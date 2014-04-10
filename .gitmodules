@@ -1,0 +1,6 @@
+[submodule "cookbooks"]
+	path = cookbooks
+	url = git@github.com:IsaoCorp/vagrant-opsworks-cookbooks.git
+
+
+

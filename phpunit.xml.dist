@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="Vendor/autoload.php">
+    <filter>
+        <blacklist>
+            <directory suffix=".php">app/Config</directory>
+            <directory suffix=".php">app/Test</directory>
+            <directory suffix=".php">app/Vendor</directory>
+            <directory suffix=".php">Vendor</directory>
+            <directory suffix=".php">Plugin</directory>
+        </blacklist>
+    </filter>
+</phpunit>

@@ -1,0 +1,21 @@
+{
+    "name": "status-site",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.cakephp.org"
+        }
+    ],
+    "require": {
+        "pear-cakephp/cakephp": "2.4.5",
+        "phpunit/phpunit": "3.7.*",
+        "cakephp/debug_kit": "2.2.*",
+        "cakedc/migrations": "2.*",
+        "slywalker/boost_cake": "*",
+        "satooshi/php-coveralls": "dev-master",
+        "mixpanel/mixpanel-php": "2.*"
+    },
+    "config": {
+        "vendor-dir": "Vendor/"
+    }
+}
