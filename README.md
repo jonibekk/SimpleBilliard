@@ -1,7 +1,6 @@
 ###説明
-CakePHPで開発環境を整えるテスト   
-travisCI   
-[![Build Status](https://travis-ci.org/bigplants/cake_dev_test.svg?branch=master)](https://travis-ci.org/bigplants/master)   
-coveralls   
-[![Coverage Status](https://coveralls.io/repos/bigplants/cake_dev_test/badge.png?branch=master)](https://coveralls.io/r/bigplants/cake_dev_test?branch=master)   
+Goalous2.0のリポジトリ
+- travisCI
+-- develop
+[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
 
