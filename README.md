@@ -27,8 +27,20 @@ Goalousの開発に関して
 1. 動作確認  
 ブラウザから以下にアクセス  
 `http://127.0.0.1:8081`  
-  
+
 ## Contributing
+みなさんの貢献は大いに歓迎します。  
+Goalousを共に改善していきましょう。  
+Goalousに貢献したいという素晴らしいマインドを持っている方は以下の手順で開発したものを送って下さい。
+
+1. Forkする  
+Githubページ上右上の「Fork」をクリックしてリポジトリをコピーします。
+1. ForkしたリポジトリをCloneする  
+1. 作業ブランチを切る  
+1. コミットする
+1. pushする
+1. Pull Requestする(マージ対象はdevelop)
+
 # Our Team
 ## Member
 # Documentation
