@@ -58,7 +58,24 @@ Goalous開発におけるすべてのドキュメントは[ここ](https://drive
 - [全体像](https://www.lucidchart.com/documents/edit/4b328b80-5327-fa30-8c2f-0aab0a00da8d)
 
 # Cloud Tools For Project
+Goalousプロジェクトで利用しているクラウドツールについて。
 ## Development
+- [TravisCI (テストツール)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
+- Coveralls (カバレッジ分析)
+
 ## Operations
+- [AWS Management Console (AWSのリソースの全てを管理)](https://console.aws.amazon.com/console/home?#)
+
 ## Metrics
+- [Mixpanel (ユーザ行動分析)](https://mixpanel.com/report/388879/events/#events)
+- [NewRelic (パフォーマンス監視)](https://rpm.newrelic.com/accounts/652568/applications/3337537)
+- Optimizely (A/Bテスト)
+- Google Analytics (アクセス解析)
+- [User Voice (ユーザフォーラム/サポート)](http://app.uservoice.com/signin)
+- SurveryMonkey (アンケート)
+
 ## Communication
+- [HipChat (チャットツール)](https://isao.hipchat.com/chat)
+
+## Other
+- [Zapier (API連携)](https://zapier.com/app/dashboard)
