@@ -17,7 +17,8 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - ステージング環境 -> https://stg2.goalous.com
 
 # Development
-Goalousの開発に関して
+Goalousの開発に関して。  
+Goalousで素早く開発を始められるよう心がけております。
 ## Requirements
 - [Virtual Box](https://www.virtualbox.org/wiki/Downloads) `version >= 4.3.10`
 - [Vagrant](http://www.vagrantup.com/downloads.html) `version >= 1.5.0`
