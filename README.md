@@ -42,7 +42,12 @@ Githubページ上右上の「Fork」をクリックしてリポジトリをコ�
 1. Pull Requestする(マージ対象はdevelop)
 
 # Our Team
+Goalousチームについて
 ## Member
+- [菊池厚平](https://github.com/Ko-hei)
+- [平形大樹](https://github.com/bigplants)
+- [西田昂弘](https://github.com/nishiii)
+
 # Documentation
 ## Development
 ## Operations
