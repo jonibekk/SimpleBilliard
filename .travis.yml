@@ -6,6 +6,8 @@ php:
 env:
   - DB=mysql
 
+git:
+  submodules: false
 before_script:
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
@@ -76,3 +78,5 @@ script:
 
 after_script:
   - php Vendor/bin/coveralls -v
+notifications:
+  hipchat: 9a2786129965fc9a2d33d93a09a2b9@goalous2
