@@ -69,7 +69,7 @@ Goalous開発におけるすべてのドキュメントは[ここ](https://drive
 Goalousプロジェクトで利用しているクラウドツールについて。
 ## Development
 - [TravisCI (テストツール)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
-- Coveralls (カバレッジ分析)
+- [Coveralls (カバレッジ分析)](https://coveralls.io/r/IsaoCorp/goalous2)
 
 ## Operations
 - [AWS Management Console (AWSのリソースの全てを管理)](https://console.aws.amazon.com/console/home?#)
