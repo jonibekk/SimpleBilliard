@@ -78,5 +78,11 @@ script:
 
 after_script:
   - php Vendor/bin/coveralls -v
+
 notifications:
-  hipchat: 9a2786129965fc9a2d33d93a09a2b9@goalous2
+  hipchat:
+    rooms:
+      - 9a2786129965fc9a2d33d93a09a2b9@goalous2
+    template:
+      - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Change view</a>)'
+    format: html
