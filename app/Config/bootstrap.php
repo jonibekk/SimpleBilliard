@@ -13,6 +13,9 @@
  * @since         CakePHP(tm) v 0.10.8.2117
  */
 
+//外部ツールのKeyを取得
+require_once "extra_defines.php";
+
 // Setup a 'default' cache configuration for use in the application.
 Cache::config('default', array('engine' => 'File'));
 
@@ -117,7 +120,3 @@ App::build(array(
     )
 );
 CakePlugin::loadAll();
-
-
-//定数
-define('MIXPANEL_PROJECT_TOKEN', "2486fb1ff5a70a2e0c1abf3e0bc7788d");
