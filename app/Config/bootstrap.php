@@ -99,24 +99,24 @@ Configure::write('Dispatcher.filters', array(
 App::uses('CakeLog', 'Log');
 CakeLog::config('debug', array(
     'engine' => 'File',
-    'types' => array('notice', 'info', 'debug'),
-    'file' => 'debug',
+    'types'  => array('notice', 'info', 'debug'),
+    'file'   => 'debug',
 ));
 CakeLog::config('error', array(
     'engine' => 'File',
-    'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
-    'file' => 'error',
+    'types'  => array('warning', 'error', 'critical', 'alert', 'emergency'),
+    'file'   => 'error',
 ));
 
 Configure::write('Asset.timestamp', 'force');
 
 App::build(array(
-        'Vendor' => array(
-            ROOT . '/Vendor/',
-        ),
-        'Plugin' => array(
-            ROOT . '/Plugin/',
-        ),
-    )
+               'Vendor' => array(
+                   ROOT . '/Vendor/',
+               ),
+               'Plugin' => array(
+                   ROOT . '/Plugin/',
+               ),
+           )
 );
 CakePlugin::loadAll();

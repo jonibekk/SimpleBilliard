@@ -41,8 +41,8 @@ Configure::write('debug', 2);
  */
 Configure::write('Error', array(
     'handler' => 'ErrorHandler::handleError',
-    'level' => E_ALL & ~E_DEPRECATED,
-    'trace' => true
+    'level'   => E_ALL & ~E_DEPRECATED,
+    'trace'   => true
 ));
 
 /**
@@ -66,9 +66,9 @@ Configure::write('Error', array(
  * @see ErrorHandler for more information on exception handling and configuration.
  */
 Configure::write('Exception', array(
-    'handler' => 'ErrorHandler::handleException',
+    'handler'  => 'ErrorHandler::handleException',
     'renderer' => 'ExceptionRenderer',
-    'log' => true
+    'log'      => true
 ));
 
 /**
@@ -348,11 +348,11 @@ $prefix = 'app_';
  * object listings, and translation cache files are stored with this configuration.
  */
 Cache::config('_cake_core_', array(
-    'engine' => $engine,
-    'prefix' => $prefix . 'cake_core_',
-    'path' => CACHE . 'persistent' . DS,
+    'engine'    => $engine,
+    'prefix'    => $prefix . 'cake_core_',
+    'path'      => CACHE . 'persistent' . DS,
     'serialize' => ($engine === 'File'),
-    'duration' => $duration
+    'duration'  => $duration
 ));
 
 /**
@@ -360,9 +360,9 @@ Cache::config('_cake_core_', array(
  * is used to store schema descriptions, and table listings in connections.
  */
 Cache::config('_cake_model_', array(
-    'engine' => $engine,
-    'prefix' => $prefix . 'cake_model_',
-    'path' => CACHE . 'models' . DS,
+    'engine'    => $engine,
+    'prefix'    => $prefix . 'cake_model_',
+    'path'      => CACHE . 'models' . DS,
     'serialize' => ($engine === 'File'),
-    'duration' => $duration
+    'duration'  => $duration
 ));

@@ -30,8 +30,8 @@ class SessionsSchema extends CakeSchema
     }
 
     public $cake_sessions = array(
-        'id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
-        'data' => array('type' => 'text', 'null' => true, 'default' => null),
+        'id'      => array('type' => 'string', 'null' => false, 'key' => 'primary'),
+        'data'    => array('type' => 'text', 'null' => true, 'default' => null),
         'expires' => array('type' => 'integer', 'null' => true, 'default' => null),
         'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
     );

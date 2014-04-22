@@ -120,5 +120,5 @@ $config['rules'] = array(
     'allow' => array(
         '*' => 'Role/admin',
     ),
-    'deny' => array(),
+    'deny'  => array(),
 );
