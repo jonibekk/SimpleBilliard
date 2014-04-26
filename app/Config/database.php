@@ -6,19 +6,19 @@ class DATABASE_CONFIG
     public $default = array(
         'datasource' => 'Database/Mysql',
         'persistent' => false,
-        'host' => 'localhost',
-        'login' => 'root',
-        'password' => '',
-        'database' => 'myapp',
+        'host'       => 'localhost',
+        'login'      => 'root',
+        'password'   => '',
+        'database'   => 'myapp',
     );
 
     public $test = array(
         'datasource' => 'Database/Mysql',
         'persistent' => false,
-        'host' => 'localhost',
-        'login' => 'root',
-        'password' => '',
-        'database' => 'myapp_test',
+        'host'       => 'localhost',
+        'login'      => 'root',
+        'password'   => '',
+        'database'   => 'myapp_test',
     );
 
     public function __construct()
@@ -35,7 +35,7 @@ class DATABASE_CONFIG
         }
         //werckerの場合(Test用DBを書き換え)
         $wercker = env('WERCKER_MYSQL_HOST');
-        if($wercker){
+        if ($wercker) {
             $this->test['host'] = env('WERCKER_MYSQL_HOST');
             $this->test['database'] = env('WERCKER_MYSQL_DATABASE');
             $this->test['login'] = env('WERCKER_MYSQL_USERNAME');

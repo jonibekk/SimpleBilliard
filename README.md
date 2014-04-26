@@ -4,7 +4,7 @@ Goalous 2.0のリポジトリです。
 当プロジェクトで管理しているソース、ドキュメント、その他のツールのすべてはここから辿れるようになっています。  
 ## Health
 - TravisCI
- - master
+ - master [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
  - develop [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
 - Coveralls
  - master [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=master)](https://coveralls.io/r/IsaoCorp/goalous2?branch=master)
@@ -17,7 +17,8 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - ステージング環境 -> https://stg2.goalous.com
 
 # Development
-Goalousの開発に関して
+Goalousの開発に関して。  
+Goalousで素早く開発を始められるよう心がけております。
 ## Requirements
 - [Virtual Box](https://www.virtualbox.org/wiki/Downloads) `version >= 4.3.10`
 - [Vagrant](http://www.vagrantup.com/downloads.html) `version >= 1.5.0`
@@ -69,7 +70,7 @@ Goalous開発におけるすべてのドキュメントは[ここ](https://drive
 Goalousプロジェクトで利用しているクラウドツールについて。
 ## Development
 - [TravisCI (テストツール)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
-- Coveralls (カバレッジ分析)
+- [Coveralls (カバレッジ分析)](https://coveralls.io/r/IsaoCorp/goalous2)
 
 ## Operations
 - [AWS Management Console (AWSのリソースの全てを管理)](https://console.aws.amazon.com/console/home?#)

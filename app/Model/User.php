@@ -60,10 +60,11 @@ class User extends AppModel
      * @param $id
      * @return array|null
      */
-    function getUser($id){
-        if(!$id){
+    function getUser($id)
+    {
+        if (!$id) {
             return null;
         }
-        return $this->find('first',$id);
+        return $this->find('first', $id);
     }
 }
