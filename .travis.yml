@@ -99,3 +99,7 @@ deploy:
     app-id: 77c4fc53-40c3-4a73-b532-18d5ef1beff7
     on:
       branch: master
+cache:
+  - bundler
+  - apt
+  - composer
