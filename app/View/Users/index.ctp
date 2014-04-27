@@ -1,6 +1,7 @@
 <?php
 /**
  * @var $users array
+ * @var $this View
  */
 ?>
 <div class="users index">
