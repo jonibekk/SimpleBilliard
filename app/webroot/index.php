@@ -83,6 +83,7 @@ if (!defined('CAKE_CORE_INCLUDE_PATH')) {
         $failed = true;
     }
 } else {
+    /** @noinspection PhpIncludeInspection */
     if (!include CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'bootstrap.php') {
         $failed = true;
     }

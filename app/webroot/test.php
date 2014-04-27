@@ -72,6 +72,7 @@ if (!defined('CAKE_CORE_INCLUDE_PATH')) {
         $failed = true;
     }
 } else {
+    /** @noinspection PhpIncludeInspection */
     if (!include CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'bootstrap.php') {
         $failed = true;
     }
@@ -84,6 +85,7 @@ if (Configure::read('debug') < 1) {
     throw new NotFoundException(__d('cake_dev', 'Debug setting does not allow access to this URL.'));
 }
 
+/** @noinspection PhpIncludeInspection */
 require_once CAKE . 'TestSuite' . DS . 'CakeTestSuiteDispatcher.php';
 
 CakeTestSuiteDispatcher::run();

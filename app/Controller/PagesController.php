@@ -19,6 +19,8 @@ App::uses('AppController', 'Controller');
  * @package       app.Controller
  * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
  */
+
+/** @noinspection PhpInconsistentReturnPointsInspection */
 class PagesController extends AppController
 {
 
@@ -32,10 +34,11 @@ class PagesController extends AppController
     /**
      * Displays a view
      *
-     * @param mixed What page to display
-     * @return void
-     * @throws NotFoundException When the view file could not be found
-     *    or MissingViewException in debug mode.
+     * @throws NotFoundException
+     * @throws Exception
+     * @throws MissingViewException
+     * @internal param \What $mixed page to display
+     * @return $this->redirect('/') or void
      */
     public function display()
     {
@@ -43,6 +46,7 @@ class PagesController extends AppController
 
         $count = count($path);
         if (!$count) {
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect('/');
         }
         $page = $subpage = $title_for_layout = null;
