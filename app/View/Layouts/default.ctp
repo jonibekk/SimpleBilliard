@@ -5,6 +5,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
+ * @var $title_for_layout string
  */
 
 /*
@@ -132,7 +133,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a href="#" class="navbar-brand">CakeDevTest</a>
+            <a href="#" class="navbar-brand">Goalous2.0</a>
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -225,6 +226,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
             </div>
         </div>
         <?php if (extension_loaded('newrelic')) {
+            /** @noinspection PhpUndefinedFunctionInspection */
             echo newrelic_get_browser_timing_footer();
         } ?>
 

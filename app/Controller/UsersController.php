@@ -46,7 +46,7 @@ class UsersController extends AppController
     /**
      * add method
      *
-     * @return $this->render()
+     * @return mixed
      */
     public function add()
     {
@@ -55,6 +55,7 @@ class UsersController extends AppController
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved.'));
                 $this->Mp->track('Add User');
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect(array('action' => 'index'));
             }
             else {
@@ -69,7 +70,7 @@ class UsersController extends AppController
      *
      * @throws NotFoundException
      * @param string $id
-     * @return $this->render()
+     * @return mixed
      */
     public function edit($id = null)
     {
@@ -80,6 +81,7 @@ class UsersController extends AppController
             if ($this->User->save($this->request->data)) {
                 $this->Mp->track('Edit User');
                 $this->Session->setFlash(__('The user has been saved.'));
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect(array('action' => 'index'));
             }
             else {
@@ -98,7 +100,7 @@ class UsersController extends AppController
      *
      * @throws NotFoundException
      * @param string $id
-     * @return void
+     * @return mixed
      */
     public function delete($id = null)
     {
@@ -113,6 +115,7 @@ class UsersController extends AppController
         else {
             $this->Session->setFlash(__('The user could not be deleted. Please, try again.'));
         }
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect(array('action' => 'index'));
     }
 

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var $users array
+ * @var $this View
+ */
+?>
 <div class="users index">
     <h2><?php echo __('Users'); ?></h2>
     <table cellpadding="0" cellspacing="0">
@@ -13,7 +19,8 @@
             <th><?php echo $this->Paginator->sort('modified'); ?></th>
             <th class="actions"><?php echo __('Actions'); ?></th>
         </tr>
-        <?php foreach ($users as $user): ?>
+        <?php
+        foreach ($users as $user): ?>
             <tr>
                 <td><?php echo h($user['User']['id']); ?>&nbsp;</td>
                 <td><?php echo h($user['User']['password']); ?>&nbsp;</td>
@@ -36,6 +43,7 @@
     </table>
     <p>
         <?php
+        /** @noinspection PhpDeprecationInspection */
         echo $this->Paginator->counter(array(
                                            'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
                                        ));

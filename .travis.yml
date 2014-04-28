@@ -6,6 +6,11 @@ php:
 env:
   - DB=mysql
 
+cache:
+  - bundler
+  - apt
+  - composer
+
 git:
   submodules: false
 before_script:
@@ -76,7 +81,7 @@ script:
   - cd ./app; ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
   - cd ../
 
-after_script:
+before_deploy:
   - php Vendor/bin/coveralls -v
 
 notifications:
@@ -101,7 +106,3 @@ deploy:
     wait-until-deployed: true
     on:
       branch: master
-cache:
-  - bundler
-  - apt
-  - composer

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var $this View
+ * @var $user array
+ */
+?>
 <div class="users view">
     <h2><?php echo __('User'); ?></h2>
     <dl>

@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var $this View
+ */
+?>
 <div>
     <?php echo $this->Form->create('BoostCake', array(
         'inputDefaults' => array(
