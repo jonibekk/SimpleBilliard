@@ -21,4 +21,5 @@ junit.xml
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
 /.idea/workspace.xml
 /.idea/dataSources.ids
+/.idea/vagrant.xml
 
