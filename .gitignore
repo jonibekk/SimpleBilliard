@@ -19,14 +19,6 @@ junit.xml
 .DS_Store
 # PhpStorm設定ファイルを除外
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
-/.idea/*
-!/.idea/cake_config_setting_v0_5.xml
-!/.idea/codeStyleSettings.xml
-!/.idea/dictionaries
-!/.idea/encodings.xml
-!/.idea/dataSources.xml
-!/.idea/scopes
-!/.idea/goalous2.iml
-!/.idea/inspectionProfiles
-!/.idea/php.xml
+/.idea/workspace.xml
+/.idea/dataSources.ids
 
