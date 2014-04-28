@@ -133,7 +133,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a href="#" class="navbar-brand">CakeDevTest</a>
+            <a href="#" class="navbar-brand">Goalous2.0</a>
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
