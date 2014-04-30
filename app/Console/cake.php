@@ -35,4 +35,5 @@ if (!include $dispatcher) {
 unset($paths, $path, $dispatcher, $root, $ds);
 
 /** @noinspection PhpUndefinedClassInspection */
+/** @noinspection PhpVoidFunctionResultUsedInspection */
 return ShellDispatcher::run($argv);

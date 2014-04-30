@@ -10,6 +10,7 @@
  */
 ?>
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en">
 <head>
     <?php echo $this->Html->charset(); ?>

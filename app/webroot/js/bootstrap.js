@@ -22,9 +22,11 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
   // ============================================================
 
   function transitionEnd() {
-    var el = document.createElement('bootstrap')
+    //noinspection UnterminatedStatementJS
+      var el = document.createElement('bootstrap')
 
-    var transEndEventNames = {
+    //noinspection UnterminatedStatementJS
+      var transEndEventNames = {
       'WebkitTransition' : 'webkitTransitionEnd',
       'MozTransition'    : 'transitionend',
       'OTransition'      : 'oTransitionEnd otransitionend',
@@ -714,11 +716,14 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
   }
 
   function clearMenus(e) {
-    $(backdrop).remove()
+      //noinspection UnterminatedStatementJS,UnterminatedStatementJS
+      $(backdrop).remove()
     $(toggle).each(function () {
       var $parent = getParent($(this))
       var relatedTarget = { relatedTarget: this }
-      if (!$parent.hasClass('open')) return
+      if (!$parent.hasClass('open')) { //noinspection UnterminatedStatementJS
+          return
+      }
       $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
       if (e.isDefaultPrevented()) return
       $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget)
@@ -1251,7 +1256,8 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
     var actualHeight = $tip[0].offsetHeight
 
     if (placement == 'top' && actualHeight != height) {
-      replace = true
+        //noinspection UnterminatedStatementJS,UnterminatedStatementJS
+        replace = true
       offset.top = offset.top + height - actualHeight
     }
 
@@ -1394,7 +1400,8 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
   // TOOLTIP PLUGIN DEFINITION
   // =========================
 
-  var old = $.fn.tooltip
+    //noinspection UnterminatedStatementJS,UnterminatedStatementJS
+    var old = $.fn.tooltip
 
   $.fn.tooltip = function (option) {
     return this.each(function () {
@@ -1847,7 +1854,8 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
     offset: 0
   }
 
-  Affix.prototype.getPinnedOffset = function () {
+  Affix.prototype.getPinnedOffset = function () //noinspection UnterminatedStatementJS,UnterminatedStatementJS
+  {
     if (this.pinnedOffset) return this.pinnedOffset
     this.$element.removeClass(Affix.RESET).addClass('affix')
     var scrollTop = this.$window.scrollTop()

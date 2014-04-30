@@ -299,7 +299,8 @@ jQuery.extend({
 
 	isEmptyObject: function( obj ) {
 		var name;
-		for ( name in obj ) {
+		//noinspection LoopStatementThatDoesntLoopJS
+        for ( name in obj ) {
 			return false;
 		}
 		return true;
@@ -1243,7 +1244,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 		function( a, b ) {
 			var adown = a.nodeType === 9 ? a.documentElement : a,
 				bup = b && b.parentNode;
-			return a === bup || !!( bup && bup.nodeType === 1 && (
+			//noinspection JSBitwiseOperatorUsage
+            return a === bup || !!( bup && bup.nodeType === 1 && (
 				adown.contains ?
 					adown.contains( bup ) :
 					a.compareDocumentPosition && a.compareDocumentPosition( bup ) & 16
@@ -1304,7 +1306,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 				0;
 		}
 
-		return compare & 4 ? -1 : 1;
+		//noinspection JSBitwiseOperatorUsage
+        return compare & 4 ? -1 : 1;
 	} :
 	function( a, b ) {
 		// Exit early if the nodes are identical
@@ -4471,7 +4474,8 @@ jQuery.event = {
 			// Add which for click: 1 === left; 2 === middle; 3 === right
 			// Note: button is not normalized, so don't use it
 			if ( !event.which && button !== undefined ) {
-				event.which = ( button & 1 ? 1 : ( button & 2 ? 3 : ( button & 4 ? 2 : 0 ) ) );
+				//noinspection JSBitwiseOperatorUsage
+                event.which = ( button & 1 ? 1 : ( button & 2 ? 3 : ( button & 4 ? 2 : 0 ) ) );
 			}
 
 			return event;
