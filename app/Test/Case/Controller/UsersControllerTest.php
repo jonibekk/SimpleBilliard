@@ -3,6 +3,7 @@ App::uses('UsersController', 'Controller');
 
 /**
  * UsersController Test Case
+ * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
  *
  */
 class UsersControllerTest extends ControllerTestCase
