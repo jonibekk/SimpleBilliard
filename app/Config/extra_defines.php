@@ -8,6 +8,7 @@
  */
 define('PUBLIC_ENV', false);
 define('ENV_NAME', "local");
+define('DEBUG_MODE', 2);
 define('USERVOICE_API_KEY', null);
 define('USERVOICE_FORUM_ID_PRIVATE', null);
 define('USERVOICE_FORUM_ID_PUBLIC', null);

@@ -19,14 +19,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
     echo $this->Html->meta('icon');
-
-    //echo $this->Html->css('cake.generic');
     //echo $this->Html->css('bootstrap.min.css', array('media' => 'screen'));
     echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->Html->css('font-awesome.min.css');
     echo $this->fetch('css');
-
     echo $this->fetch('meta');
     ?>
     <!--[if lt IE 9]>
@@ -36,6 +33,7 @@
     <?php
     //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
+        /** @noinspection PhpDeprecationInspection */
         echo $this->element('external_service_tags');
     }
     ?>
@@ -152,6 +150,17 @@
 echo $this->fetch('script');
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
+//環境を識別できるようにリボンを表示
+switch (ENV_NAME) {
+    case 'stg':
+        echo $this->Html->script('http://quickribbon.com/ribbon/2014/04/c966588e9495aa7b205aeaaf849d674f.js');
+        break;
+    case 'local':
+        echo $this->Html->script('http://quickribbon.com/ribbon/2014/04/b13dfc8e5d887b8725f256c31cc1dff4.js');
+        break;
+    default:
+        break;
+}
 ?>
 </body>
 </html>

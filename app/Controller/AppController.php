@@ -63,11 +63,10 @@ class AppController extends Controller
         }
         //ページタイトルセット
         if (ENV_NAME) {
-            $this->set('title_for_layout', "[" . ENV_NAME . "]" . SERVICE_NAME);
+            $this->set('title_for_layout', SERVICE_NAME);
         }
         else {
             $this->set('title_for_layout', SERVICE_NAME);
         }
-
     }
 }
