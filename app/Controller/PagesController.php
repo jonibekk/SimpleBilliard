@@ -60,7 +60,9 @@ class PagesController extends AppController
         if (!empty($path[$count - 1])) {
             $title_for_layout = Inflector::humanize($path[$count - 1]);
         }
-        $this->set(compact('page', 'subpage', 'title_for_layout'));
+//        $this->set(compact('page', 'subpage', 'title_for_layout'));
+        //title_for_layoutはAppControllerで設定
+        $this->set(compact('page', 'subpage'));
 
         try {
             $this->render(implode('/', $path));
@@ -70,5 +72,6 @@ class PagesController extends AppController
             }
             throw new NotFoundException();
         }
+        return $this->render(implode('/', $path));
     }
 }

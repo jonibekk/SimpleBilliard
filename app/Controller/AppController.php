@@ -58,6 +58,15 @@ class AppController extends Controller
         //TODO 一時的に全許可
         $this->Auth->allow();
         //mixpanel初期化
-        $this->Mp = Mixpanel::getInstance(MIXPANEL_TOKEN);
+        if (PUBLIC_ENV) {
+            $this->Mp = Mixpanel::getInstance(MIXPANEL_TOKEN);
+        }
+        //ページタイトルセット
+        if (ENV_NAME) {
+            $this->set('title_for_layout', SERVICE_NAME);
+        }
+        else {
+            $this->set('title_for_layout', SERVICE_NAME);
+        }
     }
 }

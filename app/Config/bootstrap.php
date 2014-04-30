@@ -13,9 +13,6 @@
  * @since         CakePHP(tm) v 0.10.8.2117
  */
 
-//外部ツールのKeyを取得
-require_once "extra_defines.php";
-
 // Setup a 'default' cache configuration for use in the application.
 Cache::config('default', array('engine' => 'File'));
 
@@ -120,3 +117,8 @@ App::build(array(
            )
 );
 CakePlugin::loadAll();
+
+/**
+ * Goalous独自定数
+ */
+define('SERVICE_NAME', "Goalous2.0");
