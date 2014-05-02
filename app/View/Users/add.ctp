@@ -4,17 +4,17 @@
  */
 ?>
 <div>
-    <?php echo $this->Form->create('BoostCake', array(
-        'inputDefaults' => array(
+    <?php echo $this->Form->create('BoostCake', [
+        'inputDefaults' => [
             'div'       => 'form-group',
-            'label'     => array(
+            'label'     => [
                 'class' => 'col col-md-3 control-label'
-            ),
+            ],
             'wrapInput' => 'col col-md-9',
             'class'     => 'form-control'
-        ),
+        ],
         'class'         => 'well form-horizontal'
-    )); ?>
+    ]); ?>
     <fieldset>
         <legend><?php echo __('Add User'); ?></legend>
         <?php
@@ -27,10 +27,10 @@
         ?>
     </fieldset>
     <div class="form-group">
-        <?php echo $this->Form->submit(__('Submit'), array(
+        <?php echo $this->Form->submit(__('Submit'), [
             'div'   => 'col col-md-9 col-md-offset-3',
             'class' => 'btn btn-default'
-        )); ?>
+        ]); ?>
     </div>
     <?php echo $this->Form->end(); ?>
 </div>
@@ -38,6 +38,6 @@
     <h3><?php echo __('Actions'); ?></h3>
     <ul>
 
-        <li><?php echo $this->Html->link(__('List Users'), array('action' => 'index')); ?></li>
+        <li><?php echo $this->Html->link(__('List Users'), ['action' => 'index']); ?></li>
     </ul>
 </div>
