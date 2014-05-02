@@ -5,7 +5,6 @@ App::uses('AppController', 'Controller');
  * Users Controller
  *
  * @property User $User
- * @property PaginatorComponent $Paginator
  */
 class UsersController extends AppController
 {
@@ -30,7 +29,9 @@ class UsersController extends AppController
      * view method
      *
      * @throws NotFoundException
+     *
      * @param string $id
+     *
      * @return $this->render()
      */
     public function view($id = null)
@@ -38,7 +39,7 @@ class UsersController extends AppController
         if (!$this->User->exists($id)) {
             throw new NotFoundException(__('Invalid user'));
         }
-        $options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
+        $options = ['conditions' => ['User.' . $this->User->primaryKey => $id]];
         $this->set('user', $this->User->find('first', $options));
         return $this->render();
     }
@@ -56,7 +57,7 @@ class UsersController extends AppController
                 $this->Session->setFlash(__('The user has been saved.'));
                 $this->Mp->track('Add User');
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(['action' => 'index']);
             }
             else {
                 $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
@@ -69,7 +70,9 @@ class UsersController extends AppController
      * edit method
      *
      * @throws NotFoundException
+     *
      * @param string $id
+     *
      * @return mixed
      */
     public function edit($id = null)
@@ -77,19 +80,19 @@ class UsersController extends AppController
         if (!$this->User->exists($id)) {
             throw new NotFoundException(__('Invalid user'));
         }
-        if ($this->request->is(array('post', 'put'))) {
+        if ($this->request->is(['post', 'put'])) {
             if ($this->User->save($this->request->data)) {
                 $this->Mp->track('Edit User');
                 $this->Session->setFlash(__('The user has been saved.'));
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect(array('action' => 'index'));
+                return $this->redirect(['action' => 'index']);
             }
             else {
                 $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
             }
         }
         else {
-            $options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
+            $options = ['conditions' => ['User.' . $this->User->primaryKey => $id]];
             $this->request->data = $this->User->find('first', $options);
         }
         return $this->render();
@@ -99,7 +102,9 @@ class UsersController extends AppController
      * delete method
      *
      * @throws NotFoundException
+     *
      * @param string $id
+     *
      * @return mixed
      */
     public function delete($id = null)
@@ -116,7 +121,7 @@ class UsersController extends AppController
             $this->Session->setFlash(__('The user could not be deleted. Please, try again.'));
         }
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(['action' => 'index']);
     }
 
     public function page_load_test()
