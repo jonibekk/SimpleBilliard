@@ -1,7 +1,6 @@
 <?php
 /**
  * Application level Controller
- *
  * This file is application-wide controller file. You can put all
  * application-wide controller-related methods here.
  *
@@ -14,40 +13,34 @@ App::uses('Controller', 'Controller');
 
 /**
  * Application Controller
- *
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
  * @package        app.Controller
- * @link        http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- *
+ * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller
 {
-    public $components = array(
+    public $components = [
         'DebugKit.Toolbar',
         'Session',
         'Paginator',
-        'Auth' => array(
-            'flash' => array(
-                'element' => 'alert',
-                'key'     => 'auth',
-                'params'  => array(
-                    'plugin' => 'BoostCake',
-                    'class'  => 'alert-error'
-                )
-            )
-        )
-    );
-    public $helpers = array(
+        'Auth' => ['flash' => [
+            'element' => 'alert',
+            'key'     => 'auth',
+            'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
+        ]]
+    ];
+    public $helpers = [
         'Session',
-        'Html'      => array('className' => 'BoostCake.BoostCakeHtml'),
-        'Form'      => array('className' => 'BoostCake.BoostCakeForm'),
-        'Paginator' => array('className' => 'BoostCake.BoostCakePaginator'),
-    );
+        'Html'      => ['className' => 'BoostCake.BoostCakeHtml'],
+        'Form'      => ['className' => 'BoostCake.BoostCakeForm'],
+        'Paginator' => ['className' => 'BoostCake.BoostCakePaginator'],
+    ];
 
     /**
      * Mixpanel
+     *
      * @var MixPanel
      */
     public $Mp;
@@ -58,6 +51,10 @@ class AppController extends Controller
         //TODO 一時的に全許可
         $this->Auth->allow();
         //mixpanel初期化
-        $this->Mp = Mixpanel::getInstance(MIXPANEL_TOKEN);
+        if (PUBLIC_ENV) {
+            $this->Mp = Mixpanel::getInstance(MIXPANEL_TOKEN);
+        }
+        //ページタイトルセット
+        $this->set('title_for_layout', SERVICE_NAME);
     }
 }

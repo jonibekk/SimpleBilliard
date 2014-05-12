@@ -68,17 +68,20 @@ if (!defined('CAKE_CORE_INCLUDE_PATH')) {
     if (function_exists('ini_set')) {
         ini_set('include_path', ROOT . DS . 'lib' . PATH_SEPARATOR . ini_get('include_path'));
     }
+    /** @noinspection PhpIncludeInspection */
     if (!include 'Cake' . DS . 'bootstrap.php') {
         $failed = true;
     }
-} else {
+}
+else {
     /** @noinspection PhpIncludeInspection */
     if (!include CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'bootstrap.php') {
         $failed = true;
     }
 }
 if (!empty($failed)) {
-    trigger_error("CakePHP core could not be found. Check the value of CAKE_CORE_INCLUDE_PATH in APP/webroot/index.php. It should point to the directory containing your " . DS . "cake core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
+    trigger_error("CakePHP core could not be found. Check the value of CAKE_CORE_INCLUDE_PATH in APP/webroot/index.php. It should point to the directory containing your " . DS . "cake core directory and your " . DS . "vendors root directory.",
+                  E_USER_ERROR);
 }
 
 if (Configure::read('debug') < 1) {

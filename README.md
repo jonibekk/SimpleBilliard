@@ -78,8 +78,8 @@ Goalousプロジェクトで利用しているクラウドツールについて�
 ## Metrics
 - [Mixpanel (ユーザ行動分析)](https://mixpanel.com/report/388879/events/#events)
 - [NewRelic (パフォーマンス監視)](https://rpm.newrelic.com/accounts/652568/applications/3337537)
-- Optimizely (A/Bテスト)
-- Google Analytics (アクセス解析)
+- [Visual Website Optimizer](http://v2.visualwebsiteoptimizer.com/) (A/Bテスト)
+- [Google Analytics](https://www.google.com/analytics/web/?hl=ja&pli=1#report/visitors-overview/a37579734w69803133p83571333/) (アクセス解析)
 - [User Voice (ユーザフォーラム/サポート)](http://app.uservoice.com/signin)
 - SurveryMonkey (アンケート)
 

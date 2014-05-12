@@ -1,7 +1,6 @@
 <?php
 /**
  * Static content controller.
- *
  * This file will render views from views/pages/
  *
  * @link          http://cakephp.org CakePHP(tm) Project
@@ -13,11 +12,10 @@ App::uses('AppController', 'Controller');
 
 /**
  * Static content controller
- *
  * Override this controller by placing a copy in controllers directory of an application
  *
  * @package       app.Controller
- * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
+ * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
  */
 
 /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -49,7 +47,7 @@ class PagesController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect('/');
         }
-        $page = $subpage = $title_for_layout = null;
+        $page = $subpage = null;
 
         if (!empty($path[0])) {
             $page = $path[0];
@@ -57,10 +55,8 @@ class PagesController extends AppController
         if (!empty($path[1])) {
             $subpage = $path[1];
         }
-        if (!empty($path[$count - 1])) {
-            $title_for_layout = Inflector::humanize($path[$count - 1]);
-        }
-        $this->set(compact('page', 'subpage', 'title_for_layout'));
+        //title_for_layoutはAppControllerで設定
+        $this->set(compact('page', 'subpage'));
 
         try {
             $this->render(implode('/', $path));
@@ -70,5 +66,6 @@ class PagesController extends AppController
             }
             throw new NotFoundException();
         }
+        return $this->render(implode('/', $path));
     }
 }
