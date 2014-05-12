@@ -1,7 +1,6 @@
 <?php
 /**
  * Static content controller.
- *
  * This file will render views from views/pages/
  *
  * @link          http://cakephp.org CakePHP(tm) Project
@@ -13,11 +12,10 @@ App::uses('AppController', 'Controller');
 
 /**
  * Static content controller
- *
  * Override this controller by placing a copy in controllers directory of an application
  *
  * @package       app.Controller
- * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
+ * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
  */
 
 /** @noinspection PhpInconsistentReturnPointsInspection */
