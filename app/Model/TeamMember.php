@@ -19,11 +19,12 @@ class TeamMember extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'    => ['uuid' => ['rule' => ['uuid'],],],
-        'team_id'    => ['uuid' => ['rule' => ['uuid'],],],
-        'active_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'admin_flg'  => ['boolean' => ['rule' => ['boolean'],],],
-        'del_flg'    => ['boolean' => ['rule' => ['boolean'],],],
+        'user_id'               => ['uuid' => ['rule' => ['uuid'],],],
+        'team_id'               => ['uuid' => ['rule' => ['uuid'],],],
+        'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
+        'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'admin_flg'             => ['boolean' => ['rule' => ['boolean'],],],
+        'del_flg'               => ['boolean' => ['rule' => ['boolean'],],],
     ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
