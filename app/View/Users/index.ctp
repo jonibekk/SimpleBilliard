@@ -1,7 +1,7 @@
 <?php
 /**
  * @var $users array
- * @var $this View
+ * @var $this  View
  */
 ?>
 <div class="users index">
@@ -9,8 +9,6 @@
     <table cellpadding="0" cellspacing="0">
         <tr>
             <th><?php echo $this->Paginator->sort('id'); ?></th>
-            <th><?php echo $this->Paginator->sort('password'); ?></th>
-            <th><?php echo $this->Paginator->sort('email'); ?></th>
             <th><?php echo $this->Paginator->sort('local_first_name'); ?></th>
             <th><?php echo $this->Paginator->sort('local_last_name'); ?></th>
             <th><?php echo $this->Paginator->sort('first_name'); ?></th>
@@ -23,8 +21,6 @@
         foreach ($users as $user): ?>
             <tr>
                 <td><?php echo h($user['User']['id']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['password']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['email']); ?>&nbsp;</td>
                 <td><?php echo h($user['User']['local_first_name']); ?>&nbsp;</td>
                 <td><?php echo h($user['User']['local_last_name']); ?>&nbsp;</td>
                 <td><?php echo h($user['User']['first_name']); ?>&nbsp;</td>
