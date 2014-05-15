@@ -11,6 +11,45 @@ App::uses('AppModel', 'Model');
  */
 class Thread extends AppModel
 {
+    /**
+     * スレッドタイプ
+     */
+    const TYPE_CREATED_GOAL = 1;
+    const TYPE_FEEDBACK = 2;
+    static public $TYPE = [
+        self::TYPE_CREATED_GOAL => "",
+        self::TYPE_FEEDBACK     => "",
+    ];
+
+    /**
+     * スレッドタイプの名前をセット
+     */
+    private function _setTypeName()
+    {
+        self::$TYPE[self::TYPE_CREATED_GOAL] = __d('gl', "ゴール作成");
+        self::$TYPE[self::TYPE_FEEDBACK] = __d('gl', "フィードバック");
+    }
+
+    /**
+     * ステータス
+     */
+    const STATUS_OPEN = 1;
+    const STATUS_CLOSE = 2;
+    static public $STATUS = [
+        self::STATUS_OPEN  => "",
+        self::STATUS_CLOSE => "",
+    ];
+
+    /**
+     * ステータスの名前をセット
+     */
+    private function _setStatusName()
+    {
+        //TODO 仮
+        self::$STATUS[self::STATUS_OPEN] = __d('gl', "オープン");
+        self::$STATUS[self::STATUS_CLOSE] = __d('gl', "クローズ");
+
+    }
 
     /**
      * Validation rules
@@ -46,5 +85,12 @@ class Thread extends AppModel
     public $hasMany = [
         'Message',
     ];
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->_setTypeName();
+        $this->_setStatusName();
+    }
 
 }
