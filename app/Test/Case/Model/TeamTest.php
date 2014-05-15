@@ -1,12 +1,12 @@
 <?php
-App::uses('User', 'Model');
+App::uses('Team', 'Model');
 
 /**
- * User Test Case
+ * Team Test Case
  *
- * @property mixed User
+ * @property mixed Team
  */
-class UserTest extends CakeTestCase
+class TeamTest extends CakeTestCase
 {
 
     /**
@@ -15,29 +15,27 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user',
-        'app.image',
-        'app.badge',
         'app.team',
-        'app.comment_like',
-        'app.comment',
+        'app.image',
+        'app.user',
+        'app.badge',
         'app.post',
+        //'app.goal',
         'app.comment_mention',
+        'app.comment',
+        'app.comment_like',
+        'app.comment_read',
         'app.given_badge',
         'app.post_like',
         'app.post_mention',
         'app.post_read',
         'app.posts_image',
-        'app.comment_read',
         'app.group',
         'app.team_member',
         'app.job_category',
         'app.invite',
         'app.notification',
-        'app.thread',
-        'app.message',
-        'app.email',
-        'app.oauth_token'
+        'app.thread'
     );
 
     /**
@@ -48,7 +46,7 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->Team = ClassRegistry::init('Team');
     }
 
     /**
@@ -58,22 +56,13 @@ class UserTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->Team);
 
         parent::tearDown();
     }
 
     //ダミーテスト
     function testDummy()
-    {
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
     {
     }
 

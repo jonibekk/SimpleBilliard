@@ -48,6 +48,7 @@ class AddUsersTable extends CakeMigration
      * Before migration callback
      *
      * @param string $direction , up or down direction of migration process
+     *
      * @return boolean Should process continue
      * @access public
      */
@@ -60,6 +61,7 @@ class AddUsersTable extends CakeMigration
      * After migration callback
      *
      * @param string $direction , up or down direction of migration process
+     *
      * @return boolean Should process continue
      * @access public
      */

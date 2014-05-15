@@ -1,12 +1,12 @@
 <?php
-App::uses('User', 'Model');
+App::uses('Thread', 'Model');
 
 /**
- * User Test Case
+ * Thread Test Case
  *
- * @property mixed User
+ * @property mixed Thread
  */
-class UserTest extends CakeTestCase
+class ThreadTest extends CakeTestCase
 {
 
     /**
@@ -15,29 +15,28 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user',
-        'app.image',
-        'app.badge',
+        'app.thread',
         'app.team',
-        'app.comment_like',
-        'app.comment',
+        'app.image',
+        'app.user',
+        'app.badge',
         'app.post',
+        //'app.goal',
         'app.comment_mention',
+        'app.comment',
+        'app.comment_like',
+        'app.comment_read',
         'app.given_badge',
         'app.post_like',
         'app.post_mention',
         'app.post_read',
         'app.posts_image',
-        'app.comment_read',
         'app.group',
         'app.team_member',
         'app.job_category',
         'app.invite',
         'app.notification',
-        'app.thread',
-        'app.message',
-        'app.email',
-        'app.oauth_token'
+        'app.message'
     );
 
     /**
@@ -48,7 +47,7 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->Thread = ClassRegistry::init('Thread');
     }
 
     /**
@@ -58,22 +57,13 @@ class UserTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->Thread);
 
         parent::tearDown();
     }
 
     //ダミーテスト
     function testDummy()
-    {
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
     {
     }
 
