@@ -4,6 +4,7 @@ App::uses('User', 'Model');
 /**
  * User Test Case
  *
+ * @property mixed User
  */
 class UserTest extends CakeTestCase
 {
@@ -60,6 +61,11 @@ class UserTest extends CakeTestCase
         unset($this->User);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
     /**

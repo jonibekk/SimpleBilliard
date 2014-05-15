@@ -3,7 +3,8 @@ App::uses('JobCategory', 'Model');
 
 /**
  * JobCategory Test Case
-
+ *
+ * @property mixed JobCategory
  */
 class JobCategoryTest extends CakeTestCase
 {
@@ -40,6 +41,11 @@ class JobCategoryTest extends CakeTestCase
         unset($this->JobCategory);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

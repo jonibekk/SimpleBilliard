@@ -3,7 +3,8 @@ App::uses('PostLike', 'Model');
 
 /**
  * PostLike Test Case
-
+ *
+ * @property mixed PostLike
  */
 class PostLikeTest extends CakeTestCase
 {
@@ -41,6 +42,11 @@ class PostLikeTest extends CakeTestCase
         unset($this->PostLike);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

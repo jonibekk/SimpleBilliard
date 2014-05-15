@@ -3,7 +3,8 @@ App::uses('Badge', 'Model');
 
 /**
  * Badge Test Case
-
+ *
+ * @property mixed Badge
  */
 class BadgeTest extends CakeTestCase
 {
@@ -18,7 +19,6 @@ class BadgeTest extends CakeTestCase
         'app.user',
         'app.team',
         'app.image',
-        'app.default_badge'
     );
 
     /**
@@ -42,6 +42,11 @@ class BadgeTest extends CakeTestCase
         unset($this->Badge);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

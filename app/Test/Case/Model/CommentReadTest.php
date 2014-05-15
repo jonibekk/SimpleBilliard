@@ -3,7 +3,8 @@ App::uses('CommentRead', 'Model');
 
 /**
  * CommentRead Test Case
-
+ *
+ * @property mixed CommentRead
  */
 class CommentReadTest extends CakeTestCase
 {
@@ -41,6 +42,11 @@ class CommentReadTest extends CakeTestCase
         unset($this->CommentRead);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

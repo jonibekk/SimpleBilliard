@@ -3,7 +3,8 @@ App::uses('Image', 'Model');
 
 /**
  * Image Test Case
-
+ *
+ * @property mixed Image
  */
 class ImageTest extends CakeTestCase
 {
@@ -18,7 +19,6 @@ class ImageTest extends CakeTestCase
         'app.user',
         'app.badge',
         'app.team',
-        'app.default_badge',
         'app.post',
         'app.posts_image'
     );
@@ -44,6 +44,11 @@ class ImageTest extends CakeTestCase
         unset($this->Image);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

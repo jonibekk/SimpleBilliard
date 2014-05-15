@@ -3,7 +3,8 @@ App::uses('Notification', 'Model');
 
 /**
  * Notification Test Case
-
+ *
+ * @property mixed Notification
  */
 class NotificationTest extends CakeTestCase
 {
@@ -17,7 +18,6 @@ class NotificationTest extends CakeTestCase
         'app.notification',
         'app.user',
         'app.team',
-        'app.from_user'
     );
 
     /**
@@ -41,6 +41,11 @@ class NotificationTest extends CakeTestCase
         unset($this->Notification);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

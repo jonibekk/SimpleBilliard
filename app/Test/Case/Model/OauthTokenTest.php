@@ -3,7 +3,8 @@ App::uses('OauthToken', 'Model');
 
 /**
  * OauthToken Test Case
-
+ *
+ * @property mixed OauthToken
  */
 class OauthTokenTest extends CakeTestCase
 {
@@ -39,6 +40,11 @@ class OauthTokenTest extends CakeTestCase
         unset($this->OauthToken);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

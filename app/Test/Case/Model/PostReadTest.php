@@ -3,7 +3,8 @@ App::uses('PostRead', 'Model');
 
 /**
  * PostRead Test Case
-
+ *
+ * @property mixed PostRead
  */
 class PostReadTest extends CakeTestCase
 {
@@ -41,6 +42,11 @@ class PostReadTest extends CakeTestCase
         unset($this->PostRead);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

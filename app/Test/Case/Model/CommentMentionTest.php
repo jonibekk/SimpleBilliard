@@ -3,7 +3,8 @@ App::uses('CommentMention', 'Model');
 
 /**
  * CommentMention Test Case
-
+ *
+ * @property mixed CommentMention
  */
 class CommentMentionTest extends CakeTestCase
 {
@@ -41,6 +42,11 @@ class CommentMentionTest extends CakeTestCase
         unset($this->CommentMention);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

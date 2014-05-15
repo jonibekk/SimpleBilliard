@@ -3,7 +3,8 @@ App::uses('TeamMember', 'Model');
 
 /**
  * TeamMember Test Case
-
+ *
+ * @property mixed TeamMember
  */
 class TeamMemberTest extends CakeTestCase
 {
@@ -17,7 +18,6 @@ class TeamMemberTest extends CakeTestCase
         'app.team_member',
         'app.user',
         'app.team',
-        'app.coach_user',
         'app.group',
         'app.job_category'
     );
@@ -43,6 +43,11 @@ class TeamMemberTest extends CakeTestCase
         unset($this->TeamMember);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

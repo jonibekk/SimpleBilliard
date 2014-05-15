@@ -3,7 +3,8 @@ App::uses('PostMention', 'Model');
 
 /**
  * PostMention Test Case
-
+ *
+ * @property mixed PostMention
  */
 class PostMentionTest extends CakeTestCase
 {
@@ -41,6 +42,11 @@ class PostMentionTest extends CakeTestCase
         unset($this->PostMention);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

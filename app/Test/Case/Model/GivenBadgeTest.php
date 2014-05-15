@@ -3,7 +3,8 @@ App::uses('GivenBadge', 'Model');
 
 /**
  * GivenBadge Test Case
-
+ *
+ * @property mixed GivenBadge
  */
 class GivenBadgeTest extends CakeTestCase
 {
@@ -16,7 +17,6 @@ class GivenBadgeTest extends CakeTestCase
     public $fixtures = array(
         'app.given_badge',
         'app.user',
-        'app.grant_user',
         'app.team',
         'app.post'
     );
@@ -42,6 +42,11 @@ class GivenBadgeTest extends CakeTestCase
         unset($this->GivenBadge);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

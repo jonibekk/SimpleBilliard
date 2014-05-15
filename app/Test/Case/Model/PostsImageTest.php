@@ -3,7 +3,8 @@ App::uses('PostsImage', 'Model');
 
 /**
  * PostsImage Test Case
-
+ *
+ * @property mixed PostsImage
  */
 class PostsImageTest extends CakeTestCase
 {
@@ -18,19 +19,17 @@ class PostsImageTest extends CakeTestCase
         'app.post',
         'app.user',
         'app.team',
-        'app.goal',
+        //'app.goal',
         'app.comment_mention',
         'app.comment',
         'app.comment_like',
         'app.comment_read',
         'app.given_badge',
-        'app.grant_user',
         'app.post_like',
         'app.post_mention',
         'app.post_read',
         'app.image',
         'app.badge',
-        'app.default_badge'
     );
 
     /**
@@ -54,6 +53,11 @@ class PostsImageTest extends CakeTestCase
         unset($this->PostsImage);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

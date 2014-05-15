@@ -3,7 +3,8 @@ App::uses('Email', 'Model');
 
 /**
  * Email Test Case
-
+ *
+ * @property mixed Email
  */
 class EmailTest extends CakeTestCase
 {
@@ -39,6 +40,11 @@ class EmailTest extends CakeTestCase
         unset($this->Email);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

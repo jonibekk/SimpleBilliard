@@ -3,7 +3,8 @@ App::uses('Invite', 'Model');
 
 /**
  * Invite Test Case
-
+ *
+ * @property mixed Invite
  */
 class InviteTest extends CakeTestCase
 {
@@ -15,8 +16,6 @@ class InviteTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.invite',
-        'app.from_user',
-        'app.to_user',
         'app.team'
     );
 
@@ -41,6 +40,11 @@ class InviteTest extends CakeTestCase
         unset($this->Invite);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

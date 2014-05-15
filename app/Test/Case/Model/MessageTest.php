@@ -3,7 +3,8 @@ App::uses('Message', 'Model');
 
 /**
  * Message Test Case
-
+ *
+ * @property mixed Message
  */
 class MessageTest extends CakeTestCase
 {
@@ -15,8 +16,6 @@ class MessageTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.message',
-        'app.from_user',
-        'app.to_user',
         'app.thread'
     );
 
@@ -41,6 +40,11 @@ class MessageTest extends CakeTestCase
         unset($this->Message);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

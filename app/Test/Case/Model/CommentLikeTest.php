@@ -3,7 +3,8 @@ App::uses('CommentLike', 'Model');
 
 /**
  * CommentLike Test Case
-
+ *
+ * @property mixed CommentLike
  */
 class CommentLikeTest extends CakeTestCase
 {
@@ -41,6 +42,11 @@ class CommentLikeTest extends CakeTestCase
         unset($this->CommentLike);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }

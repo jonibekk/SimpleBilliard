@@ -3,7 +3,8 @@ App::uses('Group', 'Model');
 
 /**
  * Group Test Case
-
+ *
+ * @property mixed Group
  */
 class GroupTest extends CakeTestCase
 {
@@ -40,6 +41,11 @@ class GroupTest extends CakeTestCase
         unset($this->Group);
 
         parent::tearDown();
+    }
+
+    //ダミーテスト
+    function testDummy()
+    {
     }
 
 }
