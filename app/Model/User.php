@@ -26,14 +26,14 @@ App::uses('AppModel', 'Model');
 class User extends AppModel
 {
     /** 性別フラグ */
-    const MALE = 1;
-    const FEMALE = 2;
+    const TYPE_GENDER_MALE = 1;
+    const TYPE_GENDER_FEMALE = 2;
     /**
      * 性別タイプ
      *
      * @var array
      */
-    static public $GENDER_TYPE = [self::MALE, self::FEMALE];
+    static public $TYPE_GENDER = [self::TYPE_GENDER_MALE, self::TYPE_GENDER_FEMALE];
 
     /**
      * Validation rules
@@ -100,9 +100,9 @@ class User extends AppModel
      */
     private function _setGenderTypeName()
     {
-        self::$GENDER_TYPE[null] = __d('gl', "選択してください");
-        self::$GENDER_TYPE[self::MALE] = __d('gl', "男性");
-        self::$GENDER_TYPE[self::FEMALE] = __d('gl', "女性");
+        self::$TYPE_GENDER[null] = __d('gl', "選択してください");
+        self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __d('gl', "男性");
+        self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __d('gl', "女性");
     }
 
     /**

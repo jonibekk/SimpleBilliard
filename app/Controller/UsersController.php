@@ -21,7 +21,6 @@ class UsersController extends AppController
     public function index()
     {
         $this->set('users', $this->Paginator->paginate());
-        User::$GENDER_TYPE;
         return $this->render();
     }
 
