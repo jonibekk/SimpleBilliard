@@ -21,6 +21,18 @@ class Image extends AppModel
     static public $TYPE = [null => "", self::TYPE_USER => "", self::TYPE_GOAL => "", self::TYPE_BADGE => "", self::TYPE_POST => ""];
 
     /**
+     * 画像タイプの名前をセット
+     */
+    private function _setTypeName()
+    {
+        self::$TYPE[null] = __d('gl', "選択してください");
+        self::$TYPE[self::TYPE_USER] = __d('gl', "ユーザロゴ画像");
+        self::$TYPE[self::TYPE_GOAL] = __d('gl', "ゴール画像");
+        self::$TYPE[self::TYPE_BADGE] = __d('gl', "バッジ画像");
+        self::$TYPE[self::TYPE_POST] = __d('gl', "投稿画像");
+    }
+
+    /**
      * Validation rules
      *
      * @var array
@@ -64,18 +76,6 @@ class Image extends AppModel
     {
         parent::__construct();
         $this->_setTypeName();
-    }
-
-    /**
-     * 画像タイプの名前をセット
-     */
-    private function _setTypeName()
-    {
-        self::$TYPE[null] = __d('gl', "選択してください");
-        self::$TYPE[self::TYPE_USER] = __d('gl', "ユーザロゴ画像");
-        self::$TYPE[self::TYPE_GOAL] = __d('gl', "ゴール画像");
-        self::$TYPE[self::TYPE_BADGE] = __d('gl', "バッジ画像");
-        self::$TYPE[self::TYPE_POST] = __d('gl', "投稿画像");
     }
 
 }

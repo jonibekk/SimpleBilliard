@@ -13,7 +13,16 @@ class OauthToken extends AppModel
      */
     const TYPE_FB = 1;
     const TYPE_GOOGLE = 2;
-    static public $TYPE = [null => "", self::TYPE_FB => "", self::TYPE_GOOGLE => ""];
+    static public $TYPE = [self::TYPE_FB => "", self::TYPE_GOOGLE => ""];
+
+    /**
+     * プロバイダタイプをセット
+     */
+    private function _setProviderTypeName()
+    {
+        self::$TYPE[self::TYPE_FB] = __d('gl', "Facebook");
+        self::$TYPE[self::TYPE_GOOGLE] = __d('gl', "Google");
+    }
 
     /**
      * Validation rules
@@ -40,16 +49,6 @@ class OauthToken extends AppModel
     {
         parent::__construct();
         $this->_setProviderTypeName();
-    }
-
-    /**
-     * プロバイダタイプをセット
-     */
-    private function _setProviderTypeName()
-    {
-        self::$TYPE[null] = __d('gl', "選択してください");
-        self::$TYPE[self::TYPE_FB] = __d('gl', "Facebook");
-        self::$TYPE[self::TYPE_GOOGLE] = __d('gl', "Google");
     }
 
 }

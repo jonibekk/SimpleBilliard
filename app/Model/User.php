@@ -31,6 +31,15 @@ class User extends AppModel
     const TYPE_GENDER_MALE = 1;
     const TYPE_GENDER_FEMALE = 2;
     static public $TYPE_GENDER = [null => "", self::TYPE_GENDER_MALE => "", self::TYPE_GENDER_FEMALE => ""];
+    /**
+     * 性別タイプの名前をセット
+     */
+    private function _setGenderTypeName()
+    {
+        self::$TYPE_GENDER[null] = __d('gl', "選択してください");
+        self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __d('gl', "男性");
+        self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __d('gl', "女性");
+    }
 
     /**
      * Validation rules
@@ -90,16 +99,6 @@ class User extends AppModel
     {
         parent::__construct();
         $this->_setGenderTypeName();
-    }
-
-    /**
-     * 性別タイプの名前をセット
-     */
-    private function _setGenderTypeName()
-    {
-        self::$TYPE_GENDER[null] = __d('gl', "選択してください");
-        self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __d('gl', "男性");
-        self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __d('gl', "女性");
     }
 
     /**
