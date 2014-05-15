@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('SchemaMigration', 'Model');
 
 /**
- * User Test Case
- *
+ * SchemaMigration Test Case
+
  */
-class UserTest extends CakeTestCase
+class SchemaMigrationTest extends CakeTestCase
 {
 
     /**
@@ -14,7 +14,7 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user'
+        'app.schema_migration'
     );
 
     /**
@@ -25,28 +25,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->SchemaMigration = ClassRegistry::init('SchemaMigration');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->SchemaMigration);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }

@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('Invite', 'Model');
 
 /**
- * User Test Case
- *
+ * Invite Test Case
+
  */
-class UserTest extends CakeTestCase
+class InviteTest extends CakeTestCase
 {
 
     /**
@@ -14,7 +14,10 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user'
+        'app.invite',
+        'app.from_user',
+        'app.to_user',
+        'app.team'
     );
 
     /**
@@ -25,28 +28,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->Invite = ClassRegistry::init('Invite');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->Invite);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }

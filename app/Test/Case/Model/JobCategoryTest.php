@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('JobCategory', 'Model');
 
 /**
- * User Test Case
- *
+ * JobCategory Test Case
+
  */
-class UserTest extends CakeTestCase
+class JobCategoryTest extends CakeTestCase
 {
 
     /**
@@ -14,7 +14,9 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user'
+        'app.job_category',
+        'app.team',
+        'app.team_member'
     );
 
     /**
@@ -25,28 +27,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->JobCategory = ClassRegistry::init('JobCategory');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->JobCategory);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }

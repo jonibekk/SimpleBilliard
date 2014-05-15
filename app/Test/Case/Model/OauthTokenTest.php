@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('OauthToken', 'Model');
 
 /**
- * User Test Case
- *
+ * OauthToken Test Case
+
  */
-class UserTest extends CakeTestCase
+class OauthTokenTest extends CakeTestCase
 {
 
     /**
@@ -14,6 +14,7 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.oauth_token',
         'app.user'
     );
 
@@ -25,28 +26,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->OauthToken = ClassRegistry::init('OauthToken');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->OauthToken);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }

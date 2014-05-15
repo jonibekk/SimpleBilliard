@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('CommentMention', 'Model');
 
 /**
- * User Test Case
- *
+ * CommentMention Test Case
+
  */
-class UserTest extends CakeTestCase
+class CommentMentionTest extends CakeTestCase
 {
 
     /**
@@ -14,7 +14,10 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user'
+        'app.comment_mention',
+        'app.post',
+        'app.user',
+        'app.team'
     );
 
     /**
@@ -25,28 +28,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->CommentMention = ClassRegistry::init('CommentMention');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->CommentMention);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }

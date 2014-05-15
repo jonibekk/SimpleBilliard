@@ -2,28 +2,27 @@
 App::uses('AppModel', 'Model');
 
 /**
- * User Model
+ * Team Model
  *
- * @property Image          $ProfileImage
- * @property Email          $PrimaryEmail
- * @property Team           $DefaultTeam
+ * @property Image          $Image
  * @property Badge          $Badge
  * @property CommentLike    $CommentLike
  * @property CommentMention $CommentMention
  * @property CommentRead    $CommentRead
  * @property Comment        $Comment
- * @property Email          $Email
  * @property GivenBadge     $GivenBadge
- * @property Image          $Image
+ * @property Group          $Group
+ * @property Invite         $Invite
+ * @property JobCategory    $JobCategory
  * @property Notification   $Notification
- * @property OauthToken     $OauthToken
  * @property PostLike       $PostLike
  * @property PostMention    $PostMention
  * @property PostRead       $PostRead
  * @property Post           $Post
  * @property TeamMember     $TeamMember
+ * @property Thread         $Thread
  */
-class User extends AppModel
+class Team extends AppModel
 {
 
     /**
@@ -32,7 +31,7 @@ class User extends AppModel
      * @var array
      */
     public $validate = array(
-        'first_name'        => array(
+        'name'               => array(
             'notEmpty' => array(
                 'rule' => array('notEmpty'),
                 //'message' => 'Your custom message here',
@@ -42,9 +41,9 @@ class User extends AppModel
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'last_name'         => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
+        'type'               => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
                 //'message' => 'Your custom message here',
                 //'allowEmpty' => false,
                 //'required' => false,
@@ -52,7 +51,7 @@ class User extends AppModel
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'hide_year_flg'     => array(
+        'domain_limited_flg' => array(
             'boolean' => array(
                 'rule' => array('boolean'),
                 //'message' => 'Your custom message here',
@@ -62,9 +61,9 @@ class User extends AppModel
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'no_pass_flg'       => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
+        'start_term_month'   => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
                 //'message' => 'Your custom message here',
                 //'allowEmpty' => false,
                 //'required' => false,
@@ -72,9 +71,9 @@ class User extends AppModel
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'primary_email_id'  => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
+        'border_months'      => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
                 //'message' => 'Your custom message here',
                 //'allowEmpty' => false,
                 //'required' => false,
@@ -82,67 +81,7 @@ class User extends AppModel
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'active_flg'        => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'admin_flg'         => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'auto_timezone_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'auto_language_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'romanize_flg'      => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'update_email_flg'  => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-                //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
-                //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'del_flg'           => array(
+        'del_flg'            => array(
             'boolean' => array(
                 'rule' => array('boolean'),
                 //'message' => 'Your custom message here',
@@ -162,23 +101,9 @@ class User extends AppModel
      * @var array
      */
     public $belongsTo = array(
-        'ProfileImage' => array(
+        'Image' => array(
             'className'  => 'Image',
-            'foreignKey' => 'profile_image_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'PrimaryEmail' => array(
-            'className'  => 'Email',
-            'foreignKey' => 'primary_email_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'DefaultTeam'  => array(
-            'className'  => 'Team',
-            'foreignKey' => 'default_team_id',
+            'foreignKey' => 'image_id',
             'conditions' => '',
             'fields'     => '',
             'order'      => ''
@@ -193,7 +118,7 @@ class User extends AppModel
     public $hasMany = array(
         'Badge'          => array(
             'className'    => 'Badge',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -206,7 +131,7 @@ class User extends AppModel
         ),
         'CommentLike'    => array(
             'className'    => 'CommentLike',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -219,7 +144,7 @@ class User extends AppModel
         ),
         'CommentMention' => array(
             'className'    => 'CommentMention',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -232,7 +157,7 @@ class User extends AppModel
         ),
         'CommentRead'    => array(
             'className'    => 'CommentRead',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -245,20 +170,7 @@ class User extends AppModel
         ),
         'Comment'        => array(
             'className'    => 'Comment',
-            'foreignKey'   => 'user_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Email'          => array(
-            'className'    => 'Email',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -271,7 +183,7 @@ class User extends AppModel
         ),
         'GivenBadge'     => array(
             'className'    => 'GivenBadge',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -282,9 +194,35 @@ class User extends AppModel
             'finderQuery'  => '',
             'counterQuery' => ''
         ),
-        'Image'          => array(
-            'className'    => 'Image',
-            'foreignKey'   => 'user_id',
+        'Group'          => array(
+            'className'    => 'Group',
+            'foreignKey'   => 'team_id',
+            'dependent'    => false,
+            'conditions'   => '',
+            'fields'       => '',
+            'order'        => '',
+            'limit'        => '',
+            'offset'       => '',
+            'exclusive'    => '',
+            'finderQuery'  => '',
+            'counterQuery' => ''
+        ),
+        'Invite'         => array(
+            'className'    => 'Invite',
+            'foreignKey'   => 'team_id',
+            'dependent'    => false,
+            'conditions'   => '',
+            'fields'       => '',
+            'order'        => '',
+            'limit'        => '',
+            'offset'       => '',
+            'exclusive'    => '',
+            'finderQuery'  => '',
+            'counterQuery' => ''
+        ),
+        'JobCategory'    => array(
+            'className'    => 'JobCategory',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -297,20 +235,7 @@ class User extends AppModel
         ),
         'Notification'   => array(
             'className'    => 'Notification',
-            'foreignKey'   => 'user_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'OauthToken'     => array(
-            'className'    => 'OauthToken',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -323,7 +248,7 @@ class User extends AppModel
         ),
         'PostLike'       => array(
             'className'    => 'PostLike',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -336,7 +261,7 @@ class User extends AppModel
         ),
         'PostMention'    => array(
             'className'    => 'PostMention',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -349,7 +274,7 @@ class User extends AppModel
         ),
         'PostRead'       => array(
             'className'    => 'PostRead',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -362,7 +287,7 @@ class User extends AppModel
         ),
         'Post'           => array(
             'className'    => 'Post',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -375,7 +300,20 @@ class User extends AppModel
         ),
         'TeamMember'     => array(
             'className'    => 'TeamMember',
-            'foreignKey'   => 'user_id',
+            'foreignKey'   => 'team_id',
+            'dependent'    => false,
+            'conditions'   => '',
+            'fields'       => '',
+            'order'        => '',
+            'limit'        => '',
+            'offset'       => '',
+            'exclusive'    => '',
+            'finderQuery'  => '',
+            'counterQuery' => ''
+        ),
+        'Thread'         => array(
+            'className'    => 'Thread',
+            'foreignKey'   => 'team_id',
             'dependent'    => false,
             'conditions'   => '',
             'fields'       => '',
@@ -388,16 +326,4 @@ class User extends AppModel
         )
     );
 
-    /**
-     * @param $id
-     *
-     * @return array|null
-     */
-    function getUser($id)
-    {
-        if (!$id) {
-            return null;
-        }
-        return $this->find('first', $id);
-    }
 }

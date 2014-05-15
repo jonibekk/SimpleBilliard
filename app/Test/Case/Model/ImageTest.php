@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('Image', 'Model');
 
 /**
- * User Test Case
- *
+ * Image Test Case
+
  */
-class UserTest extends CakeTestCase
+class ImageTest extends CakeTestCase
 {
 
     /**
@@ -14,7 +14,13 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user'
+        'app.image',
+        'app.user',
+        'app.badge',
+        'app.team',
+        'app.default_badge',
+        'app.post',
+        'app.posts_image'
     );
 
     /**
@@ -25,28 +31,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->Image = ClassRegistry::init('Image');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->Image);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }

@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('GivenBadge', 'Model');
 
 /**
- * User Test Case
- *
+ * GivenBadge Test Case
+
  */
-class UserTest extends CakeTestCase
+class GivenBadgeTest extends CakeTestCase
 {
 
     /**
@@ -14,7 +14,11 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user'
+        'app.given_badge',
+        'app.user',
+        'app.grant_user',
+        'app.team',
+        'app.post'
     );
 
     /**
@@ -25,28 +29,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->GivenBadge = ClassRegistry::init('GivenBadge');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->GivenBadge);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }

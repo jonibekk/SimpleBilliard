@@ -1,11 +1,11 @@
 <?php
-App::uses('User', 'Model');
+App::uses('Notification', 'Model');
 
 /**
- * User Test Case
- *
+ * Notification Test Case
+
  */
-class UserTest extends CakeTestCase
+class NotificationTest extends CakeTestCase
 {
 
     /**
@@ -14,7 +14,10 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user'
+        'app.notification',
+        'app.user',
+        'app.team',
+        'app.from_user'
     );
 
     /**
@@ -25,28 +28,19 @@ class UserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
+        $this->Notification = ClassRegistry::init('Notification');
     }
 
     /**
      * tearDown method
      *
-*@return void
+     * @return void
      */
     public function tearDown()
     {
-        unset($this->User);
+        unset($this->Notification);
 
         parent::tearDown();
-    }
-
-    /**
-     * testGetUser method
-     *
-     * @return void
-     */
-    public function testGetUser()
-    {
     }
 
 }
