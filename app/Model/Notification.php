@@ -10,6 +10,25 @@ App::uses('AppModel', 'Model');
  */
 class Notification extends AppModel
 {
+    /**
+     * 通知タイプ
+     */
+    const TYPE_GOAL = 1;
+    const TYPE_POST = 2;
+    static public $TYPE = [
+        self::TYPE_GOAL => "",
+        self::TYPE_POST => "",
+    ];
+
+    /**
+     * 通知タイプの名前をセット
+     */
+    private function _setTypeName()
+    {
+        //TODO ここには通知のタイトルの文言が入る。とりあえず、仮
+        self::$TYPE[self::TYPE_GOAL] = __d('gl', "ゴールの通知");
+        self::$TYPE[self::TYPE_POST] = __d('gl', "投稿の通知");
+    }
 
     /**
      * Validation rules
@@ -34,4 +53,11 @@ class Notification extends AppModel
         'Team',
         'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
     ];
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->_setTypeName();
+    }
+
 }
