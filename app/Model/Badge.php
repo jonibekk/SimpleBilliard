@@ -10,6 +10,22 @@ App::uses('AppModel', 'Model');
  */
 class Badge extends AppModel
 {
+    /**
+     * タイプ
+     */
+    const TYPE_PRAISE = 1;
+    const TYPE_SKILL = 2;
+    static public $TYPE = [null => "", self::TYPE_PRAISE => "", self::TYPE_SKILL => ""];
+
+    /**
+     * タイプの名前をセット
+     */
+    private function _setTypeName()
+    {
+        self::$TYPE[null] = __d('gl', "選択してください");
+        self::$TYPE[self::TYPE_PRAISE] = __d('gl', "賞賛");
+        self::$TYPE[self::TYPE_SKILL] = __d('gl', "スキル");
+    }
 
     /**
      * Validation rules
@@ -34,4 +50,11 @@ class Badge extends AppModel
         'Team',
         'Image',
     ];
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->_setTypeName();
+    }
+
 }
