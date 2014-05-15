@@ -23,6 +23,7 @@ class TeamMember extends AppModel
         'team_id'               => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'invitation_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'             => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'               => ['boolean' => ['rule' => ['boolean'],],],
     ];
