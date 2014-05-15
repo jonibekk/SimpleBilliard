@@ -40,20 +40,8 @@ class PostsImage extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Post'  => array(
-            'className'  => 'Post',
-            'foreignKey' => 'post_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Image' => array(
-            'className'  => 'Image',
-            'foreignKey' => 'image_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Post',
+        'Image',
+    ];
 }

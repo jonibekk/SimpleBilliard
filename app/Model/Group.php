@@ -47,55 +47,19 @@ class Group extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Team'        => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'ParentGroup' => array(
-            'className'  => 'Group',
-            'foreignKey' => 'parent_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Team',
+        'ParentGroup' => ['className' => 'Group', 'foreignKey' => 'parent_id',]
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'ChildGroup' => array(
-            'className'    => 'Group',
-            'foreignKey'   => 'parent_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'TeamMember' => array(
-            'className'    => 'TeamMember',
-            'foreignKey'   => 'group_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        )
-    );
+    public $hasMany = [
+        'ChildGroup' => ['className' => 'Group', 'foreignKey' => 'parent_id',],
+        'TeamMember',
+    ];
 
 }

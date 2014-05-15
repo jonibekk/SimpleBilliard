@@ -52,34 +52,10 @@ class GivenBadge extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'User'      => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'GrantUser' => array(
-            'className'  => 'User',
-            'foreignKey' => 'grant_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'      => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Post'      => array(
-            'className'  => 'Post',
-            'foreignKey' => 'post_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'User',
+        'GrantUser' => ['className' => 'User', 'foreignKey' => 'grant_user_id',],
+        'Team',
+        'Post',
+    ];
 }

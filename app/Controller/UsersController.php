@@ -20,7 +20,6 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $this->User->recursive = 0;
         $this->set('users', $this->Paginator->paginate());
         return $this->render();
     }
@@ -55,7 +54,6 @@ class UsersController extends AppController
             $this->User->create();
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved.'));
-                $this->Mp->track('Add User');
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect(['action' => 'index']);
             }
@@ -82,7 +80,6 @@ class UsersController extends AppController
         }
         if ($this->request->is(['post', 'put'])) {
             if ($this->User->save($this->request->data)) {
-                $this->Mp->track('Edit User');
                 $this->Session->setFlash(__('The user has been saved.'));
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect(['action' => 'index']);
@@ -122,10 +119,5 @@ class UsersController extends AppController
         }
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect(['action' => 'index']);
-    }
-
-    public function page_load_test()
-    {
-
     }
 }

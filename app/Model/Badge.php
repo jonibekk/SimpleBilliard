@@ -51,27 +51,9 @@ class Badge extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'User'  => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'  => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Image' => array(
-            'className'  => 'Image',
-            'foreignKey' => 'image_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-    );
+    public $belongsTo = [
+        'User',
+        'Team',
+        'Image',
+    ];
 }

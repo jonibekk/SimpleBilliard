@@ -47,69 +47,27 @@ class Image extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'User' => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'User',
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'Badge' => array(
-            'className'    => 'Badge',
-            'foreignKey'   => 'image_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Team'  => array(
-            'className'    => 'Team',
-            'foreignKey'   => 'image_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        )
-    );
+    public $hasMany = [
+        'Badge',
+        'Team',
+    ];
 
     /**
      * hasAndBelongsToMany associations
      *
      * @var array
      */
-    public $hasAndBelongsToMany = array(
-        'Post' => array(
-            'className'             => 'Post',
-            'joinTable'             => 'posts_images',
-            'foreignKey'            => 'image_id',
-            'associationForeignKey' => 'post_id',
-            'unique'                => 'keepExisting',
-            'conditions'            => '',
-            'fields'                => '',
-            'order'                 => '',
-            'limit'                 => '',
-            'offset'                => '',
-            'finderQuery'           => '',
-        )
-    );
+    public $hasAndBelongsToMany = [
+        'Post' => ['unique' => 'keepExisting',],
+    ];
 
 }

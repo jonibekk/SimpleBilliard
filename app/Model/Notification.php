@@ -51,27 +51,9 @@ class Notification extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'User'     => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'     => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'FromUser' => array(
-            'className'  => 'User',
-            'foreignKey' => 'from_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'User',
+        'Team',
+        'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
+    ];
 }

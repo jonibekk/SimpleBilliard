@@ -53,41 +53,11 @@ class TeamMember extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'User'        => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'        => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'CoachUser'   => array(
-            'className'  => 'User',
-            'foreignKey' => 'coach_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Group'       => array(
-            'className'  => 'Group',
-            'foreignKey' => 'group_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'JobCategory' => array(
-            'className'  => 'JobCategory',
-            'foreignKey' => 'job_category_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'User',
+        'Team',
+        'CoachUser' => ['className' => 'User', 'foreignKey' => 'coach_user_id',],
+        'Group',
+        'JobCategory',
+    ];
 }

@@ -70,230 +70,32 @@ class Team extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Image' => array(
-            'className'  => 'Image',
-            'foreignKey' => 'image_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Image',
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'Badge'          => array(
-            'className'    => 'Badge',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'CommentLike'    => array(
-            'className'    => 'CommentLike',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'CommentMention' => array(
-            'className'    => 'CommentMention',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'CommentRead'    => array(
-            'className'    => 'CommentRead',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Comment'        => array(
-            'className'    => 'Comment',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'GivenBadge'     => array(
-            'className'    => 'GivenBadge',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Group'          => array(
-            'className'    => 'Group',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Invite'         => array(
-            'className'    => 'Invite',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'JobCategory'    => array(
-            'className'    => 'JobCategory',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Notification'   => array(
-            'className'    => 'Notification',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'PostLike'       => array(
-            'className'    => 'PostLike',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'PostMention'    => array(
-            'className'    => 'PostMention',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'PostRead'       => array(
-            'className'    => 'PostRead',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Post'           => array(
-            'className'    => 'Post',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'TeamMember'     => array(
-            'className'    => 'TeamMember',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Thread'         => array(
-            'className'    => 'Thread',
-            'foreignKey'   => 'team_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        )
-    );
+    public $hasMany = [
+        'Badge',
+        'CommentLike',
+        'CommentMention',
+        'CommentRead',
+        'Comment',
+        'GivenBadge',
+        'Group',
+        'Invite',
+        'JobCategory',
+        'Notification',
+        'PostLike',
+        'PostMention',
+        'PostRead',
+        'Post',
+        'TeamMember',
+        'Thread',
+    ];
 
 }

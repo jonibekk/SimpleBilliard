@@ -51,27 +51,9 @@ class Invite extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'FromUser' => array(
-            'className'  => 'User',
-            'foreignKey' => 'from_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'ToUser'   => array(
-            'className'  => 'User',
-            'foreignKey' => 'to_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'     => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
+        'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
+        'Team',
+    ];
 }

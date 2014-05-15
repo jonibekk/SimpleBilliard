@@ -46,27 +46,9 @@ class CommentRead extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Comment' => array(
-            'className'  => 'Comment',
-            'foreignKey' => 'comment_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'User'    => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'    => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Comment',
+        'User',
+        'Team'
+    ];
 }

@@ -46,27 +46,9 @@ class Message extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'FromUser' => array(
-            'className'  => 'User',
-            'foreignKey' => 'from_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'ToUser'   => array(
-            'className'  => 'User',
-            'foreignKey' => 'to_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Thread'   => array(
-            'className'  => 'Thread',
-            'foreignKey' => 'thread_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
+        'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
+        'Thread',
+    ];
 }

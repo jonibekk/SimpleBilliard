@@ -45,35 +45,17 @@ class JobCategory extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Team' => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Team',
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'TeamMember' => array(
-            'className'    => 'TeamMember',
-            'foreignKey'   => 'job_category_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        )
-    );
+    public $hasMany = [
+        'TeamMember',
+    ];
 
 }

@@ -46,27 +46,9 @@ class PostLike extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Post' => array(
-            'className'  => 'Post',
-            'foreignKey' => 'post_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'User' => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team' => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Post',
+        'User',
+        'Team',
+    ];
 }

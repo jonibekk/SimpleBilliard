@@ -58,62 +58,20 @@ class Comment extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'Post' => array(
-            'className'  => 'Post',
-            'foreignKey' => 'post_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'User' => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team' => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'Post',
+        'User',
+        'Team',
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'CommentLike' => array(
-            'className'    => 'CommentLike',
-            'foreignKey'   => 'comment_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'CommentRead' => array(
-            'className'    => 'CommentRead',
-            'foreignKey'   => 'comment_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        )
-    );
+    public $hasMany = [
+        'CommentLike',
+        'CommentRead',
+    ];
 
 }

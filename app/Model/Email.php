@@ -44,13 +44,7 @@ class Email extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'User' => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'User',
+    ];
 }

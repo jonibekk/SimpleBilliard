@@ -30,7 +30,8 @@ class User extends AppModel
     const FEMALE = 2;
     /**
      * 性別タイプ
-     * @var array
+     *
+*@var array
      */
     static public $GENDER_TYPE = [];
 
@@ -109,103 +110,34 @@ class User extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'ProfileImage' => array(
-            'className'  => 'Image',
-            'foreignKey' => 'profile_image_id',
-        ),
-        'PrimaryEmail' => array(
-            'className'  => 'Email',
-            'foreignKey' => 'primary_email_id',
-        ),
-        'DefaultTeam'  => array(
-            'className'  => 'Team',
-            'foreignKey' => 'default_team_id',
-        )
-    );
+    public $belongsTo = [
+        'ProfileImage' => ['className' => 'Image', 'foreignKey' => 'profile_image_id',],
+        'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id',],
+        'DefaultTeam'  => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'Badge'          => array(
-            'className'  => 'Badge',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'CommentLike'    => array(
-            'className'  => 'CommentLike',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'CommentMention' => array(
-            'className'  => 'CommentMention',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'CommentRead'    => array(
-            'className'  => 'CommentRead',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'Comment'        => array(
-            'className'  => 'Comment',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'Email'          => array(
-            'className'  => 'Email',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'GivenBadge'     => array(
-            'className'  => 'GivenBadge',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'Image'          => array(
-            'className'  => 'Image',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'Notification'   => array(
-            'className'  => 'Notification',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'OauthToken'     => array(
-            'className'  => 'OauthToken',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'PostLike'       => array(
-            'className'  => 'PostLike',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'PostMention'    => array(
-            'className'  => 'PostMention',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'PostRead'       => array(
-            'className'  => 'PostRead',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'Post'           => array(
-            'className'  => 'Post',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        ),
-        'TeamMember'     => array(
-            'className'  => 'TeamMember',
-            'foreignKey' => 'user_id',
-            'dependent'  => false,
-        )
-    );
+    public $hasMany = [
+        'Badge',
+        'CommentLike',
+        'CommentMention',
+        'CommentRead',
+        'Comment',
+        'Email',
+        'GivenBadge',
+        'Image',
+        'Notification',
+        'OauthToken',
+        'PostLike',
+        'PostMention',
+        'PostRead',
+        'Post',
+        'TeamMember',
+    ];
 
     function __construct()
     {

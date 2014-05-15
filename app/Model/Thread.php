@@ -62,49 +62,19 @@ class Thread extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'FromUser' => array(
-            'className'  => 'User',
-            'foreignKey' => 'from_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'ToUser'   => array(
-            'className'  => 'User',
-            'foreignKey' => 'to_user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team'     => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        )
-    );
+    public $belongsTo = [
+        'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
+        'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
+        'Team',
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'Message' => array(
-            'className'    => 'Message',
-            'foreignKey'   => 'thread_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        )
-    );
+    public $hasMany = [
+        'Message',
+    ];
 
 }

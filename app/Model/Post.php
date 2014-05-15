@@ -72,136 +72,34 @@ class Post extends AppModel
      *
      * @var array
      */
-    public $belongsTo = array(
-        'User' => array(
-            'className'  => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        'Team' => array(
-            'className'  => 'Team',
-            'foreignKey' => 'team_id',
-            'conditions' => '',
-            'fields'     => '',
-            'order'      => ''
-        ),
-        //        TODO ゴールのモデルを追加した後にコメントアウト解除
-        //        'Goal' => array(
-        //            'className'  => 'Goal',
-        //            'foreignKey' => 'goal_id',
-        //            'conditions' => '',
-        //            'fields'     => '',
-        //            'order'      => ''
-        //        )
-    );
+    public $belongsTo = [
+        'User',
+        'Team',
+        //TODO ゴールのモデルを追加した後にコメントアウト解除
+        //'Goal',
+    ];
 
     /**
      * hasMany associations
      *
      * @var array
      */
-    public $hasMany = array(
-        'CommentMention' => array(
-            'className'    => 'CommentMention',
-            'foreignKey'   => 'post_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'Comment'        => array(
-            'className'    => 'Comment',
-            'foreignKey'   => 'post_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'GivenBadge'     => array(
-            'className'    => 'GivenBadge',
-            'foreignKey'   => 'post_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'PostLike'       => array(
-            'className'    => 'PostLike',
-            'foreignKey'   => 'post_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'PostMention'    => array(
-            'className'    => 'PostMention',
-            'foreignKey'   => 'post_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        ),
-        'PostRead'       => array(
-            'className'    => 'PostRead',
-            'foreignKey'   => 'post_id',
-            'dependent'    => false,
-            'conditions'   => '',
-            'fields'       => '',
-            'order'        => '',
-            'limit'        => '',
-            'offset'       => '',
-            'exclusive'    => '',
-            'finderQuery'  => '',
-            'counterQuery' => ''
-        )
-    );
+    public $hasMany = [
+        'CommentMention',
+        'Comment',
+        'GivenBadge',
+        'PostLike',
+        'PostMention',
+        'PostRead',
+    ];
 
     /**
      * hasAndBelongsToMany associations
      *
      * @var array
      */
-    public $hasAndBelongsToMany = array(
-        'Image' => array(
-            'className'             => 'Image',
-            'joinTable'             => 'posts_images',
-            'foreignKey'            => 'post_id',
-            'associationForeignKey' => 'image_id',
-            'unique'                => 'keepExisting',
-            'conditions'            => '',
-            'fields'                => '',
-            'order'                 => '',
-            'limit'                 => '',
-            'offset'                => '',
-            'finderQuery'           => '',
-        )
-    );
+    public $hasAndBelongsToMany = [
+        'Image',
+    ];
 
 }
