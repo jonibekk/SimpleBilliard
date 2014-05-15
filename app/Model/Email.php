@@ -14,30 +14,12 @@ class Email extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'user_id'        => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'email'          => array(
-            'email' => array(
-                'rule' => array('email'),
-            ),
-        ),
-        'email_verified' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'del_flg'        => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'user_id'        => ['uuid' => ['rule' => ['uuid']]],
+        'email'          => ['email' => ['rule' => ['email']]],
+        'email_verified' => ['boolean' => ['rule' => ['boolean']]],
+        'del_flg'        => ['boolean' => ['rule' => ['boolean']]],
+    ];
 
     /**
      * belongsTo associations

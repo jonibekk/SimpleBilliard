@@ -14,28 +14,12 @@ class OauthToken extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'user_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'type'    => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'uid'     => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-            ),
-        ),
-        'del_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
+    public $validate = [
+        'user_id' => ['uuid' => ['rule' => ['uuid'],],],
+        'type'    => ['numeric' => ['rule' => ['numeric'],],],
+        'uid'     => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
 

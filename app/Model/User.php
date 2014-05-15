@@ -31,79 +31,29 @@ class User extends AppModel
     /**
      * 性別タイプ
      *
-*@var array
+     * @var array
      */
-    static public $GENDER_TYPE = [];
+    static public $GENDER_TYPE = [self::MALE, self::FEMALE];
 
     /**
      * Validation rules
      *
      * @var array
      */
-    public $validate = array(
-        'first_name'        => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-            ),
-        ),
-        'last_name'         => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-            ),
-        ),
-        'hide_year_flg'     => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'no_pass_flg'       => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'primary_email_id'  => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'active_flg'        => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'admin_flg'         => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'auto_timezone_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'auto_language_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'romanize_flg'      => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'update_email_flg'  => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'del_flg'           => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'first_name'        => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'last_name'         => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'hide_year_flg'     => ['boolean' => ['rule' => ['boolean'],],],
+        'no_pass_flg'       => ['boolean' => ['rule' => ['boolean'],],],
+        'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
+        'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
+        'admin_flg'         => ['boolean' => ['rule' => ['boolean'],],],
+        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+        'update_email_flg'  => ['boolean' => ['rule' => ['boolean'],],],
+        'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     /**
      * belongsTo associations

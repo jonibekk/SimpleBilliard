@@ -16,35 +16,13 @@ class Notification extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'user_id'    => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'team_id'    => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'type'       => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'unread_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'del_flg'    => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'user_id'    => ['uuid' => ['rule' => ['uuid'],],],
+        'team_id'    => ['uuid' => ['rule' => ['uuid'],],],
+        'type'       => ['numeric' => ['rule' => ['numeric'],],],
+        'unread_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'del_flg'    => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     /**
      * belongsTo associations

@@ -30,40 +30,14 @@ class Team extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'name'               => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-            ),
-        ),
-        'type'               => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'domain_limited_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'start_term_month'   => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'border_months'      => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'del_flg'            => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'name'               => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'type'               => ['numeric' => ['rule' => ['numeric'],],],
+        'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
+        'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
+        'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     /**
      * belongsTo associations

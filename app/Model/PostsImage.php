@@ -15,25 +15,11 @@ class PostsImage extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'post_id'  => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'image_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'del_flg'  => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'post_id'  => ['uuid' => ['rule' => ['uuid'],],],
+        'image_id' => ['uuid' => ['rule' => ['uuid'],],],
+        'del_flg'  => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     /**
      * belongsTo associations

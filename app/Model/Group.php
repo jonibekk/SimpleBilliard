@@ -17,30 +17,12 @@ class Group extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'team_id'    => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'name'       => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-            ),
-        ),
-        'active_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'del_flg'    => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'team_id'    => ['uuid' => ['rule' => ['uuid']]],
+        'name'       => ['notEmpty' => ['rule' => ['notEmpty']]],
+        'active_flg' => ['boolean' => ['rule' => ['boolean']]],
+        'del_flg'    => ['boolean' => ['rule' => ['boolean']]],
+    ];
 
     /**
      * belongsTo associations

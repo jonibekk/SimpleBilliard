@@ -17,45 +17,15 @@ class Thread extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'from_user_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'to_user_id'   => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'team_id'      => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'type'         => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'status'       => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'name'         => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-            ),
-        ),
-        'del_flg'      => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $validate = [
+        'from_user_id' => ['uuid' => ['rule' => ['uuid'],],],
+        'to_user_id'   => ['uuid' => ['rule' => ['uuid'],],],
+        'team_id'      => ['uuid' => ['rule' => ['uuid'],],],
+        'type'         => ['numeric' => ['rule' => ['numeric'],],],
+        'status'       => ['numeric' => ['rule' => ['numeric'],],],
+        'name'         => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'del_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     /**
      * belongsTo associations

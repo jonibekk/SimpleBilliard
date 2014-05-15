@@ -16,28 +16,12 @@ class Message extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'from_user_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'to_user_id'   => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'thread_id'    => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'del_flg'      => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
+    public $validate = [
+        'from_user_id' => ['uuid' => ['rule' => ['uuid'],],],
+        'to_user_id'   => ['uuid' => ['rule' => ['uuid'],],],
+        'thread_id'    => ['uuid' => ['rule' => ['uuid'],],],
+        'del_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
 

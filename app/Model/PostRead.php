@@ -16,28 +16,12 @@ class PostRead extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'post_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'user_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'team_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'del_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
+    public $validate = [
+        'post_id' => ['uuid' => ['rule' => ['uuid'],],],
+        'user_id' => ['uuid' => ['rule' => ['uuid'],],],
+        'team_id' => ['uuid' => ['rule' => ['uuid'],],],
+        'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
 

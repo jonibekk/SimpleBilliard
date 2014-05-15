@@ -22,48 +22,16 @@ class Post extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'user_id'         => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'team_id'         => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-            ),
-        ),
-        'comment_count'   => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'post_like_count' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'post_read_count' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-            ),
-        ),
-        'public_flg'      => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'important_flg'   => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-        'del_flg'         => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
+    public $validate = [
+        'user_id'         => ['uuid' => ['rule' => ['uuid'],],],
+        'team_id'         => ['uuid' => ['rule' => ['uuid'],],],
+        'comment_count'   => ['numeric' => ['rule' => ['numeric'],],],
+        'post_like_count' => ['numeric' => ['rule' => ['numeric'],],],
+        'post_read_count' => ['numeric' => ['rule' => ['numeric'],],],
+        'public_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+        'important_flg'   => ['boolean' => ['rule' => ['boolean'],],],
+        'del_flg'         => ['boolean' => ['rule' => ['boolean'],],],
+    ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
 
