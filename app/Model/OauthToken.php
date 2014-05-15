@@ -8,6 +8,12 @@ App::uses('AppModel', 'Model');
  */
 class OauthToken extends AppModel
 {
+    /**
+     * プロバイダタイプ
+     */
+    const TYPE_FB = 1;
+    const TYPE_GOOGLE = 2;
+    static public $TYPE = [null => "", self::TYPE_FB => "", self::TYPE_GOOGLE => ""];
 
     /**
      * Validation rules
@@ -21,8 +27,6 @@ class OauthToken extends AppModel
         'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
-
     /**
      * belongsTo associations
      *
@@ -31,4 +35,21 @@ class OauthToken extends AppModel
     public $belongsTo = [
         'User',
     ];
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->_setProviderTypeName();
+    }
+
+    /**
+     * プロバイダタイプをセット
+     */
+    private function _setProviderTypeName()
+    {
+        self::$TYPE[null] = __d('gl', "選択してください");
+        self::$TYPE[self::TYPE_FB] = __d('gl', "Facebook");
+        self::$TYPE[self::TYPE_GOOGLE] = __d('gl', "Google");
+    }
+
 }

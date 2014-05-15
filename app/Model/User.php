@@ -25,15 +25,12 @@ App::uses('AppModel', 'Model');
  */
 class User extends AppModel
 {
-    /** 性別フラグ */
-    const TYPE_GENDER_MALE = 1;
-    const TYPE_GENDER_FEMALE = 2;
     /**
      * 性別タイプ
-     *
-     * @var array
      */
-    static public $TYPE_GENDER = [self::TYPE_GENDER_MALE, self::TYPE_GENDER_FEMALE];
+    const TYPE_GENDER_MALE = 1;
+    const TYPE_GENDER_FEMALE = 2;
+    static public $TYPE_GENDER = [null => "", self::TYPE_GENDER_MALE => "", self::TYPE_GENDER_FEMALE => ""];
 
     /**
      * Validation rules
