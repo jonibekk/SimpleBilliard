@@ -24,6 +24,21 @@ App::uses('AppModel', 'Model');
  */
 class Team extends AppModel
 {
+    /**
+     * タイプ
+     */
+    const TYPE_FREE = 1;
+    const TYPE_PRO = 2;
+    static public $TYPE = [self::TYPE_FREE => "", self::TYPE_PRO => ""];
+
+    /**
+     * タイプの名前をセット
+     */
+    private function _setTypeName()
+    {
+        self::$TYPE[self::TYPE_FREE] = __d('gl', "フリー");
+        self::$TYPE[self::TYPE_PRO] = __d('gl', "プロ");
+    }
 
     /**
      * Validation rules
@@ -71,5 +86,11 @@ class Team extends AppModel
         'TeamMember',
         'Thread',
     ];
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->_setTypeName();
+    }
 
 }
