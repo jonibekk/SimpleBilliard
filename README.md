@@ -59,8 +59,13 @@ Goalousチームについて
 
 # Documentation
 Goalous開発におけるすべてのドキュメントは[ここ](https://drive.google.com/a/isao.co.jp/#folders/0B6mjvNcPiJ6PLXBlTUJsZWphMG8)にあります。
+
 ## Development
 - [開発フロー](https://www.lucidchart.com/documents/edit/ae4a8af6-88c8-41fe-a67b-e121f973026b)
+
+## Design Documentation
+- [ER図](https://www.lucidchart.com/documents/edit/4f5b2ed4-5153-79ec-ba7f-70600a004117/0)
+- [DBスキーマ設計書](https://docs.google.com/a/isao.co.jp/spreadsheets/d/156jnN_MQ9FRyVGRgTKtQd0GiAQ1frN_7JoVF6TqmDRg/edit?usp=sharing)
 
 ## Operations
 ## Infrastructure
