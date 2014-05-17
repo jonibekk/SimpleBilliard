@@ -5,6 +5,8 @@
             <directory suffix=".php">app/Config</directory>
             <directory suffix=".php">app/Test</directory>
             <directory suffix=".php">app/Vendor</directory>
+            <directory suffix=".php">app/Lib</directory>
+            <directory suffix=".php">app/Utility</directory>
             <directory suffix=".php">Vendor</directory>
             <directory suffix=".php">Plugin</directory>
         </blacklist>
