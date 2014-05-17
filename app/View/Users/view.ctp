@@ -58,7 +58,7 @@
     <h3><?php echo __('Actions'); ?></h3>
     <ul>
         <li><?php echo $this->Html->link(__('Edit User'), ['action' => 'edit', $user['User']['id']]); ?> </li>
-        <li><?php echo $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user['User']['id']], null,
+        <li><?php echo $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user['User']['id']], [],
                                              __('Are you sure you want to delete # %s?', $user['User']['id'])); ?> </li>
         <li><?php echo $this->Html->link(__('List Users'), ['action' => 'index']); ?> </li>
         <li><?php echo $this->Html->link(__('New User'), ['action' => 'add']); ?> </li>
