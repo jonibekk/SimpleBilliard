@@ -58,14 +58,42 @@ class PagesController extends AppController
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
-        try {
-            $this->render(implode('/', $path));
-        } catch (MissingViewException $e) {
-            if (Configure::read('debug')) {
-                throw $e;
+        //ログインしている場合とそうでない場合の切り分け
+        if ($this->Auth->user()) {
+            if ($path[0] == 'home') {
+                //homeの場合
+                if ($this->Session->read('completed_today_alist')) {
+                    //全てのリストが完了している場合はモーダル表示
+                    $this->set('completed_today_alist', true);
+                    $this->Session->delete('completed_today_alist');
+                }
+
+                $this->render('logged_in_home');
             }
-            throw new NotFoundException();
+            else {
+                $this->render(implode('/', $path));
+            }
+        }
+        else {
+            //ログインしていない場合のヘッダー
+            //$this -> layout = 'not_logged_in';
+            $this->layout = 'homepage';
+            //現在の登録ユーザ数
+            //$user_count = $this->User->getAllUsersCount();
+            $user_count = 0;
+            $this->set(compact('user_count'));
+            if ($path[0] == 'logged_in_home') {
+                $this->render('home');
+            }
+            else {
+                $this->render(implode('/', $path));
+            }
         }
         return $this->render(implode('/', $path));
+    }
+
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
     }
 }
