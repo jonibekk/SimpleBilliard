@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  *
  *
@@ -13,12 +13,12 @@
 <!--suppress ALL -->
 <html lang="en">
 <head>
-    <?php echo $this->Html->charset(); ?>
+    <?= $this->Html->charset(); ?>
     <title>
-        <?php echo $title_for_layout; ?>
+        <?= $title_for_layout; ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php
+    <?
     echo $this->Html->meta('icon');
     //echo $this->Html->css('bootstrap.min.css', array('media' => 'screen'));
     echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
@@ -28,10 +28,10 @@
     echo $this->fetch('meta');
     ?>
     <!--[if lt IE 9]>
-    <?php echo $this->Html->script('html5shiv')?>
-    <?php echo $this->Html->script('respond.min')?>
+    <?= $this->Html->script('html5shiv')?>
+    <?= $this->Html->script('respond.min')?>
     <![endif]-->
-    <?php
+    <?
     //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
         /** @noinspection PhpDeprecationInspection */
@@ -40,14 +40,14 @@
     ?>
 </head>
 <body>
-<?php if (extension_loaded('newrelic')) {
+<? if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
 <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a href="/" class="navbar-brand"><?php echo $title_for_layout ?></a>
+            <a href="/" class="navbar-brand"><?= $title_for_layout ?></a>
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -107,9 +107,9 @@
 </div>
 
 <div id="container" class="container">
-    <?php echo $this->Session->flash(); ?>
+    <?= $this->Session->flash(); ?>
 
-    <?php echo $this->fetch('content'); ?>
+    <?= $this->fetch('content'); ?>
     <footer>
         <div class="row">
             <div class="col-lg-12">
@@ -139,7 +139,7 @@
                         href="http://www.google.com/webfonts" rel="nofollow">Google</a>.</p>
             </div>
         </div>
-        <?php if (extension_loaded('newrelic')) {
+        <? if (extension_loaded('newrelic')) {
             /** @noinspection PhpUndefinedFunctionInspection */
             echo newrelic_get_browser_timing_footer();
         } ?>
@@ -147,7 +147,7 @@
     </footer>
 
 </div>
-<?php
+<?
 echo $this->fetch('script');
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');

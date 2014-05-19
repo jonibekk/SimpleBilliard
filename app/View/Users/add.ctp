@@ -1,10 +1,11 @@
-<?php
+<?
 /**
  * @var $this View
  */
 ?>
 <div>
-    <?php echo $this->Form->create('BoostCake', [
+    <?=
+    $this->Form->create('BoostCake', [
         'inputDefaults' => [
             'div'       => 'form-group',
             'label'     => [
@@ -16,8 +17,8 @@
         'class'         => 'well form-horizontal'
     ]); ?>
     <fieldset>
-        <legend><?php echo __('Add User'); ?></legend>
-        <?php
+        <legend><?= __('Add User'); ?></legend>
+        <?
         echo $this->Form->input('password');
         echo $this->Form->input('email');
         echo $this->Form->input('local_first_name');
@@ -27,17 +28,18 @@
         ?>
     </fieldset>
     <div class="form-group">
-        <?php echo $this->Form->submit(__('Submit'), [
+        <?=
+        $this->Form->submit(__('Submit'), [
             'div'   => 'col col-md-9 col-md-offset-3',
             'class' => 'btn btn-default'
         ]); ?>
     </div>
-    <?php echo $this->Form->end(); ?>
+    <?= $this->Form->end(); ?>
 </div>
 <div class="actions">
-    <h3><?php echo __('Actions'); ?></h3>
+    <h3><?= __('Actions'); ?></h3>
     <ul>
 
-        <li><?php echo $this->Html->link(__('List Users'), ['action' => 'index']); ?></li>
+        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']); ?></li>
     </ul>
 </div>

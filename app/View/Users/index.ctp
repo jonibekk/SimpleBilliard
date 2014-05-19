@@ -1,50 +1,51 @@
-<?php
+<?
 /**
  * @var $users array
  * @var $this  View
  */
 ?>
 <div class="users index">
-    <h2><?php echo __('Users'); ?></h2>
+    <h2><?= __('Users'); ?></h2>
     <table cellpadding="0" cellspacing="0">
         <tr>
-            <th><?php echo $this->Paginator->sort('id'); ?></th>
-            <th><?php echo $this->Paginator->sort('local_first_name'); ?></th>
-            <th><?php echo $this->Paginator->sort('local_last_name'); ?></th>
-            <th><?php echo $this->Paginator->sort('first_name'); ?></th>
-            <th><?php echo $this->Paginator->sort('last_name'); ?></th>
-            <th><?php echo $this->Paginator->sort('created'); ?></th>
-            <th><?php echo $this->Paginator->sort('modified'); ?></th>
-            <th class="actions"><?php echo __('Actions'); ?></th>
+            <th><?= $this->Paginator->sort('id'); ?></th>
+            <th><?= $this->Paginator->sort('local_first_name'); ?></th>
+            <th><?= $this->Paginator->sort('local_last_name'); ?></th>
+            <th><?= $this->Paginator->sort('first_name'); ?></th>
+            <th><?= $this->Paginator->sort('last_name'); ?></th>
+            <th><?= $this->Paginator->sort('created'); ?></th>
+            <th><?= $this->Paginator->sort('modified'); ?></th>
+            <th class="actions"><?= __('Actions'); ?></th>
         </tr>
-        <?php
+        <?
         foreach ($users as $user): ?>
             <tr>
-                <td><?php echo h($user['User']['id']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['local_first_name']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['local_last_name']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['first_name']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['last_name']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['created']); ?>&nbsp;</td>
-                <td><?php echo h($user['User']['modified']); ?>&nbsp;</td>
+                <td><?= h($user['User']['id']); ?>&nbsp;</td>
+                <td><?= h($user['User']['local_first_name']); ?>&nbsp;</td>
+                <td><?= h($user['User']['local_last_name']); ?>&nbsp;</td>
+                <td><?= h($user['User']['first_name']); ?>&nbsp;</td>
+                <td><?= h($user['User']['last_name']); ?>&nbsp;</td>
+                <td><?= h($user['User']['created']); ?>&nbsp;</td>
+                <td><?= h($user['User']['modified']); ?>&nbsp;</td>
                 <td class="actions">
-                    <?php echo $this->Html->link(__('View'), ['action' => 'view', $user['User']['id']]); ?>
-                    <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $user['User']['id']]); ?>
-                    <?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $user['User']['id']],
-                                                     [], __('Are you sure you want to delete # %s?',
-                                                            $user['User']['id'])); ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $user['User']['id']]); ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $user['User']['id']]); ?>
+                    <?=
+                    $this->Form->postLink(__('Delete'), ['action' => 'delete', $user['User']['id']],
+                                          [], __('Are you sure you want to delete # %s?',
+                                                 $user['User']['id'])); ?>
                 </td>
             </tr>
-        <?php endforeach; ?>
+        <? endforeach; ?>
     </table>
     <p>
-        <?php
+        <?
         /** @noinspection PhpDeprecationInspection */
         echo $this->Paginator->counter(['format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')]);
         ?>    </p>
 
     <div class="paging">
-        <?php
+        <?
         echo $this->Paginator->prev('< ' . __('previous'), [], null, ['class' => 'prev disabled']);
         echo $this->Paginator->numbers(['separator' => '']);
         echo $this->Paginator->next(__('next') . ' >', [], null, ['class' => 'next disabled']);
@@ -52,8 +53,8 @@
     </div>
 </div>
 <div class="actions">
-    <h3><?php echo __('Actions'); ?></h3>
+    <h3><?= __('Actions'); ?></h3>
     <ul>
-        <li><?php echo $this->Html->link(__('New User'), ['action' => 'add']); ?></li>
+        <li><?= $this->Html->link(__('New User'), ['action' => 'add']); ?></li>
     </ul>
 </div>
