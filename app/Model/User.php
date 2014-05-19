@@ -113,4 +113,20 @@ class User extends AppModel
         }
         return $this->find('first', $id);
     }
+
+    /**
+     * Goalousの全ての有効なユーザ数
+     *
+     * @return int
+     */
+    function getAllUsersCount()
+    {
+        $options = array(
+            'conditions' => array(
+                'active_flg' => true
+            )
+        );
+        $res = $this->find('count', $options);
+        return $res;
+    }
 }

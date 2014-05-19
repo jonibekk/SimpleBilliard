@@ -13,12 +13,13 @@ App::uses('AppController', 'Controller');
 /**
  * Static content controller
  * Override this controller by placing a copy in controllers directory of an application
- *
- * @package       app.Controller
- * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
- */
 
-/** @noinspection PhpInconsistentReturnPointsInspection */
+ *
+*@package       app.Controller
+ * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
+ * @property User $User
+ * @noinspection  PhpInconsistentReturnPointsInspection
+ */
 class PagesController extends AppController
 {
 
@@ -27,7 +28,7 @@ class PagesController extends AppController
      *
      * @var array
      */
-    public $uses = array();
+    public $uses = ['User'];
 
     /**
      * Displays a view
@@ -79,8 +80,7 @@ class PagesController extends AppController
             //$this -> layout = 'not_logged_in';
             $this->layout = 'homepage';
             //現在の登録ユーザ数
-            //$user_count = $this->User->getAllUsersCount();
-            $user_count = 0;
+            $user_count = $this->User->getAllUsersCount();
             $this->set(compact('user_count'));
             if ($path[0] == 'logged_in_home') {
                 $this->render('home');

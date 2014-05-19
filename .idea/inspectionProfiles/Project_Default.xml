@@ -5,9 +5,11 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="2">
+          <list size="4">
             <item index="0" class="java.lang.String" itemvalue="cellpadding" />
             <item index="1" class="java.lang.String" itemvalue="cellspacing" />
+            <item index="2" class="java.lang.String" itemvalue="property" />
+            <item index="3" class="java.lang.String" itemvalue="frameborder" />
           </list>
         </value>
       </option>
