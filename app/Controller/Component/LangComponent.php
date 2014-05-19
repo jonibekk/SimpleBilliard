@@ -99,7 +99,7 @@ class LangComponent extends Object
      *
      * @return array
      */
-    function getAvailLangList()
+    public function getAvailLangList()
     {
         //言語選択
         $language_list = $this->Languages->lists('locale');

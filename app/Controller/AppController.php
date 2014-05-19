@@ -19,6 +19,7 @@ App::uses('Controller', 'Controller');
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent $Lang
+ * @property CookieComponent $Cookie
  * @property User          $User
  */
 class AppController extends Controller
@@ -33,6 +34,7 @@ class AppController extends Controller
             'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
         ]],
         'Lang',
+        'Cookie',
     ];
     public $helpers = [
         'Session',
@@ -55,7 +57,7 @@ class AppController extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->_setLanguage();
+        $this->_setAppLanguage();
         //TODO 一時的に全許可
         $this->Auth->allow();
         //mixpanel初期化
@@ -66,51 +68,11 @@ class AppController extends Controller
         $this->set('title_for_layout', SERVICE_NAME);
     }
 
-    public function _setLanguage()
+    /**
+     * アプリケーション全体の言語設定
+     */
+    public function _setAppLanguage()
     {
-        //言語切換えパラメータに対応
-        if (!$this->Auth->user()) {
-            $lang = null;
-
-            //TODO 理想としては以下の対応（時間がかかる為、今はやらない）
-            //一旦、英語をセット
-            //Configure::write('Config.language', 'eng');
-            //言語切換えの場合
-            //英語ならパラメータ無しでルートにリダイレクト
-            //英語以外はパラメータ付与してリダイレクト
-
-            //言語パラメータ無しの場合
-            //ブラウザ設定が英語以外の場合は言語パラメータ付きでリダイレクト
-            //パラメータありの場合
-            //使用可能な値ならリダイレクト無しで、全urlにパラメータ付与。
-            //使用できない場合はルートにリダイレクト
-
-            //TODO 現状、以下の対応
-            //言語切換え
-            if (isset($this->request->query['change_lang']) && !empty($this->request->query['change_lang'])) {
-                $lang = h($this->request->query['change_lang']);
-                $this->redirect("/?l=$lang");
-            }
-            //明示的な言語切換え時は全URLに言語パラメータを付与
-            if ((isset($this->request->query['l']) && !empty($this->request->query['l']))
-                || (isset($this->request->query['change_lang']) && !empty($this->request->query['change_lang']))
-            ) {
-                $lang = h($this->request->query['l']);
-
-                //存在する言語か判定し、存在する場合は言語切換え
-                $this->Lang->changeLang($lang);
-
-                //全てのURLに言語パラメータを付与
-                ini_set("url_rewriter.tags", "a=href,area=href,frame=src,form=action,fieldset=");
-                output_add_rewrite_var('l', $lang);
-            }
-
-            //使用可能言語をフロントに渡す
-            $lang_list = $this->Lang->getAvailLangList();
-            $this->set(compact('lang_list', 'lang'));
-
-        }
-
         //言語設定済かつ自動言語フラグが設定されていない場合は、言語設定を適用。それ以外はブラウザ判定
         if ($this->Auth->user() && $this->Auth->user('language') && !$this->Auth->user('auto_language_flg')) {
             Configure::write('Config.language', $this->Auth->user('language'));
@@ -122,5 +84,4 @@ class AppController extends Controller
             $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
         }
     }
-
 }

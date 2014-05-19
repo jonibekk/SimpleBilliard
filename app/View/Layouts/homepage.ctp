@@ -175,7 +175,8 @@
                                 <? /** @var $lang_list */
                                 foreach ($lang_list as $key => $val) : ?>
                                     <li><?
-                                        echo $this->Html->link($val, "/?change_lang=$key");
+                                        echo $this->Html->link($val,
+                                                               ['controller' => 'lang', 'action' => 'change', $key]);
                                         ?></li>
                                 <? endforeach; ?>
                             </ul>
