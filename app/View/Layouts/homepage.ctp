@@ -169,10 +169,11 @@
                         </li>
                         <li class="dropdown"><a data-toggle="dropdown"
                                                 class="dropdown-toggle" href="#"><?= __d('global', 'Language') ?>
-                                <b
-                                    class="caret"></b></a>
+                                <strong
+                                    class="caret"></strong></a>
                             <ul class="dropdown-menu">
-                                <? foreach ($lang_list as $key => $val) : ?>
+                                <? /** @var $lang_list */
+                                foreach ($lang_list as $key => $val) : ?>
                                     <li><?
                                         echo $this->Html->link($val, "/?change_lang=$key");
                                         ?></li>
