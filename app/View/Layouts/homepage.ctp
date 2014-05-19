@@ -168,7 +168,7 @@
                             ?>
                         </li>
                         <li class="dropdown"><a data-toggle="dropdown"
-                                                class="dropdown-toggle" href="#"><?= __d('global', 'Language') ?>
+                                                class="dropdown-toggle" href="#"><?= __d('gl', 'Language') ?>
                                 <strong
                                     class="caret"></strong></a>
                             <ul class="dropdown-menu">
@@ -217,7 +217,7 @@
                                               'http://blog.goalous.com/') ?></li>
                         <li class=""><?=
                             $this->Html
-                                ->link(__d('usr', 'Privacy Policy'),
+                                ->link(__d('gl', 'Privacy Policy'),
                                        array(
                                            'controller' => 'pages',
                                            'action'     => 'pp'
@@ -225,7 +225,7 @@
                             ?></li>
                         <li class=""><?=
                             $this->Html
-                                ->link(__d('usr', 'Terms of Service'),
+                                ->link(__d('gl', 'Terms of Service'),
                                        array(
                                            'controller' => 'pages',
                                            'action'     => 'tos'

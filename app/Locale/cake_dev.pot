@@ -1,0 +1,56 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-05-19 18:32+0900\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Utility/Debugger.php:642
+msgid "Invalid Debugger output format."
+msgstr ""
+
+#: Utility/Debugger.php:864
+msgid "Please change the value of 'Security.salt' in app/Config/core.php to a salt value specific to your application"
+msgstr ""
+
+#: Utility/Debugger.php:870
+msgid "Please change the value of 'Security.cipherSeed' in app/Config/core.php to a numeric (digits only) seed value specific to your application"
+msgstr ""
+
+#: View/Errors/fatal_error.ctp:17
+msgid "Fatal Error"
+msgstr ""
+
+#: View/Errors/fatal_error.ctp:19
+msgid "Error"
+msgstr ""
+
+#: View/Errors/fatal_error.ctp:24
+msgid "File"
+msgstr ""
+
+#: View/Errors/fatal_error.ctp:29
+msgid "Notice"
+msgstr ""
+
+#: View/Errors/fatal_error.ctp:31
+msgid "If you want to customize this error message, create %s"
+msgstr ""
+
+#: View/Layouts/error.ctp:9
+msgid "CakePHP: the rapid development php framework"
+msgstr ""
+
+#: webroot/test.php:88
+msgid "Debug setting does not allow access to this URL."
+msgstr ""
+

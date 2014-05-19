@@ -1,0 +1,106 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-05-19 18:32+0900\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Model/Badge.php:25
+#: Model/Image.php:28
+#: Model/User.php:40
+msgid "選択してください"
+msgstr ""
+
+#: Model/Badge.php:26
+msgid "賞賛"
+msgstr ""
+
+#: Model/Badge.php:27
+msgid "スキル"
+msgstr ""
+
+#: Model/Image.php:29
+msgid "ユーザロゴ画像"
+msgstr ""
+
+#: Model/Image.php:30
+msgid "ゴール画像"
+msgstr ""
+
+#: Model/Image.php:31
+msgid "バッジ画像"
+msgstr ""
+
+#: Model/Image.php:32
+msgid "投稿画像"
+msgstr ""
+
+#: Model/Notification.php:29
+msgid "ゴールの通知"
+msgstr ""
+
+#: Model/Notification.php:30
+msgid "投稿の通知"
+msgstr ""
+
+#: Model/OauthToken.php:23
+msgid "Facebook"
+msgstr ""
+
+#: Model/OauthToken.php:24
+msgid "Google"
+msgstr ""
+
+#: Model/Team.php:39
+msgid "フリー"
+msgstr ""
+
+#: Model/Team.php:40
+msgid "プロ"
+msgstr ""
+
+#: Model/Thread.php:29
+msgid "ゴール作成"
+msgstr ""
+
+#: Model/Thread.php:30
+msgid "フィードバック"
+msgstr ""
+
+#: Model/Thread.php:49
+msgid "オープン"
+msgstr ""
+
+#: Model/Thread.php:50
+msgid "クローズ"
+msgstr ""
+
+#: Model/User.php:41
+msgid "男性"
+msgstr ""
+
+#: Model/User.php:42
+msgid "女性"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:171
+msgid "Language"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:220
+msgid "Privacy Policy"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:228
+msgid "Terms of Service"
+msgstr ""
+
