@@ -1,0 +1,241 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-07-03 16:54+0000\n"
+"PO-Revision-Date: 2013-07-04 01:56+0900\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 1.5.5\n"
+
+#: View/Layouts/homepage.ctp:75
+msgid "Home"
+msgstr "ホーム"
+
+#: View/Layouts/homepage.ctp:77;131 View/Pages/features.ctp:6
+#: View/Pages/home.ctp:172
+msgid "Features"
+msgstr "機能"
+
+#: View/Layouts/homepage.ctp:83;137
+msgid "Blog"
+msgstr "ブログ"
+
+#: View/Layouts/homepage.ctp:85
+msgid "Sign UP"
+msgstr "サインアップ"
+
+#: View/Layouts/homepage.ctp:96;139
+msgid "Sign IN"
+msgstr "サインイン"
+
+#: View/Pages/features.ctp:30
+msgid "Set up a goal"
+msgstr "ゴールを作成する"
+
+#: View/Pages/features.ctp:38
+msgid ""
+"Understanding always comes after a goal is set. If you plan on going somewhere, "
+"you first need to set a destination, or you will just wander around. So, set a "
+"goal before you start working on it."
+msgstr ""
+"ゴールがあって初めて認識が生まれます。どこかへたどり着きたいならば、まず最初"
+"にゴールがなければ行くあてなくさまようのと同じです。したがって、ゴールの設定"
+"は行動する前に必要なことなのです。"
+
+#: View/Pages/features.ctp:43
+msgid ""
+"Also, goals must be clear and ambitious. Your goal should be attainable, concrete, "
+"measurable, challenging, and have a reasonable deadline.  When setting a goal, "
+"remember to be honest with your wish. Do not think about \"Have-To's\", think "
+"about \"Want-To's\". You are setting the goal for yourself, and your team. "
+"You won't be motivated if you are feeling forced or unconfident."
+msgstr ""
+"ゴールは明確で、かつ野心的でなければなりません。それは次の要素を含むでしょ"
+"う。「実現性」、「具体性」、「期限」、「測定可能性」、そして「チャレンジ性」"
+"です。また、これらを自らの願望から「本音」で引き出すことが重要です。「～しな"
+"ければならない」というより、「～したい」です。それは自分のためであり、あなた"
+"のチームのためなのです。やらされている目標では全く力が入らないことでしょう。"
+
+#: View/Pages/features.ctp:48
+msgid ""
+"In addition, using Goalous, you can designate multiple lists to reach your goal. "
+"In order to accurately determine your accomplishments, you need to set a "
+"measurable value for each list."
+msgstr ""
+"また、Goalousでは、複数の結果測定項目を登録することができます。達成の基準値"
+"は、適正な達成判断をするために全て数値で設定します。"
+
+#: View/Pages/features.ctp:68
+msgid "Make it open"
+msgstr "オープン化する"
+
+#: View/Pages/features.ctp:76
+msgid ""
+"Every goal you set up on Goalous will be visible to every member of your team. "
+"They will know your goal, and all of your progress. By making it open, you will "
+"gain more information than if you do it by yourself. It gives you a better "
+"understanding of your current situation, and the confidence to make the "
+"right decision."
+msgstr ""
+"作成されたゴールは、チームのメンバー全てにオープンになります。ゴールの内容か"
+"ら日々の活動記録まで全てを参照することができます。オープンであれば、チームの"
+"全員がより多くの情報が得られるので、より正確な現場認識とより合理的な判断をく"
+"だすことが期待できます。"
+
+#: View/Pages/features.ctp:81
+msgid ""
+"Feeling reluctant to share your goal with others? That's the same as you are "
+"not willing to work with your team members to achieve something. If you belong "
+"to a group, why not corporate with others?  To plow ahead more efficiently, "
+"having a mutual aim is essential."
+msgstr ""
+"目標をオープンにすることに抵抗がありますか？それはあなたがチームで力を合わせ"
+"て目標達成したくないのと同じ意味です。もしも組織に属しているのならば、互いに"
+"協力し合わないほうが不自然ですね。より効率よく協力するには、共通のゴールを認"
+"識することが大切です。"
+
+#: View/Pages/features.ctp:114 View/Pages/home.ctp:298
+msgid "Help each other"
+msgstr "お互いに助け合う"
+
+#: View/Pages/features.ctp:122
+msgid ""
+"On Goalous, you can collaborate with others towards a goal. Choose members "
+"you would like to work with, send an invitation message to them, and assign "
+"them roles. If they accept your request, they will become your collaborators."
+msgstr ""
+"Goalousでは、ゴールに向かってコラボレーションすることができます。共に助け合い"
+"たいメンバーをチームから選択して、役割とコメントで自分のゴールの協力者として"
+"招待することができます。相手が承認すれば、共にゴールを目指すコラボレーターと"
+"なります。"
+
+#: View/Pages/features.ctp:127
+msgid ""
+"In addition, the goal you invited others into will be shared with your "
+"collaborators. They can work on the goal and record their progress on Goalous."
+msgstr ""
+"また、コラボレーターは、招待されたゴールが自らのゴールとして成立します。した"
+"がって、ゴールの進捗を操作して前に進めることが可能です。"
+
+#: View/Pages/features.ctp:154 View/Pages/home.ctp:341
+msgid "Send compliments"
+msgstr "ほめる"
+
+#: View/Pages/features.ctp:161
+msgid ""
+"It is said that when someone is complimented, their brain becomes stimulated "
+"and shows better performance.Even you have probably experienced it before, right?"
+" On Goalous, you can send various kinds of emblems to each other to give them a "
+"pat on shoulder. You can even let all the team members know that you sent someone "
+"a compliment."
+msgstr ""
+"ヒトは他人からほめられると、脳が刺激を受けてより力が入るといわれております。"
+"あなたの経験でもそのことがわかるでしょう？Goalousでは、様々な種類のバッジを贈"
+"ることを通して、お互いにほめ合うことができます。ほめたことをチームメンバー全"
+"員に知らせることも可能です。"
+
+#: View/Pages/features.ctp:166
+msgid "Those small \"thank you\" s can make a big impact on one's motivation."
+msgstr ""
+"そんな小さな「ありがとう」が、モチベーションに大きく関わっているのです。"
+
+#: View/Pages/features.ctp:284 View/Pages/home.ctp:709
+msgid "Collaborative achievement goal tool"
+msgstr "みんなで一緒にゴール達成を目指そう！そんな世界をみんなで作ろうよ！"
+
+#: View/Pages/features.ctp:290 View/Pages/home.ctp:715
+msgid "Goalous"
+msgstr ""
+
+#: View/Pages/features.ctp:293 View/Pages/home.ctp:718
+msgid ""
+"Goalous is a tool that all members of a team are able to action in high "
+"motivated toward the achievement of self goals.Because the members create "
+"public goals in a team,they collaborate each other and get praise to your "
+"actions."
+msgstr ""
+"Goalousはコラボレーション型目標達成ツールです。チームのメンバー全員が高いモチ"
+"ベーションを持ってゴール達成へのアクションを起こすことができます。"
+
+#: View/Pages/home.ctp:25
+msgid "Registered users : %s"
+msgstr "登録者数 : %s人"
+
+#: View/Pages/home.ctp:36
+msgid "Let's start Goalous!"
+msgstr "Goalousをはじめよう！"
+
+#: View/Pages/home.ctp:53
+msgid "Sign up with facebook"
+msgstr "Facebookでサインアップする"
+
+#: View/Pages/home.ctp:67
+msgid "Sign up with google"
+msgstr "Googleでサインアップする"
+
+#: View/Pages/home.ctp:72
+msgid "here"
+msgstr "ここ"
+
+#: View/Pages/home.ctp:78
+msgid "You can also sign up with your email address. Click %s to start."
+msgstr "Eメールでサインアップできます。%sをクリックしてください。"
+
+#: View/Pages/home.ctp:212
+msgid "Set a goal"
+msgstr "ゴールを作成する"
+
+#: View/Pages/home.ctp:216
+msgid ""
+"Create a goal by establishing its title, deadline, challenging point, benefits, "
+"lists, and overall image."
+msgstr ""
+"ゴールの名前、期限、チャレンジポイント、測定可能な達成基準、イメージ画像を設定"
+"してゴールを作成します。"
+
+#: View/Pages/home.ctp:255
+msgid "Make it open"
+msgstr "オープン化する"
+
+#: View/Pages/home.ctp:259
+msgid ""
+"Let team members and other co-workers know of your ambition, collaborators, "
+"and daily progress."
+msgstr ""
+"作成されたゴールの内容や協力者、そして日々のアクティビティがチームのメンバー"
+"全員に公開されます。"
+
+#: View/Pages/home.ctp:302
+msgid ""
+"Work towards your goal with your collaborators. "
+"You don't need to struggle alone anymore."
+msgstr ""
+"ゴール達成へ向かって協力者と助け合いながら進みます。もう、自分一人だけで苦し"
+"む必要はないのです。"
+
+#: View/Pages/home.ctp:345
+msgid ""
+"Getting a compliment is the best treat for your brain. "
+"Best of all, complimenting one another is free!"
+msgstr ""
+"他人にほめられることは、脳にとってたまらないご馳走です。しかも、ほめるのはタ"
+"ダですから。"
+
+#~ msgid "%s users are using."
+#~ msgstr "現在の登録者数は%s人です。"
+
+#~ msgid "Goalous Workshop!"
+#~ msgstr "Goalousワークショップ!"
+
+#~ msgid "Register now"
+#~ msgstr "お申込はコチラ"
+
+#~ msgid "@Tokyo International Forum"
+#~ msgstr "＠東京国際フォーラム"
