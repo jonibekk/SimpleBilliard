@@ -304,7 +304,6 @@
 <? $this->end() ?>
 
 <?
-$this->set('title_for_layout', __d('home', "Goalous"));
 $this->Html
     ->meta('description',
            __d('home',
