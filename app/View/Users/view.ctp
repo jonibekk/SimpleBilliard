@@ -1,66 +1,67 @@
-<?php
+<?
 /**
  * @var $this View
  * @var $user array
  */
 ?>
 <div class="users view">
-    <h2><?php echo __('User'); ?></h2>
+    <h2><?= __('User'); ?></h2>
     <dl>
-        <dt><?php echo __('Id'); ?></dt>
+        <dt><?= __('Id'); ?></dt>
         <dd>
-            <?php echo h($user['User']['id']); ?>
+            <?= h($user['User']['id']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('Password'); ?></dt>
+        <dt><?= __('Password'); ?></dt>
         <dd>
-            <?php echo h($user['User']['password']); ?>
+            <?= h($user['User']['password']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('Email'); ?></dt>
+        <dt><?= __('Email'); ?></dt>
         <dd>
-            <?php echo h($user['User']['email']); ?>
+            <?= h($user['User']['email']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('Local First Name'); ?></dt>
+        <dt><?= __('Local First Name'); ?></dt>
         <dd>
-            <?php echo h($user['User']['local_first_name']); ?>
+            <?= h($user['User']['local_first_name']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('Local Last Name'); ?></dt>
+        <dt><?= __('Local Last Name'); ?></dt>
         <dd>
-            <?php echo h($user['User']['local_last_name']); ?>
+            <?= h($user['User']['local_last_name']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('First Name'); ?></dt>
+        <dt><?= __('First Name'); ?></dt>
         <dd>
-            <?php echo h($user['User']['first_name']); ?>
+            <?= h($user['User']['first_name']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('Last Name'); ?></dt>
+        <dt><?= __('Last Name'); ?></dt>
         <dd>
-            <?php echo h($user['User']['last_name']); ?>
+            <?= h($user['User']['last_name']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('Created'); ?></dt>
+        <dt><?= __('Created'); ?></dt>
         <dd>
-            <?php echo h($user['User']['created']); ?>
+            <?= h($user['User']['created']); ?>
             &nbsp;
         </dd>
-        <dt><?php echo __('Modified'); ?></dt>
+        <dt><?= __('Modified'); ?></dt>
         <dd>
-            <?php echo h($user['User']['modified']); ?>
+            <?= h($user['User']['modified']); ?>
             &nbsp;
         </dd>
     </dl>
 </div>
 <div class="actions">
-    <h3><?php echo __('Actions'); ?></h3>
+    <h3><?= __('Actions'); ?></h3>
     <ul>
-        <li><?php echo $this->Html->link(__('Edit User'), ['action' => 'edit', $user['User']['id']]); ?> </li>
-        <li><?php echo $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user['User']['id']], [],
-                                             __('Are you sure you want to delete # %s?', $user['User']['id'])); ?> </li>
-        <li><?php echo $this->Html->link(__('List Users'), ['action' => 'index']); ?> </li>
-        <li><?php echo $this->Html->link(__('New User'), ['action' => 'add']); ?> </li>
+        <li><?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user['User']['id']]); ?> </li>
+        <li><?=
+            $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user['User']['id']], [],
+                                  __('Are you sure you want to delete # %s?', $user['User']['id'])); ?> </li>
+        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']); ?> </li>
+        <li><?= $this->Html->link(__('New User'), ['action' => 'add']); ?> </li>
     </ul>
 </div>

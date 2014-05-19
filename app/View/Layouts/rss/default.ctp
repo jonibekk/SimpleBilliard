@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @var $title_for_layout string
  */

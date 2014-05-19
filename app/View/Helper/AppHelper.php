@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * Application level View Helper
  *

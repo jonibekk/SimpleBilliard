@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * Created by PhpStorm.
  * User: bigplants
@@ -7,20 +7,20 @@
  * @var $this View
  **/
 ?>
-<?php if(GOOGLE_ANALYTICS_ID):?>
-<!-- start Google Analytics -->
-<script>
+<? if (GOOGLE_ANALYTICS_ID): ?>
+    <!-- start Google Analytics -->
+    <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', '<?php echo GOOGLE_ANALYTICS_ID?>', 'goalous.com');
+    ga('create', '<?= GOOGLE_ANALYTICS_ID?>', 'goalous.com');
     ga('send', 'pageview');
 
 </script>
 <!-- end Google Analytics -->
-<?php endif;?>
+<? endif; ?>
 <!-- start VWO and Mixpanel Integration Code-->
 <script type="text/javascript">
     var _vis_opt_queue = window._vis_opt_queue || [], _vis_counter = 0, mixpanel = window.mixpanel || [];
@@ -49,11 +49,11 @@
     });
 </script>
 <!-- end VWO and Mixpanel Integration Code-->
-<?php if(VWO_ID):?>
-<!-- Start Visual Website Optimizer Asynchronous Code -->
-<script type='text/javascript'>
+<? if (VWO_ID): ?>
+    <!-- Start Visual Website Optimizer Asynchronous Code -->
+    <script type='text/javascript'>
     var _vwo_code=(function(){
-        var account_id=<?php echo VWO_ID?>,
+        var account_id =<?= VWO_ID?>,
             settings_tolerance=2000,
             library_tolerance=2500,
             use_existing_jquery=false,
@@ -61,21 +61,22 @@
             f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
 </script>
 <!-- End Visual Website Optimizer Asynchronous Code -->
-<?php endif;?>
-<?php if(MIXPANEL_TOKEN):?>
-<!-- start Mixpanel -->
-<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");
+<? endif; ?>
+<? if (MIXPANEL_TOKEN): ?>
+    <!-- start Mixpanel -->
+    <script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");
         for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
-    mixpanel.init("<?php echo MIXPANEL_TOKEN?>");</script>
-<!-- end Mixpanel -->
-<!-- start Uservoice -->
+        mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
+    <!-- end Mixpanel -->
+    <!-- start Uservoice -->
 <script type="text/javascript">
 
     UserVoice=window.UserVoice||[];(function(){
         var uv=document.createElement('script');uv.type='text/javascript';
-        uv.async=true;uv.src='//widget.uservoice.com/<?php echo USERVOICE_API_KEY?>.js';
+        uv.async = true;
+        uv.src = '//widget.uservoice.com/<?= USERVOICE_API_KEY?>.js';
         var s=document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(uv,s)})();
 </script>
 <!-- end Uservoice -->
-<?php endif;?>
+<? endif; ?>

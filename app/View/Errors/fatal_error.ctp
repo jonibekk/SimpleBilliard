@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -14,19 +14,20 @@
  */
 
 ?>
-<h2><?php echo __d('cake_dev', 'Fatal Error'); ?></h2>
+<h2><?= __d('cake_dev', 'Fatal Error'); ?></h2>
 <p class="error">
-    <strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
-    <?php /** @noinspection PhpUndefinedVariableInspection */
+    <strong><?= __d('cake_dev', 'Error'); ?>: </strong>
+    <? /** @noinspection PhpUndefinedVariableInspection */
     echo h($error->getMessage()); ?>
     <br>
 
-    <strong><?php echo __d('cake_dev', 'File'); ?>: </strong>
-    <?php echo h($error->getFile()) . ":" . h($error->getLine()); ?>
+    <strong><?= __d('cake_dev', 'File'); ?>: </strong>
+    <?= h($error->getFile()) . ":" . h($error->getLine()); ?>
     <br>
 </p>
 <p class="notice">
-    <strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
-    <?php echo __d('cake_dev', 'If you want to customize this error message, create %s',
-                   APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'fatal_error.ctp'); ?>
+    <strong><?= __d('cake_dev', 'Notice'); ?>: </strong>
+    <?=
+    __d('cake_dev', 'If you want to customize this error message, create %s',
+        APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'fatal_error.ctp'); ?>
 </p>
