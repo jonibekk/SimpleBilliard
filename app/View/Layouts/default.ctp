@@ -22,8 +22,8 @@
     echo $this->Html->meta('icon');
     //echo $this->Html->css('bootstrap.min.css', array('media' => 'screen'));
     echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
+    echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('style', array('media' => 'screen'));
-    echo $this->Html->css('font-awesome.min.css');
     echo $this->fetch('css');
     echo $this->fetch('meta');
     ?>
@@ -148,9 +148,10 @@
 
 </div>
 <?
-echo $this->fetch('script');
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
+echo $this->Html->script('jquery.validate.min');
+echo $this->fetch('script');
 //環境を識別できるようにリボンを表示
 switch (ENV_NAME) {
     case 'stg':
