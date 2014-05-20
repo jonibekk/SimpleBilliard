@@ -16,9 +16,9 @@ App::uses('AppController', 'Controller');
  *
  * @package       app.Controller
  * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
+ * @property User $User
+ * @noinspection  PhpInconsistentReturnPointsInspection
  */
-
-/** @noinspection PhpInconsistentReturnPointsInspection */
 class PagesController extends AppController
 {
 
@@ -27,7 +27,7 @@ class PagesController extends AppController
      *
      * @var array
      */
-    public $uses = array();
+    public $uses = ['User'];
 
     /**
      * Displays a view
@@ -58,14 +58,66 @@ class PagesController extends AppController
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
-        try {
-            $this->render(implode('/', $path));
-        } catch (MissingViewException $e) {
-            if (Configure::read('debug')) {
-                throw $e;
+        //ログインしている場合とそうでない場合の切り分け
+        if ($this->Auth->user()) {
+            if ($path[0] == 'home') {
+                //homeの場合
+                if ($this->Session->read('completed_today_alist')) {
+                    //全てのリストが完了している場合はモーダル表示
+                    $this->set('completed_today_alist', true);
+                    $this->Session->delete('completed_today_alist');
+                }
+
+                $this->render('logged_in_home');
             }
-            throw new NotFoundException();
+            else {
+                $this->render(implode('/', $path));
+            }
+        }
+        else {
+            //ログインしていない場合のヘッダー
+            //$this -> layout = 'not_logged_in';
+            $this->layout = 'homepage';
+            //現在の登録ユーザ数
+            $user_count = $this->User->getAllUsersCount();
+            $this->set(compact('user_count'));
+            if ($path[0] == 'logged_in_home') {
+                $this->render('home');
+            }
+            else {
+                $this->render(implode('/', $path));
+            }
         }
         return $this->render(implode('/', $path));
+    }
+
+    public function beforeFilter()
+    {
+        $this->_setLanguage();
+        //切り換え可能な言語をセット
+        $this->set('lang_list', $this->_getPageLanguageList());
+        parent::beforeFilter();
+    }
+
+    public function _setLanguage()
+    {
+        // パラメータから言語をセット
+        $this->set('top_lang', null);
+        if (isset($this->request->params['lang'])) {
+            $this->set('top_lang', $this->request->params['lang']);
+            Configure::write('Config.language', $this->request->params['lang']);
+        }
+    }
+
+    /**
+     * トップ用言語リスト
+     */
+    public function _getPageLanguageList()
+    {
+        $lang_list = [
+            'ja' => __d('home', "Japanese"),
+            'en' => __d('home', "English"),
+        ];
+        return $lang_list;
     }
 }

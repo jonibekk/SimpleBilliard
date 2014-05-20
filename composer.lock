@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "3dab47e87546ff593b80c736d676c8c6",
+    "hash": "ae6c7ead014dfc316a460d35f890af4f",
     "packages": [
         {
             "name": "cakedc/migrations",
@@ -41,6 +41,43 @@
                 "migrations"
             ],
             "time": "2013-10-21 10:45:27"
+        },
+        {
+            "name": "cakedc/utils",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CakeDC/utils.git",
+                "reference": "ea48ed95b62517ddb046a46c17638726242121da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CakeDC/utils/zipball/ea48ed95b62517ddb046a46c17638726242121da",
+                "reference": "ea48ed95b62517ddb046a46c17638726242121da",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "*"
+            },
+            "type": "cakephp-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cake Development Corporation",
+                    "email": "team@cakedc.com",
+                    "homepage": "http://cakedc.com"
+                }
+            ],
+            "description": "Utils Plugin for CakePHP",
+            "homepage": "http://cakedc.com",
+            "keywords": [
+                "cakephp",
+                "utility"
+            ],
+            "time": "2014-03-30 21:42:43"
         },
         {
             "name": "cakephp/debug_kit",
@@ -132,7 +169,7 @@
                 {
                     "name": "Kyle Robinson Young",
                     "email": "kyle@dontkry.com",
-                    "homepage": "https://github.com/shama",
+                    "homepage": "http://dontkry.com",
                     "role": "Developer"
                 }
             ],
@@ -313,10 +350,10 @@
         },
         {
             "name": "pear-pear.cakephp.org/CakePHP",
-            "version": "2.5.0",
+            "version": "2.5.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.cakephp.org/get/CakePHP-2.5.0.tgz",
+                "url": "http://pear.cakephp.org/get/CakePHP-2.5.1.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -324,7 +361,7 @@
                 "php": ">=5.2.8.0"
             },
             "replace": {
-                "pear-cakephp/cakephp": "== 2.5.0.0"
+                "pear-cakephp/cakephp": "== 2.5.1.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -1175,6 +1212,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "cakedc/utils": 20,
         "satooshi/php-coveralls": 20
     },
     "platform": [

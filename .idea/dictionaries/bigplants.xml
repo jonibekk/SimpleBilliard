@@ -2,14 +2,28 @@
   <dictionary name="bigplants">
     <words>
       <w>cakedc</w>
+      <w>cond</w>
+      <w>daikihirakata</w>
+      <w>fieldset</w>
       <w>fuga</w>
       <w>glyphicon</w>
       <w>goalous</w>
+      <w>googlecode</w>
+      <w>hdot</w>
       <w>hoge</w>
       <w>hogehoge</w>
+      <w>modernizr</w>
+      <w>pagename</w>
       <w>paginator</w>
+      <w>plax</w>
+      <w>precomposed</w>
+      <w>rewriter</w>
       <w>romanize</w>
+      <w>signin</w>
+      <w>signup</w>
+      <w>slitslider</w>
       <w>slywalker</w>
+      <w>subnav</w>
       <w>uservoice</w>
       <w>wercker</w>
     </words>

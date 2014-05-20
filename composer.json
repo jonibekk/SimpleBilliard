@@ -11,6 +11,7 @@
         "phpunit/phpunit": "3.7.*",
         "cakephp/debug_kit": "2.2.*",
         "cakedc/migrations": "2.*",
+        "cakedc/utils": "dev-master",
         "slywalker/boost_cake": "*",
         "satooshi/php-coveralls": "dev-master",
         "mixpanel/mixpanel-php": "2.*"

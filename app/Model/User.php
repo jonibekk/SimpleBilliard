@@ -31,6 +31,7 @@ class User extends AppModel
     const TYPE_GENDER_MALE = 1;
     const TYPE_GENDER_FEMALE = 2;
     static public $TYPE_GENDER = [null => "", self::TYPE_GENDER_MALE => "", self::TYPE_GENDER_FEMALE => ""];
+
     /**
      * 性別タイプの名前をセット
      */
@@ -95,6 +96,13 @@ class User extends AppModel
         'TeamMember',
     ];
 
+    /**
+     * ローカル名を使わない言語のリスト
+     */
+    public $langCodeOfNotLocalName = [
+        'eng',
+    ];
+
     function __construct()
     {
         parent::__construct();
@@ -113,4 +121,33 @@ class User extends AppModel
         }
         return $this->find('first', $id);
     }
+
+    /**
+     * Goalousの全ての有効なユーザ数
+     *
+     * @return int
+     */
+    function getAllUsersCount()
+    {
+        $options = array(
+            'conditions' => array(
+                'active_flg' => true
+            )
+        );
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
+    /**
+     * ローカル名を利用しないか判定
+     *
+     * @param $lung
+     *
+     * @return bool
+     */
+    public function isNotUseLocalName($lung)
+    {
+        return in_array($lung, $this->langCodeOfNotLocalName);
+    }
+
 }
