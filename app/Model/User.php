@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * User Model
@@ -43,6 +44,20 @@ class User extends AppModel
     }
 
     /**
+     * ユーザ名の表記が姓名の順である言語のリスト
+     */
+    public $langCodeOfLastFirst = [
+        //日本
+        'jpn',
+        //韓国
+        'kor',
+        //中国
+        'chi',
+        //ハンガリー
+        'hun',
+    ];
+
+    /**
      * Validation rules
      *
      * @var array
@@ -60,6 +75,8 @@ class User extends AppModel
         'romanize_flg'      => ['boolean' => ['rule' => ['boolean'],],],
         'update_email_flg'  => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
+        'password'         => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'password_confirm' => ['notEmpty' => ['rule' => ['notEmpty'],],],
     ];
 
     /**

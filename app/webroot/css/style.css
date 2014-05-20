@@ -16,3 +16,8 @@ footer p {
     clear: left;
     margin-bottom: 0;
 }
+
+.required label:after {
+    color: #E00;
+    content: " *";
+}

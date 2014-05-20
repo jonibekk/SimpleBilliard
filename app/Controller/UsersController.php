@@ -44,24 +44,24 @@ class UsersController extends AppController
     }
 
     /**
-     * add method
+     * User register action
      *
-     * @return mixed
+     * @return void
      */
     public function add()
     {
-        if ($this->request->is('post')) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved.'));
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect(['action' => 'index']);
-            }
-            else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-            }
+        //ログイン済の場合はトップへ
+        if ($this->Auth->user()) {
+            $this->redirect('/');
         }
-        return $this->render();
+
+        if (!empty($this->request->data)) {
+
+        }
+        //姓名の並び順をセット
+        $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+        $this->set(compact('last_first'));
+
     }
 
     /**
