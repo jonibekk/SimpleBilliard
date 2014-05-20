@@ -13,6 +13,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @var $title_for_layout
  * @var $this View
+ * @var $top_lang
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -117,54 +118,55 @@
                    class="btn btn-navbar"> <span><i class="icon-reorder"></i></span>
                 </a> <a class="btn btn-navbar"
                         href="<?=
-                        $this->Html
-                            ->url(
-                            array(
-                                'controller' => 'users',
-                                'action'     => 'login'
-                            ))
+                        $this->Html->url(
+                                   [
+                                       'controller' => 'users',
+                                       'action'     => 'login'
+                                   ])
                         ?>"><i
                         class="icon-signin"></i></a> <a class="brand"
-                                                        href="<?= $this->Html->url('/') ?>"><span><i
+                                                        href="<?= ($top_lang) ? $this->Html->url('/' . $top_lang . "/") : $this->Html->url('/') ?>"><span><i
                             class="icon-stop"></i></span> <?= $title_for_layout ?></a>
 
                 <div id="top-navigation"
                      class="nav-collapse subnav-collapse collapse ">
                     <ul class="nav pull-right">
-                        <li class="active"><?= $this->Html->link(__d('home', 'Home'), '/') ?></li>
+                        <li class="active"><?=
+                            $this->Html->link(__d('home', 'Home'),
+                                              $top_lang ? '/' . $top_lang . "/" : '/') ?></li>
                         <li class=""><?=
-                            $this->Html
-                                ->link(__d('home', 'Features'),
-                                       array(
-                                           'controller' => 'pages',
-                                           'action'     => 'features'
-                                       ))
+                            $this->Html->link(__d('home', 'Features'),
+                                              [
+                                                  'controller' => 'pages',
+                                                  'action'     => 'display',
+                                                  'pagename'   => 'features',
+                                                  'lang'       => $top_lang,
+                                              ])
                             ?></li>
-                        <li class=""><?=
-                            $this->Html->link(__d('home', 'Blog'),
-                                              'http://blog.goalous.com/') ?></li>
-                        <li class="top-account visible-desktop"><?=
-                            $this->Html
-                                ->link(__d('home', 'Sign UP'),
-                                       array(
-                                           'controller' => 'users',
-                                           'action'     => 'add'
-                                       ),
-                                       array(
-                                           'class' => 'top-sign-up'
-                                       ))
+                        <li class=""><?= $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/') ?></li>
+                        <li class="top-account visible-desktop">
+                            <?=
+                            $this->Html->link(__d('home', 'Sign UP'),
+                                              [
+                                                  'controller' => 'users',
+                                                  'action'     => 'add'
+                                              ],
+                                              [
+                                                  'class' => 'top-sign-up'
+                                              ])
                             ?>
                         </li>
-                        <li class="top-account visible-desktop"><?=
+                        <li class="top-account visible-desktop">
+                            <?=
                             $this->Html
                                 ->link(__d('home', 'Sign IN'),
-                                       array(
+                                       [
                                            'controller' => 'users',
                                            'action'     => 'login'
-                                       ),
-                                       array(
+                                       ],
+                                       [
                                            'class' => 'top-sign-in'
-                                       ))
+                                       ])
                             ?>
                         </li>
                         <li class="dropdown"><a data-toggle="dropdown"
@@ -174,10 +176,7 @@
                             <ul class="dropdown-menu">
                                 <? /** @var $lang_list */
                                 foreach ($lang_list as $key => $val) : ?>
-                                    <li><?
-                                        echo $this->Html->link($val,
-                                                               ['controller' => 'lang', 'action' => 'change', $key]);
-                                        ?></li>
+                                    <li><?= $this->Html->link($val, '/' . $key . '/'); ?></li>
                                 <? endforeach; ?>
                             </ul>
                     </ul>
@@ -206,39 +205,41 @@
                 <div class="span6">
                     <ul class="footer-links">
                         <li class=""><?=
-                            $this->Html
-                                ->link(__d('home', 'Features'),
-                                       array(
-                                           'controller' => 'pages',
-                                           'action'     => 'features'
-                                       ))
+                            $this->Html->link(__d('home', 'Features'),
+                                              [
+                                                  'controller' => 'pages',
+                                                  'action'     => 'display',
+                                                  'pagename'   => 'features',
+                                                  'lang'       => $top_lang,
+                                              ])
                             ?></li>
                         <li class=""><?=
                             $this->Html->link(__d('home', 'Blog'),
                                               'http://blog.goalous.com/') ?></li>
                         <li class=""><?=
-                            $this->Html
-                                ->link(__d('gl', 'Privacy Policy'),
-                                       array(
-                                           'controller' => 'pages',
-                                           'action'     => 'pp'
-                                       ))
+                            $this->Html->link(__d('gl', 'Privacy Policy'),
+                                              [
+                                                  'controller' => 'pages',
+                                                  'action'     => 'display',
+                                                  'pagename'   => 'pp',
+                                                  'lang'       => $top_lang,
+                                              ])
                             ?></li>
                         <li class=""><?=
-                            $this->Html
-                                ->link(__d('gl', 'Terms of Service'),
-                                       array(
-                                           'controller' => 'pages',
-                                           'action'     => 'tos'
-                                       ))
+                            $this->Html->link(__d('gl', 'Terms of Service'),
+                                              [
+                                                  'controller' => 'pages',
+                                                  'action'     => 'display',
+                                                  'pagename'   => 'tos',
+                                                  'lang'       => $top_lang,
+                                              ])
                             ?></li>
                         <li><?=
-                            $this->Html
-                                ->link(__d('home', 'Sign IN'),
-                                       array(
-                                           'controller' => 'users',
-                                           'action'     => 'login'
-                                       ))
+                            $this->Html->link(__d('home', 'Sign IN'),
+                                              [
+                                                  'controller' => 'users',
+                                                  'action'     => 'login'
+                                              ])
                             ?>
                         </li>
                     </ul>

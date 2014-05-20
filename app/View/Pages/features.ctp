@@ -51,7 +51,7 @@
                         <p>
                             <?=
                             __d('home',
-                                'In addition, using Goalous, you can designate multiple alists to reach your goal. In order to accurately determine your accomplishments, you need to set a measurable value for each list.')
+                                'In addition, using Goalous, you can designate multiple lists to reach your goal. In order to accurately determine your accomplishments, you need to set a measurable value for each list.')
                             ?>
                         </p>
                     </div>

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-05-19 18:32+0900\n"
+"POT-Creation-Date: 2014-05-20 14:14+0900\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,25 +14,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: View/Layouts/homepage.ctp:134
+#: Controller/PagesController.php:118
+msgid "Japanese"
+msgstr ""
+
+#: Controller/PagesController.php:119
+msgid "English"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:135
 msgid "Home"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:137;209
+#: View/Layouts/homepage.ctp:138;208
 #: View/Pages/features.ctp:6
 #: View/Pages/home.ctp:174
 msgid "Features"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:144;216
+#: View/Layouts/homepage.ctp:146;217
 msgid "Blog"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:148
+#: View/Layouts/homepage.ctp:149
 msgid "Sign UP"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:160;236
+#: View/Layouts/homepage.ctp:162;238
 msgid "Sign IN"
 msgstr ""
 
@@ -49,7 +57,7 @@ msgid "Also, goals must be clear and ambitious. Your goal should be attainable, 
 msgstr ""
 
 #: View/Pages/features.ctp:53
-msgid "In addition, using Goalous, you can designate multiple alists to reach your goal. In order to accurately determine your accomplishments, you need to set a measurable value for each list."
+msgid "In addition, using Goalous, you can designate multiple lists to reach your goal. In order to accurately determine your accomplishments, you need to set a measurable value for each list."
 msgstr ""
 
 #: View/Pages/features.ctp:73

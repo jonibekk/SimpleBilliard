@@ -93,49 +93,31 @@ class PagesController extends AppController
 
     public function beforeFilter()
     {
-        $this->_setPageLanguage();
+        $this->_setLanguage();
+        //切り換え可能な言語をセット
+        $this->set('lang_list', $this->_getPageLanguageList());
         parent::beforeFilter();
     }
 
-    /**
-     * Pagesのみの言語設定
-     */
-    public function _setPageLanguage()
+    public function _setLanguage()
     {
-        //言語切換えパラメータに対応
-        if (!$this->Auth->user()) {
-            /**
-             * TODO 本来はRouterで設定し、Viewの$this->linkも逆ルーティングで置き換えるやり方が正しいが、良い方法が見つからないのでリダイレクトで対応。Router設定に準拠。
-             */
-            //言語設定を取得
-            $cookie_lang = $this->Cookie->read('language');
-            $param_lang = (isset($this->request->params['lang'])) ? $this->request->params['lang'] : null;
-            //使用可能言語をフロントに渡す
-            $lang_list = $this->Lang->getAvailLangList();
-            if (array_key_exists($param_lang, $lang_list)) {
-                //$param_langが英語で$cookie_langが英語以外の場合はクッキーの言語にリダイレクト
-                if ($param_lang == "eng" && $cookie_lang != $param_lang) {
-                    //$cookie_langがセットされていなければ、現在のブラウザ設定を保存
-                    if (!$cookie_lang) {
-                        $this->Cookie->write('language', $this->Lang->getLanguage());
-                    }
-                    $params = $this->request->params;
-                    if ($params['pass'][0] == "home") {
-                        //ホームの場合
-                        $this->redirect("/" . $this->Cookie->read('language'));
-                    }
-                    else {
-                        //ホーム以外の場合
-                        $this->redirect("/" . $this->Cookie->read('language') . "/" . $params['controller'] . "/" . $params['pass'][0]);
-                    }
-                }
-                Configure::write('Config.language', $param_lang);
-            }
-            else {
-                //指定された言語が利用不可の場合はルートにリダイレクト
-                $this->redirect('/');
-            }
-            $this->set(compact('lang_list', 'lang'));
+        // パラメータから言語をセット
+        $this->set('top_lang', null);
+        if (isset($this->request->params['lang'])) {
+            $this->set('top_lang', $this->request->params['lang']);
+            Configure::write('Config.language', $this->request->params['lang']);
         }
+    }
+
+    /**
+     * トップ用言語リスト
+     */
+    public function _getPageLanguageList()
+    {
+        $lang_list = [
+            'ja' => __d('home', "Japanese"),
+            'en' => __d('home', "English"),
+        ];
+        return $lang_list;
     }
 }

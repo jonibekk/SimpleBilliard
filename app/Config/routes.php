@@ -1,7 +1,6 @@
 <?php
 /**
  * Routes configuration
- *
  * In this file, you set up routes to your controllers and their actions.
  * Routes are very important mechanism that allows you to freely connect
  * different URLs to chosen controllers and their actions (functions).
@@ -16,14 +15,16 @@
  * its action called 'display', and we pass a param to select the view file
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
-Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home', 'lang' => 'eng']);
+Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 /**
- * ...and connect the rest of 'Pages' controller's URLs.
+ * トップページの言語切り換えの為のルーティング設定。
+ * PagesControllerにのみ影響する。
  */
-Router::connect('/pages/*', ['controller' => 'pages', 'action' => 'display', 'lang' => 'eng']);
-//TODO 英語以外の利用可能な言語が増えた場合はここに追記する。
-Router::connect('/jpn', ['controller' => 'pages', 'action' => 'display', 'home', 'lang' => 'jpn']);
-Router::connect('/jpn/pages/*', ['controller' => 'pages', 'action' => 'display', 'lang' => 'jpn']);
+Router::connect('/:lang/', ['controller' => 'pages', 'action' => 'display', 'home'], ['lang' => 'ja|en']);
+Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'display'],
+                ['pagename' => 'features|pp|tos', 'pass' => ['pagename']]);
+Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'display'],
+                ['pagename' => 'features|pp|tos', 'lang' => 'ja|en', 'pass' => ['pagename']]);
 /**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.

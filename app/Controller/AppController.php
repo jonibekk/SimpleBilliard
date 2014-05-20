@@ -18,9 +18,9 @@ App::uses('Controller', 'Controller');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent $Lang
+ * @property LangComponent   $Lang
  * @property CookieComponent $Cookie
- * @property User          $User
+ * @property User            $User
  */
 class AppController extends Controller
 {
@@ -46,6 +46,11 @@ class AppController extends Controller
     public $uses = [
         'User',
     ];
+
+    /**
+     * @var null
+     */
+    public $top_lang = null;
 
     /**
      * Mixpanel
