@@ -90,3 +90,5 @@
         </div>
     </div>
 </div>
+<?= $this->element('modal_tos') ?>
+<?= $this->element('modal_privacy_policy') ?>
