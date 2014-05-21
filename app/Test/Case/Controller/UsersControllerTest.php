@@ -4,7 +4,7 @@ App::uses('UsersController', 'Controller');
 /**
  * UsersController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
- *
+
  */
 class UsersControllerTest extends ControllerTestCase
 {
@@ -43,7 +43,7 @@ class UsersControllerTest extends ControllerTestCase
     /**
      * testRegister method
      *
-*@return void
+     * @return void
      */
     public function testRegister()
     {

@@ -63,11 +63,11 @@ class User extends AppModel
      * @var array
      */
     public $validate = [
-        'first_name'       => [
+        'first_name'        => [
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
-        'last_name'        => [
+        'last_name'         => [
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
@@ -79,19 +79,19 @@ class User extends AppModel
         'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'auto_language_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'romanize_flg'      => ['boolean' => ['rule' => ['boolean'],],],
-        'update_email_flg' => [
+        'update_email_flg'  => [
             'boolean' => [
                 'rule'       => ['boolean',],
                 'allowEmpty' => true,
             ],
         ],
-        'agree_tos'        => [
+        'agree_tos'         => [
             'notBlankCheckbox' => [
                 'rule' => ['custom', '[1]'],
             ]
         ],
         'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
-        'password'         => [
+        'password'          => [
             'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
@@ -99,7 +99,7 @@ class User extends AppModel
                 'rule' => ['minLength', 8],
             ]
         ],
-        'password_confirm' => [
+        'password_confirm'  => [
             'notEmpty'          => [
                 'rule' => 'notEmpty',
             ],
@@ -154,19 +154,6 @@ class User extends AppModel
     {
         parent::__construct();
         $this->_setGenderTypeName();
-    }
-
-    /**
-     * @param $id
-     *
-     * @return array|null
-     */
-    function getUser($id)
-    {
-        if (!$id) {
-            return null;
-        }
-        return $this->find('first', $id);
     }
 
     /**
