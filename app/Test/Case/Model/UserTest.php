@@ -134,4 +134,11 @@ class UserTest extends CakeTestCase
              "[異常系]利用規約に同意は必須"
         );
     }
+
+    public function testGetAllUsersCount()
+    {
+        $res = $this->User->getAllUsersCount();
+        debug($res);
+
+    }
 }

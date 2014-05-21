@@ -2,13 +2,11 @@
 
 /**
  * UserFixture
-
  */
 
 /** @noinspection PhpUndefinedClassInspection */
 class UserFixture extends CakeTestFixture
 {
-
     /**
      * Fields
      *
@@ -76,8 +74,8 @@ class UserFixture extends CakeTestFixture
             'password_token'    => 'Lorem ipsum dolor sit amet',
             'password_modified' => '2014-05-22 02:28:04',
             'no_pass_flg'       => 1,
-            'profile_image_id'  => 'Lorem ipsum dolor sit amet',
-            'primary_email_id'  => 'Lorem ipsum dolor sit amet',
+            'profile_image_id' => '',
+            'primary_email_id' => '',
             'active_flg'        => 1,
             'last_login'        => '2014-05-22 02:28:04',
             'admin_flg'         => 1,
@@ -88,8 +86,8 @@ class UserFixture extends CakeTestFixture
             'auto_language_flg' => 1,
             'romanize_flg'      => 1,
             'update_email_flg'  => 1,
-            'del_flg'           => 1,
-            'deleted'           => '2014-05-22 02:28:04',
+            'del_flg'          => 0,
+            'deleted'          => '',
             'created'           => '2014-05-22 02:28:04',
             'modified'          => '2014-05-22 02:28:04'
         ),
