@@ -41,59 +41,14 @@ class UsersControllerTest extends ControllerTestCase
     );
 
     /**
-     * testIndex method
+     * testRegister method
      *
-     * @return void
+*@return void
      */
-    public function testIndex()
+    public function testRegister()
     {
-        $this->testAction('/users/index');
-        $this->assertTextContains('Users', $this->view);
+        $this->testAction('/users/register', ['return' => 'contents']);
+        $this->assertTextContains('新しいアカウントを作成', $this->view);
     }
-
-    /**
-     * testView method
-     *
-     * @return void
-     */
-    public function testView()
-    {
-    }
-
-    /**
-     * testAdd method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-    }
-
-    /**
-     * testEdit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-    }
-
-    /**
-     * testDelete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-    }
-
-    /**
-     * testPageLoadTest method
-     *
-     * @return void
-     */
-    public function testPageLoadTest()
-    {
-	}
 
 }
