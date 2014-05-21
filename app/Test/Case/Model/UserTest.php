@@ -4,7 +4,7 @@ App::uses('User', 'Model');
 /**
  * User Test Case
  *
- * @property mixed User
+ * @property User $User
  */
 class UserTest extends CakeTestCase
 {
@@ -63,18 +63,59 @@ class UserTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
-    {
-    }
+    public $baseData = [];
 
     /**
-     * testGetUser method
-     *
-     * @return void
+     * ユーザモデルのバリデーションチェックのテスト
      */
-    public function testGetUser()
+    public function testUserValidations()
     {
+        $this->assertTrue(
+             $this->getValidationRes(['first_name' => 'daiki']),
+             "[正常系]英名はアルファベットのみ"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['first_name' => '']),
+             "[異常系]英名は空を認めない"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['first_name' => 'だいき']),
+             "[異常系]英名はアルファベットのみ"
+        );
+        $this->assertTrue(
+             $this->getValidationRes(['last_name' => 'hirakata']),
+             "[正常系]英姓はアルファベットのみ"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['last_name' => '']),
+             "[異常系]英姓は空を認めない"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['last_name' => 'ひらかた']),
+             "[異常系]英姓はアルファベットのみ"
+        );
+        $this->assertTrue(
+             $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => 'goalous1234']),
+             "[正常系]パスワードは確認パスワードと一致"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
+             "[異常系]パスワードは確認パスワードと一致"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['password' => '',]),
+             "[異常系]パスワードは空を認めない"
+        );
     }
 
+    function getValidationRes($data = [])
+    {
+        if (empty($data)) {
+            return null;
+        }
+        $testData = array_merge($this->baseData, $data);
+        $this->User->create();
+        $this->User->set($testData);
+        return $this->User->validates();
+    }
 }

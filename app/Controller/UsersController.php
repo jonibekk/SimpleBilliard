@@ -55,8 +55,10 @@ class UsersController extends AppController
             $this->redirect('/');
         }
 
-        if (!empty($this->request->data)) {
-            $this->User->saveAll($this->request->data);
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            if ($this->User->saveAll($this->request->data)) {
+
+            }
         }
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
