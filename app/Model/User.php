@@ -63,8 +63,14 @@ class User extends AppModel
      * @var array
      */
     public $validate = [
-        'first_name'        => ['notEmpty' => ['rule' => ['notEmpty'],],],
-        'last_name'         => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'first_name'       => [
+            'notEmpty'       => ['rule' => 'notEmpty'],
+            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+        ],
+        'last_name'        => [
+            'notEmpty'       => ['rule' => 'notEmpty'],
+            'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+        ],
         'hide_year_flg'     => ['boolean' => ['rule' => ['boolean'],],],
         'no_pass_flg'       => ['boolean' => ['rule' => ['boolean'],],],
         'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
@@ -73,10 +79,34 @@ class User extends AppModel
         'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'auto_language_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'romanize_flg'      => ['boolean' => ['rule' => ['boolean'],],],
-        'update_email_flg'  => ['boolean' => ['rule' => ['boolean'],],],
+        'update_email_flg' => [
+            'boolean' => [
+                'rule'       => ['boolean',],
+                'allowEmpty' => true,
+            ],
+        ],
+        'agree_tos'        => [
+            'notBlankCheckbox' => [
+                'rule' => ['custom', '[1]'],
+            ]
+        ],
         'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
-        'password'         => ['notEmpty' => ['rule' => ['notEmpty'],],],
-        'password_confirm' => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'password'         => [
+            'notEmpty'  => [
+                'rule' => 'notEmpty',
+            ],
+            'minLength' => [
+                'rule' => ['minLength', 8],
+            ]
+        ],
+        'password_confirm' => [
+            'notEmpty'          => [
+                'rule' => 'notEmpty',
+            ],
+            'passwordSameCheck' => [
+                'rule' => ['passwordSameCheck', 'password'],
+            ],
+        ],
     ];
 
     /**

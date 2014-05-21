@@ -3,24 +3,25 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ae6c7ead014dfc316a460d35f890af4f",
+    "hash": "4b5696e0f416f020acde74a641cbd31c",
     "packages": [
         {
             "name": "cakedc/migrations",
-            "version": "2.2.3",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CakeDC/migrations.git",
-                "reference": "94036a606089c7e14b349eba043b0f58a0947e29"
+                "reference": "46cdcac5639fecfbcdc888ebac5a831058a91ec2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CakeDC/migrations/zipball/94036a606089c7e14b349eba043b0f58a0947e29",
-                "reference": "94036a606089c7e14b349eba043b0f58a0947e29",
+                "url": "https://api.github.com/repos/CakeDC/migrations/zipball/46cdcac5639fecfbcdc888ebac5a831058a91ec2",
+                "reference": "46cdcac5639fecfbcdc888ebac5a831058a91ec2",
                 "shasum": ""
             },
             "require": {
-                "composer/installers": "*"
+                "composer/installers": "*",
+                "php": ">=5.2.8"
             },
             "type": "cakephp-plugin",
             "notification-url": "https://packagist.org/downloads/",
@@ -40,7 +41,7 @@
                 "cakephp",
                 "migrations"
             ],
-            "time": "2013-10-21 10:45:27"
+            "time": "2014-05-19 20:20:40"
         },
         {
             "name": "cakedc/utils",
@@ -303,6 +304,48 @@
                 "web service"
             ],
             "time": "2014-05-07 17:04:22"
+        },
+        {
+            "name": "ichikaway/cakeplus",
+            "version": "2.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ichikaway/cakeplus.git",
+                "reference": "a273a8aabdca1b245764a489abd16185afb8bc86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ichikaway/cakeplus/zipball/a273a8aabdca1b245764a489abd16185afb8bc86",
+                "reference": "a273a8aabdca1b245764a489abd16185afb8bc86",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "cakephp-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yasushi Ichikawa",
+                    "homepage": "http://twitter.com/ichikaway",
+                    "role": "Author"
+                },
+                {
+                    "name": "Various Others",
+                    "homepage": "https://github.com/ichikaway/cakeplus/graphs/contributors"
+                }
+            ],
+            "description": "Cake plus is cakephp plugin and provides some functions for CakePHP.",
+            "homepage": "https://github.com/ichikaway/cakeplus",
+            "keywords": [
+                "cakephp",
+                "validation"
+            ],
+            "time": "2014-03-19 01:33:27"
         },
         {
             "name": "mixpanel/mixpanel-php",
@@ -1213,6 +1256,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "cakedc/utils": 20,
+        "ichikaway/cakeplus": 20,
         "satooshi/php-coveralls": 20
     },
     "platform": [

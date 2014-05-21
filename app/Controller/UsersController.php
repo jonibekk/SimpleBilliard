@@ -56,6 +56,9 @@ class UsersController extends AppController
         }
 
         if (!empty($this->request->data)) {
+            $this->User->saveAll($this->request->data);
+            $this->log($this->request->data);
+            $this->log($this->User->validationErrors);
 
         }
         //姓名の並び順をセット
