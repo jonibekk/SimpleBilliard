@@ -21,3 +21,16 @@ footer p {
     color: #E00;
     content: " *";
 }
+
+.form-group {
+    margin-bottom: 3px;
+}
+
+.help-block {
+    margin-top: 2px;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 60%;
+}
