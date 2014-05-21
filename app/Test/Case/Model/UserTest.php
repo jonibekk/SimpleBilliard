@@ -65,6 +65,17 @@ class UserTest extends CakeTestCase
 
     public $baseData = [];
 
+    function getValidationRes($data = [])
+    {
+        if (empty($data)) {
+            return null;
+        }
+        $testData = array_merge($this->baseData, $data);
+        $this->User->create();
+        $this->User->set($testData);
+        return $this->User->validates();
+    }
+
     /**
      * ユーザモデルのバリデーションチェックのテスト
      */
@@ -102,20 +113,25 @@ class UserTest extends CakeTestCase
              $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
              "[異常系]パスワードは確認パスワードと一致"
         );
+        $this->assertTrue(
+             $this->getValidationRes(['password' => '12345678']),
+             "[正常系]パスワードは8文字以上"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['password' => '1234567']),
+             "[異常系]パスワードは8文字以上"
+        );
         $this->assertFalse(
              $this->getValidationRes(['password' => '',]),
              "[異常系]パスワードは空を認めない"
         );
-    }
-
-    function getValidationRes($data = [])
-    {
-        if (empty($data)) {
-            return null;
-        }
-        $testData = array_merge($this->baseData, $data);
-        $this->User->create();
-        $this->User->set($testData);
-        return $this->User->validates();
+        $this->assertTrue(
+             $this->getValidationRes(['agree_tos' => true,]),
+             "[正常系]利用規約に同意は必須"
+        );
+        $this->assertFalse(
+             $this->getValidationRes(['agree_tos' => false,]),
+             "[異常系]利用規約に同意は必須"
+        );
     }
 }
