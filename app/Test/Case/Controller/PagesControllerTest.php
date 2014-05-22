@@ -4,6 +4,8 @@ App::uses('PagesController', 'Controller');
 /**
  * PagesController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
+ *
+ * @property User $User
  */
 class PagesControllerTest extends ControllerTestCase
 {
@@ -48,6 +50,18 @@ class PagesControllerTest extends ControllerTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->User = ClassRegistry::init('User');
+    }
+
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        unset($this->User);
+        parent::tearDown();
     }
 
     /**
@@ -76,6 +90,9 @@ class PagesControllerTest extends ControllerTestCase
      */
     public function testFeaturesPage()
     {
+        $this->User->useDbConfig = 'test';
+        $this->loadFixtures('User');
+
         $this->testAction('/features', ['return' => 'contents']);
         $this->assertTextContains("Set up a goal", $this->view, "ブラウザが日本語以外の場合、英語表記される");
         Configure::write('Config.language', 'ja');
