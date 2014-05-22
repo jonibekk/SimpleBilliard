@@ -12,6 +12,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter();
     }
+
     /**
      * User register action
      *
@@ -26,7 +27,8 @@ class UsersController extends AppController
 
         if ($this->request->is('post') && !empty($this->request->data)) {
             if ($this->User->saveAll($this->request->data)) {
-
+                //プライマリメールアドレスを登録
+                $this->User->save(['primary_email_id' => $this->User->Email->id]);
             }
         }
         //姓名の並び順をセット

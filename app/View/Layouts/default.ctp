@@ -150,6 +150,7 @@
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapValidator.min');
+echo $this->Html->script('bvAddition');
 echo $this->element('gl_common_js');
 echo $this->fetch('script');
 //環境を識別できるようにリボンを表示
