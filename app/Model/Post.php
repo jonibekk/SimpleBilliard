@@ -14,6 +14,8 @@ App::uses('AppModel', 'Model');
  * @property PostRead       $PostRead
  * @property Image          $Image
  */
+
+/** @noinspection PhpUndefinedClassInspection */
 class Post extends AppModel
 {
 
