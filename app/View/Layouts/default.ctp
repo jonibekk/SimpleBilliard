@@ -21,6 +21,7 @@
     //echo $this->Html->css('bootstrap.min.css', array('media' => 'screen'));
     echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     echo $this->Html->css('font-awesome.min');
+    echo $this->Html->css('bootstrapValidator.min');
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->fetch('css');
     echo $this->fetch('meta');
@@ -148,9 +149,7 @@
 <?
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
-echo $this->Html->script('jquery.validate.min');
-echo $this->Html->script('additional-methods.min');
-echo $this->Html->script('add_validate');
+echo $this->Html->script('bootstrapValidator.min');
 echo $this->element('gl_common_js');
 echo $this->fetch('script');
 //環境を識別できるようにリボンを表示
