@@ -21,15 +21,17 @@
                             'wrapInput' => 'col col-md-9',
                             'class'     => 'form-control'
                         ],
-                        'class'         => 'form-horizontal',
+                        'class' => 'form-horizontal validate',
                         'novalidate'    => true
                     ]); ?>
                     <?
                     //姓と名は言語によって表示順を変える
                     $last_name = $this->Form->input('last_name', [
-                        'label'       => __d('gl', "姓(ローマ字)"),
-                        'placeholder' => __d('gl', "姓"),
-                        'afterInput'  => '<span class="help-block">' . __d('gl', "例) Suzuki") . '</span>'
+                        'label'           => __d('gl', "姓(ローマ字)"),
+                        'placeholder'     => __d('gl', "姓"),
+                        "data-validation" => "required",
+                        'minlength'       => 8,
+                        'afterInput'      => '<span class="help-block">' . __d('gl', "例) Suzuki") . '</span>'
                     ]);
                     $first_name = $this->Form->input('first_name', [
                         'label'       => __d('gl', "名(ローマ字)"),

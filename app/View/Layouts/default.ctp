@@ -1,12 +1,10 @@
 <?
 /**
- *
- *
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var $title_for_layout string
- * @var $this View
+ * @var $this             View
  */
 ?>
 <!DOCTYPE html>
@@ -151,6 +149,9 @@
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('jquery.validate.min');
+echo $this->Html->script('additional-methods.min');
+echo $this->Html->script('add_validate');
+echo $this->element('gl_common_js');
 echo $this->fetch('script');
 //環境を識別できるようにリボンを表示
 switch (ENV_NAME) {
