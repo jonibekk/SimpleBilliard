@@ -66,7 +66,7 @@ class UsersControllerTest extends ControllerTestCase
                  'method' => 'post',
              ]
         );
-        $this->assertTextContains('入力必須項目です。', $this->view, "【異常系】[ユーザ登録画面]Post");
+        $this->assertTextContains('help-block text-danger', $this->view, "【異常系】[ユーザ登録画面]Post");
 
         $data = [
             'User'  => [
@@ -77,7 +77,7 @@ class UsersControllerTest extends ControllerTestCase
                 'agree_tos'        => true,
             ],
             'Email' => [
-                'email' => 'taro@sato.com',
+                ['email' => 'taro@sato.com'],
             ]
         ];
         $this->testAction(
@@ -88,7 +88,7 @@ class UsersControllerTest extends ControllerTestCase
                  'method' => 'post',
              ]
         );
-        $this->assertTextNotContains('入力必須項目です。', $this->view, "【異常系】[ユーザ登録画面]Post");
+        $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
     }
 
 }
