@@ -71,11 +71,13 @@ class PagesControllerTest extends ControllerTestCase
      */
     public function testHomepage()
     {
+        Configure::write('Config.language', 'en');
         $this->testAction('/', ['return' => 'contents']);
         $this->assertTextContains("Let's start Goalous!", $this->view, "ブラウザが日本語以外の場合、英語表記される");
         Configure::write('Config.language', 'ja');
         $this->testAction('/', ['return' => 'contents']);
         $this->assertTextContains("Goalousをはじめよう！", $this->view, "ブラウザが日本語の場合、日本語表記される");
+        Configure::write('Config.language', 'ja');
         $this->testAction('/en/', ['return' => 'contents']);
         $this->assertTextContains("Let's start Goalous!", $this->view, "ブラウザが日本語の場合でも、言語で英語を指定した場合は英語表記される");
         Configure::write('Config.language', 'en');
@@ -90,19 +92,17 @@ class PagesControllerTest extends ControllerTestCase
      */
     public function testFeaturesPage()
     {
-        $this->User->useDbConfig = 'test';
-        $this->loadFixtures('User');
-
+        Configure::write('Config.language', 'en');
         $this->testAction('/features', ['return' => 'contents']);
         $this->assertTextContains("Set up a goal", $this->view, "ブラウザが日本語以外の場合、英語表記される");
         Configure::write('Config.language', 'ja');
         $this->testAction('/features', ['return' => 'contents']);
         $this->assertTextContains("ゴールを作成する", $this->view, "ブラウザが日本語の場合、日本語表記される");
+        Configure::write('Config.language', 'ja');
         $this->testAction('/en/features', ['return' => 'contents']);
         $this->assertTextContains("Set up a goal", $this->view, "ブラウザが日本語の場合でも、言語で英語を指定した場合は英語表記される");
         Configure::write('Config.language', 'en');
         $this->testAction('/ja/features', ['return' => 'contents']);
         $this->assertTextContains("ゴールを作成する", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");
     }
-
 }

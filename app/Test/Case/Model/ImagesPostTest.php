@@ -2,11 +2,11 @@
 App::uses('PostsImage', 'Model');
 
 /**
- * PostsImage Test Case
+ * ImagesPost Test Case
  *
  * @property mixed PostsImage
  */
-class PostsImageTest extends CakeTestCase
+class ImagesPostTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class PostsImageTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.posts_image',
+        'app.images_post',
         'app.post',
         'app.user',
         'app.team',

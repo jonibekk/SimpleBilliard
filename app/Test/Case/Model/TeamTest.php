@@ -29,7 +29,7 @@ class TeamTest extends CakeTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.posts_image',
+        'app.images_post',
         'app.group',
         'app.team_member',
         'app.job_category',

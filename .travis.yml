@@ -31,6 +31,7 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
   - mkdir ./app/tmp
   - chmod -R 777 ./app/tmp
   - echo "<?php
@@ -47,7 +48,7 @@ before_script:
       'host' => '',
       'login' => '',
       'password' => '',
-      'database' => 'cakephp_test',
+      'database' => 'cakephp',
       'prefix' => ''
     );
     public \$test = array(
@@ -79,7 +80,9 @@ before_script:
   
 script:
   - mkdir -p build/logs
-  - cd ./app; ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
+  - cd ./app
+  - ./Console/cake migrations.migration run all
+  - ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
   - cd ../
 
 after_script:

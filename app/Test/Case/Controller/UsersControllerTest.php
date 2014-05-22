@@ -27,7 +27,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.posts_image',
+        'app.images_post',
         'app.comment_read',
         'app.group',
         'app.team_member',
