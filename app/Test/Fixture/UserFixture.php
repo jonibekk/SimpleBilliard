@@ -7,6 +7,7 @@
 /** @noinspection PhpUndefinedClassInspection */
 class UserFixture extends CakeTestFixture
 {
+    var $name = 'User';
     /**
      * Fields
      *
@@ -75,7 +76,7 @@ class UserFixture extends CakeTestFixture
             'password_modified' => '2014-05-22 02:28:04',
             'no_pass_flg'       => 1,
             'profile_image_id' => '',
-            'primary_email_id' => '',
+            'primary_email_id' => '537ce223-6738-4b91-a06e-433dac11b50b',
             'active_flg'        => 1,
             'last_login'        => '2014-05-22 02:28:04',
             'admin_flg'         => 1,
@@ -120,7 +121,7 @@ class UserFixture extends CakeTestFixture
             'auto_language_flg' => 1,
             'romanize_flg'      => 1,
             'update_email_flg'  => 1,
-            'del_flg'           => 1,
+            'del_flg' => 0,
             'deleted'           => '2014-05-22 02:28:04',
             'created'           => '2014-05-22 02:28:04',
             'modified'          => '2014-05-22 02:28:04'
@@ -154,7 +155,7 @@ class UserFixture extends CakeTestFixture
             'auto_language_flg' => 1,
             'romanize_flg'      => 1,
             'update_email_flg'  => 1,
-            'del_flg'           => 1,
+            'del_flg' => 0,
             'deleted'           => '2014-05-22 02:28:04',
             'created'           => '2014-05-22 02:28:04',
             'modified'          => '2014-05-22 02:28:04'
@@ -188,7 +189,7 @@ class UserFixture extends CakeTestFixture
             'auto_language_flg' => 1,
             'romanize_flg'      => 1,
             'update_email_flg'  => 1,
-            'del_flg'           => 1,
+            'del_flg' => 0,
             'deleted'           => '2014-05-22 02:28:04',
             'created'           => '2014-05-22 02:28:04',
             'modified'          => '2014-05-22 02:28:04'

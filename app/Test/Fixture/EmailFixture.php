@@ -38,12 +38,12 @@ class EmailFixture extends CakeTestFixture
     public $records = array(
         array(
             'id'                  => '537ce223-6738-4b91-a06e-433dac11b50b',
-            'user_id'             => 'Lorem ipsum dolor sit amet',
+            'user_id' => '537ce224-8c0c-4c99-be76-433dac11b50b',
             'email'               => 'Lorem ipsum dolor sit amet',
             'email_verified'      => 1,
             'email_token'         => 'Lorem ipsum dolor sit amet',
             'email_token_expires' => '2014-05-22 02:28:03',
-            'del_flg'             => 1,
+            'del_flg' => 0,
             'deleted'             => '2014-05-22 02:28:03',
             'created'             => '2014-05-22 02:28:03',
             'modified'            => '2014-05-22 02:28:03'
@@ -55,7 +55,7 @@ class EmailFixture extends CakeTestFixture
             'email_verified'      => 1,
             'email_token'         => 'Lorem ipsum dolor sit amet',
             'email_token_expires' => '2014-05-22 02:28:03',
-            'del_flg'             => 1,
+            'del_flg' => 0,
             'deleted'             => '2014-05-22 02:28:03',
             'created'             => '2014-05-22 02:28:03',
             'modified'            => '2014-05-22 02:28:03'
@@ -67,7 +67,7 @@ class EmailFixture extends CakeTestFixture
             'email_verified'      => 1,
             'email_token'         => 'Lorem ipsum dolor sit amet',
             'email_token_expires' => '2014-05-22 02:28:03',
-            'del_flg'             => 1,
+            'del_flg' => 0,
             'deleted'             => '2014-05-22 02:28:03',
             'created'             => '2014-05-22 02:28:03',
             'modified'            => '2014-05-22 02:28:03'

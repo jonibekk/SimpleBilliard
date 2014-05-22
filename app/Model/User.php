@@ -116,8 +116,11 @@ class User extends AppModel
      */
     public $belongsTo = [
         'ProfileImage' => ['className' => 'Image', 'foreignKey' => 'profile_image_id',],
-        'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id',],
         'DefaultTeam'  => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
+        'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
+    ];
+
+    public $hasOne = [
     ];
 
     /**
