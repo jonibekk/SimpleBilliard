@@ -4,7 +4,7 @@ App::uses('PostsImage', 'Model');
 /**
  * ImagesPost Test Case
  *
- * @property mixed PostsImage
+ * @property mixed ImagesPost
  */
 class ImagesPostTest extends CakeTestCase
 {
@@ -40,7 +40,7 @@ class ImagesPostTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->PostsImage = ClassRegistry::init('PostsImage');
+        $this->ImagesPost = ClassRegistry::init('ImagesPost');
     }
 
     /**
@@ -50,7 +50,7 @@ class ImagesPostTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->PostsImage);
+        unset($this->ImagesPost);
 
         parent::tearDown();
     }

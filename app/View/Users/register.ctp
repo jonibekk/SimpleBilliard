@@ -46,7 +46,7 @@
                     }
                     ?>
                     <?=
-                    $this->Form->input('Email.0.email', [
+                    $this->Form->input('Email.email', [
                         'label'       => __d('gl', "メール"),
                         'placeholder' => __d('gl', "hiroshi@example.com"),
                     ])?>

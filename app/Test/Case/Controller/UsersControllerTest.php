@@ -47,8 +47,48 @@ class UsersControllerTest extends ControllerTestCase
      */
     public function testRegister()
     {
+        Configure::write('Config.language', 'ja');
+
         $this->testAction('/users/register', ['return' => 'contents']);
-        $this->assertTextContains('新しいアカウントを作成', $this->view);
+        $this->assertTextContains('新しいアカウントを作成', $this->view, "[ユーザ登録画面]通常のアクセス");
+
+        $data = [
+            'User'  => [
+                'first_name' => '',
+            ],
+            'Email' => []
+        ];
+        $this->testAction(
+             '/users/register',
+             [
+                 'return' => 'contents',
+                 'data'   => $data,
+                 'method' => 'post',
+             ]
+        );
+        $this->assertTextContains('入力必須項目です。', $this->view, "【異常系】[ユーザ登録画面]Post");
+
+        $data = [
+            'User'  => [
+                'first_name'       => 'taro',
+                'last_name'        => 'sato',
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+                'agree_tos'        => true,
+            ],
+            'Email' => [
+                'email' => 'taro@sato.com',
+            ]
+        ];
+        $this->testAction(
+             '/users/register',
+             [
+                 'return' => 'contents',
+                 'data'   => $data,
+                 'method' => 'post',
+             ]
+        );
+        $this->assertTextNotContains('入力必須項目です。', $this->view, "【異常系】[ユーザ登録画面]Post");
     }
 
 }
