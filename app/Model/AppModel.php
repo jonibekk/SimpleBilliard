@@ -5,8 +5,10 @@ App::uses('Model', 'Model');
  * Application model for Cake.
  * Add your application-wide methods in the class below, your models
  * will inherit them.
+
  *
- * @package       app.Model
+*@package       app.Model
+ *                @method findById()
  */
 class AppModel extends Model
 {
@@ -30,7 +32,7 @@ class AppModel extends Model
      */
     function begin()
     {
-        $db = & ConnectionManager::getDataSource($this->useDbConfig);
+        $db = ConnectionManager::getDataSource($this->useDbConfig);
         $db->begin($this);
     }
 
@@ -39,7 +41,7 @@ class AppModel extends Model
      */
     function commit()
     {
-        $db = & ConnectionManager::getDataSource($this->useDbConfig);
+        $db = ConnectionManager::getDataSource($this->useDbConfig);
         $db->commit($this);
     }
 
@@ -48,7 +50,7 @@ class AppModel extends Model
      */
     function rollback()
     {
-        $db = & ConnectionManager::getDataSource($this->useDbConfig);
+        $db = ConnectionManager::getDataSource($this->useDbConfig);
         $db->rollback($this);
     }
 

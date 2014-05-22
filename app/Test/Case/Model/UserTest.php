@@ -190,4 +190,31 @@ class UserTest extends CakeTestCase
              "非アクティブユーザを１つ削除しても結果が変わらない"
         );
     }
+
+    public function testTransaction()
+    {
+        $this->User->useDbConfig = 'test';
+        $this->loadFixtures('User');
+        $user_id = '537ce224-8c0c-4c99-be76-433dac11b50b';
+
+        //トランザクション開始前にデータが存在する事を確認
+        $this->assertNotEmpty($this->User->findById($user_id), "トランザクション開始前にデータが存在する事を確認。");
+        //トランザクション開始
+        $this->User->begin();
+        //レコードを削除
+        $this->User->delete($user_id);
+        //結果はempty
+        $this->assertEmpty($this->User->findById($user_id), "トランザクション開始後のレコード削除でfindの結果はempty");
+        //ロールバックすると結果取得できる
+        $this->User->rollback();
+        $this->assertNotEmpty($this->User->findById($user_id), "ロールバックで削除したデータが復活する。");
+        //トランザクション開始
+        $this->User->begin();
+        //レコードを削除
+        $this->User->delete($user_id);
+        //コミットした後はempty
+        $this->User->commit();
+        $this->assertEmpty($this->User->findById($user_id), "コミット後は削除したデータは参照できない。");
+    }
+
 }
