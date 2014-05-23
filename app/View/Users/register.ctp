@@ -94,16 +94,12 @@
                         'class'                    => false,
                     ]);
                     ?>
+                    <hr>
                     <div class="form-group">
                         <div class="col-md-9 col-md-offset-3">
                             <?=
-                            $this->Html->link(__d('gl', "キャンセル"),
-                                              $this->request->referer(),
-                                              ['class' => 'btn btn-default'])
-                            ?>
-                            <?=
                             $this->Form->submit(__d('gl', "新規登録"),
-                                                ['class' => 'btn btn-primary', 'div' => false]) ?>
+                                                ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                         </div>
                     </div>
                     <?= $this->Form->end(); ?>
