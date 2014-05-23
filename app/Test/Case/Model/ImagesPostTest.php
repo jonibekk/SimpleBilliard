@@ -2,11 +2,11 @@
 App::uses('PostsImage', 'Model');
 
 /**
- * PostsImage Test Case
+ * ImagesPost Test Case
  *
- * @property mixed PostsImage
+ * @property mixed ImagesPost
  */
-class PostsImageTest extends CakeTestCase
+class ImagesPostTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class PostsImageTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.posts_image',
+        'app.images_post',
         'app.post',
         'app.user',
         'app.team',
@@ -40,7 +40,7 @@ class PostsImageTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->PostsImage = ClassRegistry::init('PostsImage');
+        $this->ImagesPost = ClassRegistry::init('ImagesPost');
     }
 
     /**
@@ -50,7 +50,7 @@ class PostsImageTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->PostsImage);
+        unset($this->ImagesPost);
 
         parent::tearDown();
     }

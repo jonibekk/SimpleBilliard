@@ -5,6 +5,8 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/Plugin/Cakeplus/Test" />
+      <excludeFolder url="file://$MODULE_DIR$/Plugin/Utils/Test" />
       <excludeFolder url="file://$MODULE_DIR$/Vendor/pear-pear.cakephp.org/CakePHP/Cake/Console/Command" />
       <excludeFolder url="file://$MODULE_DIR$/Vendor/pear-pear.cakephp.org/CakePHP/Cake/Console/Templates/skel/Config/Schema" />
       <excludeFolder url="file://$MODULE_DIR$/Vendor/pear-pear.cakephp.org/CakePHP/Cake/Console/Templates/skel/Console/Command" />

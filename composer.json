@@ -13,6 +13,7 @@
         "cakedc/migrations": "2.*",
         "cakedc/utils": "dev-master",
         "slywalker/boost_cake": "*",
+        "ichikaway/cakeplus": "2.0.*@dev",
         "satooshi/php-coveralls": "dev-master",
         "mixpanel/mixpanel-php": "2.*"
     },

@@ -2,12 +2,12 @@
 App::uses('AppModel', 'Model');
 
 /**
- * PostsImage Model
+ * ImagesPost Model
  *
  * @property Post  $Post
  * @property Image $Image
  */
-class PostsImage extends AppModel
+class ImagesPost extends AppModel
 {
 
     /**
