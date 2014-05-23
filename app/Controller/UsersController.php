@@ -26,6 +26,16 @@ class UsersController extends AppController
         }
 
         if ($this->request->is('post') && !empty($this->request->data)) {
+            //タイムゾーンをセット
+            if (isset($this->request->data['User']['local_date'])) {
+                //ユーザのローカル環境から取得したタイムゾーンをセット
+                $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
+                $this->request->data['User']['timezone'] = $timezone;
+                //自動タイムゾーン設定フラグをoff
+                $this->request->data['User']['auto_timezone_flg'] = false;
+            }
+            //言語を保存
+            $this->request->data['User']['language'] = $this->Lang->getLanguage();
             //ユーザ仮登録成功
             if ($this->User->userProvisionalRegistration($this->request->data)) {
 
