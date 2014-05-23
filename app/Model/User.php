@@ -228,7 +228,7 @@ class User extends AppModel
      *
      * @return string
      */
-    public function generateToken($length = 10)
+    public function generateToken($length = 22)
     {
         $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $token = "";
