@@ -203,9 +203,14 @@ class User extends AppModel
         if (!$this->validateAssociated($data)) {
             return false;
         }
+        //パスワードをハッシュ化
         if (isset($data['User']['password']) && !empty($data['User']['password'])) {
             $data['User']['password'] = Security::hash($data['User']['password']);
         }
+        //メールアドレスの認証トークンを発行
+        $data['Email'][0]['Email']['email_token'] = $this->generateToken();
+        //メールアドレスの認証トークンの期限をセット
+        $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire();
         //データを保存
         $this->create();
         if ($this->saveAll($data, ['validate' => false])) {
@@ -214,6 +219,41 @@ class User extends AppModel
             return true;
         }
         return false;
+    }
+
+    /**
+     * Generate token used by the user registration system
+     *
+     * @param int $length Token Length
+     *
+     * @return string
+     */
+    public function generateToken($length = 10)
+    {
+        $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $token = "";
+        $i = 0;
+
+        while ($i < $length) {
+            $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
+            if (!stristr($token, $char)) {
+                $token .= $char;
+                $i++;
+            }
+        }
+        return $token;
+    }
+
+    /**
+     * トークンの期限を返却
+     *
+     * @param int $interval
+     *
+     * @return string
+     */
+    public function getTokenExpire($interval = TOKEN_EXPIRE_SEC_REGISTER)
+    {
+        return date('Y-m-d H:i:s', time() + $interval);
     }
 
 }

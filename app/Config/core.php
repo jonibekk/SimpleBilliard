@@ -261,7 +261,7 @@ Configure::write('Acl.database', 'default');
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
-//date_default_timezone_set('UTC');
+date_default_timezone_set('UTC');
 
 /**
  *

@@ -78,6 +78,7 @@ Cache::config('default', array('engine' => 'File'));
  * ));
  */
 // composerのautoloadを読み込み
+/** @noinspection PhpIncludeInspection */
 require ROOT . '/Vendor/autoload.php';
 
 // CakePHPのオートローダーをいったん削除し、composerより先に評価されるように先頭に追加する
@@ -122,3 +123,7 @@ CakePlugin::loadAll();
  * Goalous独自定数
  */
 define('SERVICE_NAME', "Goalous2.0");
+//トークン期限
+define('TOKEN_EXPIRE_SEC_REGISTER', 86400); //1day
+define('TOKEN_EXPIRE_SEC_ADD_EMAIL', 86400); //1day
+define('TOKEN_EXPIRE_SEC_INVITE', 1209600); //2weeks
