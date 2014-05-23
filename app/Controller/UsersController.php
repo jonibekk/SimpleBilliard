@@ -38,7 +38,9 @@ class UsersController extends AppController
             $this->request->data['User']['language'] = $this->Lang->getLanguage();
             //ユーザ仮登録成功
             if ($this->User->userProvisionalRegistration($this->request->data)) {
-
+                //ユーザにメール送信
+                $this->GlEmail->sendMailUserVerify($this->User->id, $this->User->Email->data['Email']['email_token']);
+//
             }
             //ユーザ仮登録失敗
             else {

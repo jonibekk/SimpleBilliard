@@ -37,6 +37,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.thread',
         'app.message',
         'app.email',
+        'app.send_mail',
         'app.oauth_token'
     );
 

@@ -57,6 +57,8 @@ class User extends AppModel
         'hun',
     ];
 
+    public $displayField = 'username';
+
     /**
      * Validation rules
      *
@@ -153,10 +155,125 @@ class User extends AppModel
         'eng',
     ];
 
-    function __construct()
+    function __construct($id = false, $table = null, $ds = null)
     {
-        parent::__construct();
+        parent::__construct($id = false, $table = null, $ds = null);
         $this->_setGenderTypeName();
+        // $this->_setVirtualFields();
+    }
+
+    private function _setVirtualFields()
+    {
+        $first_name = $this->alias . '.first_name';
+        $last_name = $this->alias . '.last_name';
+        $this->virtualFields = [
+            'username' => 'CONCAT(UPPER(SUBSTRING(' . $first_name . ',1,1)), LOWER(SUBSTRING(' . $first_name
+                . ',2)), " ", UPPER(SUBSTRING(' . $last_name . ',1,1)), LOWER(SUBSTRING(' . $last_name . ',2)))',
+        ];
+    }
+
+    /**
+     * afterFind callback
+     *
+     * @param array $results Result data
+     * @param mixed $primary Primary query
+     *
+     * @return array
+     */
+    public function afterFind($results, $primary = false)
+    {
+        if (empty($results)) {
+            return $results;
+        }
+        //TODO php5.3だとクロージャで$thisが使えないため、$thisを変数に格納して、useで渡す。php5.4なら簡潔に書ける
+        //TODO これなおす！
+        $self = $this;
+        /** @noinspection PhpUnusedParameterInspection */
+        $this
+            ->dataIter($results,
+                function (&$entity, &$model) use ($self) {
+                    $entity = $self->setUsername($entity);
+                });
+        return $results;
+    }
+
+    /**
+     * 表示用ユーザ名と、ローカルユーザ名をセット
+     *
+     * @param array $row
+     *
+     * @return string
+     */
+    public function setUsername($row)
+    {
+        if (!isset($row[$this->alias]['first_name']) || !isset($row[$this->alias]['last_name'])) {
+            return $row;
+        }
+        $display_username = null;
+        $local_username = null;
+        //ローカルユーザ名の設定
+        $local_username = $this->_getLocalUsername($row);
+        //TODO sessionをモデルから参照するのは良くない。要修正。
+//        if ((isset($this->sessionValiable['Auth']['User']['romanize_flg'])
+//                && $this->sessionValiable['Auth']['User']['romanize_flg']) || !$local_username
+        if (!$local_username) {
+            //ローマ字表記を指定していた場合
+            $display_username = $this->_getRomanUsername($row);
+        }
+        elseif ($this->isNotUseLocalName($row[$this->alias]['language'])) {
+            //ローカル名を使わない言語の場合
+            $display_username = $this->_getRomanUsername($row);
+        }
+        else {
+            //それ以外は
+            $display_username = $local_username;
+        }
+
+        $row[$this->alias]['display_username'] = $display_username;
+        $row[$this->alias]['local_username'] = $local_username;
+
+        //姓名の並び順の場合フラグをセット
+        if (isset($row[$this->alias]['language'])) {
+            $last_first = in_array($row[$this->alias]['language'], $this->langCodeOfLastFirst);
+            $row[$this->alias]['last_first'] = $last_first;
+        }
+        return $row;
+    }
+
+    private function _getRomanUsername($row)
+    {
+        $display_username = null;
+        if (!empty($row[$this->alias]['username'])) {
+            $display_username = $row[$this->alias]['username'];
+        }
+        elseif (!empty($row[$this->alias]['first_name']) && !empty($row[$this->alias]['last_name'])) {
+            $display_username = ucfirst($row[$this->alias]['first_name']) . " "
+                . ucfirst($row[$this->alias]['last_name']);
+        }
+        return $display_username;
+    }
+
+    private function _getLocalUsername($row)
+    {
+        $local_username = null;
+        if (!empty($row[$this->alias]['language']) && !empty($row[$this->alias]['local_first_name'])
+            && !empty($row[$this->alias]['local_last_name'])
+        ) {
+            //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
+            $last_first = in_array($row[$this->alias]['language'], $this->langCodeOfLastFirst);
+            if ($last_first) {
+                $local_username = $row[$this->alias]['local_last_name'] . " "
+                    . $row[$this->alias]['local_first_name'];
+            }
+            else {
+                $local_username = $row[$this->alias]['local_first_name'] . " "
+                    . $row[$this->alias]['local_last_name'];
+            }
+        }
+        elseif (!empty($row[$this->alias]['local_first_name']) && !empty($row[$this->alias]['local_last_name'])) {
+            $local_username = $row[$this->alias]['local_first_name'] . " " . $row[$this->alias]['local_last_name'];
+        }
+        return $local_username;
     }
 
     /**
@@ -208,7 +325,8 @@ class User extends AppModel
             $data['User']['password'] = Security::hash($data['User']['password']);
         }
         //メールアドレスの認証トークンを発行
-        $data['Email'][0]['Email']['email_token'] = $this->generateToken();
+        $email_token = $this->generateToken();
+        $data['Email'][0]['Email']['email_token'] = $email_token;
         //メールアドレスの認証トークンの期限をセット
         $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire();
         //データを保存
@@ -216,6 +334,8 @@ class User extends AppModel
         if ($this->saveAll($data, ['validate' => false])) {
             //プライマリメールアドレスを登録
             $this->save(['primary_email_id' => $this->Email->id]);
+            //コントローラ側で必要になるデータをセット
+            $this->Email->set('email_token', $email_token);
             return true;
         }
         return false;
