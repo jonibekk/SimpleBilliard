@@ -26,9 +26,13 @@ class UsersController extends AppController
         }
 
         if ($this->request->is('post') && !empty($this->request->data)) {
-            if ($this->User->saveAll($this->request->data)) {
-                //プライマリメールアドレスを登録
-                $this->User->save(['primary_email_id' => $this->User->Email->id]);
+            //ユーザ仮登録成功
+            if ($this->User->userProvisionalRegistration($this->request->data)) {
+
+            }
+            //ユーザ仮登録失敗
+            else {
+
             }
         }
         //姓名の並び順をセット

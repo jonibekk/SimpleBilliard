@@ -187,4 +187,33 @@ class User extends AppModel
         return in_array($lung, $this->langCodeOfNotLocalName);
     }
 
+    /**
+     * ユーザ仮登録(メール認証前)
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function userProvisionalRegistration($data = [])
+    {
+        if (!$data) {
+            return false;
+        }
+        //バリデーションでエラーが発生したらreturn
+        if (!$this->validateAssociated($data)) {
+            return false;
+        }
+        if (isset($data['User']['password']) && !empty($data['User']['password'])) {
+            $data['User']['password'] = Security::hash($data['User']['password']);
+        }
+        //データを保存
+        $this->create();
+        if ($this->saveAll($data, ['validate' => false])) {
+            //プライマリメールアドレスを登録
+            $this->save(['primary_email_id' => $this->Email->id]);
+            return true;
+        }
+        return false;
+    }
+
 }
