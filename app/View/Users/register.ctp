@@ -97,9 +97,7 @@
                     <hr>
                     <div class="form-group">
                         <div class="col-md-9 col-md-offset-3">
-                            <?=
-                            $this->Form->submit(__d('gl', "新規登録"),
-                                                ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                            <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
                         </div>
                     </div>
                     <?= $this->Form->end(); ?>
