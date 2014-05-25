@@ -149,7 +149,7 @@
                             $this->Html->link(__d('home', 'Sign UP'),
                                               [
                                                   'controller' => 'users',
-                                                  'action'     => 'add'
+                                                  'action' => 'register'
                                               ],
                                               [
                                                   'class' => 'top-sign-up'

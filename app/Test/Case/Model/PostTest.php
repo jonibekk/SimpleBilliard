@@ -29,7 +29,7 @@ class PostTest extends CakeTestCase
         'app.post_read',
         'app.image',
         'app.badge',
-        'app.posts_image'
+        'app.images_post'
     );
 
     /**

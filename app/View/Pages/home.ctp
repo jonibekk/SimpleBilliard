@@ -74,7 +74,7 @@
                             ->link(__d('home', 'here'),
                                    array(
                                        'controller' => 'users',
-                                       'action'     => 'add'
+                                       'action' => 'register'
                                    ))
                         ?>
                         <?=

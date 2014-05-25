@@ -20,7 +20,7 @@ class ImageTest extends CakeTestCase
         'app.badge',
         'app.team',
         'app.post',
-        'app.posts_image'
+        'app.images_post'
     );
 
     /**

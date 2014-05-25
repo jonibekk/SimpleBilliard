@@ -13,7 +13,7 @@ class SchemaMigrationFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
+        'id'              => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
         'class'           => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'type'            => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'created'         => array('type' => 'datetime', 'null' => false, 'default' => null),
@@ -33,7 +33,61 @@ class SchemaMigrationFixture extends CakeTestFixture
             'id'      => 1,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-15 16:39:04'
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 2,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 3,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 4,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 5,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 6,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 7,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 8,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 9,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
+        ),
+        array(
+            'id'      => 10,
+            'class'   => 'Lorem ipsum dolor sit amet',
+            'type'    => 'Lorem ipsum dolor sit amet',
+            'created' => '2014-05-22 02:28:04'
         ),
     );
 

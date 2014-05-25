@@ -14,110 +14,25 @@ class UsersController extends AppController
     }
 
     /**
-     * index method
+     * User register action
      *
-     * @return $this->render()
+     * @return void
      */
-    public function index()
+    public function register()
     {
-        $this->set('users', $this->Paginator->paginate());
-        return $this->render();
-    }
-
-    /**
-     * view method
-     *
-     * @throws NotFoundException
-     *
-     * @param string $id
-     *
-     * @return $this->render()
-     */
-    public function view($id = null)
-    {
-        if (!$this->User->exists($id)) {
-            throw new NotFoundException(__('Invalid user'));
+        //ログイン済の場合はトップへ
+        if ($this->Auth->user()) {
+            $this->redirect('/');
         }
-        $options = ['conditions' => ['User.' . $this->User->primaryKey => $id]];
-        $this->set('user', $this->User->find('first', $options));
-        return $this->render();
-    }
 
-    /**
-     * add method
-     *
-     * @return mixed
-     */
-    public function add()
-    {
-        if ($this->request->is('post')) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved.'));
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect(['action' => 'index']);
-            }
-            else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            if ($this->User->saveAll($this->request->data)) {
+                //プライマリメールアドレスを登録
+                $this->User->save(['primary_email_id' => $this->User->Email->id]);
             }
         }
-        return $this->render();
-    }
-
-    /**
-     * edit method
-     *
-     * @throws NotFoundException
-     *
-     * @param string $id
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-        if (!$this->User->exists($id)) {
-            throw new NotFoundException(__('Invalid user'));
-        }
-        if ($this->request->is(['post', 'put'])) {
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved.'));
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect(['action' => 'index']);
-            }
-            else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-            }
-        }
-        else {
-            $options = ['conditions' => ['User.' . $this->User->primaryKey => $id]];
-            $this->request->data = $this->User->find('first', $options);
-        }
-        return $this->render();
-    }
-
-    /**
-     * delete method
-     *
-     * @throws NotFoundException
-     *
-     * @param string $id
-     *
-     * @return mixed
-     */
-    public function delete($id = null)
-    {
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
-        }
-        $this->request->onlyAllow('post', 'delete');
-        if ($this->User->delete()) {
-            $this->Session->setFlash(__('The user has been deleted.'));
-        }
-        else {
-            $this->Session->setFlash(__('The user could not be deleted. Please, try again.'));
-        }
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect(['action' => 'index']);
+        //姓名の並び順をセット
+        $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+        $this->set(compact('last_first'));
     }
 }

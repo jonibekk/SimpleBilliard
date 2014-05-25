@@ -4,7 +4,7 @@ App::uses('UsersController', 'Controller');
 /**
  * UsersController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
- *
+
  */
 class UsersControllerTest extends ControllerTestCase
 {
@@ -27,7 +27,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.posts_image',
+        'app.images_post',
         'app.comment_read',
         'app.group',
         'app.team_member',
@@ -41,59 +41,54 @@ class UsersControllerTest extends ControllerTestCase
     );
 
     /**
-     * testIndex method
+     * testRegister method
      *
      * @return void
      */
-    public function testIndex()
+    public function testRegister()
     {
-        $this->testAction('/users/index');
-        $this->assertTextContains('Users', $this->view);
-    }
+        Configure::write('Config.language', 'ja');
 
-    /**
-     * testView method
-     *
-     * @return void
-     */
-    public function testView()
-    {
-    }
+        $this->testAction('/users/register', ['return' => 'contents']);
+        $this->assertTextContains('新しいアカウントを作成', $this->view, "[ユーザ登録画面]通常のアクセス");
 
-    /**
-     * testAdd method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-    }
+        $data = [
+            'User'  => [
+                'first_name' => '',
+            ],
+            'Email' => []
+        ];
+        $this->testAction(
+             '/users/register',
+             [
+                 'return' => 'contents',
+                 'data'   => $data,
+                 'method' => 'post',
+             ]
+        );
+        $this->assertTextContains('help-block text-danger', $this->view, "【異常系】[ユーザ登録画面]Post");
 
-    /**
-     * testEdit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
+        $data = [
+            'User'  => [
+                'first_name'       => 'taro',
+                'last_name'        => 'sato',
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+                'agree_tos'        => true,
+            ],
+            'Email' => [
+                ['email' => 'taro@sato.com'],
+            ]
+        ];
+        $this->testAction(
+             '/users/register',
+             [
+                 'return' => 'contents',
+                 'data'   => $data,
+                 'method' => 'post',
+             ]
+        );
+        $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
     }
-
-    /**
-     * testDelete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-    }
-
-    /**
-     * testPageLoadTest method
-     *
-     * @return void
-     */
-    public function testPageLoadTest()
-    {
-	}
 
 }
