@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="1986768279">
+  <component name="DataSourceManagerImpl" format="xml" hash="110150953">
     <data-source source="LOCAL" name="vagrant" uuid="55a9ab28-445f-423e-aade-55e1201ddc5c">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
@@ -23,6 +23,60 @@
         <user>vagrant</user>
         <use-password>true</use-password>
         <password>dfdcdfcbdfcddfd8dfcbdfc4dfde</password>
+        <private-key-path />
+        <passphrase />
+      </ssh-properties>
+    </data-source>
+    <data-source source="LOCAL" name="stg2" uuid="2d5635a5-759b-4e83-9949-c10996d2264f">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://gls-rds01-stg2.cjoncmeaeph3.ap-northeast-1.rds.amazonaws.com:3306</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>df9bdfdbdfcbdfd0df98dfdddfd9dfd2</user-password>
+      <driver-properties>
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+      </driver-properties>
+      <libraries>
+        <library>
+          <url>file://$PROJECT_DIR$/etc/local/mysql_driver/mysql-connector-java-5.1.26-bin.jar</url>
+        </library>
+      </libraries>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <proxy-host>54.249.54.142</proxy-host>
+        <proxy-port>22</proxy-port>
+        <user>isao-op</user>
+        <use-password>true</use-password>
+        <password>dfc3dfd9dfcbdfc5df9edf9cdf9edf93</password>
+        <private-key-path />
+        <passphrase />
+      </ssh-properties>
+    </data-source>
+    <data-source source="LOCAL" name="www2" uuid="8480505e-4fe1-4593-af5c-0536139ac037">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://gls-rds01-www2.cjoncmeaeph3.ap-northeast-1.rds.amazonaws.com:3306</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>df9bdfdbdfcbdfd0df98dfdddfd9dfd2</user-password>
+      <driver-properties>
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+      </driver-properties>
+      <libraries>
+        <library>
+          <url>file://$PROJECT_DIR$/etc/local/mysql_driver/mysql-connector-java-5.1.26-bin.jar</url>
+        </library>
+      </libraries>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <proxy-host>54.249.54.142</proxy-host>
+        <proxy-port>22</proxy-port>
+        <user>isao-op</user>
+        <use-password>true</use-password>
+        <password>dfc3dfd9dfcbdfc5df9edf9cdf9edf93</password>
         <private-key-path />
         <passphrase />
       </ssh-properties>
