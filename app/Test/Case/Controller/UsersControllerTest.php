@@ -76,6 +76,7 @@ class UsersControllerTest extends ControllerTestCase
                 'password'         => '12345678',
                 'password_confirm' => '12345678',
                 'agree_tos'        => true,
+                'local_date' => date('Y-m-d H:i:s'),
             ],
             'Email' => [
                 ['email' => 'taro@sato.com'],
