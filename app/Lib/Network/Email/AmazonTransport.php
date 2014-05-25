@@ -14,6 +14,7 @@ App::uses('AbstractTransport', 'Network/Email');
 use Aws\Common\Aws;
 use Aws\Ses\SesClient;
 use Aws\Ses\Exception\SesException;
+use Aws\Common\Enum\Region;
 
 class AmazonTransport extends AbstractTransport
 {
@@ -140,6 +141,12 @@ class AmazonTransport extends AbstractTransport
      */
     protected function _generateAmazonSes()
     {
-        $this->_amazonSes = SesClient::factory(['key' => $this->_config['key'], 'secret' => $this->_config['secret']]);
+        $this->_amazonSes = SesClient::factory(
+                                     [
+                                         'key'    => $this->_config['key'],
+                                         'secret' => $this->_config['secret'],
+                                         'region' => Region::US_EAST_1
+                                     ]
+        );
     }
 }
