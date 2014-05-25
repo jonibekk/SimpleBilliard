@@ -57,6 +57,7 @@
     <data-source source="LOCAL" name="www2" uuid="8480505e-4fe1-4593-af5c-0536139ac037">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
+      <auto-commit>false</auto-commit>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://gls-rds01-www2.cjoncmeaeph3.ap-northeast-1.rds.amazonaws.com:3306</jdbc-url>
       <user-name>root</user-name>
