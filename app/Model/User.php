@@ -159,7 +159,7 @@ class User extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setGenderTypeName();
-        // $this->_setVirtualFields();
+        $this->_setVirtualFields();
     }
 
     private function _setVirtualFields()
