@@ -9,8 +9,6 @@ App::uses('PagesController', 'Controller');
  */
 class PagesControllerTest extends ControllerTestCase
 {
-    public $autoFixtures = false;
-
     /**
      * Fixtures
      *
@@ -50,7 +48,6 @@ class PagesControllerTest extends ControllerTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->User = ClassRegistry::init('User');
     }
 
     /**
@@ -60,7 +57,6 @@ class PagesControllerTest extends ControllerTestCase
      */
     public function tearDown()
     {
-        unset($this->User);
         parent::tearDown();
     }
 

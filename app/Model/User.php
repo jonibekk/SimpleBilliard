@@ -157,7 +157,7 @@ class User extends AppModel
 
     function __construct($id = false, $table = null, $ds = null)
     {
-        parent::__construct($id = false, $table = null, $ds = null);
+        parent::__construct($id, $table, $ds);
         $this->_setGenderTypeName();
         // $this->_setVirtualFields();
     }

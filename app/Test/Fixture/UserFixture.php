@@ -7,7 +7,6 @@
 /** @noinspection PhpUndefinedClassInspection */
 class UserFixture extends CakeTestFixture
 {
-    var $name = 'User';
     /**
      * Fields
      *

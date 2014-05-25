@@ -27,9 +27,9 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('mail', "Goalousのユーザアカウント認証");
     }
 
-    function __construct()
+    function __construct($id = false, $table = null, $ds = null)
     {
-        parent::__construct();
+        parent::__construct($id, $table, $ds);
         $this->_setTemplateSubject();
     }
 

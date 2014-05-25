@@ -54,9 +54,9 @@ class Notification extends AppModel
         'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
     ];
 
-    function __construct()
+    function __construct($id = false, $table = null, $ds = null)
     {
-        parent::__construct();
+        parent::__construct($id, $table, $ds);
         $this->_setTypeName();
     }
 

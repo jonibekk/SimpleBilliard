@@ -72,9 +72,9 @@ class Image extends AppModel
         'Post' => ['unique' => 'keepExisting',],
     ];
 
-    function __construct()
+    function __construct($id = false, $table = null, $ds = null)
     {
-        parent::__construct();
+        parent::__construct($id, $table, $ds);
         $this->_setTypeName();
     }
 

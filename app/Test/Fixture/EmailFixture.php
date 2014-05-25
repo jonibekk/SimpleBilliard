@@ -6,7 +6,7 @@
  */
 class EmailFixture extends CakeTestFixture
 {
-
+    public $useDbConfig = 'test';
     /**
      * Fields
      *

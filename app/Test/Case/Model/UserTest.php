@@ -9,7 +9,7 @@ App::uses('User', 'Model');
 class UserTest extends CakeTestCase
 {
 
-    public $autoFixtures = false;
+//    public $autoFixtures = false;
 
     /**
      * Fixtures
@@ -138,13 +138,6 @@ class UserTest extends CakeTestCase
 
     public function testGetAllUsersCount()
     {
-        /**
-         * TODO 本来、ClassRegistry::init()を使えばtest用DBが読み込まれるはずだが、うまくいかない。
-         * TODO 暫定的に$this->Model->useDbConfig = 'test';で乗り切る。各test毎にこれを指定
-         */
-        $this->User->useDbConfig = 'test';
-        $this->loadFixtures('User');
-        $this->loadFixtures('Email');
         //現在の結果
         $current_res = $this->User->getAllUsersCount();
         //アクティブユーザのレコードを１つ追加
@@ -193,8 +186,6 @@ class UserTest extends CakeTestCase
 
     public function testTransaction()
     {
-        $this->User->useDbConfig = 'test';
-        $this->loadFixtures('User');
         $user_id = '537ce224-8c0c-4c99-be76-433dac11b50b';
 
         //トランザクション開始前にデータが存在する事を確認
@@ -219,10 +210,6 @@ class UserTest extends CakeTestCase
 
     function testUserProvisionalRegistration()
     {
-        $this->User->useDbConfig = 'test';
-        $this->loadFixtures('User');
-        $this->loadFixtures('Email');
-
         //異常系
         $data = [
             'User'  => [
