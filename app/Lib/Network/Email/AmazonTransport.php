@@ -128,11 +128,11 @@ class AmazonTransport extends AbstractTransport
          */
         $response = $this->_amazonSes->sendRawEmail($this->_data);
         /** @noinspection PhpUndefinedMethodInspection */
-        //TODO 例外処理をまだ書いていない。ここに書かれたコードは古いもの。
-//        if (!$response->isOK()) {
-//            /** @noinspection PhpUndefinedFieldInspection */
-//            throw new CakeException((string)$response->body->Error->Message);
-//        }
+        $response_array = $response->toArray();
+        if (!isset($response_array['ResponseMetadata']['RequestId'])) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            throw new CakeException((string)$response->body->Error->Message);
+        }
     }
 
     /**
