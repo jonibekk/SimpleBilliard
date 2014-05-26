@@ -63,8 +63,7 @@ class UsersController extends AppController
             $this->Session->delete('tmp_email');
         }
         else {
-            //error
-            $this->redirect('/');
+            throw new NotFoundException();
         }
     }
 

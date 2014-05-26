@@ -22,6 +22,7 @@ App::uses('Controller', 'Controller');
  * @property TimezoneComponent    $Timezone
  * @property CookieComponent      $Cookie
  * @property GlEmailComponent     $GlEmail
+ * @property PnotifyComponent     $Pnotify
  * @property User                 $User
  */
 class AppController extends Controller
@@ -39,6 +40,7 @@ class AppController extends Controller
         'Cookie',
         'Timezone',
         'GlEmail',
+        'Pnotify',
     ];
     public $helpers = [
         'Session',

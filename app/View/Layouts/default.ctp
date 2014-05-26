@@ -22,6 +22,7 @@
     echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('bootstrapValidator.min');
+    echo $this->Html->css('pnotify.custom.min');
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->fetch('css');
     echo $this->fetch('meta');
@@ -151,9 +152,11 @@ echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapValidator.min');
 echo $this->Html->script('bvAddition');
+echo $this->Html->script('pnotify.custom.min');
 echo $this->Html->script('gl_basic');
 echo $this->element('gl_common_js');
 echo $this->fetch('script');
+echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
 switch (ENV_NAME) {
     case 'stg':
