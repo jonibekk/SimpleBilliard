@@ -40,7 +40,8 @@ class UsersController extends AppController
             if ($this->User->userProvisionalRegistration($this->request->data)) {
                 //ユーザにメール送信
                 $this->GlEmail->sendMailUserVerify($this->User->id, $this->User->Email->data['Email']['email_token']);
-//
+                $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
+                $this->redirect(['action' => 'sent_mail']);
             }
             //ユーザ仮登録失敗
             else {
@@ -51,4 +52,20 @@ class UsersController extends AppController
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         $this->set(compact('last_first'));
     }
+
+    /**
+     * 承認メール送信後の画面
+     */
+    public function sent_mail()
+    {
+        if ($this->Session->read('tmp_email')) {
+            $this->set(['email' => $this->Session->read('tmp_email')]);
+            $this->Session->delete('tmp_email');
+        }
+        else {
+            //error
+            $this->redirect('/');
+        }
+    }
+
 }

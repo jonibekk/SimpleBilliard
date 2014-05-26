@@ -336,6 +336,7 @@ class User extends AppModel
             $this->save(['primary_email_id' => $this->Email->id]);
             //コントローラ側で必要になるデータをセット
             $this->Email->set('email_token', $email_token);
+            $this->Email->set('email', $data['Email'][0]['Email']['email']);
             return true;
         }
         return false;
