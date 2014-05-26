@@ -24,7 +24,11 @@ class SendMail extends AppModel
 
     private function _setTemplateSubject()
     {
-        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('mail', "Goalousのユーザアカウント認証");
+        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('mail', "アカウントの仮登録が完了しました。");
+        //subjectにサービス名のプレフィックスを追加
+        foreach (self::$TYPE_TMPL as $key => $val) {
+            self::$TYPE_TMPL[$key]['subject'] = "[" . SERVICE_NAME . "]" . $val['subject'];
+        }
     }
 
     function __construct($id = false, $table = null, $ds = null)

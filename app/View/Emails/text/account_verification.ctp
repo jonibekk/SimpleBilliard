@@ -15,7 +15,7 @@ echo "\n";
 echo __d('mail', 'Goalousへようこそ！');
 echo "\n";
 echo "\n";
-echo __d('mail', 'あなたのアカウントを有効にする場合は以下のリンクをクリックして下さい。');
+echo __d('mail', '以下のリンクをクリックしてアカウントを有効化してください。');
 echo "\n";
 echo $url;
 echo "\n";
