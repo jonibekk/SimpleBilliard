@@ -45,6 +45,7 @@ Goalousで素早く開発を始められるよう心がけております。
 
 ## A Development routine
 ターミナルでコマンドを実行  
+
 1. vagrantを起動  
 cd goalous2`  
 `vagrant up`  
