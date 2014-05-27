@@ -413,7 +413,6 @@ class User extends AppModel
         $user['Email']['email_token_expires'] = null;
 
         $this->Email->saveAll($user, ['validate' => false, 'callbacks' => false]);
-        $this->data = $user;
-        return $user;
+        return $this->findById($user['User']['id']);
     }
 }

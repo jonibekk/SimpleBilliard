@@ -161,7 +161,7 @@ class UserFixture extends CakeTestFixture
         ),
         array(
             'id'                => '537ce224-2aa4-4c63-b694-433dac11b50b',
-            'first_name'        => 'Lorem ipsum dolor sit amet',
+            'first_name' => '過去に一度もログインしていないユーザ',
             'last_name'         => 'Lorem ipsum dolor sit amet',
             'middle_name'       => 'Lorem ipsum dolor sit amet',
             'local_first_name'  => 'Lorem ipsum dolor sit amet',
@@ -179,7 +179,7 @@ class UserFixture extends CakeTestFixture
             'profile_image_id'  => 'Lorem ipsum dolor sit amet',
             'primary_email_id'  => 'Lorem ipsum dolor sit amet',
             'active_flg'        => 1,
-            'last_login'        => '2014-05-22 02:28:04',
+            'last_login' => '',
             'admin_flg'         => 1,
             'default_team_id'   => 'Lorem ipsum dolor sit amet',
             'timezone'          => 4,

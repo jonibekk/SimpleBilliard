@@ -93,4 +93,51 @@ class UsersControllerTest extends ControllerTestCase
         $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
     }
 
+    function testSentMailSuccess()
+    {
+        Configure::write('Config.language', 'ja');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+            ]
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['tmp_email', 'test@aaa.com']]));
+        $res = $this->testAction('/users/sent_mail', ['return' => 'contents']);
+        $this->assertContains("おめでとうございます！", $res, "[正常]ユーザ仮登録");
+    }
+
+    function testSentMailFail()
+    {
+        try {
+            $this->testAction('/users/sent_mail', ['return' => 'contents']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]ユーザ登録");
+    }
+
+    function testVerifyEmailNotLoggedIn()
+    {
+        $this->testAction('/users/verify/12345678', ['return' => 'contents']);
+    }
+
+    function testVerifyEmailLoggedInYet()
+    {
+        $this->testAction('/users/verify/12345', ['return' => 'contents']);
+    }
+
+    function testVerifyEmailNotFound()
+    {
+        try {
+            $this->testAction('/users/verify/123456', ['return' => 'contents']);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]メールアドレス認証で存在しないトークンを指定された場合に例外処理");
+    }
+
 }
