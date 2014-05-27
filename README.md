@@ -25,6 +25,12 @@ Goalousで素早く開発を始められるよう心がけております。
 - [Git](http://git-scm.com/downloads) `version >= 1.8.5`
 - [Chef Client](http://www.getchef.com/chef/install/) `version >= 11.4`
 
+## Recommend
+- [hubコマンド](http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3)（mac,linuxのみ）
+
+## IDE
+当リポジトリは[Phpstorm](http://www.jetbrains.com/phpstorm/)に最適化されています。
+
 ## Installation
 1. ソースファイルをClone  
 ターミナルを起動し、以下を実行  
@@ -36,6 +42,33 @@ Goalousで素早く開発を始められるよう心がけております。
 1. 動作確認  
 ブラウザから以下にアクセス  
 `http://192.168.50.4`
+
+## A Development Routine
+ターミナルでコマンドを実行  
+
+1. vagrantを起動  
+`cd goalous2`  
+`vagrant up`  
+1. アプリケーションをアップデート   
+ターミナルを起動し、以下を実行   
+`vagrant ssh`   
+`sh ./etc/local/update_app.sh`   
+1. developブランチを作成   
+`git branch develop origin/develop`   
+1. developブランチにチェックアウト   
+`git checkout develop`   
+1. 作業用ブランチを作成   
+`git branch topic-xxxx`   
+1. 作業ブランチにチェックアウト   
+`git checkout topic-xxxx`   
+1. 作業後にコミット(関連するIssue番号をコミットログにつける。)   
+`git add .`   
+`git commit`   
+1. GitHubにプッシュ   
+`git push origin topic-xxx`   
+1. hubコマンドでIssueに関連付けたPull Requestを発行する   
+`hub pull-request [ブランチ名] -i [issue番号]`   
+1. 第三者にレビューをしてもらいマージしてもらう   
 
 ## Contributing
 みなさんの貢献は大いに歓迎します。  
