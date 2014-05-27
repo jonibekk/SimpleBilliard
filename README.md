@@ -43,11 +43,11 @@ Goalousで素早く開発を始められるよう心がけております。
 ブラウザから以下にアクセス  
 `http://192.168.50.4`
 
-## A Development routine
+## A Development Routine
 ターミナルでコマンドを実行  
 
 1. vagrantを起動  
-cd goalous2`  
+`cd goalous2`  
 `vagrant up`  
 1. アプリケーションをアップデート   
 ターミナルを起動し、以下を実行   
