@@ -67,4 +67,97 @@ class UsersController extends AppController
         }
     }
 
+    /**
+     * Confirm email action
+     *
+     * @param string $token Token
+     *
+     * @throws RuntimeException
+     * @return $this->redirect('/')
+     */
+    public function verify($token = null)
+    {
+        try {
+            $user = $this->User->verifyEmail($token);
+            $last_login = null;
+            if ($user) {
+                //ログイン済か確認
+                $last_login = $user['User']['last_login'];
+                //自動ログイン
+                $this->_autoLogin($user['User']['id']);
+            }
+            if (!$last_login) {
+                //ログインがされていなければ、新規ユーザなので「ようこそ」表示
+                $this->Pnotify->out(PnotifyComponent::TYPE_SUCCESS, __d('notify', 'Goalousへようこそ！'));
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect('/');
+            }
+            else {
+                //ログインされていれば、メール追加
+                $this->Pnotify->out(PnotifyComponent::TYPE_SUCCESS, __d('notify', 'メールアドレスの認証が完了しました。'));
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect('/');
+            }
+        } catch (RuntimeException $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+    }
+
+    /*
+     * 自動でログインする
+     */
+    public function _autoLogin($user_id)
+    {
+        if (!$user_id) {
+            return false;
+        }
+        $user = $this->User->findById($user_id);
+        //リダイレクト先を退避
+        $redirect = null;
+        if ($this->Session->read('Auth.redirect')) {
+            $redirect = $this->Session->read('Auth.redirect');
+        }
+        $this->Auth->logout();
+
+        unset($user['User']['password']);
+        $user = array_merge(['User' => []], $user);
+        //自動ログイン
+        if ($this->Auth->login($user['User'])) {
+            //リダイレクト先をセッションに保存
+            $this->Session->write('redirect', $redirect);
+            $this->_setAfterLogin();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * ログイン後に実行する
+     */
+    public function _setAfterLogin()
+    {
+        $this->User->id = $this->Auth->user('id');
+        $this->User->saveField('last_login', date('Y-m-d H:i:s'));
+        if (MIXPANEL_TOKEN) {
+            //mixpanelにユーザ情報をセット
+            $options = [
+                'conditions' => ['User.id' => $this->Auth->user('id'),],
+                'contain'    => ['PrimaryEmail',]
+            ];
+            $user = $this->User->find('first', $options);
+            $this->Mp->people->set($user['User']['id'], [
+                '$first_name'      => $user['User']['first_name'],
+                '$last_name'       => $user['User']['last_name'],
+                '$email'           => $user['PrimaryEmail']['email'],
+                '$default_team_id' => $user['User']['default_team_id'],
+                '$language'        => $user['User']['language'],
+                '$is_admin'        => $user['User']['is_admin'],
+                '$gender_id'       => $user['User']['gender_id'],
+            ]);
+        }
+    }
 }

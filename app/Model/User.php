@@ -377,4 +377,43 @@ class User extends AppModel
         return date('Y-m-d H:i:s', time() + $interval);
     }
 
+    /**
+     * Verifies a users email by a token that was sent to him via email and flags the user record as active
+     *
+     * @param string $token The token that wa sent to the user
+     *
+     * @throws RuntimeException
+     * @return array On success it returns the user data record
+     */
+    public function verifyEmail($token = null)
+    {
+        $user = $this->Email->find('first',
+                                   [
+                                       'conditions' => [
+                                           'Email.email_verified' => false,
+                                           'Email.email_token'    => $token
+                                       ],
+                                   ]
+        );
+
+        if (empty($user)) {
+            throw new RuntimeException(
+                __d('exception', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
+        }
+
+        $expires = strtotime($user['Email']['email_token_expires']);
+        if ($expires < time()) {
+            throw new RuntimeException(__d('exception', 'トークンの期限が切れています。'));
+        }
+
+        $user['User']['id'] = $user['Email']['user_id'];
+        $user['User']['active_flg'] = true;
+        $user['Email']['email_verified'] = true;
+        $user['Email']['email_token'] = null;
+        $user['Email']['email_token_expires'] = null;
+
+        $this->Email->saveAll($user, ['validate' => false, 'callbacks' => false]);
+        $this->data = $user;
+        return $user;
+    }
 }

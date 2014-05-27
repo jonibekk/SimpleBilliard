@@ -236,4 +236,80 @@ class UserTest extends CakeTestCase
         $this->assertTrue($res, "[正常系]ユーザ仮登録");
     }
 
+    function testVerifyEmail()
+    {
+        $token = "12345678";
+        $user_id = "537ce224-c708-4084-b879-433dac11b50b";
+        $before_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
+        $before_data = [
+            'User'  => [
+                'active_flg' => $before_data['User']['active_flg'],
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => $before_data['Email'][0]['email_verified'],
+                    'email_token'         => $before_data['Email'][0]['email_token'],
+                    'email_token_expires' => $before_data['Email'][0]['email_token_expires'],
+                ]
+            ]
+        ];
+        $before_expected = [
+            'User'  => [
+                'active_flg' => false,
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => false,
+                    'email_token'         => $token,
+                    'email_token_expires' => '2017-05-22 02:28:03',
+                ]
+            ]
+        ];
+        $this->assertEquals($before_expected, $before_data, "[正常系]メール認証の事前確認");
+        $this->User->verifyEmail($token);
+        $after_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
+        $after_data = [
+            'User'  => [
+                'active_flg' => $after_data['User']['active_flg'],
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => $after_data['Email'][0]['email_verified'],
+                    'email_token'         => $after_data['Email'][0]['email_token'],
+                    'email_token_expires' => $after_data['Email'][0]['email_token_expires'],
+                ]
+            ]
+        ];
+        $after_expected = [
+            'User'  => [
+                'active_flg' => true,
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => true,
+                    'email_token'         => null,
+                    'email_token_expires' => null,
+                ]
+            ]
+        ];
+        $this->assertEquals($after_expected, $after_data, "[正常系]メール認証後の確認");
+    }
+
+    function testVerifyEmailException()
+    {
+        $not_exists_token = "12345678aaa";
+        try {
+            $this->User->verifyEmail($not_exists_token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常系]tokenが正しくない例外の発生");
+        unset($e);
+
+        $exists_token = "12345678";
+        try {
+            $this->User->verifyEmail($exists_token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常系]tokenが正しくない例外の発生");
+    }
 }
