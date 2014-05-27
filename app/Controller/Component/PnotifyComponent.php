@@ -82,17 +82,62 @@ class PnotifyComponent extends Object
     }
 
     /**
+     * 成功のflashメッセージ出力
+     * @param       $message
+     * @param array $option
+     */
+    public function outSuccess($message, $option = [])
+    {
+        $this->out(self::TYPE_SUCCESS, $message, $option);
+    }
+
+    /**
+     * お知らせのflashメッセージ出力
+     *
+     * @param       $message
+     * @param array $option
+     */
+    public function outInfo($message, $option = [])
+    {
+        $this->out(self::TYPE_INFO, $message, $option);
+    }
+
+    /**
+     * 注意のflashメッセージ出力
+     *
+     * @param       $message
+     * @param array $option
+     */
+    public function outNotice($message, $option = [])
+    {
+        $this->out(self::TYPE_NOTICE, $message, $option);
+    }
+
+    /**
+     * エラーのflashメッセージ出力
+     *
+     * @param       $message
+     * @param array $option
+     */
+    public function outError($message, $option = [])
+    {
+        $this->out(self::TYPE_ERROR, $message, $option);
+    }
+
+    /**
      * flashメッセージを表示
      *
-     * @param $type
-     * @param $message
+     * @param       $type
+     * @param       $message
+     * @param array $option
      */
-    public function out($type, $message)
+    public function out($type, $message, $option = [])
     {
         if (!array_key_exists($type, $this->options) || !$message) {
             return;
         }
-        $this->Session->setFlash($message, 'flash_pnotify', $this->options[$type], 'pnotify');
+        $merged_option = array_merge($this->options[$type], $option);
+        $this->Session->setFlash($message, 'flash_pnotify', $merged_option, 'pnotify');
     }
 
 }

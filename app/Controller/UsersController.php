@@ -88,14 +88,14 @@ class UsersController extends AppController
             }
             if (!$last_login) {
                 //ログインがされていなければ、新規ユーザなので「ようこそ」表示
-                $this->Pnotify->out(PnotifyComponent::TYPE_SUCCESS, __d('notify', 'Goalousへようこそ！'));
+                $this->Pnotify->outSuccess(__d('notify', 'Goalousへようこそ！'));
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect('/');
             }
             else {
                 //ログインされていれば、メール追加
-                $this->Pnotify->out(PnotifyComponent::TYPE_SUCCESS, __d('notify', 'メールアドレスの認証が完了しました。'));
+                $this->Pnotify->outSuccess(__d('notify', 'メールアドレスの認証が完了しました。'));
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect('/');
