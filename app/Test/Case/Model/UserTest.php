@@ -312,4 +312,31 @@ class UserTest extends CakeTestCase
         }
         $this->assertFalse(isset($e), "[正常系]tokenが正しくない例外の発生");
     }
+
+    function testFind()
+    {
+        $user_id = "537ce224-5ca4-4fd5-aaf2-433dac11b50b";
+        $res = $this->User->findById($user_id);
+        $actual = $res['User']['display_username'];
+        $expected = "English user Last name";
+        $this->assertEquals($expected, $actual, "[正常]英語ユーザの場合は表示ユーザ名が`first_name last_name`になる");
+
+        $user_id = "537ce224-8f08-4cf3-9c8f-433dac11b50b";
+        $res = $this->User->findById($user_id);
+        $actual = $res['User']['display_username'];
+        $expected = "姓 名";
+        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っている場合は`local_last_name local_first_name`になる");
+
+        $user_id = "537ce224-c16c-4f12-a301-433dac11b50b";
+        $res = $this->User->findById($user_id);
+        $actual = $res['User']['display_username'];
+        $expected = "First Last";
+        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っていない場合は`first_name last_name`になる");
+
+//        $user_id = "537ce224-f3d0-46a3-a1d3-433dac11b50b";
+//        $res = $this->User->findById($user_id);
+//        $actual = $res['User']['display_username'];
+//        $expected = "First Last";
+//        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っいる場合でもローマ字表示フラグonの場合は`first_name last_name`になる");
+    }
 }
