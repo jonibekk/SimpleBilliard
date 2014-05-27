@@ -140,4 +140,56 @@ class UsersControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "[異常]メールアドレス認証で存在しないトークンを指定された場合に例外処理");
     }
 
+    function testSetAppLanguageAutoOn()
+    {
+        Configure::write('Config.language', 'en');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth',
+            ]
+        ]);
+        $value_map = [
+            [null, 1],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        $this->testAction('/users/register');
+        $this->assertEquals('en', Configure::read('Config.language'), "自動言語設定がonの場合は言語設定が無視される");
+    }
+
+    function testSetAppLanguageAutoOff()
+    {
+        Configure::write('Config.language', 'en');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth',
+            ]
+        ]);
+        $value_map = [
+            [null, 1],
+            ['language', 'jpn'],
+            ['auto_language_flg', false],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        $this->testAction('/users/register');
+        $this->assertEquals('jpn', Configure::read('Config.language'), "自動言語設定がoffの場合は言語設定が適用される");
+    }
+
 }
