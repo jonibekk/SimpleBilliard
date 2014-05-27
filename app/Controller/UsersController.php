@@ -69,11 +69,13 @@ class UsersController extends AppController
 
     /**
      * Confirm email action
+
      *
-     * @param string $token Token
+*@param string $token Token
+
      *
-     * @throws RuntimeException
-     * @return $this->redirect('/')
+*@throws RuntimeException
+     * @return void
      */
     public function verify($token = null)
     {
@@ -142,22 +144,6 @@ class UsersController extends AppController
     {
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('last_login', date('Y-m-d H:i:s'));
-        if (MIXPANEL_TOKEN) {
-            //mixpanelにユーザ情報をセット
-            $options = [
-                'conditions' => ['User.id' => $this->Auth->user('id'),],
-                'contain'    => ['PrimaryEmail',]
-            ];
-            $user = $this->User->find('first', $options);
-            $this->Mp->people->set($user['User']['id'], [
-                '$first_name'      => $user['User']['first_name'],
-                '$last_name'       => $user['User']['last_name'],
-                '$email'           => $user['PrimaryEmail']['email'],
-                '$default_team_id' => $user['User']['default_team_id'],
-                '$language'        => $user['User']['language'],
-                '$is_admin'        => $user['User']['is_admin'],
-                '$gender_id'       => $user['User']['gender_id'],
-            ]);
-        }
+        $this->Mixpanel->setUser($this->User->id);
     }
 }
