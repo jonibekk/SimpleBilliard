@@ -39,7 +39,7 @@ class EmailFixture extends CakeTestFixture
         array(
             'id'                  => '537ce223-6738-4b91-a06e-433dac11b50b',
             'user_id'             => '537ce224-8c0c-4c99-be76-433dac11b50b',
-            'email'               => 'Lorem ipsum dolor sit amet',
+            'email' => 'from@email.com',
             'email_verified'      => 1,
             'email_token'         => 'Lorem ipsum dolor sit amet',
             'email_token_expires' => '2014-05-22 02:28:03',
@@ -147,12 +147,12 @@ class EmailFixture extends CakeTestFixture
         array(
             'id'                  => '537ce223-3514-47e1-893b-433dac11b50b',
             'user_id'             => 'Lorem ipsum dolor sit amet',
-            'email'               => 'Lorem ipsum dolor sit amet',
+            'email'   => 'to@email.com',
             'email_verified'      => 1,
             'email_token'         => 'Lorem ipsum dolor sit amet',
             'email_token_expires' => '2014-05-22 02:28:03',
-            'del_flg'             => 1,
-            'deleted'             => '2014-05-22 02:28:03',
+            'del_flg' => 0,
+            'deleted' => '',
             'created'             => '2014-05-22 02:28:03',
             'modified'            => '2014-05-22 02:28:03'
         ),

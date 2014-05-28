@@ -39,14 +39,14 @@ class SendMailFixture extends CakeTestFixture
     public $records = array(
         array(
             'id'            => '537f7709-e6a8-4861-801f-0915ac11b50b',
-            'from_user_id'  => 'Lorem ipsum dolor sit amet',
-            'to_user_id'    => 'Lorem ipsum dolor sit amet',
+            'from_user_id' => '537ce224-8c0c-4c99-be76-433dac11b50b',
+            'to_user_id'   => '537ce224-54b0-4081-b044-433dac11b50b',
             'team_id'       => 'Lorem ipsum dolor sit amet',
             'template_type' => 1,
             'item'          => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'sent_datetime' => '2014-05-23 16:27:53',
-            'del_flg'       => 1,
-            'deleted'       => '2014-05-23 16:27:53',
+            'del_flg'      => 0,
+            'deleted'      => '',
             'created'       => '2014-05-23 16:27:53',
             'modified'      => '2014-05-23 16:27:53'
         ),

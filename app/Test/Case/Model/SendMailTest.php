@@ -65,9 +65,14 @@ class SendMailTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    public function testGetDetail()
     {
+        $id = "537f7709-e6a8-4861-801f-0915ac11b50b";
+        $res = $this->SendMail->getDetail($id);
+        $from = "from@email.com";
+        $to = "to@email.com";
+        $this->assertEquals($from, $res['FromUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
+        $this->assertEquals($to, $res['ToUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
     }
 
 }
