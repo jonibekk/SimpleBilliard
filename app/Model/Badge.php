@@ -51,9 +51,9 @@ class Badge extends AppModel
         'Image',
     ];
 
-    function __construct()
+    function __construct($id = false, $table = null, $ds = null)
     {
-        parent::__construct();
+        parent::__construct($id, $table, $ds);
         $this->_setTypeName();
     }
 

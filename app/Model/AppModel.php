@@ -73,4 +73,46 @@ class AppModel extends Model
     {
         parent::_deleteLinks($id);
     }
+
+    /**
+     * コールバックでデータ形式のゆらぎを統一する
+     *
+     * @param         $results
+     * @param         $callback
+     * @method $callback
+     */
+    public function dataIter(&$results, $callback)
+    {
+
+        if (!$isVector = isset($results[0])) {
+            $results = array(
+                $results
+            );
+        }
+
+        $modeled = array_key_exists($this->alias, $results[0]);
+
+        foreach ($results as &$value) {
+            if (!$modeled) {
+                $value = array(
+                    $this->alias => $value
+                );
+            }
+
+            $continue = $callback($value, $this);
+
+            if (!$modeled) {
+                $value = $value[$this->alias];
+            }
+
+            if (!is_null($continue) && !$continue) {
+                break;
+            }
+        }
+
+        if (!$isVector) {
+            $results = $results[0];
+        }
+    }
+
 }

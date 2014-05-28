@@ -18,9 +18,13 @@ App::uses('Controller', 'Controller');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent   $Lang
- * @property CookieComponent $Cookie
- * @property User            $User
+ * @property LangComponent         $Lang
+ * @property TimezoneComponent     $Timezone
+ * @property CookieComponent       $Cookie
+ * @property GlEmailComponent      $GlEmail
+ * @property PnotifyComponent      $Pnotify
+ * @property MixpanelComponent     $Mixpanel
+ * @property User                  $User
  */
 class AppController extends Controller
 {
@@ -35,6 +39,10 @@ class AppController extends Controller
         ]],
         'Lang',
         'Cookie',
+        'Timezone',
+        'GlEmail',
+        'Pnotify',
+        'Mixpanel',
     ];
     public $helpers = [
         'Session',
@@ -47,28 +55,12 @@ class AppController extends Controller
         'User',
     ];
 
-    /**
-     * @var null
-     */
-    public $top_lang = null;
-
-    /**
-     * Mixpanel
-     *
-     * @var MixPanel
-     */
-    public $Mp;
-
     public function beforeFilter()
     {
         parent::beforeFilter();
         $this->_setAppLanguage();
         //TODO 一時的に全許可
         $this->Auth->allow();
-        //mixpanel初期化
-        if (PUBLIC_ENV) {
-            $this->Mp = Mixpanel::getInstance(MIXPANEL_TOKEN);
-        }
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }

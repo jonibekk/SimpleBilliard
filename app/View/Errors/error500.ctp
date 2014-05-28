@@ -6,11 +6,13 @@
  * @var $name string
  */
 ?>
-<h2><?= $name; ?></h2>
-<p class="error">
-    <strong><?= __d('cake', 'Error'); ?>: </strong>
-    <?= __d('cake', 'An Internal Error Has Occurred.'); ?>
-</p>
+<div class="jumbotron jumbotron-icon text-center">
+    <i class="fa-warning fa fa-5"></i>
+
+    <h1>500</h1>
+
+    <p><?= $name; ?></p>
+</div>
 <?
 if (Configure::read('debug') > 0):
     echo $this->element('exception_stack_trace');

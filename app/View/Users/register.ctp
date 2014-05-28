@@ -93,6 +93,13 @@
                         "data-bv-notempty-message" => __d('validate', "利用規約に同意してください。"),
                         'class'                    => false,
                     ]);
+                    //タイムゾーン設定の為のローカル時刻をセット
+                    echo $this->Form->input('local_date', [
+                        'label' => false,
+                        'div'   => false,
+                        'style' => 'display:none;',
+                        'id'    => 'InitLocalDate',
+                    ]);
                     ?>
                     <hr>
                     <div class="form-group">
@@ -107,3 +114,11 @@
     </div>
 <?= $this->element('modal_tos') ?>
 <?= $this->element('modal_privacy_policy') ?>
+<? $this->append('script'); ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //ユーザ登録時にローカル時間をセットする
+            $('input#InitLocalDate').val(getLocalDate());
+        });
+    </script>
+<? $this->end(); ?>

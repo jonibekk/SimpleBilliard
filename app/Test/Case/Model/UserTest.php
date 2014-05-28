@@ -9,7 +9,7 @@ App::uses('User', 'Model');
 class UserTest extends CakeTestCase
 {
 
-    public $autoFixtures = false;
+//    public $autoFixtures = false;
 
     /**
      * Fixtures
@@ -138,13 +138,6 @@ class UserTest extends CakeTestCase
 
     public function testGetAllUsersCount()
     {
-        /**
-         * TODO 本来、ClassRegistry::init()を使えばtest用DBが読み込まれるはずだが、うまくいかない。
-         * TODO 暫定的に$this->Model->useDbConfig = 'test';で乗り切る。各test毎にこれを指定
-         */
-        $this->User->useDbConfig = 'test';
-        $this->loadFixtures('User');
-        $this->loadFixtures('Email');
         //現在の結果
         $current_res = $this->User->getAllUsersCount();
         //アクティブユーザのレコードを１つ追加
@@ -193,8 +186,6 @@ class UserTest extends CakeTestCase
 
     public function testTransaction()
     {
-        $this->User->useDbConfig = 'test';
-        $this->loadFixtures('User');
         $user_id = '537ce224-8c0c-4c99-be76-433dac11b50b';
 
         //トランザクション開始前にデータが存在する事を確認
@@ -217,4 +208,135 @@ class UserTest extends CakeTestCase
         $this->assertEmpty($this->User->findById($user_id), "コミット後は削除したデータは参照できない。");
     }
 
+    function testUserProvisionalRegistration()
+    {
+        //異常系
+        $data = [
+            'User'  => [
+                'first_name' => '',
+            ],
+            'Email' => []
+        ];
+        $res = $this->User->userProvisionalRegistration($data);
+        $this->assertFalse($res, "[異常系]ユーザ仮登録");
+        //正常系
+        $data = [
+            'User'  => [
+                'first_name'       => 'taro',
+                'last_name'        => 'sato',
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+                'agree_tos'        => true,
+            ],
+            'Email' => [
+                ['email' => 'taro@sato.com'],
+            ]
+        ];
+        $res = $this->User->userProvisionalRegistration($data);
+        $this->assertTrue($res, "[正常系]ユーザ仮登録");
+    }
+
+    function testVerifyEmail()
+    {
+        $token = "12345678";
+        $user_id = "537ce224-c708-4084-b879-433dac11b50b";
+        $before_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
+        $before_data = [
+            'User'  => [
+                'active_flg' => $before_data['User']['active_flg'],
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => $before_data['Email'][0]['email_verified'],
+                    'email_token'         => $before_data['Email'][0]['email_token'],
+                    'email_token_expires' => $before_data['Email'][0]['email_token_expires'],
+                ]
+            ]
+        ];
+        $before_expected = [
+            'User'  => [
+                'active_flg' => false,
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => false,
+                    'email_token'         => $token,
+                    'email_token_expires' => '2017-05-22 02:28:03',
+                ]
+            ]
+        ];
+        $this->assertEquals($before_expected, $before_data, "[正常系]メール認証の事前確認");
+        $this->User->verifyEmail($token);
+        $after_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
+        $after_data = [
+            'User'  => [
+                'active_flg' => $after_data['User']['active_flg'],
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => $after_data['Email'][0]['email_verified'],
+                    'email_token'         => $after_data['Email'][0]['email_token'],
+                    'email_token_expires' => $after_data['Email'][0]['email_token_expires'],
+                ]
+            ]
+        ];
+        $after_expected = [
+            'User'  => [
+                'active_flg' => true,
+            ],
+            'Email' => [
+                [
+                    'email_verified'      => true,
+                    'email_token'         => null,
+                    'email_token_expires' => null,
+                ]
+            ]
+        ];
+        $this->assertEquals($after_expected, $after_data, "[正常系]メール認証後の確認");
+    }
+
+    function testVerifyEmailException()
+    {
+        $not_exists_token = "12345678aaa";
+        try {
+            $this->User->verifyEmail($not_exists_token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常系]tokenが正しくない例外の発生");
+        unset($e);
+
+        $exists_token = "12345678";
+        try {
+            $this->User->verifyEmail($exists_token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常系]tokenが正しくない例外の発生");
+    }
+
+    function testFind()
+    {
+        $user_id = "537ce224-5ca4-4fd5-aaf2-433dac11b50b";
+        $res = $this->User->findById($user_id);
+        $actual = $res['User']['display_username'];
+        $expected = "English user Last name";
+        $this->assertEquals($expected, $actual, "[正常]英語ユーザの場合は表示ユーザ名が`first_name last_name`になる");
+
+        $user_id = "537ce224-8f08-4cf3-9c8f-433dac11b50b";
+        $res = $this->User->findById($user_id);
+        $actual = $res['User']['display_username'];
+        $expected = "姓 名";
+        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っている場合は`local_last_name local_first_name`になる");
+
+        $user_id = "537ce224-c16c-4f12-a301-433dac11b50b";
+        $res = $this->User->findById($user_id);
+        $actual = $res['User']['display_username'];
+        $expected = "first last";
+        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っていない場合は`first_name last_name`になる");
+
+//        $user_id = "537ce224-f3d0-46a3-a1d3-433dac11b50b";
+//        $res = $this->User->findById($user_id);
+//        $actual = $res['User']['display_username'];
+//        $expected = "First Last";
+//        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っいる場合でもローマ字表示フラグonの場合は`first_name last_name`になる");
+    }
 }

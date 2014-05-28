@@ -15,7 +15,8 @@
         "slywalker/boost_cake": "*",
         "ichikaway/cakeplus": "2.0.*@dev",
         "satooshi/php-coveralls": "dev-master",
-        "mixpanel/mixpanel-php": "2.*"
+        "mixpanel/mixpanel-php": "2.*",
+        "aws/aws-sdk-php": "2.6.*"
     },
     "config": {
         "vendor-dir": "Vendor/"
