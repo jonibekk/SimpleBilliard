@@ -311,11 +311,8 @@ class User extends AppModel
      *
      * @return bool
      */
-    public function userProvisionalRegistration($data = [])
+    public function userProvisionalRegistration($data)
     {
-        if (!$data) {
-            return false;
-        }
         //バリデーションでエラーが発生したらreturn
         if (!$this->validateAssociated($data)) {
             return false;

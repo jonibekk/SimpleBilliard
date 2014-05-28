@@ -80,9 +80,6 @@ class SendMail extends AppModel
      */
     public function saveMailData($to_uid, $tmpl_type, $item = [], $from_uid = null, $team_id = null)
     {
-        if (!$to_uid || !$tmpl_type) {
-            return false;
-        }
         $data = [
             'to_user_id'    => $to_uid,
             'template_type' => $tmpl_type,
