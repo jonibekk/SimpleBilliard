@@ -61,13 +61,6 @@ class PagesController extends AppController
         //ログインしている場合とそうでない場合の切り分け
         if ($this->Auth->user()) {
             if ($path[0] == 'home') {
-                //homeの場合
-                if ($this->Session->read('completed_today_alist')) {
-                    //全てのリストが完了している場合はモーダル表示
-                    $this->set('completed_today_alist', true);
-                    $this->Session->delete('completed_today_alist');
-                }
-
                 $this->render('logged_in_home');
             }
             else {

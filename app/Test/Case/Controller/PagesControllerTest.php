@@ -81,6 +81,31 @@ class PagesControllerTest extends ControllerTestCase
         $this->assertTextContains("Goalousをはじめよう！", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");
     }
 
+    public function testHomeAuth()
+    {
+        Configure::write('Config.language', 'en');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Pages', [
+            'components' => [
+                'Session',
+                'Auth',
+            ]
+        ]);
+        $value_map = [
+            [null, 1],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        //$this->testAction('/', ['return' => 'contents']);
+    }
+
     /**
      * testFeaturesPage method
      *
