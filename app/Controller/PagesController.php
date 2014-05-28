@@ -61,27 +61,24 @@ class PagesController extends AppController
         //ログインしている場合とそうでない場合の切り分け
         if ($this->Auth->user()) {
             if ($path[0] == 'home') {
-                $this->render('logged_in_home');
+                return $this->render('logged_in_home');
             }
             else {
-                $this->render(implode('/', $path));
+                return $this->render(implode('/', $path));
             }
         }
         else {
-            //ログインしていない場合のヘッダー
-            //$this -> layout = 'not_logged_in';
             $this->layout = 'homepage';
             //現在の登録ユーザ数
             $user_count = $this->User->getAllUsersCount();
             $this->set(compact('user_count'));
             if ($path[0] == 'logged_in_home') {
-                $this->render('home');
+                return $this->render('home');
             }
             else {
-                $this->render(implode('/', $path));
+                return $this->render(implode('/', $path));
             }
         }
-        return $this->render(implode('/', $path));
     }
 
     public function beforeFilter()
