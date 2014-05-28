@@ -162,13 +162,24 @@ class User extends AppModel
         $this->_setVirtualFields();
     }
 
+    public function beforeSave($options = [])
+    {
+        //英名、英性の頭文字を大文字に変更
+        if (!empty($this->data[$this->alias]['first_name']) &&
+            !empty($this->data[$this->alias]['first_name'])
+        ) {
+            $this->data[$this->alias]['first_name'] = ucfirst($this->data[$this->alias]['first_name']);
+            $this->data[$this->alias]['last_name'] = ucfirst($this->data[$this->alias]['last_name']);
+        }
+        return true;
+    }
+
     private function _setVirtualFields()
     {
         $first_name = $this->alias . '.first_name';
         $last_name = $this->alias . '.last_name';
         $this->virtualFields = [
-            'username' => 'CONCAT(UPPER(SUBSTRING(' . $first_name . ',1,1)), LOWER(SUBSTRING(' . $first_name
-                . ',2)), " ", UPPER(SUBSTRING(' . $last_name . ',1,1)), LOWER(SUBSTRING(' . $last_name . ',2)))',
+            'username' => 'CONCAT(' . $first_name . ', " ", ' . $last_name . ')'
         ];
     }
 

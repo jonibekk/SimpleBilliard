@@ -195,8 +195,8 @@ class UserFixture extends CakeTestFixture
         ),
         array(
             'id'                => '537ce224-5ca4-4fd5-aaf2-433dac11b50b',
-            'first_name'        => 'english user',
-            'last_name'         => 'Last Name',
+            'first_name' => 'English user',
+            'last_name'  => 'Last name',
             'middle_name'       => '',
             'local_first_name'  => 'Local First Name',
             'local_last_name'   => 'Local Last Name',
