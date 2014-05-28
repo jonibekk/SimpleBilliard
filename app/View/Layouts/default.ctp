@@ -28,9 +28,56 @@ if (!isset($nav_disable)) {
 ?>
 <?= $this->element('header', ['nav_disable' => $nav_disable]) ?>
 <div id="container" class="container">
-    <?= $this->Session->flash(); ?>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="well">
+                <p>test</p>
 
-    <?= $this->fetch('content'); ?>
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+            </div>
+        </div>
+        <div class="col-sm-6" role="main">
+            <?= $this->Session->flash(); ?>
+            <?= $this->fetch('content'); ?>
+            <div class="well">
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="well">
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+
+                <p>test</p>
+            </div>
+
+        </div>
+    </div>
 
     <?= $this->element('footer') ?>
 </div>

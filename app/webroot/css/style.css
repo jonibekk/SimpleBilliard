@@ -1,5 +1,5 @@
 body {
-    padding-top: 70px;
+    padding-top: 50px;
 }
 
 footer {
@@ -71,4 +71,9 @@ footer p {
     .container {
         width: 960px;
     }
+}
+
+[class*="col-"] {
+    padding-left: 5px;
+    padding-right: 5px;
 }
