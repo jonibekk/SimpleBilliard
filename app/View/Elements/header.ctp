@@ -14,18 +14,18 @@
     <div class="container">
         <div class="navbar-header">
             <a href="/" class="navbar-brand"><?= $title_for_layout ?></a>
-            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-main">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+            <? if (!$nav_disable) : ?>
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            <? endif ?>
         </div>
-        <div class="navbar-collapse collapse" id="navbar-main">
-            <?
-            if (!$nav_disable) {
-                echo $this->element('navbar');
-            }
-            ?>
-        </div>
+        <?
+        if (!$nav_disable) {
+            echo $this->element('navbar');
+        }
+        ?>
     </div>
 </div>
