@@ -20,6 +20,7 @@ class UsersController extends AppController
      */
     public function register()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
         //ログイン済の場合はトップへ
         if ($this->Auth->user()) {
             $this->redirect('/');
@@ -58,6 +59,7 @@ class UsersController extends AppController
      */
     public function sent_mail()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
         if ($this->Session->read('tmp_email')) {
             $this->set(['email' => $this->Session->read('tmp_email')]);
             $this->Session->delete('tmp_email');
@@ -69,12 +71,10 @@ class UsersController extends AppController
 
     /**
      * Confirm email action
-
      *
-*@param string $token Token
-
+     * @param string $token Token
      *
-*@throws RuntimeException
+     * @throws RuntimeException
      * @return void
      */
     public function verify($token = null)

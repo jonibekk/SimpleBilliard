@@ -81,4 +81,12 @@ class AppController extends Controller
             $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
         }
     }
+
+    function beforeRender()
+    {
+        //エラー画面は１カラムのレイアウト
+        if ($this->name == 'CakeError') {
+            $this->layout = LAYOUT_ONE_COLUMN;
+        }
+    }
 }

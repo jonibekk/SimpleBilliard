@@ -1,5 +1,5 @@
 body {
-    padding-top: 70px;
+    padding-top: 50px;
 }
 
 footer {
@@ -53,4 +53,27 @@ footer p {
 
 .color-blue {
     color: #2E8DEF;
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 960px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 960px;
+    }
+}
+
+[class*="col-"] {
+    padding-left: 5px;
+    padding-right: 5px;
 }
