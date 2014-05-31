@@ -330,7 +330,8 @@ class User extends AppModel
         }
         //パスワードをハッシュ化
         if (isset($data['User']['password']) && !empty($data['User']['password'])) {
-            $data['User']['password'] = Security::hash($data['User']['password']);
+            $passwordHasher = new SimplePasswordHasher();
+            $data['User']['password'] = $passwordHasher->hash($data['User']['password']);
         }
         //メールアドレスの認証トークンを発行
         $email_token = $this->generateToken();

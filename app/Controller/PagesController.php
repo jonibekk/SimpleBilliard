@@ -84,6 +84,8 @@ class PagesController extends AppController
     public function beforeFilter()
     {
         $this->_setLanguage();
+        //全ページ許可
+        $this->Auth->allow();
         //切り換え可能な言語をセット
         $this->set('lang_list', $this->_getPageLanguageList());
         parent::beforeFilter();
