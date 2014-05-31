@@ -32,6 +32,7 @@ class SendMailShell extends AppShell
         $this->components = new ComponentCollection();
         $this->Lang = $this->components->load('Lang');
         $this->AppController = new AppController();
+        $this->components->disable('Security');
     }
 
     public function __destruct()
