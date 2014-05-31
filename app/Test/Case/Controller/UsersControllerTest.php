@@ -112,6 +112,11 @@ class UsersControllerTest extends ControllerTestCase
         $this->assertContains("おめでとうございます！", $res, "[正常]ユーザ仮登録");
     }
 
+    function testLogin()
+    {
+        $this->testAction('/users/login', ['return' => 'contents']);
+    }
+
     function testSentMailFail()
     {
         try {

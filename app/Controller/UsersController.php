@@ -14,6 +14,16 @@ class UsersController extends AppController
     }
 
     /**
+     * Common login action
+     *
+     * @return void
+     */
+    public function login()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+    }
+
+    /**
      * User register action
      *
      * @return void
