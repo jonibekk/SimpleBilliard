@@ -48,6 +48,21 @@ class UsersControllerTest extends ControllerTestCase
      */
     public function testRegister()
     {
+
+//        $Users = $this->generate('Users', [
+//            'components' => [
+//                'Security' => ['_validateCsrf', '_validatePost'],
+//            ],
+//            'models'     => ['User'],
+//        ]);
+//        $Users->Security
+//            ->expects($this->any())
+//            ->method('_validateCsrf')
+//            ->will($this->returnValue(true));
+//        $Users->Security
+//            ->expects($this->any())
+//            ->method('_validatePost')
+//            ->will($this->returnValue(true));
         Configure::write('Config.language', 'ja');
 
         $this->testAction('/users/register', ['return' => 'contents']);
