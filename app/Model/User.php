@@ -257,10 +257,6 @@ class User extends AppModel
         if (!empty($row[$this->alias]['username'])) {
             $display_username = $row[$this->alias]['username'];
         }
-        elseif (!empty($row[$this->alias]['first_name']) && !empty($row[$this->alias]['last_name'])) {
-            $display_username = ucfirst($row[$this->alias]['first_name']) . " "
-                . ucfirst($row[$this->alias]['last_name']);
-        }
         return $display_username;
     }
 
