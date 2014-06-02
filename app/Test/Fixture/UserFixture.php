@@ -335,7 +335,7 @@ class UserFixture extends CakeTestFixture
             'last_name'         => 'Lorem ipsum dolor sit amet',
             'middle_name'       => 'Lorem ipsum dolor sit amet',
             'local_first_name' => '言語設定なしの名',
-            'local_last_name'  => '言語設定なしの性',
+            'local_last_name' => '言語設定なしの姓',
             'local_middle_name' => 'Lorem ipsum dolor sit amet',
             'gender_type'       => 9,
             'birth_day'         => '2014-05-22',
