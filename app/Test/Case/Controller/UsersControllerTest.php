@@ -197,6 +197,29 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
     }
 
+    function testLogout()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth',
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'display_username' => 'test taro'
+            ]],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        $this->testAction('/users/logout', ['method' => 'GET']);
+    }
+
     function testSentMailFail()
     {
         try {

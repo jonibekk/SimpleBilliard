@@ -91,7 +91,9 @@ class UsersController extends AppController
         $this->Cookie->destroy();
         $this->Pnotify->outInfo(__d('notify', "%sさん、またお会いしましょう。", $user['display_username']),
                                 ['title' => __d('notify', "ログアウトしました")]);
-        $this->redirect($this->Auth->logout());
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->Auth->logout());
     }
 
     /**
