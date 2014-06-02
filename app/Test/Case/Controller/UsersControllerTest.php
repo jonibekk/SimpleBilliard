@@ -132,6 +132,68 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/login', ['return' => 'contents']);
     }
 
+    function testLoggedInSuccess()
+    {
+        Configure::write('Config.language', 'en');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth',
+            ]
+        ]);
+        $value_map = [
+            [null, null],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        $data = [
+            'User' => [
+                'email'    => "to@email.com",
+                'password' => "12345678",
+            ]
+        ];
+        $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
+    }
+
+    function testLoggedInFailed()
+    {
+        Configure::write('Config.language', 'en');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth',
+            ]
+        ]);
+        $value_map = [
+            [null, null],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        $data = [
+            'User' => [
+                'email'    => "aaaato@email.com",
+                'password' => "12345678",
+            ]
+        ];
+        $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
+    }
+
     function testSentMailFail()
     {
         try {
