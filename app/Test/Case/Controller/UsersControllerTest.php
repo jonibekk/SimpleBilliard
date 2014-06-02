@@ -15,6 +15,7 @@ class UsersControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.cake_session',
         'app.user',
         'app.image',
         'app.badge',
