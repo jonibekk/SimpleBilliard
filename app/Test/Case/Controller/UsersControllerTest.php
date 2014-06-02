@@ -91,7 +91,7 @@ class UsersControllerTest extends ControllerTestCase
                 'password'         => '12345678',
                 'password_confirm' => '12345678',
                 'agree_tos'        => true,
-                'local_date' => date('Y-m-d H:i:s'),
+                'local_date'       => date('Y-m-d H:i:s'),
             ],
             'Email' => [
                 ['email' => 'taro@sato.com'],
@@ -142,7 +142,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session',
-                'Auth',
+                'Auth' => ['user', 'loggedIn'],
             ]
         ]);
         $value_map = [
@@ -154,6 +154,9 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
         $data = [
             'User' => [
                 'email'    => "to@email.com",
