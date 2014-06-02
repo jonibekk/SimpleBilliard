@@ -213,6 +213,18 @@ class UsersControllerTest extends ControllerTestCase
 
     function testSentMailFail()
     {
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+            ]
+        ]);
+        $value_map = [
+            ['tmp_email', null],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->staticExpects($this->any())->method('read')
+                       ->will($this->returnValueMap($value_map)
+            );
         try {
             $this->testAction('/users/sent_mail', ['method' => 'GET', 'return' => 'contents']);
         } catch (NotFoundException $e) {
@@ -298,10 +310,12 @@ class UsersControllerTest extends ControllerTestCase
                 'Security' => ['_validateCsrf', '_validatePost'],
             ],
         ]);
+        /** @noinspection PhpUndefinedMethodInspection */
         $Users->Security
             ->expects($this->any())
             ->method('_validateCsrf')
             ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
         $Users->Security
             ->expects($this->any())
             ->method('_validatePost')
