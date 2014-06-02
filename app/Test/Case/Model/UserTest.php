@@ -336,7 +336,6 @@ class UserTest extends CakeTestCase
         $user_id = "537ce224-24a4-415d-ba90-433dac11b50b";
         $res = $this->User->findById($user_id);
         $actual = $res['User']['display_username'];
-        debug($actual);
         $expected = "言語設定なしの名 言語設定なしの姓";
         $this->assertEquals($expected, $actual, "[正常]言語設定なしのユーザの場合でローカル名が入っている場合は`local_first_name local_last_name`");
 
