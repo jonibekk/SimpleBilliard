@@ -49,25 +49,13 @@ class UsersControllerTest extends ControllerTestCase
     public function testRegister()
     {
 
-//        $Users = $this->generate('Users', [
-//            'components' => [
-//                'Security' => ['_validateCsrf', '_validatePost'],
-//            ],
-//            'models'     => ['User'],
-//        ]);
-//        $Users->Security
-//            ->expects($this->any())
-//            ->method('_validateCsrf')
-//            ->will($this->returnValue(true));
-//        $Users->Security
-//            ->expects($this->any())
-//            ->method('_validatePost')
-//            ->will($this->returnValue(true));
+        $this->generateMockSecurity();
         Configure::write('Config.language', 'ja');
 
-        $this->testAction('/users/register', ['return' => 'contents']);
+        $this->testAction('/users/register', ['method' => 'GET', 'return' => 'contents']);
         $this->assertTextContains('新しいアカウントを作成', $this->view, "[ユーザ登録画面]通常のアクセス");
 
+        $this->generateMockSecurity();
         $data = [
             'User'  => [
                 'first_name' => '',
@@ -84,6 +72,7 @@ class UsersControllerTest extends ControllerTestCase
         );
         $this->assertTextContains('help-block text-danger', $this->view, "【異常系】[ユーザ登録画面]Post");
 
+        $this->generateMockSecurity();
         $data = [
             'User'  => [
                 'first_name'       => 'taro',
@@ -123,13 +112,13 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['tmp_email', 'test@aaa.com']]));
-        $res = $this->testAction('/users/sent_mail', ['return' => 'contents']);
+        $res = $this->testAction('/users/sent_mail', ['method' => 'GET', 'return' => 'contents']);
         $this->assertContains("おめでとうございます！", $res, "[正常]ユーザ仮登録");
     }
 
     function testLogin()
     {
-        $this->testAction('/users/login', ['return' => 'contents']);
+        $this->testAction('/users/login', ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testLoggedInSuccess()
@@ -157,6 +146,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
                     ->will($this->returnValue(true));
+        $this->generateMockSecurity();
         $data = [
             'User' => [
                 'email'    => "to@email.com",
@@ -188,6 +178,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
+        $this->generateMockSecurity();
         $data = [
             'User' => [
                 'email'    => "aaaato@email.com",
@@ -223,7 +214,7 @@ class UsersControllerTest extends ControllerTestCase
     function testSentMailFail()
     {
         try {
-            $this->testAction('/users/sent_mail', ['return' => 'contents']);
+            $this->testAction('/users/sent_mail', ['method' => 'GET', 'return' => 'contents']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]ユーザ登録");
@@ -231,18 +222,18 @@ class UsersControllerTest extends ControllerTestCase
 
     function testVerifyEmailNotLoggedIn()
     {
-        $this->testAction('/users/verify/12345678', ['return' => 'contents']);
+        $this->testAction('/users/verify/12345678', ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testVerifyEmailLoggedInYet()
     {
-        $this->testAction('/users/verify/12345', ['return' => 'contents']);
+        $this->testAction('/users/verify/12345', ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testVerifyEmailNotFound()
     {
         try {
-            $this->testAction('/users/verify/123456', ['return' => 'contents']);
+            $this->testAction('/users/verify/123456', ['method' => 'GET', 'return' => 'contents']);
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e), "[異常]メールアドレス認証で存在しないトークンを指定された場合に例外処理");
@@ -270,7 +261,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
-        $this->testAction('/users/register');
+        $this->testAction('/users/register', ['method' => 'GET']);
         $this->assertEquals('en', Configure::read('Config.language'), "自動言語設定がonの場合は言語設定が無視される");
     }
 
@@ -296,8 +287,29 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
-        $this->testAction('/users/register');
+        $this->testAction('/users/register', ['method' => 'GET']);
         $this->assertEquals('jpn', Configure::read('Config.language'), "自動言語設定がoffの場合は言語設定が適用される");
     }
 
+    function generateMockSecurity()
+    {
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ],
+        ]);
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+    }
+
+    function generateMockMethodSecurity()
+    {
+
+    }
 }

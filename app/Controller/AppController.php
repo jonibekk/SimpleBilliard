@@ -32,9 +32,9 @@ class AppController extends Controller
         'DebugKit.Toolbar',
         'Session',
         //TODO Securityコンポーネントを利用した場合のテスト通過方法がわからない。要調査
-        //        'Security' => [
-        //            'csrfUseOnce' => false
-        //        ],
+        'Security' => [
+            'csrfUseOnce' => false
+        ],
         'Paginator',
         'Auth'     => ['flash' => [
             'element' => 'alert',
