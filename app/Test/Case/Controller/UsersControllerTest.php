@@ -159,7 +159,7 @@ class UsersControllerTest extends ControllerTestCase
 
     function testLoggedInFailed()
     {
-        Configure::write('Config.language', 'en');
+        Configure::write('Config.language', 'ja');
 
         /**
          * @var UsersController $Users
@@ -167,7 +167,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session',
-                'Auth',
+                'Auth' => ['user', 'loggedIn'],
             ]
         ]);
         $value_map = [
@@ -176,17 +176,22 @@ class UsersControllerTest extends ControllerTestCase
             ['auto_language_flg', true],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(false));
+        /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
         $this->generateMockSecurity();
         $data = [
             'User' => [
-                'email'    => "aaaato@email.com",
+                'email' => "abcdefgto@email.com",
                 'password' => "12345678",
             ]
         ];
-        $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
+        $Users->Auth->logout();
+        $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'contents']);
+//        $this->assertContains("メールアドレスもしくはパスワードが正しくありません。",$res,"[異常系]ログイン");
     }
 
     function testLogout()

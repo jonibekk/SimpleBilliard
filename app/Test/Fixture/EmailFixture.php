@@ -146,7 +146,7 @@ class EmailFixture extends CakeTestFixture
         ),
         array(
             'id'                  => '537ce223-3514-47e1-893b-433dac11b50b',
-            'user_id'             => 'Lorem ipsum dolor sit amet',
+            'user_id' => '537ce224-54b0-4081-b044-433dac11b50b',
             'email'   => 'to@email.com',
             'email_verified'      => 1,
             'email_token'         => 'Lorem ipsum dolor sit amet',
