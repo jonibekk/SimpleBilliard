@@ -60,12 +60,11 @@ Configure::write('Error', array(
  *
  * @see ErrorHandler for more information on exception handling and configuration.
  */
-Configure::write('Exception', array(
+Configure::write('Exception', [
     'handler'  => 'ErrorHandler::handleException',
-    'renderer' => 'ExceptionRenderer',
+    'renderer' => 'AppExceptionRenderer',
     'log'      => true
-));
-
+]);
 /**
  * Application wide charset encoding
  */

@@ -257,6 +257,8 @@ class UsersControllerTest extends ControllerTestCase
         try {
             $this->testAction('/users/sent_mail', ['method' => 'GET', 'return' => 'contents']);
         } catch (NotFoundException $e) {
+            $this->controller->beforeRender();
+
         }
         $this->assertTrue(isset($e), "[異常]ユーザ登録");
     }
