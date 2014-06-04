@@ -195,9 +195,6 @@ class UsersController extends AppController
      */
     public function _autoLogin($user_id)
     {
-        if (!$user_id) {
-            return false;
-        }
         $user = $this->User->findById($user_id);
         //リダイレクト先を退避
         $redirect = null;

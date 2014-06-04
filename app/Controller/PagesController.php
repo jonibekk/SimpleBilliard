@@ -72,12 +72,7 @@ class PagesController extends AppController
             //現在の登録ユーザ数
             $user_count = $this->User->getAllUsersCount();
             $this->set(compact('user_count'));
-            if ($path[0] == 'logged_in_home') {
-                return $this->render('home');
-            }
-            else {
-                return $this->render(implode('/', $path));
-            }
+            return $this->render(implode('/', $path));
         }
     }
 
