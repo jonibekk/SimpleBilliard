@@ -181,6 +181,47 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
     }
 
+//    function testLoggedInSuccessRedirect()
+//    {
+//        Configure::write('Config.language', 'en');
+//
+//        /**
+//         * @var UsersController $Users
+//         */
+//        $Users = $this->generate('Users', [
+//            'components' => [
+//                'Session' => ['read'],
+//                'Auth'    => ['user', 'loggedIn'],
+//            ]
+//        ]);
+//        $value_map = [
+//            [null, null],
+//            ['language', 'jpn'],
+//            ['auto_language_flg', true],
+//        ];
+//        /** @noinspection PhpUndefinedMethodInspection */
+//        $Users->Auth->staticExpects($this->any())->method('user')
+//                    ->will($this->returnValueMap($value_map)
+//            );
+//        /** @noinspection PhpUndefinedMethodInspection */
+//        $Users->Auth->expects($this->any())->method('loggedIn')
+//                    ->will($this->returnValue(true));
+//        $value_map = [
+//            ['Auth.Redirect', '/'],
+//        ];
+//        /** @noinspection PhpUndefinedMethodInspection */
+//        $Users->Session->expects($this->any())->method('read')
+//                       ->will($this->returnValueMap($value_map));
+//        $this->generateMockSecurity();
+//        $data = [
+//            'User' => [
+//                'email'    => "to@email.com",
+//                'password' => "12345678",
+//            ]
+//        ];
+//        $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
+//    }
+
     function testLoggedInFailed()
     {
         Configure::write('Config.language', 'ja');
@@ -217,6 +258,7 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'contents']);
 //        $this->assertContains("メールアドレスもしくはパスワードが正しくありません。",$res,"[異常系]ログイン");
     }
+
     function testLogout()
     {
         /**
@@ -261,6 +303,23 @@ class UsersControllerTest extends ControllerTestCase
 
         }
         $this->assertTrue(isset($e), "[異常]ユーザ登録");
+    }
+
+    function testVerifySuccess()
+    {
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+            ]
+        ]);
+        $value_map = [
+            [null, null],
+            ['Auth.redirect', '/aaa'],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap($value_map));
+        $res = $this->testAction('/users/verify/1234567890', ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testVerifyEmailNotLoggedIn()
