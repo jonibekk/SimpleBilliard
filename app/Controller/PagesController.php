@@ -65,6 +65,7 @@ class PagesController extends AppController
                 return $this->render('logged_in_home');
             }
             else {
+                $this->layout = LAYOUT_ONE_COLUMN;
                 return $this->render(implode('/', $path));
             }
         }
