@@ -1,3 +1,5 @@
+<a href="http://zhb.io/zhb-now" target="_blank"><img src="https://raw.github.com/axiomzen/zenhub-now/master/powered-by-zenhub-720.png" width="200px" alt="Powered by ZenHub"/></a>
+
 # Goalous 2.0
 Goalous 2.0のリポジトリです。  
 旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)  

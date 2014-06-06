@@ -1,7 +1,6 @@
 <?php
 /**
  * This is core configuration file.
- *
  * Use it to configure core behavior of Cake.
  *
  * @link          http://cakephp.org CakePHP(tm) Project
@@ -11,14 +10,11 @@
 
 /**
  * CakePHP Debug Level:
- *
  * Production Mode:
  *    0: No error messages, errors, or warnings shown. Flash messages redirect.
- *
  * Development Mode:
  *    1: Errors and warnings shown, model caches refreshed, flash messages halted.
  *    2: As in 1, but also with full debug messages and SQL output.
- *
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
@@ -31,9 +27,7 @@ Configure::write('debug', DEBUG_MODE);
  * Configure the Error handler used to handle errors for your application. By default
  * ErrorHandler::handleError() is used. It will display errors using Debugger, when debug > 0
  * and log errors with CakeLog when debug = 0.
- *
  * Options:
- *
  * - `handler` - callback - The callback to handle errors. You can set this to any callable type,
  *   including anonymous functions.
  *   Make sure you add App::uses('MyHandler', 'Error'); when using a custom handler class
@@ -53,9 +47,7 @@ Configure::write('Error', array(
  * ErrorHandler::handleException() is used. It will display a HTML page for the exception, and
  * while debug > 0, framework errors like Missing Controller will be displayed. When debug = 0,
  * framework errors will be coerced into generic HTTP errors.
- *
  * Options:
- *
  * - `handler` - callback - The callback to handle exceptions. You can set this to any callback type,
  *   including anonymous functions.
  *   Make sure you add App::uses('MyHandler', 'Error'); when using a custom handler class
@@ -68,12 +60,11 @@ Configure::write('Error', array(
  *
  * @see ErrorHandler for more information on exception handling and configuration.
  */
-Configure::write('Exception', array(
+Configure::write('Exception', [
     'handler'  => 'ErrorHandler::handleException',
-    'renderer' => 'ExceptionRenderer',
+    'renderer' => 'AppExceptionRenderer',
     'log'      => true
-));
-
+]);
 /**
  * Application wide charset encoding
  */
@@ -83,11 +74,9 @@ Configure::write('App.encoding', 'UTF-8');
  * To configure CakePHP *not* to use mod_rewrite and to
  * use CakePHP pretty URLs, remove these .htaccess
  * files:
- *
  * /.htaccess
  * /app/.htaccess
  * /app/webroot/.htaccess
- *
  * And uncomment the App.baseUrl below. But keep in mind
  * that plugin assets such as images, CSS and JavaScript files
  * will not work without URL rewriting!
@@ -129,42 +118,36 @@ Configure::write('App.encoding', 'UTF-8');
 
 /**
  * Uncomment the define below to use CakePHP prefix routes.
- *
  * The value of the define determines the names of the routes
  * and their associated controller actions:
- *
  * Set to an array of prefixes you want to use in your application. Use for
  * admin or other prefixed routes.
- *
  *    Routing.prefixes = array('admin', 'manager');
- *
  * Enables:
  *    `admin_index()` and `/admin/controller/index`
  *    `manager_index()` and `/manager/controller/index`
- *
+
  */
 //Configure::write('Routing.prefixes', array('admin'));
 
 /**
  * Turn off all caching application-wide.
- *
+
  */
 //Configure::write('Cache.disable', true);
 
 /**
  * Enable cache checking.
- *
  * If set to true, for view caching you must still use the controller
  * public $cacheAction inside your controllers to define caching settings.
  * You can either set it controller-wide by setting public $cacheAction = true,
  * or in each action using $this->cacheAction = true.
- *
+
  */
 //Configure::write('Cache.check', true);
 
 /**
  * Enable cache view prefixes.
- *
  * If set it will be prepended to the cache name for view file caching. This is
  * helpful if you deploy the same application via multiple subdomains and languages,
  * for instance. Each version can then have its own view cache namespace.
@@ -174,13 +157,10 @@ Configure::write('App.encoding', 'UTF-8');
 
 /**
  * Session configuration.
- *
  * Contains an array of settings to use for session configuration. The defaults key is
  * used to define a default preset to use for sessions, any settings declared here will override
  * the settings of the default config.
- *
  * ## Options
- *
  * - `Session.cookie` - The name of the cookie to use. Defaults to 'CAKEPHP'
  * - `Session.timeout` - The number of minutes you want sessions to live for. This timeout is handled by CakePHP
  * - `Session.cookieTimeout` - The number of minutes you want session cookies to live for.
@@ -194,25 +174,23 @@ Configure::write('App.encoding', 'UTF-8');
  * - `Session.autoRegenerate` - Enabling this setting, turns on automatic renewal of sessions, and
  *    sessionids that change frequently. See CakeSession::$requestCountdown.
  * - `Session.ini` - An associative array of additional ini values to set.
- *
  * The built in defaults are:
- *
  * - 'php' - Uses settings defined in your php.ini.
  * - 'cake' - Saves session files in CakePHP's /tmp directory.
  * - 'database' - Uses CakePHP's database sessions.
  * - 'cache' - Use the Cache class to save sessions.
- *
  * To define a custom session handler, save it at /app/Model/Datasource/Session/<name>.php.
  * Make sure the class implements `CakeSessionHandlerInterface` and set Session.handler to <name>
- *
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
- *
+
  */
 Configure::write('Session', array(
-    'defaults' => 'php'
+    'defaults' => 'database',
+    'cookie'   => 'SID',
+    //セッションの保持時間（秒数）
+    'timeout'  => 60 * 60 * 24 * 30, //30days
 ));
-
 /**
  * A random string used in security hashing methods.
  */
@@ -227,7 +205,6 @@ Configure::write('Security.cipherSeed', '303139623634383766316337663731');
  * Apply timestamps with the last modified time to static assets (js, css, images).
  * Will append a query string parameter containing the time the file was modified. This is
  * useful for invalidating browser caches.
- *
  * Set to `true` to apply timestamps when debug > 0. Set to 'force' to always enable
  * timestamping regardless of debug value.
  */
@@ -237,7 +214,6 @@ Configure::write('Security.cipherSeed', '303139623634383766316337663731');
  * Compress CSS output by removing comments, whitespace, repeating tags, etc.
  * This requires a/var/cache directory to be writable by the web server for caching.
  * and /vendors/csspp/csspp.php
- *
  * To use, prefix the CSS link URL with '/ccss/' instead of '/css/' or use HtmlHelper::css().
  */
 //Configure::write('Asset.filter.css', 'css.php');
@@ -245,7 +221,6 @@ Configure::write('Security.cipherSeed', '303139623634383766316337663731');
 /**
  * Plug in your own custom JavaScript compressor by dropping a script in your webroot to handle the
  * output, and setting the config below to the name of the script.
- *
  * To use, prefix your JavaScript link URLs with '/cjs/' instead of '/js/' or use JsHelper::link().
  */
 //Configure::write('Asset.filter.js', 'custom_javascript_output_filter.php');
@@ -264,12 +239,9 @@ Configure::write('Acl.database', 'default');
 date_default_timezone_set('UTC');
 
 /**
- *
  * Cache Engine Configuration
  * Default settings provided below
- *
  * File storage engine.
- *
  *     Cache::config('default', array(
  *        'engine' => 'File', //[required]
  *        'duration' => 3600, //[optional]
@@ -280,18 +252,14 @@ date_default_timezone_set('UTC');
  *        'serialize' => true, //[optional]
  *        'mask' => 0664, //[optional]
  *    ));
- *
  * APC (http://pecl.php.net/package/APC)
- *
  *     Cache::config('default', array(
  *        'engine' => 'Apc', //[required]
  *        'duration' => 3600, //[optional]
  *        'probability' => 100, //[optional]
  *        'prefix' => Inflector::slug(APP_DIR) . '_', //[optional]  prefix every cache file with this string
  *    ));
- *
  * Xcache (http://xcache.lighttpd.net/)
- *
  *     Cache::config('default', array(
  *        'engine' => 'Xcache', //[required]
  *        'duration' => 3600, //[optional]
@@ -300,9 +268,7 @@ date_default_timezone_set('UTC');
  *        'user' => 'user', //user from xcache.admin.user settings
  *        'password' => 'password', //plaintext password (xcache.admin.pass)
  *    ));
- *
  * Memcache (http://www.danga.com/memcached/)
- *
  *     Cache::config('default', array(
  *        'engine' => 'Memcache', //[required]
  *        'duration' => 3600, //[optional]
@@ -314,9 +280,7 @@ date_default_timezone_set('UTC');
  *        'persistent' => true, // [optional] set this to false for non-persistent connections
  *        'compress' => false, // [optional] compress data in Memcache (slower, but uses less memory)
  *    ));
- *
  *  Wincache (http://php.net/wincache)
- *
  *     Cache::config('default', array(
  *        'engine' => 'Wincache', //[required]
  *        'duration' => 3600, //[optional]
@@ -328,9 +292,7 @@ date_default_timezone_set('UTC');
 /**
  * Configure the cache handlers that CakePHP will use for internal
  * metadata like class maps, and model schema.
- *
  * By default File is used, but for improved performance you should use APC.
- *
  * Note: 'default' and other application caches should be configured in app/Config/bootstrap.php.
  *       Please check the comments in bootstrap.php for more info on the cache engines available
  *       and their settings.

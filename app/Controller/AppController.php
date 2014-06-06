@@ -31,8 +31,12 @@ class AppController extends Controller
     public $components = [
         'DebugKit.Toolbar',
         'Session',
+        //TODO Securityコンポーネントを利用した場合のテスト通過方法がわからない。要調査
+        'Security' => [
+            'csrfUseOnce' => false
+        ],
         'Paginator',
-        'Auth' => ['flash' => [
+        'Auth'     => ['flash' => [
             'element' => 'alert',
             'key'     => 'auth',
             'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
@@ -59,8 +63,6 @@ class AppController extends Controller
     {
         parent::beforeFilter();
         $this->_setAppLanguage();
-        //TODO 一時的に全許可
-        $this->Auth->allow();
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }
@@ -79,14 +81,6 @@ class AppController extends Controller
         else {
             $lang = $this->Lang->getLanguage();
             $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
-        }
-    }
-
-    function beforeRender()
-    {
-        //エラー画面は１カラムのレイアウト
-        if ($this->name == 'CakeError') {
-            $this->layout = LAYOUT_ONE_COLUMN;
         }
     }
 }
