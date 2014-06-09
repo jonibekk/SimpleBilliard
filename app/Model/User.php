@@ -257,10 +257,6 @@ class User extends AppModel
         if (!empty($row[$this->alias]['username'])) {
             $display_username = $row[$this->alias]['username'];
         }
-        elseif (!empty($row[$this->alias]['first_name']) && !empty($row[$this->alias]['last_name'])) {
-            $display_username = ucfirst($row[$this->alias]['first_name']) . " "
-                . ucfirst($row[$this->alias]['last_name']);
-        }
         return $display_username;
     }
 
@@ -330,7 +326,8 @@ class User extends AppModel
         }
         //パスワードをハッシュ化
         if (isset($data['User']['password']) && !empty($data['User']['password'])) {
-            $data['User']['password'] = Security::hash($data['User']['password']);
+            $passwordHasher = new SimplePasswordHasher();
+            $data['User']['password'] = $passwordHasher->hash($data['User']['password']);
         }
         //メールアドレスの認証トークンを発行
         $email_token = $this->generateToken();

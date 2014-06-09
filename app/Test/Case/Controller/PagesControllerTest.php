@@ -15,6 +15,7 @@ class PagesControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.cake_session',
         'app.user',
         'app.image',
         'app.badge',
@@ -103,7 +104,32 @@ class PagesControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
-        //$this->testAction('/', ['return' => 'contents']);
+        $this->testAction('/', ['return' => 'contents']);
+    }
+
+    public function testFeatureAuth()
+    {
+        Configure::write('Config.language', 'en');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Pages', [
+            'components' => [
+                'Session',
+                'Auth',
+            ]
+        ]);
+        $value_map = [
+            [null, 1],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        $this->testAction('/features', ['return' => 'contents']);
     }
 
     /**

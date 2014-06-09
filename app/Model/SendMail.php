@@ -99,9 +99,6 @@ class SendMail extends AppModel
      */
     public function getDetail($id)
     {
-        if (!$id) {
-            return null;
-        }
         $options = [
             'conditions' => ['SendMail.id' => $id],
             'contain'    => [

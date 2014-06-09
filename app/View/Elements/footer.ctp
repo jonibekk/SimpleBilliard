@@ -14,28 +14,38 @@
         <div class="col-lg-12">
 
             <ul class="list-unstyled">
-                <li class="pull-right"><a href="#top">Back to top</a></li>
-                <li><a href="http://news.bootswatch.com"
-                       onclick="pageTracker._link(this.href); return false;">Blog</a>
-                </li>
-                <li><a href="http://feeds.feedburner.com/bootswatch">RSS</a></li>
-                <li><a href="https://twitter.com/thomashpark">Twitter</a></li>
-                <li><a href="https://github.com/thomaspark/bootswatch/">GitHub</a></li>
-                <li><a href="../help/#api">API</a></li>
-                <li>
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=F22JEM3Q78JC2">Donate</a>
-                </li>
+                <li class="pull-right"><a href="#top"><?= __d('gl', "トップに戻る") ?></a></li>
+                <li><?=
+                    $this->Html->link(__d('home', 'Features'),
+                                      [
+                                          'controller' => 'pages',
+                                          'action'     => 'display',
+                                          'pagename'   => 'features',
+                                      ])
+                    ?></li>
+                <li><?=
+                    $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
+                                      ['target' => '_blank']) ?></li>
+                <li><?=
+                    $this->Html->link(__d('gl', 'Privacy Policy'),
+                                      [
+                                          'controller' => 'pages',
+                                          'action'     => 'display',
+                                          'pagename'   => 'pp',
+                                      ])
+                    ?></li>
+                <li><?=
+                    $this->Html->link(__d('gl', 'Terms of Service'),
+                                      [
+                                          'controller' => 'pages',
+                                          'action'     => 'display',
+                                          'pagename'   => 'tos',
+                                      ])
+                    ?></li>
             </ul>
-            <p>Made by <a href="http://thomaspark.me" rel="nofollow">Thomas Park</a>. Contact him at <a
-                    href="mailto:thomas@bootswatch.com">thomas@bootswatch.com</a>.</p>
-
-            <p>Code released under the <a href="https://github.com/thomaspark/bootswatch/blob/gh-pages/LICENSE">MIT
-                    License</a>.</p>
-
-            <p>Based on <a href="http://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a
-                    href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts
-                from <a
-                    href="http://www.google.com/webfonts" rel="nofollow">Google</a>.</p>
+            <p><? $link = $this->Html->link(__d('gl', "Isao Corporation"), "http://www.isao.co.jp/",
+                                            ['target' => "_blank"]);
+                echo __d('gl', "Made By %s", $link) ?></p>
         </div>
     </div>
 </footer>

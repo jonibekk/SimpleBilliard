@@ -41,20 +41,21 @@ class PagesController extends AppController
     public function display()
     {
         $path = func_get_args();
-
-        $count = count($path);
-        if (!$count) {
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->redirect('/');
-        }
+//TODO 現状これが必要になるケースが無いため、一旦コメントアウト
+//        $count = count($path);
+//        if (!$count) {
+//            /** @noinspection PhpVoidFunctionResultUsedInspection */
+//            return $this->redirect('/');
+//        }
         $page = $subpage = null;
 
         if (!empty($path[0])) {
             $page = $path[0];
         }
-        if (!empty($path[1])) {
-            $subpage = $path[1];
-        }
+//TODO 現状これが必要になるケースが無いため、一旦コメントアウト
+//        if (!empty($path[1])) {
+//            $subpage = $path[1];
+//        }
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
@@ -64,6 +65,7 @@ class PagesController extends AppController
                 return $this->render('logged_in_home');
             }
             else {
+                $this->layout = LAYOUT_ONE_COLUMN;
                 return $this->render(implode('/', $path));
             }
         }
@@ -72,18 +74,17 @@ class PagesController extends AppController
             //現在の登録ユーザ数
             $user_count = $this->User->getAllUsersCount();
             $this->set(compact('user_count'));
-            if ($path[0] == 'logged_in_home') {
-                return $this->render('home');
-            }
-            else {
-                return $this->render(implode('/', $path));
-            }
+            return $this->render(implode('/', $path));
         }
     }
 
     public function beforeFilter()
     {
         $this->_setLanguage();
+        //全ページ許可
+        $this->Auth->allow();
+        //セキュリティコンポーネントを無効化
+        $this->Components->disable('Security');
         //切り換え可能な言語をセット
         $this->set('lang_list', $this->_getPageLanguageList());
         parent::beforeFilter();

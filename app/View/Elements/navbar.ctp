@@ -54,7 +54,6 @@
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="http://builtwithbootstrap.com/" target="_blank">Built With Bootstrap</a></li>
-        <li><a href="https://wrapbootstrap.com/?ref=bsw" target="_blank">WrapBootstrap</a></li>
+        <li><?= $this->Html->link(__d('gl', "ログアウト"), ['controller' => 'users', 'action' => 'logout']) ?></li>
     </ul>
 </div>

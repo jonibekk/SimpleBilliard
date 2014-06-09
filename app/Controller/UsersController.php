@@ -11,6 +11,89 @@ class UsersController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_setupAuth();
+    }
+
+    /**
+     * Setup Authentication Component
+     *
+     * @return void
+     */
+    protected function _setupAuth()
+    {
+        $this->Auth->allow('register', 'login', 'verify', 'logout', 'reset_password', 'sent_mail');
+
+        $this->Auth->authenticate = array(
+            'Form2' => array(
+                'fields'    => array(
+                    'username' => 'email',
+                    'password' => 'password'
+                ),
+                'userModel' => 'User',
+                'scope'     => array(
+                    'User.active_flg'             => 1,
+                    'PrimaryEmail.email_verified' => 1
+                ),
+                'recursive' => 0,
+            )
+        );
+        $this->Auth->loginRedirect = '/';
+        $this->Auth->logoutRedirect = array(
+            'controller' => 'users',
+            'action'     => 'login'
+        );
+        $this->Auth->loginAction = array(
+            'admin'      => false,
+            'controller' => 'users',
+            'action'     => 'login'
+        );
+    }
+
+    /**
+     * Common login action
+     *
+     * @return void
+     */
+    public function login()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        //ログイン済の場合はトップへ
+        if ($this->Auth->user()) {
+            /** @noinspection PhpInconsistentReturnPointsInspection */
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect('/');
+        }
+        if ($this->request->is('post') && isset($this->request->data['User'])) {
+            if ($this->Auth->login()) {
+                $this->_setAfterLogin();
+                $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
+                                           ['title' => __d('notify', "ログイン成功")]);
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect('/');
+            }
+            else {
+                $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
+            }
+        }
+
+    }
+
+    /**
+     * Common logout action
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        $user = $this->Auth->user();
+        $this->Session->destroy();
+        $this->Cookie->destroy();
+        $this->Pnotify->outInfo(__d('notify', "%sさん、またお会いしましょう。", $user['display_username']),
+                                ['title' => __d('notify', "ログアウトしました")]);
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->Auth->logout());
     }
 
     /**
@@ -112,9 +195,6 @@ class UsersController extends AppController
      */
     public function _autoLogin($user_id)
     {
-        if (!$user_id) {
-            return false;
-        }
         $user = $this->User->findById($user_id);
         //リダイレクト先を退避
         $redirect = null;
