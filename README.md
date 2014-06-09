@@ -20,6 +20,7 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 Goalousの開発に関して。  
 Goalousで素早く開発を始められるよう心がけております。
 ## Requirements
+以下のツールはローカルにおける開発時に必須である為、必ずインストールしてください。   
 - [Virtual Box](https://www.virtualbox.org/wiki/Downloads) `version >= 4.3.10`
 - [Vagrant](http://www.vagrantup.com/downloads.html) `version >= 1.5.0`
 - [Git](http://git-scm.com/downloads) `version >= 1.8.5`
