@@ -39,6 +39,7 @@ Goalousで素早く開発を始められるよう心がけております。
 ターミナルで以下を実行  
 `cd goalous2`  
 `vagrant up`  
+[vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](https://docs.google.com/a/isao.co.jp/document/d/1IeZfGQPrJtNO_piMxvcsV5KS8ZX1iq0Mv93kpgIioA4/edit?usp=sharing)   
 1. 動作確認  
 ブラウザから以下にアクセス  
 `http://192.168.50.4`
