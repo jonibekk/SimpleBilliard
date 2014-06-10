@@ -73,7 +73,12 @@ class User extends AppModel
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
-        'hide_year_flg'     => ['boolean' => ['rule' => ['boolean'],],],
+        'hide_year_flg' => [
+            'boolean' => [
+                'rule'       => ['boolean',],
+                'allowEmpty' => true,
+            ],
+        ],
         'no_pass_flg'       => ['boolean' => ['rule' => ['boolean'],],],
         'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],

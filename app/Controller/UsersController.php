@@ -138,6 +138,23 @@ class UsersController extends AppController
     }
 
     /**
+     * 新規プロフィール入力
+     */
+    public function add_profile()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        //新規ユーザ登録モードじゃない場合は４０４
+        if ($this->Session->read('add_new_mode') !== 1) {
+            throw new NotFoundException;
+        }
+        $me = $this->Auth->user();
+        //ローカル名を利用している国かどうか？
+        $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
+        $this->set(compact('me', 'is_not_use_local_name'));
+
+    }
+
+    /**
      * 承認メール送信後の画面
      */
     public function sent_mail()
@@ -173,10 +190,13 @@ class UsersController extends AppController
             }
             if (!$last_login) {
                 //ログインがされていなければ、新規ユーザなので「ようこそ」表示
-                $this->Pnotify->outSuccess(__d('notify', 'Goalousへようこそ！'));
+                $this->Pnotify->outSuccess(__d('notify', '本登録が完了しました！'));
+                //新規ユーザ登録時のフロー
+                $this->Session->write('add_new_mode', 1);
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect('/');
+                //新規プロフィール入力画面へ
+                return $this->redirect(['action' => 'add_profile']);
             }
             else {
                 //ログインされていれば、メール追加
