@@ -478,7 +478,7 @@ class UsersControllerTest extends ControllerTestCase
             );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
-                       ->will($this->returnValueMap([['add_new_mode', 1]]));
+            ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
 
         $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
         $this->assertNotContains('姓(母国語)', $this->contents, "[正常]英語でローカル名の入力項目が表示されない");

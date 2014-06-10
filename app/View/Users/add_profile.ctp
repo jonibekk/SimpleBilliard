@@ -20,7 +20,7 @@
                         'wrapInput' => 'col col-md-6',
                         'class'     => 'form-control'
                     ],
-                    'class'         => 'form-horizontal validate',
+                    'class' => 'form-horizontal',
                     'novalidate'    => true
                 ]); ?>
                 <?

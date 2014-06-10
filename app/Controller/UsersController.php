@@ -144,12 +144,18 @@ class UsersController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         //新規ユーザ登録モードじゃない場合は４０４
-        if ($this->Session->read('add_new_mode') !== 1) {
+        if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
             throw new NotFoundException;
         }
         $me = $this->Auth->user();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            //プロフィールを保存
+            $this->User->id = $me['id'];
+            $this->User->save($this->request->data);
+            //チーム作成ページへリダイレクト
+        }
         $this->set(compact('me', 'is_not_use_local_name'));
 
     }
@@ -192,7 +198,7 @@ class UsersController extends AppController
                 //ログインがされていなければ、新規ユーザなので「ようこそ」表示
                 $this->Pnotify->outSuccess(__d('notify', '本登録が完了しました！'));
                 //新規ユーザ登録時のフロー
-                $this->Session->write('add_new_mode', 1);
+                $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 //新規プロフィール入力画面へ
