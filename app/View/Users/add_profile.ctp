@@ -24,24 +24,27 @@
                     'novalidate'    => true
                 ]); ?>
                 <?
-                //姓と名は言語によって表示順を変える
-                $local_last_name = $this->Form->input('local_last_name', [
-                    'label'       => __d('gl', "姓(母国語)"),
-                    'placeholder' => __d('gl', "姓"),
-                    'afterInput'  => '<span class="help-block">' . __d('gl', "例) 鈴木") . '</span>'
-                ]);
-                $local_first_name = $this->Form->input('local_first_name', [
-                    'label'       => __d('gl', "名(母国語)"),
-                    'placeholder' => __d('gl', '名'),
-                    'afterInput'  => '<span class="help-block">' . __d('gl', "例) 太郎") . '</span>'
-                ]);
-                if ($me['last_first']) {
-                    echo $local_last_name;
-                    echo $local_first_name;
-                }
-                else {
-                    echo $local_first_name;
-                    echo $local_last_name;
+                if (!$is_not_use_local_name) {
+                    //ローカル名を使う国のみ表示
+                    //姓と名は言語によって表示順を変える
+                    $local_last_name = $this->Form->input('local_last_name', [
+                        'label'       => __d('gl', "姓(母国語)"),
+                        'placeholder' => __d('gl', "姓"),
+                        'afterInput'  => '<span class="help-block">' . __d('gl', "例) 鈴木") . '</span>'
+                    ]);
+                    $local_first_name = $this->Form->input('local_first_name', [
+                        'label'       => __d('gl', "名(母国語)"),
+                        'placeholder' => __d('gl', '名'),
+                        'afterInput'  => '<span class="help-block">' . __d('gl', "例) 太郎") . '</span>'
+                    ]);
+                    if ($me['last_first']) {
+                        echo $local_last_name;
+                        echo $local_first_name;
+                    }
+                    else {
+                        echo $local_first_name;
+                        echo $local_last_name;
+                    }
                 }
                 ?>
                 <?=
