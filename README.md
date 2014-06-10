@@ -23,10 +23,13 @@ Goalousの開発に関して。
 Goalousで素早く開発を始められるよう心がけております。
 ## Requirements
 以下のツールはローカルにおける開発時に必須である為、必ずインストールしてください。   
-- [Virtual Box](https://www.virtualbox.org/wiki/Downloads) `version >= 4.3.10`
-- [Vagrant](http://www.vagrantup.com/downloads.html) `version >= 1.5.0`
-- [Git](http://git-scm.com/downloads) `version >= 1.8.5`
-- [Chef Client](http://www.getchef.com/chef/install/) `version >= 11.4`
+- Virtual Box `version >= 4.3.10`
+- Vagrant `version >= 1.5.0`
+- Git `version >= 1.8.5`
+- Chef Client `version >= 11.4`
+
+[インストール手順(windows)](https://docs.google.com/a/isao.co.jp/document/d/1LnGo5AMdjAFdgnxh0wivFH8LJbewL77bfl64gQe1F0M/edit?usp=sharing)   
+[インストール手順(mac)](https://docs.google.com/a/isao.co.jp/document/d/12OQ5xXhRfkQWKt1B_ckSz6pAg-5uhpyILqjGbr5-rEU/edit?usp=sharing)   
 
 ## Recommend
 - [hubコマンド](http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3)（mac,linuxのみ）
