@@ -319,7 +319,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($value_map));
-        $res = $this->testAction('/users/verify/1234567890', ['method' => 'GET', 'return' => 'contents']);
+        $this->testAction('/users/verify/1234567890', ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testVerifyEmailNotLoggedIn()
@@ -412,8 +412,115 @@ class UsersControllerTest extends ControllerTestCase
             ->will($this->returnValue(true));
     }
 
-    function generateMockMethodSecurity()
+    function testAddProfileJpn()
     {
+        Configure::write('Config.language', 'ja');
 
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', 1]]));
+
+        $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
+        $this->assertContains('姓(母国語)', $this->contents, "[正常]日本語でローカル名の入力項目が表示される");
+    }
+
+    function testAddProfileEng()
+    {
+        Configure::write('Config.language', 'ja');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'last_first' => true,
+                'language'   => 'eng'
+            ]],
+            ['language', 'eng'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', 1]]));
+
+        $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
+        $this->assertNotContains('姓(母国語)', $this->contents, "[正常]英語でローカル名の入力項目が表示されない");
+    }
+
+    function testAddProfileException()
+    {
+        Configure::write('Config.language', 'ja');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'last_first' => true,
+                'language'   => 'eng'
+            ]],
+            ['language', 'eng'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', null]]));
+
+        try {
+            $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
+        } catch (NotFoundException $e) {
+
+        }
+        $this->assertTrue(isset($e), "[異常]新規ユーザ登録モード以外は例外発生");
     }
 }
