@@ -77,3 +77,10 @@ footer p {
     padding-left: 5px;
     padding-right: 5px;
 }
+
+/*inlineのフォームでスマホでも幅を固定する*/
+.gl-inline-fix {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}

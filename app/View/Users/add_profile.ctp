@@ -51,9 +51,6 @@
                 $this->Form
                     ->input('birth_day',
                             [
-                                'style'      => 'width:70px',
-                                'label'      => __d('global', '誕生日'),
-                                'dateFormat' => 'YMD',
                                 'monthNames' => [
                                     '01' => __d('gl', '1月'),
                                     '02' => __d('gl', '2月'),
@@ -68,6 +65,9 @@
                                     '11' => __d('gl', '11月'),
                                     '12' => __d('gl', '12月'),
                                 ],
+                                'class'      => 'form-control gl-inline-fix',
+                                'label'      => __d('global', '誕生日'),
+                                'dateFormat' => 'YMD',
                                 'empty'      => true,
                                 'separator'  => ' / ',
                                 'maxYear'    => date('Y'),

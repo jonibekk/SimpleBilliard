@@ -157,7 +157,6 @@ class UsersController extends AppController
             //チーム作成ページへリダイレクト
         }
         $this->set(compact('me', 'is_not_use_local_name'));
-
     }
 
     /**
