@@ -142,7 +142,6 @@ class UsersController extends AppController
      */
     public function add_profile()
     {
-        $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
         $this->layout = LAYOUT_ONE_COLUMN;
         //新規ユーザ登録モードじゃない場合は４０４
         if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
@@ -156,9 +155,11 @@ class UsersController extends AppController
             $this->User->id = $me['id'];
             $this->User->save($this->request->data);
             //チーム作成ページへリダイレクト
-            $this->redirect(['controller' => 'teams', 'action' => 'add']);
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect(['controller' => 'teams', 'action' => 'add']);
         }
         $this->set(compact('me', 'is_not_use_local_name'));
+        return $this->render();
     }
 
     /**
