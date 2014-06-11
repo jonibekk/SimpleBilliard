@@ -101,13 +101,14 @@
                         'id'    => 'InitLocalDate',
                     ]);
                     ?>
-                    <hr>
-                    <div class="form-group">
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
                         <div class="col-md-9 col-md-offset-3">
                             <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
+                            <?= $this->Form->end(); ?>
                         </div>
                     </div>
-                    <?= $this->Form->end(); ?>
                 </div>
             </div>
         </div>
