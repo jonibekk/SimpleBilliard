@@ -45,13 +45,14 @@ class User extends AppModel
     public $actsAs = [
         'Upload.Upload' => [
             'photo' => [
-                'thumbnailSizes' => [
+                'thumbnailSizes'   => [
                     'large'  => '128x128',
                     'middle' => '48x48',
                     'small'  => '32x32',
                 ],
-                'deleteOnUpdate' => true,
-                'maxSize'        => 1,
+                'deleteOnUpdate'   => true,
+                'thumbnailQuality' => 100,
+                'maxSize'          => '10485760', //10mb
             ],
         ]
     ];
@@ -85,7 +86,7 @@ class User extends AppModel
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
-        'hide_year_flg' => [
+        'hide_year_flg'     => [
             'boolean' => [
                 'rule'       => ['boolean',],
                 'allowEmpty' => true,
@@ -125,6 +126,12 @@ class User extends AppModel
             'passwordSameCheck' => [
                 'rule' => ['passwordSameCheck', 'password'],
             ],
+        ],
+        'photo'             => [
+            'isBelowMaxSize' => [
+                'rule'       => ['isBelowMaxSize', 10485760], //10mb
+                'allowEmpty' => true,
+            ]
         ],
     ];
 

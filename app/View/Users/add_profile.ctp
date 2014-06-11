@@ -92,9 +92,9 @@
                 ?>
                 <?=
                 $this->Form->input('photo', [
-                    'type'  => 'file',
-                    'label' => __d('gl', "プロフィール画像"),
-
+                    'type'       => 'file',
+                    'label'      => __d('gl', "プロフィール画像"),
+                    'afterInput' => '<span class="help-block">' . __d('gl', '10MB以下') . '</span>'
                 ])?>
             </div>
             <div class="panel-footer">

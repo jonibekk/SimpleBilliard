@@ -143,19 +143,20 @@ class UsersController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         //新規ユーザ登録モードじゃない場合は４０４
-        if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
-            throw new NotFoundException;
-        }
+//        if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
+//            throw new NotFoundException;
+//        }
         $me = $this->Auth->user();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
         if ($this->request->is('post') && !empty($this->request->data)) {
             //プロフィールを保存
             $this->User->id = $me['id'];
-            $this->User->save($this->request->data);
-            //チーム作成ページへリダイレクト
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->redirect(['controller' => 'teams', 'action' => 'add']);
+            if ($this->User->save($this->request->data)) {
+                //チーム作成ページへリダイレクト
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect(['controller' => 'teams', 'action' => 'add']);
+            }
         }
         $this->set(compact('me', 'is_not_use_local_name'));
         return $this->render();
