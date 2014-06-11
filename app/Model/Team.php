@@ -4,7 +4,6 @@ App::uses('AppModel', 'Model');
 /**
  * Team Model
  *
- * @property Image          $Image
  * @property Badge          $Badge
  * @property CommentLike    $CommentLike
  * @property CommentMention $CommentMention
@@ -59,9 +58,7 @@ class Team extends AppModel
      *
      * @var array
      */
-    public $belongsTo = [
-        'Image',
-    ];
+    public $belongsTo = [];
 
     /**
      * hasMany associations

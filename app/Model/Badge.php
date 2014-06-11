@@ -6,7 +6,6 @@ App::uses('AppModel', 'Model');
  *
  * @property User  $User
  * @property Team  $Team
- * @property Image $Image
  */
 class Badge extends AppModel
 {
@@ -48,7 +47,6 @@ class Badge extends AppModel
     public $belongsTo = [
         'User',
         'Team',
-        'Image',
     ];
 
     function __construct($id = false, $table = null, $ds = null)

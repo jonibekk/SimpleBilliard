@@ -5,7 +5,6 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Image          $ProfileImage
  * @property Email          $PrimaryEmail
  * @property Team           $DefaultTeam
  * @property Badge          $Badge
@@ -122,7 +121,6 @@ class User extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'ProfileImage' => ['className' => 'Image', 'foreignKey' => 'profile_image_id',],
         'DefaultTeam'  => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
         'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
     ];
@@ -143,7 +141,6 @@ class User extends AppModel
         'Comment',
         'Email',
         'GivenBadge',
-        'Image',
         'Notification',
         'OauthToken',
         'PostLike',
