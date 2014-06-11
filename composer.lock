@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e56b7c848ece54364993b034b6ef4ca8",
+    "hash": "8ddaa942a54d76e77da3dbb88b3375ff",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "2.6.5",
+            "version": "2.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "459e83a318911eb6685d0a6fd2dcd0495a660a51"
+                "reference": "37d5572e2408c5ea7104c361b64a187b1a0a53bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/459e83a318911eb6685d0a6fd2dcd0495a660a51",
-                "reference": "459e83a318911eb6685d0a6fd2dcd0495a660a51",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/37d5572e2408c5ea7104c361b64a187b1a0a53bd",
+                "reference": "37d5572e2408c5ea7104c361b64a187b1a0a53bd",
                 "shasum": ""
             },
             "require": {
@@ -71,7 +71,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2014-05-22 23:03:48"
+            "time": "2014-05-29 18:57:57"
         },
         {
             "name": "cakedc/migrations",
@@ -414,6 +414,170 @@
                 "validation"
             ],
             "time": "2014-03-19 01:33:27"
+        },
+        {
+            "name": "josegonzalez/cakephp-upload",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/josegonzalez/cakephp-upload.git",
+                "reference": "cdd7bb0923815f7af4c8196264e148e7379e77bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/josegonzalez/cakephp-upload/zipball/cdd7bb0923815f7af4c8196264e148e7379e77bf",
+                "reference": "cdd7bb0923815f7af4c8196264e148e7379e77bf",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "*"
+            },
+            "type": "cakephp-plugin",
+            "extra": {
+                "installer-name": "Upload"
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc Würth",
+                    "email": "ravage@bluewin.ch",
+                    "homepage": "https://github.com/ravage84",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Jose Diaz-Gonzalez",
+                    "email": "dotenv@josegonzalez.com",
+                    "homepage": "http://josediazgonzalez.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Joshua Paling",
+                    "homepage": "https://github.com/joshuapaling",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "sdoney",
+                    "homepage": "https://github.com/sdoney",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Giuliano B",
+                    "homepage": "https://github.com/giulianob",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Justin Slamka",
+                    "homepage": "https://github.com/slamkajs",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Nathan Tyler",
+                    "homepage": "https://github.com/tylerdigital",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Mirko Chialastri",
+                    "homepage": "https://github.com/hiryu85",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Benjamin Allison",
+                    "homepage": "https://github.com/benjaminallison",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Ariel Patschiki",
+                    "homepage": "https://github.com/arielpts",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "lucfranken",
+                    "homepage": "https://github.com/lucfranken",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "cpierce",
+                    "homepage": "https://github.com/cpierce",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Barry Chapman",
+                    "homepage": "https://github.com/barrychapman",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Thomas Edvalson",
+                    "homepage": "https://github.com/Cruel",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Alejandro Ibarra",
+                    "homepage": "https://github.com/ajibarra",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "simkimsia",
+                    "homepage": "https://github.com/simkimsia",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Callum Macdonald",
+                    "homepage": "https://github.com/chmac",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "David Kullmann",
+                    "homepage": "https://github.com/dkullmann",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Juan Basso",
+                    "homepage": "https://github.com/jrbasso",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Cauan Cabral",
+                    "homepage": "https://github.com/CauanCabral",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Bryan Crowe",
+                    "homepage": "https://github.com/bcrowe",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Simon Brown",
+                    "homepage": "https://github.com/Simes",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "wilsolutions",
+                    "homepage": "https://github.com/wilsolutions",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Graham Watson",
+                    "homepage": "https://github.com/PhantomWatson",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "ceallred",
+                    "homepage": "https://github.com/ceallred",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "CakePHP plugin to handle file uploading sans ridiculous automagic",
+            "homepage": "http://github.com/josegonzalez/cakephp-upload",
+            "keywords": [
+                "Behavior",
+                "cakephp",
+                "files",
+                "upload"
+            ],
+            "time": "2014-01-15 17:02:55"
         },
         {
             "name": "mixpanel/mixpanel-php",
@@ -1008,17 +1172,17 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "2effc67af6f21a0d267210b72d0b0b691d113528"
+                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/2effc67af6f21a0d267210b72d0b0b691d113528",
-                "reference": "2effc67af6f21a0d267210b72d0b0b691d113528",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
+                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
                 "shasum": ""
             },
             "require": {
@@ -1028,7 +1192,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1054,36 +1218,38 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-22 08:11:06"
+            "time": "2014-04-22 08:11:23"
         },
         {
             "name": "symfony/console",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d"
+                "reference": "ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/24f723436e62598c9dddee2a8573d6992504dc5d",
-                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c",
+                "reference": "ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
+                "psr/log": "~1.0",
                 "symfony/event-dispatcher": "~2.1"
             },
             "suggest": {
+                "psr/log": "For using the console logger",
                 "symfony/event-dispatcher": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1109,28 +1275,31 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-14 21:48:29"
+            "time": "2014-05-22 08:54:24"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "e539602e5455aa086c0e81e604745af7789e4d8a"
+                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/e539602e5455aa086c0e81e604745af7789e4d8a",
-                "reference": "e539602e5455aa086c0e81e604745af7789e4d8a",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
+                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "symfony/dependency-injection": "~2.0"
+                "psr/log": "~1.0",
+                "symfony/config": "~2.0",
+                "symfony/dependency-injection": "~2.0",
+                "symfony/stopwatch": "~2.2"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -1139,7 +1308,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1165,21 +1334,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:34:31"
+            "time": "2014-04-29 10:13:57"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "a3af8294bcce4a7c1b2892363b0c9d8109affad4"
+                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/a3af8294bcce4a7c1b2892363b0c9d8109affad4",
-                "reference": "a3af8294bcce4a7c1b2892363b0c9d8109affad4",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/98e831eac836a0a5911626ce82684155f21d0e4d",
+                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d",
                 "shasum": ""
             },
             "require": {
@@ -1188,7 +1357,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1214,21 +1383,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:34:31"
+            "time": "2014-04-16 10:36:21"
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Stopwatch",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Stopwatch.git",
-                "reference": "343bcc0360f2c22f371884b8f6a9fee8d1aa431a"
+                "reference": "724d73604ebe6c1c9bdf36533b556123bd9075a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/343bcc0360f2c22f371884b8f6a9fee8d1aa431a",
-                "reference": "343bcc0360f2c22f371884b8f6a9fee8d1aa431a",
+                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/724d73604ebe6c1c9bdf36533b556123bd9075a1",
+                "reference": "724d73604ebe6c1c9bdf36533b556123bd9075a1",
                 "shasum": ""
             },
             "require": {
@@ -1237,7 +1406,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1263,21 +1432,21 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:37:09"
+            "time": "2014-04-18 20:40:13"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265"
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/fd22bb88c3a6f73c898b39bec185a9e211b06265",
-                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b4b09c68ec2f2727574544ef0173684281a5033c",
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c",
                 "shasum": ""
             },
             "require": {
@@ -1286,7 +1455,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1312,7 +1481,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-12 09:27:48"
+            "time": "2014-05-16 14:25:18"
         }
     ],
     "packages-dev": [
