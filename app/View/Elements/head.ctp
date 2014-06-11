@@ -14,9 +14,12 @@
     <title>
         <?= $title_for_layout; ?>
     </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <?
     echo $this->Html->meta('icon');
+    echo $this->Html->meta(
+                    ['name'    => 'viewport',
+                     'content' => "width=device-width, initial-scale=1, maximum-scale=1"
+                    ]);
     //echo $this->Html->css('bootstrap.min.css', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     echo $this->Html->css('bw-simplex', array('media' => 'screen'));
