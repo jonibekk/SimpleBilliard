@@ -20,8 +20,9 @@
                         'wrapInput' => 'col col-md-6',
                         'class'     => 'form-control'
                     ],
-                    'class' => 'form-horizontal',
-                    'novalidate'    => true
+                    'class'      => 'form-horizontal',
+                    'novalidate' => true,
+                    'type'       => 'file',
                 ]); ?>
                 <?
                 if (!$is_not_use_local_name) {
@@ -89,6 +90,12 @@
                     'afterInput' => '<span class="help-block">' . __d('gl', '例) 東京都') . '</span>'
                 ]);
                 ?>
+                <?=
+                $this->Form->input('photo', [
+                    'type'  => 'file',
+                    'label' => __d('gl', "プロフィール画像"),
+
+                ])?>
             </div>
             <div class="panel-footer">
                 <div class="row">

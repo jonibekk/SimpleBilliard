@@ -42,6 +42,19 @@ class User extends AppModel
         self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __d('gl', "女性");
     }
 
+    public $actsAs = [
+        'Upload.Upload' => [
+            'photo' => [
+                'thumbnailSizes' => [
+                    'large'  => '128x128',
+                    'middle' => '48x48',
+                    'small'  => '32x32',
+                ],
+                'deleteOnUpdate' => true,
+                'maxSize'        => 1,
+            ],
+        ]
+    ];
     /**
      * ユーザ名の表記が姓名の順である言語のリスト
      */

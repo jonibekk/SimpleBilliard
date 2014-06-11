@@ -129,7 +129,6 @@ class UsersController extends AppController
             }
             //ユーザ仮登録失敗
             else {
-
             }
         }
         //姓名の並び順をセット
