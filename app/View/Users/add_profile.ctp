@@ -97,7 +97,7 @@
                         $this->Form->submit(__d('gl', "プロフィールを登録"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?=
-                        $this->Html->link(__d('gl', "スキップ"), ['action' => 'add_profile'],
+                        $this->Html->link(__d('gl', "スキップ"), ['controller' => 'teams', 'action' => 'add'],
                                           ['class' => 'btn btn-default', 'div' => false]) ?>
                         <?= $this->Form->end(); ?>
                     </div>
