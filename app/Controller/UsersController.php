@@ -143,9 +143,9 @@ class UsersController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         //新規ユーザ登録モードじゃない場合は４０４
-//        if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
-//            throw new NotFoundException;
-//        }
+        if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
+            throw new NotFoundException;
+        }
         $me = $this->Auth->user();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
