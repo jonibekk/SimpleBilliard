@@ -233,6 +233,7 @@ class UploadBehavior extends ModelBehavior
                     if (file_exists($settings['path'])) {
                         @unlink($settings['path']);
                     }
+                    $this->s3Delete($settings['path']);
                 }
             }
         }
@@ -670,9 +671,6 @@ class UploadBehavior extends ModelBehavior
 
     function s3Upload($from_path, $type)
     {
-        if (!$from_path || !$type) {
-            return false;
-        }
         //公開環境じゃない場合は処理しない
         if (!PUBLIC_ENV) {
             return false;
@@ -695,6 +693,22 @@ class UploadBehavior extends ModelBehavior
                 ));
             return $response;
 
+        } catch (S3Exception $e) {
+        }
+        return null;
+    }
+
+    function s3Delete($from_path)
+    {
+        //公開環境じゃない場合は処理しない
+        if (!PUBLIC_ENV) {
+            return false;
+        }
+        $img_path_exp = explode(S3_TRIM_PATH, $from_path);
+        $to_path = $img_path_exp[1];
+        try {
+            $response = $this->s3->deleteObject(S3_ASSETS_BUCKET, $to_path);
+            return $response;
         } catch (S3Exception $e) {
         }
         return null;
