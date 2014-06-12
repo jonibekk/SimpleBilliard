@@ -707,7 +707,7 @@ class UploadBehavior extends ModelBehavior
         $img_path_exp = explode(S3_TRIM_PATH, $from_path);
         $to_path = $img_path_exp[1];
         try {
-            $response = $this->s3->deleteObject(S3_ASSETS_BUCKET, $to_path);
+            $response = $this->s3->deleteObject(['Bucket' => S3_ASSETS_BUCKET, 'Key' => $to_path]);
             return $response;
         } catch (S3Exception $e) {
         }
