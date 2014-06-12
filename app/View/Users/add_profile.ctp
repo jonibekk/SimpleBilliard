@@ -49,6 +49,17 @@
                 }
                 ?>
                 <?=
+                $this->Form->input('gender_type',
+                                   [
+                                       'type'    => 'radio',
+                                       'before'  => '<label class="col col-md-3 control-label">'
+                                           . __d('gl', '性別') . '</label>',
+                                       'legend'  => false,
+                                       'options' => User::$TYPE_GENDER,
+                                       'class'   => 'radio-inline'
+                                   ])
+                ?>
+                <?=
                 $this->Form
                     ->input('birth_day',
                             [
@@ -67,7 +78,7 @@
                                     '12' => __d('gl', '12月'),
                                 ],
                                 'class'      => 'form-control gl-inline-fix',
-                                'label'      => __d('global', '誕生日'),
+                                'label' => __d('gl', '誕生日'),
                                 'dateFormat' => 'YMD',
                                 'empty'      => true,
                                 'separator'  => ' / ',
