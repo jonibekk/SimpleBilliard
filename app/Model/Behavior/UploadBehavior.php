@@ -34,8 +34,6 @@ class UploadBehavior extends ModelBehavior
      */
     private $s3;
 
-    private $trim_path = '/upload/';
-
     public function setup(Model $model, $settings = array())
     {
         $defaults = array(
@@ -680,7 +678,7 @@ class UploadBehavior extends ModelBehavior
             return false;
         }
 
-        $img_path_exp = explode($this->trim_path, $from_path);
+        $img_path_exp = explode(S3_TRIM_PATH, $from_path);
         $to_path = $img_path_exp[1];
 
         try {

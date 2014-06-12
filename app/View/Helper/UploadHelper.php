@@ -56,7 +56,10 @@ class UploadHelper extends AppHelper
             $url = isset($settings['default_url']) ? $settings['default_url'] : null;
         }
 
-        return $options['urlize'] ? $this->Html->url($url) : $url;
+        //s3用の処理追加
+        $url = $options['urlize'] ? $this->Html->url($url) : $url;
+        $url = $this->substrS3Url($url);
+        return $url;
     }
 
     /**
@@ -126,4 +129,14 @@ class UploadHelper extends AppHelper
         /** @noinspection PhpInconsistentReturnPointsInspection */
         return array_search($mimeType, $knownMimeTypes);
     }
+
+    public function substrS3Url($url)
+    {
+        if (PUBLIC_ENV) {
+            $trimed_url = str_replace(S3_TRIM_PATH, "", $url);
+            $url = S3_BASE_URL . DS . S3_ASSETS_BUCKET . DS . $trimed_url;
+        }
+        return $url;
+    }
+
 }
