@@ -7,6 +7,7 @@
             <directory suffix=".php">app/Model</directory>
             <exclude>
                 <directory suffix=".php">app/Controller/Component</directory>
+                <directory suffix=".php">app/View/Helper</directory>
                 <directory suffix=".php">app/Model/Behavior</directory>
                 <directory suffix=".php">app/Config</directory>
                 <directory suffix=".php">app/Test</directory>
