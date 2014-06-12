@@ -20,9 +20,9 @@
                         'wrapInput' => 'col col-md-6',
                         'class'     => 'form-control'
                     ],
-                    'class'      => 'form-horizontal',
-                    'novalidate' => true,
-                    'type'       => 'file',
+                    'class'         => 'form-horizontal',
+                    'novalidate'    => true,
+                    'type'          => 'file',
                 ]); ?>
                 <?
                 if (!$is_not_use_local_name) {
@@ -78,7 +78,7 @@
                                     '12' => __d('gl', '12月'),
                                 ],
                                 'class'      => 'form-control gl-inline-fix',
-                                'label' => __d('gl', '誕生日'),
+                                'label'      => __d('gl', '誕生日'),
                                 'dateFormat' => 'YMD',
                                 'empty'      => true,
                                 'separator'  => ' / ',
@@ -101,12 +101,45 @@
                     'afterInput' => '<span class="help-block">' . __d('gl', '例) 東京都') . '</span>'
                 ]);
                 ?>
-                <?=
-                $this->Form->input('photo', [
-                    'type'       => 'file',
-                    'label'      => __d('gl', "プロフィール画像"),
-                    'afterInput' => '<span class="help-block">' . __d('gl', '10MB以下') . '</span>'
-                ])?>
+                <div class="form-group">
+                    <label for="" class="col col-md-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
+
+                    <div class="col col-md-6">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                 style="width: 150px; height: 150px;"></div>
+                            <div>
+                        <span class="btn btn-default btn-file">
+                            <span class="fileinput-new">
+                                <?=
+                                __d('gl',
+                                    "画像を選択") ?>
+                            </span>
+                            <span class="fileinput-exists"><?= __d('gl', "画像を再選択") ?></span>
+                            <?=
+                            $this->Form->input('photo',
+                                               ['type'         => 'file',
+                                                'label'        => false,
+                                                'div'          => false,
+                                                'css'          => false,
+                                                'wrapInput'    => false,
+                                                'errorMessage' => false
+                                               ]) ?>
+                        </span>
+                            </div>
+                        </div>
+                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
+
+                        <div class="has-error">
+                            <?=
+                            $this->Form->error('photo', null,
+                                               ['class' => 'help-block text-danger',
+                                                'wrap'  => 'span'
+                                               ]) ?>
+                        </div>
+                    </div>
+
+                </div>
             </div>
             <div class="panel-footer">
                 <div class="row">

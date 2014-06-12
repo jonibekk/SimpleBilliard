@@ -46,7 +46,7 @@ class User extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo' => [
-                'styles' => [
+                'styles'      => [
                     'small'        => '32x32',
                     'medium'       => '48x48',
                     'medium_large' => '96x96',
@@ -130,7 +130,7 @@ class User extends AppModel
                 'rule' => ['passwordSameCheck', 'password'],
             ],
         ],
-        'photo' => [
+        'photo'             => [
             'image_max_size' => [
                 'rule' => [
                     'attachmentMaxSize',

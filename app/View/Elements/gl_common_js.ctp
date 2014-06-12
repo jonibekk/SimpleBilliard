@@ -9,6 +9,7 @@
 <?
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
+echo $this->Html->script('jasny-bootstrap.min');
 echo $this->Html->script('bootstrapValidator.min');
 echo $this->Html->script('bvAddition');
 echo $this->Html->script('pnotify.custom.min');
@@ -44,6 +45,7 @@ echo $this->Html->script('gl_basic');
         });
     });
     (function () {
+        $('.fileinput').fileinput();
     }());
 </script>
 <?
