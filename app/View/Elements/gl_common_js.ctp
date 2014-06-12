@@ -13,6 +13,7 @@ echo $this->Html->script('jasny-bootstrap.min');
 echo $this->Html->script('bootstrapValidator.min');
 echo $this->Html->script('bvAddition');
 echo $this->Html->script('pnotify.custom.min');
+echo $this->Html->script('jquery.nailthumb.1.1.min');
 echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
@@ -46,6 +47,7 @@ echo $this->Html->script('gl_basic');
     });
     (function () {
         $('.fileinput').fileinput();
+        $('.nailthumb-container').nailthumb({fitDirection: 'center center'});
     }());
 </script>
 <?

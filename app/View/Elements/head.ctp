@@ -26,6 +26,7 @@
     echo $this->Html->css('bw-simplex', array('media' => 'screen'));
     echo $this->Html->css('jasny-bootstrap.min');
     echo $this->Html->css('font-awesome.min');
+    echo $this->Html->css('jquery.nailthumb.1.1');
     echo $this->Html->css('bootstrapValidator.min');
     echo $this->Html->css('pnotify.custom.min');
     echo $this->Html->css('style', array('media' => 'screen'));

@@ -106,9 +106,8 @@
 
                     <div class="col col-md-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                            <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                                  style="width: 150px; height: 150px;"></div>
-                            <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
                                 <?=
@@ -126,34 +125,34 @@
                                                 'errorMessage' => false
                                                ]) ?>
                         </span>
-                            </div>
-                        </div>
-                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
-
-                        <div class="has-error">
-                            <?=
-                            $this->Form->error('photo', null,
-                                               ['class' => 'help-block text-danger',
-                                                'wrap'  => 'span'
-                                               ]) ?>
                         </div>
                     </div>
+                    <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
 
+                    <div class="has-error">
+                        <?=
+                        $this->Form->error('photo', null,
+                                           ['class' => 'help-block text-danger',
+                                            'wrap'  => 'span'
+                                           ]) ?>
+                    </div>
                 </div>
+
             </div>
-            <div class="panel-footer">
-                <div class="row">
-                    <div class="col-md-9 col-md-offset-3">
-                        <?=
-                        $this->Form->submit(__d('gl', "プロフィールを登録"),
-                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
-                        <?=
-                        $this->Html->link(__d('gl', "スキップ"), ['controller' => 'teams', 'action' => 'add'],
-                                          ['class' => 'btn btn-default', 'div' => false]) ?>
-                        <?= $this->Form->end(); ?>
-                    </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-9 col-md-offset-3">
+                    <?=
+                    $this->Form->submit(__d('gl', "プロフィールを登録"),
+                                        ['class' => 'btn btn-primary', 'div' => false]) ?>
+                    <?=
+                    $this->Html->link(__d('gl', "スキップ"), ['controller' => 'teams', 'action' => 'add'],
+                                      ['class' => 'btn btn-default', 'div' => false]) ?>
+                    <?= $this->Form->end(); ?>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
