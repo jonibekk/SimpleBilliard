@@ -4,6 +4,9 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
+ *
+ * @var View $this
+ * @var      $this CodeCompletionView
  */
 ?>
 <div class="row">

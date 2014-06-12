@@ -16,7 +16,6 @@ class TeamsController extends AppController
     public function add()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-
     }
 
 }
