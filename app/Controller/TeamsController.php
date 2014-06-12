@@ -16,10 +16,6 @@ class TeamsController extends AppController
     public function add()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-
-        //TODO test
-        $me = $this->User->findById($this->Auth->user('id'));
-        $this->set(compact('me'));
     }
 
 }
