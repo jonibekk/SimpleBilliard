@@ -689,7 +689,7 @@ class UploadBehavior extends ModelBehavior
                     'ContentType'          => $type,
                     'StorageClass'         => 'STANDARD',
                     'ServerSideEncryption' => 'AES256',
-                    'ACL'                  => CannedAcl::PUBLIC_READ
+                    'ACL' => CannedAcl::AUTHENTICATED_READ
                 ));
             return $response;
 

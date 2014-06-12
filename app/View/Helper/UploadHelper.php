@@ -134,8 +134,45 @@ class UploadHelper extends AppHelper
     {
         if (PUBLIC_ENV) {
             $trimed_url = str_replace(S3_TRIM_PATH, "", $url);
-            $url = S3_BASE_URL . DS . S3_ASSETS_BUCKET . DS . $trimed_url;
+            //$url = S3_BASE_URL . DS . S3_ASSETS_BUCKET . DS . $trimed_url;
+            $url = $this->gs_prepareS3URL($trimed_url, S3_ASSETS_BUCKET);
         }
+        return $url;
+    }
+
+    function gs_getStringToSign($request_type, $expires, $uri)
+    {
+        return "$request_type\n\n\n$expires\n$uri";
+    }
+
+    function gs_encodeSignature($s, $key)
+    {
+        $s = utf8_encode($s);
+        $s = hash_hmac('sha1', $s, $key, true);
+        $s = base64_encode($s);
+        return urlencode($s);
+    }
+
+    function gs_prepareS3URL($file, $bucket)
+    {
+
+        $awsKeyId = AWS_ACCESS_KEY; // this is the non-secret key ID.
+        $awsSecretKey = AWS_SECRET_KEY; // this is the SECRET access key!
+
+        $file = rawurlencode($file);
+        $file = str_replace('%2F', '/', $file);
+        $path = $bucket . '/' . $file;
+
+        $expires = strtotime('+1 hour');
+
+        $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
+        $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
+
+        $url = "http://$bucket.s3.amazonaws.com/$file";
+        $url .= '?AWSAccessKeyId=' . $awsKeyId
+            . '&Expires=' . $expires
+            . '&Signature=' . $signature;
+
         return $url;
     }
 
