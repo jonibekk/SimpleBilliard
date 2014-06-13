@@ -129,12 +129,37 @@ class UsersController extends AppController
             }
             //ユーザ仮登録失敗
             else {
-
             }
         }
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         $this->set(compact('last_first'));
+    }
+
+    /**
+     * 新規プロフィール入力
+     */
+    public function add_profile()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        //新規ユーザ登録モードじゃない場合は４０４
+        if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
+            throw new NotFoundException;
+        }
+        $me = $this->Auth->user();
+        //ローカル名を利用している国かどうか？
+        $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            //プロフィールを保存
+            $this->User->id = $me['id'];
+            if ($this->User->save($this->request->data)) {
+                //チーム作成ページへリダイレクト
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect(['controller' => 'teams', 'action' => 'add']);
+            }
+        }
+        $this->set(compact('me', 'is_not_use_local_name'));
+        return $this->render();
     }
 
     /**
@@ -173,10 +198,13 @@ class UsersController extends AppController
             }
             if (!$last_login) {
                 //ログインがされていなければ、新規ユーザなので「ようこそ」表示
-                $this->Pnotify->outSuccess(__d('notify', 'Goalousへようこそ！'));
+                $this->Pnotify->outSuccess(__d('notify', '本登録が完了しました！'));
+                //新規ユーザ登録時のフロー
+                $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect('/');
+                //新規プロフィール入力画面へ
+                return $this->redirect(['action' => 'add_profile']);
             }
             else {
                 //ログインされていれば、メール追加

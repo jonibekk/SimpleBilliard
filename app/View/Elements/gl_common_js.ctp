@@ -9,9 +9,11 @@
 <?
 echo $this->Html->script('jquery-2.1.0.min');
 echo $this->Html->script('bootstrap.min');
+echo $this->Html->script('jasny-bootstrap.min');
 echo $this->Html->script('bootstrapValidator.min');
 echo $this->Html->script('bvAddition');
 echo $this->Html->script('pnotify.custom.min');
+echo $this->Html->script('jquery.nailthumb.1.1.min');
 echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
@@ -44,6 +46,10 @@ echo $this->Html->script('gl_basic');
         });
     });
     (function () {
+        //アップロード画像選択時にトリムして表示
+        $('.fileinput').fileinput().on('change.bs.fileinput', function () {
+            $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
+        });
     }());
 </script>
 <?

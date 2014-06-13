@@ -5,7 +5,6 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Image          $ProfileImage
  * @property Email          $PrimaryEmail
  * @property Team           $DefaultTeam
  * @property Badge          $Badge
@@ -31,18 +30,35 @@ class User extends AppModel
      */
     const TYPE_GENDER_MALE = 1;
     const TYPE_GENDER_FEMALE = 2;
-    static public $TYPE_GENDER = [null => "", self::TYPE_GENDER_MALE => "", self::TYPE_GENDER_FEMALE => ""];
+    const TYPE_GENDER_NEITHER = 3;
+    static public $TYPE_GENDER = [self::TYPE_GENDER_MALE => "", self::TYPE_GENDER_FEMALE => "", self::TYPE_GENDER_NEITHER => ""];
 
     /**
      * 性別タイプの名前をセット
      */
     private function _setGenderTypeName()
     {
-        self::$TYPE_GENDER[null] = __d('gl', "選択してください");
         self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __d('gl', "男性");
         self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __d('gl', "女性");
+        self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __d('gl', "どちらでもない");
     }
 
+    public $actsAs = [
+        'Upload' => [
+            'photo' => [
+                'styles'      => [
+                    'small'        => '32x32',
+                    'medium'       => '48x48',
+                    'medium_large' => '96x96',
+                    'large'        => '128x128',
+                    'x_large'      => '256x256',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image.jpg',
+                'quality'     => 100,
+            ]
+        ]
+    ];
     /**
      * ユーザ名の表記が姓名の順である言語のリスト
      */
@@ -73,7 +89,12 @@ class User extends AppModel
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
-        'hide_year_flg'     => ['boolean' => ['rule' => ['boolean'],],],
+        'hide_year_flg'     => [
+            'boolean' => [
+                'rule'       => ['boolean',],
+                'allowEmpty' => true,
+            ],
+        ],
         'no_pass_flg'       => ['boolean' => ['rule' => ['boolean'],],],
         'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
@@ -109,6 +130,14 @@ class User extends AppModel
                 'rule' => ['passwordSameCheck', 'password'],
             ],
         ],
+        'photo'             => [
+            'image_max_size' => [
+                'rule' => [
+                    'attachmentMaxSize',
+                    10485760 //10mb
+                ],
+            ],
+        ]
     ];
 
     /**
@@ -117,7 +146,6 @@ class User extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'ProfileImage' => ['className' => 'Image', 'foreignKey' => 'profile_image_id',],
         'DefaultTeam'  => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
         'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
     ];
@@ -138,7 +166,6 @@ class User extends AppModel
         'Comment',
         'Email',
         'GivenBadge',
-        'Image',
         'Notification',
         'OauthToken',
         'PostLike',

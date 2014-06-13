@@ -10,20 +10,20 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading"><?= __d('gl', "新しいアカウントを作成") ?></div>
-                <div class="panel-body">
-                    <?=
-                    $this->Form->create('User', [
-                        'inputDefaults' => [
-                            'div'       => 'form-group',
-                            'label'     => [
-                                'class' => 'col col-md-3 control-label'
-                            ],
-                            'wrapInput' => 'col col-md-6',
-                            'class'     => 'form-control'
+                <?=
+                $this->Form->create('User', [
+                    'inputDefaults' => [
+                        'div'       => 'form-group',
+                        'label'     => [
+                            'class' => 'col col-md-3 control-label'
                         ],
-                        'class'         => 'form-horizontal validate',
-                        'novalidate'    => true
-                    ]); ?>
+                        'wrapInput' => 'col col-md-6',
+                        'class'     => 'form-control'
+                    ],
+                    'class'         => 'form-horizontal validate',
+                    'novalidate'    => true
+                ]); ?>
+                <div class="panel-body">
                     <?
                     //姓と名は言語によって表示順を変える
                     $last_name = $this->Form->input('last_name', [
@@ -101,14 +101,15 @@
                         'id'    => 'InitLocalDate',
                     ]);
                     ?>
-                    <hr>
-                    <div class="form-group">
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
                         <div class="col-md-9 col-md-offset-3">
                             <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
                         </div>
                     </div>
-                    <?= $this->Form->end(); ?>
                 </div>
+                <?= $this->Form->end(); ?>
             </div>
         </div>
     </div>

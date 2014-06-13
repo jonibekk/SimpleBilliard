@@ -120,3 +120,10 @@ define('TOKEN_EXPIRE_SEC_ADD_EMAIL', 86400); //1day
 define('TOKEN_EXPIRE_SEC_INVITE', 1209600); //2weeks
 //レイアウトファイル名
 define('LAYOUT_ONE_COLUMN', "one_column");
+//セッションのモード
+define('MODE_NEW_PROFILE', 1);
+define('MODE_NEW_TEAM', 2);
+//aws s3のurl
+define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
+define('S3_TRIM_PATH', '/upload/');
+

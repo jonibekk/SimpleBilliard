@@ -10,6 +10,7 @@
       <w>containments</w>
       <w>creditcard</w>
       <w>daikihirakata</w>
+      <w>dest</w>
       <w>dhabi</w>
       <w>ekaterinburg</w>
       <w>fieldset</w>
@@ -18,20 +19,29 @@
       <w>goalous</w>
       <w>googlecode</w>
       <w>hdot</w>
+      <w>heigh</w>
       <w>hoge</w>
       <w>hogehoge</w>
       <w>hong</w>
+      <w>imagecreatefromgif</w>
+      <w>imagecreatefromjpeg</w>
+      <w>imagecreatefrompng</w>
+      <w>imagegif</w>
+      <w>imagejpeg</w>
+      <w>imagepng</w>
       <w>kaliningrad</w>
       <w>kwajalein</w>
       <w>magadan</w>
       <w>maxlength</w>
       <w>mgiglesias</w>
+      <w>mimetype</w>
       <w>minlength</w>
       <w>modernizr</w>
       <w>overriden</w>
       <w>pagename</w>
       <w>paginator</w>
       <w>papua</w>
+      <w>pathinfo</w>
       <w>plax</w>
       <w>precomposed</w>
       <w>rangelength</w>
@@ -44,6 +54,8 @@
       <w>slywalker</w>
       <w>somoa</w>
       <w>subnav</w>
+      <w>substr</w>
+      <w>trimed</w>
       <w>uservoice</w>
       <w>wercker</w>
     </words>
