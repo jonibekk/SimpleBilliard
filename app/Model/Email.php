@@ -31,6 +31,41 @@ class Email extends AppModel
         'del_flg'        => ['boolean' => ['rule' => ['boolean']]],
     ];
 
+    public $validate_password_exists = [
+        'email' => [
+            'isEmailExists' => [
+                'rule' => ['isEmailExists'],
+            ]
+        ],
+    ];
+
+    /**
+     * @param $data
+     *
+     * @return bool
+     */
+    public function validateEmailExists($data)
+    {
+        $this->set($data);
+        $this->validate = $this->validate_password_exists;
+        return $this->validates();
+    }
+
+    /**
+     * メールアドレスの存在チェック
+     *
+     * @param $check
+     *
+     * @return bool
+     */
+    public function isEmailExists($check)
+    {
+        if (isset($check['email']) && empty($this->findByEmail($check['email']))) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * belongsTo associations
      *

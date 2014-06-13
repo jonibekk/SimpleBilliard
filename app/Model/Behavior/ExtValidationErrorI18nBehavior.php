@@ -20,7 +20,8 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'passwordSameCheck' => __d('validate', "パスワードが一致しません。"),
             'minLength'         => __d('validate', '%2$d文字以上で入力してください。'),
             'emailIsUnique'     => __d('validate', "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"),
-            'image_max_size' => __d('validate', "ファイルサイズが上限を超えています。"),
+            'isEmailExists'     => __d('validate', "このメールアドレスは登録されていません。ご確認ください。"),
+            'image_max_size'    => __d('validate', "ファイルサイズが上限を超えています。"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

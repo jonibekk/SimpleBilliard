@@ -44,7 +44,9 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-5 col-md-offset-3">
-                        <?= $this->Html->link(__d('gl', 'パスワードを忘れた場合はこちら'), [], ['class' => 'link']) ?>
+                        <?=
+                        $this->Html->link(__d('gl', 'パスワードを忘れた場合はこちら'), ['action' => 'password_reset'],
+                                          ['class' => 'link']) ?>
                     </div>
                     <div class="col-md-4">
                         <?=

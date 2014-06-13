@@ -8,6 +8,7 @@ App::uses('Model', 'Model');
  *
  * @package       app.Model
  *                @method findById()
+ *                @method findByEmail()
  */
 class AppModel extends Model
 {

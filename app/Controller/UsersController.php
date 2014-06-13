@@ -21,7 +21,7 @@ class UsersController extends AppController
      */
     protected function _setupAuth()
     {
-        $this->Auth->allow('register', 'login', 'verify', 'logout', 'reset_password', 'sent_mail');
+        $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'sent_mail');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -215,6 +215,22 @@ class UsersController extends AppController
             }
         } catch (RuntimeException $e) {
             throw new RuntimeException($e->getMessage());
+        }
+    }
+
+    /**
+     * パスワードリセット
+     */
+    public function password_reset()
+    {
+        if ($this->Auth->user()) {
+            throw new NotFoundException();
+        }
+        $this->layout = LAYOUT_ONE_COLUMN;
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            if ($this->User->Email->validateEmailExists($this->request->data)) {
+
+            }
         }
     }
 
