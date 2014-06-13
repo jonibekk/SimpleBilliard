@@ -1,3 +1,18 @@
+$(document).ready(function () {
+    //すべてのformで入力があった場合に行う処理
+    $("select,input").change(function () {
+        $(this).nextAll(".help-block" + ".text-danger").remove();
+        if ($(this).is("[name='data[User][agree_tos]']")) {
+            //noinspection JSCheckFunctionSignatures
+            $(this).parent().parent().nextAll(".help-block" + ".text-danger").remove();
+        }
+    });
+    //アップロード画像選択時にトリムして表示
+    $('.fileinput').fileinput().on('change.bs.fileinput', function () {
+        $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
+    });
+});
+
 /**
  * Created by bigplants on 5/23/14.
  */
