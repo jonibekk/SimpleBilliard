@@ -46,8 +46,10 @@ echo $this->Html->script('gl_basic');
         });
     });
     (function () {
-        $('.fileinput').fileinput();
-        $('.nailthumb-container').nailthumb({fitDirection: 'center center'});
+        //アップロード画像選択時にトリムして表示
+        $('.fileinput').fileinput().on('change.bs.fileinput', function () {
+            $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
+        });
     }());
 </script>
 <?
