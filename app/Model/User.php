@@ -447,4 +447,48 @@ class User extends AppModel
         $this->Email->saveAll($user, ['validate' => false, 'callbacks' => false]);
         return $this->findById($user['User']['id']);
     }
+
+    /**
+     * Checks if an email is in the system, validated and if the user is active so that the user is allowed to reste his password
+     *
+     * @param array $postData post data from controller
+     *
+     * @return mixed False or user data as array on success
+     */
+    public function passwordReset($postData)
+    {
+        //メールアドレスが空で送信されてきた場合はエラーで返却
+        if (isset($postData['User']['email']) && empty($postData['User']['email'])) {
+            $this->invalidate('email', __d('validation', "メールアドレスを入力してください。"));
+            return false;
+        }
+        $options = [
+            'conditions' => [
+                'Email.email' => $postData['User']['email'],
+            ],
+            'contain'    => ['User']
+        ];
+        $user = $this->Email->find('first', $options);
+        //メールアドレスが存在しない場合もしくはユーザが存在しない場合はエラーで返却
+        if (empty($user) || !$user['User']['id']) {
+            $this->invalidate('email', __d('validate', "このメールアドレスはGoalousに登録されていません。"));
+            return false;
+        }
+        //メールアドレスの認証が終わっていない場合
+        if (!$user['Email']['email_verified']) {
+            $this->invalidate('email', __d('validate', "このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメールをご確認ください。"));
+            return false;
+        }
+        //ユーザがアクティブではない場合
+        if (!$user['User']['active_flg']) {
+            $this->invalidate('email', __d('validate', "ユーザアカウントが有効ではありません。"));
+            return false;
+        }
+        //ここから認証データ登録
+        $user['User']['password_token'] = $this->generateToken();
+        $user['Email']['email_token_expires'] = $this->getTokenExpire(60 * 60); //一時間
+        $this->Email->saveAssociated($user, ['validate' => false]);
+        $this->data = $user;
+        return $user;
+    }
 }

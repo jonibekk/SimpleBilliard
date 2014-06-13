@@ -228,7 +228,8 @@ class UsersController extends AppController
         }
         $this->layout = LAYOUT_ONE_COLUMN;
         if ($this->request->is('post') && !empty($this->request->data)) {
-            if ($this->User->Email->validateEmailExists($this->request->data)) {
+            if ($user = $this->User->passwordReset($this->request->data)) {
+                //パスワード認証情報登録成功した場合
 
             }
         }

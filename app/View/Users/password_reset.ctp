@@ -14,7 +14,7 @@
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "パスワードの再設定") ?></div>
             <?=
-            $this->Form->create('Email', [
+            $this->Form->create('User', [
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
@@ -23,7 +23,7 @@
                     'wrapInput' => 'col col-md-6',
                     'class'     => 'form-control'
                 ],
-                'class'         => 'form-horizontal',
+                'class' => 'form-horizontal validate',
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body">
@@ -32,7 +32,10 @@
                 <p><?= __d('gl', "Goalousからパスワード再設定用のURLを送信いたします。") ?></p>
                 <?=
                 $this->Form->input('email', [
-                    'label' => __d('gl', "メールアドレス"),
+                    'label'                        => __d('gl', "メールアドレス"),
+                    'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
+                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'required'                     => true
                 ])?>
             </div>
             <div class="panel-footer">
