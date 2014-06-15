@@ -353,8 +353,7 @@ class User extends AppModel
         }
         //パスワードをハッシュ化
         if (isset($data['User']['password']) && !empty($data['User']['password'])) {
-            $passwordHasher = new SimplePasswordHasher();
-            $data['User']['password'] = $passwordHasher->hash($data['User']['password']);
+            $data['User']['password'] = $this->generateHash($data['User']['password']);
         }
         //メールアドレスの認証トークンを発行
         $email_token = $this->generateToken();
@@ -458,8 +457,8 @@ class User extends AppModel
     public function passwordResetPre($postData)
     {
         //メールアドレスが空で送信されてきた場合はエラーで返却
-        if (isset($postData['User']['email']) && empty($postData['User']['email'])) {
-            $this->invalidate('email', __d('validation', "メールアドレスを入力してください。"));
+        if (!isset($postData['User']['email']) || empty($postData['User']['email'])) {
+            $this->invalidate('email', __d('validate', "メールアドレスを入力してください。"));
             return false;
         }
         $options = [
@@ -535,12 +534,17 @@ class User extends AppModel
             return false;
         }
 
-        $passwordHasher = new SimplePasswordHasher();
-        $user_email['User']['password'] = $passwordHasher->hash($postData['User']['password']);
+        $user_email['User']['password'] = $this->generateHash($postData['User']['password']);
         $user_email['User']['password_token'] = null;
         $user_email['User']['password_modified'] = date('Y-m-d H:i:s');
         $user_email['Email']['email_token_expires'] = null;
         return $this->Email->saveAll($user_email);
+    }
+
+    public function generateHash($str)
+    {
+        $passwordHasher = new SimplePasswordHasher();
+        return $passwordHasher->hash($str);
     }
 
 }
