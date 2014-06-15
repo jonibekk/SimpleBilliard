@@ -390,8 +390,9 @@ class UserTest extends CakeTestCase
 
     function testPasswordResetPreNoDataNoUser()
     {
-        $email_data = ['email' => 'nodata@email.com'];
-        $res = $this->User->passwordResetPre([], $email_data);
+        $res = $this->User->passwordResetPre([]);
+        $this->assertFalse($res, "[異常]パスワードリセット前のユーザデータなしの場合");
+        $res = $this->User->passwordResetPre(['User' => ['email' => 'no_data@xxx.xxx.com']]);
         $this->assertFalse($res, "[異常]パスワードリセット前のユーザデータなしの場合");
     }
 
