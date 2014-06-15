@@ -455,7 +455,7 @@ class User extends AppModel
      *
      * @return mixed False or user data as array on success
      */
-    public function passwordReset($postData)
+    public function passwordResetPre($postData)
     {
         //メールアドレスが空で送信されてきた場合はエラーで返却
         if (isset($postData['User']['email']) && empty($postData['User']['email'])) {
@@ -491,4 +491,56 @@ class User extends AppModel
         $this->data = $user;
         return $user;
     }
+
+    /**
+     * Checks the token for a password change
+     *
+     * @param string $token Token
+     *
+     * @return mixed False or user data as array
+     */
+    public function checkPasswordToken($token)
+    {
+        $options = [
+            'conditions' => [
+                'User.password_token'          => $token,
+                'Email.email_token_expires >=' => date('Y-m-d H:i:s'),
+                'User.active_flg'              => true,
+            ],
+            'contain'    => ['User']
+        ];
+        $user = $this->Email->find('first', $options);
+        if (empty($user)) {
+            return false;
+        }
+        return $user;
+    }
+
+    /**
+     * パスワードリセット
+     *
+     * @param       $user_email
+     * @param array $postData
+     *
+     * @return bool
+     */
+    public function passwordReset($user_email, $postData)
+    {
+        if (!isset($user_email['User']) || !isset($user_email['Email']) || !$postData['User']) {
+            return false;
+        }
+        $this->id = $user_email['User']['id'];
+        $this->set($postData);
+        if (!$this->validates()) {
+            return false;
+        }
+
+        $passwordHasher = new SimplePasswordHasher();
+        $user_email['User']['password'] = $passwordHasher->hash($postData['User']['password']);
+        $user_email['User']['password_token'] = null;
+        $user_email['User']['password_modified'] = date('Y-m-d H:i:s');
+        $user_email['Email']['email_token_expires'] = null;
+        return $this->Email->saveAll($user_email);
+    }
+
 }

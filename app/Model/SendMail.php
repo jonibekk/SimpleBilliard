@@ -14,17 +14,31 @@ class SendMail extends AppModel
      * メールテンプレタイプ
      */
     const TYPE_TMPL_ACCOUNT_VERIFY = 1;
+    const TYPE_TMPL_PASSWORD_RESET = 2;
+    const TYPE_TMPL_PASSWORD_RESET_COMPLETE = 3;
     static public $TYPE_TMPL = [
-        self::TYPE_TMPL_ACCOUNT_VERIFY => [
+        self::TYPE_TMPL_ACCOUNT_VERIFY          => [
             'subject'  => null,
             'template' => 'account_verification',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_PASSWORD_RESET          => [
+            'subject'  => null,
+            'template' => 'password_reset',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE => [
+            'subject'  => null,
+            'template' => 'password_reset_complete',
             'layout'   => 'default',
         ],
     ];
 
     private function _setTemplateSubject()
     {
-        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('mail', "アカウントの仮登録が完了しました。");
+        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('mail', "アカウントの仮登録が完了しました");
+        self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET]['subject'] = __d('mail', "パスワードの再設定");
+        self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET_COMPLETE]['subject'] = __d('mail', "パスワードの再設定が完了しました");
         //subjectにサービス名のプレフィックスを追加
         foreach (self::$TYPE_TMPL as $key => $val) {
             self::$TYPE_TMPL[$key]['subject'] = "[" . SERVICE_NAME . "]" . $val['subject'];

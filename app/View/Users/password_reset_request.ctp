@@ -23,28 +23,25 @@
                     'wrapInput' => 'col col-md-6',
                     'class'     => 'form-control'
                 ],
-                'class' => 'form-horizontal validate',
+                'class'         => 'form-horizontal validate',
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body">
+                <p><?= __d('gl', "Goalousに登録しているメールアドレスを入力して送信してください。") ?></p>
+
+                <p><?= __d('gl', "Goalousからパスワード再設定用のURLを送信いたします。") ?></p>
                 <?=
-                $this->Form->input('password', [
-                    'label'                    => __d('gl', "パスワードを作成"),
-                    'placeholder'              => __d('gl', '8文字以上'),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                    'type'                     => 'password',
-                ])?>
-                <?=
-                $this->Form->input('password_confirm', [
-                    'label'                    => __d('gl', "パスワードを再入力"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                    'type'                     => 'password',
+                $this->Form->input('email', [
+                    'label'                        => __d('gl', "メールアドレス"),
+                    'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
+                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'required'                     => true
                 ])?>
             </div>
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
-                        <?= $this->Form->submit(__d('gl', "パスワードを設定"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__d('gl', "送信"), ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>
