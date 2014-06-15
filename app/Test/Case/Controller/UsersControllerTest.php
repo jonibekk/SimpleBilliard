@@ -648,13 +648,13 @@ class UsersControllerTest extends ControllerTestCase
             'User'  => [
                 'first_name'     => 'basic',
                 'last_name'      => 'user',
-                'password' => 'aaaaaaaaaa',
+                'password'   => 'aaaaaaaaaa',
                 'password_token' => 'abcde',
-                'active_flg'     => true
+                'active_flg' => true,
             ],
             'Email' => [
                 [
-                    'email'          => 'basic@email.com',
+                    'email' => 'basic@email.com',
                     'email_verified'      => true,
                     'email_token_expires' => date('Y-m-d H:i:s', time() + 60 * 60)
                 ]
@@ -662,6 +662,8 @@ class UsersControllerTest extends ControllerTestCase
         ];
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->saveAll($basic_data);
+        $Users->User->save(['primary_email_id' => $Users->User->Email->getLastInsertID()]);
+
         $data = [
             'User' => [
                 'password'         => '12345678',

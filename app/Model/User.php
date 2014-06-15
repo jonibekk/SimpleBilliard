@@ -538,7 +538,8 @@ class User extends AppModel
         $user_email['User']['password_token'] = null;
         $user_email['User']['password_modified'] = date('Y-m-d H:i:s');
         $user_email['Email']['email_token_expires'] = null;
-        return $this->Email->saveAll($user_email);
+        $res = $this->Email->saveAll($user_email);
+        return $res;
     }
 
     public function generateHash($str)
