@@ -641,4 +641,21 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('users/password_reset/' . $user['User']['password_token']);
     }
 
+    function testPasswordResetPostPassword()
+    {
+        App::uses('UserTest', 'Test/Case/Model');
+        $UserTest = new UserTest;
+        $UserTest->setUp();
+        $uid = $UserTest->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $user = $UserTest->User->findById($uid);
+        $data = [
+            'User' => [
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+            ]
+        ];
+        $this->testAction('users/password_reset/' . $user['User']['password_token'], ['data' => $data]);
+    }
+
 }
