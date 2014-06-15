@@ -648,14 +648,15 @@ class UsersControllerTest extends ControllerTestCase
             'User'  => [
                 'first_name'     => 'basic',
                 'last_name'      => 'user',
-                'password',
+                'password' => 'aaaaaaaaaa',
                 'password_token' => 'abcde',
                 'active_flg'     => true
             ],
             'Email' => [
                 [
                     'email'          => 'basic@email.com',
-                    'email_verified' => true
+                    'email_verified'      => true,
+                    'email_token_expires' => date('Y-m-d H:i:s', time() + 60 * 60)
                 ]
             ]
         ];
@@ -667,7 +668,7 @@ class UsersControllerTest extends ControllerTestCase
                 'password_confirm' => '12345678',
             ]
         ];
-        $this->testAction('users/password_reset/abcde', ['data' => $data]);
+        $this->testAction('users/password_reset/abcde', ['data' => $data, 'method' => 'POST']);
     }
 
 }
