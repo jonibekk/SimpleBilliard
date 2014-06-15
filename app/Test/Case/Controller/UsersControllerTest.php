@@ -578,4 +578,10 @@ class UsersControllerTest extends ControllerTestCase
         }
         $this->assertTrue(isset($e), "[異常]新規ユーザ登録モード以外は例外発生");
     }
+
+    function testPasswordReset()
+    {
+        $this->testAction('/users/password_reset');
+        $this->testAction('/users/password_reset/aaaaa');
+    }
 }
