@@ -84,3 +84,13 @@ footer p {
     width: auto;
     vertical-align: middle;
 }
+
+.me-menu-image {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.me-menu-image > img {
+    width: 40px;
+    height: 40px;
+}
