@@ -334,11 +334,7 @@ class UsersControllerTest extends ControllerTestCase
 
     function testVerifyEmailNotFound()
     {
-        try {
-            $this->testAction('/users/verify/123456', ['method' => 'GET', 'return' => 'contents']);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e), "[異常]メールアドレス認証で存在しないトークンを指定された場合に例外処理");
+        $this->testAction('/users/verify/123456', ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testSetAppLanguageAutoOn()
