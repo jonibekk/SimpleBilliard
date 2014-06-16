@@ -50,11 +50,19 @@
 
         </div>
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left" style="">
-        <a class="navmenu-brand" href="#">Project name</a>
+            <a class="navmenu-brand" href="#">Project name</a>
             <ul class="nav navbar-nav">
-                <li><a href="#"><i class="fa fa-home"></i></a></li>
-                <li><a href="#"><i class="fa fa-bullseye"></i> </a></li>
-                <li><a href="#"><i class="fa fa-users"></i> </a></li>
+                <li><a href="#"><i class="fa fa-home"></i>&nbsp;
+                        <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
+                    </a>
+                </li>
+                <li><a href="#"><i class="fa fa-bullseye"></i>&nbsp;
+                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
+                    </a></li>
+                <li><a href="#"><i class="fa fa-users"></i>&nbsp;
+                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!--/.nav-collapse -->

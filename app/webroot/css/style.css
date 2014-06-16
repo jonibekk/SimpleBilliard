@@ -108,3 +108,16 @@ footer p {
     margin-left: 3px !important;
     margin-right: 3px !important;
 }
+
+/* インラインで非表示にする */
+@media screen and (max-width: 768px) {
+    .visible-xs-inline {
+        display: inline-block !important;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .visible-xs-inline {
+        display: none !important;
+    }
+}
