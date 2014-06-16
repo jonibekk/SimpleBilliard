@@ -85,11 +85,11 @@ footer p {
     vertical-align: middle;
 }
 
-.modal-no-margin .modal-body {
+.gl-modal-no-margin .modal-body {
     padding: 0;
 }
 
-.modal-no-margin .modal-footer {
+.gl-modal-no-margin .modal-footer {
     margin: 0;
 }
 
