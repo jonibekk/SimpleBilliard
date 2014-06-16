@@ -21,7 +21,7 @@ class UsersController extends AppController
      */
     protected function _setupAuth()
     {
-        $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'sent_mail');
+        $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -214,7 +214,10 @@ class UsersController extends AppController
                 return $this->redirect('/');
             }
         } catch (RuntimeException $e) {
-            throw new RuntimeException($e->getMessage());
+            //例外の場合は、トークン再送信画面へ
+            $this->Pnotify->outError($e->getMessage());
+            //トークン再送メージへ
+            $this->redirect(['action' => 'token_resend']);
         }
     }
 
@@ -263,6 +266,25 @@ class UsersController extends AppController
             }
         }
         return $this->render('password_reset_request');
+    }
+
+    public function token_resend()
+    {
+        if ($this->Auth->user()) {
+            throw new NotFoundException();
+        }
+        $this->layout = LAYOUT_ONE_COLUMN;
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            //パスワード認証情報登録成功した場合
+            if ($email_user = $this->User->saveEmailToken($this->request->data['User']['email'])) {
+                //メールでトークンを送信
+                $this->GlEmail->sendMailEmailTokenResend($email_user['User']['id'],
+                                                         $email_user['Email']['email_token']);
+                $this->Pnotify->outSuccess(__d('gl', "メールアドレス認証用のメールを送信しました。ご確認ください。"),
+                                           ['title' => __d('gl', "メールを送信しました")]);
+            }
+        }
+
     }
 
     /*

@@ -492,4 +492,15 @@ class UserTest extends CakeTestCase
         $this->assertFalse($res, "[異常]パスワードリセットでデータなし");
     }
 
+    function testSaveEmailToken()
+    {
+        $uid = $this->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $res = $this->User->saveEmailToken($email['Email']['email']);
+        $this->assertTrue(!empty($res['Email']['email_token']), "[正常]トークン発行でトークンが存在する");
+        $this->assertTrue(!empty($res['Email']['email_token_expires']), "[正常]トークン発行でトークン期限が存在する");
+
+    }
+
 }

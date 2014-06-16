@@ -16,6 +16,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_ACCOUNT_VERIFY = 1;
     const TYPE_TMPL_PASSWORD_RESET = 2;
     const TYPE_TMPL_PASSWORD_RESET_COMPLETE = 3;
+    const TYPE_TMPL_TOKEN_RESEND = 4;
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
             'subject'  => null,
@@ -32,6 +33,11 @@ class SendMail extends AppModel
             'template' => 'password_reset_complete',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_TOKEN_RESEND => [
+            'subject'  => null,
+            'template' => 'token_resend',
+            'layout'   => 'default',
+        ],
     ];
 
     private function _setTemplateSubject()
@@ -39,6 +45,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('mail', "アカウントの仮登録が完了しました");
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET]['subject'] = __d('mail', "パスワードの再設定");
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET_COMPLETE]['subject'] = __d('mail', "パスワードの再設定が完了しました");
+        self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __d('mail', "メールアドレス認証");
         //subjectにサービス名のプレフィックスを追加
         foreach (self::$TYPE_TMPL as $key => $val) {
             self::$TYPE_TMPL[$key]['subject'] = "[" . SERVICE_NAME . "]" . $val['subject'];

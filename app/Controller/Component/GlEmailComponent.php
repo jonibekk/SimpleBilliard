@@ -47,6 +47,27 @@ class GlEmailComponent extends Object
     }
 
     /**
+     * メールにてユーザ再認証
+     *
+     * @param $to_uid
+     * @param $email_token
+     *
+     * @return null
+     */
+    public function sendMailEmailTokenResend($to_uid, $email_token)
+    {
+        $url = Router::url(
+                     [
+                         'admin'      => false,
+                         'controller' => 'users',
+                         'action'     => 'verify',
+                         $email_token,
+                     ], true);
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_TOKEN_RESEND, ['url' => $url]);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * メールにてユーザ認証
      *
      * @param $to_uid
