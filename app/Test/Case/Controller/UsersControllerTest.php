@@ -658,6 +658,7 @@ class UsersControllerTest extends ControllerTestCase
         ];
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->saveAll($basic_data);
+        /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->save(['primary_email_id' => $Users->User->Email->getLastInsertID()]);
 
         $data = [
@@ -669,4 +670,70 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('users/password_reset/abcde', ['data' => $data, 'method' => 'POST']);
     }
 
+    function testTokenResend()
+    {
+        $this->_testAction('users/token_resend');
+    }
+
+    function testTokenResendAuthenticated()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id' => "xxxxxx",
+            ]],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        try {
+            $this->testAction('users/token_resend');
+        } catch (Exception $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]トークン再送。ログイン中は例外処理");
+    }
+
+    function testTokenResendPostEmail()
+    {
+        $Users = $this->generate('Users');
+        $basic_data = [
+            'User'  => [
+                'first_name'     => 'basic',
+                'last_name'      => 'user',
+                'password'       => 'aaaaaaaaaa',
+                'password_token' => 'abcde',
+                'active_flg'     => false,
+            ],
+            'Email' => [
+                [
+                    'email'               => 'basic@email.com',
+                    'email_verified'      => false,
+                    'email_token_expires' => date('Y-m-d H:i:s', time() + 60 * 60)
+                ]
+            ]
+        ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->User->saveAll($basic_data);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->User->save(['primary_email_id' => $Users->User->Email->getLastInsertID()]);
+
+        $data = [
+            'User' => [
+                'email' => 'basic@email.com',
+            ]
+        ];
+        $this->testAction('users/token_resend', ['data' => $data, 'method' => 'POST']);
+    }
 }
