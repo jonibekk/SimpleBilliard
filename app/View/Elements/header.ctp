@@ -50,7 +50,7 @@
 
         </div>
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left" style="">
-            <a class="navmenu-brand" href="#">Project name</a>
+            <a class="navmenu-brand" href="#"><?= $title_for_layout ?></a>
             <ul class="nav navbar-nav">
                 <li><a href="#"><i class="fa fa-home"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
