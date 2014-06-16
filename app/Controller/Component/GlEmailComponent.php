@@ -71,6 +71,40 @@ class GlEmailComponent extends Object
     }
 
     /**
+     * メールにてパスワード設定完了通知
+     *
+     * @param $to_uid
+     *
+     * @return null
+     */
+    public function sendMailCompletePasswordReset($to_uid)
+    {
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_PASSWORD_RESET_COMPLETE);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * メールにてパスワード再設定
+     *
+     * @param $to_uid
+     * @param $token
+     *
+     * @return null
+     */
+    public function sendMailPasswordReset($to_uid, $token)
+    {
+        $url = Router::url(
+                     [
+                         'admin'      => false,
+                         'controller' => 'users',
+                         'action'     => 'password_reset',
+                         $token,
+                     ], true);
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_PASSWORD_RESET, ['url' => $url]);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * execコマンドにてidを元にメール送信を行う
      *
      * @param $id

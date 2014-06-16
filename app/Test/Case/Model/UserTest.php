@@ -42,6 +42,21 @@ class UserTest extends CakeTestCase
         'app.oauth_token'
     );
 
+    public $basicUserDefault = [
+        'User'  => [
+            'first_name' => 'basic',
+            'last_name'  => 'user',
+            'password',
+            'active_flg' => true
+        ],
+        'Email' => [
+            [
+                'email'          => 'basic@email.com',
+                'email_verified' => true
+            ]
+        ]
+    ];
+
     /**
      * setUp method
      *
@@ -75,6 +90,27 @@ class UserTest extends CakeTestCase
         $this->User->create();
         $this->User->set($testData);
         return $this->User->validates();
+    }
+
+    /**
+     * @param array $user_data
+     * @param array $email_data
+     *
+     * @return mixed
+     */
+    function generateBasicUser($user_data = [], $email_data = [])
+    {
+        $data = $this->basicUserDefault;
+        $data['User']['password'] = $this->User->generateHash('12345678');
+        if (!empty($user_data)) {
+            $data['User'] = array_merge($data['User'], $user_data);
+        }
+        if (!empty($email_data)) {
+            $data['Email'][0] = array_merge($data['Email'][0], $email_data);
+        }
+        $this->User->saveAll($data);
+        $this->User->save(['primary_email_id' => $this->User->Email->getLastInsertID()]);
+        return $this->User->getLastInsertID();
     }
 
     /**
@@ -345,4 +381,115 @@ class UserTest extends CakeTestCase
 //        $expected = "First Last";
 //        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っいる場合でもローマ字表示フラグonの場合は`first_name last_name`になる");
     }
+
+    function testPasswordResetPreNoData()
+    {
+        $res = $this->User->passwordResetPre([]);
+        $this->assertFalse($res, "[異常]パスワードリセット前のデータなしの場合");
+    }
+
+    function testPasswordResetPreNoDataNoUser()
+    {
+        $res = $this->User->passwordResetPre([]);
+        $this->assertFalse($res, "[異常]パスワードリセット前のユーザデータなしの場合");
+        $res = $this->User->passwordResetPre(['User' => ['email' => 'no_data@xxx.xxx.com']]);
+        $this->assertFalse($res, "[異常]パスワードリセット前のユーザデータなしの場合");
+    }
+
+    function testPasswordResetPreSuccess()
+    {
+        $uid = $this->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $data = ['User' => ['email' => $email['Email']['email']]];
+        $res = $this->User->passwordResetPre($data);
+        $this->assertTrue(!empty($res['User']['password_token']), "[正常]パスワードリセット前のトークン生成に成功");
+    }
+
+    function testPasswordResetPreNotEmailVerified()
+    {
+        $email_data = ['email_verified' => false];
+        $uid = $this->generateBasicUser([], $email_data);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $data = ['User' => ['email' => $email['Email']['email']]];
+        $res = $this->User->passwordResetPre($data);
+        $this->assertFalse($res, "[異常]パスワードリセット前のメアド未認証");
+    }
+
+    function testPasswordResetPreNotUserActive()
+    {
+        $user_data = ['active_flg' => false];
+        $uid = $this->generateBasicUser($user_data);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $data = ['User' => ['email' => $email['Email']['email']]];
+        $res = $this->User->passwordResetPre($data);
+        $this->assertFalse($res, "[異常]パスワードリセット前のユーザ非アクティブ");
+    }
+
+    function testCheckPasswordToken()
+    {
+        $uid = $this->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $data = ['User' => ['email' => $email['Email']['email']]];
+        $res = $this->User->passwordResetPre($data);
+
+        $res = $this->User->checkPasswordToken($res['User']['password_token']);
+        $this->assertTrue(!empty($res), "[成功]パスワードトークンチェック");
+    }
+
+    function testCheckPasswordTokenFail()
+    {
+        $res = $this->User->checkPasswordToken('no_data');
+        $this->assertFalse(!empty($res), "[異常]パスワードトークンチェック");
+    }
+
+    function testPasswordResetSuccess()
+    {
+        $uid = $this->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $data = ['User' => ['email' => $email['Email']['email']]];
+        $res = $this->User->passwordResetPre($data);
+
+        $user_email = $this->User->checkPasswordToken($res['User']['password_token']);
+
+        $postData = [
+            'User' => [
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+            ],
+        ];
+        $res = $this->User->passwordReset($user_email, $postData);
+        $this->assertTrue($res, "[正常]パスワードリセット");
+    }
+
+    function testPasswordResetFailNotSameConfirm()
+    {
+        $uid = $this->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $data = ['User' => ['email' => $email['Email']['email']]];
+        $res = $this->User->passwordResetPre($data);
+
+        $user_email = $this->User->checkPasswordToken($res['User']['password_token']);
+
+        $postData = [
+            'User' => [
+                'password'         => '12345678',
+                'password_confirm' => '123456789',
+            ],
+        ];
+        $res = $this->User->passwordReset($user_email, $postData);
+        $this->assertFalse($res, "[異常]パスワードリセットでパスワード確認用と一致しない");
+    }
+
+    function testPasswordResetFailNoData()
+    {
+        $res = $this->User->passwordReset([], []);
+        $this->assertFalse($res, "[異常]パスワードリセットでデータなし");
+    }
+
 }

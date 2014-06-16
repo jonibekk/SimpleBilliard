@@ -21,7 +21,7 @@ class UsersController extends AppController
      */
     protected function _setupAuth()
     {
-        $this->Auth->allow('register', 'login', 'verify', 'logout', 'reset_password', 'sent_mail');
+        $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'sent_mail');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -216,6 +216,53 @@ class UsersController extends AppController
         } catch (RuntimeException $e) {
             throw new RuntimeException($e->getMessage());
         }
+    }
+
+    /**
+     * パスワードリセット
+     */
+    public function password_reset($token = null)
+    {
+        if ($this->Auth->user()) {
+            throw new NotFoundException();
+        }
+        $this->layout = LAYOUT_ONE_COLUMN;
+        //トークンがある場合はパスワードリセット画面
+        if ($token) {
+            //トークンが正しく期限内の場合
+            if ($user_email = $this->User->checkPasswordToken($token)) {
+                if ($this->request->is('post') && !empty($this->request->data)) {
+                    //パスワードリセット完了した場合
+                    if ($this->User->passwordReset($user_email, $this->request->data)) {
+                        //パスワードリセット完了の旨をユーザに通知
+                        $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
+                        $this->Pnotify->outSuccess(__d('gl', "新しいパスワードでログインしてください。"),
+                                                   ['title' => __d('gl', 'パスワードを設定しました')]);
+                        $this->redirect(['action' => 'login']);
+                    }
+                }
+                return $this->render('password_reset');
+            }
+            //トークンが正しくないor期限外
+            else {
+                $this->Pnotify->outError(__d('gl', "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"),
+                                         ['title' => __d('gl', "トークンの認証に失敗しました。")]);
+                $this->redirect(['action' => 'password_reset']);
+            }
+        }
+        //トークンがない場合はメールアドレス入力画面
+        else {
+            if ($this->request->is('post') && !empty($this->request->data)) {
+                //パスワード認証情報登録成功した場合
+                if ($user = $this->User->passwordResetPre($this->request->data)) {
+                    //メールでトークンを送信
+                    $this->GlEmail->sendMailPasswordReset($user['User']['id'], $user['User']['password_token']);
+                    $this->Pnotify->outSuccess(__d('gl', "パスワード再設定のメールを送信しました。ご確認ください。"),
+                                               ['title' => __d('gl', "メールを送信しました")]);
+                }
+            }
+        }
+        return $this->render('password_reset_request');
     }
 
     /*

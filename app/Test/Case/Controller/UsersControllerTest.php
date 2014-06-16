@@ -578,4 +578,99 @@ class UsersControllerTest extends ControllerTestCase
         }
         $this->assertTrue(isset($e), "[異常]新規ユーザ登録モード以外は例外発生");
     }
+
+    function testPasswordReset()
+    {
+        $this->testAction('/users/password_reset');
+        $this->testAction('/users/password_reset/aaaaa');
+    }
+
+    function testPasswordResetAuthenticated()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id' => "xxxxxx",
+            ]],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        try {
+            $this->testAction('users/password_reset');
+        } catch (Exception $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]パスワードリセット ログイン中の例外");
+
+    }
+
+    function testPasswordResetPost()
+    {
+        App::uses('UserTest', 'Test/Case/Model');
+        $UserTest = new UserTest;
+        $UserTest->setUp();
+        $uid = $UserTest->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $UserTest->User->Email->findByUserId($uid);
+
+        $data = ['User' => ['email' => $email['Email']['email']]];
+        $this->testAction('users/password_reset', ['data' => $data]);
+    }
+
+    function testPasswordResetPostToken()
+    {
+        App::uses('UserTest', 'Test/Case/Model');
+        $UserTest = new UserTest;
+        $UserTest->setUp();
+        $uid = $UserTest->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $user = $UserTest->User->findById($uid);
+
+        $this->testAction('users/password_reset/' . $user['User']['password_token']);
+    }
+
+    function testPasswordResetPostPassword()
+    {
+        $Users = $this->generate('Users');
+        $basic_data = [
+            'User'  => [
+                'first_name'     => 'basic',
+                'last_name'      => 'user',
+                'password'   => 'aaaaaaaaaa',
+                'password_token' => 'abcde',
+                'active_flg' => true,
+            ],
+            'Email' => [
+                [
+                    'email' => 'basic@email.com',
+                    'email_verified'      => true,
+                    'email_token_expires' => date('Y-m-d H:i:s', time() + 60 * 60)
+                ]
+            ]
+        ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->User->saveAll($basic_data);
+        $Users->User->save(['primary_email_id' => $Users->User->Email->getLastInsertID()]);
+
+        $data = [
+            'User' => [
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+            ]
+        ];
+        $this->testAction('users/password_reset/abcde', ['data' => $data, 'method' => 'POST']);
+    }
+
 }

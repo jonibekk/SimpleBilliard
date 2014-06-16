@@ -353,8 +353,7 @@ class User extends AppModel
         }
         //パスワードをハッシュ化
         if (isset($data['User']['password']) && !empty($data['User']['password'])) {
-            $passwordHasher = new SimplePasswordHasher();
-            $data['User']['password'] = $passwordHasher->hash($data['User']['password']);
+            $data['User']['password'] = $this->generateHash($data['User']['password']);
         }
         //メールアドレスの認証トークンを発行
         $email_token = $this->generateToken();
@@ -447,4 +446,106 @@ class User extends AppModel
         $this->Email->saveAll($user, ['validate' => false, 'callbacks' => false]);
         return $this->findById($user['User']['id']);
     }
+
+    /**
+     * Checks if an email is in the system, validated and if the user is active so that the user is allowed to reste his password
+     *
+     * @param array $postData post data from controller
+     *
+     * @return mixed False or user data as array on success
+     */
+    public function passwordResetPre($postData)
+    {
+        //メールアドレスが空で送信されてきた場合はエラーで返却
+        if (!isset($postData['User']['email']) || empty($postData['User']['email'])) {
+            $this->invalidate('email', __d('validate', "メールアドレスを入力してください。"));
+            return false;
+        }
+        $options = [
+            'conditions' => [
+                'Email.email' => $postData['User']['email'],
+            ],
+            'contain'    => ['User']
+        ];
+        $user = $this->Email->find('first', $options);
+        //メールアドレスが存在しない場合もしくはユーザが存在しない場合はエラーで返却
+        if (empty($user) || !$user['User']['id']) {
+            $this->invalidate('email', __d('validate', "このメールアドレスはGoalousに登録されていません。"));
+            return false;
+        }
+        //メールアドレスの認証が終わっていない場合
+        if (!$user['Email']['email_verified']) {
+            $this->invalidate('email', __d('validate', "このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメールをご確認ください。"));
+            return false;
+        }
+        //ユーザがアクティブではない場合
+        if (!$user['User']['active_flg']) {
+            $this->invalidate('email', __d('validate', "ユーザアカウントが有効ではありません。"));
+            return false;
+        }
+        //ここから認証データ登録
+        $user['User']['password_token'] = $this->generateToken();
+        $user['Email']['email_token_expires'] = $this->getTokenExpire(60 * 60); //一時間
+        $this->Email->saveAssociated($user, ['validate' => false]);
+        $this->data = $user;
+        return $user;
+    }
+
+    /**
+     * Checks the token for a password change
+     *
+     * @param string $token Token
+     *
+     * @return mixed False or user data as array
+     */
+    public function checkPasswordToken($token)
+    {
+        $options = [
+            'conditions' => [
+                'User.password_token'          => $token,
+                'Email.email_token_expires >=' => date('Y-m-d H:i:s'),
+                'User.active_flg'              => true,
+            ],
+            'contain'    => ['User']
+        ];
+        $user = $this->Email->find('first', $options);
+        if (empty($user)) {
+            return false;
+        }
+        return $user;
+    }
+
+    /**
+     * パスワードリセット
+     *
+     * @param       $user_email
+     * @param array $postData
+     *
+     * @return bool
+     */
+    public function passwordReset($user_email, $postData)
+    {
+        if (!isset($user_email['User']) || !isset($user_email['Email']) || !$postData['User']) {
+            return false;
+        }
+        $this->id = $user_email['User']['id'];
+        $this->set($postData);
+        if (!$this->validates()) {
+            return false;
+        }
+
+        $user_email['User']['password'] = $this->generateHash($postData['User']['password']);
+        $user_email['User']['password_token'] = null;
+        $user_email['User']['password_modified'] = date('Y-m-d H:i:s');
+        $user_email['Email']['email_token_expires'] = null;
+        $res = $this->Email->saveAll($user_email);
+        return $res;
+    }
+
+    public function generateHash($str)
+    {
+        $passwordHasher = new SimplePasswordHasher();
+        return $passwordHasher->hash($str);
+    }
+
 }
