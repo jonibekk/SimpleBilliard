@@ -102,3 +102,9 @@ footer p {
     width: 40px;
     height: 40px;
 }
+
+.gl-hamburger {
+    float: left !important;
+    margin-left: 3px !important;
+    margin-right: 3px !important;
+}

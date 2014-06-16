@@ -13,7 +13,8 @@
 <? if (!$nav_disable): ?>
     <div class="navbar navbar-fixed-top navbar-default" style="">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navbar-offcanvas"
+            <button type="button" class="navbar-toggle gl-hamburger" data-toggle="offcanvas"
+                    data-target=".navbar-offcanvas"
                     data-canvas="body">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -48,8 +49,8 @@
             <a class="navbar-brand" href="#"><i class="fa fa-bell-o"></i></a>
 
         </div>
-        <div class="navbar-offcanvas offcanvas " style="">
-            <a class="navmenu-brand" href="#">Project name</a>
+        <div class="navbar-offcanvas offcanvas navmenu-fixed-left" style="">
+        <a class="navmenu-brand" href="#">Project name</a>
             <ul class="nav navbar-nav">
                 <li><a href="#"><i class="fa fa-home"></i></a></li>
                 <li><a href="#"><i class="fa fa-bullseye"></i> </a></li>
