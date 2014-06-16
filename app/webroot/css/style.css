@@ -85,6 +85,14 @@ footer p {
     vertical-align: middle;
 }
 
+.modal-no-margin .modal-body {
+    padding: 0;
+}
+
+.modal-no-margin .modal-footer {
+    margin: 0;
+}
+
 .me-menu-image {
     padding-top: 0 !important;
     padding-bottom: 0 !important;

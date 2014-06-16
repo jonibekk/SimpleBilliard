@@ -236,6 +236,22 @@ class User extends AppModel
     }
 
     /**
+     * @param $email
+     *
+     * @return array
+     */
+    public function getUserByEmail($email)
+    {
+        $options = [
+            'conditions' => [
+                'Email.email' => $email,
+            ],
+            'contain'    => ['User']
+        ];
+        return $this->Email->find('first', $options);
+    }
+
+    /**
      * 表示用ユーザ名と、ローカルユーザ名をセット
      *
      * @param array $row
@@ -371,6 +387,26 @@ class User extends AppModel
             return true;
         }
         return false;
+    }
+
+    /**
+     * トークンの発行
+     *
+     * @param string $email
+     *
+     * @return mixed
+     */
+    function saveEmailToken($email)
+    {
+        $email_user = $this->getUserByEmail($email);
+        $email_user['Email']['email_token'] = $this->generateToken();
+        $email_user['Email']['email_token_expires'] = $this->getTokenExpire();
+        if ($this->Email->saveAll($email_user)) {
+            return $email_user;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
