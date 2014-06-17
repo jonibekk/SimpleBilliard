@@ -50,15 +50,13 @@
                 <a class="navmenu-brand" href="#"><?= $title_for_layout ?></a>
                 <ul class="nav navbar-nav">
                     <li>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <!--suppress HtmlFormInputWithoutLabel -->
-                                <select class="form-control gl-nav-team-select">
-                                    <option>TeamISAO</option>
-                                    <option>TeamGoalous</option>
-                                    <option>すごく長い長い長い長い長い長い長いチーム名</option>
-                                </select>
-                            </div>
+                        <form class="gl-nav-form-group" role="search">
+                            <!--suppress HtmlFormInputWithoutLabel -->
+                            <select class="form-control gl-nav-team-select">
+                                <option>TeamISAO</option>
+                                <option>TeamGoalous</option>
+                                <option>すごく長い長い長い長い長い長い長いチーム名</option>
+                            </select>
                         </form>
                     </li>
                     <li><a href="#"><i class="fa fa-home"></i>&nbsp;
@@ -73,11 +71,9 @@
                         </a>
                     </li>
                     <li>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group left-inner-addon">
-                                <i class="fa fa-search"></i>
-                                <input type="text" class="form-control gl-nav-search" placeholder="Search">
-                            </div>
+                        <form class="gl-nav-form-group" role="search">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control gl-nav-search" placeholder="Search">
                         </form>
                     </li>
                 </ul>

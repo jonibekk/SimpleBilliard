@@ -188,15 +188,37 @@ footer p {
 }
 
 .gl-nav-search {
-    width: 200px;
+    width: 200px !important;
 }
 
 @media (max-width: 768px) {
     .gl-nav-search {
-        width: 100%;
+        width: 100% !important;
     }
 }
 
 .gl-nav-team-select {
     width: 150px !important;
+}
+
+.gl-nav-form-group input, select {
+    height: 28px !important;
+    font-size: 12px !important;
+}
+
+.gl-nav-form-group input {
+    padding-left: 27px;
+}
+
+.gl-nav-form-group {
+    position: relative;
+    padding: 6px;
+}
+
+/*noinspection ALL*/
+.gl-nav-form-group i {
+    position: absolute;
+    font-size: 15px !important;
+    padding: 7px 7px;
+    pointer-events: none;
 }
