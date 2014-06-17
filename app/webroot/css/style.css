@@ -99,8 +99,8 @@ footer p {
 }
 
 .gl-me-menu-image > img {
-    width: 40px;
-    height: 40px;
+    width: 26px;
+    height: 26px;
 }
 
 .gl-hamburger {
@@ -125,7 +125,7 @@ footer p {
 .gl-navbar-icon {
     float: left;
     font-size: 20px;
-    padding: 5px 15px;
+    padding: 6px 15px;
     color: #000000;
 }
 
@@ -160,14 +160,9 @@ footer p {
     pointer-events: none;
 }
 
-.navbar-form {
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .gl-navbar-nav-fix {
     float: left;
-    padding: 8px 15px;
+    padding: 7px 15px;
     margin: 0;
     list-style: none;
 }
@@ -185,6 +180,11 @@ footer p {
 
 .navbar-nav i {
     font-size: 20px;
+}
+
+.navbar-nav > li > a {
+    padding-top: 9px;
+    padding-bottom: 9px;
 }
 
 .gl-nav-search {
