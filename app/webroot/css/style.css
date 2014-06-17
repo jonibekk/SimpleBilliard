@@ -201,7 +201,7 @@ footer p {
     width: 150px !important;
 }
 
-.gl-nav-form-group input, select {
+.gl-nav-form-group input, .gl-nav-form-group select {
     height: 28px !important;
     font-size: 12px !important;
 }
