@@ -204,6 +204,9 @@ footer p {
 .gl-nav-form-group input, select {
     height: 28px !important;
     font-size: 12px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-right: 0 !important;
 }
 
 .gl-nav-form-group input {
