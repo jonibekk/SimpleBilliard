@@ -17,16 +17,13 @@
     echo newrelic_get_browser_timing_header();
 } ?>
 <?
-if (!isset($nav_disable)) {
-    if ($this->Session->read('Auth.User.id')) {
-        $nav_disable = false;
-    }
-    else {
-        $nav_disable = true;
-    }
+if ($this->Session->read('Auth.User.id')) {
+    echo $this->element('header_logged_in');
+}
+else {
+    echo $this->element('header_not_logged_in');
 }
 ?>
-<?= $this->element('header', ['nav_disable' => $nav_disable]) ?>
 <div id="container" class="container">
     <?= $this->Session->flash(); ?>
 
