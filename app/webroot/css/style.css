@@ -186,3 +186,17 @@ footer p {
 .navbar-nav i {
     font-size: 20px;
 }
+
+.gl-nav-search {
+    width: 200px;
+}
+
+@media (max-width: 768px) {
+    .gl-nav-search {
+        width: 100%;
+    }
+}
+
+.gl-nav-team-select {
+    width: 150px !important;
+}

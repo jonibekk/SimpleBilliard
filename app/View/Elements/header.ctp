@@ -53,9 +53,10 @@
                         <form class="navbar-form navbar-left" role="search">
                             <div class="form-group">
                                 <!--suppress HtmlFormInputWithoutLabel -->
-                                <select class="form-control">
+                                <select class="form-control gl-nav-team-select">
                                     <option>TeamISAO</option>
                                     <option>TeamGoalous</option>
+                                    <option>すごく長い長い長い長い長い長い長いチーム名</option>
                                 </select>
                             </div>
                         </form>
@@ -75,7 +76,7 @@
                         <form class="navbar-form navbar-left" role="search">
                             <div class="form-group left-inner-addon">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control" placeholder="Search">
+                                <input type="text" class="form-control gl-nav-search" placeholder="Search">
                             </div>
                         </form>
                     </li>
