@@ -122,7 +122,7 @@ footer p {
     }
 }
 
-.gl-navbar-icon {
+.gl-navbar-icons > a {
     float: left;
     font-size: 20px;
     padding: 6px 15px;
@@ -221,4 +221,15 @@ footer p {
     font-size: 15px !important;
     padding: 7px 7px;
     pointer-events: none;
+}
+
+.gl-navbar i {
+    color: dimgray;
+}
+
+@media (min-width: 768px) {
+    .gl-nav-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
