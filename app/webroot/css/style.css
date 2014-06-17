@@ -170,3 +170,14 @@ footer p {
     margin: 0;
     list-style: none;
 }
+
+/* Offcanvasのサイズを独自に定義 */
+.navbar-offcanvas {
+    width: 200px;
+}
+
+@media (min-width: 768px) {
+    .navbar-offcanvas {
+        width: auto;
+    }
+}
