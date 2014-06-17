@@ -29,13 +29,15 @@
                     <a href="#" class="dropdown-toggle me-menu-image" data-toggle="dropdown" href="#" id="download">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                                   ['width' => '12px', 'height' => '12px', 'class' => 'img-circle']) ?>
+                                                   ['width' => '25px', 'height' => '25px', 'class' => 'img-circle']) ?>
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" aria-labelledby="download">
-                        <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?= __d('gl',
-                                                                                                  "チュートリアル") ?></a></li>
-                        <li><?= $this->Html->link(__d('gl', "ログアウト"),
-                                                  ['controller' => 'users', 'action' => 'logout']) ?></li>
+                        <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
+                                __d('gl',
+                                    "チュートリアル") ?></a></li>
+                        <li><?=
+                            $this->Html->link(__d('gl', "ログアウト"),
+                                              ['controller' => 'users', 'action' => 'logout']) ?></li>
                         <li class="divider"></li>
                         <li><?=
                             $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
