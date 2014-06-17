@@ -124,7 +124,8 @@ footer p {
 
 .gl-navbar-icon {
     float: left;
-    padding: 10px 15px;
+    font-size: 20px;
+    padding: 5px 15px;
     color: #000000;
 }
 
@@ -180,4 +181,8 @@ footer p {
     .navbar-offcanvas {
         width: auto;
     }
+}
+
+.navbar-nav i {
+    font-size: 20px;
 }
