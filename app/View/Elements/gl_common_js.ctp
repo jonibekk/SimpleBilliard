@@ -7,7 +7,8 @@
  */
 ?>
 <?
-echo $this->Html->script('jquery-2.1.0.min');
+//echo $this->Html->script('jquery-2.1.0.min');
+echo $this->Html->script('jquery-1.11.1.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('jasny-bootstrap.min');
 echo $this->Html->script('bootstrapValidator.min');
