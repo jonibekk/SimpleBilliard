@@ -24,6 +24,25 @@
                 <a class="gl-navbar-icon" href="#"><i class="fa fa-plus-circle"></i></a>
                 <a class="gl-navbar-icon" href="#"><i class="fa fa-envelope-o"></i></a>
                 <a class="gl-navbar-icon" href="#"><i class="fa fa-bell-o"></i></a>
+
+                <div class="dropdown gl-navbar-nav-fix">
+                    <a href="#" class="dropdown-toggle me-menu-image" data-toggle="dropdown" href="#" id="download">
+                        <?=
+                        $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
+                                                   ['width' => '12px', 'height' => '12px', 'class' => 'img-circle']) ?>
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                        <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?= __d('gl',
+                                                                                                  "チュートリアル") ?></a></li>
+                        <li><?= $this->Html->link(__d('gl', "ログアウト"),
+                                                  ['controller' => 'users', 'action' => 'logout']) ?></li>
+                        <li class="divider"></li>
+                        <li><?=
+                            $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
+                                              ['target' => '_blank']) ?></li>
+                    </ul>
+                </div>
+
             </div>
             <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
                 <a class="navmenu-brand" href="#"><?= $title_for_layout ?></a>

@@ -163,3 +163,10 @@ footer p {
     margin-left: 0;
     margin-right: 0;
 }
+
+.gl-navbar-nav-fix {
+    float: left;
+    padding: 10px 15px;
+    margin: 0;
+    list-style: none;
+}
