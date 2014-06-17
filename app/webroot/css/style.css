@@ -121,3 +121,45 @@ footer p {
         display: none !important;
     }
 }
+
+.gl-navbar-icon {
+    float: left;
+    padding: 10px 15px;
+    color: #000000;
+}
+
+.left-inner-addon {
+    position: relative;
+}
+
+.left-inner-addon input {
+    padding-left: 30px;
+}
+
+/*noinspection ALL*/
+.left-inner-addon i {
+    position: absolute;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+
+.right-inner-addon input {
+    padding-right: 30px;
+}
+
+/*noinspection ALL*/
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.navbar-form {
+    margin-left: 0;
+    margin-right: 0;
+}
