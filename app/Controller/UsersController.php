@@ -153,6 +153,7 @@ class UsersController extends AppController
             //プロフィールを保存
             $this->User->id = $me['id'];
             if ($this->User->save($this->request->data)) {
+                $this->_refreshAuth($me['id']);
                 //チーム作成ページへリダイレクト
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect(['controller' => 'teams', 'action' => 'add']);
@@ -287,23 +288,50 @@ class UsersController extends AppController
 
     }
 
+    /**
+     * ログイン中のAuthを更新する（ユーザ情報を更新後などに実行する）
+     *
+     * @param $uid
+     *
+     * @return bool
+     */
+    public function _refreshAuth($uid)
+    {
+        $this->Auth->logout();
+        $this->User->recursive = 0;
+        $user_buff = $this->User->findById($uid);
+        $this->User->recursive = -1;
+        unset($user_buff['User']['password']);
+        $user_buff = array_merge(['User' => []], $user_buff);
+        //配列を整形（Userの中に他の関連データを配置）
+        $user = [];
+        $associations = [];
+        foreach ($user_buff as $key => $val) {
+            if ($key == 'User') {
+                $user[$key] = $val;
+            }
+            else {
+                $associations[$key] = $val;
+            }
+        }
+        if (isset($user['User'])) {
+            $user['User'] = array_merge($user['User'], $associations);
+        }
+        return $this->Auth->login($user['User']);
+    }
+
     /*
      * 自動でログインする
      */
     public function _autoLogin($user_id)
     {
-        $user = $this->User->findById($user_id);
         //リダイレクト先を退避
         $redirect = null;
         if ($this->Session->read('Auth.redirect')) {
             $redirect = $this->Session->read('Auth.redirect');
         }
-        $this->Auth->logout();
-
-        unset($user['User']['password']);
-        $user = array_merge(['User' => []], $user);
         //自動ログイン
-        if ($this->Auth->login($user['User'])) {
+        if ($this->_refreshAuth($user_id)) {
             //リダイレクト先をセッションに保存
             $this->Session->write('redirect', $redirect);
             $this->_setAfterLogin();
