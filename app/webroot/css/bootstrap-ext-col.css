@@ -19,6 +19,23 @@ goalous独自に追加したスマホ横のブレイクポイント
     }
 }
 
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+    float: left;
+    width: 100%;
+}
+
+.col-xs-pull-0, .col-xs-pull-1, .col-xs-pull-2, .col-xs-pull-3, .col-xs-pull-4, .col-xs-pull-5, .col-xs-pull-6, .col-xs-pull-7, .col-xs-pull-8, .col-xs-pull-9, .col-xs-pull-10, .col-xs-pull-11, .col-xs-pull-12 {
+    right: auto;
+}
+
+.col-xs-push-0, .col-xs-push-1, .col-xs-push-2, .col-xs-push-3, .col-xs-push-4, .col-xs-push-5, .col-xs-push-6, .col-xs-push-7, .col-xs-push-8, .col-xs-push-9, .col-xs-push-10, .col-xs-push-11, .col-xs-push-12 {
+    left: auto;
+}
+
+.col-xs-offset-0, .col-xs-offset-1, .col-xs-offset-2, .col-xs-offset-3, .col-xs-offset-4, .col-xs-offset-5, .col-xs-offset-6, .col-xs-offset-7, .col-xs-offset-8, .col-xs-offset-9, .col-xs-offset-10, .col-xs-offset-11, .col-xs-offset-12 {
+    margin-left: auto;
+}
+
 .col-xxs-1, .col-xxs-2, .col-xxs-3, .col-xxs-4, .col-xxs-5, .col-xxs-6, .col-xxs-7, .col-xxs-8, .col-xxs-9, .col-xxs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xxs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xxs-12 {
     min-height: 1px;
     padding-left: 15px;
