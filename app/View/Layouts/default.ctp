@@ -26,8 +26,8 @@ else {
 ?>
 <div id="container" class="container">
     <div class="row">
-        <div class="col-sm-2">
-            <div class="well">
+        <div class="col-md-2 col-sm-3 hidden-xs">
+        <div class="well">
                 <p>test</p>
 
                 <p>test</p>
@@ -41,8 +41,8 @@ else {
                 <p>test</p>
             </div>
         </div>
-        <div class="col-sm-6" role="main">
-            <?= $this->Session->flash(); ?>
+        <div class="col-md-6 col-sm-9" role="main">
+        <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
             <div class="well">
                 <p>test</p>
@@ -58,8 +58,8 @@ else {
                 <p>test</p>
             </div>
         </div>
-        <div class="col-sm-4">
-            <div class="well">
+        <div class="col-md-4 visible-md visible-lg">
+        <div class="well">
                 <p>test</p>
 
                 <p>test</p>
