@@ -29,6 +29,7 @@
     echo $this->Html->css('jquery.nailthumb.1.1');
     echo $this->Html->css('bootstrapValidator.min');
     echo $this->Html->css('pnotify.custom.min');
+    echo $this->Html->css('bootstrap-ext-col');
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->fetch('css');
     echo $this->fetch('meta');
