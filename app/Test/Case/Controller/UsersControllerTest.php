@@ -736,4 +736,9 @@ class UsersControllerTest extends ControllerTestCase
         ];
         $this->testAction('users/token_resend', ['data' => $data, 'method' => 'POST']);
     }
+
+    function testSetting()
+    {
+        $this->testAction('users/settings');
+    }
 }

@@ -289,6 +289,14 @@ class UsersController extends AppController
     }
 
     /**
+     * ユーザ設定
+     */
+    public function settings()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+    }
+
+    /**
      * ログイン中のAuthを更新する（ユーザ情報を更新後などに実行する）
      *
      * @param $uid
