@@ -236,3 +236,24 @@ footer p {
         padding-right: 0;
     }
 }
+
+/*TODO testここから*/
+.gl-affix {
+    position: fixed;
+    top: 50px;
+}
+
+.bs-docs-sidebar .nav > .active > a, .bs-docs-sidebar .nav > .active:hover > a, .bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: 700;
+    color: #563d7c;
+    background-color: transparent;
+    border-left: 2px solid #563d7c;
+}
+
+.spy-body {
+    padding-top: 50px;
+    margin-top: -50px;
+}
+
+/*testここまで*/
