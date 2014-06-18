@@ -19,4 +19,3 @@
         type: '<?=$type?>'
     });
 </script>
-<i class="fa-info-circle"
