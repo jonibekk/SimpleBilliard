@@ -55,21 +55,21 @@ footer p {
     color: #2E8DEF;
 }
 
-@media (min-width: 768px) {
-    .container {
-        width: 960px;
-    }
-}
+/*@media (min-width: 768px) {*/
+/*.container {*/
+/*width: 960px;*/
+/*}*/
+/*}*/
 
 @media (min-width: 992px) {
     .container {
-        width: 960px;
+        width: 970px;
     }
 }
 
 @media (min-width: 1200px) {
     .container {
-        width: 960px;
+        width: 970px;
     }
 }
 
