@@ -4,11 +4,13 @@
  * User: bigplants
  * Date: 6/19/14
  * Time: 2:39 PM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $last_first
  * @var array              $me
  * @var boolean            $is_not_use_local_name
+ * @var array              $language_list
  */
 ?>
     <div class="panel panel-default">
@@ -41,6 +43,31 @@
                 'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
                 'class'     => false,
             ])?>
+            <?=
+            $this->Form->input('language', [
+                'label'   => __d('gl', "言語"),
+                'type'    => 'select',
+                'options' => $language_list,
+            ])?>
+            <?=
+            $this->Form->input('auto_language_flg', [
+                'wrapInput' => 'col col-md-9 col-md-offset-3',
+                'label'     => ['class' => null, 'text' => __d('gl', "自動的に言語を設定する。")],
+                'class'     => false,
+            ])?>
+            <?=
+            $this->Form->input('romanize_flg', [
+                'wrapInput' => 'col col-md-9 col-md-offset-3',
+                'label'     => ['class' => null, 'text' => __d('gl', "自分の名前を強制的にローマ字表記にする。")],
+                'class'     => false,
+            ])?>
+            <!--            --><? //=
+            //            $this->Form->input('timezone', [
+            //                'label'   => __d('gl', "タイムゾーン"),
+            //                'type'    => 'select',
+            //                'options' => $this->TimeZone->timezones,
+            //            ])
+            ?>
             <?=
             $this->Form->input('password', [
                 'label'                    => __d('gl', "パスワードを作成"),
