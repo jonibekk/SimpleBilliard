@@ -29,7 +29,7 @@
         ]); ?>
         <div class="panel-body">
             <?=
-            $this->Form->input('Email.0.email', [
+            $this->Form->input('PrimaryEmail.email', [
                 'label'                        => __d('gl', "メール"),
                 'placeholder'                  => __d('gl', "hiroshi@example.com"),
                 'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
@@ -40,7 +40,6 @@
                 'wrapInput' => 'col col-md-9 col-md-offset-3',
                 'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
                 'class'     => false,
-                'default'   => true,
             ])?>
             <?=
             $this->Form->input('password', [

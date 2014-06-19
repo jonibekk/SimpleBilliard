@@ -295,13 +295,18 @@ class UsersController extends AppController
     {
         if ($this->request->is('post') && !empty($this->request->data)) {
         }
+        else {
+            $this->request->data = $this->User->getDetail($this->Auth->user('id'));
+        }
         $this->layout = LAYOUT_SETTING;
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         $me = $this->Auth->user();
+        //言語選択
+        $language_list = $this->Lang->getAvailLangList();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
-        $this->set(compact('me', 'is_not_use_local_name', 'last_first'));
+        $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list'));
         return $this->render();
     }
 

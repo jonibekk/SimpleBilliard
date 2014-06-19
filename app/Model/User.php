@@ -251,6 +251,15 @@ class User extends AppModel
         return $this->Email->find('first', $options);
     }
 
+    public function getDetail($id)
+    {
+        $recursive = $this->recursive;
+        $this->recursive = 0;
+        $res = $this->findById($id);
+        $this->recursive = -$recursive;
+        return $res;
+    }
+
     /**
      * 表示用ユーザ名と、ローカルユーザ名をセット
      *
