@@ -293,7 +293,7 @@ class UsersController extends AppController
      */
     public function settings()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->layout = LAYOUT_SETTING;
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         $me = $this->Auth->user();

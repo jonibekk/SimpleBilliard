@@ -49,7 +49,6 @@ echo $this->Html->script('gl_basic');
     });
 </script>
 <?
-echo $this->fetch('script');
 echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
 switch (ENV_NAME) {

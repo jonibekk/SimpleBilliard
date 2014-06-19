@@ -28,7 +28,7 @@ else {
     <div class="row">
         <div class="col-md-2 col-sm-3 col-xs-3 hidden-xxs">
             <div class="well">
-            <p>test</p>
+                <p>test</p>
 
                 <p>test</p>
 
@@ -60,7 +60,7 @@ else {
         </div>
         <div class="col-md-4 visible-md visible-lg">
             <div class="well">
-            <p>test</p>
+                <p>test</p>
 
                 <p>test</p>
 
@@ -84,5 +84,6 @@ else {
 } ?>
 <?= $this->element('modal_tutorial') ?>
 <?= $this->element('gl_common_js') ?>
+<?= $this->fetch('script') ?>
 </body>
 </html>
