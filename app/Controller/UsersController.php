@@ -294,6 +294,13 @@ class UsersController extends AppController
     public function settings()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        //姓名の並び順をセット
+        $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+        $me = $this->Auth->user();
+        //ローカル名を利用している国かどうか？
+        $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
+        $this->set(compact('me', 'is_not_use_local_name', 'last_first'));
+        return $this->render();
     }
 
     /**

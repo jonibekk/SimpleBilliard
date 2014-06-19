@@ -236,3 +236,21 @@ footer p {
         padding-right: 0;
     }
 }
+
+.gl-sidebar-setting {
+    position: fixed;
+    top: 50px;
+}
+
+.gl-sidebar-setting .nav > .active > a, .gl-sidebar-setting .nav > .active:hover > a, .gl-sidebar-setting .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: 700;
+    color: #563d7c;
+    background-color: transparent;
+    border-left: 2px solid #563d7c;
+}
+
+.gl-sections > div {
+    padding-top: 50px;
+    margin-top: -50px;
+}
