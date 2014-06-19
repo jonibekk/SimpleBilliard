@@ -237,13 +237,12 @@ footer p {
     }
 }
 
-/*TODO testここから*/
-.gl-affix {
+.gl-sidebar-setting {
     position: fixed;
     top: 50px;
 }
 
-.bs-docs-sidebar .nav > .active > a, .bs-docs-sidebar .nav > .active:hover > a, .bs-docs-sidebar .nav > .active:focus > a {
+.gl-sidebar-setting .nav > .active > a, .gl-sidebar-setting .nav > .active:hover > a, .gl-sidebar-setting .nav > .active:focus > a {
     padding-left: 18px;
     font-weight: 700;
     color: #563d7c;
@@ -251,9 +250,7 @@ footer p {
     border-left: 2px solid #563d7c;
 }
 
-.spy-body {
+.gl-sections > div {
     padding-top: 50px;
     margin-top: -50px;
 }
-
-/*testここまで*/
