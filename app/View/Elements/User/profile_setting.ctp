@@ -14,21 +14,21 @@
 <div id="profile">
     <div class="panel panel-default">
         <div class="panel-heading"><?= __d('gl', "プロフィール") ?></div>
-        <div class="panel-body">
-            <?=
-            $this->Form->create('User', [
-                'inputDefaults' => [
-                    'div'       => 'form-group',
-                    'label'     => [
-                        'class' => 'col col-md-3 control-label'
-                    ],
-                    'wrapInput' => 'col col-md-6',
-                    'class'     => 'form-control'
+        <?=
+        $this->Form->create('User', [
+            'inputDefaults' => [
+                'div'       => 'form-group',
+                'label'     => [
+                    'class' => 'col col-md-3 control-label'
                 ],
-                'class'         => 'form-horizontal',
-                'novalidate'    => true,
-                'type'          => 'file',
-            ]); ?>
+                'wrapInput' => 'col col-md-6',
+                'class'     => 'form-control'
+            ],
+            'class'         => 'form-horizontal validate',
+            'novalidate'    => true,
+            'type'          => 'file',
+        ]); ?>
+        <div class="panel-body">
             <?
             if (!$is_not_use_local_name) {
                 //ローカル名を使う国のみ表示
@@ -51,6 +51,35 @@
                     echo $local_first_name;
                     echo $local_last_name;
                 }
+            }
+            ?>
+            <?
+            //姓と名は言語によって表示順を変える
+            $last_name = $this->Form->input('last_name', [
+                'label'                    => __d('gl', "姓(ローマ字)"),
+                'placeholder'              => __d('gl', "姓"),
+                "pattern"                  => '^[a-zA-Z]+$',
+                "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
+                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                'afterInput'               => '<span class="help-block">' . __d('gl',
+                                                                                "例) Suzuki") . '</span>'
+            ]);
+            $first_name = $this->Form->input('first_name', [
+                'label'                    => __d('gl', "名(ローマ字)"),
+                'placeholder'              => __d('gl', '名'),
+                "pattern"                  => '^[a-zA-Z]+$',
+                "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
+                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                'afterInput'               => '<span class="help-block">' . __d('gl',
+                                                                                "例) Hiroshi") . '</span>'
+            ]);
+            if ($last_first) {
+                echo $last_name;
+                echo $first_name;
+            }
+            else {
+                echo $first_name;
+                echo $last_name;
             }
             ?>
             <?=
@@ -147,18 +176,10 @@
             </div>
         </div>
         <div class="panel-footer">
-            <div class="row">
-                <div class="col-md-9 col-md-offset-3">
-                    <?=
-                    $this->Form->submit(__d('gl', "プロフィールを登録"),
-                                        ['class' => 'btn btn-primary', 'div' => false]) ?>
-                    <?=
-                    $this->Html->link(__d('gl', "スキップ"), ['controller' => 'teams', 'action' => 'add'],
-                                      ['class' => 'btn btn-default', 'div' => false]) ?>
-                    <?= $this->Form->end(); ?>
-                </div>
-            </div>
+            <?= $this->Form->submit(__d('gl', "更新"), ['class' => 'btn btn-primary pull-right']) ?>
+            <div class="clearfix"></div>
         </div>
+        <?= $this->Form->end(); ?>
     </div>
 
 </div>

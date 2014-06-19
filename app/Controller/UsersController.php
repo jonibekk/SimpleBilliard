@@ -293,6 +293,8 @@ class UsersController extends AppController
      */
     public function settings()
     {
+        if ($this->request->is('post') && !empty($this->request->data)) {
+        }
         $this->layout = LAYOUT_SETTING;
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
