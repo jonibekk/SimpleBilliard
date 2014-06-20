@@ -304,9 +304,11 @@ class UsersController extends AppController
         $me = $this->Auth->user();
         //言語選択
         $language_list = $this->Lang->getAvailLangList();
+        //タイムゾーン
+        $timezones = $this->Timezone->getTimezones();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
-        $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list'));
+        $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones'));
         return $this->render();
     }
 

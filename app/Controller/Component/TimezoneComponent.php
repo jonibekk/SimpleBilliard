@@ -67,7 +67,7 @@ class TimezoneComponent extends Object
         return null;
     }
 
-    private function getTimezones()
+    public function getTimezones()
     {
         $timezones = array(
             '-12.0' => '(GMT -12:00 hours) Eniwetok, Kwajalein',

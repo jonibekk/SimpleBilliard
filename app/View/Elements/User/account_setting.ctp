@@ -4,13 +4,13 @@
  * User: bigplants
  * Date: 6/19/14
  * Time: 2:39 PM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView          $this
  * @var                    $last_first
  * @var array              $me
  * @var boolean            $is_not_use_local_name
  * @var array              $language_list
+ * @var array                       $timezones
  */
 ?>
     <div class="panel panel-default">
@@ -61,12 +61,12 @@
                 'label'     => ['class' => null, 'text' => __d('gl', "自分の名前を強制的にローマ字表記にする。")],
                 'class'     => false,
             ])?>
-            <!--            --><? //=
-            //            $this->Form->input('timezone', [
-            //                'label'   => __d('gl', "タイムゾーン"),
-            //                'type'    => 'select',
-            //                'options' => $this->TimeZone->timezones,
-            //            ])
+            <?=
+            $this->Form->input('timezone', [
+                'label'   => __d('gl', "タイムゾーン"),
+                'type'    => 'select',
+                'options' => $timezones,
+            ])
             ?>
             <?=
             $this->Form->input('password', [

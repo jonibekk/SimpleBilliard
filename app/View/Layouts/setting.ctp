@@ -30,8 +30,8 @@
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
-        <?= $this->element('footer') ?>
     </div>
+    <?= $this->element('footer') ?>
     <? if (extension_loaded('newrelic')) {
         /** @noinspection PhpUndefinedFunctionInspection */
         echo newrelic_get_browser_timing_footer();

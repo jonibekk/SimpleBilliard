@@ -99,9 +99,12 @@ class User extends AppModel
         'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'         => ['boolean' => ['rule' => ['boolean'],],],
-        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
+        ],],
+        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
+        ],],
+        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
+        ],],
         'update_email_flg'  => [
             'boolean' => [
                 'rule'       => ['boolean',],
