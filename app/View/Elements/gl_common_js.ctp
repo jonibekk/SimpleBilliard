@@ -28,6 +28,9 @@ echo $this->Html->script('gl_basic');
                 validating: 'fa fa-refresh'
             },
             fields: {
+                "data[User][photo]": {
+                    enabled: false
+                },
                 "data[User][password]": {
                     validators: {
                         stringLength: {

@@ -62,7 +62,7 @@
                         </select>
                     </form>
                 </li>
-                <li><a href="#"><i class="fa fa-home"></i>&nbsp;
+                <li><a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>

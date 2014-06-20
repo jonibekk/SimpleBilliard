@@ -43,7 +43,7 @@
                     'placeholder' => __d('gl', '名'),
                     'afterInput'  => '<span class="help-block">' . __d('gl', "例) 太郎") . '</span>'
                 ]);
-                if ($me['last_first']) {
+                if ($me['User']['last_first']) {
                     echo $local_last_name;
                     echo $local_first_name;
                 }
@@ -139,9 +139,13 @@
                 <label for="" class="col col-sm-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
 
                 <div class="col col-sm-6">
-                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
                         <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                             style="width: 150px; height: 150px;"></div>
+                             style="width: 150px; height: 150px;">
+                            <?=
+                            $this->Upload->uploadImage($this->request->data, 'User.photo',
+                                                       ['style' => 'x_large']) ?>
+                        </div>
                         <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
@@ -157,7 +161,8 @@
                                                 'div'          => false,
                                                 'css'          => false,
                                                 'wrapInput'    => false,
-                                                'errorMessage' => false
+                                                'errorMessage' => false,
+                                                ''
                                                ]) ?>
                         </span>
                         </div>

@@ -293,21 +293,35 @@ class UsersController extends AppController
      */
     public function settings()
     {
-        if ($this->request->is('post') && !empty($this->request->data)) {
+        //ユーザデータ取得
+        $me = $this->User->getDetail($this->Auth->user('id'));
+        if ($this->request->is('put') && !empty($this->request->data)) {
+            //request->dataに入っていないデータを表示しなければ行けない為、マージ
+            $this->request->data['User'] = array_merge($me['User'], $this->request->data['User']);
+            $this->User->id = $this->Auth->user('id');
+            if ($this->User->save($this->request->data)) {
+                //セッション更新
+                $this->_refreshAuth();
+                $this->request->data = $this->User->getDetail($this->Auth->user('id'));
+                $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
+
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "ユーザ設定の保存に失敗しました。"));
+            }
         }
         else {
-            $this->request->data = $this->User->getDetail($this->Auth->user('id'));
+            $this->request->data = $me;
         }
         $this->layout = LAYOUT_SETTING;
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-        $me = $this->Auth->user();
         //言語選択
         $language_list = $this->Lang->getAvailLangList();
         //タイムゾーン
         $timezones = $this->Timezone->getTimezones();
         //ローカル名を利用している国かどうか？
-        $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
+        $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones'));
         return $this->render();
     }
@@ -319,8 +333,11 @@ class UsersController extends AppController
      *
      * @return bool
      */
-    public function _refreshAuth($uid)
+    public function _refreshAuth($uid = null)
     {
+        if (!$uid) {
+            $uid = $this->Auth->user('id');
+        }
         $this->Auth->logout();
         $this->User->recursive = 0;
         $user_buff = $this->User->findById($uid);

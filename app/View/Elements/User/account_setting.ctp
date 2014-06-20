@@ -34,7 +34,7 @@
                 <label for="PrimaryEmailEmail" class="col col-sm-3 control-label"><?= __d('gl', "メール") ?></label>
 
                 <div class="col col-sm-6">
-                    <p class="form-control-static"><?= $this->request->data['PrimaryEmail']['email'] ?></p>
+                    <p class="form-control-static"><?= $me['PrimaryEmail']['email'] ?></p>
                 </div>
             </div>
             <?=

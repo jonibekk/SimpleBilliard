@@ -617,7 +617,7 @@ class UploadBehavior extends ModelBehavior
         if ($image_type != IMAGETYPE_JPEG && $image_type != IMAGETYPE_JPEG2000) {
             return 0;
         }
-        $exif = exif_read_data($file_path); //　Exif情報読み込み
+        $exif = @exif_read_data($file_path); //　Exif情報読み込み
         if (isset($exif['Orientation'])) {
             $r_data = $exif['Orientation']; //　画像の向き情報を取り出す
         }
