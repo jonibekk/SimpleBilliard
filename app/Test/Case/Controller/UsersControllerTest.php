@@ -842,6 +842,9 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $data = [
             'User' => [
+                'old_password'     => null,
+                'password'         => null,
+                'password_confirm' => null
             ]
         ];
 
@@ -875,6 +878,40 @@ class UsersControllerTest extends ControllerTestCase
             'User' => [
                 'id'               => '537ce224-54b0-4081-b044-433dac11aaab',
                 'old_password'     => '12345678',
+                'password'         => '12345678',
+                'password_confirm' => '12345678'
+            ]
+        ];
+        $this->testAction('users/change_password', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testChangePasswordFailNotSame()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        $uid = "537ce224-54b0-4081-b044-433dac11aaab";
+        $Users->User->id = $uid;
+        $Users->User->saveField('password', $Users->User->generateHash('12345678'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $data = [
+            'User' => [
+                'id'           => '537ce224-54b0-4081-b044-433dac11aaab',
+                'old_password' => '1234567890',
                 'password'         => '12345678',
                 'password_confirm' => '12345678'
             ]
