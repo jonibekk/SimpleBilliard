@@ -6,7 +6,7 @@
  */
 ?>
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "プロフィールを入力してください") ?></div>
             <div class="panel-body">
@@ -15,9 +15,9 @@
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
-                            'class' => 'col col-md-3 control-label'
+                            'class' => 'col col-sm-3 control-label'
                         ],
-                        'wrapInput' => 'col col-md-6',
+                        'wrapInput' => 'col col-sm-6',
                         'class'     => 'form-control'
                     ],
                     'class'         => 'form-horizontal',
@@ -52,7 +52,7 @@
                 $this->Form->input('gender_type',
                                    [
                                        'type'    => 'radio',
-                                       'before'  => '<label class="col col-md-3 control-label">'
+                                       'before' => '<label class="col col-sm-3 control-label">'
                                            . __d('gl', '性別') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
@@ -84,12 +84,12 @@
                                 'separator'  => ' / ',
                                 'maxYear'    => date('Y'),
                                 'minYear'    => '1910',
-                                'wrapInput'  => 'col col-md-6 form-inline',
+                                'wrapInput' => 'col col-sm-6 form-inline',
                             ]);
                 ?>
                 <?=
                 $this->Form->input('hide_year_flg', [
-                    'wrapInput' => 'col col-md-9 col-md-offset-3',
+                    'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                     'type'      => 'checkbox',
                     'label'     => ['class' => null, 'text' => __d('gl', "生年を隠す。")],
                     'class'     => false,
@@ -102,10 +102,10 @@
                 ]);
                 ?>
                 <div class="form-group">
-                    <label for="" class="col col-md-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
 
-                    <div class="col col-md-6">
-                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="col col-sm-6">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                                  style="width: 150px; height: 150px;"></div>
                             <div>
@@ -143,8 +143,8 @@
             </div>
             <div class="panel-footer">
                 <div class="row">
-                    <div class="col-md-9 col-md-offset-3">
-                        <?=
+                    <div class="col-sm-9 col-sm-offset-3">
+                    <?=
                         $this->Form->submit(__d('gl', "プロフィールを登録"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?=

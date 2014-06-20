@@ -20,9 +20,9 @@
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
-                    'class' => 'col col-md-3 control-label'
+                    'class' => 'col col-sm-3 control-label'
                 ],
-                'wrapInput' => 'col col-md-6',
+                'wrapInput' => 'col col-sm-6',
                 'class'     => 'form-control'
             ],
             'class'         => 'form-horizontal',
@@ -31,15 +31,15 @@
         ]); ?>
         <div class="panel-body">
             <div class="form-group">
-                <label for="PrimaryEmailEmail" class="col col-md-3 control-label"><?= __d('gl', "メール") ?></label>
+                <label for="PrimaryEmailEmail" class="col col-sm-3 control-label"><?= __d('gl', "メール") ?></label>
 
-                <div class="col col-md-6">
+                <div class="col col-sm-6">
                     <p class="form-control-static"><?= $this->request->data['PrimaryEmail']['email'] ?></p>
                 </div>
             </div>
             <?=
             $this->Form->input('update_email_flg', [
-                'wrapInput' => 'col col-md-9 col-md-offset-3',
+                'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                 'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
                 'class'     => false,
             ])?>
@@ -51,13 +51,13 @@
             ])?>
             <?=
             $this->Form->input('auto_language_flg', [
-                'wrapInput' => 'col col-md-9 col-md-offset-3',
+                'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                 'label'     => ['class' => null, 'text' => __d('gl', "自動的に言語を設定する。")],
                 'class'     => false,
             ])?>
             <?=
             $this->Form->input('romanize_flg', [
-                'wrapInput' => 'col col-md-9 col-md-offset-3',
+                'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                 'label'     => ['class' => null, 'text' => __d('gl', "自分の名前を強制的にローマ字表記にする。")],
                 'class'     => false,
             ])?>
@@ -69,9 +69,9 @@
             ])
             ?>
             <div class="form-group">
-                <label for="UserPassword" class="col col-md-3 control-label"><?= __d('gl', "パスワード") ?></label>
+                <label for="UserPassword" class="col col-sm-3 control-label"><?= __d('gl', "パスワード") ?></label>
 
-                <div class="col col-md-6">
+                <div class="col col-sm-6">
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@
  */
 ?>
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-sm-8 col-sm-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading"><?= __d('gl', "新しいアカウントを作成") ?></div>
                 <?=
@@ -15,9 +15,9 @@
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
-                            'class' => 'col col-md-3 control-label'
+                            'class' => 'col col-sm-3 control-label'
                         ],
-                        'wrapInput' => 'col col-md-6',
+                        'wrapInput' => 'col col-sm-6',
                         'class'     => 'form-control'
                     ],
                     'class'         => 'form-horizontal validate',
@@ -60,7 +60,7 @@
                     ])?>
                     <?=
                     $this->Form->input('update_email_flg', [
-                        'wrapInput' => 'col col-md-9 col-md-offset-3',
+                        'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                         'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
                         'class'     => false,
                         'default'   => true,
@@ -85,7 +85,7 @@
                     $ppLink = $this->Html->link(__d('gl', 'プライバシーポリシー'), '#modal-pp',
                                                 ['class' => 'link', 'data-toggle' => "modal"]);
                     echo $this->Form->input('agree_tos', [
-                        'wrapInput'                => 'col col-md-9 col-md-offset-3',
+                        'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                         'type'                     => 'checkbox',
                         'label'                    => ['class' => null,
                                                        'text'  => __d('gl', "Goalousの%sと%sに同意します。", $tosLink, $ppLink)],
@@ -104,8 +104,8 @@
                 </div>
                 <div class="panel-footer">
                     <div class="row">
-                        <div class="col-md-9 col-md-offset-3">
-                            <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
+                        <div class="col-sm-9 col-sm-offset-3">
+                        <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
                         </div>
                     </div>
                 </div>
