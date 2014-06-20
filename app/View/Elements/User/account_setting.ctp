@@ -30,13 +30,13 @@
             'id'            => 'UserAccountForm',
         ]); ?>
         <div class="panel-body">
-            <?=
-            $this->Form->input('PrimaryEmail.email', [
-                'label'                        => __d('gl', "メール"),
-                'placeholder'                  => __d('gl', "hiroshi@example.com"),
-                'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
-                "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-            ])?>
+            <div class="form-group">
+                <label for="PrimaryEmailEmail" class="col col-md-3 control-label"><?= __d('gl', "メール") ?></label>
+
+                <div class="col col-md-6">
+                    <p class="form-control-static"><?= $this->request->data['PrimaryEmail']['email'] ?></p>
+                </div>
+            </div>
             <?=
             $this->Form->input('update_email_flg', [
                 'wrapInput' => 'col col-md-9 col-md-offset-3',
@@ -68,19 +68,12 @@
                 'options' => $timezones,
             ])
             ?>
-            <?=
-            $this->Form->input('password', [
-                'label'                    => __d('gl', "パスワードを作成"),
-                'placeholder'              => __d('gl', '8文字以上'),
-                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                'type'                     => 'password',
-            ])?>
-            <?=
-            $this->Form->input('password_confirm', [
-                'label'                    => __d('gl', "パスワードを再入力"),
-                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                'type'                     => 'password',
-            ])?>
+            <div class="form-group">
+                <label for="UserPassword" class="col col-md-3 control-label"><?= __d('gl', "パスワード") ?></label>
+
+                <div class="col col-md-6">
+                </div>
+            </div>
         </div>
         <div class="panel-footer">
             <?= $this->Form->submit(__d('gl', "更新"), ['class' => 'btn btn-primary pull-right']) ?>
