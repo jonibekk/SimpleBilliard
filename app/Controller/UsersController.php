@@ -295,6 +295,7 @@ class UsersController extends AppController
     {
         //ユーザデータ取得
         $me = $this->User->getDetail($this->Auth->user('id'));
+        unset($me['User']['password']);
         if ($this->request->is('put') && !empty($this->request->data)) {
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'], $this->request->data['User']);
@@ -302,9 +303,10 @@ class UsersController extends AppController
             if ($this->User->save($this->request->data)) {
                 //セッション更新
                 $this->_refreshAuth();
-                $this->request->data = $this->User->getDetail($this->Auth->user('id'));
+                $me = $this->User->getDetail($this->Auth->user('id'));
+                unset($me['User']['password']);
+                $this->request->data = $me;
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
-
             }
             else {
                 $this->Pnotify->outError(__d('gl', "ユーザ設定の保存に失敗しました。"));
@@ -324,6 +326,30 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones'));
         return $this->render();
+    }
+
+    /**
+     * パスワード変更
+     *
+     * @throws NotFoundException
+     */
+    public function change_password()
+    {
+        if ($this->request->is('put') && !empty($this->request->data)) {
+            try {
+                $this->User->changePassword($this->request->data);
+            } catch (RuntimeException $e) {
+                $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "パスワードの変更に失敗しました")]);
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect($this->referer());
+            }
+            $this->Pnotify->outSuccess(__d('gl', "パスワードを変更しました。"));
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        else {
+            throw new NotFoundException();
+        }
     }
 
     /**

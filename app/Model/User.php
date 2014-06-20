@@ -117,6 +117,14 @@ class User extends AppModel
             ]
         ],
         'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
+        'old_password' => [
+            'notEmpty'  => [
+                'rule' => 'notEmpty',
+            ],
+            'minLength' => [
+                'rule' => ['minLength', 8],
+            ]
+        ],
         'password'          => [
             'notEmpty'  => [
                 'rule' => 'notEmpty',
@@ -399,6 +407,34 @@ class User extends AppModel
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return bool
+     * @throws RuntimeException
+     */
+    public function changePassword($data)
+    {
+        if (!$this->validateAssociated($data)) {
+            $msg = null;
+            foreach ($this->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+        $currentPassword = $this->field('password', ['User.id' => $data['User']['id']]);
+        $hashed_old_password = $this->generateHash($data['User']['old_password']);
+        if ($currentPassword !== $hashed_old_password) {
+            throw new RuntimeException(__d('validate', "現在のパスワードが間違っています。"));
+        }
+
+        $this->id = $data['User']['id'];
+        $this->saveField('password', $this->generateHash($data['User']['password']));
+        $this->saveField('password_modified', date('Y-m-d H:i:s'));
+        return true;
     }
 
     /**

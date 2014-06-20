@@ -72,6 +72,11 @@
                 <label for="UserPassword" class="col col-sm-3 control-label"><?= __d('gl', "パスワード") ?></label>
 
                 <div class="col col-sm-6">
+                    <p class="form-control-static">
+                        <a href="#" data-toggle="modal" data-target="#modal_change_password"><?=
+                            __d('gl',
+                                "パスワードを変更する") ?></a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -113,3 +118,4 @@
         });
     </script>
 <? $this->end() ?>
+<?= $this->element('User/modal_change_password') ?>
