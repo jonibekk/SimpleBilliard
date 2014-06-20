@@ -32,16 +32,18 @@
         </div>
     </div>
     <?= $this->element('footer') ?>
-    <? if (extension_loaded('newrelic')) {
-        /** @noinspection PhpUndefinedFunctionInspection */
-        echo newrelic_get_browser_timing_footer();
-    } ?>
-    <?= $this->element('gl_common_js') ?>
-    <?= $this->fetch('script') ?>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('body').scrollspy({ target: '.gl-sidebar-setting' });
-        });
-    </script>
+</div>
+<? if (extension_loaded('newrelic')) {
+    /** @noinspection PhpUndefinedFunctionInspection */
+    echo newrelic_get_browser_timing_footer();
+} ?>
+<?= $this->element('modal_tutorial') ?>
+<?= $this->element('gl_common_js') ?>
+<?= $this->fetch('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('body').scrollspy({ target: '.gl-sidebar-setting' });
+    });
+</script>
 </body>
 </html>
