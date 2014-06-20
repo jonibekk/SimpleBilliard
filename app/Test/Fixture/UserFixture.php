@@ -433,8 +433,8 @@ class UserFixture extends CakeTestFixture
         ),
         array(
             'id'                => '537ce224-54b0-4081-b044-433dac11aaab',
-            'first_name'        => 'password reset',
-            'last_name'         => 'Lorem ipsum dolor sit amet',
+            'first_name'      => 'testFirst',
+            'last_name'       => 'testLast',
             'middle_name'       => 'Lorem ipsum dolor sit amet',
             'local_first_name'  => 'Lorem ipsum dolor sit amet',
             'local_last_name'   => 'Lorem ipsum dolor sit amet',

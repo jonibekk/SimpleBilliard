@@ -760,4 +760,153 @@ class UsersControllerTest extends ControllerTestCase
 
         $this->testAction('users/settings');
     }
+
+    function testSettingPutSuccess()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $data = [
+            'User' => [
+                'update_email_flg' => true,
+            ]
+        ];
+
+        $this->testAction('users/settings', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testSettingPutFail()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $data = [
+            'User' => [
+                'first_name' => null,
+                'last_name'  => null,
+            ]
+        ];
+
+        $this->testAction('users/settings', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testChangePasswordFail()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $data = [
+            'User' => [
+            ]
+        ];
+
+        $this->testAction('users/change_password', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testChangePasswordSuccess()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        $uid = "537ce224-54b0-4081-b044-433dac11aaab";
+        $Users->User->id = $uid;
+        $Users->User->saveField('password', $Users->User->generateHash('12345678'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $data = [
+            'User' => [
+                'id'               => '537ce224-54b0-4081-b044-433dac11aaab',
+                'old_password'     => '12345678',
+                'password'         => '12345678',
+                'password_confirm' => '12345678'
+            ]
+        ];
+        $this->testAction('users/change_password', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testChangePasswordException()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        try {
+            $this->testAction('users/change_password', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[例外]パスワード変更");
+    }
+
 }
