@@ -103,7 +103,8 @@
 </head>
 <body>
 <header id="header">
-    <!--NewRelic Header-->
+
+<!--NewRelic Header-->
     <? if (extension_loaded('newrelic')) {
         /** @noinspection PhpUndefinedFunctionInspection */
         echo newrelic_get_browser_timing_header();
@@ -187,7 +188,6 @@
     </div>
     <!--end: navbar --> </header>
 <?= $this->element('mainte_alert') ?>
-
 <?= $this->fetch('content') ?>
 <!-- start: footer -->
 <footer>
@@ -264,18 +264,5 @@
 <!--[if lt IE 9]>
 <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
-<?
-//環境を識別できるようにリボンを表示
-switch (ENV_NAME) {
-    case 'stg':
-        echo $this->Html->script('http://quickribbon.com/ribbon/2014/04/c966588e9495aa7b205aeaaf849d674f.js');
-        break;
-    case 'local':
-        echo $this->Html->script('http://quickribbon.com/ribbon/2014/04/b13dfc8e5d887b8725f256c31cc1dff4.js');
-        break;
-    default:
-        break;
-}
-?>
 </body>
 </html>

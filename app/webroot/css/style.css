@@ -254,3 +254,32 @@ footer p {
     padding-top: 50px;
     margin-top: -50px;
 }
+
+/*noinspection ALL*/
+.ribbon {
+    position: absolute;
+    top: 75px;
+    right: -260px;
+    width: 600px;
+    padding: 5px;
+    font-size: 16px;
+    font-style: italic;
+    text-align: center;
+    color: #fff;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -moz-transform-origin: 50% 0px;
+    -webkit-transform-origin: 50% 0px;
+    -o-transform-origin: 50% 0px;
+    -ms-transform-origin: 50% 0px;
+    background-color: #000;
+    border: 1px solid #aaa;
+    -webkit-opacity: 0.5;
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+    -ms-filter: & quot;
+alpha(opacity = 50) & quot;;
+    opacity: 0.5;
+}
