@@ -81,7 +81,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <?= $this->Form->submit(__d('gl', "更新"), ['class' => 'btn btn-primary pull-right']) ?>
+            <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
             <div class="clearfix"></div>
         </div>
         <?= $this->Form->end(); ?>

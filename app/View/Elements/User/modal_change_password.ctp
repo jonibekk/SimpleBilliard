@@ -53,7 +53,7 @@
                     <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
                 </div>
                 <div class="modal-footer">
-                    <?= $this->Form->submit(__d('gl', "パスワードを変更"), ['class' => 'btn btn-primary']) ?>
+                    <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary']) ?>
                 </div>
                 <?= $this->Form->end() ?>
             </div>
