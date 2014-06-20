@@ -739,6 +739,25 @@ class UsersControllerTest extends ControllerTestCase
 
     function testSetting()
     {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+
         $this->testAction('users/settings');
     }
 }
