@@ -494,22 +494,26 @@ class User extends AppModel
 
     /**
      * Verifies a users email by a token that was sent to him via email and flags the user record as active
+
      *
-     * @param string $token The token that wa sent to the user
+*@param string $token The token that wa sent to the user
+     * @param null $uid
      *
-     * @throws RuntimeException
+*@throws RuntimeException
      * @return array On success it returns the user data record
      */
-    public function verifyEmail($token = null)
+    public function verifyEmail($token, $uid = null)
     {
-        $user = $this->Email->find('first',
-                                   [
-                                       'conditions' => [
-                                           'Email.email_verified' => false,
-                                           'Email.email_token'    => $token
-                                       ],
-                                   ]
-        );
+        $options = [
+            'conditions' => [
+                'Email.email_verified' => false,
+                'Email.email_token'    => $token
+            ],
+        ];
+        if ($uid) {
+            $options['conditions']['Email.user_id'] = $uid;
+        }
+        $user = $this->Email->find('first', $options);
 
         if (empty($user)) {
             throw new RuntimeException(
@@ -528,7 +532,9 @@ class User extends AppModel
         $user['Email']['email_token_expires'] = null;
 
         $this->Email->saveAll($user, ['validate' => false, 'callbacks' => false]);
-        return $this->findById($user['User']['id']);
+
+        $res = $this->findById($user['User']['id']);
+        return array_merge($user, $res);
     }
 
     /**
@@ -663,6 +669,25 @@ class User extends AppModel
         }
 
         return $res;
+    }
+
+    /**
+     * 通常使うメールアドレスの変更（今まで使っていたメールアドレスを削除）
+     *
+     * @param      $uid
+     * @param      $email_id
+     * @param bool $old_delete
+     *
+     * @return bool
+     */
+    public function changePrimaryEmail($uid, $email_id, $old_delete = true)
+    {
+        $this->id = $uid;
+        if ($old_delete) {
+            $user = $this->find('first');
+            $this->Email->delete($user['User']['primary_email_id']);
+        }
+        return $this->saveField('primary_email_id', $email_id);
     }
 
 }

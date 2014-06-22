@@ -55,7 +55,7 @@
                 validating: 'fa fa-refresh'
             },
             fields: {
-                "data[Email][email]": {
+                "data[User][email]": {
                     validators: {
                         notEmpty: {
                             message: '<?=__d('validate', "入力必須項目です。")?>'

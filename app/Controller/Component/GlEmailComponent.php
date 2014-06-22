@@ -109,7 +109,7 @@ class GlEmailComponent extends Object
                      [
                          'admin'      => false,
                          'controller' => 'users',
-                         'action'     => 'verify',
+                         'action' => 'change_email_verify',
                          $email_token,
                      ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_CHANGE_EMAIL_VERIFY,

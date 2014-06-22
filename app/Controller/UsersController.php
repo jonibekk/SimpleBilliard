@@ -56,6 +56,8 @@ class UsersController extends AppController
      */
     public function login()
     {
+        //リダイレクト先
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
         //ログイン済の場合はトップへ
         if ($this->Auth->user()) {
@@ -70,7 +72,7 @@ class UsersController extends AppController
                                            ['title' => __d('notify', "ログイン成功")]);
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect('/');
+                return $this->redirect($redirect_url);
             }
             else {
                 $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
@@ -220,6 +222,30 @@ class UsersController extends AppController
             //トークン再送メージへ
             $this->redirect(['action' => 'token_resend']);
         }
+    }
+
+    /**
+     * メールアドレス変更時の認証
+     *
+     * @param $token
+     */
+    public function change_email_verify($token)
+    {
+        try {
+            $this->User->begin();
+            $user = $this->User->verifyEmail($token, $this->Auth->user('id'));
+            $this->User->changePrimaryEmail($this->Auth->user('id'), $user['Email']['id']);
+        } catch (RuntimeException $e) {
+            $this->User->rollback();
+            //例外の場合は、トークン再送信画面へ
+            $this->Pnotify->outError($e->getMessage());
+            //トークン再送メージへ
+            $this->redirect(['action' => 'token_resend']);
+        }
+        $this->User->commit();
+        $this->_refreshAuth();
+        $this->Pnotify->outSuccess(__d('gl', "メールアドレスの変更が正常に完了しました。"));
+        $this->redirect(['action' => 'settings']);
     }
 
     /**
