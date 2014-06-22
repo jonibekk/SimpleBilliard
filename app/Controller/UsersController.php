@@ -353,6 +353,32 @@ class UsersController extends AppController
     }
 
     /**
+     *
+     */
+    public function change_email()
+    {
+        if ($this->request->is('put') && !empty($this->request->data)) {
+            try {
+                $email_data = $this->User->addEmail($this->request->data, $this->Auth->user('id'));
+            } catch (RuntimeException $e) {
+                $this->Pnotify->outError($e->getMessage());
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect($this->referer());
+            }
+
+            $this->Pnotify->outNotice(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
+            $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
+                                                      $email_data['Email']['email_token']);
+
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        else {
+            throw new NotFoundException();
+        }
+    }
+
+    /**
      * ログイン中のAuthを更新する（ユーザ情報を更新後などに実行する）
      *
      * @param $uid

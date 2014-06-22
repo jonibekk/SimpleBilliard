@@ -632,4 +632,37 @@ class User extends AppModel
         return $passwordHasher->hash($str);
     }
 
+    public function addEmail($postData, $uid)
+    {
+        $postData['User']['email'];
+        if (!isset($postData['User']['email'])) {
+            throw new RuntimeException(__d('validate', "メールアドレスが入力されていません"));
+        }
+        $email = $postData['User']['email'];
+
+        //現在メール認証中の場合は拒否
+        if (!$this->Email->isAllVerified($uid)) {
+            throw new RuntimeException(__d('validate', "現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"));
+        }
+        //メールアドレスの認証トークンを発行
+        $data = [];
+        $data['Email']['user_id'] = $uid;
+        $data['Email']['email'] = $email;
+        $data['Email']['email_token'] = $this->generateToken();
+        $data['Email']['email_token_expires'] = $this->getTokenExpire();
+
+        //データを保存
+        $res = $this->Email->save($data);
+        if ($this->Email->validationErrors) {
+            $msg = null;
+            foreach ($this->Email->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+
+        return $res;
+    }
+
 }

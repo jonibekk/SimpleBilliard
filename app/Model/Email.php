@@ -15,7 +15,11 @@ class Email extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'        => ['uuid' => ['rule' => ['uuid']]],
+        'user_id' => [
+            'uuid' => [
+                'rule' => 'uuid'
+            ],
+        ],
         'email'          => [
             'notEmpty'      => [
                 'rule' => 'notEmpty',
@@ -39,4 +43,19 @@ class Email extends AppModel
     public $belongsTo = [
         'User',
     ];
+
+    public function isAllVerified($uid)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'        => $uid,
+                'email_verified' => false,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (empty($res)) {
+            return true;
+        }
+        return false;
+    }
 }

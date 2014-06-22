@@ -25,18 +25,17 @@
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control'
                 ],
-                'url'           => ['action' => 'change_email'],
+                'url' => ['controller' => 'users', 'action' => 'change_email'],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'id'            => 'ChangeEmail',
             ]); ?>
             <div class="modal-body">
                 <?=
-                $this->Form->input('Email.0.email', [
+                $this->Form->input('email', [
                     'label'       => __d('gl', "メールアドレス"),
                     'placeholder' => __d('gl', "hiroshi@example.com"),
                 ])?>
-                <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
             </div>
             <div class="modal-footer">
                 <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary']) ?>
@@ -56,7 +55,7 @@
                 validating: 'fa fa-refresh'
             },
             fields: {
-                "data[Email][0][email]": {
+                "data[Email][email]": {
                     validators: {
                         notEmpty: {
                             message: '<?=__d('validate', "入力必須項目です。")?>'

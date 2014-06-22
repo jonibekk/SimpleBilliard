@@ -82,6 +82,10 @@ class SendMailShell extends AppShell
         $options = array_merge(SendMail::$TYPE_TMPL[$tmpl_type],
                                ['to' => (isset($data['ToUser']['PrimaryEmail']['email'])) ? $data['ToUser']['PrimaryEmail']['email'] : null]
         );
+        //送信先メールアドレスが指定されていた場合
+        if (isset($item['to'])) {
+            $options['to'] = $item['to'];
+        }
 
         //言語設定
         Configure::write('Config.language', $data['ToUser']['language']);
