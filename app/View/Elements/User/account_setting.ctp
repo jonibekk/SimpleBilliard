@@ -34,7 +34,12 @@
                 <label for="PrimaryEmailEmail" class="col col-sm-3 control-label"><?= __d('gl', "メール") ?></label>
 
                 <div class="col col-sm-6">
-                    <p class="form-control-static"><?= $me['PrimaryEmail']['email'] ?></p>
+                    <p class="form-control-static"><?= h($me['PrimaryEmail']['email']) ?></p>
+
+                    <p class="form-control-static">
+                        <a href="#" data-toggle="modal" data-target="#modal_change_email">
+                            <?= __d('gl', "メールアドレスを変更する") ?></a>
+                    </p>
                 </div>
             </div>
             <?=
@@ -119,3 +124,4 @@
     </script>
 <? $this->end() ?>
 <?= $this->element('User/modal_change_password') ?>
+<?= $this->element('User/modal_change_email') ?>
