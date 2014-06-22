@@ -20,6 +20,9 @@ echo $this->Html->script('gl_basic');
 ?>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('[rel="tooltip"]').tooltip();
+
             $('.validate').bootstrapValidator({
                 live: 'enabled',
                 feedbackIcons: {

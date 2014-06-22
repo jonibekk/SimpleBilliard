@@ -15,7 +15,7 @@ class Email extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id' => [
+        'user_id'        => [
             'uuid' => [
                 'rule' => 'uuid'
             ],
@@ -57,5 +57,24 @@ class Email extends AppModel
             return true;
         }
         return false;
+    }
+
+    /**
+     * まだ認証が終わっていないメールを返却
+     *
+     * @param $uid
+     *
+     * @return array
+     */
+    public function getNotVerifiedEmail($uid)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'        => $uid,
+                'email_verified' => false,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
     }
 }

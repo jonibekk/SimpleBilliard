@@ -238,9 +238,9 @@ class UsersController extends AppController
         } catch (RuntimeException $e) {
             $this->User->rollback();
             //例外の場合は、トークン再送信画面へ
-            $this->Pnotify->outError($e->getMessage());
-            //トークン再送メージへ
-            $this->redirect(['action' => 'token_resend']);
+            $this->Pnotify->outError($e->getMessage() . "<br>" . __d('gl', "メールアドレス変更を一度キャンセルし、再度変更してください。"));
+            //トークン再送ページへ
+            $this->redirect(['action' => 'settings']);
         }
         $this->User->commit();
         $this->_refreshAuth();
@@ -350,7 +350,9 @@ class UsersController extends AppController
         $timezones = $this->Timezone->getTimezones();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
-        $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones'));
+        $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
+        $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
+                           'not_verified_email'));
         return $this->render();
     }
 
@@ -392,7 +394,7 @@ class UsersController extends AppController
                 return $this->redirect($this->referer());
             }
 
-            $this->Pnotify->outNotice(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
+            $this->Pnotify->outInfo(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
             $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
                                                       $email_data['Email']['email_token']);
 

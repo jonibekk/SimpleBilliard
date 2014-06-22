@@ -11,6 +11,7 @@
  * @var boolean            $is_not_use_local_name
  * @var array              $language_list
  * @var array                       $timezones
+ * @var array                       $not_verified_email
  */
 ?>
     <div class="panel panel-default">
@@ -36,10 +37,31 @@
                 <div class="col col-sm-6">
                     <p class="form-control-static"><?= h($me['PrimaryEmail']['email']) ?></p>
 
-                    <p class="form-control-static">
-                        <a href="#" data-toggle="modal" data-target="#modal_change_email">
-                            <?= __d('gl', "メールアドレスを変更する") ?></a>
-                    </p>
+                    <? if (!empty($not_verified_email)): ?>
+                        <p class="form-control-static">
+                            <a href="#" rel="tooltip" title="<?= __d('gl', "認証待ちのメールアドレスが存在するため、変更はできません。") ?>">
+                                <?= __d('gl', "メールアドレスを変更する") ?>
+                            </a>
+                        </p>
+                        <div class="alert alert-warning fade in">
+                            <p><?=
+                                __d('gl', '現在、%sの認証待ちです。',
+                                    "<b>" . $not_verified_email['Email']['email'] . "</b>") ?></p>
+
+                            <p><?= __d('gl', 'このメールアドレスに送られた確認用のメールをご確認ください。') ?></p>
+                            <a href="#" data-toggle="modal" data-target="#modal_delete_email">
+                                <?= __d('gl', "メールアドレスの変更をキャンセルする") ?>
+                            </a>
+                        </div>
+
+                    <? else: ?>
+                        <p class="form-control-static">
+                            <a href="#" data-toggle="modal" data-target="#modal_change_email">
+                                <?= __d('gl', "メールアドレスを変更する") ?>
+                            </a>
+                        </p>
+                    <?
+                    endif ?>
                 </div>
             </div>
             <?=
@@ -125,3 +147,10 @@
 <? $this->end() ?>
 <?= $this->element('User/modal_change_password') ?>
 <?= $this->element('User/modal_change_email') ?>
+<?
+if (!empty($not_verified_email)) {
+    echo $this->element('User/modal_delete_email',
+                        ['email'    => $not_verified_email['Email']['email'],
+                         'email_id' => $not_verified_email['Email']['id']]);
+}
+?>
