@@ -181,47 +181,6 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
     }
 
-//    function testLoggedInSuccessRedirect()
-//    {
-//        Configure::write('Config.language', 'en');
-//
-//        /**
-//         * @var UsersController $Users
-//         */
-//        $Users = $this->generate('Users', [
-//            'components' => [
-//                'Session' => ['read'],
-//                'Auth'    => ['user', 'loggedIn'],
-//            ]
-//        ]);
-//        $value_map = [
-//            [null, null],
-//            ['language', 'jpn'],
-//            ['auto_language_flg', true],
-//        ];
-//        /** @noinspection PhpUndefinedMethodInspection */
-//        $Users->Auth->staticExpects($this->any())->method('user')
-//                    ->will($this->returnValueMap($value_map)
-//            );
-//        /** @noinspection PhpUndefinedMethodInspection */
-//        $Users->Auth->expects($this->any())->method('loggedIn')
-//                    ->will($this->returnValue(true));
-//        $value_map = [
-//            ['Auth.Redirect', '/'],
-//        ];
-//        /** @noinspection PhpUndefinedMethodInspection */
-//        $Users->Session->expects($this->any())->method('read')
-//                       ->will($this->returnValueMap($value_map));
-//        $this->generateMockSecurity();
-//        $data = [
-//            'User' => [
-//                'email'    => "to@email.com",
-//                'password' => "12345678",
-//            ]
-//        ];
-//        $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'vars']);
-//    }
-
     function testLoggedInFailed()
     {
         Configure::write('Config.language', 'ja');
@@ -232,7 +191,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session' => ['setFlash'],
-                'Auth'    => ['user', 'loggedIn'],
+                'Auth' => ['user'],
             ]
         ]);
         $value_map = [
@@ -944,6 +903,142 @@ class UsersControllerTest extends ControllerTestCase
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[例外]パスワード変更");
+    }
+
+    function testChangeEmailVerifySuccess()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $token = "token_test0123456789";
+        try {
+            $this->testAction('users/change_email_verify/' . $token, ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]メアド追加");
+    }
+
+    function testChangeEmailVerifyFail()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $token = "token_test0123456789aaaa";
+        try {
+            $this->testAction('users/change_email_verify/' . $token, ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[異常]メアド変更");
+    }
+
+    function testChangeEmailFail()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        try {
+            $this->testAction('users/change_email', ['method' => 'POST', 'data' => []]);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]メアド追加");
+    }
+
+    function testChangeEmailFailNotData()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        try {
+            $this->testAction('users/change_email', ['method' => 'PUT', 'data' => ['User' => ['email' => null]]]);
+        } catch (NotFoundException $e) {
+        }
+    }
+
+    function testChangeEmailSuccess()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        try {
+            $this->testAction('users/change_email',
+                              ['method' => 'PUT', 'data' => ['User' => ['email' => 'abcde@1234.com']]]);
+        } catch (NotFoundException $e) {
+        }
     }
 
 }

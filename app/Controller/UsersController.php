@@ -240,12 +240,14 @@ class UsersController extends AppController
             //例外の場合は、トークン再送信画面へ
             $this->Pnotify->outError($e->getMessage() . "<br>" . __d('gl', "メールアドレス変更を一度キャンセルし、再度変更してください。"));
             //トークン再送ページへ
-            $this->redirect(['action' => 'settings']);
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect(['action' => 'settings']);
         }
         $this->User->commit();
         $this->_refreshAuth();
         $this->Pnotify->outSuccess(__d('gl', "メールアドレスの変更が正常に完了しました。"));
-        $this->redirect(['action' => 'settings']);
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect(['action' => 'settings']);
     }
 
     /**
