@@ -1026,7 +1026,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
