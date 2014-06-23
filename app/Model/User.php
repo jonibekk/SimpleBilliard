@@ -681,11 +681,11 @@ class User extends AppModel
      */
     public function changePrimaryEmail($uid, $email_id, $old_delete = true)
     {
-        $this->id = $uid;
         if ($old_delete) {
-            $user = $this->find('first');
+            $user = $this->find('first', ['conditions' => ['id' => $uid]]);
             $this->Email->delete($user['User']['primary_email_id']);
         }
+        $this->id = $uid;
         return $this->saveField('primary_email_id', $email_id);
     }
 
