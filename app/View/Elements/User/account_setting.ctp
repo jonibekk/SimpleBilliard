@@ -77,18 +77,6 @@
                 'options' => $language_list,
             ])?>
             <?=
-            $this->Form->input('auto_language_flg', [
-                'wrapInput' => 'col col-sm-9 col-sm-offset-3',
-                'label'     => ['class' => null, 'text' => __d('gl', "自動的に言語を設定する。")],
-                'class'     => false,
-            ])?>
-            <?=
-            $this->Form->input('romanize_flg', [
-                'wrapInput' => 'col col-sm-9 col-sm-offset-3',
-                'label'     => ['class' => null, 'text' => __d('gl', "自分の名前を強制的にローマ字表記にする。")],
-                'class'     => false,
-            ])?>
-            <?=
             $this->Form->input('timezone', [
                 'label'   => __d('gl', "タイムゾーン"),
                 'type'    => 'select',
