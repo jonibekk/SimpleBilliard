@@ -404,9 +404,8 @@ class User extends AppModel
             //コントローラ側で必要になるデータをセット
             $this->Email->set('email_token', $email_token);
             $this->Email->set('email', $data['Email'][0]['Email']['email']);
-            return true;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -446,7 +445,9 @@ class User extends AppModel
      */
     function saveEmailToken($email)
     {
+        $default = ['Email' => ['user_id' => null]];
         $email_user = $this->getUserByEmail($email);
+        $email_user = array_merge($default, $email_user);
         $email_user['Email']['email_token'] = $this->generateToken();
         $email_user['Email']['email_token_expires'] = $this->getTokenExpire();
         if ($this->Email->saveAll($email_user)) {
@@ -494,12 +495,11 @@ class User extends AppModel
 
     /**
      * Verifies a users email by a token that was sent to him via email and flags the user record as active
-
      *
-*@param string $token The token that wa sent to the user
-     * @param null $uid
+     * @param string $token The token that wa sent to the user
+     * @param null   $uid
      *
-*@throws RuntimeException
+     * @throws RuntimeException
      * @return array On success it returns the user data record
      */
     public function verifyEmail($token, $uid = null)
@@ -656,7 +656,6 @@ class User extends AppModel
         $data['Email']['email'] = $email;
         $data['Email']['email_token'] = $this->generateToken();
         $data['Email']['email_token_expires'] = $this->getTokenExpire();
-
         //データを保存
         $res = $this->Email->save($data);
         if ($this->Email->validationErrors) {

@@ -16,8 +16,11 @@ class Email extends AppModel
      */
     public $validate = [
         'user_id'        => [
-            'uuid' => [
+            'uuid'     => [
                 'rule' => 'uuid'
+            ],
+            'notEmpty' => [
+                'rule' => 'notEmpty',
             ],
         ],
         'email'          => [

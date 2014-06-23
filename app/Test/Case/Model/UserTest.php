@@ -349,6 +349,43 @@ class UserTest extends CakeTestCase
         $this->assertFalse(isset($e), "[正常系]tokenが正しくない例外の発生");
     }
 
+    function testVerifyEmailUid()
+    {
+        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $token = 'abcd1234';
+        $data = [
+            'Email' => [
+                'user_id'             => $uid,
+                'email_verified'      => false,
+                'email_token'         => $token,
+                'email_token_expires' => date('Y-m-d H:i:s', strtotime("+1 day")),
+            ]
+        ];
+        $this->User->Email->save($data);
+        $res = $this->User->verifyEmail($token, $uid);
+        $this->assertNotEmpty($res, "[正常]ユーザIDを指定したメールアドレスの認証");
+    }
+
+    function testVerifyEmailUidExpire()
+    {
+        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $token = 'abcd1234';
+        $data = [
+            'Email' => [
+                'user_id'             => $uid,
+                'email_verified'      => false,
+                'email_token'         => $token,
+                'email_token_expires' => date('Y-m-d H:i:s', strtotime("-1 day")),
+            ]
+        ];
+        $this->User->Email->save($data);
+        try {
+            $this->User->verifyEmail($token, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]メアド認証でトークンの期限切れ");
+    }
+
     function testFind()
     {
         $user_id = "537ce224-5ca4-4fd5-aaf2-433dac11b50b";
@@ -501,6 +538,79 @@ class UserTest extends CakeTestCase
         $this->assertTrue(!empty($res['Email']['email_token']), "[正常]トークン発行でトークンが存在する");
         $this->assertTrue(!empty($res['Email']['email_token_expires']), "[正常]トークン発行でトークン期限が存在する");
 
+    }
+
+    function testSaveEmailTokenFail()
+    {
+        $res = $this->User->saveEmailToken('test_xxxxx');
+        $this->assertFalse($res, "[異常]トークンの保存");
+    }
+
+    function testAddEmailSuccess()
+    {
+        $uid = $this->generateBasicUser();
+        $postData = [];
+        $postData['User']['email'] = "test@aaaaaaa.com";
+        try {
+            $this->User->addEmail($postData, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]emailアドレス追加");
+    }
+
+    function testAddEmailFailNotEmail()
+    {
+        $uid = $this->generateBasicUser();
+        $postData = [];
+        $postData['User']['email'] = null;
+        try {
+            $this->User->addEmail($postData, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]emailアドレス追加でメアドの入力がない");
+    }
+
+    function testAddEmailFailNotAllVerified()
+    {
+        $uid = $this->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $email['Email']['email_verified'] = false;
+        $this->User->Email->save($email);
+
+        $postData = [];
+        $postData['User']['email'] = "test@aaaaaaa.com";
+        try {
+            $this->User->addEmail($postData, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]emailアドレス追加で認証ができていないメアドが存在する");
+    }
+
+    function testAddEmailFailExistsEmail()
+    {
+        $uid = $this->generateBasicUser();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $email = $this->User->Email->findByUserId($uid);
+        $email['Email']['email_verified'] = true;
+        $this->User->Email->save($email);
+        $postData = [];
+        $postData['User']['email'] = "test@abc.com";
+        try {
+            $this->User->addEmail($postData, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]emailアドレス追加で既にメアドが存在する");
+    }
+
+    function testChangePrimaryEmailSuccess()
+    {
+        $uid = $this->generateBasicUser();
+        $postData = [];
+        $postData['User']['email'] = "test@aaaaaaa.com";
+        $this->User->addEmail($postData, $uid);
+        $res = $this->User->changePrimaryEmail($uid, $this->User->getLastInsertID());
+        $this->assertArrayHasKey('User', $res, "[正常]通常使うメアドの変更");
     }
 
 }
