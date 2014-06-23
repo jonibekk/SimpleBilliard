@@ -56,11 +56,7 @@ echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
 ?>
 <? if (ENV_NAME == "stg"): ?>
-    <div class="ribbon">
-        <span style='margin-left:50px;'>Staging</span>
-    </div>
+    <p class="ribbon ribbon-staging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Staging</p>
 <? elseif (ENV_NAME == "local"): ?>
-    <div class="ribbon">
-        <span style='margin-left:50px;'>Local</span>
-    </div>
+    <p class="ribbon ribbon-local">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local</p>
 <?endif; ?>

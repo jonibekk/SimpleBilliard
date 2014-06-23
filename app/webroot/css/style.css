@@ -257,29 +257,34 @@ footer p {
 
 /*noinspection ALL*/
 .ribbon {
-    position: absolute;
-    top: 75px;
-    right: -260px;
-    width: 600px;
-    padding: 5px;
-    font-size: 16px;
-    font-style: italic;
-    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+
+    position: fixed;
+    width: 200px;
+    height: 30px;
+    background: red;
     color: #fff;
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -moz-transform-origin: 50% 0px;
-    -webkit-transform-origin: 50% 0px;
-    -o-transform-origin: 50% 0px;
-    -ms-transform-origin: 50% 0px;
-    background-color: #000;
-    border: 1px solid #aaa;
-    -webkit-opacity: 0.5;
-    -moz-opacity: 0.5;
-    -khtml-opacity: 0.5;
-    -ms-filter: & quot;
-alpha(opacity = 50) & quot;;
-    opacity: 0.5;
+    line-height: 30px;
+    right: -40px;
+    top: 40px;
+    -webkit-transform: rotateZ(45deg);
+    -moz-transform: rotateZ(45deg);
+    -ms-transform: rotateZ(45deg);
+    -o-transform: rotateZ(45deg);
+    transform: rotateZ(45deg);
+    text-align: center;
+    box-shadow: 0 0 6px #666;
+    z-index: -1999;
+}
+
+.ribbon-local {
+    background: blue;
+}
+
+.ribbon-staging {
+    background: green;
 }
