@@ -109,4 +109,21 @@ class EmailTest extends CakeTestCase
         $this->assertFalse($this->Email->isAllVerified($uid), "[異常]全て認証済みである");
     }
 
+    function testIsOwn()
+    {
+        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $testData = [
+            'user_id'        => $uid,
+            'email'          => 'standalonea@email.com',
+            'email_verified' => false,
+        ];
+        $this->Email->save($testData);
+        $email_id = $this->Email->getLastInsertID();
+        $this->assertTrue($this->Email->isOwner($uid, $email_id), "[正常]所有者チェック email_idあり");
+        $this->Email->id = $email_id;
+        $this->assertTrue($this->Email->isOwner($uid), "[正常]所有者チェック email_idなし");
+        $this->Email->id = null;
+        $this->assertFalse($this->Email->isOwner($uid), "[異常]所有者チェック email_idなし");
+    }
+
 }

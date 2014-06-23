@@ -26,6 +26,10 @@ class EmailsController extends AppController
         if (!$this->Email->exists()) {
             throw new NotFoundException(__('gl', "このメールアドレスは存在しません。"));
         }
+        if (!$this->Email->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "このメールアドレスはあなたのものではありません。"));
+        }
+
         $this->request->allowMethod('post', 'delete');
         $this->Email->delete();
         $this->Pnotify->outSuccess(__d('gl', "メールアドレス変更をキャンセルしました。"));

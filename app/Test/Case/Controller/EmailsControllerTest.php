@@ -3,6 +3,7 @@ App::uses('EmailsController', 'Controller');
 
 /**
  * EmailsController Test Case
+ * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
 
  */
 class EmailsControllerTest extends ControllerTestCase
@@ -14,6 +15,7 @@ class EmailsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.cake_session',
         'app.email',
         'app.user',
         'app.team',
@@ -44,8 +46,87 @@ class EmailsControllerTest extends ControllerTestCase
      *
      * @return void
      */
-    public function testDelete()
+    public function testDeleteFail()
     {
+        /**
+         * @var EmailsController $Emails
+         */
+        $Emails = $this->generate('Emails', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Emails->Auth->expects($this->any())->method('loggedIn')
+                     ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Emails->Auth->staticExpects($this->any())->method('user')
+                     ->will($this->returnValueMap($value_map));
+        try {
+            $this->testAction('emails/delete', ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]メアド削除");
+    }
+
+    public function testDeleteNotOwn()
+    {
+        /**
+         * @var EmailsController $Emails
+         */
+        $Emails = $this->generate('Emails', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Emails->Auth->expects($this->any())->method('loggedIn')
+                     ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Emails->Auth->staticExpects($this->any())->method('user')
+                     ->will($this->returnValueMap($value_map));
+        $email_id = "537ce223-3514-47e1-893b-433dac11xxxx";
+        try {
+            $this->testAction('emails/delete/' . $email_id, ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]所有していないメアド削除");
+    }
+
+    public function testDeleteSuccess()
+    {
+        /**
+         * @var EmailsController $Emails
+         */
+        $Emails = $this->generate('Emails', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Emails->Auth->expects($this->any())->method('loggedIn')
+                     ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Emails->Auth->staticExpects($this->any())->method('user')
+                     ->will($this->returnValueMap($value_map));
+        $email_id = '537ce223-3514-47e1-893b-433dac11b50b';
+        try {
+            $this->testAction('emails/delete/' . $email_id, ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]メアド削除");
     }
 
 }
