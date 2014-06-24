@@ -99,12 +99,9 @@ class User extends AppModel
         'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'         => ['boolean' => ['rule' => ['boolean'],],],
-        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
-        ],],
-        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
-        ],],
-        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
-        ],],
+        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
+        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
+        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
         'update_email_flg'  => [
             'boolean' => [
                 'rule'       => ['boolean',],
@@ -662,10 +659,21 @@ class User extends AppModel
 
     public function addEmail($postData, $uid)
     {
-        $postData['User']['email'];
         if (!isset($postData['User']['email'])) {
             throw new RuntimeException(__d('validate', "メールアドレスが入力されていません"));
         }
+
+        $this->id = $uid;
+        $this->set($postData);
+        if (!$this->validates()) {
+            $msg = null;
+            foreach ($this->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+
         $email = $postData['User']['email'];
 
         //現在メール認証中の場合は拒否

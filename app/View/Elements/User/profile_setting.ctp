@@ -179,13 +179,6 @@
                     </div>
 
                 </div>
-                <hr>
-                <?=
-                $this->Form->input('password_request2', [
-                    'label' => __d('gl', "パスワード入力"),
-                    'type'  => 'password',
-                ])?>
-
             </div>
             <div class="panel-footer">
                 <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
@@ -221,17 +214,6 @@
                             identical: {
                                 field: "data[User][password]",
                                 message: '<?=__d('validate', "パスワードが一致しません。")?>'
-                            }
-                        }
-                    },
-                    "data[User][password_request2]": {
-                        validators: {
-                            stringLength: {
-                                min: 8,
-                                message: '<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>'
-                            },
-                            notEmpty: {
-                                message: '<?=__d('validate', "変更する場合はパスワード入力が必要です。")?>'
                             }
                         }
                     }
