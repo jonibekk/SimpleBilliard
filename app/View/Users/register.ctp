@@ -49,6 +49,7 @@
                         echo $last_name;
                     }
                     ?>
+                    <hr>
                     <?=
                     $this->Form->input('Email.0.email', [
                         'label'                        => __d('gl', "メール"),
@@ -63,6 +64,7 @@
                         'class'     => false,
                         'default'   => true,
                     ])?>
+                    <hr>
                     <?=
                     $this->Form->input('password', [
                         'label'                    => __d('gl', "パスワードを作成"),
@@ -76,6 +78,7 @@
                         "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                         'type'                     => 'password',
                     ])?>
+                    <hr>
                     <?
                     $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',
                                                  ['class' => 'link', 'data-toggle' => "modal"]);
