@@ -30,13 +30,11 @@
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('local_last_name', [
                         'label'       => __d('gl', "姓(母国語)"),
-                        'placeholder' => __d('gl', "姓"),
-                        'afterInput'  => '<span class="help-block">' . __d('gl', "例) 鈴木") . '</span>'
+                        'placeholder' => __d('gl', "例) 鈴木"),
                     ]);
                     $local_first_name = $this->Form->input('local_first_name', [
                         'label'       => __d('gl', "名(母国語)"),
-                        'placeholder' => __d('gl', '名'),
-                        'afterInput'  => '<span class="help-block">' . __d('gl', "例) 太郎") . '</span>'
+                        'placeholder' => __d('gl', "例) 太郎"),
                     ]);
                     if ($me['last_first']) {
                         echo $local_last_name;
@@ -48,6 +46,7 @@
                     }
                 }
                 ?>
+                <hr>
                 <?=
                 $this->Form->input('gender_type',
                                    [
@@ -59,6 +58,7 @@
                                        'class'   => 'radio-inline'
                                    ])
                 ?>
+                <hr>
                 <?=
                 $this->Form
                     ->input('birth_day',
@@ -95,17 +95,19 @@
                     'class'     => false,
                 ])
                 ?>
+                <hr>
                 <?=
                 $this->Form->input('hometown', [
-                    'label'      => __d('gl', "出身地"),
-                    'afterInput' => '<span class="help-block">' . __d('gl', '例) 東京都') . '</span>'
+                    'label'       => __d('gl', "出身地"),
+                    'placeholder' => __d('gl', '例) 東京都'),
                 ]);
                 ?>
+                <hr>
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
 
                     <div class="col col-sm-6">
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                                  style="width: 150px; height: 150px;"></div>
                             <div>
@@ -144,7 +146,7 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                    <?=
+                        <?=
                         $this->Form->submit(__d('gl', "プロフィールを登録"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?=

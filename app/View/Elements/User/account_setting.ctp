@@ -70,12 +70,14 @@
                 'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
                 'class'     => false,
             ])?>
+            <hr>
             <?=
             $this->Form->input('language', [
                 'label'   => __d('gl', "言語"),
                 'type'    => 'select',
                 'options' => $language_list,
             ])?>
+            <hr>
             <?=
             $this->Form->input('timezone', [
                 'label'   => __d('gl', "タイムゾーン"),
@@ -83,6 +85,7 @@
                 'options' => $timezones,
             ])
             ?>
+            <hr>
             <div class="form-group">
                 <label for="UserPassword" class="col col-sm-3 control-label"><?= __d('gl', "パスワード") ?></label>
 

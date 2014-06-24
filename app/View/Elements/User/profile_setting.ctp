@@ -36,13 +36,11 @@
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('local_last_name', [
                         'label'       => __d('gl', "姓(母国語)"),
-                        'placeholder' => __d('gl', "姓"),
-                        'afterInput'  => '<span class="help-block">' . __d('gl', "例) 鈴木") . '</span>'
+                        'placeholder' => __d('gl', "例) 鈴木"),
                     ]);
                     $local_first_name = $this->Form->input('local_first_name', [
                         'label'       => __d('gl', "名(母国語)"),
-                        'placeholder' => __d('gl', '名'),
-                        'afterInput'  => '<span class="help-block">' . __d('gl', "例) 太郎") . '</span>'
+                        'placeholder' => __d('gl', "例) 太郎"),
                     ]);
                     if ($me['User']['last_first']) {
                         echo $local_last_name;
@@ -54,25 +52,22 @@
                     }
                 }
                 ?>
+                <hr>
                 <?
                 //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __d('gl', "姓(ローマ字)"),
-                    'placeholder'              => __d('gl', "姓"),
+                    'placeholder' => __d('gl', "例) Suzuki"),
                     "pattern"                  => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                    'afterInput'               => '<span class="help-block">' . __d('gl',
-                                                                                    "例) Suzuki") . '</span>'
                 ]);
                 $first_name = $this->Form->input('first_name', [
                     'label'                    => __d('gl', "名(ローマ字)"),
-                    'placeholder'              => __d('gl', '名'),
+                    'placeholder' => __d('gl', "例) Hiroshi"),
                     "pattern"                  => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                    'afterInput'               => '<span class="help-block">' . __d('gl',
-                                                                                    "例) Hiroshi") . '</span>'
                 ]);
                 if ($last_first) {
                     echo $last_name;
@@ -83,6 +78,7 @@
                     echo $last_name;
                 }
                 ?>
+                <hr>
                 <?=
                 $this->Form->input('gender_type',
                                    [
@@ -94,6 +90,7 @@
                                        'class'   => 'radio-inline'
                                    ])
                 ?>
+                <hr>
                 <?=
                 $this->Form
                     ->input('birth_day',
@@ -130,12 +127,14 @@
                     'class'     => false,
                 ])
                 ?>
+                <hr>
                 <?=
                 $this->Form->input('hometown', [
-                    'label'      => __d('gl', "出身地"),
-                    'afterInput' => '<span class="help-block">' . __d('gl', '例) 東京都') . '</span>'
+                    'label'       => __d('gl', "出身地"),
+                    'placeholder' => __d('gl', '例) 東京都'),
                 ]);
                 ?>
+                <hr>
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
 
