@@ -117,12 +117,34 @@ class User extends AppModel
             ]
         ],
         'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
-        'old_password' => [
+        'old_password'      => [
             'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
+            ]
+        ],
+        'password_request'  => [
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
+            ],
+            'minLength'     => [
+                'rule' => ['minLength', 8],
+            ],
+            'passwordCheck' => [
+                'rule' => ['passwordCheck', 'password_request'],
+            ]
+        ],
+        'password_request2' => [
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
+            ],
+            'minLength'     => [
+                'rule' => ['minLength', 8],
+            ],
+            'passwordCheck' => [
+                'rule' => ['passwordCheck', 'password_request2'],
             ]
         ],
         'password'          => [
@@ -687,6 +709,27 @@ class User extends AppModel
         }
         $this->id = $uid;
         return $this->saveField('primary_email_id', $email_id);
+    }
+
+    /**
+     * パスワードチェックをするバリデーションルール
+     *
+     * @param $value
+     * @param $field_name
+     *
+     * @return bool
+     */
+    public function passwordCheck($value, $field_name)
+    {
+        if (empty($value) || !isset($value[$field_name])) {
+            return false;
+        }
+        $currentPassword = $this->field('password', ['User.id' => $this->id]);
+        $hashed_old_password = $this->generateHash($value[$field_name]);
+        if ($currentPassword !== $hashed_old_password) {
+            return false;
+        }
+        return true;
     }
 
 }

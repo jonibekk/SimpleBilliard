@@ -613,4 +613,34 @@ class UserTest extends CakeTestCase
         $this->assertArrayHasKey('User', $res, "[正常]通常使うメアドの変更");
     }
 
+    function testPasswordCheckSuccess()
+    {
+        $uid = $this->generateBasicUser();
+        $value = ['password_request' => '12345678'];
+        $field_name = "password_request";
+        $this->User->id = $uid;
+        $res = $this->User->passwordCheck($value, $field_name);
+        $this->assertTrue($res, "[正常]パスワード確認に成功");
+    }
+
+    function testPasswordCheckFail()
+    {
+        $uid = $this->generateBasicUser();
+        $value = ['password_request' => '1234567800'];
+        $field_name = "password_request";
+        $this->User->id = $uid;
+        $res = $this->User->passwordCheck($value, $field_name);
+        $this->assertFalse($res, "[異常]パスワード確認で間違ったパスワード");
+    }
+
+    function testPasswordCheckFailNoData()
+    {
+        $uid = $this->generateBasicUser();
+        $value = ['password_request' => '1234567800'];
+        $field_name = "password_request_aaaa";
+        $this->User->id = $uid;
+        $res = $this->User->passwordCheck($value, $field_name);
+        $this->assertFalse($res, "[異常]パスワード確認で間違ったヴァリデーション指定");
+    }
+
 }

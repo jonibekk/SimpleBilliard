@@ -18,6 +18,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'email'             => __d('validate', "メールアドレスが正しくありません。"),
             'notBlankCheckbox'  => __d('validate', "利用規約に同意してください。"),
             'passwordSameCheck' => __d('validate', "パスワードが一致しません。"),
+            'passwordCheck' => __d('validate', "パスワードが間違っています。"),
             'minLength'         => __d('validate', '%2$d文字以上で入力してください。'),
             'emailIsUnique'     => __d('validate', "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"),
             'image_max_size'    => __d('validate', "ファイルサイズが上限を超えています。"),
