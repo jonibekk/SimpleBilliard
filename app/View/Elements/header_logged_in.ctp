@@ -32,6 +32,9 @@
                                                    ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
                         <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                        <li>
+                            <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
+                        </li>
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
                                 __d('gl',
                                     "チュートリアル") ?></a></li>
@@ -59,7 +62,7 @@
                         </select>
                     </form>
                 </li>
-                <li><a href="#"><i class="fa fa-home"></i>&nbsp;
+                <li><a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>

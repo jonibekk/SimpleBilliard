@@ -92,6 +92,32 @@ class GlEmailComponent extends Object
     }
 
     /**
+     * メールにてメールアドレス変更に伴う認証
+     *
+     * @param $to_uid
+     * @param $email
+     * @param $email_token
+     *
+     * @return null
+     */
+    public function sendMailChangeEmailVerify($to_uid, $email, $email_token)
+    {
+        if (!$to_uid || !$email_token) {
+            return null;
+        }
+        $url = Router::url(
+                     [
+                         'admin'      => false,
+                         'controller' => 'users',
+                         'action' => 'change_email_verify',
+                         $email_token,
+                     ], true);
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_CHANGE_EMAIL_VERIFY,
+                                      ['url' => $url, 'to' => $email]);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * メールにてパスワード設定完了通知
      *
      * @param $to_uid

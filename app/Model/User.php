@@ -99,9 +99,12 @@ class User extends AppModel
         'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'         => ['boolean' => ['rule' => ['boolean'],],],
-        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
+        ],],
+        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
+        ],],
+        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
+        ],],
         'update_email_flg'  => [
             'boolean' => [
                 'rule'       => ['boolean',],
@@ -114,6 +117,14 @@ class User extends AppModel
             ]
         ],
         'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
+        'old_password' => [
+            'notEmpty'  => [
+                'rule' => 'notEmpty',
+            ],
+            'minLength' => [
+                'rule' => ['minLength', 8],
+            ]
+        ],
         'password'          => [
             'notEmpty'  => [
                 'rule' => 'notEmpty',
@@ -251,6 +262,15 @@ class User extends AppModel
         return $this->Email->find('first', $options);
     }
 
+    public function getDetail($id)
+    {
+        $recursive = $this->recursive;
+        $this->recursive = 0;
+        $res = $this->findById($id);
+        $this->recursive = -$recursive;
+        return $res;
+    }
+
     /**
      * 表示用ユーザ名と、ローカルユーザ名をセット
      *
@@ -384,9 +404,36 @@ class User extends AppModel
             //コントローラ側で必要になるデータをセット
             $this->Email->set('email_token', $email_token);
             $this->Email->set('email', $data['Email'][0]['Email']['email']);
-            return true;
         }
-        return false;
+        return true;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return bool
+     * @throws RuntimeException
+     */
+    public function changePassword($data)
+    {
+        if (!$this->validateAssociated($data)) {
+            $msg = null;
+            foreach ($this->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+        $currentPassword = $this->field('password', ['User.id' => $data['User']['id']]);
+        $hashed_old_password = $this->generateHash($data['User']['old_password']);
+        if ($currentPassword !== $hashed_old_password) {
+            throw new RuntimeException(__d('validate', "現在のパスワードが間違っています。"));
+        }
+
+        $this->id = $data['User']['id'];
+        $this->saveField('password', $this->generateHash($data['User']['password']));
+        $this->saveField('password_modified', date('Y-m-d H:i:s'));
+        return true;
     }
 
     /**
@@ -398,7 +445,9 @@ class User extends AppModel
      */
     function saveEmailToken($email)
     {
+        $default = ['Email' => ['user_id' => null]];
         $email_user = $this->getUserByEmail($email);
+        $email_user = array_merge($default, $email_user);
         $email_user['Email']['email_token'] = $this->generateToken();
         $email_user['Email']['email_token_expires'] = $this->getTokenExpire();
         if ($this->Email->saveAll($email_user)) {
@@ -448,20 +497,23 @@ class User extends AppModel
      * Verifies a users email by a token that was sent to him via email and flags the user record as active
      *
      * @param string $token The token that wa sent to the user
+     * @param null   $uid
      *
      * @throws RuntimeException
      * @return array On success it returns the user data record
      */
-    public function verifyEmail($token = null)
+    public function verifyEmail($token, $uid = null)
     {
-        $user = $this->Email->find('first',
-                                   [
-                                       'conditions' => [
-                                           'Email.email_verified' => false,
-                                           'Email.email_token'    => $token
-                                       ],
-                                   ]
-        );
+        $options = [
+            'conditions' => [
+                'Email.email_verified' => false,
+                'Email.email_token'    => $token
+            ],
+        ];
+        if ($uid) {
+            $options['conditions']['Email.user_id'] = $uid;
+        }
+        $user = $this->Email->find('first', $options);
 
         if (empty($user)) {
             throw new RuntimeException(
@@ -480,7 +532,9 @@ class User extends AppModel
         $user['Email']['email_token_expires'] = null;
 
         $this->Email->saveAll($user, ['validate' => false, 'callbacks' => false]);
-        return $this->findById($user['User']['id']);
+
+        $res = $this->findById($user['User']['id']);
+        return array_merge($user, $res);
     }
 
     /**
@@ -582,6 +636,57 @@ class User extends AppModel
     {
         $passwordHasher = new SimplePasswordHasher();
         return $passwordHasher->hash($str);
+    }
+
+    public function addEmail($postData, $uid)
+    {
+        $postData['User']['email'];
+        if (!isset($postData['User']['email'])) {
+            throw new RuntimeException(__d('validate', "メールアドレスが入力されていません"));
+        }
+        $email = $postData['User']['email'];
+
+        //現在メール認証中の場合は拒否
+        if (!$this->Email->isAllVerified($uid)) {
+            throw new RuntimeException(__d('validate', "現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"));
+        }
+        //メールアドレスの認証トークンを発行
+        $data = [];
+        $data['Email']['user_id'] = $uid;
+        $data['Email']['email'] = $email;
+        $data['Email']['email_token'] = $this->generateToken();
+        $data['Email']['email_token_expires'] = $this->getTokenExpire();
+        //データを保存
+        $res = $this->Email->save($data);
+        if ($this->Email->validationErrors) {
+            $msg = null;
+            foreach ($this->Email->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+
+        return $res;
+    }
+
+    /**
+     * 通常使うメールアドレスの変更（今まで使っていたメールアドレスを削除）
+     *
+     * @param      $uid
+     * @param      $email_id
+     * @param bool $old_delete
+     *
+     * @return bool
+     */
+    public function changePrimaryEmail($uid, $email_id, $old_delete = true)
+    {
+        if ($old_delete) {
+            $user = $this->find('first', ['conditions' => ['id' => $uid]]);
+            $this->Email->delete($user['User']['primary_email_id']);
+        }
+        $this->id = $uid;
+        return $this->saveField('primary_email_id', $email_id);
     }
 
 }

@@ -1,29 +1,35 @@
 <?php
 /**
- * @var View    $this
- * @var array   $me
- * @var boolean $is_not_use_local_name
+ * Created by PhpStorm.
+ * User: bigplants
+ * Date: 6/19/14
+ * Time: 2:41 PM
+ *
+ * @var CodeCompletionView $this
+ * @var                    $last_first
+ * @var array              $me
+ * @var boolean            $is_not_use_local_name
  */
 ?>
-<div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
+    <div id="profile">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('gl', "プロフィールを入力してください") ?></div>
-            <div class="panel-body">
-                <?=
-                $this->Form->create('User', [
-                    'inputDefaults' => [
-                        'div'       => 'form-group',
-                        'label'     => [
-                            'class' => 'col col-sm-3 control-label'
-                        ],
-                        'wrapInput' => 'col col-sm-6',
-                        'class'     => 'form-control'
+            <div class="panel-heading"><?= __d('gl', "プロフィール") ?></div>
+            <?=
+            $this->Form->create('User', [
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => [
+                        'class' => 'col col-sm-3 control-label'
                     ],
-                    'class'         => 'form-horizontal',
-                    'novalidate'    => true,
-                    'type'          => 'file',
-                ]); ?>
+                    'wrapInput' => 'col col-sm-6',
+                    'class'     => 'form-control'
+                ],
+                'class'         => 'form-horizontal',
+                'novalidate'    => true,
+                'type'          => 'file',
+                'id'            => 'ChangeProfileForm'
+            ]); ?>
+            <div class="panel-body">
                 <?
                 if (!$is_not_use_local_name) {
                     //ローカル名を使う国のみ表示
@@ -38,7 +44,7 @@
                         'placeholder' => __d('gl', '名'),
                         'afterInput'  => '<span class="help-block">' . __d('gl', "例) 太郎") . '</span>'
                     ]);
-                    if ($me['last_first']) {
+                    if ($me['User']['last_first']) {
                         echo $local_last_name;
                         echo $local_first_name;
                     }
@@ -48,11 +54,40 @@
                     }
                 }
                 ?>
+                <?
+                //姓と名は言語によって表示順を変える
+                $last_name = $this->Form->input('last_name', [
+                    'label'                    => __d('gl', "姓(ローマ字)"),
+                    'placeholder'              => __d('gl', "姓"),
+                    "pattern"                  => '^[a-zA-Z]+$',
+                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'afterInput'               => '<span class="help-block">' . __d('gl',
+                                                                                    "例) Suzuki") . '</span>'
+                ]);
+                $first_name = $this->Form->input('first_name', [
+                    'label'                    => __d('gl', "名(ローマ字)"),
+                    'placeholder'              => __d('gl', '名'),
+                    "pattern"                  => '^[a-zA-Z]+$',
+                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'afterInput'               => '<span class="help-block">' . __d('gl',
+                                                                                    "例) Hiroshi") . '</span>'
+                ]);
+                if ($last_first) {
+                    echo $last_name;
+                    echo $first_name;
+                }
+                else {
+                    echo $first_name;
+                    echo $last_name;
+                }
+                ?>
                 <?=
                 $this->Form->input('gender_type',
                                    [
                                        'type'    => 'radio',
-                                       'before' => '<label class="col col-sm-3 control-label">'
+                                       'before'  => '<label class="col col-sm-3 control-label">'
                                            . __d('gl', '性別') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
@@ -84,7 +119,7 @@
                                 'separator'  => ' / ',
                                 'maxYear'    => date('Y'),
                                 'minYear'    => '1910',
-                                'wrapInput' => 'col col-sm-6 form-inline',
+                                'wrapInput'  => 'col col-sm-6 form-inline',
                             ]);
                 ?>
                 <?=
@@ -105,9 +140,13 @@
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
 
                     <div class="col col-sm-6">
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                                 style="width: 150px; height: 150px;"></div>
+                                 style="width: 150px; height: 150px;">
+                                <?=
+                                $this->Upload->uploadImage($this->request->data, 'User.photo',
+                                                           ['style' => 'x_large']) ?>
+                            </div>
                             <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
@@ -123,7 +162,8 @@
                                                 'div'          => false,
                                                 'css'          => false,
                                                 'wrapInput'    => false,
-                                                'errorMessage' => false
+                                                'errorMessage' => false,
+                                                ''
                                                ]) ?>
                         </span>
                             </div>
@@ -142,18 +182,44 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <div class="row">
-                    <div class="col-sm-9 col-sm-offset-3">
-                    <?=
-                        $this->Form->submit(__d('gl', "プロフィールを登録"),
-                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
-                        <?=
-                        $this->Html->link(__d('gl', "スキップ"), ['controller' => 'teams', 'action' => 'add'],
-                                          ['class' => 'btn btn-default', 'div' => false]) ?>
-                        <?= $this->Form->end(); ?>
-                    </div>
-                </div>
+                <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+                <div class="clearfix"></div>
             </div>
+            <?= $this->Form->end(); ?>
         </div>
     </div>
-</div>
+<? $this->append('script') ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ChangeProfileForm').bootstrapValidator({
+                live: 'enabled',
+                feedbackIcons: {
+                    valid: 'fa fa-check',
+                    invalid: 'fa fa-times',
+                    validating: 'fa fa-refresh'
+                },
+                fields: {
+                    "data[User][photo]": {
+                        enabled: false
+                    },
+                    "data[User][password]": {
+                        validators: {
+                            stringLength: {
+                                min: 8,
+                                message: '<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>'
+                            }
+                        }
+                    },
+                    "data[User][password_confirm]": {
+                        validators: {
+                            identical: {
+                                field: "data[User][password]",
+                                message: '<?=__d('validate', "パスワードが一致しません。")?>'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+<? $this->end() ?>

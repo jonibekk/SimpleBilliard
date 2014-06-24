@@ -56,6 +56,8 @@ class UsersController extends AppController
      */
     public function login()
     {
+        //リダイレクト先
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
         //ログイン済の場合はトップへ
         if ($this->Auth->user()) {
@@ -70,7 +72,7 @@ class UsersController extends AppController
                                            ['title' => __d('notify', "ログイン成功")]);
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect('/');
+                return $this->redirect($redirect_url);
             }
             else {
                 $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
@@ -223,6 +225,32 @@ class UsersController extends AppController
     }
 
     /**
+     * メールアドレス変更時の認証
+     *
+     * @param $token
+     */
+    public function change_email_verify($token)
+    {
+        try {
+            $this->User->begin();
+            $user = $this->User->verifyEmail($token, $this->Auth->user('id'));
+            $this->User->changePrimaryEmail($this->Auth->user('id'), $user['Email']['id']);
+        } catch (RuntimeException $e) {
+            $this->User->rollback();
+            //例外の場合は、トークン再送信画面へ
+            $this->Pnotify->outError($e->getMessage() . "<br>" . __d('gl', "メールアドレス変更を一度キャンセルし、再度変更してください。"));
+            //トークン再送ページへ
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect(['action' => 'settings']);
+        }
+        $this->User->commit();
+        $this->_refreshAuth();
+        $this->Pnotify->outSuccess(__d('gl', "メールアドレスの変更が正常に完了しました。"));
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect(['action' => 'settings']);
+    }
+
+    /**
      * パスワードリセット
      */
     public function password_reset($token = null)
@@ -289,14 +317,109 @@ class UsersController extends AppController
     }
 
     /**
+     * ユーザ設定
+     */
+    public function settings()
+    {
+        //ユーザデータ取得
+        $me = $this->User->getDetail($this->Auth->user('id'));
+        unset($me['User']['password']);
+        if ($this->request->is('put') && !empty($this->request->data)) {
+            //request->dataに入っていないデータを表示しなければ行けない為、マージ
+            $this->request->data['User'] = array_merge($me['User'], $this->request->data['User']);
+            $this->User->id = $this->Auth->user('id');
+            if ($this->User->save($this->request->data)) {
+                //セッション更新
+                $this->_refreshAuth();
+                $me = $this->User->getDetail($this->Auth->user('id'));
+                unset($me['User']['password']);
+                $this->request->data = $me;
+                $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "ユーザ設定の保存に失敗しました。"));
+            }
+        }
+        else {
+            $this->request->data = $me;
+        }
+        $this->layout = LAYOUT_SETTING;
+        //姓名の並び順をセット
+        $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+        //言語選択
+        $language_list = $this->Lang->getAvailLangList();
+        //タイムゾーン
+        $timezones = $this->Timezone->getTimezones();
+        //ローカル名を利用している国かどうか？
+        $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
+        $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
+        $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
+                           'not_verified_email'));
+        return $this->render();
+    }
+
+    /**
+     * パスワード変更
+     *
+     * @throws NotFoundException
+     */
+    public function change_password()
+    {
+        if ($this->request->is('put') && !empty($this->request->data)) {
+            try {
+                $this->User->changePassword($this->request->data);
+            } catch (RuntimeException $e) {
+                $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "パスワードの変更に失敗しました")]);
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect($this->referer());
+            }
+            $this->Pnotify->outSuccess(__d('gl', "パスワードを変更しました。"));
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        else {
+            throw new NotFoundException();
+        }
+    }
+
+    /**
+     *
+     */
+    public function change_email()
+    {
+        if ($this->request->is('put') && !empty($this->request->data)) {
+            try {
+                $email_data = $this->User->addEmail($this->request->data, $this->Auth->user('id'));
+            } catch (RuntimeException $e) {
+                $this->Pnotify->outError($e->getMessage());
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect($this->referer());
+            }
+
+            $this->Pnotify->outInfo(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
+            $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
+                                                      $email_data['Email']['email_token']);
+
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        else {
+            throw new NotFoundException();
+        }
+    }
+
+    /**
      * ログイン中のAuthを更新する（ユーザ情報を更新後などに実行する）
      *
      * @param $uid
      *
      * @return bool
      */
-    public function _refreshAuth($uid)
+    public function _refreshAuth($uid = null)
     {
+        if (!$uid) {
+            $uid = $this->Auth->user('id');
+        }
         $this->Auth->logout();
         $this->User->recursive = 0;
         $user_buff = $this->User->findById($uid);

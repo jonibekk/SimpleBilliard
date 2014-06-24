@@ -116,4 +116,32 @@ class AppModel extends Model
         }
     }
 
+    /**
+     * 所有者かどうかのチェック
+     *
+     * @param null   $id
+     * @param string $uid
+     *
+     * @return bool
+     */
+    public function isOwner($uid, $id = null)
+    {
+        if ($id === null) {
+            $id = $this->getID();
+        }
+
+        if ($id === false) {
+            return false;
+        }
+
+        return (bool)$this->find('count', array(
+            'conditions' => array(
+                $this->alias . '.' . $this->primaryKey => $id,
+                $this->alias . '.' . 'user_id'         => $uid,
+            ),
+            'recursive'  => -1,
+            'callbacks'  => false
+        ));
+    }
+
 }
