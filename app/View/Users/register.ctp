@@ -28,19 +28,17 @@
                     //姓と名は言語によって表示順を変える
                     $last_name = $this->Form->input('last_name', [
                         'label'                    => __d('gl', "姓(ローマ字)"),
-                        'placeholder'              => __d('gl', "姓"),
+                        'placeholder' => __d('gl', "例) Suzuki"),
                         "pattern"                  => '^[a-zA-Z]+$',
                         "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
                         "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                        'afterInput'               => '<span class="help-block">' . __d('gl', "例) Suzuki") . '</span>'
                     ]);
                     $first_name = $this->Form->input('first_name', [
                         'label'                    => __d('gl', "名(ローマ字)"),
-                        'placeholder'              => __d('gl', '名'),
+                        'placeholder' => __d('gl', "例) Hiroshi"),
                         "pattern"                  => '^[a-zA-Z]+$',
                         "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
                         "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                        'afterInput'               => '<span class="help-block">' . __d('gl', "例) Hiroshi") . '</span>'
                     ]);
                     if ($last_first) {
                         echo $last_name;
@@ -105,7 +103,7 @@
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
+                            <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
                         </div>
                     </div>
                 </div>
