@@ -570,6 +570,20 @@ class UserTest extends CakeTestCase
         $this->assertTrue(isset($e), "[異常]emailアドレス追加でメアドの入力がない");
     }
 
+    function testAddEmailFailPassword()
+    {
+        $uid = $this->generateBasicUser();
+        $postData = [];
+        $postData['User']['email'] = null;
+        $postData['User']['password_request2'] = "1111111111111";
+
+        try {
+            $this->User->addEmail($postData, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]emailアドレス追加でパスワードが間違っている");
+    }
+
     function testAddEmailFailNotAllVerified()
     {
         $uid = $this->generateBasicUser();
