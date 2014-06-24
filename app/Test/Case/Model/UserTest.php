@@ -574,7 +574,7 @@ class UserTest extends CakeTestCase
     {
         $uid = $this->generateBasicUser();
         $postData = [];
-        $postData['User']['email'] = null;
+        $postData['User']['email'] = "aaaaaaa@aaaaccc.com";
         $postData['User']['password_request2'] = "1111111111111";
 
         try {
