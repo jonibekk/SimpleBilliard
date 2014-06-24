@@ -570,6 +570,20 @@ class UserTest extends CakeTestCase
         $this->assertTrue(isset($e), "[異常]emailアドレス追加でメアドの入力がない");
     }
 
+    function testAddEmailFailPassword()
+    {
+        $uid = $this->generateBasicUser();
+        $postData = [];
+        $postData['User']['email'] = null;
+        $postData['User']['password_request2'] = "1111111111111";
+
+        try {
+            $this->User->addEmail($postData, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]emailアドレス追加でパスワードが間違っている");
+    }
+
     function testAddEmailFailNotAllVerified()
     {
         $uid = $this->generateBasicUser();
@@ -611,6 +625,36 @@ class UserTest extends CakeTestCase
         $this->User->addEmail($postData, $uid);
         $res = $this->User->changePrimaryEmail($uid, $this->User->getLastInsertID());
         $this->assertArrayHasKey('User', $res, "[正常]通常使うメアドの変更");
+    }
+
+    function testPasswordCheckSuccess()
+    {
+        $uid = $this->generateBasicUser();
+        $value = ['password_request' => '12345678'];
+        $field_name = "password_request";
+        $this->User->id = $uid;
+        $res = $this->User->passwordCheck($value, $field_name);
+        $this->assertTrue($res, "[正常]パスワード確認に成功");
+    }
+
+    function testPasswordCheckFail()
+    {
+        $uid = $this->generateBasicUser();
+        $value = ['password_request' => '1234567800'];
+        $field_name = "password_request";
+        $this->User->id = $uid;
+        $res = $this->User->passwordCheck($value, $field_name);
+        $this->assertFalse($res, "[異常]パスワード確認で間違ったパスワード");
+    }
+
+    function testPasswordCheckFailNoData()
+    {
+        $uid = $this->generateBasicUser();
+        $value = ['password_request' => '1234567800'];
+        $field_name = "password_request_aaaa";
+        $this->User->id = $uid;
+        $res = $this->User->passwordCheck($value, $field_name);
+        $this->assertFalse($res, "[異常]パスワード確認で間違ったヴァリデーション指定");
     }
 
 }

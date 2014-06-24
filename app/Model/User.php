@@ -99,12 +99,9 @@ class User extends AppModel
         'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'         => ['boolean' => ['rule' => ['boolean'],],],
-        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
-        ],],
-        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
-        ],],
-        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,
-        ],],
+        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
+        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
+        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
         'update_email_flg'  => [
             'boolean' => [
                 'rule'       => ['boolean',],
@@ -117,12 +114,34 @@ class User extends AppModel
             ]
         ],
         'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
-        'old_password' => [
+        'old_password'      => [
             'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
+            ]
+        ],
+        'password_request'  => [
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
+            ],
+            'minLength'     => [
+                'rule' => ['minLength', 8],
+            ],
+            'passwordCheck' => [
+                'rule' => ['passwordCheck', 'password_request'],
+            ]
+        ],
+        'password_request2' => [
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
+            ],
+            'minLength'     => [
+                'rule' => ['minLength', 8],
+            ],
+            'passwordCheck' => [
+                'rule' => ['passwordCheck', 'password_request2'],
             ]
         ],
         'password'          => [
@@ -640,10 +659,21 @@ class User extends AppModel
 
     public function addEmail($postData, $uid)
     {
-        $postData['User']['email'];
         if (!isset($postData['User']['email'])) {
             throw new RuntimeException(__d('validate', "メールアドレスが入力されていません"));
         }
+
+        $this->id = $uid;
+        $this->set($postData);
+        if (!$this->validates()) {
+            $msg = null;
+            foreach ($this->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+
         $email = $postData['User']['email'];
 
         //現在メール認証中の場合は拒否
@@ -687,6 +717,27 @@ class User extends AppModel
         }
         $this->id = $uid;
         return $this->saveField('primary_email_id', $email_id);
+    }
+
+    /**
+     * パスワードチェックをするバリデーションルール
+     *
+     * @param $value
+     * @param $field_name
+     *
+     * @return bool
+     */
+    public function passwordCheck($value, $field_name)
+    {
+        if (empty($value) || !isset($value[$field_name])) {
+            return false;
+        }
+        $currentPassword = $this->field('password', ['User.id' => $this->id]);
+        $hashed_old_password = $this->generateHash($value[$field_name]);
+        if ($currentPassword !== $hashed_old_password) {
+            return false;
+        }
+        return true;
     }
 
 }

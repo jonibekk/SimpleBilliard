@@ -39,6 +39,12 @@
                     'label'       => __d('gl', "メールアドレス"),
                     'placeholder' => __d('gl', "hiroshi@example.com"),
                 ])?>
+                <hr>
+                <?=
+                $this->Form->input('password_request2', [
+                    'label' => __d('gl', "パスワード入力"),
+                    'type'  => 'password',
+                ])?>
             </div>
             <div class="modal-footer">
                 <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary']) ?>
@@ -65,6 +71,17 @@
                         },
                         emailAddress: {
                             message: '<?=__d('validate', "メールアドレスが正しくありません。")?>'
+                        }
+                    }
+                },
+                "data[User][password_request2]": {
+                    validators: {
+                        stringLength: {
+                            min: 8,
+                            message: '<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>'
+                        },
+                        notEmpty: {
+                            message: '<?=__d('validate', "変更する場合はパスワード入力が必要です。")?>'
                         }
                     }
                 }
