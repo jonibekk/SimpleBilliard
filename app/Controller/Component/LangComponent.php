@@ -23,8 +23,8 @@ class LangComponent extends Object
     var $model;
 
     public $availableLanguages = array(
-        'eng',
-        'jpn',
+        'eng' => null,
+        'jpn' => null,
     );
 
     function initialize()
@@ -33,6 +33,7 @@ class LangComponent extends Object
         $this->L10n = new L10n();
         App::import('Lib', 'Utils.Languages');
         $this->Languages = new Languages();
+        $this->_setLangList();
 
     }
 
@@ -51,6 +52,12 @@ class LangComponent extends Object
 
     function beforeRedirect()
     {
+    }
+
+    protected function _setLangList()
+    {
+        $this->availableLanguages['jpn'] = __d('language', "日本語");
+        $this->availableLanguages['eng'] = __d('language', "English");
     }
 
     function getLanguage()
@@ -101,17 +108,6 @@ class LangComponent extends Object
      */
     public function getAvailLangList()
     {
-        //言語選択
-        $language_list = $this->Languages->lists('locale');
-        //利用可能言語を抽出
-        $avail_languages = array();
-        foreach ($this->availableLanguages as $avail_lang) {
-            if (array_key_exists($avail_lang, $language_list)
-            ) {
-                $avail_languages[$avail_lang] = $language_list[$avail_lang];
-            }
-        }
-        $language_list = $avail_languages;
-        return $language_list;
+        return $this->availableLanguages;
     }
 }
