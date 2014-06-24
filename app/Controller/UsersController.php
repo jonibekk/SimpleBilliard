@@ -331,6 +331,8 @@ class UsersController extends AppController
             if ($this->User->save($this->request->data)) {
                 //セッション更新
                 $this->_refreshAuth();
+                //言語設定
+                $this->_setAppLanguage();
                 $me = $this->User->getDetail($this->Auth->user('id'));
                 unset($me['User']['password']);
                 $this->request->data = $me;

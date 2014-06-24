@@ -50,9 +50,9 @@
                         echo $local_first_name;
                         echo $local_last_name;
                     }
+                    echo "<hr>";
                 }
                 ?>
-                <hr>
                 <?
                 //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
