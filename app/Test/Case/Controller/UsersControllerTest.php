@@ -709,6 +709,10 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
+            [null, [
+                'id'       => "537ce224-54b0-4081-b044-433dac11aaab",
+                'language' => 'jpn',
+            ]],
             ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
@@ -718,7 +722,9 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map));
 
-        $this->testAction('users/settings');
+        $res = $this->testAction('users/settings', ["method" => 'GET', 'return' => 'contents']);
+        $this->assertContains('日本語', $res, "[正常]ユーザ設定画面で言語名が表示されている");
+        $this->assertContains('ろーかる名', $res, "[正常]ユーザ設定画面で言語別の名前が表示されている");
     }
 
     function testSettingPutSuccess()
@@ -730,9 +736,25 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
         $value_map = [
+            [null, [
+                'id'       => "537ce224-54b0-4081-b044-433dac11aaab",
+                'language' => 'jpn',
+            ]],
             ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
@@ -747,7 +769,9 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ];
 
-        $this->testAction('users/settings', ['method' => 'PUT', 'data' => $data]);
+        $res = $this->testAction('users/settings', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->assertContains('日本語', $res, "[正常]ユーザ設定画面で言語名が表示されている");
+        $this->assertContains('ろーかる名', $res, "[正常]ユーザ設定画面で言語別の名前が表示されている");
     }
 
     function testSettingPutFail()
