@@ -78,7 +78,6 @@ class UsersController extends AppController
                 $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
             }
         }
-
     }
 
     /**

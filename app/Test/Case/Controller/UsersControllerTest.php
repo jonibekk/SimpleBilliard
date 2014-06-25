@@ -191,8 +191,9 @@ class UsersControllerTest extends ControllerTestCase
          */
         $Users = $this->generate('Users', [
             'components' => [
-                'Session' => ['setFlash'],
-                'Auth' => ['user'],
+                'Session'  => ['setFlash'],
+                'Auth',
+                'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
         $value_map = [
@@ -207,7 +208,16 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
-        $this->generateMockSecurity();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
         $data = [
             'User' => [
                 'email' => "abcdefgto@email.com",
@@ -215,7 +225,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ];
         $Users->Auth->logout();
-        $this->testAction('/users/login', ['data' => $data, 'method' => 'post', 'return' => 'contents']);
+        $this->testAction('/users/login', ['data' => $data, 'method' => 'post']);
 //        $this->assertContains("メールアドレスもしくはパスワードが正しくありません。",$res,"[異常系]ログイン");
     }
 
@@ -714,6 +724,7 @@ class UsersControllerTest extends ControllerTestCase
                 'language' => 'jpn',
             ]],
             ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['language', "jpn"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -756,6 +767,7 @@ class UsersControllerTest extends ControllerTestCase
                 'language' => 'jpn',
             ]],
             ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['language', "jpn"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
