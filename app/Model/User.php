@@ -4,8 +4,9 @@ App::uses('AppModel', 'Model');
 
 /**
  * User Model
+
  *
- * @property Email          $PrimaryEmail
+*@property Email          $PrimaryEmail
  * @property Team           $DefaultTeam
  * @property Badge          $Badge
  * @property CommentLike    $CommentLike
@@ -22,6 +23,7 @@ App::uses('AppModel', 'Model');
  * @property PostRead       $PostRead
  * @property Post           $Post
  * @property TeamMember     $TeamMember
+ * @property LocalName      $LocalName
  */
 class User extends AppModel
 {
@@ -203,6 +205,7 @@ class User extends AppModel
         'PostRead',
         'Post',
         'TeamMember',
+        'LocalName',
     ];
 
     /**
