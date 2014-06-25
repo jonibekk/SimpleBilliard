@@ -17,6 +17,7 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.local_name',
         'app.user',
         'app.image',
         'app.badge',
@@ -396,6 +397,8 @@ class UserTest extends CakeTestCase
 
         $user_id = "537ce224-8f08-4cf3-9c8f-433dac11b50b";
         $res = $this->User->findById($user_id);
+        $this->User->me = $res['User'];
+        $res = $this->User->findById($user_id);
         $actual = $res['User']['display_username'];
         $expected = "姓 名";
         $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っている場合は`local_last_name local_first_name`になる");
@@ -405,18 +408,6 @@ class UserTest extends CakeTestCase
         $actual = $res['User']['display_username'];
         $expected = "first last";
         $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っていない場合は`first_name last_name`になる");
-
-        $user_id = "537ce224-24a4-415d-ba90-433dac11b50b";
-        $res = $this->User->findById($user_id);
-        $actual = $res['User']['display_username'];
-        $expected = "言語設定なしの名 言語設定なしの姓";
-        $this->assertEquals($expected, $actual, "[正常]言語設定なしのユーザの場合でローカル名が入っている場合は`local_first_name local_last_name`");
-
-//        $user_id = "537ce224-f3d0-46a3-a1d3-433dac11b50b";
-//        $res = $this->User->findById($user_id);
-//        $actual = $res['User']['display_username'];
-//        $expected = "First Last";
-//        $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っいる場合でもローマ字表示フラグonの場合は`first_name last_name`になる");
     }
 
     function testPasswordResetPreNoData()

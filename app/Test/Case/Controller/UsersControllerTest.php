@@ -15,6 +15,7 @@ class UsersControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.local_name',
         'app.cake_session',
         'app.user',
         'app.image',
@@ -400,7 +401,7 @@ class UsersControllerTest extends ControllerTestCase
             ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
 
         $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
-        $this->assertContains('姓(母国語)', $this->contents, "[正常]日本語でローカル名の入力項目が表示される");
+        $this->assertContains('姓(日本語)', $this->contents, "[正常]日本語でローカル名の入力項目が表示される");
     }
 
     function testAddProfilePost()

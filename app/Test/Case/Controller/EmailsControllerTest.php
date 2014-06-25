@@ -15,6 +15,7 @@ class EmailsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.local_name',
         'app.cake_session',
         'app.email',
         'app.user',
