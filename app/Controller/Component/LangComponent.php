@@ -27,6 +27,12 @@ class LangComponent extends Object
         'jpn' => null,
     );
 
+    protected function _setLangList()
+    {
+        $this->availableLanguages['jpn'] = __d('language', "日本語");
+        $this->availableLanguages['eng'] = __d('language', "English");
+    }
+
     function initialize()
     {
         App::uses('L10n', 'I18n');
@@ -54,19 +60,13 @@ class LangComponent extends Object
     {
     }
 
-    protected function _setLangList()
-    {
-        $this->availableLanguages['jpn'] = __d('language', "日本語");
-        $this->availableLanguages['eng'] = __d('language', "English");
-    }
-
     function getLanguage()
     {
         $catalog_searched = $this->L10n->catalog($this->L10n->get());
         if (isset($catalog_searched['localeFallback']) && is_array($catalog_searched)) {
-            foreach ($this->availableLanguages as $language) {
+            foreach ($this->availableLanguages as $key => $val) {
                 //使用可能言語の場合はその言語を返す
-                if ($catalog_searched['localeFallback'] == $language) {
+                if ($catalog_searched['localeFallback'] == $key) {
                     return $catalog_searched['localeFallback'];
                 }
             }

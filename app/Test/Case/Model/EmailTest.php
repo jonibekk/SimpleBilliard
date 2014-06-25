@@ -15,6 +15,7 @@ class EmailTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.local_name',
         'app.email',
         'app.user'
     );
