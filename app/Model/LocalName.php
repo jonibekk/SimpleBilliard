@@ -52,4 +52,16 @@ class LocalName extends AppModel
     public $belongsTo = [
         'User'
     ];
+
+    public function getName($uid, $lang)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'  => $uid,
+                'language' => $lang
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
 }

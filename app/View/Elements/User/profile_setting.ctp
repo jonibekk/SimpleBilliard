@@ -4,9 +4,11 @@
  * User: bigplants
  * Date: 6/19/14
  * Time: 2:41 PM
+
  *
- * @var CodeCompletionView $this
- * @var                    $last_first
+*@var CodeCompletionView $this
+ * @var boolean          $last_first
+ * @var string           $language_name
  * @var array              $me
  * @var boolean            $is_not_use_local_name
  */
@@ -34,12 +36,12 @@
                 if (!$is_not_use_local_name) {
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
-                    $local_last_name = $this->Form->input('local_last_name', [
-                        'label'       => __d('gl', "姓(母国語)"),
+                    $local_last_name = $this->Form->input('LocalName.0.last_name', [
+                        'label' => __d('gl', "姓(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 鈴木"),
                     ]);
-                    $local_first_name = $this->Form->input('local_first_name', [
-                        'label'       => __d('gl', "名(母国語)"),
+                    $local_first_name = $this->Form->input('LocalName.0.first_name', [
+                        'label' => __d('gl', "名(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 太郎"),
                     ]);
                     if ($me['User']['last_first']) {
@@ -49,6 +51,12 @@
                     else {
                         echo $local_first_name;
                         echo $local_last_name;
+                    }
+                    echo $this->Form->hidden('LocalName.0.language',
+                                             ['value' => $this->request->data['User']['language']]);
+                    if (isset($this->request->data['LocalName'][0]['id'])) {
+                        echo $this->Form->hidden('LocalName.0.id',
+                                                 ['value' => $this->request->data['LocalName'][0]['id']]);
                     }
                     echo "<hr>";
                 }

@@ -5,9 +5,11 @@ App::uses('Model', 'Model');
  * Application model for Cake.
  * Add your application-wide methods in the class below, your models
  * will inherit them.
+
  *
- * @package       app.Model
+*@package       app.Model
  *                @method findById()
+ *                @method findByUserId()
  *                @method findByEmail()
  */
 class AppModel extends Model
@@ -26,6 +28,12 @@ class AppModel extends Model
 
     //全てのモデルでデフォルトで再起的にjoinするのをやめる。個別に指定する。
     public $recursive = -1;
+    /**
+     * 自分のユーザ情報を保持(コントローラ側からセッションの値をセットする)
+     *
+     * @var array
+     */
+    public $me = [];
 
     /**
      * トランザクション開始

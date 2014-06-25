@@ -4,9 +4,8 @@ App::uses('AppModel', 'Model');
 
 /**
  * User Model
-
  *
-*@property Email          $PrimaryEmail
+ * @property Email          $PrimaryEmail
  * @property Team           $DefaultTeam
  * @property Badge          $Badge
  * @property CommentLike    $CommentLike
@@ -289,7 +288,7 @@ class User extends AppModel
         $recursive = $this->recursive;
         $this->recursive = 0;
         $res = $this->findById($id);
-        $this->recursive = -$recursive;
+        $this->recursive = $recursive;
         return $res;
     }
 
@@ -309,9 +308,6 @@ class User extends AppModel
         $local_username = null;
         //ローカルユーザ名の設定
         $local_username = $this->_getLocalUsername($row);
-        //TODO sessionをモデルから参照するのは良くない。要修正。
-//        if ((isset($this->sessionValiable['Auth']['User']['romanize_flg'])
-//                && $this->sessionValiable['Auth']['User']['romanize_flg']) || !$local_username
         if (!$local_username) {
             //ローマ字表記を指定していた場合
             $display_username = $this->_getRomanUsername($row);
@@ -348,22 +344,29 @@ class User extends AppModel
     private function _getLocalUsername($row)
     {
         $local_username = null;
-        if (!empty($row[$this->alias]['language']) && !empty($row[$this->alias]['local_first_name'])
-            && !empty($row[$this->alias]['local_last_name'])
-        ) {
-            //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
-            $last_first = in_array($row[$this->alias]['language'], $this->langCodeOfLastFirst);
-            if ($last_first) {
-                $local_username = $row[$this->alias]['local_last_name'] . " "
-                    . $row[$this->alias]['local_first_name'];
-            }
-            else {
-                $local_username = $row[$this->alias]['local_first_name'] . " "
-                    . $row[$this->alias]['local_last_name'];
-            }
+        if (!isset($this->me['language']) || empty($this->me['language'])) {
+            return null;
         }
-        elseif (!empty($row[$this->alias]['local_first_name']) && !empty($row[$this->alias]['local_last_name'])) {
-            $local_username = $row[$this->alias]['local_first_name'] . " " . $row[$this->alias]['local_last_name'];
+        //ローカル名を取得
+        $options = [
+            'conditions' => [
+                'user_id'  => $row[$this->alias]['id'],
+                'language' => $this->me['language'],
+            ]
+        ];
+        $res = $this->LocalName->find('first', $options);
+        if (empty($res)) {
+            return null;
+        }
+        //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
+        $last_first = in_array($this->me['language'], $this->langCodeOfLastFirst);
+        if ($last_first) {
+            $local_username = $res['LocalName']['last_name'] . " "
+                . $res['LocalName']['first_name'];
+        }
+        else {
+            $local_username = $res['LocalName']['first_name'] . " "
+                . $res['LocalName']['last_name'];
         }
         return $local_username;
     }

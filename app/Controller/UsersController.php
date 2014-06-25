@@ -154,14 +154,16 @@ class UsersController extends AppController
         if ($this->request->is('post') && !empty($this->request->data)) {
             //プロフィールを保存
             $this->User->id = $me['id'];
-            if ($this->User->save($this->request->data)) {
+            if ($this->User->saveAll($this->request->data)) {
                 $this->_refreshAuth($me['id']);
                 //チーム作成ページへリダイレクト
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect(['controller' => 'teams', 'action' => 'add']);
             }
         }
-        $this->set(compact('me', 'is_not_use_local_name'));
+        $language_name = $this->Lang->availableLanguages[$me['language']];
+
+        $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
         return $this->render();
     }
 
@@ -324,17 +326,25 @@ class UsersController extends AppController
         //ユーザデータ取得
         $me = $this->User->getDetail($this->Auth->user('id'));
         unset($me['User']['password']);
+        $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
+        if (isset($local_name['LocalName'])) {
+            $me['LocalName'][0] = $local_name['LocalName'];
+        }
         if ($this->request->is('put') && !empty($this->request->data)) {
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'], $this->request->data['User']);
             $this->User->id = $this->Auth->user('id');
-            if ($this->User->save($this->request->data)) {
+            if ($this->User->saveAll($this->request->data)) {
                 //セッション更新
                 $this->_refreshAuth();
                 //言語設定
                 $this->_setAppLanguage();
                 $me = $this->User->getDetail($this->Auth->user('id'));
                 unset($me['User']['password']);
+                $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
+                if (isset($local_name['LocalName'])) {
+                    $me['LocalName'][0] = $local_name['LocalName'];
+                }
                 $this->request->data = $me;
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
             }
@@ -355,8 +365,9 @@ class UsersController extends AppController
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
+        $language_name = $this->Lang->availableLanguages[$me['User']['language']];
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
-                           'not_verified_email'));
+                           'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
     }
 

@@ -3,6 +3,7 @@
  * @var View    $this
  * @var array   $me
  * @var boolean $is_not_use_local_name
+ * @var string  $language_name
  */
 ?>
 <div class="row">
@@ -28,12 +29,12 @@
                 if (!$is_not_use_local_name) {
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
-                    $local_last_name = $this->Form->input('local_last_name', [
-                        'label'       => __d('gl', "姓(母国語)"),
+                    $local_last_name = $this->Form->input('LocalName.0.last_name', [
+                        'label' => __d('gl', "姓(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 鈴木"),
                     ]);
-                    $local_first_name = $this->Form->input('local_first_name', [
-                        'label'       => __d('gl', "名(母国語)"),
+                    $local_first_name = $this->Form->input('LocalName.0.first_name', [
+                        'label' => __d('gl', "名(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 太郎"),
                     ]);
                     if ($me['last_first']) {
@@ -44,9 +45,13 @@
                         echo $local_first_name;
                         echo $local_last_name;
                     }
+                    echo $this->Form->hidden('LocalName.0.language',
+                                             ['value' => $this->Session->read('Auth.User.language')]);
+//                    echo $this->Form->hidden('LocalName.0.user_id',
+//                                             ['value' => $this->Session->read('Auth.User.id')]);
+                    echo "<hr>";
                 }
                 ?>
-                <hr>
                 <?=
                 $this->Form->input('gender_type',
                                    [
@@ -146,6 +151,7 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
+                        <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
                         <?=
                         $this->Form->submit(__d('gl', "プロフィールを登録"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
