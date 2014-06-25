@@ -309,11 +309,7 @@ class User extends AppModel
         //ローカルユーザ名の設定
         $local_username = $this->_getLocalUsername($row);
         if (!$local_username) {
-            //ローマ字表記を指定していた場合
-            $display_username = $this->_getRomanUsername($row);
-        }
-        elseif ($this->isNotUseLocalName($row[$this->alias]['language'])) {
-            //ローカル名を使わない言語の場合
+            //ローカル名が存在しない場合はローマ字で
             $display_username = $this->_getRomanUsername($row);
         }
         else {
