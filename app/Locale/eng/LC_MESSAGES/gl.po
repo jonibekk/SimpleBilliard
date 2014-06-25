@@ -1,18 +1,19 @@
 # LANGUAGE translation of CakePHP Application
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-06-24 07:46+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"PO-Revision-Date: 2014-06-24 17:00+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 1.6.5\n"
 
 #: Controller/EmailsController.php:35
 msgid "メールアドレス変更をキャンセルしました。"
@@ -35,7 +36,9 @@ msgid "パスワードを設定しました"
 msgstr ""
 
 #: Controller/UsersController.php:280
-msgid "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"
+msgid ""
+"パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設"
+"定用のメールを送信してください。"
 msgstr ""
 
 #: Controller/UsersController.php:281
@@ -71,11 +74,11 @@ msgid "パスワードを変更しました。"
 msgstr ""
 
 #: Controller/UsersController.php:399
-msgid "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"
+msgid ""
+"認証用のメールを送信しました。送信されたメールを確認し、認証してください。"
 msgstr ""
 
-#: Model/Badge.php:24
-#: Model/Image.php:28
+#: Model/Badge.php:24 Model/Image.php:28
 msgid "選択してください"
 msgstr ""
 
@@ -135,8 +138,7 @@ msgstr ""
 msgid "フィードバック"
 msgstr ""
 
-#: Model/Thread.php:49
-#: View/Elements/modal_tutorial.ctp:38
+#: Model/Thread.php:49 View/Elements/modal_tutorial.ctp:38
 msgid "オープン"
 msgstr ""
 
@@ -160,13 +162,11 @@ msgstr ""
 msgid "トップに戻る"
 msgstr ""
 
-#: View/Elements/footer.ctp:30
-#: View/Layouts/homepage.ctp:220
+#: View/Elements/footer.ctp:30 View/Layouts/homepage.ctp:220
 msgid "Privacy Policy"
 msgstr ""
 
-#: View/Elements/footer.ctp:38
-#: View/Layouts/homepage.ctp:229
+#: View/Elements/footer.ctp:38 View/Layouts/homepage.ctp:229
 msgid "Terms of Service"
 msgstr ""
 
@@ -182,8 +182,7 @@ msgstr ""
 msgid "設定"
 msgstr ""
 
-#: View/Elements/header_logged_in.ctp:39
-#: View/Elements/modal_tutorial.ctp:16
+#: View/Elements/header_logged_in.ctp:39 View/Elements/modal_tutorial.ctp:16
 msgid "チュートリアル"
 msgstr ""
 
@@ -195,8 +194,7 @@ msgstr ""
 msgid "ホーム"
 msgstr ""
 
-#: View/Elements/header_logged_in.ctp:70
-#: View/Elements/modal_tutorial.ctp:32
+#: View/Elements/header_logged_in.ctp:70 View/Elements/modal_tutorial.ctp:32
 msgid "ゴール"
 msgstr ""
 
@@ -204,18 +202,15 @@ msgstr ""
 msgid "チーム"
 msgstr ""
 
-#: View/Elements/modal_privacy_policy.ctp:11
-#: View/Users/register.ctp:86
+#: View/Elements/modal_privacy_policy.ctp:11 View/Users/register.ctp:86
 msgid "プライバシーポリシー"
 msgstr ""
 
-#: View/Elements/modal_privacy_policy.ctp:17
-#: View/Elements/modal_tos.ctp:19
+#: View/Elements/modal_privacy_policy.ctp:17 View/Elements/modal_tos.ctp:19
 msgid "閉じる"
 msgstr ""
 
-#: View/Elements/modal_tos.ctp:13
-#: View/Users/register.ctp:83
+#: View/Elements/modal_tos.ctp:13 View/Users/register.ctp:83
 msgid "利用規約"
 msgstr ""
 
@@ -227,13 +222,11 @@ msgstr ""
 msgid "Goalous"
 msgstr ""
 
-#: View/Elements/User/account_setting.ctp:18
-#: View/Users/settings.ctp:12
+#: View/Elements/User/account_setting.ctp:18 View/Users/settings.ctp:12
 msgid "アカウント"
 msgstr ""
 
-#: View/Elements/User/account_setting.ctp:35
-#: View/Users/register.ctp:55
+#: View/Elements/User/account_setting.ctp:35 View/Users/register.ctp:55
 msgid "メール"
 msgstr ""
 
@@ -257,21 +250,19 @@ msgstr ""
 msgid "メールアドレスの変更をキャンセルする"
 msgstr ""
 
-#: View/Elements/User/account_setting.ctp:70
-#: View/Users/register.ctp:63
+#: View/Elements/User/account_setting.ctp:70 View/Users/register.ctp:63
 msgid "Goalousからのメールによるニュースや更新情報などを受け取る。"
 msgstr ""
 
 #: View/Elements/User/account_setting.ctp:76
 msgid "言語"
-msgstr ""
+msgstr "Language"
 
 #: View/Elements/User/account_setting.ctp:83
 msgid "タイムゾーン"
-msgstr ""
+msgstr "Timezone"
 
-#: View/Elements/User/account_setting.ctp:90
-#: View/Users/login.ctp:36
+#: View/Elements/User/account_setting.ctp:90 View/Users/login.ctp:36
 msgid "パスワード"
 msgstr ""
 
@@ -296,22 +287,21 @@ msgid "メールアドレスの変更"
 msgstr ""
 
 #: View/Elements/User/modal_change_email.ctp:34
-msgid "メールアドレスを保存後に、そのメールアドレス宛に認証用のメールが届きます。"
+msgid ""
+"メールアドレスを保存後に、そのメールアドレス宛に認証用のメールが届きます。"
 msgstr ""
 
 #: View/Elements/User/modal_change_email.ctp:36
-msgid "これは、あなたがそのメールアドレスの持ち主である事を確認する為のものです。"
+msgid ""
+"これは、あなたがそのメールアドレスの持ち主である事を確認する為のものです。"
 msgstr ""
 
-#: View/Elements/User/modal_change_email.ctp:39
-#: View/Users/login.ctp:32
-#: View/Users/password_reset_request.ctp:35
-#: View/Users/token_resend.ctp:35
+#: View/Elements/User/modal_change_email.ctp:39 View/Users/login.ctp:32
+#: View/Users/password_reset_request.ctp:35 View/Users/token_resend.ctp:35
 msgid "メールアドレス"
 msgstr ""
 
-#: View/Elements/User/modal_change_email.ctp:40
-#: View/Users/register.ctp:56
+#: View/Elements/User/modal_change_email.ctp:40 View/Users/register.ctp:56
 msgid "hiroshi@example.com"
 msgstr ""
 
@@ -328,14 +318,12 @@ msgid "新しいパスワード"
 msgstr ""
 
 #: View/Elements/User/modal_change_password.ctp:43
-#: View/Users/password_reset.ctp:33
-#: View/Users/register.ctp:71
+#: View/Users/password_reset.ctp:33 View/Users/register.ctp:71
 msgid "8文字以上"
 msgstr ""
 
 #: View/Elements/User/modal_change_password.ctp:49
-#: View/Users/password_reset.ctp:39
-#: View/Users/register.ctp:77
+#: View/Users/password_reset.ctp:39 View/Users/register.ctp:77
 msgid "パスワードを再入力"
 msgstr ""
 
@@ -351,153 +339,123 @@ msgstr ""
 msgid "はい"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:16
-#: View/Users/settings.ctp:13
+#: View/Elements/User/profile_setting.ctp:16 View/Users/settings.ctp:13
 msgid "プロフィール"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:38
-#: View/Users/add_profile.ctp:32
+#: View/Elements/User/profile_setting.ctp:38 View/Users/add_profile.ctp:32
 msgid "姓(母国語)"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:39
-#: View/Users/add_profile.ctp:33
+#: View/Elements/User/profile_setting.ctp:39 View/Users/add_profile.ctp:33
 msgid "例) 鈴木"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:42
-#: View/Users/add_profile.ctp:36
+#: View/Elements/User/profile_setting.ctp:42 View/Users/add_profile.ctp:36
 msgid "名(母国語)"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:43
-#: View/Users/add_profile.ctp:37
+#: View/Elements/User/profile_setting.ctp:43 View/Users/add_profile.ctp:37
 msgid "例) 太郎"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:59
-#: View/Users/register.ctp:30
+#: View/Elements/User/profile_setting.ctp:59 View/Users/register.ctp:30
 msgid "姓(ローマ字)"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:60
-#: View/Users/register.ctp:31
+#: View/Elements/User/profile_setting.ctp:60 View/Users/register.ctp:31
 msgid "例) Suzuki"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:66
-#: View/Users/register.ctp:37
+#: View/Elements/User/profile_setting.ctp:66 View/Users/register.ctp:37
 msgid "名(ローマ字)"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:67
-#: View/Users/register.ctp:38
+#: View/Elements/User/profile_setting.ctp:67 View/Users/register.ctp:38
 msgid "例) Hiroshi"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:87
-#: View/Users/add_profile.ctp:55
+#: View/Elements/User/profile_setting.ctp:87 View/Users/add_profile.ctp:55
 msgid "性別"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:99
-#: View/Users/add_profile.ctp:67
+#: View/Elements/User/profile_setting.ctp:99 View/Users/add_profile.ctp:67
 msgid "1月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:100
-#: View/Users/add_profile.ctp:68
+#: View/Elements/User/profile_setting.ctp:100 View/Users/add_profile.ctp:68
 msgid "2月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:101
-#: View/Users/add_profile.ctp:69
+#: View/Elements/User/profile_setting.ctp:101 View/Users/add_profile.ctp:69
 msgid "3月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:102
-#: View/Users/add_profile.ctp:70
+#: View/Elements/User/profile_setting.ctp:102 View/Users/add_profile.ctp:70
 msgid "4月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:103
-#: View/Users/add_profile.ctp:71
+#: View/Elements/User/profile_setting.ctp:103 View/Users/add_profile.ctp:71
 msgid "5月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:104
-#: View/Users/add_profile.ctp:72
+#: View/Elements/User/profile_setting.ctp:104 View/Users/add_profile.ctp:72
 msgid "6月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:105
-#: View/Users/add_profile.ctp:73
+#: View/Elements/User/profile_setting.ctp:105 View/Users/add_profile.ctp:73
 msgid "7月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:106
-#: View/Users/add_profile.ctp:74
+#: View/Elements/User/profile_setting.ctp:106 View/Users/add_profile.ctp:74
 msgid "8月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:107
-#: View/Users/add_profile.ctp:75
+#: View/Elements/User/profile_setting.ctp:107 View/Users/add_profile.ctp:75
 msgid "9月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:108
-#: View/Users/add_profile.ctp:76
+#: View/Elements/User/profile_setting.ctp:108 View/Users/add_profile.ctp:76
 msgid "10月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:109
-#: View/Users/add_profile.ctp:77
+#: View/Elements/User/profile_setting.ctp:109 View/Users/add_profile.ctp:77
 msgid "11月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:110
-#: View/Users/add_profile.ctp:78
+#: View/Elements/User/profile_setting.ctp:110 View/Users/add_profile.ctp:78
 msgid "12月"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:113
-#: View/Users/add_profile.ctp:81
+#: View/Elements/User/profile_setting.ctp:113 View/Users/add_profile.ctp:81
 msgid "誕生日"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:126
-#: View/Users/add_profile.ctp:94
+#: View/Elements/User/profile_setting.ctp:126 View/Users/add_profile.ctp:94
 msgid "生年を隠す。"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:133
-#: View/Users/add_profile.ctp:101
+#: View/Elements/User/profile_setting.ctp:133 View/Users/add_profile.ctp:101
 msgid "出身地"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:134
-#: View/Users/add_profile.ctp:102
+#: View/Elements/User/profile_setting.ctp:134 View/Users/add_profile.ctp:102
 msgid "例) 東京都"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:139
-#: View/Users/add_profile.ctp:107
+#: View/Elements/User/profile_setting.ctp:139 View/Users/add_profile.ctp:107
 msgid "プロフィール画像"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:153
-#: View/Users/add_profile.ctp:117
+#: View/Elements/User/profile_setting.ctp:153 View/Users/add_profile.ctp:117
 msgid "画像を選択"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:156
-#: View/Users/add_profile.ctp:120
+#: View/Elements/User/profile_setting.ctp:156 View/Users/add_profile.ctp:120
 msgid "画像を再選択"
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:170
-#: View/Users/add_profile.ctp:133
+#: View/Elements/User/profile_setting.ctp:170 View/Users/add_profile.ctp:133
 msgid "10MB以下"
 msgstr ""
 
@@ -513,8 +471,7 @@ msgstr ""
 msgid "チームを作成"
 msgstr ""
 
-#: View/Teams/add.ctp:25
-#: View/Users/add_profile.ctp:153
+#: View/Teams/add.ctp:25 View/Users/add_profile.ctp:153
 msgid "スキップ"
 msgstr ""
 
@@ -532,7 +489,7 @@ msgstr ""
 
 #: View/Users/login.ctp:42
 msgid "ログイン"
-msgstr ""
+msgstr "Login"
 
 #: View/Users/login.ctp:48
 msgid "パスワードを忘れた場合はこちら"
@@ -542,13 +499,11 @@ msgstr ""
 msgid "新規ユーザ登録はこちら"
 msgstr ""
 
-#: View/Users/password_reset.ctp:15
-#: View/Users/password_reset_request.ctp:15
+#: View/Users/password_reset.ctp:15 View/Users/password_reset_request.ctp:15
 msgid "パスワードの再設定"
 msgstr ""
 
-#: View/Users/password_reset.ctp:32
-#: View/Users/register.ctp:70
+#: View/Users/password_reset.ctp:32 View/Users/register.ctp:70
 msgid "パスワードを作成"
 msgstr ""
 
@@ -556,8 +511,7 @@ msgstr ""
 msgid "パスワードを設定"
 msgstr ""
 
-#: View/Users/password_reset_request.ctp:30
-#: View/Users/token_resend.ctp:30
+#: View/Users/password_reset_request.ctp:30 View/Users/token_resend.ctp:30
 msgid "Goalousに登録しているメールアドレスを入力して送信してください。"
 msgstr ""
 
@@ -565,8 +519,7 @@ msgstr ""
 msgid "Goalousからパスワード再設定用のURLを送信いたします。"
 msgstr ""
 
-#: View/Users/password_reset_request.ctp:44
-#: View/Users/token_resend.ctp:44
+#: View/Users/password_reset_request.ctp:44 View/Users/token_resend.ctp:44
 msgid "送信"
 msgstr ""
 
@@ -591,7 +544,9 @@ msgid "あなたはフリートライアルとしてGoalousに登録されまし
 msgstr ""
 
 #: View/Users/sent_mail.ctp:14
-msgid "%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURLをクリックして下さい。"
+msgid ""
+"%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURL"
+"をクリックして下さい。"
 msgstr ""
 
 #: View/Users/settings.ctp:15
@@ -609,4 +564,3 @@ msgstr ""
 #: View/Users/token_resend.ctp:32
 msgid "Goalousからメールアドレス認証用のURLを送信いたします。"
 msgstr ""
-

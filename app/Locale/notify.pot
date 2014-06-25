@@ -1,0 +1,60 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-06-24 07:46+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Controller/UsersController.php:71
+msgid "%sさん、こんにちは。"
+msgstr ""
+
+#: Controller/UsersController.php:72
+msgid "ログイン成功"
+msgstr ""
+
+#: Controller/UsersController.php:78
+msgid "メールアドレスもしくはパスワードが正しくありません。"
+msgstr ""
+
+#: Controller/UsersController.php:94
+msgid "%sさん、またお会いしましょう。"
+msgstr ""
+
+#: Controller/UsersController.php:95
+msgid "ログアウトしました"
+msgstr ""
+
+#: Controller/UsersController.php:204
+msgid "本登録が完了しました！"
+msgstr ""
+
+#: Controller/UsersController.php:214
+msgid "メールアドレスの認証が完了しました。"
+msgstr ""
+
+#: Controller/Component/PnotifyComponent.php:78
+msgid "お知らせ"
+msgstr ""
+
+#: Controller/Component/PnotifyComponent.php:79
+msgid "成功"
+msgstr ""
+
+#: Controller/Component/PnotifyComponent.php:80
+msgid "注意"
+msgstr ""
+
+#: Controller/Component/PnotifyComponent.php:81
+msgid "エラー"
+msgstr ""
+
