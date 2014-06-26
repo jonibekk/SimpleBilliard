@@ -39,6 +39,22 @@ class Team extends AppModel
         self::$TYPE[self::TYPE_PRO] = __d('gl', "プロ");
     }
 
+    public $actsAs = [
+        'Upload' => [
+            'photo' => [
+                'styles'      => [
+                    'small'        => '32x32',
+                    'medium'       => '48x48',
+                    'medium_large' => '96x96',
+                    'large'        => '128x128',
+                    'x_large'      => '256x256',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image.jpg',
+                'quality'     => 100,
+            ]
+        ]
+    ];
     /**
      * Validation rules
      *
@@ -51,6 +67,14 @@ class Team extends AppModel
         'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
+        'photo' => [
+            'image_max_size' => [
+                'rule' => [
+                    'attachmentMaxSize',
+                    10485760 //10mb
+                ],
+            ],
+        ]
     ];
 
     /**
@@ -90,4 +114,33 @@ class Team extends AppModel
         $this->_setTypeName();
     }
 
+    /**
+     * @param array  $postData
+     * @param string $uid
+     *
+     * @return array|bool
+     */
+    function add($postData, $uid)
+    {
+        $this->set($postData);
+        if (!$this->validates()) {
+            return false;
+        }
+        $team_member = [
+            'TeamMember' => [
+                [
+                    'user_id' => $uid,
+                ]
+            ]
+        ];
+        $postData = array_merge($postData, $team_member);
+        $this->saveAll($postData);
+        //デフォルトチームを更新
+        $user = $this->TeamMember->User->findById($uid);
+        if (isset($user['User']) && !$user['User']['default_team_id']) {
+            $this->TeamMember->User->id = $uid;
+            $this->TeamMember->User->saveField('default_team_id', $this->id);
+        }
+        return true;
+    }
 }

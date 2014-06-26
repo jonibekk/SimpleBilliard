@@ -90,4 +90,39 @@ class AppController extends Controller
             $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
         }
     }
+
+    /**
+     * ログイン中のAuthを更新する（ユーザ情報を更新後などに実行する）
+     *
+     * @param $uid
+     *
+     * @return bool
+     */
+    public function _refreshAuth($uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->Auth->user('id');
+        }
+        $this->Auth->logout();
+        $this->User->recursive = 0;
+        $user_buff = $this->User->findById($uid);
+        $this->User->recursive = -1;
+        unset($user_buff['User']['password']);
+        $user_buff = array_merge(['User' => []], $user_buff);
+        //配列を整形（Userの中に他の関連データを配置）
+        $user = [];
+        $associations = [];
+        foreach ($user_buff as $key => $val) {
+            if ($key == 'User') {
+                $user[$key] = $val;
+            }
+            else {
+                $associations[$key] = $val;
+            }
+        }
+        if (isset($user['User'])) {
+            $user['User'] = array_merge($user['User'], $associations);
+        }
+        return $this->Auth->login($user['User']);
+    }
 }
