@@ -73,7 +73,7 @@ class UserFixture extends CakeTestFixture
             'active_flg'        => 1,
             'last_login'        => '2014-05-22 02:28:04',
             'admin_flg'         => 1,
-            'default_team_id'   => 'Lorem ipsum dolor sit amet',
+            'default_team_id' => null,
             'timezone'          => 1,
             'auto_timezone_flg' => 1,
             'language'        => 'jpn',

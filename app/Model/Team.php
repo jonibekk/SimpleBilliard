@@ -137,7 +137,7 @@ class Team extends AppModel
         $this->saveAll($postData);
         //デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
-        if (isset($user['User']['default_team_id']) && !$user['User']['default_team_id']) {
+        if (isset($user['User']) && !$user['User']['default_team_id']) {
             $this->TeamMember->User->id = $uid;
             $this->TeamMember->User->saveField('default_team_id', $this->id);
         }
