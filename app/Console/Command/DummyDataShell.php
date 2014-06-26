@@ -48,9 +48,10 @@ class DummyDataShell extends AppShell
             $this->insertMulti($records, $table_name);
         }
         $end_time = microtime(true);
-        $total_time = $end_time - $this->start_time;
+        $total_time = round($end_time - $this->start_time, 2);
 
-        $this->out("ダミーデータを登録しました。");
+        $this->out("****************************");
+        $this->out("ダミーデータの登録が完了しました。");
         $this->out("実行時間:{$total_time}sec");
     }
 
@@ -119,8 +120,8 @@ class DummyDataShell extends AppShell
         $sql = "INSERT INTO {$table_name} ({$fields_imploded}) SELECT {$id}{$select_fields} FROM {$from}";
         $this->User->query($sql);
         $end_time = microtime(true);
-        $current_time = $end_time - $current_start_time;
-        $total_time = $end_time - $this->start_time;
+        $current_time = round($end_time - $current_start_time, 2);
+        $total_time = round($end_time - $this->start_time, 2);
         $this->out("****************************");
         $this->out("完了 : {$table_name}");
         $this->out("実行時間:{$current_time}sec");
