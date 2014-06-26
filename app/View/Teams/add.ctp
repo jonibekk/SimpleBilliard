@@ -78,7 +78,7 @@
                 </div>
                 <hr>
                 <?=
-                $this->Form->input('language', [
+                $this->Form->input('type', [
                     'label'      => __d('gl', "プラン"),
                     'type'       => 'select',
                     'options'    => Team::$TYPE,
@@ -91,7 +91,7 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                    <?=
+                        <?=
                         $this->Form->submit(__d('gl', "チームを作成"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?=
