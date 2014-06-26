@@ -134,16 +134,13 @@ class Team extends AppModel
             ]
         ];
         $postData = array_merge($postData, $team_member);
-        if ($this->saveAll($postData)) {
-            //デフォルトチームを更新
-            $user = $this->TeamMember->User->findById($uid);
-            if (!$user['User']['default_team_id']) {
-                $this->TeamMember->User->id = $uid;
-                $this->TeamMember->User->saveField('default_team_id', $this->id);
-            }
-            return true;
+        $this->saveAll($postData);
+        //デフォルトチームを更新
+        $user = $this->TeamMember->User->findById($uid);
+        if (isset($user['User']['default_team_id']) && !$user['User']['default_team_id']) {
+            $this->TeamMember->User->id = $uid;
+            $this->TeamMember->User->saveField('default_team_id', $this->id);
         }
-        return false;
-
+        return true;
     }
 }

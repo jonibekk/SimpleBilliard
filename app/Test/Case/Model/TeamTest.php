@@ -4,7 +4,7 @@ App::uses('Team', 'Model');
 /**
  * Team Test Case
  *
- * @property mixed Team
+ * @property Team $Team
  */
 class TeamTest extends CakeTestCase
 {
@@ -15,6 +15,7 @@ class TeamTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.local_name',
         'app.team',
         'app.image',
         'app.user',
@@ -61,9 +62,23 @@ class TeamTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    function testAddNoData()
     {
+        $res = $this->Team->add(['Team' => ['name' => null]], "test");
+        $this->assertFalse($res, "[異常]チーム追加 データ不正");
+    }
+
+    function testAddSuccess()
+    {
+        $postData = [
+            'Team' => [
+                'name' => "test",
+                'type' => 1
+            ]
+        ];
+        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $res = $this->Team->add($postData, $uid);
+        $this->assertTrue($res, "[正常]チーム追加");
     }
 
 }
