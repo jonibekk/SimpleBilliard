@@ -50,4 +50,72 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $this->testAction('/teams/add');
     }
+
+    public function testAddPostSuccess()
+    {
+        $Teams = $this->generate('Teams', [
+            'components' => [
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Auth'
+            ],
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+        $value_map = [
+            ['id', '537ce224-8c0c-4c99-be76-433dac11b50b'],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+
+        $data = [
+            'Team' => [
+                'name' => 'team xxx'
+            ]
+        ];
+        $this->testAction('/teams/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    public function testAddPostFail()
+    {
+        $Teams = $this->generate('Teams', [
+            'components' => [
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Auth'
+            ],
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+        $value_map = [
+            ['id', '537ce224-8c0c-4c99-be76-433dac11b50b'],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+
+        $data = [
+            'Team' => [
+                'name' => null
+            ]
+        ];
+        $this->testAction('/teams/add', ['method' => 'POST', 'data' => $data]);
+    }
 }
