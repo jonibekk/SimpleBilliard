@@ -128,4 +128,10 @@ class AppController extends Controller
         }
         return $this->Auth->login($user['User']);
     }
+
+    function _switchTerm($team_id, $uid)
+    {
+        $this->User->TeamMember->updateLastLogin($team_id, $uid);
+        $this->Session->write('current_team_id', $team_id);
+    }
 }
