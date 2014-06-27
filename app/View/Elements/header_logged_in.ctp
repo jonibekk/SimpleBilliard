@@ -58,14 +58,15 @@
                         <?
                         echo $this->Form->input('current_team',
                                                 array(
-                                                    'type'    => 'select',
-                                                    'options' => !empty($my_teams) ? $my_teams : [__d('gl',
-                                                                                                      'チームがありません')],
-                                                    'value'   => $this->Session->read('current_team_id'),
-                                                    'id'      => 'SwitchTeam',
-                                                    'label'   => false,
-                                                    'div'     => false,
-                                                    'class'   => 'form-control gl-nav-team-select',
+                                                    'type'      => 'select',
+                                                    'options'   => !empty($my_teams) ? $my_teams : [__d('gl',
+                                                                                                        'チームがありません')],
+                                                    'value'     => $this->Session->read('current_team_id'),
+                                                    'id'        => 'SwitchTeam',
+                                                    'label'     => false,
+                                                    'div'       => false,
+                                                    'class'     => 'form-control gl-nav-team-select',
+                                                    'wrapInput' => false,
                                                 ))
                         ?>
                     </form>
