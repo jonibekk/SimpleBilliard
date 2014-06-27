@@ -21,6 +21,15 @@ class DATABASE_CONFIG
         'database'   => 'myapp_test',
     );
 
+    public $bench = array(
+        'datasource' => 'Database/Mysql',
+        'persistent' => false,
+        'host'       => 'localhost',
+        'login'      => 'root',
+        'password'   => '',
+        'database'   => 'myapp_bench',
+    );
+
     public function __construct()
     {
         //opsworksの環境の場合はdb設定をopsworks側で管理されているものに置き換える
