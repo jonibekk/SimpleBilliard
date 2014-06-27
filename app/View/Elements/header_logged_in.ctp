@@ -5,9 +5,10 @@
  * Date: 5/28/14
  * Time: 5:04 PM
  *
- * @var $title_for_layout string
- * @var $this             View
- * @var $nav_disable
+ * @var       $title_for_layout string
+ * @var       $this             View
+ * @var       $nav_disable
+ * @var array $my_teams
  */
 ?>
 <div class="navbar navbar-fixed-top navbar-default gl-navbar" style="">
@@ -54,12 +55,19 @@
             <ul class="nav navbar-nav">
                 <li>
                     <form class="gl-nav-form-group" role="search">
-                        <!--suppress HtmlFormInputWithoutLabel -->
-                        <select class="form-control gl-nav-team-select">
-                            <option>TeamISAO</option>
-                            <option>TeamGoalous</option>
-                            <option>すごく長い長い長い長い長い長い長いチーム名</option>
-                        </select>
+                        <?
+                        echo $this->Form->input('current_team',
+                                                array(
+                                                    'type'    => 'select',
+                                                    'options' => !empty($my_teams) ? $my_teams : [__d('gl',
+                                                                                                      'チームがありません')],
+                                                    'value'   => $this->Session->read('current_team_id'),
+                                                    'id'      => 'SwitchTeam',
+                                                    'label'   => false,
+                                                    'div'     => false,
+                                                    'class'   => 'form-control gl-nav-team-select',
+                                                ))
+                        ?>
                     </form>
                 </li>
                 <li><a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home"></i>&nbsp;
