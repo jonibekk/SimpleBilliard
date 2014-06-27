@@ -4,11 +4,10 @@
  * User: bigplants
  * Date: 6/19/14
  * Time: 2:41 PM
-
  *
-*@var CodeCompletionView $this
- * @var boolean          $last_first
- * @var string           $language_name
+ * @var CodeCompletionView $this
+ * @var boolean            $last_first
+ * @var string             $language_name
  * @var array              $me
  * @var boolean            $is_not_use_local_name
  */
@@ -37,12 +36,14 @@
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('LocalName.0.last_name', [
-                        'label' => __d('gl', "姓(%s)", $language_name),
-                        'placeholder' => __d('gl', "例) 鈴木"),
+                        'label'                    => __d('gl', "姓(%s)", $language_name),
+                        'placeholder'              => __d('gl', "例) 鈴木"),
+                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     ]);
                     $local_first_name = $this->Form->input('LocalName.0.first_name', [
-                        'label' => __d('gl', "名(%s)", $language_name),
-                        'placeholder' => __d('gl', "例) 太郎"),
+                        'label'                    => __d('gl', "名(%s)", $language_name),
+                        'placeholder'              => __d('gl', "例) 太郎"),
+                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     ]);
                     if ($me['User']['last_first']) {
                         echo $local_last_name;
