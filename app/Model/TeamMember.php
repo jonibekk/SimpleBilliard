@@ -53,16 +53,10 @@ class TeamMember extends AppModel
                 'TeamMember.user_id'    => $uid,
                 'TeamMember.active_flg' => true
             ],
-            'fields'     => ['team_id'],
-            'contain'    => [
-                'Team' => [
-                    'fields' => ['name'],
-                ]
-            ]
+            'fields'  => ['TeamMember.team_id', 'Team.name'],
+            'contain' => ['Team']
         ];
-        $res = $this->find('all', $options);
-        /** @noinspection PhpDeprecationInspection */
-        $res = array_filter(Set::combine($res, '{n}.Team.id', '{n}.Team.name'));
+        $res = array_filter($this->find('list', $options));
         return $res;
     }
 }
