@@ -11,6 +11,14 @@ $(document).ready(function () {
     $('.fileinput').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
     });
+    //チーム切り換え
+    $('#SwitchTeam').change(function () {
+        var val = $(this).val();
+        var url = "/teams/ajax_switch_team/" + val;
+        $.get(url, function (data) {
+            location.href = data;
+        });
+    });
 });
 
 /**

@@ -67,7 +67,7 @@ class Team extends AppModel
         'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
-        'photo' => [
+        'photo'              => [
             'image_max_size' => [
                 'rule' => [
                     'attachmentMaxSize',

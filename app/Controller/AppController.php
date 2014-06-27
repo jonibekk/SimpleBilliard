@@ -65,13 +65,16 @@ class AppController extends Controller
     {
         parent::beforeFilter();
 
-        //ログイン済みならModelにユーザ情報を渡す
-        if ($this->Auth->user()) {
-            $this->User->me = $this->Auth->user();
-        }
         $this->_setAppLanguage();
+        $this->_setMyTeam();
+
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
+    }
+
+    public function _setMyTeam()
+    {
+        $this->set('my_teams', $this->User->TeamMember->getActiveTeamList($this->Auth->user('id')));
     }
 
     /**
@@ -124,5 +127,11 @@ class AppController extends Controller
             $user['User'] = array_merge($user['User'], $associations);
         }
         return $this->Auth->login($user['User']);
+    }
+
+    function _switchTerm($team_id, $uid)
+    {
+        $this->User->TeamMember->updateLastLogin($team_id, $uid);
+        $this->Session->write('current_team_id', $team_id);
     }
 }

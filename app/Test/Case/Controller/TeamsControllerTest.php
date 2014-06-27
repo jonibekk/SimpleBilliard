@@ -118,4 +118,59 @@ class TeamsControllerTest extends ControllerTestCase
         ];
         $this->testAction('/teams/add', ['method' => 'POST', 'data' => $data]);
     }
+
+    function testAjaxSwitchTeamNoData()
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/teams/ajax_switch_team/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSwitchTeamNotFountTeam()
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/teams/ajax_switch_team/test', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSwitchTeamSuccess()
+    {
+        $Teams = $this->generate('Teams', [
+            'components' => [
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Auth'
+            ],
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+        $value_map = [
+            ['id', '537ce224-8c0c-4c99-be76-433dac11b50b'],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        $postData = [
+            'Team' => [
+                'name' => "test",
+                'type' => 1
+            ]
+        ];
+        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Teams->Team->add($postData, $uid);
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_switch_team/' . $Teams->Team->id, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
 }
