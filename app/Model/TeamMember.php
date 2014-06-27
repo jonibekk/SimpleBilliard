@@ -42,4 +42,27 @@ class TeamMember extends AppModel
         'Group',
         'JobCategory',
     ];
+
+    /**
+     * 現在有効なチーム一覧を取得
+     */
+    function getActiveTeamList($uid)
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.user_id'    => $uid,
+                'TeamMember.active_flg' => true
+            ],
+            'fields'     => ['team_id'],
+            'contain'    => [
+                'Team' => [
+                    'fields' => ['name'],
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        /** @noinspection PhpDeprecationInspection */
+        $res = array_filter(Set::combine($res, '{n}.Team.id', '{n}.Team.name'));
+        return $res;
+    }
 }
