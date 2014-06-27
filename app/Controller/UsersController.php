@@ -449,6 +449,12 @@ class UsersController extends AppController
     {
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('last_login', date('Y-m-d H:i:s'));
+        $this->_setDefaultTeam($this->Auth->user('default_team_id'));
         $this->Mixpanel->setUser($this->User->id);
+    }
+
+    public function _setDefaultTeam($team_id)
+    {
+        $this->Session->write('current_team_id', $team_id);
     }
 }

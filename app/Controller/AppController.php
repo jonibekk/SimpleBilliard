@@ -65,13 +65,16 @@ class AppController extends Controller
     {
         parent::beforeFilter();
 
-        //ログイン済みならModelにユーザ情報を渡す
-        if ($this->Auth->user()) {
-            $this->User->me = $this->Auth->user();
-        }
         $this->_setAppLanguage();
+        $this->_setMyTeam();
+
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
+    }
+
+    public function _setMyTeam()
+    {
+        $this->set('my_teams', $this->User->TeamMember->getActiveTeamList($this->Auth->user('id')));
     }
 
     /**

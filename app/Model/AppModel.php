@@ -5,9 +5,8 @@ App::uses('Model', 'Model');
  * Application model for Cake.
  * Add your application-wide methods in the class below, your models
  * will inherit them.
-
  *
-*@package       app.Model
+ * @package       app.Model
  *                @method findById()
  *                @method findByUserId()
  *                @method findByEmail()
@@ -34,6 +33,30 @@ class AppModel extends Model
      * @var array
      */
     public $me = [];
+
+    /**
+     * 現在のチームID
+     *
+     * @var string
+     */
+    public $current_team_id = null;
+
+    public function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+        $this->_setSessionVariable();
+    }
+
+    function _setSessionVariable()
+    {
+        if (isset($_SESSION['Auth']['User'])) {
+            $this->me = $_SESSION['Auth']['User'];
+        }
+        if (isset($_SESSION['current_team_id'])) {
+            $this->current_team_id = $_SESSION['current_team_id'];
+        }
+
+    }
 
     /**
      * トランザクション開始
