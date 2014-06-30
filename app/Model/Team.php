@@ -74,7 +74,8 @@ class Team extends AppModel
                     10485760 //10mb
                 ],
             ],
-        ]
+        ],
+        'emails'             => ['notEmpty' => ['rule' => ['notEmpty'],],],
     ];
 
     /**
