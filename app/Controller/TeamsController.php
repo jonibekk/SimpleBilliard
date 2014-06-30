@@ -33,8 +33,9 @@ class TeamsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->Team->TeamMember->adminCheck($this->Session->read('current_team_id'), $this->Auth->user('id'));
         if ($this->request->is('post') && !empty($this->request->data)) {
-            $this->Team->set($this->request->data);
-            $this->Team->validates();
+            //複数のメールアドレスを配列に抜き出す
+            if ($email_list = $this->Team->getEmailListFromPost($this->request->data)) {
+            }
         }
 
     }
