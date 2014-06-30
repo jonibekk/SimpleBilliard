@@ -129,7 +129,8 @@ class Team extends AppModel
         $team_member = [
             'TeamMember' => [
                 [
-                    'user_id' => $uid,
+                    'user_id'   => $uid,
+                    'admin_flg' => true,
                 ]
             ]
         ];
