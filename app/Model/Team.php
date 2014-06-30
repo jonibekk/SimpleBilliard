@@ -75,7 +75,12 @@ class Team extends AppModel
                 ],
             ],
         ],
-        'emails'             => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'emails' => [
+            'notEmpty'    => ['rule' => ['notEmpty'],],
+            'emailsCheck' => [
+                'rule' => ['emailsCheck']
+            ],
+        ],
     ];
 
     /**

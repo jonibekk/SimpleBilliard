@@ -228,4 +228,61 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'GET']);
     }
+
+    function testInvitePost()
+    {
+        $Teams = $this->generate('Teams', [
+            'components' => [
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Auth',
+                'Session'
+            ],
+        ]);
+        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+        $value_map = [
+            ['id', $uid],
+        ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Teams->Team->TeamMember->myStatusWithTeam = null;
+        $data = [
+            'TeamMember' => [
+                [
+                    'user_id'    => $uid,
+                    'active_flg' => true,
+                    'admin_flg'  => true,
+                ]
+            ],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Teams->Team->saveAll($data);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $session_value_map = [
+            ['current_team_id', $Teams->Team->getLastInsertId()]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap($session_value_map)
+            );
+        $emails = "aaa@example.com";
+        $data = ['Team' => ['emails' => $emails]];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
+    }
 }
