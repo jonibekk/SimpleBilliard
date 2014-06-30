@@ -43,6 +43,7 @@
                         'rows'                     => 3,
                         "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                         'afterInput'               => '<span class="help-block">'
+                            . '<p>' . __d('gl', "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。") . '</p>'
                             . '<ul class="example-indent"><li>' . __d('gl', "例%s",
                                                                       1) . ' aaa@example.com,bbb@example.com</li></ul>'
                             . '<ul class="example-indent"><li>'
