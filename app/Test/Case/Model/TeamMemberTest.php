@@ -76,4 +76,106 @@ class TeamMemberTest extends CakeTestCase
 
     }
 
+    function testPermissionCheck()
+    {
+        $team_id = null;
+        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        try {
+            $this->TeamMember->permissionCheck($team_id, $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]ユーザ権限チェック　チーム切換えなし");
+
+        $this->TeamMember->myStatusWithTeam = null;
+        $data = [
+            'TeamMember' => [['user_id' => $uid,]],
+        ];
+        $this->TeamMember->Team->save($data);
+        try {
+            $this->TeamMember->permissionCheck("test", $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]ユーザ権限チェック　チームなし");
+
+        $this->TeamMember->myStatusWithTeam = null;
+
+        $data = [
+            'TeamMember' => [
+                [
+                    'user_id'    => $uid,
+                    'active_flg' => false,
+                ]
+            ],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+        $this->TeamMember->Team->saveAll($data);
+        try {
+            $this->TeamMember->permissionCheck($this->TeamMember->Team->getLastInsertID(), $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]ユーザ権限チェック　非アクティブ");
+
+        $this->TeamMember->myStatusWithTeam = null;
+
+        $data = [
+            'TeamMember' => [
+                [
+                    'user_id'    => $uid,
+                    'active_flg' => true,
+                ]
+            ],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+        $this->TeamMember->Team->saveAll($data);
+        $res = $this->TeamMember->permissionCheck($this->TeamMember->Team->getLastInsertID(), $uid);
+        $this->assertTrue($res, "[正常]ユーザ権限チェック");
+    }
+
+    function testAdminCheck()
+    {
+        $this->TeamMember->myStatusWithTeam = null;
+        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+
+        $data = [
+            'TeamMember' => [
+                [
+                    'user_id'    => $uid,
+                    'active_flg' => true,
+                    'admin_flg'  => false,
+                ]
+            ],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+        $this->TeamMember->Team->saveAll($data);
+        try {
+            $this->TeamMember->adminCheck($this->TeamMember->Team->getLastInsertID(), $uid);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]アドミンチェック　非アドミン");
+
+        $this->TeamMember->myStatusWithTeam = null;
+        $data = [
+            'TeamMember' => [
+                [
+                    'user_id'    => $uid,
+                    'active_flg' => true,
+                    'admin_flg'  => true,
+                ]
+            ],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+        $this->TeamMember->Team->saveAll($data);
+        $res = $this->TeamMember->adminCheck($this->TeamMember->Team->getLastInsertID(), $uid);
+        $this->assertTrue($res, "[正常]アドミンチェック");
+
+    }
+
 }

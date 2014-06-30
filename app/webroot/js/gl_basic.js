@@ -19,6 +19,11 @@ $(document).ready(function () {
             location.href = data;
         });
     });
+    //autosize
+    //noinspection JSJQueryEfficiency
+    $('textarea').autosize();
+    //noinspection JSJQueryEfficiency
+    $('textarea').show().trigger('autosize.resize');
 });
 
 /**
