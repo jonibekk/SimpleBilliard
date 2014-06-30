@@ -128,9 +128,6 @@ class TeamMember extends AppModel
     {
         //まず通常のチームアクセス権限があるかチェック
         $this->permissionCheck($team_id, $uid);
-        if (!$this->myStatusWithTeam) {
-            $this->setMyStatusWithTeam($team_id, $uid);
-        }
         if (!$this->myStatusWithTeam['TeamMember']['admin_flg']) {
             throw new RuntimeException(__d('gl', "あなたはチーム管理者では無い為、このページにはアクセスできません。"));
         }
