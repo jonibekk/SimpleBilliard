@@ -89,12 +89,12 @@ class TeamMember extends AppModel
     }
 
     /**
-     * アクセス権限の確認
+     * 通常のアクセス権限チェック（自分が所属しているチームかどうか？）
      *
      * @param $team_id
      * @param $uid
      *
-     * @return boolean
+     * @return bool
      * @throws RuntimeException
      */
     public function permissionCheck($team_id, $uid)
@@ -112,8 +112,27 @@ class TeamMember extends AppModel
         if (!$this->myStatusWithTeam['TeamMember']['active_flg']) {
             throw new RuntimeException(__d('gl', "現在、あなたはこのチームにアクセスできません。ユーザアカウントが無効化されています。"));
         }
+        return true;
+    }
+
+    /**
+     * アクセス権限の確認
+     *
+     * @param $team_id
+     * @param $uid
+     *
+     * @return boolean
+     * @throws RuntimeException
+     */
+    public function adminCheck($team_id, $uid)
+    {
+        //まず通常のチームアクセス権限があるかチェック
+        $this->permissionCheck($team_id, $uid);
+        if (!$this->myStatusWithTeam) {
+            $this->setMyStatusWithTeam($team_id, $uid);
+        }
         if (!$this->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new RuntimeException(__d('gl', "管理者では無い為、このページにはアクセスできません。"));
+            throw new RuntimeException(__d('gl', "あなたはチーム管理者では無い為、このページにはアクセスできません。"));
         }
         return true;
     }

@@ -31,7 +31,7 @@ class TeamsController extends AppController
     public function invite()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->Team->TeamMember->permissionCheck($this->Session->read('current_team_id'), $this->Auth->user('id'));
+        $this->Team->TeamMember->adminCheck($this->Session->read('current_team_id'), $this->Auth->user('id'));
 
     }
 
