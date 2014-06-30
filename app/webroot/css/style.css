@@ -288,3 +288,12 @@ footer p {
 .ribbon-staging {
     background: green;
 }
+
+ul.example-indent {
+    list-style-type: none;
+    padding-left: 25px;
+}
+
+.example-indent li {
+    text-indent: -1.8em;
+}

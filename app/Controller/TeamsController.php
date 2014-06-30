@@ -28,6 +28,17 @@ class TeamsController extends AppController
         }
     }
 
+    public function invite()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->Team->TeamMember->adminCheck($this->Session->read('current_team_id'), $this->Auth->user('id'));
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            $this->Team->set($this->request->data);
+            $this->Team->validates();
+        }
+
+    }
+
     public function ajax_switch_team($team_id = null)
     {
         $this->layout = 'ajax';

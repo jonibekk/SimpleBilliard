@@ -74,7 +74,13 @@ class Team extends AppModel
                     10485760 //10mb
                 ],
             ],
-        ]
+        ],
+        'emails' => [
+            'notEmpty'    => ['rule' => ['notEmpty'],],
+            'emailsCheck' => [
+                'rule' => ['emailsCheck']
+            ],
+        ],
     ];
 
     /**
@@ -129,7 +135,8 @@ class Team extends AppModel
         $team_member = [
             'TeamMember' => [
                 [
-                    'user_id' => $uid,
+                    'user_id'   => $uid,
+                    'admin_flg' => true,
                 ]
             ]
         ];
