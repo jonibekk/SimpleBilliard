@@ -64,7 +64,7 @@
                     <div class="row">
                         <div class="col-sm-9 col-sm-offset-3">
                             <?=
-                            $this->Form->submit(__d('gl', "招待"),
+                            $this->Form->submit(__d('gl', "招待メールを送信"),
                                                 ['class' => 'btn btn-primary', 'div' => false]) ?>
                             <?=
                             $this->Html->link(__d('gl', "スキップ"), "/",
