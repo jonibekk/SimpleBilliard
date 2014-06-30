@@ -34,7 +34,8 @@ class AppController extends Controller
         'Session',
         //TODO Securityコンポーネントを利用した場合のテスト通過方法がわからない。要調査
         'Security' => [
-            'csrfUseOnce' => false
+            'csrfUseOnce' => false,
+            'csrfExpires' => '+24 hour'
         ],
         'Paginator',
         'Auth'     => ['flash' => [
