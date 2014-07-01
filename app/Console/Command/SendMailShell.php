@@ -88,12 +88,23 @@ class SendMailShell extends AppShell
         }
 
         //言語設定
-        Configure::write('Config.language', $data['ToUser']['language']);
+        //言語指定がある場合はそれを採用
+        if (isset($item['language']) && !empty($item['language'])) {
+            Configure::write('Config.language', $item['language']);
+        }
+        //言語指定がない場合で相手が存在する場合は相手の言語を採用
+        elseif (isset($data['ToUser']['language'])) {
+            Configure::write('Config.language', $data['ToUser']['language']);
+        }
+        //それ以外は英語
+        else {
+            Configure::write('Config.language', "eng");
+        }
         $viewVars = [
-            'to_user_name'   => $data['ToUser']['display_username'],
+            'to_user_name' => isset($data['ToUser']['display_username']) ? $data['ToUser']['display_username'] : null,
             'from_user_name' => (isset($data['FromUser']['display_username'])) ? $data['FromUser']['display_username'] : null,
-            'url'            => (isset($item['url'])) ? $item['url'] : null,
         ];
+        $viewVars = array_merge($item, $viewVars);
         $this->_sendMailItem($options, $viewVars);
         $this->SendMail->id = $data['SendMail']['id'];
         $this->SendMail->save(['sent_datetime' => date('Y-m-d H:i:s')]);

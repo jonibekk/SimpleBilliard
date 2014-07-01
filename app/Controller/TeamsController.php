@@ -53,6 +53,8 @@ class TeamsController extends AppController
                                                  !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
                     );
                     //招待メール送信
+                    $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
+                    $this->GlEmail->sendMailInvite($invite, $team_name, $this->Auth->user('language'));
 
                 }
             }

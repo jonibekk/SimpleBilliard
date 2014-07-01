@@ -13,6 +13,7 @@ App::uses('AppModel', 'Model');
 class TeamMember extends AppModel
 {
 
+    public $myTeams = [];
     /**
      * Validation rules
      *
@@ -50,16 +51,19 @@ class TeamMember extends AppModel
      */
     function getActiveTeamList($uid)
     {
-        $options = [
-            'conditions' => [
-                'TeamMember.user_id'    => $uid,
-                'TeamMember.active_flg' => true
-            ],
-            'fields'     => ['TeamMember.team_id', 'Team.name'],
-            'contain'    => ['Team']
-        ];
-        $res = array_filter($this->find('list', $options));
-        return $res;
+        if (empty($this->myTeams)) {
+            $options = [
+                'conditions' => [
+                    'TeamMember.user_id'    => $uid,
+                    'TeamMember.active_flg' => true
+                ],
+                'fields'     => ['TeamMember.team_id', 'Team.name'],
+                'contain'    => ['Team']
+            ];
+            $res = array_filter($this->find('list', $options));
+            $this->myTeams = $res;
+        }
+        return $this->myTeams;
     }
 
     function updateLastLogin($team_id, $uid)

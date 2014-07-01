@@ -18,6 +18,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_PASSWORD_RESET_COMPLETE = 3;
     const TYPE_TMPL_TOKEN_RESEND = 4;
     const TYPE_TMPL_CHANGE_EMAIL_VERIFY = 5;
+    const TYPE_TMPL_INVITE = 6;
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
             'subject'  => null,
@@ -44,6 +45,11 @@ class SendMail extends AppModel
             'template' => 'change_email',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_INVITE              => [
+            'subject'  => null,
+            'template' => 'invite',
+            'layout'   => 'default',
+        ],
     ];
 
     private function _setTemplateSubject()
@@ -53,6 +59,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET_COMPLETE]['subject'] = __d('mail', "パスワードの再設定が完了しました");
         self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __d('mail', "メールアドレス認証");
         self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __d('mail', "メールアドレス変更に伴う認証");
+        self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __d('mail', "Goalousのチームへ招待");
         //subjectにサービス名のプレフィックスを追加
         foreach (self::$TYPE_TMPL as $key => $val) {
             self::$TYPE_TMPL[$key]['subject'] = "[" . SERVICE_NAME . "]" . $val['subject'];
@@ -71,9 +78,6 @@ class SendMail extends AppModel
      * @var array
      */
     public $validate = [
-        'to_user_id'    => [
-            'uuid' => ['rule' => ['uuid'],],
-        ],
         'template_type' => [
             'numeric' => ['rule' => ['numeric'],],
         ],
@@ -106,7 +110,7 @@ class SendMail extends AppModel
      *
      * @return bool
      */
-    public function saveMailData($to_uid, $tmpl_type, $item = [], $from_uid = null, $team_id = null)
+    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null)
     {
         $data = [
             'to_user_id'    => $to_uid,
@@ -115,6 +119,7 @@ class SendMail extends AppModel
             'from_user_id'  => ($from_uid) ? $from_uid : null,
             'team_id'       => ($team_id) ? $team_id : null,
         ];
+        $this->create();
         return $this->save($data);
     }
 
