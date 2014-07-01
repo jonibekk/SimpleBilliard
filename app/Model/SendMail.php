@@ -126,12 +126,19 @@ class SendMail extends AppModel
     /**
      * 詳細なユーザ名等を含んだデータを返す
      *
-     * @param $id
+     * @param      $id
+     * @param null $lang
      *
-     * @return array|null
+*@return array|null
      */
-    public function getDetail($id)
+    public function getDetail($id, $lang = null)
     {
+        $lang_backup = null;
+        if ($lang) {
+            $lang_backup = isset($this->me['language']) ? $this->me['language'] : null;
+            $this->FromUser->me['language'] = $lang;
+            $this->ToUser->me['language'] = $lang;
+        }
         $options = [
             'conditions' => ['SendMail.id' => $id],
             'contain'    => [
@@ -140,6 +147,10 @@ class SendMail extends AppModel
                 'Team'
             ]
         ];
-        return $this->find('first', $options);
+        $res = $this->find('first', $options);
+        if ($lang) {
+            $this->me['language'] = $lang_backup;
+        }
+        return $res;
     }
 }

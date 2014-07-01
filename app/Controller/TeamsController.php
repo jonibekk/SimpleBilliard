@@ -54,7 +54,7 @@ class TeamsController extends AppController
                     );
                     //招待メール送信
                     $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
-                    $this->GlEmail->sendMailInvite($invite, $team_name, $this->Auth->user('language'));
+                    $this->GlEmail->sendMailInvite($invite, $team_name);
 
                 }
             }

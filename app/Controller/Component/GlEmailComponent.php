@@ -63,7 +63,11 @@ class GlEmailComponent extends Object
                          'action'     => 'verify',
                          $email_token,
                      ], true);
-        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_TOKEN_RESEND, ['url' => $url]);
+        $item = [
+            'url'      => $url,
+            'language' => Configure::read('Config.language'),
+        ];
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_TOKEN_RESEND, $item);
         $this->execSendMailById($this->SendMail->id);
     }
 
@@ -158,13 +162,12 @@ class GlEmailComponent extends Object
     /**
      * メールにて招待メールを送信
      *
-     * @param array  $invite_data
-     * @param        $team_name
-     * @param string $language
+     * @param array $invite_data
+     * @param       $team_name
      *
-     * @return bool
+*@return bool
      */
-    public function sendMailInvite($invite_data, $team_name, $language = "eng")
+    public function sendMailInvite($invite_data, $team_name)
     {
         if (!isset($invite_data['Invite']) || empty(($invite_data['Invite']))) {
             return false;
@@ -181,7 +184,6 @@ class GlEmailComponent extends Object
             'url'       => $url,
             'to'        => $invite_data['email'],
             'team_name' => $team_name,
-            'language'  => $language,
             'message'   => isset($invite_data['message']) ? $invite_data['message'] : null
         ];
         $this->SendMail->saveMailData(isset($invite_data['to_user_id']) ? $invite_data['to_user_id'] : null,
