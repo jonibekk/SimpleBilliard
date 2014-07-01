@@ -31,10 +31,33 @@ class TeamsController extends AppController
     public function invite()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->Team->TeamMember->adminCheck($this->Session->read('current_team_id'), $this->Auth->user('id'));
+        $team_id = $this->Session->read('current_team_id');
+        $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         if ($this->request->is('post') && !empty($this->request->data)) {
-            $this->Team->set($this->request->data);
-            $this->Team->validates();
+            $data = $this->request->data;
+            //複数のメールアドレスを配列に抜き出す
+            if ($email_list = $this->Team->getEmailListFromPost($data)) {
+                $allReadyBelongTeamEmails = [];
+                //１件ずつtokenを発行し、メール送信
+                foreach ($email_list as $email) {
+                    //既にチームに所属している場合は処理しない
+                    if ($this->User->Email->isBelongTeamByEmail($email, $team_id)) {
+                        $allReadyBelongTeamEmails[] = $email;
+                        continue;
+                    }
+                    //招待メールデータの登録
+                    $invite = $this->Team->Invite->saveInvite(
+                                                 $email,
+                                                 $team_id,
+                                                 $this->Auth->user('id'),
+                                                 !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
+                    );
+                    //招待メール送信
+                    $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
+                    $this->GlEmail->sendMailInvite($invite, $team_name);
+
+                }
+            }
         }
 
     }

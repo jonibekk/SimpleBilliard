@@ -36,4 +36,35 @@ class Invite extends AppModel
         'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
         'Team',
     ];
+
+    function saveInvite($email, $team_id, $from_uid, $message = null)
+    {
+        //既に招待済みの場合は古い招待メールを削除
+        $exists = $this->find('first',
+                              ['conditions' => [
+                                  'team_id' => $team_id,
+                                  'email'   => $email
+                              ]]);
+        if (!empty($exists)) {
+            $this->delete($exists['Invite']['id']);
+        }
+
+        $data = [];
+        $data['Invite']['from_user_id'] = $from_uid;
+        $data['Invite']['team_id'] = $team_id;
+        $data['Invite']['email'] = $email;
+        $data['Invite']['email_token'] = $this->generateToken();
+        $data['Invite']['email_token_expires'] = $this->getTokenExpire();
+        //既に登録済みのユーザの場合はuser_idをセット
+        if (!empty($user_id = $this->ToUser->Email->findByEmail($email))) {
+            $data['Invite']['to_user_id'] = $user_id['Email']['user_id'];
+        }
+        //メッセージがある場合は
+        if ($message) {
+            $data['Invite']['message'] = $message;
+        }
+        $this->create();
+        $res = $this->save($data);
+        return $res;
+    }
 }

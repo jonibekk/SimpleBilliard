@@ -63,7 +63,11 @@ class GlEmailComponent extends Object
                          'action'     => 'verify',
                          $email_token,
                      ], true);
-        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_TOKEN_RESEND, ['url' => $url]);
+        $item = [
+            'url'      => $url,
+            'language' => Configure::read('Config.language'),
+        ];
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_TOKEN_RESEND, $item);
         $this->execSendMailById($this->SendMail->id);
     }
 
@@ -87,7 +91,11 @@ class GlEmailComponent extends Object
                          'action'     => 'verify',
                          $email_token,
                      ], true);
-        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_ACCOUNT_VERIFY, ['url' => $url]);
+        $item = [
+            'url'      => $url,
+            'language' => Configure::read('Config.language')
+        ];
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_ACCOUNT_VERIFY, $item);
         $this->execSendMailById($this->SendMail->id);
     }
 
@@ -149,6 +157,43 @@ class GlEmailComponent extends Object
                      ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_PASSWORD_RESET, ['url' => $url]);
         $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * メールにて招待メールを送信
+     *
+     * @param array $invite_data
+     * @param       $team_name
+     *
+*@return bool
+     */
+    public function sendMailInvite($invite_data, $team_name)
+    {
+        if (!isset($invite_data['Invite']) || empty(($invite_data['Invite']))) {
+            return false;
+        }
+        $invite_data = $invite_data['Invite'];
+        $url = Router::url(
+                     [
+                         'admin'      => false,
+                         'controller' => 'users',
+                         'action'     => 'accept_invite',
+                         $invite_data['email_token'],
+                     ], true);
+        $item = [
+            'url'       => $url,
+            'to'        => $invite_data['email'],
+            'team_name' => $team_name,
+            'message'   => isset($invite_data['message']) ? $invite_data['message'] : null
+        ];
+        $this->SendMail->saveMailData(isset($invite_data['to_user_id']) ? $invite_data['to_user_id'] : null,
+                                      SendMail::TYPE_TMPL_INVITE,
+                                      $item,
+                                      $invite_data['from_user_id'],
+                                      $invite_data['team_id']
+        );
+        $this->execSendMailById($this->SendMail->id);
+        return true;
     }
 
     /**

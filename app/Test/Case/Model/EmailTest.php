@@ -17,7 +17,9 @@ class EmailTest extends CakeTestCase
     public $fixtures = array(
         'app.local_name',
         'app.email',
-        'app.user'
+        'app.user',
+        'app.team_member',
+        'app.team',
     );
 
     /**
@@ -125,6 +127,14 @@ class EmailTest extends CakeTestCase
         $this->assertTrue($this->Email->isOwner($uid), "[正常]所有者チェック email_idなし");
         $this->Email->id = null;
         $this->assertFalse($this->Email->isOwner($uid), "[異常]所有者チェック email_idなし");
+    }
+
+    function testIsBelongTeamByEmail()
+    {
+        $email = 'from@email.com';
+        $team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $res = $this->Email->isBelongTeamByEmail($email, $team_id);
+        $this->assertTrue($res, "[正常]メアドからユーザが既にチームに存在しているかのチェック");
     }
 
 }

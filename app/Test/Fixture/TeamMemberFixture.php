@@ -43,8 +43,8 @@ class TeamMemberFixture extends CakeTestFixture
     public $records = array(
         array(
             'id'                    => '537ce224-b7c4-4d12-81c8-433dac11b50b',
-            'user_id'               => 'Lorem ipsum dolor sit amet',
-            'team_id'               => 'Lorem ipsum dolor sit amet',
+            'user_id' => '537ce224-8c0c-4c99-be76-433dac11b50b',
+            'team_id' => '537ce224-c21c-41b6-a808-433dac11b50b',
             'coach_user_id'         => 'Lorem ipsum dolor sit amet',
             'member_no'             => 'Lorem ipsum dolor sit amet',
             'group_id'              => 'Lorem ipsum dolor sit amet',
@@ -54,8 +54,8 @@ class TeamMemberFixture extends CakeTestFixture
             'evaluation_enable_flg' => 1,
             'admin_flg'             => 1,
             'last_login'            => '2014-05-22 02:28:04',
-            'del_flg'               => 1,
-            'deleted'               => '2014-05-22 02:28:04',
+            'del_flg' => false,
+            'deleted' => null,
             'created'               => '2014-05-22 02:28:04',
             'modified'              => '2014-05-22 02:28:04'
         ),

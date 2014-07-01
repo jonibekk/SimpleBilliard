@@ -150,4 +150,63 @@ class Team extends AppModel
         }
         return true;
     }
+
+    /**
+     * @param $data
+     *
+     * @return null
+     */
+    function getEmailListFromPost($data)
+    {
+        if (!isset($data['Team']['emails'])) {
+            return null;
+        }
+        $this->set($data);
+        if (!$this->validates()) {
+            return null;
+        }
+        $res = $this->extractEmail($data['Team']['emails']);
+        return $res;
+    }
+
+    /**
+     * @param $emails
+     *
+     * @return array
+     */
+    function extractEmail($emails)
+    {
+        $res = [];
+        //一行ずつ処理
+        $cr = array("\r\n", "\r"); // 改行コード置換用配列を作成しておく
+
+        $emails = trim($emails); // 文頭文末の空白を削除
+
+        // 改行コードを統一
+        //str_replace ("検索文字列", "置換え文字列", "対象文字列");
+        $emails = str_replace($cr, "\n", $emails);
+
+        //改行コードで分割（結果は配列に入る）
+        $lines_array = explode("\n", $emails);
+        //一行ずつ処理
+        foreach ($lines_array as $line) {
+            //カンマで分割
+            $emails = explode(",", $line);
+            //メールアドレス毎に処理
+            foreach ($emails as $email) {
+                //全角スペースを除去
+                $email = preg_replace('/　/', ' ', $email);
+                //前後スペースを除去
+                $email = trim($email);
+                //空行はスキップ
+                if (empty($email)) {
+                    continue;
+                }
+                if (!in_array($email, $res)) {
+                    $res[] = $email;
+                }
+            }
+        }
+        return $res;
+    }
 }

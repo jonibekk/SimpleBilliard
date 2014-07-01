@@ -148,6 +148,36 @@ class TeamTest extends CakeTestCase
         $postData = ['Team' => ['emails' => $emails]];
         $this->Team->set($postData);
         $this->assertFalse($this->Team->validates(), "[異常]メールアドレスリスト:カンマ区切り複数行のメアド(データ0件)");
+    }
+
+    function testGetEmailListFromPost()
+    {
+        $postData = [];
+        $res = $this->Team->getEmailListFromPost($postData);
+        $this->assertNull($res, "[異常]テキストからメアド抽出:データなし");
+
+        $emails = "";
+        $emails .= ",,," . "\n\n";
+        $emails .= ",,," . "\n";
+        $postData = ['Team' => ['emails' => $emails]];
+        $res = $this->Team->getEmailListFromPost($postData);
+        $this->assertNull($res, "[異常]テキストからメアド抽出:validationError");
+
+        $emails = "";
+        $emails .= "aaa@aaa.com, aaa@aaa.com" . "\n\n";
+        $emails .= "aaa@aaa.com, aaa@aaa.com" . "\n";
+        $postData = ['Team' => ['emails' => $emails]];
+        $res = $this->Team->getEmailListFromPost($postData);
+        $actual = ["aaa@aaa.com"];
+        $this->assertEquals($res, $actual, "[正常]テキストからメアド抽出:ダブりメアドを除去");
+
+        $emails = "";
+        $emails .= ", ,,," . "\n\n";
+        $emails .= "aaa@aaa.com, bbb@aaa.com" . "\n";
+        $postData = ['Team' => ['emails' => $emails]];
+        $res = $this->Team->getEmailListFromPost($postData);
+        $actual = ["aaa@aaa.com", "bbb@aaa.com"];
+        $this->assertEquals($res, $actual, "[正常]テキストからメアド抽出:空を除去");
 
     }
 

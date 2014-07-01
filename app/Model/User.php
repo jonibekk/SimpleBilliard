@@ -480,41 +480,6 @@ class User extends AppModel
     }
 
     /**
-     * Generate token used by the user registration system
-     *
-     * @param int $length Token Length
-     *
-     * @return string
-     */
-    public function generateToken($length = 22)
-    {
-        $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $token = "";
-        $i = 0;
-
-        while ($i < $length) {
-            $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
-            if (!stristr($token, $char)) {
-                $token .= $char;
-                $i++;
-            }
-        }
-        return $token;
-    }
-
-    /**
-     * トークンの期限を返却
-     *
-     * @param int $interval
-     *
-     * @return string
-     */
-    public function getTokenExpire($interval = TOKEN_EXPIRE_SEC_REGISTER)
-    {
-        return date('Y-m-d H:i:s', time() + $interval);
-    }
-
-    /**
      * Verifies a users email by a token that was sent to him via email and flags the user record as active
      *
      * @param string $token The token that wa sent to the user
