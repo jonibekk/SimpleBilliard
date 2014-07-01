@@ -70,7 +70,7 @@ class TeamsController extends AppController
                 }
                 else {
                     //１件も送信していない場合は既にチームに参加済みのユーザの為、再入力
-                    $this->Pnotify->outError(__d('gl', "入力した全てのメールアドレスは既にチームに参加しているユーザの為、メール送信をキャンセルしました。"));
+                    $this->Pnotify->outError(__d('gl', "入力した全てのメールアドレスのユーザは既にチームに参加している為、メール送信をキャンセルしました。"));
                 }
             }
         }
