@@ -239,7 +239,7 @@ class UsersController extends AppController
         } catch (RuntimeException $e) {
             $this->User->rollback();
             //例外の場合は、トークン再送信画面へ
-            $this->Pnotify->outError($e->getMessage() . "<br>" . __d('gl', "メールアドレス変更を一度キャンセルし、再度変更してください。"));
+            $this->Pnotify->outError($e->getMessage() . "\n" . __d('gl', "メールアドレス変更を一度キャンセルし、再度変更してください。"));
             //トークン再送ページへ
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect(['action' => 'settings']);

@@ -84,7 +84,7 @@ class PnotifyComponent extends Object
     /**
      * 成功のflashメッセージ出力
      *
-*@param       $message
+     * @param       $message
      * @param array $option
      */
     public function outSuccess($message, $option = [])
@@ -139,6 +139,11 @@ class PnotifyComponent extends Object
         }
         $option['escape'] = false;
         $merged_option = array_merge($this->options[$type], $option);
+        //改行を<br>に変換
+        $message = nl2br(h($message));
+        //改行を除去
+        $cr = array("\r\n", "\r", "\n");
+        $message = str_replace($cr, "", $message);
         $this->Session->setFlash($message, 'flash_pnotify', $merged_option, 'pnotify');
     }
 

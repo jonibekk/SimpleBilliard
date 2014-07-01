@@ -38,6 +38,7 @@ class TeamsController extends AppController
             //複数のメールアドレスを配列に抜き出す
             if ($email_list = $this->Team->getEmailListFromPost($data)) {
                 $allReadyBelongTeamEmails = [];
+                $sentEmails = [];
                 //１件ずつtokenを発行し、メール送信
                 foreach ($email_list as $email) {
                     //既にチームに所属している場合は処理しない
@@ -55,11 +56,25 @@ class TeamsController extends AppController
                     //招待メール送信
                     $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
                     $this->GlEmail->sendMailInvite($invite, $team_name);
-
+                    $sentEmails[] = $email;
+                }
+                if (!empty($sentEmails)) {
+                    //１件以上メール送信している場合はホームリダイレクト
+                    $msg = __d('gl', "%s人に招待メールを送信しました。", count($sentEmails)) . "\n";
+                    if (!empty($allReadyBelongTeamEmails)) {
+                        $msg .= __d('gl', "%s人は既にチームに参加しているユーザの為、メール送信をキャンセルしました。", count($allReadyBelongTeamEmails));
+                    }
+                    $this->Pnotify->outSuccess($msg);
+                    /** @noinspection PhpVoidFunctionResultUsedInspection */
+                    return $this->redirect('/');
+                }
+                else {
+                    //１件も送信していない場合は既にチームに参加済みのユーザの為、再入力
+                    $this->Pnotify->outError(__d('gl', "入力した全てのメールアドレスは既にチームに参加しているユーザの為、メール送信をキャンセルしました。"));
                 }
             }
         }
-
+        return $this->render();
     }
 
     public function ajax_switch_team($team_id = null)
