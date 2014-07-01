@@ -54,25 +54,26 @@ class TeamMemberTest extends CakeTestCase
                 'name' => 'test'
             ]
         ];
+        $before_cunt = count($this->TeamMember->getActiveTeamList($uid));
         $this->TeamMember->Team->saveAll($data);
         $res = $this->TeamMember->getActiveTeamList($uid);
-        $this->assertEquals(count($res), 1);
+        $this->assertEquals(count($res), $before_cunt + 1);
 
         $this->TeamMember->Team->saveAll($data);
         $res = $this->TeamMember->getActiveTeamList($uid);
-        $this->assertEquals(count($res), 2);
+        $this->assertEquals(count($res), $before_cunt + 2);
 
         $this->TeamMember->Team->delete();
         $res = $this->TeamMember->getActiveTeamList($uid);
-        $this->assertEquals(count($res), 1);
+        $this->assertEquals(count($res), $before_cunt + 1);
 
         $this->TeamMember->Team->saveAll($data);
         $res = $this->TeamMember->getActiveTeamList($uid);
-        $this->assertEquals(count($res), 2);
+        $this->assertEquals(count($res), $before_cunt + 2);
 
         $this->TeamMember->saveField('active_flg', false);
         $res = $this->TeamMember->getActiveTeamList($uid);
-        $this->assertEquals(count($res), 1);
+        $this->assertEquals(count($res), $before_cunt + 1);
 
     }
 
