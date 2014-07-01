@@ -39,6 +39,16 @@ class Invite extends AppModel
 
     function saveInvite($email, $team_id, $from_uid, $message = null)
     {
+        //既に招待済みの場合は古い招待メールを削除
+        $exists = $this->find('first',
+                              ['conditions' => [
+                                  'team_id' => $team_id,
+                                  'email'   => $email
+                              ]]);
+        if (!empty($exists)) {
+            $this->delete($exists['Invite']['id']);
+        }
+
         $data = [];
         $data['Invite']['from_user_id'] = $from_uid;
         $data['Invite']['team_id'] = $team_id;
@@ -52,17 +62,6 @@ class Invite extends AppModel
         //メッセージがある場合は
         if ($message) {
             $data['Invite']['message'] = $message;
-        }
-        //既に招待済みの場合は古い招待メールを削除
-        if (!empty($user_id)) {
-            $exists = $this->find('first',
-                                  ['conditions' => [
-                                      'team_id'    => $team_id,
-                                      'to_user_id' => $user_id['Email']['user_id']
-                                  ]]);
-            if (!empty($exists)) {
-                $this->delete($exists['Invite']['id']);
-            }
         }
         $this->create();
         $res = $this->save($data);
