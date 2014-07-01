@@ -34,7 +34,7 @@ class ThreadTest extends CakeTestCase
         'app.group',
         'app.team_member',
         'app.job_category',
-        'app.invite',
+        'app.tokenData',
         'app.notification',
         'app.message'
     );

@@ -38,7 +38,7 @@ class SendMailTest extends CakeTestCase
         'app.team_member',
         'app.group',
         'app.job_category',
-        'app.invite',
+        'app.tokenData',
         'app.thread',
         'app.message'
     );

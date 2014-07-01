@@ -34,7 +34,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.group',
         'app.team_member',
         'app.job_category',
-        'app.invite',
+        'app.tokenData',
         'app.notification',
         'app.thread',
         'app.message',
@@ -220,7 +220,7 @@ class UsersControllerTest extends ControllerTestCase
             ->will($this->returnValue(true));
         $data = [
             'User' => [
-                'email' => "abcdefgto@email.com",
+                'email'    => "abcdefgto@email.com",
                 'password' => "12345678",
             ]
         ];
@@ -408,7 +408,7 @@ class UsersControllerTest extends ControllerTestCase
             );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
-            ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
 
         $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
         $this->assertContains('姓(日本語)', $this->contents, "[正常]日本語でローカル名の入力項目が表示される");
@@ -499,7 +499,7 @@ class UsersControllerTest extends ControllerTestCase
             );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
-            ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
 
         $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
         $this->assertNotContains('姓(母国語)', $this->contents, "[正常]英語でローカル名の入力項目が表示されない");
@@ -614,13 +614,13 @@ class UsersControllerTest extends ControllerTestCase
             'User'  => [
                 'first_name'     => 'basic',
                 'last_name'      => 'user',
-                'password'   => 'aaaaaaaaaa',
+                'password'       => 'aaaaaaaaaa',
                 'password_token' => 'abcde',
-                'active_flg' => true,
+                'active_flg'     => true,
             ],
             'Email' => [
                 [
-                    'email' => 'basic@email.com',
+                    'email'               => 'basic@email.com',
                     'email_verified'      => true,
                     'email_token_expires' => date('Y-m-d H:i:s', time() + 60 * 60)
                 ]
@@ -746,7 +746,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session',
-                'Auth' => ['user', 'loggedIn'],
+                'Auth'     => ['user', 'loggedIn'],
                 'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
@@ -906,8 +906,8 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $data = [
             'User' => [
-                'id'           => '537ce224-54b0-4081-b044-433dac11aaab',
-                'old_password' => '1234567890',
+                'id'               => '537ce224-54b0-4081-b044-433dac11aaab',
+                'old_password'     => '1234567890',
                 'password'         => '12345678',
                 'password_confirm' => '12345678'
             ]
