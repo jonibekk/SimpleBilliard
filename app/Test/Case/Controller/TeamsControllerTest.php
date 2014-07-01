@@ -38,6 +38,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.job_category',
         'app.invite',
         'app.thread',
+        'app.send_mail',
         'app.message'
     );
 
