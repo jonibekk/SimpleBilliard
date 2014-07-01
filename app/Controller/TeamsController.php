@@ -66,7 +66,7 @@ class TeamsController extends AppController
                     }
                     $this->Pnotify->outSuccess($msg);
                     /** @noinspection PhpVoidFunctionResultUsedInspection */
-                    return $this->redirect('/');
+                    $this->redirect('/');
                 }
                 else {
                     //１件も送信していない場合は既にチームに参加済みのユーザの為、再入力
@@ -74,7 +74,6 @@ class TeamsController extends AppController
                 }
             }
         }
-        return $this->render();
     }
 
     public function ajax_switch_team($team_id = null)
