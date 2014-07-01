@@ -87,7 +87,11 @@ class GlEmailComponent extends Object
                          'action'     => 'verify',
                          $email_token,
                      ], true);
-        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_ACCOUNT_VERIFY, ['url' => $url]);
+        $item = [
+            'url'      => $url,
+            'language' => Configure::read('Config.language')
+        ];
+        $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_ACCOUNT_VERIFY, $item);
         $this->execSendMailById($this->SendMail->id);
     }
 
