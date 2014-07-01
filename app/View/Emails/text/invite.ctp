@@ -24,6 +24,11 @@ echo "\n";
 echo __d('mail', '%sさんがGoalous内のチーム「%s」へあなたを招待しています。', h($from_user_name), h($team_name));
 echo "\n";
 echo "\n";
+echo __d('mail', 'この招待に応じる場合は、次のリンクをクリックしてください。');
+echo "\n";
+echo $url;
+echo "\n";
+echo "\n";
 if ($message) {
     echo __d('mail', "%sさんからのメッセージ：", h($from_user_name));
     echo "\n";
@@ -31,11 +36,6 @@ if ($message) {
     echo "\n";
     echo "\n";
 }
-echo __d('mail', 'この招待に応じる場合は、次のリンクをクリックしてください。');
-echo "\n";
-echo $url;
-echo "\n";
-echo "\n";
 echo "\n";
 echo __d('mail', 'なかまと共にみんなのゴールに到達するため、ほめ合うため、そして有用なフィードバックを集めるためにGoalousを使おう！');
 echo "\n";
