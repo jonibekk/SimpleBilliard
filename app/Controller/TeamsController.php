@@ -19,8 +19,9 @@ class TeamsController extends AppController
         if ($this->request->is('post') && !empty($this->request->data)) {
             if ($this->Team->add($this->request->data, $this->Auth->user('id'))) {
                 $this->_refreshAuth($this->Auth->user('id'));
+                $this->Session->write('current_team_id', $this->Team->getLastInsertID());
                 $this->Pnotify->outSuccess(__d('gl', "チームを作成しました。"));
-                $this->redirect("/");
+                $this->redirect(['action' => 'invite']);
             }
             else {
                 $this->Pnotify->outError(__d('gl', "チームに失敗しました。"));
@@ -38,6 +39,7 @@ class TeamsController extends AppController
             //複数のメールアドレスを配列に抜き出す
             if ($email_list = $this->Team->getEmailListFromPost($data)) {
                 $allReadyBelongTeamEmails = [];
+                $sentEmails = [];
                 //１件ずつtokenを発行し、メール送信
                 foreach ($email_list as $email) {
                     //既にチームに所属している場合は処理しない
@@ -55,11 +57,24 @@ class TeamsController extends AppController
                     //招待メール送信
                     $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
                     $this->GlEmail->sendMailInvite($invite, $team_name);
-
+                    $sentEmails[] = $email;
+                }
+                if (!empty($sentEmails)) {
+                    //１件以上メール送信している場合はホームリダイレクト
+                    $msg = __d('gl', "%s人に招待メールを送信しました。", count($sentEmails)) . "\n";
+                    if (!empty($allReadyBelongTeamEmails)) {
+                        $msg .= __d('gl', "%s人は既にチームに参加しているユーザの為、メール送信をキャンセルしました。", count($allReadyBelongTeamEmails));
+                    }
+                    $this->Pnotify->outSuccess($msg);
+                    /** @noinspection PhpVoidFunctionResultUsedInspection */
+                    $this->redirect('/');
+                }
+                else {
+                    //１件も送信していない場合は既にチームに参加済みのユーザの為、再入力
+                    $this->Pnotify->outError(__d('gl', "入力した全てのメールアドレスのユーザは既にチームに参加している為、メール送信をキャンセルしました。"));
                 }
             }
         }
-
     }
 
     public function ajax_switch_team($team_id = null)
