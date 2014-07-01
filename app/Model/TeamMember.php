@@ -52,18 +52,23 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
-            $options = [
-                'conditions' => [
-                    'TeamMember.user_id'    => $uid,
-                    'TeamMember.active_flg' => true
-                ],
-                'fields'     => ['TeamMember.team_id', 'Team.name'],
-                'contain'    => ['Team']
-            ];
-            $res = array_filter($this->find('list', $options));
-            $this->myTeams = $res;
+            $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
+    }
+
+    function setActiveTeamList($uid)
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.user_id'    => $uid,
+                'TeamMember.active_flg' => true
+            ],
+            'fields'     => ['TeamMember.team_id', 'Team.name'],
+            'contain'    => ['Team']
+        ];
+        $res = array_filter($this->find('list', $options));
+        $this->myTeams = $res;
     }
 
     function updateLastLogin($team_id, $uid)
