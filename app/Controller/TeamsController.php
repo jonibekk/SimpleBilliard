@@ -19,8 +19,9 @@ class TeamsController extends AppController
         if ($this->request->is('post') && !empty($this->request->data)) {
             if ($this->Team->add($this->request->data, $this->Auth->user('id'))) {
                 $this->_refreshAuth($this->Auth->user('id'));
+                $this->Session->write('current_team_id', $this->Team->getLastInsertID());
                 $this->Pnotify->outSuccess(__d('gl', "チームを作成しました。"));
-                $this->redirect("/");
+                $this->redirect(['action' => 'invite']);
             }
             else {
                 $this->Pnotify->outError(__d('gl', "チームに失敗しました。"));
