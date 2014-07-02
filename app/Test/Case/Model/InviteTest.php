@@ -109,4 +109,52 @@ class InviteTest extends CakeTestCase
 
     }
 
+    function testConfirmToken()
+    {
+        $token = "not_found";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]tokenデータなし");
+        unset($e);
+
+        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_token_verified', true);
+        $token = "token_test001";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]既に認証済みの古いtoken");
+        unset($e);
+
+        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_token_verified', false);
+        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('-1 day')));
+        $token = "token_test001";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]token期限切れ");
+        unset($e);
+
+        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+        $token = "token_test001";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]token確認");
+        unset($e);
+    }
+
 }
