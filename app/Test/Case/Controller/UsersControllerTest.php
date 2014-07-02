@@ -108,7 +108,26 @@ class UsersControllerTest extends ControllerTestCase
         );
         $this->assertTextContains('<input type="hidden" name="data[Email][0][email]"', $this->view, "【正常系】[ユーザ登録画面]招待");
 
-        $this->generateMockSecurity();
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session'  => ['setFlash'],
+                'Auth',
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
         $data = [
             'User'  => [
                 'first_name'       => 'taro',
@@ -119,7 +138,7 @@ class UsersControllerTest extends ControllerTestCase
                 'local_date'       => date('Y-m-d H:i:s'),
             ],
             'Email' => [
-                ['email' => 'taro@sato.com'],
+                ['email' => 'taro@sato.comaaaaaa'],
             ]
         ];
         $this->testAction(
@@ -130,8 +149,7 @@ class UsersControllerTest extends ControllerTestCase
                  'method' => 'post',
              ]
         );
-        $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
-
+        $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]招待Post");
     }
 
     function testSentMailSuccess()
