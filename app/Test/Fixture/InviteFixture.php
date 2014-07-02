@@ -40,16 +40,16 @@ class InviteFixture extends CakeTestFixture
     public $records = array(
         array(
             'id'                  => '537ce223-29d0-431b-bfe4-433dac11b50b',
-            'from_user_id'        => 'Lorem ipsum dolor sit amet',
-            'to_user_id'          => 'Lorem ipsum dolor sit amet',
-            'team_id'             => 'Lorem ipsum dolor sit amet',
+            'from_user_id'   => 'aaa',
+            'to_user_id'     => 'bbb',
+            'team_id'        => 'ccc',
             'email'               => 'Lorem ipsum dolor sit amet',
             'message'             => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'email_verified'      => 1,
-            'email_token'         => 'Lorem ipsum dolor sit amet',
+            'email_verified' => false,
+            'email_token'    => 'token_test001',
             'email_token_expires' => '2014-05-22 02:28:03',
-            'del_flg'             => 1,
-            'deleted'             => '2014-05-22 02:28:03',
+            'del_flg'        => false,
+            'deleted'        => null,
             'created'             => '2014-05-22 02:28:03',
             'modified'            => '2014-05-22 02:28:03'
         ),

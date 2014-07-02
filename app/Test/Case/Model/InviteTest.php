@@ -76,4 +76,37 @@ class InviteTest extends CakeTestCase
         $this->assertArrayHasKey("message", $res['Invite'], "[正常]招待データ保存:メッセージありの場合、メッセージが保存されている");
     }
 
+    function testGetByToken()
+    {
+        $token = 'token_test001';
+        $this->Invite->tokenData = null;
+        $res = $this->Invite->getByToken($token);
+        $this->assertNotEmpty($res, "[正常]トークンデータ取得(データなし)");
+        $res2 = $this->Invite->getByToken($token);
+        $this->assertEquals($res, $res2, "[正常]トークンデータ取得(データあり)");
+    }
+
+    function testIsUser()
+    {
+        $token = 'token_test001';
+        $res = $this->Invite->isUser($token);
+        $this->assertTrue($res, "[異常]存在するユーザか？");
+
+        $this->Invite->tokenData['Invite']['to_user_id'] = null;
+        $res = $this->Invite->isUser($token);
+        $this->assertFalse($res, "[正常]存在するユーザか？");
+    }
+
+    function testIsForMe()
+    {
+        $token = 'token_test001';
+        $uid = "bbb";
+        $res = $this->Invite->isForMe($token, $uid);
+        $this->assertTrue($res, "[正常]トークン自分宛");
+        $uid = "bbc";
+        $res = $this->Invite->isForMe($token, $uid);
+        $this->assertFalse($res, "[異常]トークン自分宛");
+
+    }
+
 }
