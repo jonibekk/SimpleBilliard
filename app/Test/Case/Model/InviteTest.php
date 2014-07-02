@@ -167,4 +167,15 @@ class InviteTest extends CakeTestCase
         unset($e);
     }
 
+    function testVerify()
+    {
+        $id = '537ce223-507c-442a-a361-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+        $token = "token_test002";
+        $res = $this->Invite->verify($token);
+        $this->assertArrayHasKey('id', $res['Invite']);
+    }
+
 }
