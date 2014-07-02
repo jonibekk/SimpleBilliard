@@ -103,10 +103,20 @@ class InviteTest extends CakeTestCase
         $uid = "bbb";
         $res = $this->Invite->isForMe($token, $uid);
         $this->assertTrue($res, "[正常]トークン自分宛");
+        $this->Invite->tokenData = null;
+
         $uid = "bbc";
         $res = $this->Invite->isForMe($token, $uid);
         $this->assertFalse($res, "[異常]トークン自分宛");
+        $this->Invite->tokenData = null;
 
+        /** @noinspection PhpUndefinedMethodInspection */
+        $token_data = $this->Invite->findByEmailToken($token);
+        $this->Invite->id = $token_data['Invite']['id'];
+        $this->Invite->saveField('to_user_id', null);
+        $uid = "bbb";
+        $res = $this->Invite->isForMe($token, $uid);
+        $this->assertFalse($res, "[異常]to_user_idなし");
     }
 
     function testConfirmToken()
