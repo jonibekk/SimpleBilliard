@@ -1,9 +1,11 @@
 <?
 /**
  * ユーザ登録画面
+
  *
- * @var $this View
+*@var $this View
  * @var $last_first
+ * @var $email
  */
 ?>
     <div class="row">
@@ -50,13 +52,26 @@
                     }
                     ?>
                     <hr>
-                    <?=
-                    $this->Form->input('Email.0.email', [
-                        'label'                        => __d('gl', "メール"),
-                        'placeholder'                  => __d('gl', "hiroshi@example.com"),
-                        'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
-                        "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                    ])?>
+                    <? if (isset($email)): ?>
+                        <div class="form-group">
+                            <label for="" class="col col-sm-3 control-label"><?= __d('gl', "メール") ?></label>
+
+                            <div class="col col-sm-6">
+                                <p class="form-control-static"><?= h($email) ?></p>
+                            </div>
+                        </div>
+                        <?=
+                        $this->Form->hidden('Email.0.email', ['value' => $email])?>
+                    <? else: ?>
+                        <?=
+                        $this->Form->input('Email.0.email', [
+                            'label'                        => __d('gl', "メール"),
+                            'placeholder'                  => __d('gl', "hiroshi@example.com"),
+                            'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
+                            "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                        ])?>
+                    <? endif; ?>
+
                     <?=
                     $this->Form->input('update_email_flg', [
                         'wrapInput' => 'col col-sm-9 col-sm-offset-3',

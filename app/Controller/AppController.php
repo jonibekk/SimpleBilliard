@@ -127,11 +127,15 @@ class AppController extends Controller
         if (isset($user['User'])) {
             $user['User'] = array_merge($user['User'], $associations);
         }
+        $this->User->me = $user['User'];
         return $this->Auth->login($user['User']);
     }
 
-    function _switchTerm($team_id, $uid)
+    function _switchTeam($team_id, $uid = null)
     {
+        if (!$uid) {
+            $uid = $this->Auth->user('id');
+        }
         $this->User->TeamMember->updateLastLogin($team_id, $uid);
         $this->Session->write('current_team_id', $team_id);
     }

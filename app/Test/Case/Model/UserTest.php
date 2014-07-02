@@ -254,7 +254,7 @@ class UserTest extends CakeTestCase
             ],
             'Email' => []
         ];
-        $res = $this->User->userProvisionalRegistration($data);
+        $res = $this->User->userRegistration($data);
         $this->assertFalse($res, "[異常系]ユーザ仮登録");
         //正常系
         $data = [
@@ -269,7 +269,7 @@ class UserTest extends CakeTestCase
                 ['email' => 'taro@sato.com'],
             ]
         ];
-        $res = $this->User->userProvisionalRegistration($data);
+        $res = $this->User->userRegistration($data);
         $this->assertTrue($res, "[正常系]ユーザ仮登録");
     }
 

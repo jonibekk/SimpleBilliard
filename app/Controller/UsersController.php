@@ -128,17 +128,41 @@ class UsersController extends AppController
             }
             //言語を保存
             $this->request->data['User']['language'] = $this->Lang->getLanguage();
-            //ユーザ仮登録成功
-            if ($this->User->userProvisionalRegistration($this->request->data)) {
-                //ユーザにメール送信
-                $this->GlEmail->sendMailUserVerify($this->User->id, $this->User->Email->data['Email']['email_token']);
-                $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
-                $this->redirect(['action' => 'sent_mail']);
+            //トークン付きは本登録
+            if (isset($this->request->params['named']['invite_token'])) {
+                //ユーザ登録成功
+                if ($this->User->userRegistration($this->request->data, false)) {
+                    //ログイン
+                    $this->_autoLogin($this->User->getLastInsertID());
+                    //チーム参加
+                    $this->_joinTeam($this->request->params['named']['invite_token']);
+
+                    $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+                    //プロフィール画面に遷移
+                    $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
+                }
             }
-            //ユーザ仮登録失敗
             else {
+                //ユーザ仮登録成功
+                if ($this->User->userRegistration($this->request->data)) {
+                    //ユーザにメール送信
+                    $this->GlEmail->sendMailUserVerify($this->User->id,
+                                                       $this->User->Email->data['Email']['email_token']);
+                    $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
+                    $this->redirect(['action' => 'sent_mail']);
+                }
             }
         }
+        //トークン付きの場合はメアドデータを取得
+        if (isset($this->request->params['named']['invite_token'])) {
+            //トークンチェック
+            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
+            if (isset($invite['Invite']['email'])) {
+                $this->set(['email' => $invite['Invite']['email']]);
+            }
+        }
+
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         $this->set(compact('last_first'));
@@ -429,12 +453,11 @@ class UsersController extends AppController
 
     /**
      * 招待に応じる
-     * 登録済みユーザの場合は、TeamMember保存でホームへリダイレクト
+     * 登録済みユーザの場合は、チーム参加でホームへリダイレクト
      * 未登録ユーザの場合は、個人情報入力ページへ
      */
     public function accept_invite($token)
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
         //トークンが有効かチェック
         $this->Invite->confirmToken($token);
         //登録ユーザ宛の場合
@@ -450,27 +473,37 @@ class UsersController extends AppController
                 if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
                     throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
                 }
-                //トークン認証
-                $invite = $this->Invite->verify($token);
                 //チーム参加
-                $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
-                //チーム切り替え&ホームリダイレクト
+                $team = $this->_joinTeam($token);
+                $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
+                //ホームへリダイレクト
+                $this->redirect("/");
             }
         }
         else {
-            if ($this->request->is('put') && !empty($this->request->data)) {
-                //個人情報登録
-
-                //トークン認証
-
-                //チーム参加
-
-                //チーム切り替え&ホームリダイレクト
-
-            }
-
+            //新規ユーザ登録
+            $this->redirect(['action' => 'register', 'invite_token' => $token]);
         }
+    }
 
+    /**
+     * チームに参加
+     *
+     * @param $token
+     */
+    function _joinTeam($token)
+    {
+        //トークン認証
+        $invite = $this->Invite->verify($token);
+        //チーム参加
+        $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
+        //デフォルトチーム設定
+        $this->User->updateDefaultTeam($invite['Invite']['team_id']);
+        //セッション更新
+        $this->_refreshAuth();
+        //チーム切換え
+        $this->_switchTeam($invite['Invite']['team_id']);
+        return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
     }
 
     /*
