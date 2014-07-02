@@ -97,6 +97,41 @@ class UsersControllerTest extends ControllerTestCase
              ]
         );
         $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
+
+        $intite_token = 'token_test002';
+        $this->testAction(
+             '/users/register/invite_token:' . $intite_token,
+             [
+                 'return' => 'contents',
+                 'method' => 'get',
+             ]
+        );
+        $this->assertTextContains('<input type="hidden" name="data[Email][0][email]"', $this->view, "【正常系】[ユーザ登録画面]招待");
+
+        $this->generateMockSecurity();
+        $data = [
+            'User'  => [
+                'first_name'       => 'taro',
+                'last_name'        => 'sato',
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+                'agree_tos'        => true,
+                'local_date'       => date('Y-m-d H:i:s'),
+            ],
+            'Email' => [
+                ['email' => 'taro@sato.com'],
+            ]
+        ];
+        $this->testAction(
+             '/users/register/invite_token:' . $intite_token,
+             [
+                 'return' => 'contents',
+                 'data'   => $data,
+                 'method' => 'post',
+             ]
+        );
+        $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
+
     }
 
     function testSentMailSuccess()
