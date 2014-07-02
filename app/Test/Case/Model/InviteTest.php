@@ -132,7 +132,7 @@ class InviteTest extends CakeTestCase
         $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
-        $this->Invite->saveField('email_token_verified', true);
+        $this->Invite->saveField('email_verified', true);
         $token = "token_test001";
         try {
             $this->Invite->confirmToken($token);
@@ -144,7 +144,7 @@ class InviteTest extends CakeTestCase
         $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
-        $this->Invite->saveField('email_token_verified', false);
+        $this->Invite->saveField('email_verified', false);
         $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('-1 day')));
         $token = "token_test001";
         try {
