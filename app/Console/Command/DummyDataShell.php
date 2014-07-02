@@ -37,10 +37,32 @@ class DummyDataShell extends AppShell
         $this->start_time = microtime(true);
     }
 
+    public function getOptionParser()
+    {
+        $parser = parent::getOptionParser();
+        $commands = [
+            'send_mail_by_id' => [
+                'help'   => 'SendMailのidを元にメールを送信する',
+                'parser' => [
+                    'options' => [
+                        'config' => ['short' => 'c', 'help' => 'DBのConfig名', 'required' => false,],
+                    ]
+                ]
+            ],
+        ];
+        $parser->addSubcommands($commands);
+        return $parser;
+    }
+
     function main()
     {
         $this->User->cacheQueries = false;
-        $this->User->useDbConfig = "bench";
+        if ($this->params['config']) {
+            $this->User->useDbConfig = $this->params['config'];
+        }
+        else {
+            $this->User->useDbConfig = "bench";
+        }
         foreach ($this->records as $table_name => $records) {
             $this->insertInitData($records, $table_name);
         }
