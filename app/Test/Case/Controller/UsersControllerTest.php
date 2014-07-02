@@ -1113,4 +1113,101 @@ class UsersControllerTest extends ControllerTestCase
         }
     }
 
+    function testAcceptInvite()
+    {
+        $intite_token = 'token_test002';
+        //$invite_id = '537ce223-507c-442a-a361-433dac11b50b';
+
+        //ユーザ有,未ログイン,
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', null],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(false));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+
+        //ユーザなし
+        $intite_token = "token_not_user_001";
+        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+
+    }
+
+    function testAcceptInviteLoggedInForMe()
+    {
+        $intite_token = 'token_test002';
+        //ユーザ有,ログイン済,自分あてのtoken
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-c708-4084-b879-433dac11b50b"],
+            [null, true]
+        ];
+        $user = $Users->User->getDetail("537ce224-c708-4084-b879-433dac11b50b");
+        $Users->User->me = $user['User'];
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+
+    }
+
+    function testAcceptInviteLoggedInForOther()
+    {
+
+        $intite_token = 'token_test002';
+        //ユーザ有,ログイン済,他人あてのtoken
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+            [null, true]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $user = $Users->User->getDetail("537ce224-54b0-4081-b044-433dac11b50b");
+        $Users->User->me = $user['User'];
+
+        try {
+            $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+        } catch (RuntimeException $e) {
+
+        }
+        $this->assertTrue(isset($e), "[異常]招待で別のユーザ宛");
+    }
+
 }
