@@ -76,4 +76,106 @@ class InviteTest extends CakeTestCase
         $this->assertArrayHasKey("message", $res['Invite'], "[正常]招待データ保存:メッセージありの場合、メッセージが保存されている");
     }
 
+    function testGetByToken()
+    {
+        $token = 'token_test001';
+        $this->Invite->tokenData = null;
+        $res = $this->Invite->getByToken($token);
+        $this->assertNotEmpty($res, "[正常]トークンデータ取得(データなし)");
+        $res2 = $this->Invite->getByToken($token);
+        $this->assertEquals($res, $res2, "[正常]トークンデータ取得(データあり)");
+    }
+
+    function testIsUser()
+    {
+        $token = 'token_test001';
+        $res = $this->Invite->isUser($token);
+        $this->assertTrue($res, "[異常]存在するユーザか？");
+
+        $this->Invite->tokenData['Invite']['to_user_id'] = null;
+        $res = $this->Invite->isUser($token);
+        $this->assertFalse($res, "[正常]存在するユーザか？");
+    }
+
+    function testIsForMe()
+    {
+        $token = 'token_test001';
+        $uid = "bbb";
+        $res = $this->Invite->isForMe($token, $uid);
+        $this->assertTrue($res, "[正常]トークン自分宛");
+        $this->Invite->tokenData = null;
+
+        $uid = "bbc";
+        $res = $this->Invite->isForMe($token, $uid);
+        $this->assertFalse($res, "[異常]トークン自分宛");
+        $this->Invite->tokenData = null;
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $token_data = $this->Invite->findByEmailToken($token);
+        $this->Invite->id = $token_data['Invite']['id'];
+        $this->Invite->saveField('to_user_id', null);
+        $uid = "bbb";
+        $res = $this->Invite->isForMe($token, $uid);
+        $this->assertFalse($res, "[異常]to_user_idなし");
+    }
+
+    function testConfirmToken()
+    {
+        $token = "not_found";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]tokenデータなし");
+        unset($e);
+
+        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_verified', true);
+        $token = "token_test001";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]既に認証済みの古いtoken");
+        unset($e);
+
+        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_verified', false);
+        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('-1 day')));
+        $token = "token_test001";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]token期限切れ");
+        unset($e);
+
+        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+        $token = "token_test001";
+        try {
+            $this->Invite->confirmToken($token);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]token確認");
+        unset($e);
+    }
+
+    function testVerify()
+    {
+        $id = '537ce223-507c-442a-a361-433dac11b50b';
+        $this->Invite->tokenData = null;
+        $this->Invite->id = $id;
+        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+        $token = "token_test002";
+        $res = $this->Invite->verify($token);
+        $this->assertArrayHasKey('id', $res['Invite']);
+    }
+
 }

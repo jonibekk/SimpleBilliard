@@ -396,13 +396,15 @@ class User extends AppModel
     }
 
     /**
-     * ユーザ仮登録(メール認証前)
+     * ユーザ登録
+     * 仮登録 or 本登録
      *
-     * @param array $data
+*@param array $data
+     * @param bool $provisional
      *
-     * @return bool
+*@return bool
      */
-    public function userProvisionalRegistration($data)
+    public function userRegistration($data, $provisional = true)
     {
         //バリデーションでエラーが発生したらreturn
         if (!$this->validateAssociated($data)) {
@@ -412,18 +414,29 @@ class User extends AppModel
         if (isset($data['User']['password']) && !empty($data['User']['password'])) {
             $data['User']['password'] = $this->generateHash($data['User']['password']);
         }
-        //メールアドレスの認証トークンを発行
-        $email_token = $this->generateToken();
-        $data['Email'][0]['Email']['email_token'] = $email_token;
-        //メールアドレスの認証トークンの期限をセット
-        $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire();
+        $email_token = null;
+        //仮登録なら
+        if ($provisional) {
+            //メールアドレスの認証トークンを発行
+            $email_token = $this->generateToken();
+            $data['Email'][0]['Email']['email_token'] = $email_token;
+            //メールアドレスの認証トークンの期限をセット
+            $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire();
+        }
+        //本登録なら
+        else {
+            $data['Email'][0]['Email']['email_verified'] = true;
+            $data['User']['active_flg'] = true;
+        }
         //データを保存
         $this->create();
         if ($this->saveAll($data, ['validate' => false])) {
             //プライマリメールアドレスを登録
             $this->save(['primary_email_id' => $this->Email->id]);
             //コントローラ側で必要になるデータをセット
-            $this->Email->set('email_token', $email_token);
+            if ($provisional) {
+                $this->Email->set('email_token', $email_token);
+            }
             $this->Email->set('email', $data['Email'][0]['Email']['email']);
         }
         return true;
@@ -705,6 +718,25 @@ class User extends AppModel
             return false;
         }
         return true;
+    }
+
+    /**
+     * デフォルトチームを更新
+     * 未設定の場合のみ
+     *
+     * @param      $team_id
+     * @param bool $force
+     *
+     * @return bool
+     */
+    public function updateDefaultTeam($team_id, $force = false)
+    {
+        if (!$this->me['default_team_id'] || $force) {
+            $this->id = $this->me['id'];
+            $this->saveField('default_team_id', $team_id);
+            return true;
+        }
+        return false;
     }
 
 }

@@ -93,7 +93,7 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__d('gl', "このチームには所属していません"));
             return $this->render();
         }
-        $this->_switchTerm($team_id, $this->Auth->user('id'));
+        $this->_switchTeam($team_id, $this->Auth->user('id'));
         $this->Pnotify->outSuccess(__d('gl', "チームを「%s」に切り換えました。", $my_teams[$team_id]));
         return $this->render();
     }

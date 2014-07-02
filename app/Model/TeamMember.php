@@ -143,4 +143,14 @@ class TeamMember extends AppModel
         return true;
     }
 
+    public function add($uid, $team_id)
+    {
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $team_id,
+            'active_flg' => true,
+        ];
+        return $this->save($data);
+    }
+
 }

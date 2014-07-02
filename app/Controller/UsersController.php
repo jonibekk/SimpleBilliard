@@ -4,10 +4,16 @@ App::uses('AppController', 'Controller');
 /**
  * Users Controller
  *
- * @property User $User
+ * @property User   $User
+ * @property Invite $Invite
  */
 class UsersController extends AppController
 {
+    public $uses = [
+        'User',
+        'Invite',
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -21,7 +27,8 @@ class UsersController extends AppController
      */
     protected function _setupAuth()
     {
-        $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail');
+        $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
+                           'accept_invite');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -121,17 +128,41 @@ class UsersController extends AppController
             }
             //言語を保存
             $this->request->data['User']['language'] = $this->Lang->getLanguage();
-            //ユーザ仮登録成功
-            if ($this->User->userProvisionalRegistration($this->request->data)) {
-                //ユーザにメール送信
-                $this->GlEmail->sendMailUserVerify($this->User->id, $this->User->Email->data['Email']['email_token']);
-                $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
-                $this->redirect(['action' => 'sent_mail']);
+            //トークン付きは本登録
+            if (isset($this->request->params['named']['invite_token'])) {
+                //ユーザ登録成功
+                if ($this->User->userRegistration($this->request->data, false)) {
+                    //ログイン
+                    $this->_autoLogin($this->User->getLastInsertID());
+                    //チーム参加
+                    $this->_joinTeam($this->request->params['named']['invite_token']);
+
+                    $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+                    //プロフィール画面に遷移
+                    $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
+                }
             }
-            //ユーザ仮登録失敗
             else {
+                //ユーザ仮登録成功
+                if ($this->User->userRegistration($this->request->data)) {
+                    //ユーザにメール送信
+                    $this->GlEmail->sendMailUserVerify($this->User->id,
+                                                       $this->User->Email->data['Email']['email_token']);
+                    $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
+                    $this->redirect(['action' => 'sent_mail']);
+                }
             }
         }
+        //トークン付きの場合はメアドデータを取得
+        if (isset($this->request->params['named']['invite_token'])) {
+            //トークンチェック
+            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
+            if (isset($invite['Invite']['email'])) {
+                $this->set(['email' => $invite['Invite']['email']]);
+            }
+        }
+
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         $this->set(compact('last_first'));
@@ -418,6 +449,61 @@ class UsersController extends AppController
         else {
             throw new NotFoundException();
         }
+    }
+
+    /**
+     * 招待に応じる
+     * 登録済みユーザの場合は、チーム参加でホームへリダイレクト
+     * 未登録ユーザの場合は、個人情報入力ページへ
+     */
+    public function accept_invite($token)
+    {
+        //トークンが有効かチェック
+        $this->Invite->confirmToken($token);
+        //登録ユーザ宛の場合
+        if ($this->Invite->isUser($token)) {
+            //ログイン済みじゃない場合はログイン画面
+            if (!$this->Auth->user()) {
+                $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
+                $this->redirect(['action' => 'login']);
+            }
+            //ログイン済みの場合は、TeamMember保存でチーム切り替えてホームへ
+            else {
+                //自分宛かチェック
+                if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
+                    throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
+                }
+                //チーム参加
+                $team = $this->_joinTeam($token);
+                $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
+                //ホームへリダイレクト
+                $this->redirect("/");
+            }
+        }
+        else {
+            //新規ユーザ登録
+            $this->redirect(['action' => 'register', 'invite_token' => $token]);
+        }
+    }
+
+    /**
+     * チームに参加
+     *
+     * @param $token
+     */
+    function _joinTeam($token)
+    {
+        //トークン認証
+        $invite = $this->Invite->verify($token);
+        //チーム参加
+        $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
+        //デフォルトチーム設定
+        $this->User->updateDefaultTeam($invite['Invite']['team_id']);
+        //セッション更新
+        $this->_refreshAuth();
+        //チーム切換え
+        $this->_switchTeam($invite['Invite']['team_id']);
+        return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
     }
 
     /*

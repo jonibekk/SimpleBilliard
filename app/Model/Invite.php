@@ -11,6 +11,7 @@ App::uses('AppModel', 'Model');
 class Invite extends AppModel
 {
 
+    public $tokenData = [];
     /**
      * Validation rules
      *
@@ -67,4 +68,87 @@ class Invite extends AppModel
         $res = $this->save($data);
         return $res;
     }
+
+    /**
+     * トークンのチェック
+     *
+     * @param $token
+     *
+     * @return bool
+     * @throws RuntimeException
+     */
+    public function confirmToken($token)
+    {
+        $invite = $this->getByToken($token);
+        if (empty($invite)) {
+            throw new RuntimeException(
+                __d('exception', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
+        }
+        if ($invite['Invite']['email_verified']) {
+            throw new RuntimeException(__d('exception', 'このトークンは使用済みです。'));
+        }
+        $expires = strtotime($invite['Invite']['email_token_expires']);
+        if ($expires < time()) {
+            throw new RuntimeException(__d('exception', 'トークンの期限が切れています。'));
+        }
+        return true;
+    }
+
+    /**
+     * 招待の認証
+     *
+     * @param string $token The token that wa sent to the user
+     *
+     * @internal param $uid
+     * @return array On success it returns the user data record
+     */
+    public function verify($token)
+    {
+        $this->confirmToken($token);
+        $invite = $this->getByToken($token);
+        $invite['Invite']['email_verified'] = true;
+        $res = $this->save($invite);
+        return $res;
+    }
+
+    function getByToken($token)
+    {
+        if (empty($this->tokenData)) {
+            return $this->setInviteByToken($token);
+        }
+        else {
+            return $this->tokenData;
+        }
+    }
+
+    function isForMe($token, $uid)
+    {
+        $invite = $this->getByToken($token);
+        if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {
+            return $invite['Invite']['to_user_id'] === $uid;
+        }
+        return false;
+    }
+
+    function setInviteByToken($token)
+    {
+        $options = [
+            'conditions' => [
+                'email_token' => $token
+            ],
+        ];
+        $invite = $this->find('first', $options);
+        $this->tokenData = $invite;
+        return $this->tokenData;
+    }
+
+    function isUser($token)
+    {
+        $invite = $this->getByToken($token);
+        if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {
+            return true;
+        }
+        return false;
+    }
+
 }

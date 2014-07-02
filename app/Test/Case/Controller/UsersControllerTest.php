@@ -97,6 +97,59 @@ class UsersControllerTest extends ControllerTestCase
              ]
         );
         $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
+
+        $intite_token = 'token_test002';
+        $this->testAction(
+             '/users/register/invite_token:' . $intite_token,
+             [
+                 'return' => 'contents',
+                 'method' => 'get',
+             ]
+        );
+        $this->assertTextContains('<input type="hidden" name="data[Email][0][email]"', $this->view, "【正常系】[ユーザ登録画面]招待");
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session'  => ['setFlash'],
+                'Auth',
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+        $data = [
+            'User'  => [
+                'first_name'       => 'taro',
+                'last_name'        => 'sato',
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+                'agree_tos'        => true,
+                'local_date'       => date('Y-m-d H:i:s'),
+            ],
+            'Email' => [
+                ['email' => 'taro@sato.comaaaaaa'],
+            ]
+        ];
+        $this->testAction(
+             '/users/register/invite_token:' . $intite_token,
+             [
+                 'return' => 'contents',
+                 'data'   => $data,
+                 'method' => 'post',
+             ]
+        );
+        $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]招待Post");
     }
 
     function testSentMailSuccess()
@@ -220,7 +273,7 @@ class UsersControllerTest extends ControllerTestCase
             ->will($this->returnValue(true));
         $data = [
             'User' => [
-                'email' => "abcdefgto@email.com",
+                'email'    => "abcdefgto@email.com",
                 'password' => "12345678",
             ]
         ];
@@ -408,7 +461,7 @@ class UsersControllerTest extends ControllerTestCase
             );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
-            ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
 
         $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
         $this->assertContains('姓(日本語)', $this->contents, "[正常]日本語でローカル名の入力項目が表示される");
@@ -499,7 +552,7 @@ class UsersControllerTest extends ControllerTestCase
             );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
-            ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
 
         $this->testAction('/users/add_profile', ['method' => 'GET', 'return' => 'contents']);
         $this->assertNotContains('姓(母国語)', $this->contents, "[正常]英語でローカル名の入力項目が表示されない");
@@ -614,13 +667,13 @@ class UsersControllerTest extends ControllerTestCase
             'User'  => [
                 'first_name'     => 'basic',
                 'last_name'      => 'user',
-                'password'   => 'aaaaaaaaaa',
+                'password'       => 'aaaaaaaaaa',
                 'password_token' => 'abcde',
-                'active_flg' => true,
+                'active_flg'     => true,
             ],
             'Email' => [
                 [
-                    'email' => 'basic@email.com',
+                    'email'               => 'basic@email.com',
                     'email_verified'      => true,
                     'email_token_expires' => date('Y-m-d H:i:s', time() + 60 * 60)
                 ]
@@ -746,7 +799,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session',
-                'Auth' => ['user', 'loggedIn'],
+                'Auth'     => ['user', 'loggedIn'],
                 'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
@@ -906,8 +959,8 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $data = [
             'User' => [
-                'id'           => '537ce224-54b0-4081-b044-433dac11aaab',
-                'old_password' => '1234567890',
+                'id'               => '537ce224-54b0-4081-b044-433dac11aaab',
+                'old_password'     => '1234567890',
                 'password'         => '12345678',
                 'password_confirm' => '12345678'
             ]
@@ -1076,6 +1129,103 @@ class UsersControllerTest extends ControllerTestCase
                               ['method' => 'PUT', 'data' => ['User' => ['email' => 'abcde@1234.com']]]);
         } catch (NotFoundException $e) {
         }
+    }
+
+    function testAcceptInvite()
+    {
+        $intite_token = 'token_test002';
+        //$invite_id = '537ce223-507c-442a-a361-433dac11b50b';
+
+        //ユーザ有,未ログイン,
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', null],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(false));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+
+        //ユーザなし
+        $intite_token = "token_not_user_001";
+        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+
+    }
+
+    function testAcceptInviteLoggedInForMe()
+    {
+        $intite_token = 'token_test002';
+        //ユーザ有,ログイン済,自分あてのtoken
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-c708-4084-b879-433dac11b50b"],
+            [null, true]
+        ];
+        $user = $Users->User->getDetail("537ce224-c708-4084-b879-433dac11b50b");
+        $Users->User->me = $user['User'];
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+
+    }
+
+    function testAcceptInviteLoggedInForOther()
+    {
+
+        $intite_token = 'token_test002';
+        //ユーザ有,ログイン済,他人あてのtoken
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+            [null, true]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $user = $Users->User->getDetail("537ce224-54b0-4081-b044-433dac11b50b");
+        $Users->User->me = $user['User'];
+
+        try {
+            $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+        } catch (RuntimeException $e) {
+
+        }
+        $this->assertTrue(isset($e), "[異常]招待で別のユーザ宛");
     }
 
 }

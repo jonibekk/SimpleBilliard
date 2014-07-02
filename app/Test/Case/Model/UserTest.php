@@ -245,7 +245,7 @@ class UserTest extends CakeTestCase
         $this->assertEmpty($this->User->findById($user_id), "コミット後は削除したデータは参照できない。");
     }
 
-    function testUserProvisionalRegistration()
+    function testUserProvisionalRegistrationPre()
     {
         //異常系
         $data = [
@@ -254,7 +254,7 @@ class UserTest extends CakeTestCase
             ],
             'Email' => []
         ];
-        $res = $this->User->userProvisionalRegistration($data);
+        $res = $this->User->userRegistration($data);
         $this->assertFalse($res, "[異常系]ユーザ仮登録");
         //正常系
         $data = [
@@ -269,8 +269,27 @@ class UserTest extends CakeTestCase
                 ['email' => 'taro@sato.com'],
             ]
         ];
-        $res = $this->User->userProvisionalRegistration($data);
+        $res = $this->User->userRegistration($data);
         $this->assertTrue($res, "[正常系]ユーザ仮登録");
+    }
+
+    function testUserProvisionalRegistration()
+    {
+        //正常系
+        $data = [
+            'User'  => [
+                'first_name'       => 'taro',
+                'last_name'        => 'sato',
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+                'agree_tos'        => true,
+            ],
+            'Email' => [
+                ['email' => 'taro@sato.com'],
+            ]
+        ];
+        $res = $this->User->userRegistration($data, false);
+        $this->assertTrue($res, "[正常系]ユーザ本登録");
     }
 
     function testVerifyEmail()
@@ -646,6 +665,20 @@ class UserTest extends CakeTestCase
         $this->User->id = $uid;
         $res = $this->User->passwordCheck($value, $field_name);
         $this->assertFalse($res, "[異常]パスワード確認で間違ったヴァリデーション指定");
+    }
+
+    function testUpdateDefaultTeam()
+    {
+        $uid = $this->generateBasicUser();
+        $this->User->me['id'] = $uid;
+        $this->User->me['default_team_id'] = null;
+        $res = $this->User->updateDefaultTeam('team_aaaaaaa');
+        $this->assertTrue($res, "[正常]デフォルトチーム更新");
+
+        $this->User->me['id'] = $uid;
+        $this->User->me['default_team_id'] = "team_xxxxxxxx";
+        $res = $this->User->updateDefaultTeam('team_aaaaaaa');
+        $this->assertFalse($res, "[異常]デフォルトチーム更新");
     }
 
 }

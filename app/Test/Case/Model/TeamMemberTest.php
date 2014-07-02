@@ -184,4 +184,19 @@ class TeamMemberTest extends CakeTestCase
 
     }
 
+    function testAdd()
+    {
+        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+
+        $data = [
+            'Team' => [
+                'name' => 'test'
+            ]
+        ];
+        $this->TeamMember->Team->save($data);
+        $res = $this->TeamMember->add($uid, $this->TeamMember->Team->id);
+        $this->assertTrue($res['TeamMember']['active_flg'], "[正常]メンバー追加でアクティブフラグon");
+        $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
+    }
+
 }
