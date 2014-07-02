@@ -36,7 +36,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.team_member',
         'app.group',
         'app.job_category',
-        'app.tokenData',
+        'app.invite',
         'app.thread',
         'app.send_mail',
         'app.message'
@@ -227,7 +227,7 @@ class TeamsControllerTest extends ControllerTestCase
                        ->will($this->returnValueMap($session_value_map)
             );
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/tokenData', ['method' => 'GET']);
+        $this->testAction('/teams/invite', ['method' => 'GET']);
     }
 
     function testInvitePost()
@@ -284,7 +284,7 @@ class TeamsControllerTest extends ControllerTestCase
         $emails = "aaa@example.com";
         $data = ['Team' => ['emails' => $emails]];
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/tokenData', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
     }
 
     function testInvitePostAllReadyInTeam()
@@ -344,7 +344,7 @@ class TeamsControllerTest extends ControllerTestCase
             );
         $data = ['Team' => ['emails' => $email]];
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/tokenData', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
     }
 
     function testInvitePostAllReadyInTeamAndNot()
@@ -404,6 +404,6 @@ class TeamsControllerTest extends ControllerTestCase
             );
         $data = ['Team' => ['emails' => $email]];
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/tokenData', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
     }
 }

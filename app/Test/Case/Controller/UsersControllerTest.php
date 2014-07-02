@@ -34,7 +34,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.group',
         'app.team_member',
         'app.job_category',
-        'app.tokenData',
+        'app.invite',
         'app.notification',
         'app.thread',
         'app.message',

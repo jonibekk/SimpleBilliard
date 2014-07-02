@@ -17,7 +17,7 @@ class InviteTest extends CakeTestCase
     public $fixtures = array(
         'app.user',
         'app.team_member',
-        'app.tokenData',
+        'app.invite',
         'app.team',
         'app.email',
     );
