@@ -75,9 +75,6 @@ class PagesController extends AppController
         }
         else {
             $this->layout = 'homepage';
-            //現在の登録ユーザ数
-            $user_count = $this->User->getAllUsersCount();
-            $this->set(compact('user_count'));
             return $this->render(implode('/', $path));
         }
     }
