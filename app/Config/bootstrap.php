@@ -124,6 +124,8 @@ define('LAYOUT_SETTING', "setting");
 //セッションのモード
 define('MODE_NEW_PROFILE', 1);
 define('MODE_NEW_TEAM', 2);
+//View側のモード
+define('MODE_VIEW_TUTORIAL', 1);
 //aws s3のurl
 define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
 define('S3_TRIM_PATH', '/upload/');
