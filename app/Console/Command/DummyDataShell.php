@@ -37,10 +37,25 @@ class DummyDataShell extends AppShell
         $this->start_time = microtime(true);
     }
 
+    public function getOptionParser()
+    {
+        $parser = parent::getOptionParser();
+        $options = [
+            'config' => ['short' => 'c', 'help' => 'DBのConfig名', 'required' => false],
+        ];
+        $parser->addOptions($options);
+        return $parser;
+    }
+
     function main()
     {
         $this->User->cacheQueries = false;
-        $this->User->useDbConfig = "bench";
+        if ($this->params['config']) {
+            $this->User->useDbConfig = $this->params['config'];
+        }
+        else {
+            $this->User->useDbConfig = "bench";
+        }
         foreach ($this->records as $table_name => $records) {
             $this->insertInitData($records, $table_name);
         }
@@ -158,14 +173,14 @@ class DummyDataShell extends AppShell
                 else {
 
                     if ($field['type'] == "string") {
-                        $records[$table_name][$field_name] = "test string";
+                        $records[$table_name][$field_name] = "test_string";
                     }
                     elseif ($field['type'] == "integer") {
                         $records[$table_name][$field_name] = true;
 
                     }
                     elseif ($field['type'] == "text") {
-                        $records[$table_name][$field_name] = "test text";
+                        $records[$table_name][$field_name] = "test_text";
                     }
                     elseif ($field['type'] == "boolean") {
                         $records[$table_name][$field_name] = true;
