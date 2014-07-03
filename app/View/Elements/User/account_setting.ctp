@@ -12,6 +12,7 @@
  * @var array              $language_list
  * @var array                       $timezones
  * @var array                       $not_verified_email
+ * @var                             $my_teams
  */
 ?>
     <div class="panel panel-default">
@@ -86,6 +87,16 @@
             ])
             ?>
             <hr>
+            <?
+            if (!empty($my_teams)) {
+                echo $this->Form->input('default_team_id', [
+                    'label'   => __d('gl', "デフォルトチーム"),
+                    'type'    => 'select',
+                    'options' => $my_teams,
+                ]);
+                echo "<hr>";
+            }
+            ?>
             <div class="form-group">
                 <label for="UserPassword" class="col col-sm-3 control-label"><?= __d('gl', "パスワード") ?></label>
 
