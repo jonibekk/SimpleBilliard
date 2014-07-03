@@ -10,32 +10,35 @@
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "プロフィールを入力してください") ?></div>
-            <div class="panel-body">
-                <?=
-                $this->Form->create('User', [
-                    'inputDefaults' => [
-                        'div'       => 'form-group',
-                        'label'     => [
-                            'class' => 'col col-sm-3 control-label'
-                        ],
-                        'wrapInput' => 'col col-sm-6',
-                        'class'     => 'form-control'
+            <?=
+            $this->Form->create('User', [
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => [
+                        'class' => 'col col-sm-3 control-label'
                     ],
-                    'class'         => 'form-horizontal',
-                    'novalidate'    => true,
-                    'type'          => 'file',
-                ]); ?>
+                    'wrapInput' => 'col col-sm-6',
+                    'class'     => 'form-control'
+                ],
+                'class'         => 'form-horizontal',
+                'novalidate'    => true,
+                'type'          => 'file',
+                'id'            => 'ProfileForm',
+            ]); ?>
+            <div class="panel-body">
                 <?
                 if (!$is_not_use_local_name) {
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('LocalName.0.last_name', [
-                        'label' => __d('gl', "姓(%s)", $language_name),
+                        'label'    => __d('gl', "姓(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 鈴木"),
+                        'required' => false,
                     ]);
                     $local_first_name = $this->Form->input('LocalName.0.first_name', [
-                        'label' => __d('gl', "名(%s)", $language_name),
+                        'label'    => __d('gl', "名(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 太郎"),
+                        'required' => false,
                     ]);
                     if ($me['last_first']) {
                         echo $local_last_name;
@@ -47,11 +50,34 @@
                     }
                     echo $this->Form->hidden('LocalName.0.language',
                                              ['value' => $this->Session->read('Auth.User.language')]);
-//                    echo $this->Form->hidden('LocalName.0.user_id',
-//                                             ['value' => $this->Session->read('Auth.User.id')]);
-                    echo "<hr>";
                 }
                 ?>
+                <?
+                //姓と名は言語によって表示順を変える
+                $last_name = $this->Form->input('last_name', [
+                    'label'                    => __d('gl', "姓(ローマ字)"),
+                    'placeholder'              => __d('gl', "例) Suzuki"),
+                    "pattern"                  => '^[a-zA-Z]+$',
+                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                ]);
+                $first_name = $this->Form->input('first_name', [
+                    'label'                    => __d('gl', "名(ローマ字)"),
+                    'placeholder'              => __d('gl', "例) Hiroshi"),
+                    "pattern"                  => '^[a-zA-Z]+$',
+                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                ]);
+                if ($me['last_first']) {
+                    echo $last_name;
+                    echo $first_name;
+                }
+                else {
+                    echo $first_name;
+                    echo $last_name;
+                }
+                ?>
+                <hr>
                 <?=
                 $this->Form->input('gender_type',
                                    [
@@ -158,10 +184,29 @@
                         <?=
                         $this->Html->link(__d('gl', "スキップ"), ['controller' => 'teams', 'action' => 'add'],
                                           ['class' => 'btn btn-default', 'div' => false]) ?>
-                        <?= $this->Form->end(); ?>
                     </div>
                 </div>
             </div>
+            <?= $this->Form->end(); ?>
         </div>
     </div>
 </div>
+<? $this->append('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ProfileForm').bootstrapValidator({
+            live: 'enabled',
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                "data[User][photo]": {
+                    enabled: false
+                }
+            }
+        });
+    });
+</script>
+<? $this->end() ?>
