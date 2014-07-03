@@ -181,7 +181,12 @@ class UsersController extends AppController
         $me = $this->Auth->user();
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
-        if ($this->request->is('post') && !empty($this->request->data)) {
+        if ($this->request->is('put') && !empty($this->request->data)) {
+            //ローカル名の入力が無い場合は除去
+            $local_name = $this->request->data['LocalName'][0];
+            if (!$local_name['first_name'] || !$local_name['last_name']) {
+                unset($this->request->data['LocalName']);
+            }
             //プロフィールを保存
             $this->User->id = $me['id'];
             if ($this->User->saveAll($this->request->data)) {
@@ -198,6 +203,9 @@ class UsersController extends AppController
                     return $this->redirect(['controller' => 'teams', 'action' => 'add']);
                 }
             }
+        }
+        else {
+            $this->request->data = ['User' => $me];
         }
         $language_name = $this->Lang->availableLanguages[$me['language']];
 

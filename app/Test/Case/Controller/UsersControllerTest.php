@@ -467,7 +467,7 @@ class UsersControllerTest extends ControllerTestCase
         $this->assertContains('姓(日本語)', $this->contents, "[正常]日本語でローカル名の入力項目が表示される");
     }
 
-    function testAddProfilePost()
+    function testAddProfilePut()
     {
         Configure::write('Config.language', 'ja');
 
@@ -512,17 +512,25 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [
-            'User' => [
-                'local_last_name'  => 'めい',
-                'local_first_name' => 'せい',
+            'User'      => [
+                'id'         => 'xxx',
+                'last_name'  => 'mei',
+                'first_name' => 'sei',
+            ],
+            'LocalName' => [
+                [
+                    'first_name' => null,
+                    'last_name'  => null,
+                    'language'   => 'jpn',
+                ]
             ]
         ];
-        $this->testAction('/users/add_profile', ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/users/add_profile', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
         $this->assertRegExp("/" . preg_quote("/teams/add", "/") . "$/", $this->headers["Location"],
                             "[正常]Post後にチーム作成画面へ遷移");
     }
 
-    function testAddProfilePostInvite()
+    function testAddProfilePutInvite()
     {
         Configure::write('Config.language', 'ja');
 
@@ -567,13 +575,22 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [
-            'User' => [
-                'local_last_name'  => 'めい',
-                'local_first_name' => 'せい',
+            'User'      => [
+                'id'         => 'xxx',
+                'last_name'  => 'mei',
+                'first_name' => 'sei',
+            ],
+            'LocalName' => [
+                [
+                    'first_name' => "めい",
+                    'last_name'  => "せい",
+                    'language'   => 'jpn',
+                ]
             ]
         ];
         $this->testAction('/users/add_profile/invite_token:test',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+
         $this->assertRegExp("/" . preg_quote("/", "/") . "$/", $this->headers["Location"],
                             "[正常]Post後にホーム画面へ遷移");
     }
