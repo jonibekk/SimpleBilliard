@@ -522,6 +522,62 @@ class UsersControllerTest extends ControllerTestCase
                             "[正常]Post後にチーム作成画面へ遷移");
     }
 
+    function testAddProfilePostInvite()
+    {
+        Configure::write('Config.language', 'ja');
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => 'xxx',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        $data = [
+            'User' => [
+                'local_last_name'  => 'めい',
+                'local_first_name' => 'せい',
+            ]
+        ];
+        $this->testAction('/users/add_profile/invite_token:test',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->assertRegExp("/" . preg_quote("/", "/") . "$/", $this->headers["Location"],
+                            "[正常]Post後にホーム画面へ遷移");
+    }
+
     function testAddProfileEng()
     {
         Configure::write('Config.language', 'ja');
