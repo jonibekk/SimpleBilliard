@@ -136,7 +136,7 @@ class UsersController extends AppController
                     $this->_autoLogin($this->User->getLastInsertID());
                     //チーム参加
                     $this->_joinTeam($this->request->params['named']['invite_token']);
-
+                    //ホーム画面でモーダル表示
                     $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
                     //プロフィール画面に遷移
                     $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);

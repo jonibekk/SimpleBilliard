@@ -62,6 +62,10 @@ class PagesController extends AppController
         //ログインしている場合とそうでない場合の切り分け
         if ($this->Auth->user()) {
             if ($path[0] == 'home') {
+                if ($this->Session->read('add_new_mode') === MODE_NEW_PROFILE) {
+                    $this->Session->delete('add_new_mode');
+                    $this->set('mode_view', MODE_VIEW_TUTORIAL);
+                }
                 return $this->render('logged_in_home');
             }
             else {

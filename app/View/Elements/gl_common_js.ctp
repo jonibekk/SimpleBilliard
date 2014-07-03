@@ -51,6 +51,11 @@ echo $this->Html->script('gl_basic');
                 }
             });
         });
+        <?if(isset($mode_view)):?>
+        <?if($mode_view == MODE_VIEW_TUTORIAL):?>
+        $("#modal_tutorial").modal('show');
+        <?endif;?>
+        <?endif;?>
     </script>
 <?
 echo $this->Session->flash('pnotify');
