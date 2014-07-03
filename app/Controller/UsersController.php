@@ -186,9 +186,17 @@ class UsersController extends AppController
             $this->User->id = $me['id'];
             if ($this->User->saveAll($this->request->data)) {
                 $this->_refreshAuth($me['id']);
-                //チーム作成ページへリダイレクト
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect(['controller' => 'teams', 'action' => 'add']);
+
+                //トークン付きの場合は招待のため、ホームへ
+                if (isset($this->request->params['named']['invite_token'])) {
+                    /** @noinspection PhpVoidFunctionResultUsedInspection */
+                    return $this->redirect("/");
+                }
+                else {
+                    //チーム作成ページへリダイレクト
+                    /** @noinspection PhpVoidFunctionResultUsedInspection */
+                    return $this->redirect(['controller' => 'teams', 'action' => 'add']);
+                }
             }
         }
         $language_name = $this->Lang->availableLanguages[$me['language']];
