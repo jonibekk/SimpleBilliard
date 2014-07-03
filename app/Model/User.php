@@ -368,22 +368,6 @@ class User extends AppModel
     }
 
     /**
-     * Goalousの全ての有効なユーザ数
-     *
-     * @return int
-     */
-    function getAllUsersCount()
-    {
-        $options = array(
-            'conditions' => array(
-                'active_flg' => true
-            )
-        );
-        $res = $this->find('count', $options);
-        return $res;
-    }
-
-    /**
      * ローカル名を利用しないか判定
      *
      * @param $lung
@@ -399,10 +383,10 @@ class User extends AppModel
      * ユーザ登録
      * 仮登録 or 本登録
      *
-*@param array $data
-     * @param bool $provisional
+     * @param array $data
+     * @param bool  $provisional
      *
-*@return bool
+     * @return bool
      */
     public function userRegistration($data, $provisional = true)
     {

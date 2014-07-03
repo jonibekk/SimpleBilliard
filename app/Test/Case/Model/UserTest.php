@@ -173,54 +173,6 @@ class UserTest extends CakeTestCase
         );
     }
 
-    public function testGetAllUsersCount()
-    {
-        //現在の結果
-        $current_res = $this->User->getAllUsersCount();
-        //アクティブユーザのレコードを１つ追加
-        $this->User->create();
-        $active_user_data = $this->User->save(
-                                       [
-                                           'first_name' => 'hoge',
-                                           'last_name'  => 'fuga',
-                                           'active_flg' => true
-                                       ]
-        );
-        $after_add_a_active_res = $this->User->getAllUsersCount();
-
-        $this->assertTrue(
-             $current_res + 1 === $after_add_a_active_res,
-             "アクティブユーザを１レコード追加した場合の取得結果が１レコード増えている"
-        );
-        $current_res = $after_add_a_active_res;
-        //非アクティブユーザのレコードを１つ追加
-        $this->User->create();
-        $non_active_user_data = $this->User->save(
-                                           [
-                                               'first_name' => 'hoge',
-                                               'last_name'  => 'fuga',
-                                               'active_flg' => false
-                                           ]
-        );
-        $after_add_a_non_active_res = $this->User->getAllUsersCount();
-        $this->assertTrue(
-             $current_res === $after_add_a_non_active_res,
-             "非アクティブユーザを追加しても取得結果のレコード数に変化がない"
-        );
-        $current_res = $after_add_a_non_active_res;
-        $this->User->delete($active_user_data['User']['id']);
-        $this->assertTrue(
-             $current_res - 1 === $this->User->getAllUsersCount(),
-             "アクティブユーザを１つ削除すると、結果が１減っている"
-        );
-        $current_res = $this->User->getAllUsersCount();
-        $this->User->delete($non_active_user_data['User']['id']);
-        $this->assertTrue(
-             $current_res === $this->User->getAllUsersCount(),
-             "非アクティブユーザを１つ削除しても結果が変わらない"
-        );
-    }
-
     public function testTransaction()
     {
         $user_id = '537ce224-8c0c-4c99-be76-433dac11b50b';

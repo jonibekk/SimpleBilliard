@@ -18,13 +18,6 @@
 ?>
     <div class="section-wrapper">
         <div class="container">
-            <div class="row">
-                <div class="span12">
-                    <h3 style="text-align: center">
-                        <?= __d('home', 'Registered users : %s', $this->Number->format($user_count)) ?>
-                    </h3>
-                </div>
-            </div>
             <?= $this->Session->flash('oauth_error'); ?>
             <div class="row">
                 <div class="span6">
@@ -74,7 +67,7 @@
                             ->link(__d('home', 'here'),
                                    array(
                                        'controller' => 'users',
-                                       'action' => 'register'
+                                       'action'     => 'register'
                                    ))
                         ?>
                         <?=
