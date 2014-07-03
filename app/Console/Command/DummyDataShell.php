@@ -40,17 +40,10 @@ class DummyDataShell extends AppShell
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $commands = [
-            'send_mail_by_id' => [
-                'help'   => 'SendMailのidを元にメールを送信する',
-                'parser' => [
-                    'options' => [
-                        'config' => ['short' => 'c', 'help' => 'DBのConfig名', 'required' => false,],
-                    ]
-                ]
-            ],
+        $options = [
+            'config' => ['short' => 'c', 'help' => 'DBのConfig名', 'required' => false],
         ];
-        $parser->addSubcommands($commands);
+        $parser->addOptions($options);
         return $parser;
     }
 
@@ -180,14 +173,14 @@ class DummyDataShell extends AppShell
                 else {
 
                     if ($field['type'] == "string") {
-                        $records[$table_name][$field_name] = "test string";
+                        $records[$table_name][$field_name] = "test_string";
                     }
                     elseif ($field['type'] == "integer") {
                         $records[$table_name][$field_name] = true;
 
                     }
                     elseif ($field['type'] == "text") {
-                        $records[$table_name][$field_name] = "test text";
+                        $records[$table_name][$field_name] = "test_text";
                     }
                     elseif ($field['type'] == "boolean") {
                         $records[$table_name][$field_name] = true;
