@@ -44,19 +44,6 @@ else {
         <div class="col-md-6 col-sm-9 col-xs-9 col-xxs-12" role="main">
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
-            <div class="well">
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-            </div>
         </div>
         <div class="col-md-4 visible-md visible-lg">
             <div class="well">

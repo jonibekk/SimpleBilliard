@@ -297,3 +297,11 @@ ul.example-indent {
 .example-indent li {
     text-indent: -1.8em;
 }
+
+.global-form .panel-heading {
+    border-bottom: none;
+}
+
+.global-form .panel-footer {
+    border-top: none;
+}
