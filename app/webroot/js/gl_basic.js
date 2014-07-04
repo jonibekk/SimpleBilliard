@@ -24,8 +24,30 @@ $(document).ready(function () {
     $('textarea').autosize();
     //noinspection JSJQueryEfficiency
     $('textarea').show().trigger('autosize.resize');
-});
 
+    //tiny-form
+    $(".tiny-form-text").bind("click", evShowAndThisWide);
+});
+/**
+ * クリックした要素のheightを倍にし、
+ * 指定した要素を表示する。(一度だけ)
+ */
+function evShowAndThisWide() {
+    //クリック済みの場合は処理しない
+    if ($(this).hasClass('clicked'))return;
+
+    //autosizeを一旦、切る。
+    $(this).trigger('autosize.destroy');
+    var current_height = $(this).height();
+    //現在のheightを倍にする。
+    $(this).height(current_height * 2);
+    //再度autosizeを有効化
+    $(this).autosize();
+    //submitボタンを表示
+    $("#" + $(this).attr('target_show_id')).show();
+    //クリック済みにする
+    $(this).addClass('clicked');
+}
 /**
  * Created by bigplants on 5/23/14.
  */

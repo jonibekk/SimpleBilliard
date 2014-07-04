@@ -8,7 +8,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<div class="panel panel-default">
+<div class="panel panel-default global-form">
     <div class="panel-heading">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
@@ -30,18 +30,21 @@
                 ],
                 'class'         => '',
                 'novalidate'    => true,
-                'id'            => 'UserAccountForm',
             ]); ?>
             <div class="panel-body">
                 <?=
                 $this->Form->input('body', [
-                    'label' => false,
-                    'type'  => 'textarea',
+                    'label'          => false,
+                    'type'           => 'textarea',
+                    'rows'           => 1,
+                    'placeholder'    => __d('gl', "何か投稿しよう"),
+                    'class'          => 'form-control tiny-form-text',
+                    'target_show_id' => "PostFormFooter",
                 ])
                 ?>
             </div>
-            <div class="panel-footer">
-                <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
+            <div class="panel-footer" style="display: none" id="PostFormFooter">
+            <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
                 <div class="clearfix"></div>
             </div>
             <?= $this->Form->end() ?>
