@@ -9,3 +9,4 @@
  */
 ?>
 <?= $this->element("Feed/common_form") ?>
+<?= $this->element("Feed/posts") ?>
