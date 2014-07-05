@@ -15,9 +15,8 @@ App::uses('Controller', 'Controller');
  * Application Controller
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
-
  *
-*@package        app.Controller
+ * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent              $Lang
  * @property SessionComponent           $Session
@@ -58,6 +57,7 @@ class AppController extends Controller
         'Form'      => ['className' => 'BoostCake.BoostCakeForm'],
         'Paginator' => ['className' => 'BoostCake.BoostCakePaginator'],
         'Upload',
+        'TimeEx'
     ];
 
     public $uses = [

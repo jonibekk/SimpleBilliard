@@ -23,7 +23,7 @@
                         <?= h($post['User']['display_username']) ?>
                     </div>
                     <div class="col col-xxs-12">
-                        <?= h($post['Post']['created']) ?>
+                        <?= $this->TimeEx->datetimeNoYear(h($post['Post']['created'])) ?>
                     </div>
                 </div>
                 <div class="col col-xxs-12">
