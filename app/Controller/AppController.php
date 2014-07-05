@@ -15,8 +15,9 @@ App::uses('Controller', 'Controller');
  * Application Controller
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
+
  *
- * @package        app.Controller
+*@package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent              $Lang
  * @property SessionComponent           $Session
@@ -26,6 +27,7 @@ App::uses('Controller', 'Controller');
  * @property PnotifyComponent           $Pnotify
  * @property MixpanelComponent          $Mixpanel
  * @property User                       $User
+ * @property Post                       $Post
  */
 class AppController extends Controller
 {
@@ -60,7 +62,17 @@ class AppController extends Controller
 
     public $uses = [
         'User',
+        'Post',
     ];
+
+    /**
+     * ページネータの初期設定
+     *
+     * @var array
+     */
+//    public $paginate = [
+//        'limit' => 20,
+//    ];
 
     public function beforeFilter()
     {

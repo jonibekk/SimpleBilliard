@@ -68,7 +68,7 @@ if (false) {
         var $Number;
 
         /**
-         * @var PaginatorHelper
+         * @var BoostCakePaginatorHelper
          */
         var $Paginator;
 

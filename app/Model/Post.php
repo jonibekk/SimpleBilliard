@@ -101,4 +101,21 @@ class Post extends AppModel
         return $res;
     }
 
+    public function getPaginateOption()
+    {
+        $options = [
+            'conditions' => [
+                'Post.team_id' => $this->current_team_id
+            ],
+            'limit'      => 10,
+            'order'      => [
+                'Post.modified' => 'desc'
+            ],
+            'contain'    => [
+                'User'
+            ]
+        ];
+        return $options;
+    }
+
 }
