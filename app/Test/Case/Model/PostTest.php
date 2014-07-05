@@ -4,7 +4,7 @@ App::uses('Post', 'Model');
 /**
  * Post Test Case
  *
- * @property mixed Post
+ * @property Post $Post
  */
 class PostTest extends CakeTestCase
 {
@@ -55,9 +55,20 @@ class PostTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    public function testAdd()
     {
+        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $postData = [
+            'Post' => ['body' => 'test']
+        ];
+        $res = $this->Post->add($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
+
+        $this->Post->me['id'] = $uid;
+        $this->Post->team_id = $team_id;
+        $res = $this->Post->add($postData);
+        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
 }

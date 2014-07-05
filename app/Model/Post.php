@@ -93,14 +93,9 @@ class Post extends AppModel
         if (!isset($postData['Post']) || empty($postData['Post'])) {
             return false;
         }
-        if (!$uid) {
-            $uid = $this->me['id'];
-        }
-        if (!$team_id) {
-            $team_id = $this->current_team_id;
-        }
-        $postData['Post']['user_id'] = $uid;
-        $postData['Post']['team_id'] = $team_id;
+        $this->setUidAndTeamId($uid, $team_id);
+        $postData['Post']['user_id'] = $this->uid;
+        $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
         $res = $this->save($postData);
         return $res;

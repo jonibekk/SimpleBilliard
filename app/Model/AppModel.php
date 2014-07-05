@@ -41,6 +41,24 @@ class AppModel extends Model
      */
     public $current_team_id = null;
 
+    /**
+     * save系のメソッドで扱うuser_id
+     *
+     * @var null
+     */
+    public $uid = null;
+    /**
+     * save系のメソッドで扱うteam_id
+     *
+     * @var null
+     */
+    public $team_id = null;
+
+    /**
+     * @param bool $id
+     * @param null $table
+     * @param null $ds
+     */
     public function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -208,6 +226,48 @@ class AppModel extends Model
     public function getTokenExpire($interval = TOKEN_EXPIRE_SEC_REGISTER)
     {
         return date('Y-m-d H:i:s', time() + $interval);
+    }
+
+    /**
+     * ユーザIDをセット
+     *
+     * @param null $uid
+     */
+    public function setUid($uid = null)
+    {
+        if (!$uid) {
+            $this->uid = $this->me['id'];
+        }
+        else {
+            $this->uid = $uid;
+        }
+    }
+
+    /**
+     * チームIDをセット
+     *
+     * @param null $team_id
+     */
+    public function setTeamId($team_id = null)
+    {
+        if (!$team_id) {
+            $this->team_id = $this->me['id'];
+        }
+        else {
+            $this->team_id = $team_id;
+        }
+    }
+
+    /**
+     * ユーザIDとチームIDをセット
+     *
+     * @param null $uid
+     * @param null $team_id
+     */
+    public function setUidAndTeamId($uid = null, $team_id = null)
+    {
+        $this->setUid($uid);
+        $this->setTeamId($team_id);
     }
 
 }
