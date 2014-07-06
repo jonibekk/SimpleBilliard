@@ -129,7 +129,7 @@ class DummyDataShell extends AppShell
                 $select_fields .= ", CONCAT(t1.{$key},({$id}))";
             }
             elseif ($table_schema[$key]['type'] == "datetime" && $key != "deleted") {
-                $select_fields .= ", date_add(now(),interval -({$key}) minute )";
+                $select_fields .= ", date_add(now(),interval -({$id}) minute )";
             }
             else {
                 $select_fields .= ", t1.{$key}";
