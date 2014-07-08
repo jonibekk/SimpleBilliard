@@ -225,7 +225,7 @@ class AppModel extends Model
      */
     public function getTokenExpire($interval = TOKEN_EXPIRE_SEC_REGISTER)
     {
-        return date('Y-m-d H:i:s', time() + $interval);
+        return time() + $interval;
     }
 
     /**

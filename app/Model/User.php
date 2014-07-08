@@ -449,7 +449,7 @@ class User extends AppModel
 
         $this->id = $data['User']['id'];
         $this->saveField('password', $this->generateHash($data['User']['password']));
-        $this->saveField('password_modified', date('Y-m-d H:i:s'));
+        $this->saveField('password_modified', time());
         return true;
     }
 
@@ -573,7 +573,7 @@ class User extends AppModel
         $options = [
             'conditions' => [
                 'User.password_token'          => $token,
-                'Email.email_token_expires >=' => date('Y-m-d H:i:s'),
+                'Email.email_token_expires >=' => time(),
                 'User.active_flg'              => true,
             ],
             'contain'    => ['User']
@@ -606,7 +606,7 @@ class User extends AppModel
 
         $user_email['User']['password'] = $this->generateHash($postData['User']['password']);
         $user_email['User']['password_token'] = null;
-        $user_email['User']['password_modified'] = date('Y-m-d H:i:s');
+        $user_email['User']['password_modified'] = time();
         $user_email['Email']['email_token_expires'] = null;
         $res = $this->Email->saveAll($user_email);
         return $res;

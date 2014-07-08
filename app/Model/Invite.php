@@ -85,8 +85,7 @@ class Invite extends AppModel
         if ($invite['Invite']['email_verified']) {
             throw new RuntimeException(__d('exception', 'このトークンは使用済みです。'));
         }
-        $expires = strtotime($invite['Invite']['email_token_expires']);
-        if ($expires < time()) {
+        if ($invite['Invite']['email_token_expires'] < time()) {
             throw new RuntimeException(__d('exception', 'トークンの期限が切れています。'));
         }
         return true;

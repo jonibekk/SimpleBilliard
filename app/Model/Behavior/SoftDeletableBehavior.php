@@ -84,7 +84,7 @@ class SoftDeletableBehavior extends ModelBehavior
             );
 
             if (isset($attributes['field_date']) && $Model->hasField($attributes['field_date'])) {
-                $data[$Model->alias][$attributes['field_date']] = date('Y-m-d H:i:s');
+                $data[$Model->alias][$attributes['field_date']] = time();
             }
 
             foreach (am(array_keys($data[$Model->alias]),
