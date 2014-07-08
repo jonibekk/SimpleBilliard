@@ -121,6 +121,15 @@ class DummyDataShell extends AppShell
         }
         $id = "t6.id * 100000 + t5.id * 10000 + t4.id * 1000 + t3.id * 100 + t2.id * 10 + t1.id";
         $select_fields = "";
+        $datetime_list = [
+            'created',
+            'modified',
+            'last_login',
+            'password_modified',
+            'email_token_expires',
+            'sent_datetime',
+
+        ];
         foreach ($default_data as $key => $val) {
             if ($key === "id") {
                 continue;
@@ -128,8 +137,8 @@ class DummyDataShell extends AppShell
             if ($table_schema[$key]['type'] == "string" || $table_schema[$key]['type'] == "text") {
                 $select_fields .= ", CONCAT(t1.{$key},({$id}))";
             }
-            elseif ($table_schema[$key]['type'] == "datetime" && $key != "deleted") {
-                $select_fields .= ", date_add(now(),interval -({$id}) minute )";
+            elseif (in_array($key, $datetime_list)) {
+                $select_fields .= ", unix_timestamp(date_add(now(),interval -({$id}) minute ))";
             }
             else {
                 $select_fields .= ", t1.{$key}";
