@@ -76,7 +76,7 @@ class TeamTest extends CakeTestCase
                 'type' => 1
             ]
         ];
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
         $res = $this->Team->add($postData, $uid);
         $this->assertTrue($res, "[正常]チーム追加");
     }

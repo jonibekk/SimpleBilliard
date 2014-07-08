@@ -17,10 +17,7 @@ class CommentRead extends AppModel
      * @var array
      */
     public $validate = [
-        'comment_id' => ['uuid' => ['rule' => ['uuid']]],
-        'user_id'    => ['uuid' => ['rule' => ['uuid']]],
-        'team_id'    => ['uuid' => ['rule' => ['uuid']]],
-        'del_flg'    => ['boolean' => ['rule' => ['boolean']]],
+        'del_flg' => ['boolean' => ['rule' => ['boolean']]],
     ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed

@@ -57,8 +57,8 @@ class PostTest extends CakeTestCase
 
     public function testAdd()
     {
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
-        $team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $uid = '1';
+        $team_id = '1';
         $postData = [
             'Post' => ['body' => 'test']
         ];

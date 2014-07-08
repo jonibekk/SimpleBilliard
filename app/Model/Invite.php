@@ -18,8 +18,6 @@ class Invite extends AppModel
      * @var array
      */
     public $validate = [
-        'from_user_id'   => ['uuid' => ['rule' => ['uuid']]],
-        'team_id'        => ['uuid' => ['rule' => ['uuid']]],
         'email'          => ['email' => ['rule' => ['email']]],
         'email_verified' => ['boolean' => ['rule' => ['boolean']]],
         'del_flg'        => ['boolean' => ['rule' => ['boolean']]],

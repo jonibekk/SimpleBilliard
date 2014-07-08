@@ -33,61 +33,61 @@ class SchemaMigrationFixture extends CakeTestFixture
             'id'      => 1,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 2,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 3,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 4,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 5,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 6,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 7,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 8,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 9,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
         array(
             'id'      => 10,
             'class'   => 'Lorem ipsum dolor sit amet',
             'type'    => 'Lorem ipsum dolor sit amet',
-            'created' => '2014-05-22 02:28:04'
+            'created' => '2014-07-08 15:07:26'
         ),
     );
 

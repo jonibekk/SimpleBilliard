@@ -47,7 +47,7 @@ class TeamMemberTest extends CakeTestCase
 
     function testGetActiveTeamList()
     {
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
         $data = [
             'TeamMember' => [['user_id' => $uid,]],
             'Team'       => [
@@ -85,7 +85,7 @@ class TeamMemberTest extends CakeTestCase
     function testPermissionCheck()
     {
         $team_id = null;
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
         try {
             $this->TeamMember->permissionCheck($team_id, $uid);
         } catch (RuntimeException $e) {
@@ -144,7 +144,7 @@ class TeamMemberTest extends CakeTestCase
     function testAdminCheck()
     {
         $this->TeamMember->myStatusWithTeam = null;
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
 
         $data = [
             'TeamMember' => [
@@ -186,7 +186,7 @@ class TeamMemberTest extends CakeTestCase
 
     function testAdd()
     {
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
 
         $data = [
             'Team' => [

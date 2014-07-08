@@ -71,7 +71,7 @@ class TeamsControllerTest extends ControllerTestCase
             ->method('_validatePost')
             ->will($this->returnValue(true));
         $value_map = [
-            ['id', '537ce224-8c0c-4c99-be76-433dac11b50b'],
+            ['id', '1'],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
@@ -105,7 +105,7 @@ class TeamsControllerTest extends ControllerTestCase
             ->method('_validatePost')
             ->will($this->returnValue(true));
         $value_map = [
-            ['id', '537ce224-8c0c-4c99-be76-433dac11b50b'],
+            ['id', '1'],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
@@ -153,7 +153,7 @@ class TeamsControllerTest extends ControllerTestCase
             ->method('_validatePost')
             ->will($this->returnValue(true));
         $value_map = [
-            ['id', '537ce224-8c0c-4c99-be76-433dac11b50b'],
+            ['id', '1'],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
@@ -165,7 +165,7 @@ class TeamsControllerTest extends ControllerTestCase
                 'type' => 1
             ]
         ];
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Teams->Team->add($postData, $uid);
 
@@ -184,7 +184,7 @@ class TeamsControllerTest extends ControllerTestCase
                 'Session'
             ],
         ]);
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Security
             ->expects($this->any())
@@ -239,7 +239,7 @@ class TeamsControllerTest extends ControllerTestCase
                 'Session'
             ],
         ]);
-        $uid = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $uid = '1';
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Security
             ->expects($this->any())
@@ -296,7 +296,7 @@ class TeamsControllerTest extends ControllerTestCase
                 'Session'
             ],
         ]);
-        $uid = '537ce224-c708-4084-b879-433dac11b50b';
+        $uid = '2';
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Security
             ->expects($this->any())
@@ -314,7 +314,7 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams->Team->TeamMember->myStatusWithTeam = null;
 
         $email = 'from@email.com';
-        $team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $team_id = '1';
 
         $data = [
             'TeamMember' => [
@@ -356,7 +356,7 @@ class TeamsControllerTest extends ControllerTestCase
                 'Session'
             ],
         ]);
-        $uid = '537ce224-c708-4084-b879-433dac11b50b';
+        $uid = '2';
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Security
             ->expects($this->any())
@@ -374,7 +374,7 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams->Team->TeamMember->myStatusWithTeam = null;
 
         $email = 'from@email.com,abcd@efgh.ccc';
-        $team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $team_id = '1';
 
         $data = [
             'TeamMember' => [

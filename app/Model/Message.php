@@ -17,10 +17,7 @@ class Message extends AppModel
      * @var array
      */
     public $validate = [
-        'from_user_id' => ['uuid' => ['rule' => ['uuid'],],],
-        'to_user_id'   => ['uuid' => ['rule' => ['uuid'],],],
-        'thread_id'    => ['uuid' => ['rule' => ['uuid'],],],
-        'del_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+        'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed

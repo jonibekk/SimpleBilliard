@@ -13,15 +13,18 @@ class ImagesPostFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_general_ci', 'comment' => '投稿画像ID', 'charset' => 'utf8'),
-        'post_id'         => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_general_ci', 'comment' => '投稿ID(belongsToでPostモデルと関連)', 'charset' => 'utf8'),
-        'image_id'        => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_general_ci', 'comment' => '画像ID(belongsToでImageモデルと関連)', 'charset' => 'utf8'),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
-        'deleted'         => array('type' => 'datetime', 'null' => true, 'default' => null, 'comment' => '所有バッジを削除した日付時刻'),
-        'created'         => array('type' => 'datetime', 'null' => true, 'default' => null, 'comment' => '所有バッジを追加した日付時刻'),
-        'modified'        => array('type' => 'datetime', 'null' => true, 'default' => null, 'comment' => '所有バッジを更新した日付時刻'),
+        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿画像ID'),
+        'post_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿ID(belongsToでPostモデルと関連)'),
+        'image_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '画像ID(belongsToでImageモデルと関連)'),
+        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
+        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '所有バッジを削除した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '所有バッジを追加した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '所有バッジを更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY' => array('column' => 'id', 'unique' => 1)
+            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
+            'post_id'  => array('column' => 'post_id', 'unique' => 0),
+            'image_id' => array('column' => 'image_id', 'unique' => 0),
+            'del_flg'  => array('column' => 'del_flg', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -33,94 +36,94 @@ class ImagesPostFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'       => '537d95df-73d0-4167-9eb4-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 1,
+            'created'  => 1,
+            'modified' => 1
         ),
         array(
-            'id'       => '537d95df-9cd4-49b9-9f51-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 2,
+            'created'  => 2,
+            'modified' => 2
         ),
         array(
-            'id'       => '537d95df-b570-4fe0-bbb9-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 3,
+            'created'  => 3,
+            'modified' => 3
         ),
         array(
-            'id'       => '537d95df-cce0-4776-be3b-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 4,
+            'created'  => 4,
+            'modified' => 4
         ),
         array(
-            'id'       => '537d95df-e3ec-4193-bb63-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 5,
+            'created'  => 5,
+            'modified' => 5
         ),
         array(
-            'id'       => '537d95df-fcec-4cbf-880f-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 6,
+            'created'  => 6,
+            'modified' => 6
         ),
         array(
-            'id'       => '537d95df-14c0-4402-8b54-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 7,
+            'created'  => 7,
+            'modified' => 7
         ),
         array(
-            'id'       => '537d95df-2b68-4d5a-8671-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 8,
+            'created'  => 8,
+            'modified' => 8
         ),
         array(
-            'id'       => '537d95df-51b0-434d-97e1-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 9,
+            'created'  => 9,
+            'modified' => 9
         ),
         array(
-            'id'       => '537d95df-68bc-4397-b0ef-13d0ac11b50b',
-            'post_id'  => 'Lorem ipsum dolor sit amet',
-            'image_id' => 'Lorem ipsum dolor sit amet',
+            'id'       => '',
+            'post_id'  => '',
+            'image_id' => '',
             'del_flg'  => 1,
-            'deleted'  => '2014-05-22 15:14:55',
-            'created'  => '2014-05-22 15:14:55',
-            'modified' => '2014-05-22 15:14:55'
+            'deleted'  => 10,
+            'created'  => 10,
+            'modified' => 10
         ),
     );
 

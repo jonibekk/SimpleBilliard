@@ -47,8 +47,8 @@ class InviteTest extends CakeTestCase
 
     function testSaveInvite()
     {
-        $team_id = "537ce224-c21c-41b6-a808-433dac11b50b";
-        $user_id = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $team_id = "1";
+        $user_id = '1';
         $email = "nodata@aaaaaaaaaaaaa.com";
         //登録済みでもなく招待もしていない場合
         $before_count = $this->Invite->find('count');
@@ -100,12 +100,12 @@ class InviteTest extends CakeTestCase
     function testIsForMe()
     {
         $token = 'token_test001';
-        $uid = "bbb";
+        $uid = "1234567891";
         $res = $this->Invite->isForMe($token, $uid);
         $this->assertTrue($res, "[正常]トークン自分宛");
         $this->Invite->tokenData = null;
 
-        $uid = "bbc";
+        $uid = "1234567892";
         $res = $this->Invite->isForMe($token, $uid);
         $this->assertFalse($res, "[異常]トークン自分宛");
         $this->Invite->tokenData = null;
@@ -114,7 +114,7 @@ class InviteTest extends CakeTestCase
         $token_data = $this->Invite->findByEmailToken($token);
         $this->Invite->id = $token_data['Invite']['id'];
         $this->Invite->saveField('to_user_id', null);
-        $uid = "bbb";
+        $uid = "1234567891";
         $res = $this->Invite->isForMe($token, $uid);
         $this->assertFalse($res, "[異常]to_user_idなし");
     }
@@ -129,7 +129,7 @@ class InviteTest extends CakeTestCase
         $this->assertTrue(isset($e), "[異常]tokenデータなし");
         unset($e);
 
-        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $id = '1';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
         $this->Invite->saveField('email_verified', true);
@@ -141,11 +141,11 @@ class InviteTest extends CakeTestCase
         $this->assertTrue(isset($e), "[異常]既に認証済みの古いtoken");
         unset($e);
 
-        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $id = '1';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
         $this->Invite->saveField('email_verified', false);
-        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('-1 day')));
+        $this->Invite->saveField('email_token_expires', strtotime("-1 day", time()));
         $token = "token_test001";
         try {
             $this->Invite->confirmToken($token);
@@ -154,7 +154,7 @@ class InviteTest extends CakeTestCase
         $this->assertTrue(isset($e), "[異常]token期限切れ");
         unset($e);
 
-        $id = '537ce223-29d0-431b-bfe4-433dac11b50b';
+        $id = '1';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
         $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));
@@ -169,7 +169,7 @@ class InviteTest extends CakeTestCase
 
     function testVerify()
     {
-        $id = '537ce223-507c-442a-a361-433dac11b50b';
+        $id = '2';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
         $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));

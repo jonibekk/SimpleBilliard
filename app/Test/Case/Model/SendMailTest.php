@@ -68,7 +68,7 @@ class SendMailTest extends CakeTestCase
 
     public function testGetDetail()
     {
-        $id = "537f7709-e6a8-4861-801f-0915ac11b50b";
+        $id = "1";
         $res = $this->SendMail->getDetail($id);
         $from = "from@email.com";
         $to = "to@email.com";
@@ -78,7 +78,7 @@ class SendMailTest extends CakeTestCase
 
     public function testGetDetailWithLang()
     {
-        $id = "537f7709-e6a8-4861-801f-0915ac11b50b";
+        $id = "1";
         $res = $this->SendMail->getDetail($id, "jpn");
         $from = "from@email.com";
         $to = "to@email.com";

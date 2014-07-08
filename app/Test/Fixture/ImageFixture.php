@@ -13,17 +13,19 @@ class ImageFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_general_ci', 'comment' => '画像ID', 'charset' => 'utf8'),
-        'user_id'         => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_general_ci', 'comment' => 'ユーザID(belongsToでUserモデルに関連)', 'charset' => 'utf8'),
-        'type'            => array('type' => 'integer', 'null' => false, 'default' => '1', 'unsigned' => false, 'comment' => '画像タイプ(1:ユーザ画像,2:ゴール画像,3:バッジ画像,4:投稿画像)'),
+        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '画像ID'),
+        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
+        'type'            => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 3, 'unsigned' => true, 'comment' => '画像タイプ(1:ユーザ画像,2:ゴール画像,3:バッジ画像,4:投稿画像)'),
         'name'            => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '画像名', 'charset' => 'utf8'),
         'item_file_name'  => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '画像ファイル名', 'charset' => 'utf8'),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
-        'deleted'         => array('type' => 'datetime', 'null' => true, 'default' => null, 'comment' => '画像を削除した日付時刻'),
-        'created'         => array('type' => 'datetime', 'null' => true, 'default' => null, 'comment' => '画像を追加した日付時刻'),
-        'modified'        => array('type' => 'datetime', 'null' => true, 'default' => null, 'comment' => '画像を更新した日付時刻'),
+        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
+        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '画像を削除した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '画像を追加した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '画像を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY' => array('column' => 'id', 'unique' => 1)
+            'PRIMARY' => array('column' => 'id', 'unique' => 1),
+            'user_id' => array('column' => 'user_id', 'unique' => 0),
+            'del_flg' => array('column' => 'del_flg', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -35,114 +37,114 @@ class ImageFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'             => '537ce223-827c-4d53-b925-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 1,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 1,
+            'created'        => 1,
+            'modified'       => 1
         ),
         array(
-            'id'             => '537ce223-a284-41c2-9f9f-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 2,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 2,
+            'created'        => 2,
+            'modified'       => 2
         ),
         array(
-            'id'             => '537ce223-bea4-46e3-bd60-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 3,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 3,
+            'created'        => 3,
+            'modified'       => 3
         ),
         array(
-            'id'             => '537ce223-d9fc-43bc-8777-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 4,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 4,
+            'created'        => 4,
+            'modified'       => 4
         ),
         array(
-            'id'             => '537ce223-f0a4-4511-bf5c-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 5,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 5,
+            'created'        => 5,
+            'modified'       => 5
         ),
         array(
-            'id'             => '537ce223-06e8-4a1b-b26c-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 6,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 6,
+            'created'        => 6,
+            'modified'       => 6
         ),
         array(
-            'id'             => '537ce223-1d90-4f35-ba00-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 7,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 7,
+            'created'        => 7,
+            'modified'       => 7
         ),
         array(
-            'id'             => '537ce223-3438-4b43-812e-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 8,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 8,
+            'created'        => 8,
+            'modified'       => 8
         ),
         array(
-            'id'             => '537ce223-4ae0-43bc-a404-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 9,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 9,
+            'created'        => 9,
+            'modified'       => 9
         ),
         array(
-            'id'             => '537ce223-6124-40e8-b9ae-433dac11b50b',
-            'user_id'        => 'Lorem ipsum dolor sit amet',
+            'id'             => '',
+            'user_id'        => '',
             'type'           => 10,
             'name'           => 'Lorem ipsum dolor sit amet',
             'item_file_name' => 'Lorem ipsum dolor sit amet',
             'del_flg'        => 1,
-            'deleted'        => '2014-05-22 02:28:03',
-            'created'        => '2014-05-22 02:28:03',
-            'modified'       => '2014-05-22 02:28:03'
+            'deleted'        => 10,
+            'created'        => 10,
+            'modified'       => 10
         ),
     );
 

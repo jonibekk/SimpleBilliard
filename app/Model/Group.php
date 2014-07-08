@@ -18,7 +18,6 @@ class Group extends AppModel
      * @var array
      */
     public $validate = [
-        'team_id'    => ['uuid' => ['rule' => ['uuid']]],
         'name'       => ['notEmpty' => ['rule' => ['notEmpty']]],
         'active_flg' => ['boolean' => ['rule' => ['boolean']]],
         'del_flg'    => ['boolean' => ['rule' => ['boolean']]],

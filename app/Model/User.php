@@ -97,7 +97,6 @@ class User extends AppModel
             ],
         ],
         'no_pass_flg'       => ['boolean' => ['rule' => ['boolean'],],],
-        'primary_email_id'  => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'         => ['boolean' => ['rule' => ['boolean'],],],
         'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
@@ -502,9 +501,7 @@ class User extends AppModel
             throw new RuntimeException(
                 __d('exception', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
         }
-
-        $expires = strtotime($user['Email']['email_token_expires']);
-        if ($expires < time()) {
+        if ($user['Email']['email_token_expires'] < time()) {
             throw new RuntimeException(__d('exception', 'トークンの期限が切れています。'));
         }
 

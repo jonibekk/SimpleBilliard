@@ -90,7 +90,7 @@ class EmailTest extends CakeTestCase
 
     function testIsAllVerifiedSuccess()
     {
-        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $uid = "1";
         $testData = [
             'user_id'        => $uid,
             'email'          => 'standalonea@email.com',
@@ -102,7 +102,7 @@ class EmailTest extends CakeTestCase
 
     function testIsAllVerifiedFail()
     {
-        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $uid = "1";
         $testData = [
             'user_id'        => $uid,
             'email'          => 'standalonea@email.com',
@@ -114,7 +114,7 @@ class EmailTest extends CakeTestCase
 
     function testIsOwn()
     {
-        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $uid = "1";
         $testData = [
             'user_id'        => $uid,
             'email'          => 'standalonea@email.com',
@@ -132,7 +132,7 @@ class EmailTest extends CakeTestCase
     function testIsBelongTeamByEmail()
     {
         $email = 'from@email.com';
-        $team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $team_id = '1';
         $res = $this->Email->isBelongTeamByEmail($email, $team_id);
         $this->assertTrue($res, "[正常]メアドからユーザが既にチームに存在しているかのチェック");
     }

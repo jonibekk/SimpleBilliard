@@ -31,8 +31,6 @@ class Post extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'         => ['uuid' => ['rule' => ['uuid'],],],
-        'team_id'         => ['uuid' => ['rule' => ['uuid'],],],
         'comment_count'   => ['numeric' => ['rule' => ['numeric'],],],
         'post_like_count' => ['numeric' => ['rule' => ['numeric'],],],
         'post_read_count' => ['numeric' => ['rule' => ['numeric'],],],

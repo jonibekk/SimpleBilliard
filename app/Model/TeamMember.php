@@ -20,8 +20,6 @@ class TeamMember extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'               => ['uuid' => ['rule' => ['uuid'],],],
-        'team_id'               => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],

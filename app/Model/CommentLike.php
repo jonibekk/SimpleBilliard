@@ -17,10 +17,7 @@ class CommentLike extends AppModel
      * @var array
      */
     public $validate = [
-        'comment_id' => ['uuid' => ['rule' => ['uuid']]],
-        'user_id'    => ['uuid' => ['rule' => ['uuid']]],
-        'team_id'    => ['uuid' => ['rule' => ['uuid']]],
-        'del_flg'    => ['boolean' => ['rule' => ['boolean']]],
+        'del_flg' => ['boolean' => ['rule' => ['boolean']]],
     ];
 
     /**
