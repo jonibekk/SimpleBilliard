@@ -134,7 +134,10 @@ class DummyDataShell extends AppShell
             if ($key === "id") {
                 continue;
             }
-            if ($table_schema[$key]['type'] == "string" || $table_schema[$key]['type'] == "text") {
+            if ($key === "item") {
+                $select_fields .= ', null';
+            }
+            elseif ($table_schema[$key]['type'] == "string" || $table_schema[$key]['type'] == "text") {
                 $select_fields .= ", CONCAT(t1.{$key},({$id}))";
             }
             elseif (in_array($key, $datetime_list)) {

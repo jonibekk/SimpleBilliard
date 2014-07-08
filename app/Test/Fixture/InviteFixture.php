@@ -60,34 +60,34 @@ class InviteFixture extends CakeTestFixture
             'modified'            => 1400725683
         ),
         array(
-            'id'           => '2',
-            'from_user_id' => '1',
-            'to_user_id'   => '2',
-            'team_id'      => '1',
+            'id'                  => '2',
+            'from_user_id'        => '1',
+            'to_user_id'          => '2',
+            'team_id'             => '1',
             'email'               => 'test@ppppp.com',
             'message'             => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'email_verified'      => false,
             'email_token'         => 'token_test002',
-            'email_token_expires' => '2025-05-22 02:28:03',
+            'email_token_expires' => 1747880883,
             'del_flg'             => false,
             'deleted'             => null,
-            'created'      => 1400725683,
-            'modified'     => 1400725683
+            'created'             => 1400725683,
+            'modified'            => 1400725683
         ),
         array(
-            'id'           => '3',
-            'from_user_id' => '1234567893',
+            'id'                  => '3',
+            'from_user_id'        => '1234567893',
             'to_user_id'          => null,
             'team_id'             => 'team_id_001',
             'email'               => 'Lorem ipsum dolor sit amet',
             'message'             => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'email_verified'      => false,
             'email_token'         => 'token_not_user_001',
-            'email_token_expires' => '2025-05-22 02:28:03',
+            'email_token_expires' => 1747880883,
             'del_flg'             => false,
             'deleted'             => null,
-            'created'      => 1400725683,
-            'modified'     => 1400725683
+            'created'             => 1400725683,
+            'modified'            => 1400725683
         ),
         array(
             'id'                  => '',

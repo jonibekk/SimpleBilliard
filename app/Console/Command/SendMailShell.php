@@ -110,10 +110,12 @@ class SendMailShell extends AppShell
             'to_user_name' => isset($data['ToUser']['display_username']) ? $data['ToUser']['display_username'] : null,
             'from_user_name' => (isset($data['FromUser']['display_username'])) ? $data['FromUser']['display_username'] : null,
         ];
-        $viewVars = array_merge($item, $viewVars);
+        if (is_array($item)) {
+            $viewVars = array_merge($item, $viewVars);
+        }
         $this->_sendMailItem($options, $viewVars);
         $this->SendMail->id = $data['SendMail']['id'];
-        $this->SendMail->save(['sent_datetime' => date('Y-m-d H:i:s')]);
+        $this->SendMail->save(['sent_datetime' => time()]);
     }
 
     /**
@@ -132,6 +134,9 @@ class SendMailShell extends AppShell
         );
         $options = array_merge($defaults, $options);
 
+        /**
+         * @var CakeEmail $Email
+         */
         $Email = $this->_getMailInstance();
         $Email->to($options['to'])->subject($options['subject'])
               ->template($options['template'], $options['layout'])->viewVars($viewVars)->send();
