@@ -22,6 +22,7 @@
         <div class="tab-pane fade in active" id="PostForm">
             <?=
             $this->Form->create('Post', [
+                'url' => ['controller' => 'posts', 'action' => 'add'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -44,7 +45,7 @@
                 ?>
             </div>
             <div class="panel-footer" style="display: none" id="PostFormFooter">
-            <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
+                <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
                 <div class="clearfix"></div>
             </div>
             <?= $this->Form->end() ?>
