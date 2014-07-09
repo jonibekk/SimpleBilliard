@@ -116,4 +116,22 @@ class Post extends AppModel
         return $options;
     }
 
+    /**
+     * ページネータのカウンタ
+     *
+     * @param null  $conditions
+     * @param int   $recursive
+     * @param array $extra
+     *
+     * @return array
+     */
+    function paginateCount($conditions = null, $recursive = 0, $extra = array())
+    {
+        //extraからcontainを除去
+        unset($extra['contain']);
+        $params = array('conditions' => $conditions);
+        $this->recursive = $recursive;
+        $count = $this->find('count', array_merge($params, $extra));
+        return $count;
+    }
 }

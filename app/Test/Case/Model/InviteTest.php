@@ -157,7 +157,7 @@ class InviteTest extends CakeTestCase
         $id = '1';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
-        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+        $this->Invite->saveField('email_token_expires', strtotime("+1 day", time()));
         $token = "token_test001";
         try {
             $this->Invite->confirmToken($token);
@@ -172,7 +172,7 @@ class InviteTest extends CakeTestCase
         $id = '2';
         $this->Invite->tokenData = null;
         $this->Invite->id = $id;
-        $this->Invite->saveField('email_token_expires', date('Y-m-d H:i:s', strtotime('+1 day')));
+        $this->Invite->saveField('email_token_expires', strtotime("+1 day", time()));
         $token = "token_test002";
         $res = $this->Invite->verify($token);
         $this->assertArrayHasKey('id', $res['Invite']);

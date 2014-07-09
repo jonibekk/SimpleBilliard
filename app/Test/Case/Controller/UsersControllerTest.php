@@ -736,7 +736,11 @@ class UsersControllerTest extends ControllerTestCase
         $uid = $UserTest->generateBasicUser();
         /** @noinspection PhpUndefinedMethodInspection */
         $user = $UserTest->User->findById($uid);
-
+        $user['User']['password_token'] = "test123456788";
+        $email = $UserTest->User->Email->findById($user['User']['primary_email_id']);
+        $email['Email']['email_token_expires'] = time() + (24 * 60 * 60);
+        $UserTest->User->Email->save($email);
+        $UserTest->User->save($user);
         $this->testAction('users/password_reset/' . $user['User']['password_token']);
     }
 
@@ -755,7 +759,7 @@ class UsersControllerTest extends ControllerTestCase
                 [
                     'email'               => 'basic@email.com',
                     'email_verified'      => true,
-                    'email_token_expires' => date('Y-m-d H:i:s', time() + 60 * 60)
+                    'email_token_expires' => time() + (60 * 60)
                 ]
             ]
         ];

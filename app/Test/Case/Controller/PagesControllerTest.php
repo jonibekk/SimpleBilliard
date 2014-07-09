@@ -173,8 +173,10 @@ class PagesControllerTest extends ControllerTestCase
                 'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
+        $user_id = 3;
+        $team_id = 1;
         $value_map = [
-            [null, 1],
+            [null, $user_id],
             ['language', 'jpn'],
             ['auto_language_flg', true],
         ];
@@ -192,7 +194,21 @@ class PagesControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
-        $this->testAction('/', ['return' => 'contents']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Pages->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', $team_id]]));
+        $Pages->Post->current_team_id = $team_id;
+        //投稿記事を20個いれる
+        $post_data = [];
+        for ($i = 0; $i < 20; $i++) {
+            $post_data[] = ['Post' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ]];
+        }
+        $Pages->User->Post->saveAll($post_data);
+        $this->testAction('/');
     }
 
     public function testHomeAuthNewProfile()
