@@ -15,11 +15,6 @@ class LocalName extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'    => [
-            'uuid' => [
-                'rule' => ['uuid'],
-            ],
-        ],
         'language'   => [
             'notEmpty' => [
                 'rule' => ['notEmpty'],

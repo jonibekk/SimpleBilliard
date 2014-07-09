@@ -16,9 +16,7 @@ class ImagesPost extends AppModel
      * @var array
      */
     public $validate = [
-        'post_id'  => ['uuid' => ['rule' => ['uuid'],],],
-        'image_id' => ['uuid' => ['rule' => ['uuid'],],],
-        'del_flg'  => ['boolean' => ['rule' => ['boolean'],],],
+        'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 
     /**

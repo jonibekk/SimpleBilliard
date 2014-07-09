@@ -59,7 +59,7 @@ class EmailsControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+            ['id', "10"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Emails->Auth->expects($this->any())->method('loggedIn')
@@ -86,7 +86,7 @@ class EmailsControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+            ['id', "10"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Emails->Auth->expects($this->any())->method('loggedIn')
@@ -94,7 +94,7 @@ class EmailsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Emails->Auth->staticExpects($this->any())->method('user')
                      ->will($this->returnValueMap($value_map));
-        $email_id = "537ce223-3514-47e1-893b-433dac11xxxx";
+        $email_id = "10";
         try {
             $this->testAction('emails/delete/' . $email_id, ['method' => 'POST']);
         } catch (NotFoundException $e) {
@@ -114,7 +114,7 @@ class EmailsControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+            ['id', "10"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Emails->Auth->expects($this->any())->method('loggedIn')
@@ -122,7 +122,7 @@ class EmailsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Emails->Auth->staticExpects($this->any())->method('user')
                      ->will($this->returnValueMap($value_map));
-        $email_id = '537ce223-3514-47e1-893b-433dac11b50b';
+        $email_id = '9';
         try {
             $this->testAction('emails/delete/' . $email_id, ['method' => 'POST']);
         } catch (NotFoundException $e) {

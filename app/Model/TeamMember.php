@@ -20,8 +20,6 @@ class TeamMember extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'               => ['uuid' => ['rule' => ['uuid'],],],
-        'team_id'               => ['uuid' => ['rule' => ['uuid'],],],
         'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
@@ -74,7 +72,7 @@ class TeamMember extends AppModel
     function updateLastLogin($team_id, $uid)
     {
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
-        $team_member['TeamMember']['last_login'] = date('Y-m-d H:i:s');
+        $team_member['TeamMember']['last_login'] = time();
         $res = $this->save($team_member);
         return $res;
     }

@@ -36,8 +36,6 @@ class Notification extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'    => ['uuid' => ['rule' => ['uuid'],],],
-        'team_id'    => ['uuid' => ['rule' => ['uuid'],],],
         'type'       => ['numeric' => ['rule' => ['numeric'],],],
         'unread_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'    => ['boolean' => ['rule' => ['boolean'],],],

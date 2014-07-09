@@ -84,9 +84,9 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '537ce224-8c0c-4c99-be76-433dac11b50b'];
+        $Posts->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $Posts->Post->current_team_id = '1';
         $data = [
             'Post' => [
                 'body' => 'test'
@@ -139,9 +139,9 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '537ce224-8c0c-4c99-be76-433dac11b50b'];
+        $Posts->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '537ce224-c21c-41b6-a808-433dac11b50b';
+        $Posts->Post->current_team_id = '1';
         $data = [];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);

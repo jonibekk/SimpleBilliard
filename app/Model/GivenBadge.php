@@ -18,11 +18,7 @@ class GivenBadge extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'       => ['uuid' => ['rule' => ['uuid']]],
-        'grant_user_id' => ['uuid' => ['rule' => ['uuid']]],
-        'team_id'       => ['uuid' => ['rule' => ['uuid']]],
-        'post_id'       => ['uuid' => ['rule' => ['uuid']]],
-        'del_flg'       => ['boolean' => ['rule' => ['boolean']]],
+        'del_flg' => ['boolean' => ['rule' => ['boolean']]],
     ];
 
     /**

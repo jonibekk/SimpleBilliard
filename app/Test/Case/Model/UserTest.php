@@ -175,7 +175,7 @@ class UserTest extends CakeTestCase
 
     public function testTransaction()
     {
-        $user_id = '537ce224-8c0c-4c99-be76-433dac11b50b';
+        $user_id = '1';
 
         //トランザクション開始前にデータが存在する事を確認
         $this->assertNotEmpty($this->User->findById($user_id), "トランザクション開始前にデータが存在する事を確認。");
@@ -247,7 +247,7 @@ class UserTest extends CakeTestCase
     function testVerifyEmail()
     {
         $token = "12345678";
-        $user_id = "537ce224-c708-4084-b879-433dac11b50b";
+        $user_id = "2";
         $before_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
         $before_data = [
             'User'  => [
@@ -269,7 +269,7 @@ class UserTest extends CakeTestCase
                 [
                     'email_verified'      => false,
                     'email_token'         => $token,
-                    'email_token_expires' => '2017-05-22 02:28:03',
+                    'email_token_expires' => strtotime('2017-05-22 02:28:03'),
                 ]
             ]
         ];
@@ -323,14 +323,14 @@ class UserTest extends CakeTestCase
 
     function testVerifyEmailUid()
     {
-        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $uid = "1";
         $token = 'abcd1234';
         $data = [
             'Email' => [
                 'user_id'             => $uid,
                 'email_verified'      => false,
                 'email_token'         => $token,
-                'email_token_expires' => date('Y-m-d H:i:s', strtotime("+1 day")),
+                'email_token_expires' => strtotime("+1 day", time()),
             ]
         ];
         $this->User->Email->save($data);
@@ -340,14 +340,14 @@ class UserTest extends CakeTestCase
 
     function testVerifyEmailUidExpire()
     {
-        $uid = "537ce224-8c0c-4c99-be76-433dac11b50b";
+        $uid = "1";
         $token = 'abcd1234';
         $data = [
             'Email' => [
                 'user_id'             => $uid,
                 'email_verified'      => false,
                 'email_token'         => $token,
-                'email_token_expires' => date('Y-m-d H:i:s', strtotime("-1 day")),
+                'email_token_expires' => strtotime("-1 day", time()),
             ]
         ];
         $this->User->Email->save($data);
@@ -360,13 +360,13 @@ class UserTest extends CakeTestCase
 
     function testFind()
     {
-        $user_id = "537ce224-5ca4-4fd5-aaf2-433dac11b50b";
+        $user_id = "5";
         $res = $this->User->findById($user_id);
         $actual = $res['User']['display_username'];
         $expected = "English user Last name";
         $this->assertEquals($expected, $actual, "[正常]英語ユーザの場合は表示ユーザ名が`first_name last_name`になる");
 
-        $user_id = "537ce224-8f08-4cf3-9c8f-433dac11b50b";
+        $user_id = "6";
         $res = $this->User->findById($user_id);
         $this->User->me = $res['User'];
         $res = $this->User->findById($user_id);
@@ -374,7 +374,7 @@ class UserTest extends CakeTestCase
         $expected = "姓 名";
         $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っている場合は`local_last_name local_first_name`になる");
 
-        $user_id = "537ce224-c16c-4f12-a301-433dac11b50b";
+        $user_id = "7";
         $res = $this->User->findById($user_id);
         $actual = $res['User']['display_username'];
         $expected = "first last";

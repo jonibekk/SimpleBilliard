@@ -114,7 +114,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session'  => ['setFlash'],
-                'Auth',
+                'Auth' => ['user'],
                 'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
@@ -128,6 +128,13 @@ class UsersControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        $value_map = [
+            ["id", 1234567890],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
         $data = [
             'User'  => [
                 'first_name'       => 'taro',
@@ -846,10 +853,10 @@ class UsersControllerTest extends ControllerTestCase
         ]);
         $value_map = [
             [null, [
-                'id'       => "537ce224-54b0-4081-b044-433dac11aaab",
+                'id' => "12",
                 'language' => 'jpn',
             ]],
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
             ['language', "jpn"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
@@ -889,10 +896,10 @@ class UsersControllerTest extends ControllerTestCase
 
         $value_map = [
             [null, [
-                'id'       => "537ce224-54b0-4081-b044-433dac11aaab",
+                'id' => "12",
                 'language' => 'jpn',
             ]],
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
             ['language', "jpn"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
@@ -924,7 +931,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -954,7 +961,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -985,9 +992,9 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
-        $uid = "537ce224-54b0-4081-b044-433dac11aaab";
+        $uid = "12";
         $Users->User->id = $uid;
         $Users->User->saveField('password', $Users->User->generateHash('12345678'));
         /** @noinspection PhpUndefinedMethodInspection */
@@ -998,7 +1005,7 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $data = [
             'User' => [
-                'id'               => '537ce224-54b0-4081-b044-433dac11aaab',
+                'id' => '12',
                 'old_password'     => '12345678',
                 'password'         => '12345678',
                 'password_confirm' => '12345678'
@@ -1019,9 +1026,9 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
-        $uid = "537ce224-54b0-4081-b044-433dac11aaab";
+        $uid = "12";
         $Users->User->id = $uid;
         $Users->User->saveField('password', $Users->User->generateHash('12345678'));
         /** @noinspection PhpUndefinedMethodInspection */
@@ -1032,7 +1039,7 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $data = [
             'User' => [
-                'id'               => '537ce224-54b0-4081-b044-433dac11aaab',
+                'id' => '12',
                 'old_password'     => '1234567890',
                 'password'         => '12345678',
                 'password_confirm' => '12345678'
@@ -1053,7 +1060,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1080,7 +1087,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1108,7 +1115,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1136,7 +1143,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1163,7 +1170,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11aaab"],
+            ['id', "12"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1189,7 +1196,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+            ['id', "10"],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1207,7 +1214,7 @@ class UsersControllerTest extends ControllerTestCase
     function testAcceptInvite()
     {
         $intite_token = 'token_test002';
-        //$invite_id = '537ce223-507c-442a-a361-433dac11b50b';
+        //$invite_id = '2';
 
         //ユーザ有,未ログイン,
         /**
@@ -1250,10 +1257,10 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-c708-4084-b879-433dac11b50b"],
+            ['id', "2"],
             [null, true]
         ];
-        $user = $Users->User->getDetail("537ce224-c708-4084-b879-433dac11b50b");
+        $user = $Users->User->getDetail("2");
         $Users->User->me = $user['User'];
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -1281,7 +1288,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "537ce224-54b0-4081-b044-433dac11b50b"],
+            ['id', "10"],
             [null, true]
         ];
         /** @noinspection PhpUndefinedMethodInspection */
@@ -1290,7 +1297,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map));
-        $user = $Users->User->getDetail("537ce224-54b0-4081-b044-433dac11b50b");
+        $user = $Users->User->getDetail("10");
         $Users->User->me = $user['User'];
 
         try {

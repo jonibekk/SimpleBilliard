@@ -57,13 +57,10 @@ class Thread extends AppModel
      * @var array
      */
     public $validate = [
-        'from_user_id' => ['uuid' => ['rule' => ['uuid'],],],
-        'to_user_id'   => ['uuid' => ['rule' => ['uuid'],],],
-        'team_id'      => ['uuid' => ['rule' => ['uuid'],],],
-        'type'         => ['numeric' => ['rule' => ['numeric'],],],
-        'status'       => ['numeric' => ['rule' => ['numeric'],],],
-        'name'         => ['notEmpty' => ['rule' => ['notEmpty'],],],
-        'del_flg'      => ['boolean' => ['rule' => ['boolean'],],],
+        'type'    => ['numeric' => ['rule' => ['numeric'],],],
+        'status'  => ['numeric' => ['rule' => ['numeric'],],],
+        'name'    => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 
     /**

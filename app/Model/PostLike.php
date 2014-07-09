@@ -17,9 +17,6 @@ class PostLike extends AppModel
      * @var array
      */
     public $validate = [
-        'post_id' => ['uuid' => ['rule' => ['uuid'],],],
-        'user_id' => ['uuid' => ['rule' => ['uuid'],],],
-        'team_id' => ['uuid' => ['rule' => ['uuid'],],],
         'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 

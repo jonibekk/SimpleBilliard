@@ -38,7 +38,6 @@ class Image extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'        => ['uuid' => ['rule' => ['uuid']]],
         'type'           => ['numeric' => ['rule' => ['numeric']]],
         'item_file_name' => ['notEmpty' => ['rule' => ['notEmpty']]],
         'del_flg'        => ['boolean' => ['rule' => ['boolean']]],
