@@ -68,7 +68,7 @@ if (false) {
         var $Number;
 
         /**
-         * @var PaginatorHelper
+         * @var BoostCakePaginatorHelper
          */
         var $Paginator;
 
@@ -91,6 +91,10 @@ if (false) {
          * @var TimeHelper
          */
         var $Time;
+        /**
+         * @var TimeExHelper
+         */
+        var $TimeEx;
 
         /**
          * @var UploadHelper

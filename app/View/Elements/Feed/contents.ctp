@@ -10,3 +10,4 @@
 ?>
 <?= $this->element("Feed/common_form") ?>
 <?= $this->element("Feed/posts") ?>
+<?= $this->Paginator->pagination(['ul' => 'pagination']) ?>

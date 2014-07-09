@@ -251,7 +251,7 @@ class AppModel extends Model
     public function setTeamId($team_id = null)
     {
         if (!$team_id) {
-            $this->team_id = $this->me['id'];
+            $this->team_id = $this->current_team_id;
         }
         else {
             $this->team_id = $team_id;

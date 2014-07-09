@@ -26,6 +26,7 @@ App::uses('Controller', 'Controller');
  * @property PnotifyComponent           $Pnotify
  * @property MixpanelComponent          $Mixpanel
  * @property User                       $User
+ * @property Post                       $Post
  */
 class AppController extends Controller
 {
@@ -56,11 +57,22 @@ class AppController extends Controller
         'Form'      => ['className' => 'BoostCake.BoostCakeForm'],
         'Paginator' => ['className' => 'BoostCake.BoostCakePaginator'],
         'Upload',
+        'TimeEx'
     ];
 
     public $uses = [
         'User',
+        'Post',
     ];
+
+    /**
+     * ページネータの初期設定
+     *
+     * @var array
+     */
+//    public $paginate = [
+//        'limit' => 20,
+//    ];
 
     public function beforeFilter()
     {
