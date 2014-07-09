@@ -132,6 +132,7 @@ class DummyDataShell extends AppShell
         ];
         foreach ($default_data as $key => $val) {
             if ($key === "id") {
+                $select_fields .= 'null';
                 continue;
             }
             if ($key === "item") {
@@ -141,13 +142,13 @@ class DummyDataShell extends AppShell
                 $select_fields .= ", CONCAT(t1.{$key},({$id}))";
             }
             elseif (in_array($key, $datetime_list)) {
-                $select_fields .= ", unix_timestamp(date_add(now(),interval -({$id}) minute ))";
+                $select_fields .= ", unix_timestamp() - ({$id})";
             }
             else {
                 $select_fields .= ", t1.{$key}";
             }
         }
-        $sql = "INSERT INTO {$table_name} ({$fields_imploded}) SELECT {$id}{$select_fields} FROM {$from}";
+        $sql = "INSERT INTO {$table_name} ({$fields_imploded}) SELECT {$select_fields} FROM {$from}";
         $this->User->query($sql);
         $end_time = microtime(true);
         $current_time = round($end_time - $current_start_time, 2);
