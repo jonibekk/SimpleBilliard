@@ -139,13 +139,15 @@ class DummyDataShell extends AppShell
 
         $from = "";
         $unique_num = "";
+        $multi_num = 1;
         for ($i = 1; $i < $this->digits; $i++) {
             if ($i != 1) {
                 $from .= ",";
                 $unique_num .= "+";
             }
             $from .= " {$table_name} t{$i}";
-            $unique_num .= "t{$i}.id * {$i} ";
+            $unique_num .= "t{$i}.id * {$multi_num} ";
+            $multi_num *= 10;
         }
         $select_fields = "";
         $datetime_list = [
@@ -169,7 +171,7 @@ class DummyDataShell extends AppShell
                 $select_fields .= ", CONCAT(t1.{$key},({$unique_num}))";
             }
             elseif (in_array($key, $datetime_list)) {
-                $select_fields .= ", unix_timestamp() - ({$unique_num})";
+                $select_fields .= ", unix_timestamp() - ({$unique_num}) * 60";
             }
             else {
                 $select_fields .= ", t1.{$key}";
