@@ -29,4 +29,35 @@ class PostsController extends AppController
             throw new RuntimeException(__d('exception', "不正な画面遷移です。"));
         }
     }
+
+    public function ajax_get_feed($page_num = null)
+    {
+        if (!$this->request->is('ajax')) {
+            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
+        }
+        //パラメータ初期値
+        $feed_type_id = null;
+        $created = null;
+        if (!$page_num) {
+            $page_num = 1;
+        }
+        Configure::write('debug', 0);
+        $this->layout = 'ajax';
+        $this->viewPath = 'Elements';
+
+        $posts = $this->Post->get($page_num);
+        $this->set(compact('posts'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/posts');
+        $html = $response->__toString();
+        $result = array(
+            'html' => $html
+        );
+        //レスポンスをjsonで生成
+        $this->response->type('json');
+        $this->response->body(json_encode($result));
+        return $this->response;
+    }
 }
