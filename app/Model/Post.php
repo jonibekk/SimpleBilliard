@@ -99,13 +99,14 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getPaginateOption()
+    public function get($page = 1, $limit = 20)
     {
         $options = [
             'conditions' => [
                 'Post.team_id' => $this->current_team_id
             ],
-            'limit' => 20,
+            'limit' => $limit,
+            'page'  => $page,
             'order'      => [
                 'Post.modified' => 'desc'
             ],
@@ -113,25 +114,7 @@ class Post extends AppModel
                 'User'
             ]
         ];
-        return $options;
-    }
-
-    /**
-     * ページネータのカウンタ
-     *
-     * @param null  $conditions
-     * @param int   $recursive
-     * @param array $extra
-     *
-     * @return array
-     */
-    function paginateCount($conditions = null, $recursive = 0, $extra = array())
-    {
-        //extraからcontainを除去
-        unset($extra['contain']);
-        $params = array('conditions' => $conditions);
-        $this->recursive = $recursive;
-        $count = $this->find('count', array_merge($params, $extra));
-        return $count;
+        $res = $this->find('all', $options);
+        return $res;
     }
 }
