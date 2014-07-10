@@ -41,7 +41,7 @@ class DummyDataShell extends AppShell
         $this->start_time = microtime(true);
 
         $this->table = "all";
-        $this->digits = 8;
+        $this->digits = 7;
     }
 
     public function getOptionParser()
@@ -59,17 +59,17 @@ class DummyDataShell extends AppShell
     function main()
     {
         $this->User->cacheQueries = false;
-        if ($this->params['config']) {
+        if (isset($this->params['config'])) {
             $this->User->useDbConfig = $this->params['config'];
         }
         else {
             $this->User->useDbConfig = "bench";
         }
 
-        if ($this->params['table']) {
+        if (isset($this->params['table'])) {
             $this->table = $this->params['table'];
         }
-        if ($this->params['digits']) {
+        if (isset($this->params['digits'])) {
             $this->digits = $this->params['digits'];
         }
 
