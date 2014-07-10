@@ -28,6 +28,10 @@ class DummyDataShell extends AppShell
 
     public $start_time;
 
+    public $table;
+
+    public $digits;
+
     function startup()
     {
         Configure::write('debug', 2);
@@ -35,6 +39,9 @@ class DummyDataShell extends AppShell
         Configure::write('shell_mode', true);
         $this->_setTableAndRecords();
         $this->start_time = microtime(true);
+
+        $this->table = "all";
+        $this->digits = 8;
     }
 
     public function getOptionParser()
@@ -42,6 +49,8 @@ class DummyDataShell extends AppShell
         $parser = parent::getOptionParser();
         $options = [
             'config' => ['short' => 'c', 'help' => 'DBのConfig名', 'required' => false],
+            'table'  => ['short' => 't', 'help' => 'テーブル名（指定なしの場合は全テーブル）', 'required' => false],
+            'digits' => ['short' => 'd', 'help' => '挿入データの桁数 2〜9(デフォルトは7)', 'required' => false],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -56,10 +65,26 @@ class DummyDataShell extends AppShell
         else {
             $this->User->useDbConfig = "bench";
         }
+
+        if ($this->params['table']) {
+            $this->table = $this->params['table'];
+        }
+        if ($this->params['digits']) {
+            $this->digits = $this->params['digits'];
+        }
+
         foreach ($this->records as $table_name => $records) {
+            //全指定以外でかつテーブル名が違う場合はスキップ
+            if ($this->table !== "all" && $this->table !== $table_name) {
+                continue;
+            }
             $this->insertInitData($records, $table_name);
         }
         foreach ($this->records as $table_name => $records) {
+            //全指定以外でかつテーブル名が違う場合はスキップ
+            if ($this->table !== "all" && $this->table !== $table_name) {
+                continue;
+            }
             $this->insertMulti($records, $table_name);
         }
         $end_time = microtime(true);
@@ -90,7 +115,7 @@ class DummyDataShell extends AppShell
         foreach ($data as $val) {
             foreach ($fields as $field) {
                 if ($field == "id") {
-                    $params[] = $current_no;
+                    $params[] = "null";
                 }
                 else {
                     $params[] = $val[$field];
@@ -113,13 +138,15 @@ class DummyDataShell extends AppShell
         $fields_imploded = implode(',', $fields);
 
         $from = "";
-        for ($i = 1; $i < 7; $i++) {
+        $unique_num = "";
+        for ($i = 1; $i < $this->digits; $i++) {
             if ($i != 1) {
                 $from .= ",";
+                $unique_num .= "+";
             }
             $from .= " {$table_name} t{$i}";
+            $unique_num .= "t{$i}.id * {$i} ";
         }
-        $id = "t6.id * 100000 + t5.id * 10000 + t4.id * 1000 + t3.id * 100 + t2.id * 10 + t1.id";
         $select_fields = "";
         $datetime_list = [
             'created',
@@ -139,10 +166,10 @@ class DummyDataShell extends AppShell
                 $select_fields .= ', null';
             }
             elseif ($table_schema[$key]['type'] == "string" || $table_schema[$key]['type'] == "text") {
-                $select_fields .= ", CONCAT(t1.{$key},({$id}))";
+                $select_fields .= ", CONCAT(t1.{$key},({$unique_num}))";
             }
             elseif (in_array($key, $datetime_list)) {
-                $select_fields .= ", unix_timestamp() - ({$id})";
+                $select_fields .= ", unix_timestamp() - ({$unique_num})";
             }
             else {
                 $select_fields .= ", t1.{$key}";
