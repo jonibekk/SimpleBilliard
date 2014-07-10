@@ -105,7 +105,7 @@ class Post extends AppModel
             'conditions' => [
                 'Post.team_id' => $this->current_team_id
             ],
-            'limit'      => 10,
+            'limit' => 20,
             'order'      => [
                 'Post.modified' => 'desc'
             ],
