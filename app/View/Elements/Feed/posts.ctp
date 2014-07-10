@@ -12,19 +12,13 @@
 <? if (!empty($posts)): ?>
     <? foreach ($posts as $post): ?>
         <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="col col-xxs-2">
+            <div class="panel-body gl-feed">
+                <div class="col col-xxs-12">
                     <?=
-                    $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium_large'],
-                                               ['width' => '60px', 'height' => '60px']) ?>
-                </div>
-                <div class="col col-xxs-10">
-                    <div class="col col-xxs-12">
-                        <?= h($post['User']['display_username']) ?>
-                    </div>
-                    <div class="col col-xxs-12">
-                        <?= $this->TimeEx->datetimeNoYear(h($post['Post']['created'])) ?>
-                    </div>
+                    $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
+                                               ['class' => 'gl-feed-img']) ?>
+                    <div><?= h($post['User']['display_username']) ?></div>
+                    <div><?= $this->TimeEx->datetimeNoYear(h($post['Post']['created'])) ?></div>
                 </div>
                 <div class="col col-xxs-12">
                     <?= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
