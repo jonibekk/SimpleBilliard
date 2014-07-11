@@ -181,9 +181,12 @@
                         <?=
                         $this->Form->submit(__d('gl', "プロフィールを登録"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
-                        <?=
-                        $this->Html->link(__d('gl', "スキップ"), ['controller' => 'teams', 'action' => 'add'],
-                                          ['class' => 'btn btn-default', 'div' => false]) ?>
+                        <?
+                        //招待の場合のスキップはホーム、そうじゃない場合はチーム作成
+                        $skip_link = isset($this->request->params['named']['invite_token']) ? "/" : ['controller' => 'teams', 'action' => 'add'];
+                        echo $this->Html->link(__d('gl', "スキップ"), $skip_link,
+                                               ['class' => 'btn btn-default', 'div' => false]);
+                        ?>
                     </div>
                 </div>
             </div>
