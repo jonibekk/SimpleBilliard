@@ -52,51 +52,6 @@ function evShowAndThisWide() {
     $(this).addClass('clicked');
 }
 
-function evFeedMoreView() {
-    attrUndefinedCheck(this, 'parent-id');
-    attrUndefinedCheck(this, 'next-page-num');
-    attrUndefinedCheck(this, 'get-url');
-
-    var $obj = $(this);
-    var parent_id = $obj.attr('parent-id');
-    var next_page_num = $obj.attr('next-page-num');
-    var get_url = $obj.attr('get-url');
-    //リンクを無効化
-    $obj.attr('disabled', 'disabled');
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    //ローダー表示
-    $obj.after($loader_html);
-    $.ajax({
-        type: 'GET',
-        url: get_url + '/' + next_page_num,
-        async: true,
-        dataType: 'json',
-        success: function (data) {
-            if (!$.isEmptyObject(data)) {
-                //取得したhtmlをオブジェクト化
-                var $posts = $(data.html);
-                //一旦非表示
-                $posts.hide();
-                $("#" + parent_id).before($posts);
-                //html表示
-                $posts.show("slow");
-                next_page_num++;
-                //次のページ番号をセット
-                $obj.attr('next-page-num', next_page_num);
-                //リンクを有効化
-                $obj.removeAttr('disabled');
-                //ローダーを削除
-                $loader_html.remove();
-            }
-            else {
-            }
-        },
-        error: function () {
-            alert('問題がありました。');
-        }
-    });
-    return false;
-}
 /**
  * Created by bigplants on 5/23/14.
  */
