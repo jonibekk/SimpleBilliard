@@ -58,8 +58,7 @@ class PagesController extends AppController
                     $this->Session->delete('add_new_mode');
                     $this->set('mode_view', MODE_VIEW_TUTORIAL);
                 }
-                $this->Paginator->settings = $this->Post->getPaginateOption();
-                $posts = $this->Paginator->paginate('Post');
+                $posts = $this->Post->get();
                 $this->set(compact('posts'));
                 return $this->render('logged_in_home');
             }
