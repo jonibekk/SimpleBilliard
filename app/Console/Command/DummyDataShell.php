@@ -171,7 +171,7 @@ class DummyDataShell extends AppShell
                 $select_fields .= ", CONCAT(t1.{$key},({$unique_num}))";
             }
             elseif (in_array($key, $datetime_list)) {
-                $select_fields .= ", unix_timestamp() - ({$unique_num}) * 60";
+                $select_fields .= ", unix_timestamp() - ({$unique_num})";
             }
             else {
                 $select_fields .= ", t1.{$key}";
