@@ -90,7 +90,7 @@ class DummyDataShell extends AppShell
         $end_time = microtime(true);
         $total_time = round($end_time - $this->start_time, 2);
 
-        $this->out("****************************");
+        $this->hr();
         $this->out("ダミーデータの登録が完了しました。");
         $this->out("実行時間:{$total_time}sec");
     }
@@ -182,7 +182,7 @@ class DummyDataShell extends AppShell
         $end_time = microtime(true);
         $current_time = round($end_time - $current_start_time, 2);
         $total_time = round($end_time - $this->start_time, 2);
-        $this->out("****************************");
+        $this->hr();
         $this->out("完了 : {$table_name}");
         $this->out("実行時間:{$current_time}sec");
         $this->out("経過時間:{$total_time}sec");
