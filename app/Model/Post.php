@@ -99,14 +99,28 @@ class Post extends AppModel
         return $res;
     }
 
-    public function get($page = 1, $limit = 20)
+    public function get($page = 1, $limit = 20, $start = null, $end = null)
     {
+        $one_month = 60 * 60 * 24 * 31;
+        if (!$start) {
+            $start = time() - $one_month;
+        }
+        elseif (is_string($start)) {
+            $start = strtotime($start);
+        }
+        if (!$end) {
+            $end = time();
+        }
+        elseif (is_string($end)) {
+            $end = strtotime($end);
+        }
         $options = [
             'conditions' => [
-                'Post.team_id' => $this->current_team_id
+                'Post.team_id'                  => $this->current_team_id,
+                'Post.modified BETWEEN ? AND ?' => [$start, $end],
             ],
-            'limit' => $limit,
-            'page'  => $page,
+            'limit'      => $limit,
+            'page'       => $page,
             'order'      => [
                 'Post.modified' => 'desc'
             ],
