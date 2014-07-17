@@ -317,3 +317,22 @@ ul.example-indent {
     width: 40px;
     margin-right: 7px;
 }
+
+.gl-comment-block {
+    border-top: 1px solid #dddddd;
+    background-color: #fcfcfc;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.gl-comment-img {
+    display: block;
+    float: left;
+    height: 32px;
+    width: 32px;
+    margin-right: 4px;
+}
+
+.gl-comment-body {
+    overflow: hidden;
+}
