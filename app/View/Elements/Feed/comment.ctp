@@ -19,7 +19,7 @@
                     <?= h($user['display_username']) ?></span>
         <?= nl2br($this->Text->autoLink(h($comment['body']))) ?>
         <div>
-            <?= $this->TimeEx->datetimeNoYear(h($comment['created'])) ?>
+            <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?>
             <a href="" class="">いいね！</a></div>
     </div>
 </div>

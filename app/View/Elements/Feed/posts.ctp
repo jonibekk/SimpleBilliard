@@ -18,7 +18,7 @@
                     $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                                ['class' => 'gl-feed-img']) ?>
                     <div><?= h($post['User']['display_username']) ?></div>
-                    <div><?= $this->TimeEx->datetimeNoYear(h($post['Post']['created'])) ?></div>
+                    <div><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
                 </div>
                 <div class="col col-xxs-12">
                     <?= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
