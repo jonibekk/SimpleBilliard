@@ -66,6 +66,10 @@ class Comment extends AppModel
         $postData['Comment']['user_id'] = $this->uid;
         $postData['Comment']['team_id'] = $this->team_id;
         $res = $this->save($postData);
+        //投稿データのmodifiedを更新
+        $this->Post->id = $postData['Comment']['post_id'];
+        $this->Post->saveField('modified', time());
+
         return $res;
     }
 }

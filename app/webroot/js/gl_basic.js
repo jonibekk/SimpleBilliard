@@ -25,12 +25,14 @@ $(document).ready(function () {
     //noinspection JSJQueryEfficiency
     $('textarea').show().trigger('autosize.resize');
 
-    //tiny-form
-    $(".tiny-form-text").bind("click", evShowAndThisWide);
     //チームフィードの「もっと見る」のイベント
     $('.click-feed-read-more').bind('click', evFeedMoreView);
 
 });
+/**
+ * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
+ */
+$(document).on("click", ".tiny-form-text", evShowAndThisWide);
 /**
  * クリックした要素のheightを倍にし、
  * 指定した要素を表示する。(一度だけ)
