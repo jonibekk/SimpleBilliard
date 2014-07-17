@@ -28,7 +28,9 @@ class CommentRead extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Comment',
+        'Comment' => [
+            "counterCache" => true,
+        ],
         'User',
         'Team'
     ];

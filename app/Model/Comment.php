@@ -30,7 +30,9 @@ class Comment extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Post',
+        'Post' => [
+            "counterCache" => true,
+        ],
         'User',
         'Team',
     ];
@@ -45,4 +47,25 @@ class Comment extends AppModel
         'CommentRead',
     ];
 
+    /**
+     * コメント
+     *
+     * @param      $postData
+     * @param null $uid
+     * @param null $team_id
+     *
+     * @internal param int $type
+     * @return bool|mixed
+     */
+    public function add($postData, $uid = null, $team_id = null)
+    {
+        if (!isset($postData['Comment']) || empty($postData['Comment'])) {
+            return false;
+        }
+        $this->setUidAndTeamId($uid, $team_id);
+        $postData['Comment']['user_id'] = $this->uid;
+        $postData['Comment']['team_id'] = $this->team_id;
+        $res = $this->save($postData);
+        return $res;
+    }
 }

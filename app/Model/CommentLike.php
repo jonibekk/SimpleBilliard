@@ -26,7 +26,9 @@ class CommentLike extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Comment',
+        'Comment' => [
+            "counterCache" => true,
+        ],
         'User',
         'Team',
     ];

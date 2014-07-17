@@ -47,7 +47,7 @@
                                                ['class' => 'gl-comment-img']) ?>
                     <div class="gl-comment-body">
                         <?=
-                        $this->Form->create('Post', [
+                        $this->Form->create('Comment', [
                             'url'           => ['controller' => 'posts', 'action' => 'comment_add'],
                             'inputDefaults' => [
                                 'div'       => 'form-group',
@@ -68,6 +68,7 @@
                             'target_show_id' => "Comment_{$post_key}",
                         ])
                         ?>
+                        <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                         <div class="" style="display: none" id="Comment_<?= $post_key ?>">
                             <?= $this->Form->submit(__d('gl', "コメントする"), ['class' => 'btn btn-primary pull-right']) ?>
                             <div class="clearfix"></div>
