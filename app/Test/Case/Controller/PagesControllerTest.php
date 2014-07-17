@@ -201,11 +201,20 @@ class PagesControllerTest extends ControllerTestCase
         //投稿記事を20個いれる
         $post_data = [];
         for ($i = 0; $i < 20; $i++) {
-            $post_data[] = ['Post' => [
-                'user_id' => $user_id,
-                'team_id' => $team_id,
-                'body'    => 'test'
-            ]];
+            $post_data[] = [
+                'Post'    => [
+                    'user_id' => $user_id,
+                    'team_id' => $team_id,
+                    'body'    => 'test'
+                ],
+                'Comment' => [
+                    [
+                        'user_id' => $user_id,
+                        'team_id' => $team_id,
+                        'body'    => 'test'
+                    ]
+                ]
+            ];
         }
         $Pages->User->Post->saveAll($post_data);
         $this->testAction('/');
