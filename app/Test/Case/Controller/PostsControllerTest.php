@@ -204,6 +204,167 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testAddComment()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->generate('Posts', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => 'xxx',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->current_team_id = '1';
+
+        $data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'body'    => 'test'
+        ];
+        $Posts->Post->save($data);
+        $data = [
+            'Comment' => [
+                'body'    => 'test',
+                'post_id' => 1,
+            ],
+        ];
+        $this->testAction('/posts/comment_add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testAddCommentFailNotPost()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->generate('Posts', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => 'xxx',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->current_team_id = '1';
+        try {
+            $this->testAction('/posts/add',
+                              ['method' => 'GET', 'return' => 'contents']);
+
+        } catch (RuntimeException $e) {
+
+        }
+        $this->assertTrue(isset($e), "[異常]Postsコントローラのaddメソッドにgetでアクセス");
+    }
+
+    function testAddCommentFail()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->generate('Posts', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => 'xxx',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->current_team_id = '1';
+        $data = [];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
     function testAjaxGetFeedNoPageNum()
     {
         /**
