@@ -59,18 +59,20 @@
                                 'wrapInput' => '',
                                 'class'     => 'form-control'
                             ],
-                            'class'         => '',
+                            'class' => 'validate',
                             'novalidate'    => true,
                         ]); ?>
                         <?=
                         $this->Form->input('body', [
-                            'id' => "CommentFormBody_{$post['Post']['id']}",
-                            'label'          => false,
-                            'type'           => 'textarea',
-                            'rows'           => 1,
-                            'placeholder'    => __d('gl', "コメントする"),
-                            'class'          => 'form-control tiny-form-text',
-                            'target_show_id' => "Comment_{$post['Post']['id']}",
+                            'id'                       => "CommentFormBody_{$post['Post']['id']}",
+                            'label'                    => false,
+                            'type'                     => 'textarea',
+                            'rows'                     => 1,
+                            'required'                 => true,
+                            'placeholder'              => __d('gl', "コメントする"),
+                            'class'                    => 'form-control tiny-form-text',
+                            'target_show_id'           => "Comment_{$post['Post']['id']}",
+                            "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                         ])
                         ?>
                         <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
