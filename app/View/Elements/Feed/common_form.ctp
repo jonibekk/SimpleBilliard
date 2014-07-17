@@ -29,24 +29,26 @@
                     'wrapInput' => '',
                     'class'     => 'form-control'
                 ],
-                'class'         => '',
+                'id'  => 'PostDisplayForm',
                 'novalidate'    => true,
             ]); ?>
             <div class="panel-body">
                 <?=
                 $this->Form->input('body', [
-                    'label'          => false,
-                    'type'           => 'textarea',
-                    'rows'           => 1,
-                    'placeholder'    => __d('gl', "何か投稿しよう"),
-                    'class'          => 'form-control tiny-form-text',
-                    'target_show_id' => "PostFormFooter",
+                    'label'                    => false,
+                    'type'                     => 'textarea',
+                    'rows'                     => 1,
+                    'required'                 => true,
+                    'placeholder'              => __d('gl', "何か投稿しよう"),
+                    'class'                    => 'form-control tiny-form-text',
+                    'target_show_id'           => "PostFormFooter",
+                    "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-            </div>
-            <div class="panel-footer" style="display: none" id="PostFormFooter">
-                <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
-                <div class="clearfix"></div>
+                <div class="" style="display: none" id="PostFormFooter">
+                    <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
+                    <div class="clearfix"></div>
+                </div>
             </div>
             <?= $this->Form->end() ?>
         </div>
