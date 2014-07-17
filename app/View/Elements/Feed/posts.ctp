@@ -24,23 +24,26 @@
                     <?= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
                 </div>
                 <div class="col col-xxs-12">
-                    <a href="" class="">いいね！</a>&nbsp;<a href="">コメントする</a>
+                    <a href="" class="">いいね！</a>&nbsp;<a
+                        href="<?= "#CommentFormBody_{$post['Post']['id']}" ?>"><?= __d('gl', "コメントする") ?></a>
                 </div>
             </div>
             <div class="panel-body gl-feed gl-comment-block">
-                <!--                <div class="col col-xxs-12">-->
-                <!--                    --><? //=
-                //                    $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'small'],
-                //                                               ['class' => 'gl-comment-img'])
-                ?>
-                <!--                    <div class="gl-comment-body"><span>-->
-                <? //= h($post['User']['display_username']) ?><!--</span>-->
-                <!--                        --><? //= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
-                <!--                        <div>-->
-                <!--                            --><? //= $this->TimeEx->datetimeNoYear(h($post['Post']['created'])) ?>
-                <!--                            <a href="" class="">いいね！</a></div>-->
-                <!--                    </div>-->
-                <!--                </div>-->
+                <? foreach ($post['Comment'] as $comment): ?>
+                    <div class="col col-xxs-12">
+                        <?=
+                        $this->Upload->uploadImage($comment['User'], 'User.photo', ['style' => 'small'],
+                                                   ['class' => 'gl-comment-img'])
+                        ?>
+                        <div class="gl-comment-body"><span>
+                    <?= h($comment['User']['display_username']) ?></span>
+                            <?= nl2br($this->Text->autoLink(h($comment['body']))) ?>
+                            <div>
+                                <?= $this->TimeEx->datetimeNoYear(h($comment['created'])) ?>
+                                <a href="" class="">いいね！</a></div>
+                        </div>
+                    </div>
+                <? endforeach ?>
                 <div class="col col-xxs-12">
                     <?=
                     $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
@@ -60,6 +63,7 @@
                         ]); ?>
                         <?=
                         $this->Form->input('body', [
+                            'id' => "CommentFormBody_{$post['Post']['id']}",
                             'label'          => false,
                             'type'           => 'textarea',
                             'rows'           => 1,
@@ -70,7 +74,7 @@
                         ?>
                         <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                         <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
-                        <?= $this->Form->submit(__d('gl', "コメントする"), ['class' => 'btn btn-primary pull-right']) ?>
+                            <?= $this->Form->submit(__d('gl', "コメントする"), ['class' => 'btn btn-primary pull-right']) ?>
                             <div class="clearfix"></div>
                         </div>
                         <?= $this->Form->end() ?>
