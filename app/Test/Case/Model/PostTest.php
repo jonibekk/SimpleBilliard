@@ -71,4 +71,13 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
+    public function testGet()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->me['id'] = $uid;
+        $this->Post->current_team_id = $team_id;
+        $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
+    }
+
 }
