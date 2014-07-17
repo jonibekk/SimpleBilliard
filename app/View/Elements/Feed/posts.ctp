@@ -29,20 +29,18 @@
                 </div>
             </div>
             <div class="panel-body gl-feed gl-comment-block">
+                <? if ($post['Post']['comment_count'] > 3): ?>
+                    <a href="#" class="btn btn-link click-comment-all"
+                       id="Comments_<?= $post['Post']['id'] ?>"
+                       parent-id="Comments_<?= $post['Post']['id'] ?>"
+                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_comment', $post['Post']['id']]) ?>"
+                        >
+                        <i class="fa fa-comment-o"></i>&nbsp;<?=
+                        __d('gl', "他%s件のコメントを見る",
+                            $post['Post']['comment_count'] - 3) ?></a>
+                <? endif; ?>
                 <? foreach ($post['Comment'] as $comment): ?>
-                    <div class="col col-xxs-12">
-                        <?=
-                        $this->Upload->uploadImage($comment['User'], 'User.photo', ['style' => 'small'],
-                                                   ['class' => 'gl-comment-img'])
-                        ?>
-                        <div class="gl-comment-body"><span>
-                    <?= h($comment['User']['display_username']) ?></span>
-                            <?= nl2br($this->Text->autoLink(h($comment['body']))) ?>
-                            <div>
-                                <?= $this->TimeEx->datetimeNoYear(h($comment['created'])) ?>
-                                <a href="" class="">いいね！</a></div>
-                        </div>
-                    </div>
+                    <?= $this->element('Feed/comment', ['comment' => $comment, 'user' => $comment['User']]) ?>
                 <? endforeach ?>
                 <div class="col col-xxs-12">
                     <?=

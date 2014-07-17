@@ -72,4 +72,30 @@ class Comment extends AppModel
 
         return $res;
     }
+
+    public function getPostsComment($post_id, $cut_num = 0)
+    {
+        $options = [
+            'conditions' => [
+                'Comment.post_id' => $post_id,
+                'Comment.team_id' => $this->current_team_id,
+            ],
+            'order'      => [
+                'Comment.created' => 'asc'
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        //最後のコメントから指定件数を削除
+        if ($cut_num > 0) {
+            for ($i = 0; $i < $cut_num; $i++) {
+                array_pop($res);
+            }
+        }
+        return $res;
+    }
 }

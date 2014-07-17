@@ -26,8 +26,10 @@ $(document).ready(function () {
     $('textarea').show().trigger('autosize.resize');
 
     //チームフィードの「もっと見る」のイベント
+    //noinspection JSUnresolvedVariable
     $('.click-feed-read-more').bind('click', evFeedMoreView);
-
+    //noinspection JSUnresolvedVariable
+    $('.click-comment-all').bind('click', evCommentAllView);
 });
 /**
  * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
