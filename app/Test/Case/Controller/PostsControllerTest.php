@@ -304,11 +304,11 @@ class PostsControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map)
             );
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
+        $Posts->Post->Comment->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
+        $Posts->Post->Comment->current_team_id = '1';
         try {
-            $this->testAction('/posts/add',
+            $this->testAction('/posts/comment_add',
                               ['method' => 'GET', 'return' => 'contents']);
 
         } catch (RuntimeException $e) {
@@ -357,11 +357,11 @@ class PostsControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map)
             );
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
+        $Posts->Post->Comment->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
+        $Posts->Post->Comment->current_team_id = '1';
         $data = [];
-        $this->testAction('/posts/add',
+        $this->testAction('/posts/comment_add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
