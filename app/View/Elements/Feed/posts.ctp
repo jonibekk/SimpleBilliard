@@ -24,8 +24,11 @@
                     <?= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
                 </div>
                 <div class="col col-xxs-12">
-                    <a href="" class="">いいね！</a>&nbsp;<a
-                        href="<?= "#CommentFormBody_{$post['Post']['id']}" ?>"><?= __d('gl', "コメントする") ?></a>
+                    <a href="" class="">いいね！</a>&nbsp;<a class="trigger-click"
+                                                         href="#"
+                                                         target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
+                        __d('gl',
+                            "コメントする") ?></a>
                 </div>
             </div>
             <div class="panel-body gl-feed gl-comment-block">

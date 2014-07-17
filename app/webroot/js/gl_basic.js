@@ -35,6 +35,17 @@ $(document).ready(function () {
  * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
  */
 $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+$(document).on("click", ".trigger-click", evTriggerClick);
+
+function evTriggerClick() {
+    attrUndefinedCheck(this, 'target-id');
+    var target_id = $(this).attr("target-id");
+    //noinspection JSJQueryEfficiency
+    $("#" + target_id).trigger('click');
+    //noinspection JSJQueryEfficiency
+    $("#" + target_id).focus();
+    return false;
+}
 /**
  * クリックした要素のheightを倍にし、
  * 指定した要素を表示する。(一度だけ)
