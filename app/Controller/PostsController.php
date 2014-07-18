@@ -75,10 +75,10 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_comment_like($post_id)
+    public function ajax_comment_like($comment_id)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Post->Comment->CommentLike->changeLike($post_id);
+        $res = $this->Post->Comment->CommentLike->changeLike($comment_id);
         return $this->_ajaxGetResponse($res);
     }
 
