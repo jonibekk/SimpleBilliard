@@ -116,6 +116,22 @@ class Post extends AppModel
         elseif (is_string($end)) {
             $end = strtotime($end);
         }
+        $post_options = [
+            'conditions' => [
+                'Post.team_id'                  => $this->current_team_id,
+                'Post.modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'limit'      => $limit,
+            'page'       => $page,
+            'order'      => [
+                'Post.modified' => 'desc'
+            ],
+        ];
+        $post_list = $this->find('list', $post_options);
+        //投稿を既読に
+        $this->PostRead->red($post_list);
+        //コメントを既読に
+        $this->Comment->CommentRead->red($post_list);
         $options = [
             'conditions' => [
                 'Post.team_id'                  => $this->current_team_id,

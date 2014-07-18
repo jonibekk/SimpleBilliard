@@ -35,4 +35,37 @@ class PostRead extends AppModel
         'User',
         'Team',
     ];
+
+    public function red($post_list)
+    {
+        //既読済みのリスト取得
+        $options = [
+            'conditions' => [
+                'post_id' => $post_list,
+                'user_id' => $this->me['id'],
+            ],
+            'fields'     => ['post_id']
+        ];
+        $read = $this->find('all', $options);
+
+        /** @noinspection PhpDeprecationInspection */
+        $read_list = Set::combine($read, '{n}.PostRead.post_id', '{n}.PostRead.post_id');
+        $common_data = [
+            'user_id' => $this->me['id'],
+            'team_id' => $this->current_team_id
+        ];
+        $post_data = [];
+        foreach ($post_list as $post_id) {
+            //既読をスキップ
+            if (in_array($post_id, $read_list)) {
+                continue;
+            }
+            $data = array_merge($common_data, ['post_id' => $post_id]);
+            $post_data[] = $data;
+        }
+        if (empty($post_data)) {
+            return;
+        }
+        $this->saveAll($post_data);
+    }
 }

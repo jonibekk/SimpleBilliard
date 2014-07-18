@@ -79,6 +79,8 @@ class Comment extends AppModel
 
     public function getPostsComment($post_id, $cut_num = 0)
     {
+        //既読済みに
+        $this->CommentRead->red($post_id);
         $options = [
             'conditions' => [
                 'Comment.post_id' => $post_id,
