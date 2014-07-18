@@ -30,6 +30,7 @@ class CommentRead extends AppModel
     public $belongsTo = [
         'Comment' => [
             "counterCache" => true,
+            'counterScope' => ['CommentRead.del_flg' => false]
         ],
         'User',
         'Team'

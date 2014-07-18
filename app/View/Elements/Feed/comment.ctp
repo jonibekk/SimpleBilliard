@@ -20,6 +20,10 @@
         <?= nl2br($this->Text->autoLink(h($comment['body']))) ?>
         <div>
             <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?>
-            <a href="" class="">いいね！</a></div>
+            <a href="#" class="click-like"
+               like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
+               model_id="<?= $comment['id'] ?>"
+               like_type="comment">
+                <?= __d('gl', "いいね！") ?></a><span id="CommentLikeCount_<?= $comment['id'] ?>">0</span></div>
     </div>
 </div>

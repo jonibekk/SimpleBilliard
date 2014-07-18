@@ -32,18 +32,11 @@ class PostsController extends AppController
 
     public function ajax_get_feed($page_num = null)
     {
-        if (!$this->request->is('ajax')) {
-            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
-        }
-        //パラメータ初期値
-        $feed_type_id = null;
-        $created = null;
+        $this->_ajaxPreProcess();
+
         if (!$page_num) {
             $page_num = 1;
         }
-        Configure::write('debug', 0);
-        $this->layout = 'ajax';
-        $this->viewPath = 'Elements';
 
         $posts = $this->Post->get($page_num);
         $this->set(compact('posts'));
@@ -55,23 +48,12 @@ class PostsController extends AppController
         $result = array(
             'html' => $html
         );
-        //レスポンスをjsonで生成
-        $this->response->type('json');
-        $this->response->body(json_encode($result));
-        return $this->response;
+        return $this->_ajaxGetResponse($result);
     }
 
     public function ajax_get_comment($post_id)
     {
-        if (!$this->request->is('ajax')) {
-            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
-        }
-        //パラメータ初期値
-        $feed_type_id = null;
-        $created = null;
-        Configure::write('debug', 0);
-        $this->layout = 'ajax';
-        $this->viewPath = 'Elements';
+        $this->_ajaxPreProcess();
 
         $comments = $this->Post->Comment->getPostsComment($post_id, 3);
         $this->set(compact('comments'));
@@ -83,6 +65,35 @@ class PostsController extends AppController
         $result = array(
             'html' => $html
         );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_post_like($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->PostLike->changeLike($post_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_comment_like($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->Comment->CommentLike->changeLike($post_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    public function _ajaxPreProcess()
+    {
+        if (!$this->request->is('ajax')) {
+            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
+        }
+        Configure::write('debug', 0);
+        $this->layout = 'ajax';
+        $this->viewPath = 'Elements';
+    }
+
+    public function _ajaxGetResponse($result)
+    {
         //レスポンスをjsonで生成
         $this->response->type('json');
         $this->response->body(json_encode($result));

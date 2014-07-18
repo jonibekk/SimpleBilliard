@@ -30,6 +30,7 @@ class PostRead extends AppModel
     public $belongsTo = [
         'Post' => [
             "counterCache" => true,
+            'counterScope' => ['PostRead.del_flg' => false]
         ],
         'User',
         'Team',

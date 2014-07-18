@@ -24,9 +24,14 @@
                     <?= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
                 </div>
                 <div class="col col-xxs-12">
-                    <a href="" class="">いいね！</a>&nbsp;<a class="trigger-click"
-                                                         href="#"
-                                                         target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
+                    <a href="#" class="click-like"
+                       like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
+                       model_id="<?= $post['Post']['id'] ?>"
+                       like_type="post">
+                        <?= __d('gl', "いいね！") ?></a><span id="PostLikeCount_<?= $post['Post']['id'] ?>">0</span>
+                    &nbsp;<a class="trigger-click"
+                             href="#"
+                             target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
                         __d('gl',
                             "コメントする") ?></a>
                 </div>

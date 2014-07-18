@@ -34,19 +34,20 @@ $(document).ready(function () {
      */
     $(document).on("click", ".tiny-form-text", evShowAndThisWide);
     $(document).on("click", ".trigger-click", evTriggerClick);
-//noinspection SpellCheckingInspection
+    //noinspection SpellCheckingInspection
     $(document).on("keyup", ".blank-disable", evBlankDisable);
-//noinspection JSUnresolvedVariable
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
-//noinspection JSUnresolvedVariable
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-comment-all", evCommentAllView);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".click-like", evLike);
 });
 
 function evBlankDisable() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
-    console.log($obj.val().length);
     if ($obj.val().length == 0) {
         $("#" + target_id).attr("disabled", "disabled");
     }
