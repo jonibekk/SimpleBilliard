@@ -29,12 +29,22 @@
                        model_id="<?= $post['Post']['id'] ?>"
                        like_type="post">
                         <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
-                    <span id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
+
                     &nbsp;<a class="trigger-click"
                              href="#"
                              target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
                         __d('gl',
                             "コメントする") ?></a>
+                                <span class="pull-right">
+                            <a href="#"><i class="fa fa-thumbs-o-up"></i>&nbsp;
+                                <span
+                                    id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
+                            </a>
+            <a href="#"><i class="fa fa-check"></i>&nbsp;
+                <span><?= $post['Post']['post_read_count'] ?></span>
+            </a>
+            </span>
+
                 </div>
             </div>
             <div class="panel-body gl-feed gl-comment-block">
