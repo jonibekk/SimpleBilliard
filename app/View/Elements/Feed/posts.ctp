@@ -28,7 +28,8 @@
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                        model_id="<?= $post['Post']['id'] ?>"
                        like_type="post">
-                        <?= __d('gl', "いいね！") ?></a><span id="PostLikeCount_<?= $post['Post']['id'] ?>">0</span>
+                        <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
+                    <span id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
                     &nbsp;<a class="trigger-click"
                              href="#"
                              target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=

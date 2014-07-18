@@ -45,6 +45,10 @@ class Comment extends AppModel
     public $hasMany = [
         'CommentLike',
         'CommentRead',
+        'MyCommentLike' => [
+            'className' => 'CommentLike',
+            'fields'    => ['id']
+        ]
     ];
 
     /**

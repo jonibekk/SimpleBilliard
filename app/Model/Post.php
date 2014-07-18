@@ -63,6 +63,10 @@ class Post extends AppModel
         'PostLike',
         'PostMention',
         'PostRead',
+        'MyPostLike' => [
+            'className' => 'PostLike',
+            'fields'    => ['id']
+        ]
     ];
 
     /**
@@ -123,16 +127,18 @@ class Post extends AppModel
                 'Post.modified' => 'desc'
             ],
             'contain'    => [
-                'User'    => [
+                'User'       => [
                     'fields' => $this->User->profileFields
                 ],
-                'Comment' => [
-                    'order' => [
+                'MyPostLike' => ['conditions' => ['MyPostLike.user_id' => $this->me['id']]],
+                'Comment'    => [
+                    'order'         => [
                         'Comment.created' => 'desc'
                     ],
-                    'limit' => 3,
-                    'User'  => ['fields' => $this->User->profileFields],
-                ]
+                    'limit'         => 3,
+                    'User'          => ['fields' => $this->User->profileFields],
+                    'MyCommentLike' => ['conditions' => ['MyCommentLike.user_id' => $this->me['id']]],
+                ],
             ]
         ];
         $res = $this->find('all', $options);

@@ -24,6 +24,7 @@
                like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                model_id="<?= $comment['id'] ?>"
                like_type="comment">
-                <?= __d('gl', "いいね！") ?></a><span id="CommentLikeCount_<?= $comment['id'] ?>">0</span></div>
+                <?= empty($comment['MyCommentLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
+            <span id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></div>
     </div>
 </div>
