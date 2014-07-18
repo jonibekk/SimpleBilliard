@@ -25,18 +25,22 @@ $(document).ready(function () {
     //noinspection JSJQueryEfficiency
     $('textarea').show().trigger('autosize.resize');
 
-    //チームフィードの「もっと見る」のイベント
-    //noinspection JSUnresolvedVariable
-    $('.click-feed-read-more').bind('click', evFeedMoreView);
-    //noinspection JSUnresolvedVariable
-    $('.click-comment-all').bind('click', evCommentAllView);
+    //form二重送信防止
+    $('form').on('submit', function () {
+        $(this).find('input:submit').attr('disabled', 'disabled');
+    });
+    /**
+     * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
+     */
+    $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("click", ".trigger-click", evTriggerClick);
+//noinspection SpellCheckingInspection
+    $(document).on("keyup", ".blank-disable", evBlankDisable);
+//noinspection JSUnresolvedVariable
+    $(document).on("click", ".click-feed-read-more", evFeedMoreView);
+//noinspection JSUnresolvedVariable
+    $(document).on("click", ".click-comment-all", evCommentAllView);
 });
-/**
- * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
- */
-$(document).on("click", ".tiny-form-text", evShowAndThisWide);
-$(document).on("click", ".trigger-click", evTriggerClick);
-$(document).on("keyup", ".blank-disable", evBlankDisable);
 
 function evBlankDisable() {
     attrUndefinedCheck(this, 'target-id');
