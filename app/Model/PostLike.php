@@ -18,6 +18,7 @@ class PostLike extends AppModel
      */
     public $validate = [
         'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'post_id' => ['numeric' => ['rule' => ['numeric'], 'allowEmpty' => false],],
     ];
 
     /**

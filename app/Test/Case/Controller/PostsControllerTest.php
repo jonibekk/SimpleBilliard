@@ -747,27 +747,30 @@ class PostsControllerTest extends ControllerTestCase
         $team_id = 1;
 
         $post_data[] = [
-            'Post'     => [
+            'Post'    => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
                 'body'    => 'test'
             ],
-            'Comment'  => [
+            'Comment' => [
                 [
                     'user_id' => $user_id,
                     'team_id' => $team_id,
                     'body'    => 'test'
                 ]
             ],
-            'PostLike' => [
-                [
-                    'user_id' => $user_id,
-                    'team_id' => $team_id,
-                ]
-            ]
         ];
         $Posts->Post->saveAll($post_data);
         $post_id = $Posts->Post->getLastInsertID();
+        $post_like = [
+            'PostLike' => [
+                'post_id' => $post_id,
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+            ]
+        ];
+        $Posts->Post->PostLike->save($post_like);
+
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_post_like/' . $post_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);

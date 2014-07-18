@@ -4,7 +4,7 @@ App::uses('PostLike', 'Model');
 /**
  * PostLike Test Case
  *
- * @property mixed PostLike
+ * @property PostLike $PostLike
  */
 class PostLikeTest extends CakeTestCase
 {
@@ -44,9 +44,13 @@ class PostLikeTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    function testChangeLike()
     {
+        $uid = '1';
+        $team_id = '1';
+        $this->PostLike->me['id'] = $uid;
+        $this->PostLike->current_team_id = $team_id;
+        $this->PostLike->changeLike(null);
     }
 
 }

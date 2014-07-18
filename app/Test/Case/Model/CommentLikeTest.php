@@ -4,7 +4,7 @@ App::uses('CommentLike', 'Model');
 /**
  * CommentLike Test Case
  *
- * @property mixed CommentLike
+ * @property  CommentLike $CommentLike
  */
 class CommentLikeTest extends CakeTestCase
 {
@@ -44,9 +44,13 @@ class CommentLikeTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    function testChangeLike()
     {
+        $uid = '1';
+        $team_id = '1';
+        $this->CommentLike->me['id'] = $uid;
+        $this->CommentLike->current_team_id = $team_id;
+        $this->CommentLike->changeLike(null);
     }
 
 }
