@@ -36,6 +36,22 @@ $(document).ready(function () {
  */
 $(document).on("click", ".tiny-form-text", evShowAndThisWide);
 $(document).on("click", ".trigger-click", evTriggerClick);
+$(document).on("keyup", ".blank-disable", evBlankDisable);
+
+function evBlankDisable() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    console.log($obj.val().length);
+    if ($obj.val().length == 0) {
+        $("#" + target_id).attr("disabled", "disabled");
+    }
+    else {
+        $("#" + target_id).removeAttr("disabled");
+    }
+
+
+}
 
 function evTriggerClick() {
     attrUndefinedCheck(this, 'target-id');

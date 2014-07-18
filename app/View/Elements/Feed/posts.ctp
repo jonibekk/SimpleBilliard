@@ -59,7 +59,7 @@
                                 'wrapInput' => '',
                                 'class'     => 'form-control'
                             ],
-                            'class' => 'validate',
+                            'class' => '',
                             'novalidate'    => true,
                         ]); ?>
                         <?=
@@ -70,14 +70,17 @@
                             'rows'                     => 1,
                             'required'                 => true,
                             'placeholder'              => __d('gl', "コメントする"),
-                            'class'                    => 'form-control tiny-form-text',
+                            'class'     => 'form-control tiny-form-text blank-disable',
                             'target_show_id'           => "Comment_{$post['Post']['id']}",
+                            'target-id' => "CommentSubmit_{$post['Post']['id']}",
                             "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                         ])
                         ?>
                         <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                         <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
-                            <?= $this->Form->submit(__d('gl', "コメントする"), ['class' => 'btn btn-primary pull-right']) ?>
+                            <?=
+                            $this->Form->submit(__d('gl', "コメントする"),
+                                                ['class' => 'btn btn-primary pull-right', 'id' => "CommentSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
                             <div class="clearfix"></div>
                         </div>
                         <?= $this->Form->end() ?>

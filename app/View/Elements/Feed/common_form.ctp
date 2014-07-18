@@ -29,7 +29,6 @@
                     'wrapInput' => '',
                     'class'     => 'form-control'
                 ],
-                'id' => 'PostDisplayForm',
                 'novalidate'    => true,
             ]); ?>
             <div class="panel-body">
@@ -40,13 +39,16 @@
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'                    => 'form-control tiny-form-text',
+                    'class'     => 'form-control tiny-form-text blank-disable',
                     'target_show_id'           => "PostFormFooter",
+                    'target-id' => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
                 <div class="" style="display: none" id="PostFormFooter">
-                    <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
+                    <?=
+                    $this->Form->submit(__d('gl', "投稿する"),
+                                        ['class' => 'btn btn-primary pull-right', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
                     <div class="clearfix"></div>
                 </div>
             </div>
