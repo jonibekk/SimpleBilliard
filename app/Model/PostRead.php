@@ -55,12 +55,18 @@ class PostRead extends AppModel
             'team_id' => $this->current_team_id
         ];
         $post_data = [];
-        foreach ($post_list as $post_id) {
-            //既読をスキップ
-            if (in_array($post_id, $read_list)) {
-                continue;
+        if (is_array($post_list)) {
+            foreach ($post_list as $post_id) {
+                //既読をスキップ
+                if (in_array($post_id, $read_list)) {
+                    continue;
+                }
+                $data = array_merge($common_data, ['post_id' => $post_id]);
+                $post_data[] = $data;
             }
-            $data = array_merge($common_data, ['post_id' => $post_id]);
+        }
+        else {
+            $data = array_merge($common_data, ['post_id' => $post_list]);
             $post_data[] = $data;
         }
         if (empty($post_data)) {

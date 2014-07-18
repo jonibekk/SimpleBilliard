@@ -4,7 +4,7 @@ App::uses('CommentRead', 'Model');
 /**
  * CommentRead Test Case
  *
- * @property mixed CommentRead
+ * @property  CommentRead $CommentRead
  */
 class CommentReadTest extends CakeTestCase
 {
@@ -18,7 +18,8 @@ class CommentReadTest extends CakeTestCase
         'app.comment_read',
         'app.comment',
         'app.user',
-        'app.team'
+        'app.team',
+        'app.post'
     );
 
     /**
@@ -44,9 +45,30 @@ class CommentReadTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    public function testRed()
     {
+        $uid = '1';
+        $team_id = '1';
+        $this->CommentRead->me['id'] = $uid;
+        $this->CommentRead->current_team_id = $team_id;
+        $test_save_data = [
+            'Post'    => [
+                'user_id' => $uid,
+                'team_id' => $team_id,
+                'body'    => 'test',
+            ],
+            'Comment' => [
+                [
+                    'user_id' => $uid,
+                    'team_id' => $team_id,
+                    'body'    => 'test',
+                ]
+            ]
+        ];
+        $this->CommentRead->Comment->Post->saveAll($test_save_data);
+        $this->CommentRead->red($this->CommentRead->Comment->Post->getLastInsertID());
+        $comment_read = $this->CommentRead->read();
+        $this->assertEquals($uid, $comment_read['CommentRead']['user_id']);
     }
 
 }

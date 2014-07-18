@@ -4,7 +4,7 @@ App::uses('PostRead', 'Model');
 /**
  * PostRead Test Case
  *
- * @property mixed PostRead
+ * @property  PostRead $PostRead
  */
 class PostReadTest extends CakeTestCase
 {
@@ -44,9 +44,23 @@ class PostReadTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    public function testRed()
     {
+        $uid = '1';
+        $team_id = '1';
+        $this->PostRead->me['id'] = $uid;
+        $this->PostRead->current_team_id = $team_id;
+        $test_save_data = [
+            'Post' => [
+                'user_id' => $uid,
+                'team_id' => $team_id,
+                'body'    => 'test',
+            ],
+        ];
+        $this->PostRead->Post->save($test_save_data);
+        $this->PostRead->red($this->PostRead->Post->getLastInsertID());
+        $post_read = $this->PostRead->read();
+        $this->assertEquals($uid, $post_read['PostRead']['user_id']);
     }
 
 }
