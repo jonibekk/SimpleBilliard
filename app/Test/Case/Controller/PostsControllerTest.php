@@ -408,6 +408,14 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->current_team_id = '1';
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_get_feed/', ['method' => 'GET']);
@@ -457,6 +465,14 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->current_team_id = '1';
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_get_feed/2', ['method' => 'GET']);
@@ -557,6 +573,10 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->Comment->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->current_team_id = '1';
 
         //投稿記事を20個いれる
         $user_id = 1;

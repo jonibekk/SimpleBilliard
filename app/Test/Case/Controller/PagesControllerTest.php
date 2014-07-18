@@ -217,6 +217,14 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->Comment->CommentRead->current_team_id = '1';
         $this->testAction('/');
     }
 
@@ -260,6 +268,14 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->Comment->CommentRead->current_team_id = '1';
 
         $this->testAction('/', ['return' => 'contents']);
     }
