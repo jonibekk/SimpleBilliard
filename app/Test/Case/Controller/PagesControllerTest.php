@@ -213,6 +213,10 @@ class PagesControllerTest extends ControllerTestCase
             ]
         ];
         $Pages->User->Post->saveAll($post_data);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->current_team_id = '1';
         $this->testAction('/');
     }
 
@@ -252,6 +256,10 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->current_team_id = '1';
 
         $this->testAction('/', ['return' => 'contents']);
     }
