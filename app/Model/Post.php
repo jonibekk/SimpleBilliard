@@ -146,16 +146,27 @@ class Post extends AppModel
                 'User'       => [
                     'fields' => $this->User->profileFields
                 ],
-                'MyPostLike' => ['conditions' => ['MyPostLike.user_id' => $this->me['id']]],
+                'MyPostLike' => [
+                    'conditions' => [
+                        'MyPostLike.user_id' => $this->me['id'],
+                        'MyPostLike.team_id' => $this->current_team_id,
+                    ],
+                ],
                 'Comment'    => [
+                    'conditions'    => ['Comment.team_id' => $this->current_team_id],
                     'order'         => [
                         'Comment.created' => 'desc'
                     ],
                     'limit'         => 3,
                     'User'          => ['fields' => $this->User->profileFields],
-                    'MyCommentLike' => ['conditions' => ['MyCommentLike.user_id' => $this->me['id']]],
+                    'MyCommentLike' => [
+                        'conditions' => [
+                            'MyCommentLike.user_id' => $this->me['id'],
+                            'MyCommentLike.team_id' => $this->current_team_id,
+                        ]
+                    ],
                 ],
-            ]
+            ],
         ];
         $res = $this->find('all', $options);
         //コメントを逆順に

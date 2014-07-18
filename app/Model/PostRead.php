@@ -43,6 +43,7 @@ class PostRead extends AppModel
             'conditions' => [
                 'post_id' => $post_list,
                 'user_id' => $this->me['id'],
+                'team_id' => $this->current_team_id,
             ],
             'fields'     => ['post_id']
         ];

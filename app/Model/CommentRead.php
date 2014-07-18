@@ -42,12 +42,14 @@ class CommentRead extends AppModel
         $options = [
             'conditions' => [
                 'post_id' => $post_list,
+                'team_id' => $this->current_team_id,
             ],
             'fields'     => ['id', 'post_id'],
             'contain'    => [
                 'CommentRead' => [
                     'conditions' => [
                         'user_id' => $this->me['id'],
+                        'team_id' => $this->current_team_id,
                     ],
                     'fields'     => ['id']
                 ]

@@ -93,7 +93,12 @@ class Comment extends AppModel
                 'User'          => [
                     'fields' => $this->User->profileFields
                 ],
-                'MyCommentLike' => ['conditions' => ['MyCommentLike.user_id' => $this->me['id']]],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $this->me['id'],
+                        'MyCommentLike.team_id' => $this->current_team_id,
+                    ]
+                ],
             ],
         ];
         $res = $this->find('all', $options);
