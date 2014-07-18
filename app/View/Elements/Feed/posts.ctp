@@ -49,7 +49,9 @@
                             $post['Post']['comment_count'] - 3) ?></a>
                 <? endif; ?>
                 <? foreach ($post['Comment'] as $comment): ?>
-                    <?= $this->element('Feed/comment', ['comment' => $comment, 'user' => $comment['User']]) ?>
+                    <?=
+                    $this->element('Feed/comment',
+                                   ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 <? endforeach ?>
                 <div class="col col-xxs-12">
                     <?=

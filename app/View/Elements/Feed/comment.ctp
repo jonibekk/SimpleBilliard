@@ -4,9 +4,11 @@
  * User: bigplants
  * Date: 7/17/14
  * Time: 4:23 PM
+
  *
- * @var                    $comment
+*@var                    $comment
  * @var                    $user
+ * @var                    $like
  * @var CodeCompletionView $this
  */
 ?>
@@ -24,7 +26,7 @@
                like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                model_id="<?= $comment['id'] ?>"
                like_type="comment">
-                <?= empty($comment['MyCommentLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
+                <?= empty($like) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
             <span id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></div>
     </div>
 </div>

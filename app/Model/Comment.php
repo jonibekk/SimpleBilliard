@@ -90,9 +90,10 @@ class Comment extends AppModel
                 'Comment.created' => 'asc'
             ],
             'contain'    => [
-                'User' => [
+                'User'          => [
                     'fields' => $this->User->profileFields
                 ],
+                'MyCommentLike' => ['conditions' => ['MyCommentLike.user_id' => $this->me['id']]],
             ],
         ];
         $res = $this->find('all', $options);
