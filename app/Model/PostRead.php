@@ -65,7 +65,7 @@ class PostRead extends AppModel
                 $post_data[] = $data;
             }
         }
-        else {
+        elseif (!in_array($post_list, $read_list)) {
             $data = array_merge($common_data, ['post_id' => $post_list]);
             $post_data[] = $data;
         }

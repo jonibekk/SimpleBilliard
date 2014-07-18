@@ -58,9 +58,15 @@ class PostReadTest extends CakeTestCase
             ],
         ];
         $this->PostRead->Post->save($test_save_data);
+        $post_id = $this->PostRead->Post->getLastInsertID();
         $this->PostRead->red($this->PostRead->Post->getLastInsertID());
         $post_read = $this->PostRead->read();
         $this->assertEquals($uid, $post_read['PostRead']['user_id']);
+
+        $before_data = $post_read;
+        $this->PostRead->red($post_id);
+        $after_data = $this->PostRead->read();
+        $this->assertEquals($before_data, $after_data);
     }
 
 }

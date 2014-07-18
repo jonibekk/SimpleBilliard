@@ -69,6 +69,12 @@ class CommentReadTest extends CakeTestCase
         $this->CommentRead->red($this->CommentRead->Comment->Post->getLastInsertID());
         $comment_read = $this->CommentRead->read();
         $this->assertEquals($uid, $comment_read['CommentRead']['user_id']);
+
+        $before_data = $comment_read;
+        $this->CommentRead->red($this->CommentRead->Comment->Post->getLastInsertID());
+        $after_data = $this->CommentRead->read();
+        $this->assertEquals($before_data, $after_data);
+
     }
 
 }
