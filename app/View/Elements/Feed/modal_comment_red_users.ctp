@@ -13,7 +13,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title"><?= __d('gl', "この投稿を読んだ人") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "このコメントを読んだ人") ?></h4>
         </div>
         <div class="modal-body">
             <? if (!empty($red_users)): ?>
@@ -21,7 +21,7 @@
                     <? foreach ($red_users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user' => $user['User'], 'created' => $user['PostRead']['created']]) ?>
+                                       ['user' => $user['User'], 'created' => $user['CommentRead']['created']]) ?>
                     <? endforeach ?>
                 </div>
             <? else: ?>

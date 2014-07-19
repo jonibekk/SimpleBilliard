@@ -31,7 +31,9 @@
                                class="modal-ajax-get">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a>
-            <a href="#"><i class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
+            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
+               class="modal-ajax-get"><i
+                    class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
             </span>
         </div>
     </div>

@@ -99,8 +99,8 @@ class PostsController extends AppController
     public function ajax_get_post_red_users($post_id)
     {
         $this->_ajaxPreProcess();
-        $liked_users = $this->Post->PostRead->getRedUsers($post_id);
-        $this->set(compact('liked_users'));
+        $red_users = $this->Post->PostRead->getRedUsers($post_id);
+        $this->set(compact('red_users'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -119,6 +119,20 @@ class PostsController extends AppController
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/modal_comment_liked_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_comment_red_users($comment_id)
+    {
+        $this->_ajaxPreProcess();
+        $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
+        $this->set(compact('red_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_comment_red_users');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);

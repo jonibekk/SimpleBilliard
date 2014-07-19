@@ -75,4 +75,25 @@ class CommentRead extends AppModel
         }
         $this->saveAll($comment_data);
     }
+
+    public function getRedUsers($comment_id)
+    {
+        $options = [
+            'conditions' => [
+                'CommentRead.comment_id' => $comment_id,
+                'CommentRead.team_id'    => $this->current_team_id,
+            ],
+            'order'      => [
+                'CommentRead.created' => 'desc'
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }
