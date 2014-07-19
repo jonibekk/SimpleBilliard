@@ -66,4 +66,24 @@ class CommentLike extends AppModel
         return $res;
     }
 
+    public function getLikedUsers($comment_id)
+    {
+        $options = [
+            'conditions' => [
+                'CommentLike.comment_id' => $comment_id,
+                'CommentLike.team_id'    => $this->current_team_id,
+            ],
+            'order'      => [
+                'CommentLike.created' => 'desc'
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }
