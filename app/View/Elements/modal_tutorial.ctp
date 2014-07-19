@@ -12,7 +12,7 @@
     <div class="modal-dialog">
         <div class="modal-content gl-modal-no-margin">
             <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title"><?= __d('gl', "チュートリアル") ?></h4>
             </div>
             <div class="modal-body">
@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
             </div>
         </div>
     </div>

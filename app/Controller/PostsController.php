@@ -82,6 +82,20 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    public function ajax_get_post_liked_users($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $liked_users = $this->Post->PostLike->getLikedUsers($post_id);
+        $this->set(compact('liked_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_liked_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function _ajaxPreProcess()
     {
         if (!$this->request->is('ajax')) {
@@ -115,4 +129,5 @@ class PostsController extends AppController
             throw new RuntimeException(__d('exception', "不正な画面遷移です。"));
         }
     }
+
 }

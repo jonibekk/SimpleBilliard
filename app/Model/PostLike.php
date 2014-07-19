@@ -65,4 +65,24 @@ class PostLike extends AppModel
         }
         return $res;
     }
+
+    public function getLikedUsers($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'PostLike.post_id' => $post_id,
+                'PostLike.team_id' => $this->current_team_id,
+            ],
+            'order'      => [
+                'PostLike.created' => 'desc'
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }

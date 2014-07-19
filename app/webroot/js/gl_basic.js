@@ -42,6 +42,19 @@ $(document).ready(function () {
     $(document).on("click", ".click-comment-all", evCommentAllView);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-like", evLike);
+    //dynamic modal
+    $(document).on("click", '.modal-ajax-get', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url,function (data) {
+                $('<div class="modal on fade">' + data + '</div>').modal();
+            }).success(function () {
+            });
+        }
+    });
 });
 
 function evBlankDisable() {
