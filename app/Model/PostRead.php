@@ -75,4 +75,25 @@ class PostRead extends AppModel
         }
         $this->saveAll($post_data);
     }
+
+    public function getRedUsers($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'PostRead.post_id' => $post_id,
+                'PostRead.team_id' => $this->current_team_id,
+            ],
+            'order'      => [
+                'PostRead.created' => 'desc'
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }

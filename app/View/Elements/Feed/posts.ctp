@@ -42,7 +42,8 @@
                                 <span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
                             </a>
-            <a href="#"><i class="fa fa-check"></i>&nbsp;
+            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"
+               class="modal-ajax-get"><i class="fa fa-check"></i>&nbsp;
                 <span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>
