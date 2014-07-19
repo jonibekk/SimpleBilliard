@@ -943,4 +943,92 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/posts/ajax_comment_like/' . $comment_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
+    function testAjaxGetLikedRedUsers()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->generate('Posts', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => 'xxx',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentLike->current_team_id = '1';
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $post_data = [
+            'Post' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $post = $Posts->Post->save($post_data);
+        $post_id = $post['Post']['id'];
+        $post_like_read_data = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'post_id' => $post_id,
+        ];
+        $Posts->Post->PostLike->save($post_like_read_data);
+        $Posts->Post->PostRead->save($post_like_read_data);
+        $comment_data = [
+            'Comment' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'post_id' => $post_id,
+                'body'    => 'test'
+            ]
+        ];
+        $comment = $Posts->Post->Comment->save($comment_data);
+        $comment_id = $comment['Comment']['id'];
+        $comment_read_like_data = [
+            'user_id'    => $user_id,
+            'team_id'    => $team_id,
+            'comment_id' => $comment_id,
+        ];
+        $Posts->Post->Comment->CommentLike->save($comment_read_like_data);
+        $Posts->Post->Comment->CommentRead->save($comment_read_like_data);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_post_liked_users/' . $post_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_post_red_users/' . $post_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_comment_liked_users/' . $comment_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_comment_red_users/' . $comment_id, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
 }
