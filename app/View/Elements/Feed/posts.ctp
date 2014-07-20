@@ -14,6 +14,22 @@
         <div class="panel panel-default">
             <div class="panel-body gl-feed">
                 <div class="col col-xxs-12">
+                    <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                        <div class="pull-right">
+                            <div class="dropdown">
+                                <a href="#" class="" data-toggle="dropdown" id="download">
+                                    <i class="fa fa-chevron-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                                    <li><?= $this->Html->link(__d('gl', "投稿を編集"), "#") ?></li>
+                                    <li><?=
+                                        $this->Form->postLink(__d('gl', "投稿を削除"),
+                                                              ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
+                                                              null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
+                                </ul>
+                            </div>
+                        </div>
+                    <? endif; ?>
                     <?=
                     $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                                ['class' => 'gl-feed-img']) ?>

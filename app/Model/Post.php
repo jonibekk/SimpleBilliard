@@ -58,11 +58,17 @@ class Post extends AppModel
      */
     public $hasMany = [
         'CommentMention',
-        'Comment',
+        'Comment'  => [
+            'dependent' => true,
+        ],
         'GivenBadge',
-        'PostLike',
+        'PostLike' => [
+            'dependent' => true,
+        ],
         'PostMention',
-        'PostRead',
+        'PostRead' => [
+            'dependent' => true,
+        ],
         'MyPostLike' => [
             'className' => 'PostLike',
             'fields'    => ['id']

@@ -30,6 +30,58 @@ class PostsController extends AppController
         }
     }
 
+    /**
+     * post_delete method
+     *
+     * @throws NotFoundException
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    public function post_delete($id = null)
+    {
+        $this->Post->id = $id;
+        if (!$this->Post->exists()) {
+            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+        }
+        if (!$this->Post->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post', 'delete');
+        $this->Post->delete();
+        $this->Pnotify->outSuccess(__d('gl', "投稿を削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * comment_delete method
+     *
+     * @throws NotFoundException
+     *
+     * @param string $comment_id
+     *
+     * @return void
+     */
+    public function comment_delete($comment_id = null)
+    {
+        $this->Post->Comment->id = $comment_id;
+        if (!$this->Post->Comment->exists()) {
+            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+        }
+        if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post', 'delete');
+        $this->Post->Comment->delete();
+        $this->Pnotify->outSuccess(__d('gl', "コメントを削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
     public function ajax_get_feed($page_num = null)
     {
         $this->_ajaxPreProcess();

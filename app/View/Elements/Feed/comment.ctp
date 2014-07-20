@@ -16,7 +16,23 @@
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
                                ['class' => 'gl-comment-img'])
     ?>
-    <div class="gl-comment-body"><span>
+    <div class="gl-comment-body">
+        <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+            <div class="dropdown pull-right">
+                <a href="#" class="" data-toggle="dropdown" id="download">
+                    <i class="fa fa-chevron-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                    <li><?= $this->Html->link(__d('gl', "コメントを編集"), "#") ?></li>
+                    <li><?=
+                        $this->Form->postLink(__d('gl', "コメントを削除"),
+                                              ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
+                                              null, __d('gl', "本当にこのコメントを削除しますか？")) ?></li>
+                </ul>
+            </div>
+        <? endif; ?>
+
+        <span>
                     <?= h($user['display_username']) ?></span>
         <?= nl2br($this->Text->autoLink(h($comment['body']))) ?>
         <div>

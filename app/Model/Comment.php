@@ -43,8 +43,12 @@ class Comment extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CommentLike',
-        'CommentRead',
+        'CommentLike' => [
+            'dependent' => true,
+        ],
+        'CommentRead' => [
+            'dependent' => true,
+        ],
         'MyCommentLike' => [
             'className' => 'CommentLike',
             'fields'    => ['id']
