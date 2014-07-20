@@ -41,7 +41,7 @@
                     <div><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
                 </div>
                 <div class="col col-xxs-12">
-                    <?= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
+                    <?= $this->TextEx->autoLink($post['Post']['body']) ?>
                     <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                         <?= $this->element('Feed/post_edit_form', compact('post')) ?>
                     <? endif; ?>

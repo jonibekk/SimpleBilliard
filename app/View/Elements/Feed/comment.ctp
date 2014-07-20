@@ -38,7 +38,7 @@
 
         <span>
                     <?= h($user['display_username']) ?></span>
-        <?= nl2br($this->Text->autoLink(h($comment['body']))) ?>
+        <?= $this->TextEx->autoLink($comment['body']) ?>
         <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
             <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
         <? endif; ?>

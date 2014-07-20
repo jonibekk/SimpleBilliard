@@ -57,7 +57,8 @@ class AppController extends Controller
         'Form'      => ['className' => 'BoostCake.BoostCakeForm'],
         'Paginator' => ['className' => 'BoostCake.BoostCakePaginator'],
         'Upload',
-        'TimeEx'
+        'TimeEx',
+        'TextEx',
     ];
 
     public $uses = [
