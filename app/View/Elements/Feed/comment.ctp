@@ -23,8 +23,11 @@
                     <i class="fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <li><a href="#" class="target-toggle"
-                           target-id="CommentEditFormBody_<?= $comment['id'] ?>"><?= __d('gl', "投稿を編集") ?></a></li>
+                    <li><a href="#" class="target-toggle-click-click"
+                           target-id="CommentEditForm_<?= $comment['id'] ?>"
+                           click-target-id="CommentEditFormBody_<?= $comment['id'] ?>"
+
+                            ><?= __d('gl', "コメントを編集") ?></a></li>
                     <li><?=
                         $this->Form->postLink(__d('gl', "コメントを削除"),
                                               ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],

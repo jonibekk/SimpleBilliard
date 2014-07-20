@@ -43,7 +43,7 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-like", evLike);
     //noinspection JSUnresolvedVariable
-    $(document).on("click", ".target-toggle", evTargetToggle);
+    $(document).on("click", ".target-toggle-click", evTargetToggleClick);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -59,11 +59,17 @@ $(document).ready(function () {
     });
 });
 
-function evTargetToggle() {
+function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'click-target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
+    var click_target_id = $obj.attr("click-target-id");
     $("#" + target_id).toggle();
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).trigger('click');
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).focus();
     return false;
 }
 

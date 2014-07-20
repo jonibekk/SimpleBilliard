@@ -20,7 +20,7 @@ $this->Form->create('Post', [
     'class'         => '',
     'style'         => 'display: none',
     'novalidate'    => true,
-    'id'            => "PostEditFormBody_{$post['Post']['id']}",
+    'id' => "PostEditForm_{$post['Post']['id']}",
 ]); ?>
 <?=
 $this->Form->input('body', [

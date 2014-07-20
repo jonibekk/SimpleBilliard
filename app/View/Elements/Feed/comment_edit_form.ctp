@@ -20,7 +20,7 @@ $this->Form->create('Comment', [
     'class'         => '',
     'style'         => 'display: none',
     'novalidate'    => true,
-    'id'            => "CommentEditFormBody_{$comment['id']}",
+    'id' => "CommentEditForm_{$comment['id']}",
 ]); ?>
 <?=
 $this->Form->input('body', [
