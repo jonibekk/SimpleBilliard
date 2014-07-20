@@ -42,6 +42,8 @@ $(document).ready(function () {
     $(document).on("click", ".click-comment-all", evCommentAllView);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-like", evLike);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".target-toggle", evTargetToggle);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -57,6 +59,14 @@ $(document).ready(function () {
     });
 });
 
+function evTargetToggle() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).toggle();
+    return false;
+}
+
 function evBlankDisable() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
@@ -67,8 +77,6 @@ function evBlankDisable() {
     else {
         $("#" + target_id).removeAttr("disabled");
     }
-
-
 }
 
 function evTriggerClick() {

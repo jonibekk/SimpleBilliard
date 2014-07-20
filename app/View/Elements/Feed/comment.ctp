@@ -23,7 +23,8 @@
                     <i class="fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <li><?= $this->Html->link(__d('gl', "コメントを編集"), "#") ?></li>
+                    <li><a href="#" class="target-toggle"
+                           target-id="CommentEditFormBody_<?= $comment['id'] ?>"><?= __d('gl', "投稿を編集") ?></a></li>
                     <li><?=
                         $this->Form->postLink(__d('gl', "コメントを削除"),
                                               ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
@@ -35,6 +36,10 @@
         <span>
                     <?= h($user['display_username']) ?></span>
         <?= nl2br($this->Text->autoLink(h($comment['body']))) ?>
+        <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+            <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
+        <? endif; ?>
+
         <div>
             <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?>
             <a href="#" class="click-like"

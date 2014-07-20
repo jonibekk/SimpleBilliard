@@ -39,7 +39,7 @@ class PostsController extends AppController
      *
      * @return void
      */
-    public function post_delete($id = null)
+    public function post_delete($id)
     {
         $this->Post->id = $id;
         if (!$this->Post->exists()) {
@@ -57,6 +57,36 @@ class PostsController extends AppController
     }
 
     /**
+     * post_edit method
+     *
+     * @throws NotFoundException
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    public function post_edit($id)
+    {
+        $this->Post->id = $id;
+        if (!$this->Post->exists()) {
+            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+        }
+        if (!$this->Post->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post');
+        if ($this->Post->save($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "投稿の変更に失敗しました。"));
+        }
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    /**
      * comment_delete method
      *
      * @throws NotFoundException
@@ -65,7 +95,7 @@ class PostsController extends AppController
      *
      * @return void
      */
-    public function comment_delete($comment_id = null)
+    public function comment_delete($comment_id)
     {
         $this->Post->Comment->id = $comment_id;
         if (!$this->Post->Comment->exists()) {
@@ -77,6 +107,35 @@ class PostsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Post->Comment->delete();
         $this->Pnotify->outSuccess(__d('gl', "コメントを削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * comment_edit method
+     *
+     * @param $comment_id
+     *
+     * @throws NotFoundException
+     * @return void
+     */
+    public function comment_edit($comment_id)
+    {
+        $this->Post->Comment->id = $comment_id;
+        if (!$this->Post->Comment->exists()) {
+            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+        }
+        if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post');
+        if ($this->Post->Comment->save($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "コメントの変更を保存しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "コメントの変更に失敗しました。"));
+        }
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());

@@ -21,7 +21,11 @@
                                     <i class="fa fa-chevron-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                                    <li><?= $this->Html->link(__d('gl', "投稿を編集"), "#") ?></li>
+                                    <li><a href="#" class="target-toggle"
+                                           target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"><?=
+                                            __d('gl',
+                                                "投稿を編集") ?></a>
+                                    </li>
                                     <li><?=
                                         $this->Form->postLink(__d('gl', "投稿を削除"),
                                                               ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
@@ -38,6 +42,9 @@
                 </div>
                 <div class="col col-xxs-12">
                     <?= nl2br($this->Text->autoLink(h($post['Post']['body']))) ?>
+                    <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                        <?= $this->element('Feed/post_edit_form', compact('post')) ?>
+                    <? endif; ?>
                 </div>
                 <div class="col col-xxs-12">
                     <a href="#" class="click-like"
@@ -95,7 +102,7 @@
                                 'wrapInput' => '',
                                 'class'     => 'form-control'
                             ],
-                            'class' => '',
+                            'class'         => '',
                             'novalidate'    => true,
                         ]); ?>
                         <?=
@@ -106,9 +113,9 @@
                             'rows'                     => 1,
                             'required'                 => true,
                             'placeholder'              => __d('gl', "コメントする"),
-                            'class'     => 'form-control tiny-form-text blank-disable',
+                            'class'                    => 'form-control tiny-form-text blank-disable',
                             'target_show_id'           => "Comment_{$post['Post']['id']}",
-                            'target-id' => "CommentSubmit_{$post['Post']['id']}",
+                            'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                             "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                         ])
                         ?>
