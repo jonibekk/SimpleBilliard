@@ -525,6 +525,112 @@ class PostsControllerTest extends ControllerTestCase
      *
      * @return void
      */
+    public function testPostEditFail()
+    {
+        $this->_getPostsCommonMock();
+
+        try {
+            $this->testAction('posts/post_edit/0', ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]投稿編集");
+    }
+
+    public function testPostEditNotOwn()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+
+        $user_id = 10;
+        $team_id = 1;
+
+        $post_data = [
+            'Post' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $post = $Posts->Post->save($post_data);
+
+        try {
+            $this->testAction('posts/post_edit/' . $post['Post']['id'], ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]所有していない投稿編集");
+    }
+
+    public function testPostEditSuccess()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $post_data = [
+            'Post' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $post = $Posts->Post->save($post_data);
+
+        $data = [
+            'Post' => [
+                'body' => 'test_aaaa'
+            ],
+        ];
+
+        try {
+            $this->testAction('posts/post_edit/' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]投稿編集");
+    }
+
+    public function testPostEditValidationError()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $post_data = [
+            'Post' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $post = $Posts->Post->save($post_data);
+
+        $data = [
+            'Post' => [
+                'important_flg' => 'test'
+            ],
+        ];
+
+        try {
+            $this->testAction('posts/post_edit/' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[異常ValidationError]投稿編集");
+    }
+
+    /**
+     * testDelete method
+     *
+     * @return void
+     */
     public function testCommentDeleteFail()
     {
         $this->_getPostsCommonMock();
@@ -585,7 +691,111 @@ class PostsControllerTest extends ControllerTestCase
             $this->testAction('posts/comment_delete/' . $comment['Comment']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
-        $this->assertFalse(isset($e), "[正常]投稿削除");
+        $this->assertFalse(isset($e), "[正常]コメント削除");
+    }
+
+    /**
+     * testDelete method
+     *
+     * @return void
+     */
+    public function testCommentEditFail()
+    {
+        $this->_getPostsCommonMock();
+
+        try {
+            $this->testAction('posts/comment_edit/0', ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]コメント編集");
+    }
+
+    public function testCommentEditNotOwn()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+
+        $user_id = 10;
+        $team_id = 1;
+
+        $comment_data = [
+            'Comment' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $comment = $Posts->Post->Comment->save($comment_data);
+
+        try {
+            $this->testAction('posts/comment_edit/' . $comment['Comment']['id'], ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]所有していないコメント編集");
+    }
+
+    public function testCommentEditSuccess()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $comment_data = [
+            'Comment' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $comment = $Posts->Post->Comment->save($comment_data);
+        $data = [
+            'Comment' => [
+                'body' => 'test_aaaa'
+            ],
+        ];
+
+        try {
+            $this->testAction('posts/comment_edit/' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]コメント編集");
+    }
+
+    public function testCommentEditValidationError()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $comment_data = [
+            'Comment' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $comment = $Posts->Post->Comment->save($comment_data);
+        $data = [
+            'Comment' => [
+                'comment_like_count' => 'test_aaaa'
+            ],
+        ];
+
+        try {
+            $this->testAction('posts/comment_edit/' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[異常ValidationError]コメント編集");
     }
 
     function _getPostsCommonMock()
