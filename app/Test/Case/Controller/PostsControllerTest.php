@@ -1031,4 +1031,120 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/posts/ajax_get_comment_red_users/' . $comment_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
+    /**
+     * testDelete method
+     *
+     * @return void
+     */
+    public function testPostDeleteFail()
+    {
+        $this->_postsCommon();
+
+        try {
+            $this->testAction('posts/post_delete', ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]投稿削除");
+    }
+
+    public function testDeleteNotOwn()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_postsCommon();
+
+        $user_id = 10;
+        $team_id = 1;
+
+        $post_data = [
+            'Post' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $post = $Posts->Post->save($post_data);
+
+        try {
+            $this->testAction('posts/post_delete/' . $post['Post']['id'], ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]所有していない投稿削除");
+    }
+
+    public function testDeleteSuccess()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_postsCommon();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $post_data = [
+            'Post' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $post = $Posts->Post->save($post_data);
+
+        try {
+            $this->testAction('posts/post_delete/' . $post['Post']['id'], ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]投稿削除");
+    }
+
+    function _postsCommon()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->generate('Posts', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['id', '1'],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentLike->current_team_id = '1';
+        return $Posts;
+    }
+
 }
