@@ -47,47 +47,10 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
         $data = [
             'Post' => [
                 'body' => 'test'
@@ -102,47 +65,10 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
         try {
             $this->testAction('/posts/add',
                               ['method' => 'GET', 'return' => 'contents']);
@@ -158,47 +84,10 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
         $data = [];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -209,44 +98,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->current_team_id = '1';
+        $Posts = $this->_getPostsCommonMock();
 
         $data = [
             'user_id' => 1,
@@ -266,47 +118,7 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAddCommentFailNotPost()
     {
-        /**
-         * @var UsersController $Posts
-         */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->current_team_id = '1';
+        $this->_getPostsCommonMock();
         try {
             $this->testAction('/posts/comment_add',
                               ['method' => 'GET', 'return' => 'contents']);
@@ -319,47 +131,7 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAddCommentFail()
     {
-        /**
-         * @var UsersController $Posts
-         */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->current_team_id = '1';
+        $this->_getPostsCommonMock();
         $data = [];
         $this->testAction('/posts/comment_add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -370,44 +142,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostRead->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -427,44 +162,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostRead->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -481,47 +179,7 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAjaxGetFeedException()
     {
-        /**
-         * @var UsersController $Posts
-         */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->current_team_id = '1';
+        $this->_getPostsCommonMock();
 
         try {
             $this->testAction('/posts/ajax_get_feed/', ['method' => 'GET']);
@@ -535,44 +193,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->current_team_id = '1';
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -605,43 +226,7 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAjaxGetCommentException()
     {
-        /**
-         * @var UsersController $Posts
-         */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $this->_getPostsCommonMock();
         try {
             $this->testAction('/posts/ajax_get_comment/2', ['method' => 'GET']);
         } catch (RuntimeException $e) {
@@ -654,40 +239,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostLike->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -723,40 +275,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostLike->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -801,40 +320,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -872,40 +358,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -949,40 +402,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->generate('Posts', [
-            'components' => [
-                'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, [
-                'id'         => 'xxx',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
+        $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -1039,7 +459,7 @@ class PostsControllerTest extends ControllerTestCase
      */
     public function testPostDeleteFail()
     {
-        $this->_postsCommon();
+        $this->_getPostsCommonMock();
 
         try {
             $this->testAction('posts/post_delete', ['method' => 'POST']);
@@ -1053,7 +473,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->_postsCommon();
+        $Posts = $this->_getPostsCommonMock();
 
         $user_id = 10;
         $team_id = 1;
@@ -1079,7 +499,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->_postsCommon();
+        $Posts = $this->_getPostsCommonMock();
 
         $user_id = 1;
         $team_id = 1;
@@ -1107,7 +527,7 @@ class PostsControllerTest extends ControllerTestCase
      */
     public function testCommentDeleteFail()
     {
-        $this->_postsCommon();
+        $this->_getPostsCommonMock();
 
         try {
             $this->testAction('posts/comment_delete', ['method' => 'POST']);
@@ -1121,7 +541,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->_postsCommon();
+        $Posts = $this->_getPostsCommonMock();
 
         $user_id = 10;
         $team_id = 1;
@@ -1147,7 +567,7 @@ class PostsControllerTest extends ControllerTestCase
         /**
          * @var UsersController $Posts
          */
-        $Posts = $this->_postsCommon();
+        $Posts = $this->_getPostsCommonMock();
 
         $user_id = 1;
         $team_id = 1;
@@ -1168,7 +588,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[正常]投稿削除");
     }
 
-    function _postsCommon()
+    function _getPostsCommonMock()
     {
         /**
          * @var UsersController $Posts
