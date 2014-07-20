@@ -462,7 +462,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/post_delete', ['method' => 'POST']);
+            $this->testAction('posts/post_delete/0', ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]投稿削除");
@@ -530,7 +530,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/comment_delete', ['method' => 'POST']);
+            $this->testAction('posts/comment_delete/0', ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]コメント削除");
