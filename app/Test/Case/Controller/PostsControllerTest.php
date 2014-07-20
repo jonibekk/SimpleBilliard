@@ -1048,7 +1048,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "[異常]投稿削除");
     }
 
-    public function testDeleteNotOwn()
+    public function testPostDeleteNotOwn()
     {
         /**
          * @var UsersController $Posts
@@ -1074,7 +1074,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "[異常]所有していない投稿削除");
     }
 
-    public function testDeleteSuccess()
+    public function testPostDeleteSuccess()
     {
         /**
          * @var UsersController $Posts
@@ -1095,6 +1095,74 @@ class PostsControllerTest extends ControllerTestCase
 
         try {
             $this->testAction('posts/post_delete/' . $post['Post']['id'], ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "[正常]投稿削除");
+    }
+
+    /**
+     * testDelete method
+     *
+     * @return void
+     */
+    public function testCommentDeleteFail()
+    {
+        $this->_postsCommon();
+
+        try {
+            $this->testAction('posts/comment_delete', ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]コメント削除");
+    }
+
+    public function testCommentDeleteNotOwn()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_postsCommon();
+
+        $user_id = 10;
+        $team_id = 1;
+
+        $comment_data = [
+            'Comment' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $comment = $Posts->Post->Comment->save($comment_data);
+
+        try {
+            $this->testAction('posts/comment_delete/' . $comment['Comment']['id'], ['method' => 'POST']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]所有していないコメント削除");
+    }
+
+    public function testCommentDeleteSuccess()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_postsCommon();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $comment_data = [
+            'Comment' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+        ];
+        $comment = $Posts->Post->Comment->save($comment_data);
+
+        try {
+            $this->testAction('posts/comment_delete/' . $comment['Comment']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]投稿削除");
@@ -1141,9 +1209,13 @@ class PostsControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map)
             );
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
+        $Posts->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->current_team_id = '1';
+        $Posts->Post->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->current_team_id = '1';
         return $Posts;
     }
 
