@@ -363,7 +363,6 @@ class UsersController extends AppController
                                            ['title' => __d('gl', "メールを送信しました")]);
             }
         }
-
     }
 
     /**
@@ -476,31 +475,36 @@ class UsersController extends AppController
      */
     public function accept_invite($token)
     {
-        //トークンが有効かチェック
-        $this->Invite->confirmToken($token);
-        //登録ユーザ宛の場合
-        if ($this->Invite->isUser($token)) {
-            //ログイン済みじゃない場合はログイン画面
-            if (!$this->Auth->user()) {
-                $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
-                $this->redirect(['action' => 'login']);
-            }
-            //ログイン済みの場合は、TeamMember保存でチーム切り替えてホームへ
-            else {
-                //自分宛かチェック
-                if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
-                    throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
+        try {
+            //トークンが有効かチェック
+            $this->Invite->confirmToken($token);
+            //登録ユーザ宛の場合
+            if ($this->Invite->isUser($token)) {
+                //ログイン済みじゃない場合はログイン画面
+                if (!$this->Auth->user()) {
+                    $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
+                    $this->redirect(['action' => 'login']);
                 }
-                //チーム参加
-                $team = $this->_joinTeam($token);
-                $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
-                //ホームへリダイレクト
-                $this->redirect("/");
+                //ログイン済みの場合は、TeamMember保存でチーム切り替えてホームへ
+                else {
+                    //自分宛かチェック
+                    if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
+                        throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
+                    }
+                    //チーム参加
+                    $team = $this->_joinTeam($token);
+                    $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
+                    //ホームへリダイレクト
+                    $this->redirect("/");
+                }
             }
-        }
-        else {
-            //新規ユーザ登録
-            $this->redirect(['action' => 'register', 'invite_token' => $token]);
+            else {
+                //新規ユーザ登録
+                $this->redirect(['action' => 'register', 'invite_token' => $token]);
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect("/");
         }
     }
 

@@ -34,6 +34,8 @@
     echo $this->fetch('meta');
     echo $this->Html->css('homepage/bootstrap');
     echo $this->Html->css('homepage/bootstrap-responsive');
+    echo $this->Html->css('font-awesome.min');
+    echo $this->Html->css('pnotify.custom.min');
     echo $this->Html->css('homepage/style');
     echo $this->Html->css('homepage/gl_home');
     echo $this->fetch('css');
@@ -104,7 +106,7 @@
 <body>
 <header id="header">
 
-<!--NewRelic Header-->
+    <!--NewRelic Header-->
     <? if (extension_loaded('newrelic')) {
         /** @noinspection PhpUndefinedFunctionInspection */
         echo newrelic_get_browser_timing_header();
@@ -188,6 +190,7 @@
     </div>
     <!--end: navbar --> </header>
 <?= $this->element('mainte_alert') ?>
+<?= $this->Session->flash(); ?>
 <?= $this->fetch('content') ?>
 <!-- start: footer -->
 <footer>
@@ -259,6 +262,7 @@
 
 <?= $this->element('common_homepage_js') ?>
 <?= $this->fetch('script') ?>
+<?= $this->Session->flash('pnotify') ?>
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
