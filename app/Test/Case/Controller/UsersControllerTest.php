@@ -1309,7 +1309,7 @@ class UsersControllerTest extends ControllerTestCase
         } catch (RuntimeException $e) {
 
         }
-        $this->assertTrue(isset($e), "[異常]招待で別のユーザ宛");
+        $this->assertFalse(isset($e), "[異常]招待で別のユーザ宛");
     }
 
 }
