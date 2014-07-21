@@ -12,7 +12,6 @@ App::uses('AppModel', 'Model');
  * @property PostLike       $PostLike
  * @property PostMention    $PostMention
  * @property PostRead       $PostRead
- * @property Image          $Image
  */
 class Post extends AppModel
 {
@@ -73,15 +72,6 @@ class Post extends AppModel
             'className' => 'PostLike',
             'fields'    => ['id']
         ]
-    ];
-
-    /**
-     * hasAndBelongsToMany associations
-     *
-     * @var array
-     */
-    public $hasAndBelongsToMany = [
-        'Image',
     ];
 
     /**
