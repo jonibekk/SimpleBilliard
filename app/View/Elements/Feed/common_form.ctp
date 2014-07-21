@@ -22,13 +22,14 @@
         <div class="tab-pane fade in active" id="PostForm">
             <?=
             $this->Form->create('Post', [
-                'url' => ['controller' => 'posts', 'action' => 'add'],
+                'url'           => ['controller' => 'posts', 'action' => 'add'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
                     'wrapInput' => '',
-                    'class'     => 'form-control'
+                    'class' => 'form-control',
                 ],
+                'type'          => 'file',
                 'novalidate'    => true,
             ]); ?>
             <div class="panel-body">
@@ -45,6 +46,111 @@
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
+                <div class="form-group">
+                    <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                             style="width: 50px; height: 50px;">
+                        </div>
+                        <div>
+                        <span class="btn-file">
+                            <?=
+                            $this->Form->input('photo1',
+                                               ['type'         => 'file',
+                                                'label'        => false,
+                                                'div'          => false,
+                                                'css'          => false,
+                                                'wrapInput'    => false,
+                                                'errorMessage' => false,
+                                                ''
+                                               ]) ?>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                             style="width: 50px; height: 50px;">
+                        </div>
+                        <div>
+                        <span class="btn-file">
+                            <?=
+                            $this->Form->input('photo2',
+                                               ['type'         => 'file',
+                                                'label'        => false,
+                                                'div'          => false,
+                                                'css'          => false,
+                                                'wrapInput'    => false,
+                                                'errorMessage' => false,
+                                                ''
+                                               ]) ?>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                             style="width: 50px; height: 50px;">
+                        </div>
+                        <div>
+                        <span class="btn-file">
+                            <?=
+                            $this->Form->input('photo3',
+                                               ['type'         => 'file',
+                                                'label'        => false,
+                                                'div'          => false,
+                                                'css'          => false,
+                                                'wrapInput'    => false,
+                                                'errorMessage' => false,
+                                                ''
+                                               ]) ?>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                             style="width: 50px; height: 50px;">
+                        </div>
+                        <div>
+                        <span class="btn-file">
+                            <?=
+                            $this->Form->input('photo4',
+                                               ['type'         => 'file',
+                                                'label'        => false,
+                                                'div'          => false,
+                                                'css'          => false,
+                                                'wrapInput'    => false,
+                                                'errorMessage' => false,
+                                                ''
+                                               ]) ?>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                             style="width: 50px; height: 50px;">
+                        </div>
+                        <div>
+                        <span class="btn-file">
+                            <?=
+                            $this->Form->input('photo5',
+                                               ['type'         => 'file',
+                                                'label'        => false,
+                                                'div'          => false,
+                                                'css'          => false,
+                                                'wrapInput'    => false,
+                                                'errorMessage' => false,
+                                                ''
+                                               ]) ?>
+                        </span>
+                        </div>
+                    </div>
+                </div>
                 <div class="" style="display: none" id="PostFormFooter">
                     <?=
                     $this->Form->submit(__d('gl', "投稿する"),
