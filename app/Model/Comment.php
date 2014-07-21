@@ -12,7 +12,50 @@ App::uses('AppModel', 'Model');
  */
 class Comment extends AppModel
 {
-
+    public $actsAs = [
+        'Upload' => [
+            'photo1' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo2' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo3' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo4' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo5' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+        ],
+    ];
     /**
      * Validation rules
      *

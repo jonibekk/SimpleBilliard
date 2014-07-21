@@ -22,6 +22,51 @@ class Post extends AppModel
     const TYPE_ACTION = 2;
     const TYPE_BADGE = 3;
 
+    public $actsAs = [
+        'Upload' => [
+            'photo1' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo2' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo3' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo4' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo5' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+        ],
+    ];
+
     /**
      * Validation rules
      *
