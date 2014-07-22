@@ -45,7 +45,7 @@ $this->Form->input('body', [
 
     <div class="" style="display: none" id="CommentEdit_<?= $comment['id'] ?>">
         <a href="#" class="target-show-this-del" target-id="CommentEditFormImage_<?= $comment['id'] ?>">
-            <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "画像を変更する") ?>
+            <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
         </a>
         <?=
         $this->Form->submit(__d('gl', "変更を保存する"),

@@ -42,10 +42,8 @@ $this->Form->input('body', [
     </div>
 
     <div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">
-        <a href="#" class="target-show-this-del" target-id="PostFormImage_<?= $post['Post']['id'] ?>"><i
-                class="fa fa-file-o"></i>&nbsp;<?=
-            __d('gl',
-                "画像を変更する") ?>
+        <a href="#" class="target-show-this-del" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
+            <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
         </a>
 
         <?=
