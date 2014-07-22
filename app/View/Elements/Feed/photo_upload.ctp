@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 7/22/14
  * Time: 11:05 AM
-
  *
-*@var                    $index
+ * @var                    $index
  * @var                    $data
  * @var                    $type
  * @var CodeCompletionView $this
@@ -32,8 +31,15 @@ if (isset($type)) {
              style="width: 50px; height: 50px;">
             <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
                 <?=
-                $this->Upload->uploadImage($data, "{$model}.photo" . $index,
-                                           ['style' => 'small'], ['style' => 'width: 50px; height: 50px;']) ?>
+                $this->Html->image('ajax-loader.gif',
+                                   [
+                                       'class'         => 'lazy',
+                                       'style'         => 'width: 50px; height: 50px;',
+                                       'data-original' => $this->Upload->uploadUrl($data, "{$model}.photo" . $index,
+                                                                                   ['style' => 'small'])
+                                   ]
+                )
+                ?>
             <? endif ?>
         </div>
         <div>

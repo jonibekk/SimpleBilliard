@@ -30,7 +30,13 @@ $(document).ready(function () {
     $('textarea').show().trigger('autosize.resize');
 
     //noinspection JSJQueryEfficiency,JSUnresolvedFunction
-    $('img').lazyload();
+    $('img.lazy').lazy({
+        attribute: "data-original",
+        combined: true,
+        delay: 100,
+        effect: "fadeIn",
+        removeAttribute: false
+    });
 
     //form二重送信防止
     $('form').on('submit', function () {
@@ -65,6 +71,18 @@ $(document).ready(function () {
             }).success(function () {
             });
         }
+    });
+    //lazy load
+    $(document).on("click", '.target-toggle-click', function (e) {
+        e.preventDefault();
+        $("img.lazy").lazy({
+            bind: "event",
+            attribute: "data-original",
+            combined: true,
+            delay: 100,
+            effect: "fadeIn",
+            removeAttribute: false
+        });
     });
 });
 
