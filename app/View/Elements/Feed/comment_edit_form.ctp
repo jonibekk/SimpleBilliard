@@ -20,7 +20,8 @@ $this->Form->create('Comment', [
     'class'         => '',
     'style'         => 'display: none',
     'novalidate'    => true,
-    'id' => "CommentEditForm_{$comment['id']}",
+    'type' => 'file',
+    'id'   => "CommentEditForm_{$comment['id']}",
 ]); ?>
 <?=
 $this->Form->input('body', [
@@ -34,7 +35,18 @@ $this->Form->input('body', [
     'value'          => $comment['body'],
 ])
 ?>
+    <div class="form-inline" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
+        <? for ($i = 1; $i <= 5; $i++): ?>
+            <?=
+            $this->element('Feed/photo_upload',
+                           ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i]) ?>
+        <? endfor ?>
+    </div>
+
     <div class="" style="display: none" id="CommentEdit_<?= $comment['id'] ?>">
+        <a href="#" class="target-show-this-del" target-id="CommentEditFormImage_<?= $comment['id'] ?>">
+            <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "画像を変更する") ?>
+        </a>
         <?=
         $this->Form->submit(__d('gl', "変更を保存する"),
                             ['class' => 'btn btn-primary pull-right', 'id' => "CommentEditSubmit_{$comment['id']}", 'disabled' => 'disabled']) ?>

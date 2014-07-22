@@ -37,7 +37,7 @@ $this->Form->input('body', [
 ?>
     <div class="form-inline" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
         <? for ($i = 1; $i <= 5; $i++): ?>
-            <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i, 'post' => $post]) ?>
+            <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i, 'data' => $post]) ?>
         <? endfor ?>
     </div>
 

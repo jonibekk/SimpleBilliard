@@ -4,9 +4,10 @@
  * User: bigplants
  * Date: 7/22/14
  * Time: 11:05 AM
+
  *
- * @var                    $index
- * @var                    $post
+*@var                    $index
+ * @var                    $data
  * @var                    $type
  * @var CodeCompletionView $this
  */
@@ -29,9 +30,9 @@ if (isset($type)) {
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
         <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
              style="width: 50px; height: 50px;">
-            <? if (isset($post['Post']["photo{$index}_file_name"]) && $post['Post']["photo{$index}_file_name"]): ?>
+            <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
                 <?=
-                $this->Upload->uploadImage($post, "{$model}.photo" . $index,
+                $this->Upload->uploadImage($data, "{$model}.photo" . $index,
                                            ['style' => 'small'], ['style' => 'width: 50px; height: 50px;']) ?>
             <? endif ?>
         </div>

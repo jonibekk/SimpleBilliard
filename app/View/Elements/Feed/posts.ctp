@@ -103,6 +103,7 @@
                                 'class'     => 'form-control'
                             ],
                             'class'         => '',
+                            'type' => 'file',
                             'novalidate'    => true,
                         ]); ?>
                         <?=
@@ -119,8 +120,19 @@
                             "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                         ])
                         ?>
+                        <div class="form-inline" id="CommentFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+                            <? for ($i = 1; $i <= 5; $i++): ?>
+                                <?= $this->element('Feed/photo_upload', ['type' => 'comment', 'index' => $i]) ?>
+                            <? endfor ?>
+                        </div>
                         <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                         <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
+                            <a href="#" class="target-show-this-del"
+                               target-id="CommentFormImage_<?= $post['Post']['id'] ?>"><i class="fa fa-file-o"></i>&nbsp;<?=
+                                __d('gl',
+                                    "画像を追加する") ?>
+                            </a>
+
                             <?=
                             $this->Form->submit(__d('gl', "コメントする"),
                                                 ['class' => 'btn btn-primary pull-right', 'id' => "CommentSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
