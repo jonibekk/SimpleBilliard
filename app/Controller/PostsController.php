@@ -98,6 +98,7 @@ class PostsController extends AppController
     public function comment_delete($comment_id)
     {
         $this->Post->Comment->id = $comment_id;
+        $post_id = $this->Post->Comment->field('post_id');
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
         }
@@ -106,6 +107,8 @@ class PostsController extends AppController
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->Comment->delete();
+        $this->Post->Comment->updateCounterCache(['post_id' => $post_id]);
+
         $this->Pnotify->outSuccess(__d('gl', "コメントを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */

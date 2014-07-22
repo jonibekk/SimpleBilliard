@@ -75,6 +75,7 @@ class Comment extends AppModel
     public $belongsTo = [
         'Post' => [
             "counterCache" => true,
+            'counterScope' => ['Comment.del_flg' => false]
         ],
         'User',
         'Team',
@@ -86,10 +87,10 @@ class Comment extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CommentLike' => [
+        'CommentLike'   => [
             'dependent' => true,
         ],
-        'CommentRead' => [
+        'CommentRead'   => [
             'dependent' => true,
         ],
         'MyCommentLike' => [
