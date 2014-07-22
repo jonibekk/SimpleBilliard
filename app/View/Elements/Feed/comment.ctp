@@ -23,7 +23,7 @@
                     <i class="fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <li><a href="#" class="target-toggle-click-click"
+                    <li><a href="#" class="target-toggle-click"
                            target-id="CommentEditForm_<?= $comment['id'] ?>"
                            click-target-id="CommentEditFormBody_<?= $comment['id'] ?>"
 
