@@ -31,6 +31,10 @@ $(document).ready(function () {
 
     //noinspection JSJQueryEfficiency,JSUnresolvedFunction
     imageLazyOn();
+    //carousel
+    $('.carousel').carousel({interval:false});
+
+
 
     //form二重送信防止
     $('form').on('submit', function () {

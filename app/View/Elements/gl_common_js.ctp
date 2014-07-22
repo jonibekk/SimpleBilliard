@@ -19,6 +19,7 @@ echo $this->Html->script('pnotify.custom.min');
 echo $this->Html->script('jquery.nailthumb.1.1.min');
 echo $this->Html->script('jquery.autosize.min');
 echo $this->Html->script('jquery.lazy.min');
+echo $this->Html->script('lightbox.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('gl_basic');
 ?>
