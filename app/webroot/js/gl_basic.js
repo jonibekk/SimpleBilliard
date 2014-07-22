@@ -31,6 +31,9 @@ $(document).ready(function () {
 
     //noinspection JSJQueryEfficiency,JSUnresolvedFunction
     imageLazyOn();
+    //showmore
+    //noinspection JSUnresolvedFunction
+    showMore();
     //carousel
     $('.carousel').carousel({interval:false});
 
