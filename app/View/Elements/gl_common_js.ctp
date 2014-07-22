@@ -107,6 +107,56 @@ echo $this->Html->script('gl_basic');
             });
             return false;
         }
+
+        function evCommentAllView() {
+            attrUndefinedCheck(this, 'parent-id');
+            attrUndefinedCheck(this, 'get-url');
+
+            var $obj = $(this);
+            var parent_id = $obj.attr('parent-id');
+            var get_url = $obj.attr('get-url');
+            //リンクを無効化
+            $obj.attr('disabled', 'disabled');
+            var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+            //ローダー表示
+            $obj.after($loader_html);
+            $.ajax({
+                type: 'GET',
+                url: get_url,
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    if (!$.isEmptyObject(data.html)) {
+                        //取得したhtmlをオブジェクト化
+                        var $posts = $(data.html);
+                        //一旦非表示
+                        $posts.hide();
+                        $("#" + parent_id).before($posts);
+                        //html表示
+                        $posts.show("slow");
+                        //ローダーを削除
+                        $loader_html.remove();
+                        //リンクを削除
+                        $obj.remove();
+                    }
+                    else {
+                        //ローダーを削除
+                        $loader_html.remove();
+                        //親を取得
+                        //noinspection JSCheckFunctionSignatures
+                        var $parent = $obj.parent();
+                        //「もっと読む」リンクを削除
+                        $obj.remove();
+                        //データが無かった場合はデータ無いよ。を表示
+                        $parent.append("<?=__d('gl','これ以上のコメントがありません。')?>");
+                    }
+                },
+                error: function () {
+                    alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
+                }
+            });
+            return false;
+        }
         <?if(isset($mode_view)):?>
         <?if($mode_view == MODE_VIEW_TUTORIAL):?>
         $("#modal_tutorial").modal('show');

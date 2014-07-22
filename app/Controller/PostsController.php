@@ -61,6 +61,34 @@ class PostsController extends AppController
         return $this->response;
     }
 
+    public function ajax_get_comment($post_id)
+    {
+        if (!$this->request->is('ajax')) {
+            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
+        }
+        //パラメータ初期値
+        $feed_type_id = null;
+        $created = null;
+        Configure::write('debug', 0);
+        $this->layout = 'ajax';
+        $this->viewPath = 'Elements';
+
+        $comments = $this->Post->Comment->getPostsComment($post_id, 3);
+        $this->set(compact('comments'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/ajax_comments');
+        $html = $response->__toString();
+        $result = array(
+            'html' => $html
+        );
+        //レスポンスをjsonで生成
+        $this->response->type('json');
+        $this->response->body(json_encode($result));
+        return $this->response;
+    }
+
     public function comment_add()
     {
         if ($this->request->is('post')) {

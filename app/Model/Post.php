@@ -123,10 +123,25 @@ class Post extends AppModel
                 'Post.modified' => 'desc'
             ],
             'contain'    => [
-                'User'
+                'User'    => [
+                    'fields' => $this->User->profileFields
+                ],
+                'Comment' => [
+                    'order' => [
+                        'Comment.created' => 'desc'
+                    ],
+                    'limit' => 3,
+                    'User'  => ['fields' => $this->User->profileFields],
+                ]
             ]
         ];
         $res = $this->find('all', $options);
+        //コメントを逆順に
+        foreach ($res as $key => $val) {
+            if (!empty($val['Comment'])) {
+                $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
+            }
+        }
         return $res;
     }
 }

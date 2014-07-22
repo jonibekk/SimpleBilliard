@@ -26,13 +26,26 @@ $(document).ready(function () {
     $('textarea').show().trigger('autosize.resize');
 
     //チームフィードの「もっと見る」のイベント
+    //noinspection JSUnresolvedVariable
     $('.click-feed-read-more').bind('click', evFeedMoreView);
-
+    //noinspection JSUnresolvedVariable
+    $('.click-comment-all').bind('click', evCommentAllView);
 });
 /**
  * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
  */
 $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+$(document).on("click", ".trigger-click", evTriggerClick);
+
+function evTriggerClick() {
+    attrUndefinedCheck(this, 'target-id');
+    var target_id = $(this).attr("target-id");
+    //noinspection JSJQueryEfficiency
+    $("#" + target_id).trigger('click');
+    //noinspection JSJQueryEfficiency
+    $("#" + target_id).focus();
+    return false;
+}
 /**
  * クリックした要素のheightを倍にし、
  * 指定した要素を表示する。(一度だけ)
@@ -82,3 +95,34 @@ function attrUndefinedCheck(obj, attr_name) {
         throw new Error(msg);
     }
 }
+$(function () {
+    // PageTopヘッダ分ずらす
+    var headH = 50;
+
+    // PageTop
+    $('a[href^=#], area[href^=#]').not('a[href=#], area[href=#]').each(function () {
+        // jquery.easing
+        jQuery.easing.quart = function (x, t, b, c, d) {
+            return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+        };
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname && this.hash.replace(/#/, '')) {
+            var $targetId = $(this.hash),
+                $targetAnchor = $('[name=' + this.hash.slice(1) + ']');
+            var $target = $targetId.length ? $targetId : $targetAnchor.length ? $targetAnchor : false;
+            if ($target) {
+                var targetOffset = $target.offset().top - headH;
+                $(this).click(function () {
+                    $('html, body').animate({
+                        scrollTop: targetOffset
+                    }, 500, 'quart');
+                    return false;
+                });
+            }
+        }
+    });
+    if (location.hash) {
+        var hash = location.hash;
+        window.scroll(0, headH);
+        $('a[href=' + hash + ']').click();
+    }
+});

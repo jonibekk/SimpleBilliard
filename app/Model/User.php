@@ -170,6 +170,17 @@ class User extends AppModel
         ]
     ];
 
+    public $profileFields = [
+        'id',
+        'first_name',
+        'last_name',
+        'photo_file_name',
+        'language',
+        'auto_language_flg',
+        'romanize_flg',
+        'username',
+    ];
+
     /**
      * belongsTo associations
      *
