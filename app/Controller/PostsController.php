@@ -60,4 +60,20 @@ class PostsController extends AppController
         $this->response->body(json_encode($result));
         return $this->response;
     }
+
+    public function comment_add()
+    {
+        if ($this->request->is('post')) {
+            if ($this->Post->Comment->add($this->request->data)) {
+                $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "コメントに失敗しました。"));
+            }
+            $this->redirect($this->referer());
+        }
+        else {
+            throw new RuntimeException(__d('exception', "不正な画面遷移です。"));
+        }
+    }
 }

@@ -26,7 +26,9 @@ class PostLike extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Post',
+        'Post' => [
+            "counterCache" => true,
+        ],
         'User',
         'Team',
     ];
