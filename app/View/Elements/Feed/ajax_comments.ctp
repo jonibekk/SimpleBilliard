@@ -9,5 +9,7 @@
  */
 ?>
 <? foreach ($comments as $comment): ?>
-    <?= $this->element('Feed/comment', ['comment' => $comment['Comment'], 'user' => $comment['User']]) ?>
+    <?=
+    $this->element('Feed/comment',
+                   ['comment' => $comment['Comment'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
 <? endforeach ?>

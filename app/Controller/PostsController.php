@@ -30,20 +30,124 @@ class PostsController extends AppController
         }
     }
 
+    /**
+     * post_delete method
+     *
+     * @throws NotFoundException
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    public function post_delete($id)
+    {
+        $this->Post->id = $id;
+        if (!$this->Post->exists()) {
+            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+        }
+        if (!$this->Post->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post', 'delete');
+        $this->Post->delete();
+        $this->Pnotify->outSuccess(__d('gl', "投稿を削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * post_edit method
+     *
+     * @throws NotFoundException
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    public function post_edit($id)
+    {
+        $this->Post->id = $id;
+        if (!$this->Post->exists()) {
+            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+        }
+        if (!$this->Post->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post');
+        if ($this->Post->save($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "投稿の変更に失敗しました。"));
+        }
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * comment_delete method
+     *
+     * @throws NotFoundException
+     *
+     * @param string $comment_id
+     *
+     * @return void
+     */
+    public function comment_delete($comment_id)
+    {
+        $this->Post->Comment->id = $comment_id;
+        if (!$this->Post->Comment->exists()) {
+            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+        }
+        if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post', 'delete');
+        $this->Post->Comment->delete();
+        $this->Pnotify->outSuccess(__d('gl', "コメントを削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * comment_edit method
+     *
+     * @param $comment_id
+     *
+     * @throws NotFoundException
+     * @return void
+     */
+    public function comment_edit($comment_id)
+    {
+        $this->Post->Comment->id = $comment_id;
+        if (!$this->Post->Comment->exists()) {
+            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+        }
+        if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
+            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+        }
+        $this->request->allowMethod('post');
+        if ($this->Post->Comment->save($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "コメントの変更を保存しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "コメントの変更に失敗しました。"));
+        }
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
     public function ajax_get_feed($page_num = null)
     {
-        if (!$this->request->is('ajax')) {
-            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
-        }
-        //パラメータ初期値
-        $feed_type_id = null;
-        $created = null;
+        $this->_ajaxPreProcess();
+
         if (!$page_num) {
             $page_num = 1;
         }
-        Configure::write('debug', 0);
-        $this->layout = 'ajax';
-        $this->viewPath = 'Elements';
 
         $posts = $this->Post->get($page_num);
         $this->set(compact('posts'));
@@ -55,23 +159,12 @@ class PostsController extends AppController
         $result = array(
             'html' => $html
         );
-        //レスポンスをjsonで生成
-        $this->response->type('json');
-        $this->response->body(json_encode($result));
-        return $this->response;
+        return $this->_ajaxGetResponse($result);
     }
 
     public function ajax_get_comment($post_id)
     {
-        if (!$this->request->is('ajax')) {
-            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
-        }
-        //パラメータ初期値
-        $feed_type_id = null;
-        $created = null;
-        Configure::write('debug', 0);
-        $this->layout = 'ajax';
-        $this->viewPath = 'Elements';
+        $this->_ajaxPreProcess();
 
         $comments = $this->Post->Comment->getPostsComment($post_id, 3);
         $this->set(compact('comments'));
@@ -83,6 +176,91 @@ class PostsController extends AppController
         $result = array(
             'html' => $html
         );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_post_like($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->PostLike->changeLike($post_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_comment_like($comment_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->Comment->CommentLike->changeLike($comment_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_get_post_liked_users($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $liked_users = $this->Post->PostLike->getLikedUsers($post_id);
+        $this->set(compact('liked_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_post_liked_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_post_red_users($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $red_users = $this->Post->PostRead->getRedUsers($post_id);
+        $this->set(compact('red_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_post_red_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_comment_liked_users($comment_id)
+    {
+        $this->_ajaxPreProcess();
+        $liked_users = $this->Post->Comment->CommentLike->getLikedUsers($comment_id);
+        $this->set(compact('liked_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_comment_liked_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_comment_red_users($comment_id)
+    {
+        $this->_ajaxPreProcess();
+        $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
+        $this->set(compact('red_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_comment_red_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function _ajaxPreProcess()
+    {
+        if (!$this->request->is('ajax')) {
+            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
+        }
+        Configure::write('debug', 0);
+        $this->layout = 'ajax';
+        $this->viewPath = 'Elements';
+    }
+
+    public function _ajaxGetResponse($result)
+    {
         //レスポンスをjsonで生成
         $this->response->type('json');
         $this->response->body(json_encode($result));
@@ -104,4 +282,5 @@ class PostsController extends AppController
             throw new RuntimeException(__d('exception', "不正な画面遷移です。"));
         }
     }
+
 }

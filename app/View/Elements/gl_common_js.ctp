@@ -4,6 +4,8 @@
  * User: bigplants
  * Date: 5/22/14
  * Time: 6:47 PM
+ *
+ * @var CodeCompletionView $this
  */
 ?>
 <?
@@ -16,6 +18,7 @@ echo $this->Html->script('bvAddition');
 echo $this->Html->script('pnotify.custom.min');
 echo $this->Html->script('jquery.nailthumb.1.1.min');
 echo $this->Html->script('jquery.autosize.min');
+echo $this->Html->script('jquery.lazy.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('gl_basic');
 ?>
@@ -163,6 +166,60 @@ echo $this->Html->script('gl_basic');
                 },
                 error: function () {
                     alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
+                }
+            });
+            return false;
+        }
+        function evLike() {
+            attrUndefinedCheck(this, 'like_count_id');
+            attrUndefinedCheck(this, 'model_id');
+            attrUndefinedCheck(this, 'like_type');
+
+            var $obj = $(this);
+            var like_count_id = $obj.attr('like_count_id');
+
+            var like_type = $obj.attr('like_type');
+            var url = null;
+            var model_id = $obj.attr('model_id');
+            if (like_type == "post") {
+                url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>" + "/" + model_id;
+            }
+            else {
+                url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>" + "/" + model_id;
+            }
+
+            //リンクを非表示
+            $obj.hide();
+            var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+            //ローダー表示
+            $obj.after($loader_html);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error) {
+                        alert("<?=__d('gl',"エラーが発生しました。")?>");
+                    }
+                    else {
+                        //「いいね」した場合は「いいね取り消し」表示に
+                        //noinspection JSUnresolvedVariable
+                        if (data.created == true) {
+                            $obj.text("<?=__d('gl',"いいね取り消し")?>");
+                        }
+                        //「いいね取り消し」した場合は「いいね」表示に
+                        else {
+                            $obj.text("<?=__d('gl',"いいね！")?>");
+                        }
+                        $("#" + like_count_id).text(data.count);
+                        //ローダーを削除
+                        $loader_html.remove();
+                        $obj.show();
+                    }
+                },
+                error: function () {
+                    alert("<?=__d('gl',"エラーが発生しました。")?>");
                 }
             });
             return false;

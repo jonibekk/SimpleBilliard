@@ -77,6 +77,10 @@ class PostTest extends CakeTestCase
         $team_id = '1';
         $this->Post->me['id'] = $uid;
         $this->Post->current_team_id = $team_id;
+        $this->Post->PostRead->me['id'] = $uid;
+        $this->Post->PostRead->current_team_id = $team_id;
+        $this->Post->Comment->CommentRead->me['id'] = $uid;
+        $this->Post->Comment->CommentRead->current_team_id = $team_id;
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
     }
 

@@ -12,7 +12,50 @@ App::uses('AppModel', 'Model');
  */
 class Comment extends AppModel
 {
-
+    public $actsAs = [
+        'Upload' => [
+            'photo1' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo2' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo3' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo4' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo5' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+        ],
+    ];
     /**
      * Validation rules
      *
@@ -43,8 +86,16 @@ class Comment extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CommentLike',
-        'CommentRead',
+        'CommentLike' => [
+            'dependent' => true,
+        ],
+        'CommentRead' => [
+            'dependent' => true,
+        ],
+        'MyCommentLike' => [
+            'className' => 'CommentLike',
+            'fields'    => ['id']
+        ]
     ];
 
     /**
@@ -75,6 +126,8 @@ class Comment extends AppModel
 
     public function getPostsComment($post_id, $cut_num = 0)
     {
+        //既読済みに
+        $this->CommentRead->red($post_id);
         $options = [
             'conditions' => [
                 'Comment.post_id' => $post_id,
@@ -84,8 +137,14 @@ class Comment extends AppModel
                 'Comment.created' => 'asc'
             ],
             'contain'    => [
-                'User' => [
+                'User'          => [
                     'fields' => $this->User->profileFields
+                ],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $this->me['id'],
+                        'MyCommentLike.team_id' => $this->current_team_id,
+                    ]
                 ],
             ],
         ];

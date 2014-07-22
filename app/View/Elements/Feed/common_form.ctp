@@ -22,14 +22,14 @@
         <div class="tab-pane fade in active" id="PostForm">
             <?=
             $this->Form->create('Post', [
-                'url' => ['controller' => 'posts', 'action' => 'add'],
+                'url'           => ['controller' => 'posts', 'action' => 'add'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
                     'wrapInput' => '',
-                    'class'     => 'form-control'
+                    'class' => 'form-control',
                 ],
-                'id'  => 'PostDisplayForm',
+                'type'          => 'file',
                 'novalidate'    => true,
             ]); ?>
             <div class="panel-body">
@@ -40,13 +40,26 @@
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'                    => 'form-control tiny-form-text',
+                    'class'     => 'form-control tiny-form-text blank-disable',
                     'target_show_id'           => "PostFormFooter",
+                    'target-id' => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
+                <div class="form-inline" id="PostFormImage" style="display: none">
+                    <? for ($i = 1; $i <= 5; $i++): ?>
+                        <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i]) ?>
+                    <? endfor ?>
+                </div>
                 <div class="" style="display: none" id="PostFormFooter">
-                    <?= $this->Form->submit(__d('gl', "投稿する"), ['class' => 'btn btn-primary pull-right']) ?>
+                    <a href="#" class="target-show-this-del" target-id="PostFormImage"><i class="fa fa-file-o"></i>&nbsp;<?=
+                        __d('gl',
+                            "画像を追加する") ?>
+                    </a>
+
+                    <?=
+                    $this->Form->submit(__d('gl', "投稿する"),
+                                        ['class' => 'btn btn-primary pull-right', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
                     <div class="clearfix"></div>
                 </div>
             </div>

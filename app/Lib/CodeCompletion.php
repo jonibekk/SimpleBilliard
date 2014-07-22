@@ -95,6 +95,10 @@ if (false) {
          * @var TimeExHelper
          */
         var $TimeEx;
+        /**
+         * @var TextExHelper
+         */
+        var $TextEx;
 
         /**
          * @var UploadHelper

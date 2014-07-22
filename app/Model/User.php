@@ -14,7 +14,6 @@ App::uses('AppModel', 'Model');
  * @property Comment        $Comment
  * @property Email          $Email
  * @property GivenBadge     $GivenBadge
- * @property Image          $Image
  * @property Notification   $Notification
  * @property OauthToken     $OauthToken
  * @property PostLike       $PostLike

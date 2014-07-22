@@ -12,7 +12,6 @@ App::uses('AppModel', 'Model');
  * @property PostLike       $PostLike
  * @property PostMention    $PostMention
  * @property PostRead       $PostRead
- * @property Image          $Image
  */
 class Post extends AppModel
 {
@@ -22,6 +21,51 @@ class Post extends AppModel
     const TYPE_NORMAL = 1;
     const TYPE_ACTION = 2;
     const TYPE_BADGE = 3;
+
+    public $actsAs = [
+        'Upload' => [
+            'photo1' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo2' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo3' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo4' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'photo5' => [
+                'styles'  => [
+                    'small' => '443l',
+                    'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+        ],
+    ];
 
     /**
      * Validation rules
@@ -58,20 +102,21 @@ class Post extends AppModel
      */
     public $hasMany = [
         'CommentMention',
-        'Comment',
+        'Comment'  => [
+            'dependent' => true,
+        ],
         'GivenBadge',
-        'PostLike',
+        'PostLike' => [
+            'dependent' => true,
+        ],
         'PostMention',
-        'PostRead',
-    ];
-
-    /**
-     * hasAndBelongsToMany associations
-     *
-     * @var array
-     */
-    public $hasAndBelongsToMany = [
-        'Image',
+        'PostRead' => [
+            'dependent' => true,
+        ],
+        'MyPostLike' => [
+            'className' => 'PostLike',
+            'fields'    => ['id']
+        ]
     ];
 
     /**
@@ -112,6 +157,22 @@ class Post extends AppModel
         elseif (is_string($end)) {
             $end = strtotime($end);
         }
+        $post_options = [
+            'conditions' => [
+                'Post.team_id'                  => $this->current_team_id,
+                'Post.modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'limit'      => $limit,
+            'page'       => $page,
+            'order'      => [
+                'Post.modified' => 'desc'
+            ],
+        ];
+        $post_list = $this->find('list', $post_options);
+        //投稿を既読に
+        $this->PostRead->red($post_list);
+        //コメントを既読に
+        $this->Comment->CommentRead->red($post_list);
         $options = [
             'conditions' => [
                 'Post.team_id'                  => $this->current_team_id,
@@ -123,17 +184,30 @@ class Post extends AppModel
                 'Post.modified' => 'desc'
             ],
             'contain'    => [
-                'User'    => [
+                'User'       => [
                     'fields' => $this->User->profileFields
                 ],
-                'Comment' => [
-                    'order' => [
+                'MyPostLike' => [
+                    'conditions' => [
+                        'MyPostLike.user_id' => $this->me['id'],
+                        'MyPostLike.team_id' => $this->current_team_id,
+                    ],
+                ],
+                'Comment'    => [
+                    'conditions'    => ['Comment.team_id' => $this->current_team_id],
+                    'order'         => [
                         'Comment.created' => 'desc'
                     ],
-                    'limit' => 3,
-                    'User'  => ['fields' => $this->User->profileFields],
-                ]
-            ]
+                    'limit'         => 3,
+                    'User'          => ['fields' => $this->User->profileFields],
+                    'MyCommentLike' => [
+                        'conditions' => [
+                            'MyCommentLike.user_id' => $this->me['id'],
+                            'MyCommentLike.team_id' => $this->current_team_id,
+                        ]
+                    ],
+                ],
+            ],
         ];
         $res = $this->find('all', $options);
         //コメントを逆順に

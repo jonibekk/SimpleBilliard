@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 7/4/14
  * Time: 10:33 AM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $posts
  */
 ?>

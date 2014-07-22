@@ -11,6 +11,10 @@ $(document).ready(function () {
     $('.fileinput').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
     });
+    //アップロード画像選択時にトリムして表示
+    $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+        $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
+    });
     //チーム切り換え
     $('#SwitchTeam').change(function () {
         var val = $(this).val();
@@ -25,17 +29,96 @@ $(document).ready(function () {
     //noinspection JSJQueryEfficiency
     $('textarea').show().trigger('autosize.resize');
 
-    //チームフィードの「もっと見る」のイベント
+    //noinspection JSJQueryEfficiency,JSUnresolvedFunction
+    $('img.lazy').lazy({
+        attribute: "data-original",
+        combined: true,
+        delay: 100,
+        effect: "fadeIn",
+        removeAttribute: false
+    });
+
+    //form二重送信防止
+    $('form').on('submit', function () {
+        $(this).find('input:submit').attr('disabled', 'disabled');
+    });
+    /**
+     * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
+     */
+    $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("click", ".trigger-click", evTriggerClick);
+    //noinspection SpellCheckingInspection
+    $(document).on("keyup", ".blank-disable", evBlankDisable);
     //noinspection JSUnresolvedVariable
-    $('.click-feed-read-more').bind('click', evFeedMoreView);
+    $(document).on("click", ".click-feed-read-more", evFeedMoreView);
     //noinspection JSUnresolvedVariable
-    $('.click-comment-all').bind('click', evCommentAllView);
+    $(document).on("click", ".click-comment-all", evCommentAllView);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".click-like", evLike);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".target-toggle-click", evTargetToggleClick);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
+    //dynamic modal
+    $(document).on("click", '.modal-ajax-get', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url,function (data) {
+                $('<div class="modal on fade">' + data + '</div>').modal();
+            }).success(function () {
+            });
+        }
+    });
+    //lazy load
+    $(document).on("click", '.target-toggle-click', function (e) {
+        e.preventDefault();
+        $("img.lazy").lazy({
+            bind: "event",
+            attribute: "data-original",
+            combined: true,
+            delay: 100,
+            effect: "fadeIn",
+            removeAttribute: false
+        });
+    });
 });
-/**
- * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
- */
-$(document).on("click", ".tiny-form-text", evShowAndThisWide);
-$(document).on("click", ".trigger-click", evTriggerClick);
+
+function evTargetToggleClick() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'click-target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var click_target_id = $obj.attr("click-target-id");
+    $("#" + target_id).toggle();
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).trigger('click');
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).focus();
+    return false;
+}
+function evTargetShowThisDelete() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).show();
+    $obj.remove();
+    return false;
+}
+
+function evBlankDisable() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    if ($obj.val().length == 0) {
+        $("#" + target_id).attr("disabled", "disabled");
+    }
+    else {
+        $("#" + target_id).removeAttr("disabled");
+    }
+}
 
 function evTriggerClick() {
     attrUndefinedCheck(this, 'target-id');
