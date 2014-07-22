@@ -20,7 +20,8 @@ $this->Form->create('Post', [
     'class'         => '',
     'style'         => 'display: none',
     'novalidate'    => true,
-    'id' => "PostEditForm_{$post['Post']['id']}",
+    'type' => 'file',
+    'id'   => "PostEditForm_{$post['Post']['id']}",
 ]); ?>
 <?=
 $this->Form->input('body', [
@@ -34,7 +35,19 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
+    <div class="form-inline" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+        <? for ($i = 1; $i <= 5; $i++): ?>
+            <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i, 'post' => $post]) ?>
+        <? endfor ?>
+    </div>
+
     <div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">
+        <a href="#" class="target-show-this-del" target-id="PostFormImage_<?= $post['Post']['id'] ?>"><i
+                class="fa fa-file-o"></i>&nbsp;<?=
+            __d('gl',
+                "画像を変更する") ?>
+        </a>
+
         <?=
         $this->Form->submit(__d('gl', "変更を保存する"),
                             ['class' => 'btn btn-primary pull-right', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>

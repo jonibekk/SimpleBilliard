@@ -5,13 +5,35 @@
  * Date: 7/22/14
  * Time: 11:05 AM
  *
- * @var $index
+ * @var                    $index
+ * @var                    $post
+ * @var                    $type
+ * @var CodeCompletionView $this
  */
+$model = null;
+if (isset($type)) {
+    switch ($type) {
+        case "post":
+            $model = "Post";
+            break;
+        case "comment":
+            $model = "Comment";
+            break;
+        default:
+            $model = "User";
+            break;
+    }
+}
 ?>
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
         <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
              style="width: 50px; height: 50px;">
+            <? if (isset($post['Post']["photo{$index}_file_name"]) && $post['Post']["photo{$index}_file_name"]): ?>
+                <?=
+                $this->Upload->uploadImage($post, "{$model}.photo" . $index,
+                                           ['style' => 'small'], ['style' => 'width: 50px; height: 50px;']) ?>
+            <? endif ?>
         </div>
         <div>
                         <span class="btn-file">

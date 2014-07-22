@@ -48,7 +48,7 @@
                 ?>
                 <div class="form-inline" id="PostFormImage" style="display: none">
                     <? for ($i = 1; $i <= 5; $i++): ?>
-                        <?= $this->element('Feed/photo_upload', ['index' => $i]) ?>
+                        <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i]) ?>
                     <? endfor ?>
                 </div>
                 <div class="" style="display: none" id="PostFormFooter">
