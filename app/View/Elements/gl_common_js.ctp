@@ -101,6 +101,7 @@ echo $this->Html->script('gl_basic');
                     $loader_html.remove();
                     //リンクを有効化
                     $obj.removeAttr('disabled');
+                    //画像をレイジーロード
                     imageLazyOn();
                 }
                 else {
@@ -152,6 +153,8 @@ echo $this->Html->script('gl_basic');
                     $loader_html.remove();
                     //リンクを削除
                     $obj.remove();
+                    //画像をレイジーロード
+                    imageLazyOn();
                 }
                 else {
                     //ローダーを削除
