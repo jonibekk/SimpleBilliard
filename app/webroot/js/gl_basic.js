@@ -29,6 +29,9 @@ $(document).ready(function () {
     //noinspection JSJQueryEfficiency
     $('textarea').show().trigger('autosize.resize');
 
+    //noinspection JSJQueryEfficiency,JSUnresolvedFunction
+    $('img').lazyload();
+
     //form二重送信防止
     $('form').on('submit', function () {
         $(this).find('input:submit').attr('disabled', 'disabled');

@@ -18,6 +18,7 @@ echo $this->Html->script('bvAddition');
 echo $this->Html->script('pnotify.custom.min');
 echo $this->Html->script('jquery.nailthumb.1.1.min');
 echo $this->Html->script('jquery.autosize.min');
+echo $this->Html->script('jquery.lazyload.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('gl_basic');
 ?>
