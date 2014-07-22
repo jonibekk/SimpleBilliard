@@ -13,7 +13,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title"><?= __d('gl', "このコメントに「いいね！」と言っている人") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "このコメントに%s人が「いいね！」と言っています。", count($liked_users)) ?></h4>
         </div>
         <div class="modal-body">
             <? if (!empty($liked_users)): ?>

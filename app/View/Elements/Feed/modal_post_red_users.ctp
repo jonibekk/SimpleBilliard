@@ -5,7 +5,7 @@
  * Date: 2014/07/19
  * Time: 22:11
  *
- * @var                    $liked_users
+ * @var                    $red_users
  * @var CodeCompletionView $this
  */
 ?>
@@ -13,7 +13,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title"><?= __d('gl', "この投稿を読んだ人") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "この投稿を%s人が読みました。", count($red_users)) ?></h4>
         </div>
         <div class="modal-body">
             <? if (!empty($red_users)): ?>
