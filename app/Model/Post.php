@@ -26,7 +26,7 @@ class Post extends AppModel
         'Upload' => [
             'photo1' => [
                 'styles'  => [
-                    'small' => '443l',
+                    'small' => '511l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
@@ -34,7 +34,7 @@ class Post extends AppModel
             ],
             'photo2' => [
                 'styles'  => [
-                    'small' => '443l',
+                    'small' => '511l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
@@ -42,7 +42,7 @@ class Post extends AppModel
             ],
             'photo3' => [
                 'styles'  => [
-                    'small' => '443l',
+                    'small' => '511l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
@@ -50,7 +50,7 @@ class Post extends AppModel
             ],
             'photo4' => [
                 'styles'  => [
-                    'small' => '443l',
+                    'small' => '511l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
@@ -58,7 +58,7 @@ class Post extends AppModel
             ],
             'photo5' => [
                 'styles'  => [
-                    'small' => '443l',
+                    'small' => '511l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
