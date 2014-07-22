@@ -30,13 +30,7 @@ $(document).ready(function () {
     $('textarea').show().trigger('autosize.resize');
 
     //noinspection JSJQueryEfficiency,JSUnresolvedFunction
-    $('img.lazy').lazy({
-        attribute: "data-original",
-        combined: true,
-        delay: 100,
-        effect: "fadeIn",
-        removeAttribute: false
-    });
+    imageLazyOn();
 
     //form二重送信防止
     $('form').on('submit', function () {
@@ -75,17 +69,21 @@ $(document).ready(function () {
     //lazy load
     $(document).on("click", '.target-toggle-click', function (e) {
         e.preventDefault();
-        $("img.lazy").lazy({
-            bind: "event",
-            attribute: "data-original",
-            combined: true,
-            delay: 100,
-            effect: "fadeIn",
-            removeAttribute: false
-        });
+        imageLazyOn();
     });
 });
 
+function imageLazyOn() {
+    $("img.lazy").lazy({
+        bind: "event",
+        attribute: "data-original",
+        combined: true,
+        delay: 100,
+        visibleOnly: false,
+        effect: "fadeIn",
+        removeAttribute: false
+    });
+}
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
