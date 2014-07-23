@@ -17,7 +17,8 @@ class PostsController extends AppController
     public function add()
     {
         if ($this->request->is('post')) {
-            $org = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
+//            $org = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
+//            $this->log($org);
             if ($this->Post->add($this->request->data)) {
                 $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             }
