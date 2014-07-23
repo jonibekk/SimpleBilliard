@@ -35,8 +35,8 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
-    <div class="form-inline" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
-        <? for ($i = 1; $i <= 5; $i++): ?>
+    <div class="gl-form-inline-fix" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+    <? for ($i = 1; $i <= 5; $i++): ?>
             <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i, 'data' => $post]) ?>
         <? endfor ?>
     </div>

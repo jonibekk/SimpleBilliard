@@ -189,8 +189,9 @@
                             "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                         ])
                         ?>
-                        <div class="form-inline" id="CommentFormImage_<?= $post['Post']['id'] ?>" style="display: none">
-                            <? for ($i = 1; $i <= 5; $i++): ?>
+                        <div class="gl-form-inline-fix" id="CommentFormImage_<?= $post['Post']['id'] ?>"
+                             style="display: none">
+                        <? for ($i = 1; $i <= 5; $i++): ?>
                                 <?= $this->element('Feed/photo_upload', ['type' => 'comment', 'index' => $i]) ?>
                             <? endfor ?>
                         </div>
