@@ -6,6 +6,8 @@
  * Date: 2014/05/28
  * Time: 0:36
  */
+
+/** @noinspection PhpUndefinedClassInspection */
 class OgpComponent extends Object
 {
 
@@ -61,14 +63,61 @@ class OgpComponent extends Object
     private $_values = array();
 
     /**
+     * @param $text
+     *
+     * @return array|null
+     */
+    public function getOgpByUrlInText($text)
+    {
+        preg_match_all('(https?://[-_.!~*\'()a-zA-Z0-9;/?:@&=+$,%#]+)', $text, $urls);
+        if (!empty($urls[0][0])) {
+            //一番目のurlを取り出す。
+            $ogp = $this->getOgpByUrl($urls[0][0]);
+            return $ogp;
+        }
+        return null;
+    }
+
+    public function getOgpByUrl($url)
+    {
+        $ogp = $this->fetch($url);
+        $res = [];
+        if (isset($ogp->title)) {
+            $res['title'] = $ogp->title;
+
+        }
+        if (isset($ogp->description)) {
+            $res['description'] = $ogp->description;
+        }
+        if (isset($ogp->url)) {
+            $res['url'] = $ogp->url;
+        }
+        else {
+            $res['url'] = $url;
+        }
+        if (isset($ogp->image)) {
+            $res['image'] = $ogp->image;
+        }
+        if (isset($ogp->site_name)) {
+            $res['site_name'] = $ogp->site_name;
+        }
+        if (isset($ogp->site_url)) {
+            $res['site_url'] = $ogp->site_url;
+        }
+
+        return $res;
+    }
+
+    /**
      * Fetches a URI and parses it for Open Graph data, returns
      * false on error.
+
      *
-     * @param $URI    URI to page to parse for Open Graph data
+*@param $URI    URI to page to parse for Open Graph data
      *
-     * @return OpenGraph
+     * @return mixed
      */
-    static public function fetch($URI)
+    public function fetch($URI)
     {
         $curl = curl_init($URI);
 
@@ -81,10 +130,13 @@ class OgpComponent extends Object
         curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 
         $response = curl_exec($curl);
+        //文字化け対策
+        $response = mb_convert_encoding($response, 'HTML-ENTITIES', 'auto');
 
         curl_close($curl);
 
         if (!empty($response)) {
+            /** @noinspection PhpParamsInspection */
             return self::_parse($response);
         }
         else {
@@ -95,10 +147,11 @@ class OgpComponent extends Object
     /**
      * Parses HTML and extracts Open Graph data, this assumes
      * the document is at least well formed.
+
      *
-     * @param $HTML    HTML to parse
+*@param $HTML    HTML to parse
      *
-     * @return OpenGraph
+     * @return mixed
      */
     static private function _parse($HTML)
     {
@@ -106,9 +159,11 @@ class OgpComponent extends Object
 
         $doc = new DOMDocument();
         $doc->loadHTML($HTML);
-
         libxml_use_internal_errors($old_libxml_error);
 
+        /**
+         * @var DOMNodeList $tags
+         */
         $tags = $doc->getElementsByTagName('meta');
         if (!$tags || $tags->length === 0) {
             return false;
@@ -119,6 +174,9 @@ class OgpComponent extends Object
         $nonOgDescription = null;
 
         foreach ($tags AS $tag) {
+            /**
+             * @var DOMElement $tag
+             */
             if ($tag->hasAttribute('property') &&
                 strpos($tag->getAttribute('property'), 'og:') === 0
             ) {
@@ -149,17 +207,20 @@ class OgpComponent extends Object
         if (!isset($page->_values['description']) && $nonOgDescription) {
             $page->_values['description'] = $nonOgDescription;
         }
-
         //Fallback to use image_src if ogp::image isn't set.
-        if (!isset($page->values['image'])) {
+        if (!isset($page->_values['image'])) {
             $domxpath = new DOMXPath($doc);
             $elements = $domxpath->query("//link[@rel='image_src']");
 
             if ($elements->length > 0) {
+                /**
+                 * @var DOMNode $domattr
+                 */
                 $domattr = $elements->item(0)->attributes->getNamedItem('href');
+
                 if ($domattr) {
-                    $page->_values['image'] = $domattr->value;
-                    $page->_values['image_src'] = $domattr->value;
+                    $page->_values['image'] = $domattr->nodeValue;
+                    $page->_values['image_src'] = $domattr->nodeValue;
                 }
             }
         }
@@ -183,6 +244,7 @@ class OgpComponent extends Object
     public function __get($key)
     {
         if (array_key_exists($key, $this->_values)) {
+            /** @noinspection PhpIllegalArrayKeyTypeInspection */
             return $this->_values[$key];
         }
 
@@ -193,6 +255,7 @@ class OgpComponent extends Object
                 }
             }
         }
+        return null;
     }
 
     /**

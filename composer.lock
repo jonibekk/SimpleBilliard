@@ -1,22 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "e56b7c848ece54364993b034b6ef4ca8",
+    "hash": "f869447167aca4db91a5fa0e9da24c8c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "2.6.6",
+            "version": "2.6.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "37d5572e2408c5ea7104c361b64a187b1a0a53bd"
+                "reference": "88d075461e95111a5e42ead60c68e847c1856cc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/37d5572e2408c5ea7104c361b64a187b1a0a53bd",
-                "reference": "37d5572e2408c5ea7104c361b64a187b1a0a53bd",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/88d075461e95111a5e42ead60c68e847c1856cc3",
+                "reference": "88d075461e95111a5e42ead60c68e847c1856cc3",
                 "shasum": ""
             },
             "require": {
@@ -27,7 +28,7 @@
                 "doctrine/cache": "~1.0",
                 "ext-openssl": "*",
                 "monolog/monolog": "1.4.*",
-                "phpunit/phpunit": "3.7.*",
+                "phpunit/phpunit": "4.*",
                 "symfony/class-loader": "2.*",
                 "symfony/yaml": "2.*"
             },
@@ -71,20 +72,20 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2014-05-29 18:57:57"
+            "time": "2014-07-16 21:01:13"
         },
         {
             "name": "cakedc/migrations",
-            "version": "2.3.0",
+            "version": "2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CakeDC/migrations.git",
-                "reference": "46cdcac5639fecfbcdc888ebac5a831058a91ec2"
+                "reference": "c975ba95db59df55c155141052b8d7774d24ce35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CakeDC/migrations/zipball/46cdcac5639fecfbcdc888ebac5a831058a91ec2",
-                "reference": "46cdcac5639fecfbcdc888ebac5a831058a91ec2",
+                "url": "https://api.github.com/repos/CakeDC/migrations/zipball/c975ba95db59df55c155141052b8d7774d24ce35",
+                "reference": "c975ba95db59df55c155141052b8d7774d24ce35",
                 "shasum": ""
             },
             "require": {
@@ -109,7 +110,7 @@
                 "cakephp",
                 "migrations"
             ],
-            "time": "2014-05-19 20:20:40"
+            "time": "2014-07-09 23:50:13"
         },
         {
             "name": "cakedc/utils",
@@ -199,24 +200,25 @@
         },
         {
             "name": "composer/installers",
-            "version": "v1.0.13",
+            "version": "v1.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "26d37e307f9aa6e2e81806a6525666f8ab5ba0ff"
+                "reference": "033679ad3cfc5ab759f9ed2a58881aeef13c342b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/26d37e307f9aa6e2e81806a6525666f8ab5ba0ff",
-                "reference": "26d37e307f9aa6e2e81806a6525666f8ab5ba0ff",
+                "url": "https://api.github.com/repos/composer/installers/zipball/033679ad3cfc5ab759f9ed2a58881aeef13c342b",
+                "reference": "033679ad3cfc5ab759f9ed2a58881aeef13c342b",
                 "shasum": ""
             },
             "replace": {
+                "roundcube/plugin-installer": "*",
                 "shama/baton": "*"
             },
             "require-dev": {
                 "composer/composer": "1.0.*@dev",
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "4.1.*"
             },
             "type": "composer-installer",
             "extra": {
@@ -238,20 +240,21 @@
                 {
                     "name": "Kyle Robinson Young",
                     "email": "kyle@dontkry.com",
-                    "homepage": "http://dontkry.com",
-                    "role": "Developer"
+                    "homepage": "https://github.com/shama"
                 }
             ],
             "description": "A multi-framework Composer library installer",
             "homepage": "http://composer.github.com/installers/",
             "keywords": [
                 "Craft",
+                "Dolibarr",
                 "Hurad",
                 "MODX Evo",
                 "OXID",
                 "WolfCMS",
                 "agl",
                 "annotatecms",
+                "bitrix",
                 "cakephp",
                 "codeigniter",
                 "concrete5",
@@ -268,9 +271,12 @@
                 "mako",
                 "mediawiki",
                 "modulework",
+                "moodle",
                 "phpbb",
                 "piwik",
                 "ppi",
+                "puppet",
+                "roundcube",
                 "shopware",
                 "silverstripe",
                 "symfony",
@@ -279,7 +285,7 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2014-04-09 16:12:43"
+            "time": "2014-07-21 15:54:34"
         },
         {
             "name": "guzzle/guzzle",
@@ -461,10 +467,10 @@
         },
         {
             "name": "pear-pear.cakephp.org/CakePHP",
-            "version": "2.5.1",
+            "version": "2.5.3",
             "dist": {
                 "type": "file",
-                "url": "http://pear.cakephp.org/get/CakePHP-2.5.1.tgz",
+                "url": "http://pear.cakephp.org/get/CakePHP-2.5.3.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -472,7 +478,7 @@
                 "php": ">=5.2.8.0"
             },
             "replace": {
-                "pear-cakephp/cakephp": "== 2.5.1.0"
+                "pear-cakephp/cakephp": "== 2.5.3.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -895,18 +901,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/satooshi/php-coveralls.git",
-                "reference": "b7271847c84d160f5b0aae83e45c225e8ffc96f4"
+                "reference": "94389a0ebdb64857d6899b5e0254dffa99e5aa96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/b7271847c84d160f5b0aae83e45c225e8ffc96f4",
-                "reference": "b7271847c84d160f5b0aae83e45c225e8ffc96f4",
+                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/94389a0ebdb64857d6899b5e0254dffa99e5aa96",
+                "reference": "94389a0ebdb64857d6899b5e0254dffa99e5aa96",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-simplexml": "*",
-                "guzzle/guzzle": ">=3.0",
+                "guzzle/guzzle": ">=2.7",
                 "php": ">=5.3",
                 "psr/log": "1.0.0",
                 "symfony/config": ">=2.0",
@@ -916,7 +922,7 @@
             },
             "require-dev": {
                 "apigen/apigen": "2.8.*@stable",
-                "pdepend/pdepend": "dev-master",
+                "pdepend/pdepend": "dev-master as 2.0.0",
                 "phpmd/phpmd": "dev-master",
                 "phpunit/php-invoker": ">=1.1.0,<1.2.0",
                 "phpunit/phpunit": "3.7.*@stable",
@@ -962,7 +968,7 @@
                 "github",
                 "test"
             ],
-            "time": "2014-05-14 13:09:37"
+            "time": "2014-07-09 10:45:38"
         },
         {
             "name": "slywalker/boost_cake",
@@ -1008,17 +1014,17 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.5.0",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f"
+                "reference": "a31aa8029bcc0b5b85578328050aa70d052e177b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
-                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/a31aa8029bcc0b5b85578328050aa70d052e177b",
+                "reference": "a31aa8029bcc0b5b85578328050aa70d052e177b",
                 "shasum": ""
             },
             "require": {
@@ -1054,21 +1060,21 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-22 08:11:23"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/console",
-            "version": "v2.5.0",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c"
+                "reference": "386fa63407805959bd2c5fe540294721ad4224c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c",
-                "reference": "ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/386fa63407805959bd2c5fe540294721ad4224c8",
+                "reference": "386fa63407805959bd2c5fe540294721ad4224c8",
                 "shasum": ""
             },
             "require": {
@@ -1111,21 +1117,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-22 08:54:24"
+            "time": "2014-07-15 14:15:12"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.5.0",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8"
+                "reference": "2215d2ef6fd7ab24d55576a3d924df575c741762"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
-                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/2215d2ef6fd7ab24d55576a3d924df575c741762",
+                "reference": "2215d2ef6fd7ab24d55576a3d924df575c741762",
                 "shasum": ""
             },
             "require": {
@@ -1170,21 +1176,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-29 10:13:57"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.5.0",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d"
+                "reference": "c1309b0ee195ad264a4314435bdaecdfacb8ae9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/98e831eac836a0a5911626ce82684155f21d0e4d",
-                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/c1309b0ee195ad264a4314435bdaecdfacb8ae9c",
+                "reference": "c1309b0ee195ad264a4314435bdaecdfacb8ae9c",
                 "shasum": ""
             },
             "require": {
@@ -1219,21 +1225,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:36:21"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v2.5.0",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/Stopwatch",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Stopwatch.git",
-                "reference": "724d73604ebe6c1c9bdf36533b556123bd9075a1"
+                "reference": "13cb004db921ec40d41689f471e3667037a8087e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/724d73604ebe6c1c9bdf36533b556123bd9075a1",
-                "reference": "724d73604ebe6c1c9bdf36533b556123bd9075a1",
+                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/13cb004db921ec40d41689f471e3667037a8087e",
+                "reference": "13cb004db921ec40d41689f471e3667037a8087e",
                 "shasum": ""
             },
             "require": {
@@ -1268,21 +1274,21 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:40:13"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.5.0",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c"
+                "reference": "f868ecdbcc0276b6158dfbf08b9e98ce07f014e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b4b09c68ec2f2727574544ef0173684281a5033c",
-                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/f868ecdbcc0276b6158dfbf08b9e98ce07f014e1",
+                "reference": "f868ecdbcc0276b6158dfbf08b9e98ce07f014e1",
                 "shasum": ""
             },
             "require": {
@@ -1317,7 +1323,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-16 14:25:18"
+            "time": "2014-07-09 09:05:48"
         }
     ],
     "packages-dev": [
