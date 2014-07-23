@@ -35,8 +35,8 @@ $this->Form->input('body', [
     'value'          => $comment['body'],
 ])
 ?>
-    <div class="form-inline" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
-        <? for ($i = 1; $i <= 5; $i++): ?>
+    <div class="gl-form-inline-fix" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
+    <? for ($i = 1; $i <= 5; $i++): ?>
             <?=
             $this->element('Feed/photo_upload',
                            ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i]) ?>
