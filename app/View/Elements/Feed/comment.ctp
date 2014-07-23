@@ -17,28 +17,29 @@
                                ['class' => 'gl-comment-img'])
     ?>
     <div class="gl-comment-body">
-        <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-            <div class="dropdown pull-right">
-                <a href="#" class="" data-toggle="dropdown" id="download">
-                    <i class="fa fa-chevron-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <li><a href="#" class="target-toggle-click"
-                           target-id="CommentEditForm_<?= $comment['id'] ?>"
-                           click-target-id="CommentEditFormBody_<?= $comment['id'] ?>"
+        <div class="col col-xxs-12 showmore">
+            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+                <div class="dropdown pull-right">
+                    <a href="#" class="" data-toggle="dropdown" id="download">
+                        <i class="fa fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                        <li><a href="#" class="target-toggle-click"
+                               target-id="CommentEditForm_<?= $comment['id'] ?>"
+                               click-target-id="CommentEditFormBody_<?= $comment['id'] ?>"
 
-                            ><?= __d('gl', "コメントを編集") ?></a></li>
-                    <li><?=
-                        $this->Form->postLink(__d('gl', "コメントを削除"),
-                                              ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
-                                              null, __d('gl', "本当にこのコメントを削除しますか？")) ?></li>
-                </ul>
-            </div>
-        <? endif; ?>
+                                ><?= __d('gl', "コメントを編集") ?></a></li>
+                        <li><?=
+                            $this->Form->postLink(__d('gl', "コメントを削除"),
+                                                  ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
+                                                  null, __d('gl', "本当にこのコメントを削除しますか？")) ?></li>
+                    </ul>
+                </div>
+            <? endif; ?>
+            <span><?= h($user['display_username']) ?></span>
+            <?= $this->TextEx->autoLink($comment['body']) ?>
+        </div>
 
-        <span>
-                    <?= h($user['display_username']) ?></span>
-        <?= $this->TextEx->autoLink($comment['body']) ?>
         <?
         $photo_count = 0;
         for ($i = 1; $i <= 5; $i++) {

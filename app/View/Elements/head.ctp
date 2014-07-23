@@ -30,6 +30,7 @@
     echo $this->Html->css('bootstrapValidator.min');
     echo $this->Html->css('pnotify.custom.min');
     echo $this->Html->css('lightbox');
+    echo $this->Html->css('showmore');
     echo $this->Html->css('bootstrap-ext-col');
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->fetch('css');

@@ -20,6 +20,8 @@ echo $this->Html->script('jquery.nailthumb.1.1.min');
 echo $this->Html->script('jquery.autosize.min');
 echo $this->Html->script('jquery.lazy.min');
 echo $this->Html->script('lightbox.min');
+//echo $this->Html->script('jquery.showmore.min');
+echo $this->Html->script('jquery.showmore.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('gl_basic');
 ?>
@@ -93,7 +95,10 @@ echo $this->Html->script('gl_basic');
                     $posts.hide();
                     $("#" + parent_id).before($posts);
                     //html表示
-                    $posts.show("slow");
+                    $posts.show("slow", function () {
+                        //もっと見る
+                        showMore(this);
+                    });
                     //ページ番号をインクリメント
                     next_page_num++;
                     //次のページ番号をセット
@@ -149,7 +154,10 @@ echo $this->Html->script('gl_basic');
                     $posts.hide();
                     $("#" + parent_id).before($posts);
                     //html表示
-                    $posts.show("slow");
+                    $posts.show("slow", function () {
+                        //もっと見る
+                        showMore(this);
+                    });
                     //ローダーを削除
                     $loader_html.remove();
                     //リンクを削除
@@ -228,6 +236,31 @@ echo $this->Html->script('gl_basic');
             }
         });
         return false;
+    }
+    /**
+     *
+     * @param obj
+     */
+    function showMore(obj) {
+        obj = obj || null;
+        if (obj) {
+            $(obj).find('.showmore').showMore({
+                speedDown: 300,
+                speedUp: 300,
+                height: '125px',
+                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
+                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+            });
+        }
+        else {
+            $('.showmore').showMore({
+                speedDown: 300,
+                speedUp: 300,
+                height: '125px',
+                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
+                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+            });
+        }
     }
     <?if(isset($mode_view)):?>
     <?if($mode_view == MODE_VIEW_TUTORIAL):?>

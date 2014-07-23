@@ -40,12 +40,10 @@
                     <div><?= h($post['User']['display_username']) ?></div>
                     <div><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
                 </div>
-                <div class="col col-xxs-12">
+                <div class="col col-xxs-12 showmore">
                     <?= $this->TextEx->autoLink($post['Post']['body']) ?>
-                    <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                        <?= $this->element('Feed/post_edit_form', compact('post')) ?>
-                    <? endif; ?>
                 </div>
+
                 <?
                 $photo_count = 0;
                 for ($i = 1; $i <= 5; $i++) {
@@ -111,6 +109,12 @@
 
                     </div>
                 <? endif; ?>
+                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                    <div class="col col-xxs-12">
+                        <?= $this->element('Feed/post_edit_form', compact('post')) ?>
+                    </div>
+                <? endif; ?>
+
                 <div class="col col-xxs-12">
                     <a href="#" class="click-like"
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
