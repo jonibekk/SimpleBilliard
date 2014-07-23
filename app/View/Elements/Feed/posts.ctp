@@ -46,6 +46,71 @@
                         <?= $this->element('Feed/post_edit_form', compact('post')) ?>
                     <? endif; ?>
                 </div>
+                <?
+                $photo_count = 0;
+                for ($i = 1; $i <= 5; $i++) {
+                    if ($post['Post']["photo{$i}_file_name"]) {
+                        $photo_count++;
+                    }
+                }
+                ?>
+                <? if ($photo_count): ?>
+                    <div class="col col-xxs-12">
+                        <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <? $index = 0 ?>
+                                <? for ($i = 1; $i <= 5; $i++): ?>
+                                    <? if ($post['Post']["photo{$i}_file_name"]): ?>
+                                        <li data-target="#CarouselPost_<?= $post['Post']['id'] ?>"
+                                            data-slide-to="<?= $index ?>"
+                                            class="<?= ($index === 0) ? "active" : null ?>"></li>
+                                        <? $index++ ?>
+                                    <? endif ?>
+                                <? endfor ?>
+                            </ol>
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <? $index = 0 ?>
+                                <? for ($i = 1; $i <= 5; $i++): ?>
+                                    <? if ($post['Post']["photo{$i}_file_name"]): ?>
+                                        <div class="item <?= ($index === 0) ? "active" : null ?>">
+                                            <a href="<?=
+                                            $this->Upload->uploadUrl($post, "Post.photo" . $i,
+                                                                     ['style' => 'large']) ?>"
+                                               rel="lightbox" data-lightbox="LightBoxPost_<?= $post['Post']['id'] ?>">
+                                                <?=
+                                                $this->Html->image('ajax-loader.gif',
+                                                                   [
+                                                                       'class'         => 'lazy',
+                                                                       'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                                   "Post.photo" . $i,
+                                                                                                                   ['style' => 'small'])
+                                                                   ]
+                                                )
+                                                ?>
+                                            </a>
+                                            <? $index++ ?>
+                                        </div>
+                                    <? endif ?>
+                                <? endfor ?>
+                            </div>
+
+                            <!-- Controls -->
+                            <? if ($photo_count >= 2): ?>
+                                <a class="left carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
+                                   data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </a>
+                                <a class="right carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
+                                   data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            <? endif; ?>
+                        </div>
+
+                    </div>
+                <? endif; ?>
                 <div class="col col-xxs-12">
                     <a href="#" class="click-like"
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
@@ -103,7 +168,7 @@
                                 'class'     => 'form-control'
                             ],
                             'class'         => '',
-                            'type' => 'file',
+                            'type'          => 'file',
                             'novalidate'    => true,
                         ]); ?>
                         <?=

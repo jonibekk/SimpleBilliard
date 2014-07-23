@@ -39,6 +39,72 @@
         <span>
                     <?= h($user['display_username']) ?></span>
         <?= $this->TextEx->autoLink($comment['body']) ?>
+        <?
+        $photo_count = 0;
+        for ($i = 1; $i <= 5; $i++) {
+            if ($comment["photo{$i}_file_name"]) {
+                $photo_count++;
+            }
+        }
+        ?>
+        <? if ($photo_count): ?>
+            <div class="col col-xxs-12">
+
+                <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <? $index = 0 ?>
+                        <? for ($i = 1; $i <= 5; $i++): ?>
+                            <? if ($comment["photo{$i}_file_name"]): ?>
+                                <li data-target="#CarouselComment_<?= $comment['id'] ?>" data-slide-to="<?= $index ?>"
+                                    class="<?= ($index === 0) ? "active" : null ?>"></li>
+                                <? $index++ ?>
+                            <? endif ?>
+                        <? endfor ?>
+                    </ol>
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <? $index = 0 ?>
+                        <? for ($i = 1; $i <= 5; $i++): ?>
+                            <? if ($comment["photo{$i}_file_name"]): ?>
+                                <div class="item <?= ($index === 0) ? "active" : null ?>">
+                                    <a href="<?=
+                                    $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
+                                                             ['style' => 'large']) ?>" rel="lightbox"
+                                       data-lightbox="LightBoxComment_<?= $comment['id'] ?>">
+                                        <?=
+                                        $this->Html->image('ajax-loader.gif',
+                                                           [
+                                                               'class'         => 'lazy',
+                                                               //'style'         => 'width: 50px; height: 50px;',
+                                                               'data-original' => $this->Upload->uploadUrl($comment,
+                                                                                                           "Comment.photo" . $i,
+                                                                                                           ['style' => 'small'])
+                                                           ]
+                                        )
+                                        ?>
+                                    </a>
+                                    <? $index++ ?>
+                                </div>
+                            <? endif ?>
+                        <? endfor ?>
+                    </div>
+
+                    <!-- Controls -->
+                    <? if ($photo_count >= 2): ?>
+                        <a class="left carousel-control" href="#CarouselComment_<?= $comment['id'] ?>"
+                           data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                        <a class="right carousel-control" href="#CarouselComment_<?= $comment['id'] ?>"
+                           data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                    <? endif; ?>
+                </div>
+
+            </div>
+        <? endif; ?>
         <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
             <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
         <? endif; ?>
