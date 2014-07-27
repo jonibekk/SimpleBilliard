@@ -17,8 +17,10 @@ class PostsController extends AppController
     public function add()
     {
         if ($this->request->is('post')) {
-//            $org = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
-//            $this->log($org);
+            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
+            if (isset($ogp['title']) && isset($ogp['description'])) {
+                $this->request->data['Post']['site_info'] = json_encode($ogp);
+            }
             if ($this->Post->add($this->request->data)) {
                 $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             }
