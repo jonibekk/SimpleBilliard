@@ -55,18 +55,6 @@ class TeamMember extends AppModel
         return $this->myTeams;
     }
 
-    function getMyStats()
-    {
-        $options = [
-            'conditions' => [
-                'user_id' => $this->me['id'],
-                'team_id' => $this->current_team_id
-            ]
-        ];
-        $res = $this->find('first', $options);
-        return $res;
-    }
-
     function setActiveTeamList($uid)
     {
         $options = [
