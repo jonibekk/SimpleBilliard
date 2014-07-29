@@ -51,9 +51,12 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
         $data = [
             'Post' => [
-                'body' => 'http://www.isao.co.jp'
+                'body' => 'test'
             ],
         ];
         $this->testAction('/posts/add',
@@ -808,6 +811,7 @@ class PostsControllerTest extends ControllerTestCase
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
                 'Security' => ['_validateCsrf', '_validatePost'],
+                'Ogp',
             ]
         ]);
         $value_map = [
