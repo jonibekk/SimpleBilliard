@@ -486,7 +486,7 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
         $post = $Posts->Post->save($post_data);
-
+        $Posts->Post->Team->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'] = 0;
         try {
             $this->testAction('posts/post_delete/' . $post['Post']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
@@ -660,7 +660,7 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
         $comment = $Posts->Post->Comment->save($comment_data);
-
+        $Posts->Post->Team->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'] = 0;
         try {
             $this->testAction('posts/comment_delete/' . $comment['Comment']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
