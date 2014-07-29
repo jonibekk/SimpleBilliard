@@ -117,6 +117,44 @@
 
             </div>
         <? endif; ?>
+
+        <? if ($comment['site_info']): ?>
+            <? $site_info = json_decode($comment['site_info'], true) ?>
+            <div class="col col-xxs-12">
+                <div class="site-info">
+                    <div class="media">
+                        <div class="pull-left">
+                            <? if (isset($site_info['image'])): ?>
+                                <?=
+                                $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'lazy media-object',
+                                                       'data-original' => $site_info['image'],
+                                                       'width'         => '80px',
+                                                       'height'        => '80px'
+                                                   ]
+                                )
+                                ?>
+                            <? else: ?>
+                                <?=
+                                $this->Html->image('no-image.jpg',
+                                                   ['class' => 'media-object', 'width' => '80px', 'height' => '80px']) ?>
+                            <?endif; ?>
+                        </div>
+
+                        <div class="media-body">
+                            <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank">
+                                <h4 class="media-heading"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                            </a>
+
+                            <p><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                            <?= isset($site_info['description']) ? $site_info['description'] : null ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <? endif; ?>
+
         <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
             <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
         <? endif; ?>
