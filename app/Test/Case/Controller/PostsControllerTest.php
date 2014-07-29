@@ -109,12 +109,16 @@ class PostsControllerTest extends ControllerTestCase
             'body'    => 'test'
         ];
         $Posts->Post->save($data);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
         $data = [
             'Comment' => [
                 'body'    => 'test',
                 'post_id' => 1,
             ],
         ];
+
         $this->testAction('/posts/comment_add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
