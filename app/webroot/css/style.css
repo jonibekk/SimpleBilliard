@@ -134,6 +134,13 @@ footer p {
     color: #000000;
 }
 
+.gl-navbar-icons > .dropdown > a {
+    float: left;
+    font-size: 20px;
+    padding: 6px 15px;
+    color: #000000;
+}
+
 .left-inner-addon {
     position: relative;
 }
@@ -167,7 +174,6 @@ footer p {
 
 .gl-navbar-nav-fix {
     float: left;
-    padding: 7px 15px;
     margin: 0;
     list-style: none;
 }

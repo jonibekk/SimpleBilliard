@@ -22,7 +22,19 @@
                 <span class="icon-bar"></span>
             </button>
             <div class="pull-right gl-navbar-icons">
-                <a href="#"><i class="fa fa-plus-circle"></i></a>
+                <div class="dropdown gl-navbar-nav-fix">
+                    <a href="#" data-toggle="dropdown" id="download">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                        <li><?=
+                            $this->Html->link(__d('gl', "サークルを作成"),
+                                              ['controller' => 'circles', 'action' => 'add']) ?></li>
+                        <li><?=
+                            $this->Html->link(__d('gl', "チームを作成"),
+                                              ['controller' => 'teams', 'action' => 'add']) ?></li>
+                    </ul>
+                </div>
                 <a href="#"><i class="fa fa-envelope-o"></i></a>
                 <a href="#"><i class="fa fa-bell-o"></i></a>
 
