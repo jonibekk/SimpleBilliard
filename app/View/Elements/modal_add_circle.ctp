@@ -88,7 +88,7 @@
                 </div>
                 <hr>
                 <?
-                if ($my_member_status['TeamMember']['admin_flg']) {
+                if (isset($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']) {
                     //管理者の場合はデフォルトがon
                     $default = Circle::TYPE_PUBLIC_ON;
                     $disabled = "";
