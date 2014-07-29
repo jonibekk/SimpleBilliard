@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 7/17/14
  * Time: 4:23 PM
-
  *
-*@var                    $comment
+ * @var                    $comment
  * @var                    $my_member_status
  * @var                    $user
  * @var                    $like
@@ -62,16 +61,19 @@
 
                 <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        <? $index = 0 ?>
-                        <? for ($i = 1; $i <= 5; $i++): ?>
-                            <? if ($comment["photo{$i}_file_name"]): ?>
-                                <li data-target="#CarouselComment_<?= $comment['id'] ?>" data-slide-to="<?= $index ?>"
-                                    class="<?= ($index === 0) ? "active" : null ?>"></li>
-                                <? $index++ ?>
-                            <? endif ?>
-                        <? endfor ?>
-                    </ol>
+                    <? if ($photo_count >= 2): ?>
+                        <ol class="carousel-indicators">
+                            <? $index = 0 ?>
+                            <? for ($i = 1; $i <= 5; $i++): ?>
+                                <? if ($comment["photo{$i}_file_name"]): ?>
+                                    <li data-target="#CarouselComment_<?= $comment['id'] ?>"
+                                        data-slide-to="<?= $index ?>"
+                                        class="<?= ($index === 0) ? "active" : null ?>"></li>
+                                    <? $index++ ?>
+                                <? endif ?>
+                            <? endfor ?>
+                        </ol>
+                    <? endif; ?>
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <? $index = 0 ?>
