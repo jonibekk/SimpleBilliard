@@ -16,7 +16,7 @@ class TextExHelper extends AppHelper
 
     function autoLink($text)
     {
-        return nl2br($this->Text->autoLink(h($text), ['target' => 'blank']));
+        return nl2br($this->Text->autoLink(h($text), ['target' => 'blank', 'escape' => false]));
     }
 
 }
