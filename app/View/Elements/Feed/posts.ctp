@@ -4,9 +4,8 @@
  * User: daikihirakata
  * Date: 2014/07/06
  * Time: 1:03
-
  *
-*@var                    $posts
+ * @var                    $posts
  * @var                    $my_member_status
  * @var CodeCompletionView $this
  */
@@ -65,17 +64,19 @@
                 <div class="col col-xxs-12">
                     <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
-                        <ol class="carousel-indicators">
-                            <? $index = 0 ?>
-                            <? for ($i = 1; $i <= 5; $i++): ?>
-                                <? if ($post['Post']["photo{$i}_file_name"]): ?>
-                                    <li data-target="#CarouselPost_<?= $post['Post']['id'] ?>"
-                                        data-slide-to="<?= $index ?>"
-                                        class="<?= ($index === 0) ? "active" : null ?>"></li>
-                                    <? $index++ ?>
-                                <? endif ?>
-                            <? endfor ?>
-                        </ol>
+                        <? if ($photo_count >= 2): ?>
+                            <ol class="carousel-indicators">
+                                <? $index = 0 ?>
+                                <? for ($i = 1; $i <= 5; $i++): ?>
+                                    <? if ($post['Post']["photo{$i}_file_name"]): ?>
+                                        <li data-target="#CarouselPost_<?= $post['Post']['id'] ?>"
+                                            data-slide-to="<?= $index ?>"
+                                            class="<?= ($index === 0) ? "active" : null ?>"></li>
+                                        <? $index++ ?>
+                                    <? endif ?>
+                                <? endfor ?>
+                            </ol>
+                        <? endif; ?>
                         <!-- Wrapper for slides -->
                         <div class="carousel-inner">
                             <? $index = 0 ?>

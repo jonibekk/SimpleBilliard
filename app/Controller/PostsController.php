@@ -279,6 +279,13 @@ class PostsController extends AppController
     public function comment_add()
     {
         if ($this->request->is('post')) {
+            if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
+                $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
+                if (isset($ogp['title']) && isset($ogp['description'])) {
+                    $this->request->data['Comment']['site_info'] = json_encode($ogp);
+                }
+            }
+
             if ($this->Post->Comment->add($this->request->data)) {
                 $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
             }
