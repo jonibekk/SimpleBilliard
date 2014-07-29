@@ -198,6 +198,7 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['current_team_id', $team_id]]));
         $Pages->Post->current_team_id = $team_id;
+        $Pages->Post->Team->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'] = 1;
         $post_data = [
             'Post'    => [
                 'user_id' => $user_id,

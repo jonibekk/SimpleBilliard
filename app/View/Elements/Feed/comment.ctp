@@ -4,8 +4,10 @@
  * User: bigplants
  * Date: 7/17/14
  * Time: 4:23 PM
+
  *
- * @var                    $comment
+*@var                    $comment
+ * @var                    $my_member_status
  * @var                    $user
  * @var                    $like
  * @var CodeCompletionView $this
@@ -34,6 +36,13 @@
                                                   ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
                                                   null, __d('gl', "本当にこのコメントを削除しますか？")) ?></li>
                     </ul>
+                </div>
+            <? elseif ($my_member_status['TeamMember']['admin_flg']): ?>
+                <div class="pull-right">
+                    <?=
+                    $this->Form->postLink('<i class="fa fa-times"></i>',
+                                          ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
+                                          ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                 </div>
             <? endif; ?>
             <span><?= h($user['display_username']) ?></span>

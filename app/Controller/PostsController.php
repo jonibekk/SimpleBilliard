@@ -51,7 +51,7 @@ class PostsController extends AppController
         if (!$this->Post->exists()) {
             throw new NotFoundException(__('gl', "この投稿は存在しません。"));
         }
-        if (!$this->Post->isOwner($this->Auth->user('id'))) {
+        if (!$this->Post->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
             throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
         }
         $this->request->allowMethod('post', 'delete');
@@ -108,7 +108,7 @@ class PostsController extends AppController
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
         }
-        if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
+        if (!$this->Post->Comment->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
         $this->request->allowMethod('post', 'delete');

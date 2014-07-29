@@ -141,6 +141,24 @@ class TeamMemberTest extends CakeTestCase
         $this->assertTrue($res, "[正常]ユーザ権限チェック");
     }
 
+    function testGetWithTeam()
+    {
+        $data = [
+            'TeamMember' => [
+                [
+                    'user_id'    => 1,
+                    'active_flg' => true,
+                ]
+            ],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+        $this->TeamMember->Team->saveAll($data);
+        $this->TeamMember->me['id'] = 1;
+        $this->TeamMember->getWithTeam();
+    }
+
     function testAdminCheck()
     {
         $this->TeamMember->myStatusWithTeam = null;

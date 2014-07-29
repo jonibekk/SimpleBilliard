@@ -51,6 +51,9 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
         $data = [
             'Post' => [
                 'body' => 'test'
@@ -486,7 +489,7 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
         $post = $Posts->Post->save($post_data);
-
+        $Posts->Post->Team->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'] = 0;
         try {
             $this->testAction('posts/post_delete/' . $post['Post']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
@@ -660,7 +663,7 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
         $comment = $Posts->Post->Comment->save($comment_data);
-
+        $Posts->Post->Team->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'] = 0;
         try {
             $this->testAction('posts/comment_delete/' . $comment['Comment']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
@@ -808,6 +811,7 @@ class PostsControllerTest extends ControllerTestCase
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
                 'Security' => ['_validateCsrf', '_validatePost'],
+                'Ogp',
             ]
         ]);
         $value_map = [
