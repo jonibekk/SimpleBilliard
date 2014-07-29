@@ -53,7 +53,7 @@ class PostsControllerTest extends ControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [
             'Post' => [
-                'body' => 'test'
+                'body' => 'http://www.isao.co.jp'
             ],
         ];
         $this->testAction('/posts/add',
