@@ -17,14 +17,17 @@ class CircleMember extends AppModel
      * @var array
      */
     public $validate = [
-        'del_flg' => [
+        'del_flg'   => [
+            'boolean' => [
+                'rule' => ['boolean'],
+            ],
+        ],
+        'admin_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
     ];
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
 
     /**
      * belongsTo associations
