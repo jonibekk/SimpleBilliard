@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 6/6/14
  * Time: 3:19 PM
-
  *
-*@var View $this
+ * @var View $this
  * @var      $my_member_status
  */
 ?>
@@ -31,6 +30,7 @@
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
+                'id' => 'AddCircleForm',
             ]); ?>
             <div class="modal-body">
                 <?=
@@ -132,3 +132,23 @@
         </div>
     </div>
 </div>
+<? $this->append('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#AddCircleForm').bootstrapValidator({
+            excluded: [':disabled'],
+            live: 'enabled',
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                "data[Circle][photo]": {
+                    enabled: false
+                }
+            }
+        });
+    });
+</script>
+<? $this->end() ?>
