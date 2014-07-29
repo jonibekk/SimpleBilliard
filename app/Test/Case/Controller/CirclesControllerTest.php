@@ -3,7 +3,7 @@ App::uses('CirclesController', 'Controller');
 
 /**
  * CirclesController Test Case
-
+ * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
  */
 class CirclesControllerTest extends ControllerTestCase
 {
@@ -40,54 +40,74 @@ class CirclesControllerTest extends ControllerTestCase
         'app.circle_member'
     );
 
-    /**
-     * testIndex method
-     *
-     * @return void
-     */
-    public function testIndex()
+    function testAddSuccess()
     {
-        $this->markTestIncomplete('testIndex not implemented.');
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                'name' => 'test'
+            ],
+        ];
+        $this->testAction('/circles/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
     }
 
-    /**
-     * testView method
-     *
-     * @return void
-     */
-    public function testView()
+    function testAddFail()
     {
-        $this->markTestIncomplete('testView not implemented.');
+        $this->_getCirclesCommonMock();
+        $data = [];
+        $this->testAction('/circles/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
     }
 
-    /**
-     * testAdd method
-     *
-     * @return void
-     */
-    public function testAdd()
+    function _getCirclesCommonMock()
     {
-        $this->markTestIncomplete('testAdd not implemented.');
-    }
+        /**
+         * @var CirclesController $Circles
+         */
+        $Circles = $this->generate('Circles', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Ogp',
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['id', '1'],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Circles->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Circles->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
 
-    /**
-     * testEdit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('testEdit not implemented.');
-    }
-
-    /**
-     * testDelete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->markTestIncomplete('testDelete not implemented.');
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Circles->Auth->expects($this->any())->method('loggedIn')
+                      ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Circles->Auth->staticExpects($this->any())->method('user')
+                      ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Circles->Circle->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Circles->Circle->current_team_id = '1';
+        return $Circles;
     }
 
 }
