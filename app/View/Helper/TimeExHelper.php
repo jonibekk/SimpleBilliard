@@ -112,19 +112,19 @@ class TimeExHelper extends AppHelper
     public function elapsedMinutes($unixtime)
     {
         $minutes = floor((time() - $unixtime) / 60);
-        return __d('time', "%d分前", $minutes);
+        return __d('time', "%s分前", $minutes);
     }
 
     public function elapsedHours($unixtime)
     {
         $hours = floor((time() - $unixtime) / 60 / 60);
-        return __d('time', "%d時間前", $hours);
+        return __d('time', "%s時間前", $hours);
     }
 
     public function datetimeLocalFormat($unixtime)
     {
         $local_time = $unixtime + ($this->timeOffset * 60 * 60);
-        $res = __dc("time", '%d月%d日 %d:%d', LC_TIME,
+        $res = __dc("time", '%s月%s日 %s:%s', LC_TIME,
                     date('n', $local_time),
                     date('j', $local_time),
                     date('H', $local_time),
@@ -136,7 +136,7 @@ class TimeExHelper extends AppHelper
     public function yearDayLocalFormat($unixtime)
     {
         $local_time = $unixtime + ($this->timeOffset * 60 * 60);
-        $res = __dc("time", '%d年%d月%d日', LC_TIME,
+        $res = __dc("time", '%s年%s月%s日', LC_TIME,
                     date('Y', $local_time),
                     date('n', $local_time),
                     date('j', $local_time)
@@ -147,7 +147,7 @@ class TimeExHelper extends AppHelper
     public function fullTimeLocalFormat($unixtime)
     {
         $local_time = $unixtime + ($this->timeOffset * 60 * 60);
-        $res = __dc("time", '%d年%d月%d日 %d:%d', LC_TIME,
+        $res = __dc("time", '%s年%s月%s日 %s:%s', LC_TIME,
                     date('Y', $local_time),
                     date('n', $local_time),
                     date('j', $local_time),
