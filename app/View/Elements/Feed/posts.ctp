@@ -4,8 +4,10 @@
  * User: daikihirakata
  * Date: 2014/07/06
  * Time: 1:03
+
  *
- * @var                    $posts
+*@var                    $posts
+ * @var                    $my_member_status
  * @var CodeCompletionView $this
  */
 ?>
@@ -32,6 +34,13 @@
                                                           null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
                             </ul>
                         </div>
+                    </div>
+                <? elseif ($my_member_status['TeamMember']['admin_flg']): ?>
+                    <div class="pull-right">
+                        <?=
+                        $this->Form->postLink('<i class="fa fa-times"></i>',
+                                              ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
+                                              ['escape' => false], __d('gl', "本当にこの投稿を削除しますか？")) ?>
                     </div>
                 <? endif; ?>
                 <?=

@@ -15,9 +15,8 @@ App::uses('Controller', 'Controller');
  * Application Controller
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
-
  *
-*@package        app.Controller
+ * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent              $Lang
  * @property SessionComponent           $Session
@@ -84,6 +83,7 @@ class AppController extends Controller
 
         $this->_setAppLanguage();
         $this->_setMyTeam();
+        $this->_setMyMemberStatus();
 
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
@@ -92,6 +92,11 @@ class AppController extends Controller
     public function _setMyTeam()
     {
         $this->set('my_teams', $this->User->TeamMember->getActiveTeamList($this->Auth->user('id')));
+    }
+
+    public function _setMyMemberStatus()
+    {
+        $this->set('my_member_status', $this->User->TeamMember->getWithTeam());
     }
 
     /**

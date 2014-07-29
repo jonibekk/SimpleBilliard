@@ -55,6 +55,18 @@ class TeamMember extends AppModel
         return $this->myTeams;
     }
 
+    function getMyStats()
+    {
+        $options = [
+            'conditions' => [
+                'user_id' => $this->me['id'],
+                'team_id' => $this->current_team_id
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
     function setActiveTeamList($uid)
     {
         $options = [
@@ -77,8 +89,22 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    function getWithTeam($team_id, $uid)
+    function getWithTeam($team_id = null, $uid = null)
     {
+        if (!empty($this->myStatusWithTeam)) {
+            return $this->myStatusWithTeam;
+        }
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        if (!$uid) {
+            if (isset($this->me['id'])) {
+                $uid = $this->me['id'];
+            }
+            else {
+                return [];
+            }
+        }
         $options = [
             'conditions' => [
                 'TeamMember.user_id' => $uid,
@@ -87,6 +113,7 @@ class TeamMember extends AppModel
             'contain'    => ['Team']
         ];
         $res = $this->find('first', $options);
+        $this->myStatusWithTeam = $res;
         return $res;
     }
 
