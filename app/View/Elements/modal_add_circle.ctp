@@ -4,8 +4,10 @@
  * User: bigplants
  * Date: 6/6/14
  * Time: 3:19 PM
+
  *
- * @var View $this
+*@var View $this
+ * @var      $my_member_status
  */
 ?>
 <div class="modal fade" id="modal_add_circle">
@@ -36,6 +38,12 @@
                                    ['label'                    => __d('gl', "サークル名"),
                                     'placeholder'              => __d('gl', "例) ○○部"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                   ]) ?>
+                <hr>
+                <?=
+                $this->Form->input('description',
+                                   ['label'       => __d('gl', "サークルの説明"),
+                                    'placeholder' => __d('gl', "例) ○○部のサークルです。"),
                                    ]) ?>
                 <hr>
                 <div class="form-group">
@@ -77,7 +85,37 @@
                                                ]) ?>
                         </div>
                     </div>
+                </div>
+                <hr>
+                <?
+                if ($my_member_status['TeamMember']['admin_flg']) {
+                    //管理者の場合はデフォルトがon
+                    $default = Circle::TYPE_PUBLIC_ON;
+                    $disabled = "";
+                }
+                else {
+                    $default = Circle::TYPE_PUBLIC_OFF;
+                    $disabled = "disabled";
+                }
+                ?>
+                <div class="form-group">
+                    <label class="col col-sm-3 control-label"><?= __d('gl', '公開設定') ?></label>
 
+                    <div class="col col-sm-6">
+                        <?=
+                        $this->Form->input('public_flg',
+                                           [
+                                               'type'      => 'radio',
+                                               'wrapInput' => false,
+                                               'div'       => false,
+                                               'legend'    => false,
+                                               'options'   => Circle::$TYPE_PUBLIC,
+                                               'default'   => $default,
+                                               'class'     => 'radio-inline',
+                                               $disabled   => $disabled,
+                                           ])
+                        ?>
+                        <span class="help-block"><?= __d('gl', "公開のサークルを作成できるのはチーム管理者だけです。") ?></span></div>
                 </div>
             </div>
 

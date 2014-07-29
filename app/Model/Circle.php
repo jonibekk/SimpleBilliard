@@ -9,6 +9,28 @@ App::uses('AppModel', 'Model');
  */
 class Circle extends AppModel
 {
+    /**
+     * 公開タイプ
+     */
+    const TYPE_PUBLIC_ON = 1;
+    const TYPE_PUBLIC_OFF = 0;
+    static public $TYPE_PUBLIC = [self::TYPE_PUBLIC_ON => "", self::TYPE_PUBLIC_OFF => "",];
+
+    /**
+     * 公開タイプの名前をセット
+     */
+    private function _setPublicTypeName()
+    {
+        self::$TYPE_PUBLIC[self::TYPE_PUBLIC_ON] = __d('gl', "公開");
+        self::$TYPE_PUBLIC[self::TYPE_PUBLIC_OFF] = __d('gl', "非公開");
+    }
+
+    function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+        $this->_setPublicTypeName();
+    }
+
     public $actsAs = [
         'Upload' => [
             'photo' => [
@@ -39,22 +61,17 @@ class Circle extends AppModel
      * @var array
      */
     public $validate = [
-        'name'       => [
+        'name'    => [
             'notEmpty' => [
                 'rule' => ['notEmpty'],
             ],
         ],
-        'public_flg' => [
+        'del_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'del_flg'    => [
-            'boolean' => [
-                'rule' => ['boolean'],
-            ],
-        ],
-        'photo' => [
+        'photo'   => [
             'image_max_size' => [
                 'rule' => [
                     'attachmentMaxSize',
