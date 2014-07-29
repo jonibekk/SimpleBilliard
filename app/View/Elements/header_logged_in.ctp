@@ -27,9 +27,10 @@
                         <i class="fa fa-plus-circle"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                        <li><?=
-                            $this->Html->link(__d('gl', "サークルを作成"),
-                                              ['controller' => 'circles', 'action' => 'add']) ?></li>
+                        <li><a href="#" data-toggle="modal" data-target="#modal_add_circle"><?=
+                                __d('gl',
+                                    "サークルを作成") ?></a>
+                        </li>
                         <li><?=
                             $this->Html->link(__d('gl', "チームを作成"),
                                               ['controller' => 'teams', 'action' => 'add']) ?></li>
