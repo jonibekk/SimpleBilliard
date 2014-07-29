@@ -99,4 +99,23 @@ class Circle extends AppModel
         'CircleMember'
     ];
 
+    /**
+     * 新規サークル追加(管理者として自分を登録)
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    function add($data)
+    {
+        if (!isset($data['Circle']) || empty($data['Circle'])) {
+            return false;
+        }
+        $data['Circle']['team_id'] = $this->current_team_id;
+        $data['CircleMember'][0]['team_id'] = $this->current_team_id;
+        $data['CircleMember'][0]['admin_flg'] = true;
+        $data['CircleMember'][0]['user_id'] = $this->me['id'];
+        return $this->saveAll($data);
+    }
+
 }
