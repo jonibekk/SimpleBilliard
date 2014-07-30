@@ -149,6 +149,12 @@ class DummyDataShell extends AppShell
             $unique_num .= "t{$i}.id * {$multi_num} ";
             $multi_num *= 10;
         }
+        $minus_mun = 0;
+        for ($i = 1; $i < $this->digits - 1; $i++) {
+            $minus_mun += pow(10, $i);
+        }
+        $unique_num = "(" . $unique_num . ") - " . $minus_mun;
+
         $select_fields = "";
         $datetime_list = [
             'created',
@@ -159,6 +165,12 @@ class DummyDataShell extends AppShell
             'sent_datetime',
 
         ];
+        $add_unique_num_type_list = [
+            'string',
+            'text',
+            'integer',
+            'biginteger',
+        ];
         foreach ($default_data as $key => $val) {
             if ($key === "id") {
                 $select_fields .= 'null';
@@ -167,11 +179,11 @@ class DummyDataShell extends AppShell
             if ($key === "item") {
                 $select_fields .= ', null';
             }
-            elseif ($table_schema[$key]['type'] == "string" || $table_schema[$key]['type'] == "text") {
-                $select_fields .= ", CONCAT(t1.{$key},({$unique_num}))";
-            }
             elseif (in_array($key, $datetime_list)) {
                 $select_fields .= ", unix_timestamp() - ({$unique_num})";
+            }
+            elseif (in_array($table_schema[$key]['type'], $add_unique_num_type_list)) {
+                $select_fields .= ", CONCAT(t1.{$key},({$unique_num}))";
             }
             else {
                 $select_fields .= ", t1.{$key}";
