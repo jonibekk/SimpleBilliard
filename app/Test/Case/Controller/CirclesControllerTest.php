@@ -45,7 +45,8 @@ class CirclesControllerTest extends ControllerTestCase
         $this->_getCirclesCommonMock();
         $data = [
             'Circle' => [
-                'name' => 'test'
+                'name'    => 'test',
+                'members' => '2,12',
             ],
         ];
         $this->testAction('/circles/add',
