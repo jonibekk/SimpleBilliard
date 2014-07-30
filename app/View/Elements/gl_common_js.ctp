@@ -23,6 +23,8 @@ echo $this->Html->script('lightbox.min');
 //echo $this->Html->script('jquery.showmore.min');
 echo $this->Html->script('jquery.showmore.min');
 echo $this->Html->script('placeholders.min');
+echo $this->Html->script('select2.min');
+echo $this->Html->script('select2_locale_ja');
 echo $this->Html->script('gl_basic');
 ?>
     <script type="text/javascript">
