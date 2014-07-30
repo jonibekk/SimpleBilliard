@@ -53,6 +53,11 @@
                 </div>
                 <hr>
                 <?
+                $privacy_option = Circle::$TYPE_PUBLIC;
+                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block">' . __d('gl',
+                                                                                             "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block">' . __d('gl',
+                                                                                              "サークル名と参加メンバー、投稿はこのサークルの感化メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
                 if (isset($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']) {
                     //管理者の場合はデフォルトがon
                     $default = Circle::TYPE_PUBLIC_ON;
@@ -63,25 +68,15 @@
                     $disabled = "disabled";
                 }
                 ?>
-                <div class="form-group">
-                    <label class="col col-sm-3 control-label"><?= __d('gl', '公開設定') ?></label>
-
-                    <div class="col col-sm-6">
-                        <?=
-                        $this->Form->input('public_flg',
-                                           [
-                                               'type'      => 'radio',
-                                               'wrapInput' => false,
-                                               'div'       => false,
-                                               'legend'    => false,
-                                               'options'   => Circle::$TYPE_PUBLIC,
-                                               'default'   => $default,
-                                               'class'     => 'radio-inline',
-                                               $disabled   => $disabled,
-                                           ])
-                        ?>
-                        <span class="help-block"><?= __d('gl', "公開のサークルを作成できるのはチーム管理者だけです。") ?></span></div>
-                </div>
+                <?php echo $this->Form->input('public_flg_', array(
+                    'type'    => 'radio',
+                    'before'  => '<label class="col col-md-3 control-label">' . __d('gl', 'プライバシー') . '</label>',
+                    'legend'  => false,
+                    'class'   => false,
+                    'options' => $privacy_option,
+                    'default' => $default,
+                    $disabled => $disabled,
+                )); ?>
                 <hr>
                 <?=
                 $this->Form->input('description',
