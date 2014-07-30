@@ -68,14 +68,10 @@ class Team extends AppModel
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'photo'              => [
-            'image_max_size' => [
-                'rule' => [
-                    'attachmentMaxSize',
-                    10485760 //10mb
-                ],
-            ],
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'emails' => [
+        'emails'             => [
             'notEmpty'    => ['rule' => ['notEmpty'],],
             'emailsCheck' => [
                 'rule' => ['emailsCheck']

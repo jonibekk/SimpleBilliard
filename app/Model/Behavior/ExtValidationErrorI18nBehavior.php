@@ -22,6 +22,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'minLength'         => __d('validate', '%2$d文字以上で入力してください。'),
             'emailIsUnique'     => __d('validate', "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"),
             'image_max_size'    => __d('validate', "ファイルサイズが上限を超えています。"),
+            'image_type'    => __d('validate', "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"),
             'emailsCheck'   => __d('validate', "幾つかのメールアドレスが正しくありません。"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);

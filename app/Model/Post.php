@@ -79,6 +79,26 @@ class Post extends AppModel
         'public_flg'      => ['boolean' => ['rule' => ['boolean'],],],
         'important_flg'   => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'         => ['boolean' => ['rule' => ['boolean'],],],
+        'photo1' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo2' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo3' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo4' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo5' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
     ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
