@@ -166,4 +166,17 @@ class TeamMember extends AppModel
         return $this->save($data);
     }
 
+    public function getAllMemberUserIdList()
+    {
+        $options = [
+            'conditions' => [
+                'team_id'    => $this->current_team_id,
+                'active_flg' => true,
+            ],
+            'fields'     => ['user_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

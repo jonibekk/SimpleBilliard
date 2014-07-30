@@ -115,6 +115,15 @@ class Circle extends AppModel
         $data['CircleMember'][0]['team_id'] = $this->current_team_id;
         $data['CircleMember'][0]['admin_flg'] = true;
         $data['CircleMember'][0]['user_id'] = $this->me['id'];
+        if (!empty($data['Circle']['members'])) {
+            $members = explode(",", $data['Circle']['members']);
+            foreach ($members as $val) {
+                $data['CircleMember'][] = [
+                    'team_id' => $this->current_team_id,
+                    'user_id' => $val
+                ];
+            }
+        }
         return $this->saveAll($data);
     }
 

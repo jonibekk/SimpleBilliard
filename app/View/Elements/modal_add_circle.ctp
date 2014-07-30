@@ -36,14 +36,57 @@
                 <?=
                 $this->Form->input('name',
                                    ['label'                    => __d('gl', "サークル名"),
-                                    'placeholder'              => __d('gl', "例) ○○部"),
+                                    'placeholder' => __d('gl', "例) 営業部"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                    ]) ?>
+                <hr>
+                <div class="form-group">
+                    <label class="col col-sm-3 control-label"><?= __d('gl', 'メンバー') ?></label>
+
+                    <div class="col col-sm-6">
+                        <?php echo $this->Form->hidden('members',
+                                                       ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
+                        <span class="help-block"><?=
+                            __d('gl', "管理者：%s",
+                                $this->Session->read('Auth.User.display_username')) ?></span>
+                    </div>
+                </div>
+                <hr>
+                <?
+                if (isset($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']) {
+                    //管理者の場合はデフォルトがon
+                    $default = Circle::TYPE_PUBLIC_ON;
+                    $disabled = "";
+                }
+                else {
+                    $default = Circle::TYPE_PUBLIC_OFF;
+                    $disabled = "disabled";
+                }
+                ?>
+                <div class="form-group">
+                    <label class="col col-sm-3 control-label"><?= __d('gl', '公開設定') ?></label>
+
+                    <div class="col col-sm-6">
+                        <?=
+                        $this->Form->input('public_flg',
+                                           [
+                                               'type'      => 'radio',
+                                               'wrapInput' => false,
+                                               'div'       => false,
+                                               'legend'    => false,
+                                               'options'   => Circle::$TYPE_PUBLIC,
+                                               'default'   => $default,
+                                               'class'     => 'radio-inline',
+                                               $disabled   => $disabled,
+                                           ])
+                        ?>
+                        <span class="help-block"><?= __d('gl', "公開のサークルを作成できるのはチーム管理者だけです。") ?></span></div>
+                </div>
                 <hr>
                 <?=
                 $this->Form->input('description',
                                    ['label'       => __d('gl', "サークルの説明"),
-                                    'placeholder' => __d('gl', "例) ○○部のサークルです。"),
+                                    'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
                                    ]) ?>
                 <hr>
                 <div class="form-group">
@@ -86,37 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <hr>
-                <?
-                if (isset($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']) {
-                    //管理者の場合はデフォルトがon
-                    $default = Circle::TYPE_PUBLIC_ON;
-                    $disabled = "";
-                }
-                else {
-                    $default = Circle::TYPE_PUBLIC_OFF;
-                    $disabled = "disabled";
-                }
-                ?>
-                <div class="form-group">
-                    <label class="col col-sm-3 control-label"><?= __d('gl', '公開設定') ?></label>
 
-                    <div class="col col-sm-6">
-                        <?=
-                        $this->Form->input('public_flg',
-                                           [
-                                               'type'      => 'radio',
-                                               'wrapInput' => false,
-                                               'div'       => false,
-                                               'legend'    => false,
-                                               'options'   => Circle::$TYPE_PUBLIC,
-                                               'default'   => $default,
-                                               'class'     => 'radio-inline',
-                                               $disabled   => $disabled,
-                                           ])
-                        ?>
-                        <span class="help-block"><?= __d('gl', "公開のサークルを作成できるのはチーム管理者だけです。") ?></span></div>
-                </div>
             </div>
 
             <div class="modal-footer">
@@ -124,7 +137,7 @@
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
                         $this->Form->submit(__d('gl', "サークルを作成"),
-                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false,]) ?>
                     </div>
                 </div>
             </div>
