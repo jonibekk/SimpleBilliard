@@ -1314,7 +1314,13 @@ class UsersControllerTest extends ControllerTestCase
 
     function testAjaxSelect2Success()
     {
-        $this->_getUsersCommonMock();
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->_getUsersCommonMock();
+        $Users->User->TeamMember->current_team_id = 1;
+        $Users->User->TeamMember->me['id'] = 1;
+
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_select2_get_users?term=Lorem&page_limit=10', ['method' => 'GET']);
