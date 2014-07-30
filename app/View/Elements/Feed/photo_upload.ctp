@@ -27,9 +27,11 @@ if (isset($type)) {
 ?>
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
-        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+        <div class="fileinput-preview thumbnail nailthumb-container gl-thumb-container" data-trigger="fileinput"
              style="width: 50px; height: 50px;">
+            <? $delete_style = null ?>
             <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
+                <? $delete_style = "display:block" ?>
                 <?=
                 $this->Html->image('ajax-loader.gif',
                                    [
@@ -56,5 +58,8 @@ if (isset($type)) {
                                                ]) ?>
                         </span>
         </div>
+        <a href="#" class="fileinput-exists" data-dismiss="fileinput" style="<?= $delete_style ?>"><?=
+            __d('gl',
+                "削除") ?></a>
     </div>
 </div>

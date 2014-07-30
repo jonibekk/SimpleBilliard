@@ -235,11 +235,15 @@
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                     ])
                     ?>
-                    <div class="gl-form-inline-fix" id="CommentFormImage_<?= $post['Post']['id'] ?>"
+                    <div class="form-group" id="CommentFormImage_<?= $post['Post']['id'] ?>"
                          style="display: none">
-                        <? for ($i = 1; $i <= 5; $i++): ?>
-                            <?= $this->element('Feed/photo_upload', ['type' => 'comment', 'index' => $i]) ?>
-                        <? endfor ?>
+                        <ul class="gl-input-images">
+                            <? for ($i = 1; $i <= 5; $i++): ?>
+                                <li>
+                                    <?= $this->element('Feed/photo_upload', ['type' => 'comment', 'index' => $i]) ?>
+                                </li>
+                            <? endfor ?>
+                        </ul>
                     </div>
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                     <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">

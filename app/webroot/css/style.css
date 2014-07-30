@@ -393,3 +393,17 @@ ul.example-indent {
 .showmore {
     word-wrap: break-word;
 }
+
+.gl-thumb-container {
+    margin: 0 0 0 0;
+}
+
+ul.gl-input-images {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.gl-input-images > li {
+    float: left;
+    margin-right: 3px;
+}
