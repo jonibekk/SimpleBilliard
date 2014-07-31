@@ -65,6 +65,26 @@ class Comment extends AppModel
         'comment_like_count' => ['numeric' => ['rule' => ['numeric']]],
         'comment_read_count' => ['numeric' => ['rule' => ['numeric']]],
         'del_flg'            => ['boolean' => ['rule' => ['boolean']]],
+        'photo1' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo2' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo3' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo4' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'photo5' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
     ];
 
     /**
