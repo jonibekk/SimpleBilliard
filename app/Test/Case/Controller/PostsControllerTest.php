@@ -96,6 +96,20 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testAddFailValidate()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        $data = ['Post' => ['comment_count' => 'test']];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
     function testAddComment()
     {
         /**
@@ -140,6 +154,14 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $data = [];
+        $this->testAction('/posts/comment_add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testAddCommentFailValidate()
+    {
+        $this->_getPostsCommonMock();
+        $data = ['Comment' => ['comment_like_count' => 'test']];
         $this->testAction('/posts/comment_add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
