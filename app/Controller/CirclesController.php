@@ -16,10 +16,6 @@ class CirclesController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        //メンバーのリストの追加がhiddenを書き換えている為、validatePostに引っかかる。
-        if ($this->request->params['action'] == "add") {
-            $this->Security->validatePost = false;
-        }
     }
 
     /**

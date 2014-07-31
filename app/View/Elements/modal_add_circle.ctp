@@ -44,8 +44,10 @@
                     <label class="col col-sm-3 control-label"><?= __d('gl', 'メンバー') ?></label>
 
                     <div class="col col-sm-6">
-                        <?php echo $this->Form->hidden('members',
-                                                       ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
+                        <?=
+                        $this->Form->hidden('members',
+                                            ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
+                        <? $this->Form->unlockField('Circle.members') ?>
                         <span class="help-block"><?=
                             __d('gl', "管理者：%s",
                                 $this->Session->read('Auth.User.display_username')) ?></span>
