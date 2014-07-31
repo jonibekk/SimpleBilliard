@@ -61,7 +61,15 @@
                             "画像を追加する") ?>
                     </a>
 
-                    <div class="row form-horizontal form-group">
+                    <?php echo $this->Form->input('public_flg', [
+                        'label'     => __d('gl', "公開"),
+                        'class'     => "check-target-toggle",
+                        'default'   => true,
+                        'required'  => false,
+                        'target-id' => 'PostShare'
+                    ]); ?>
+
+                    <div class="row form-horizontal form-group" style="display: none" id="PostShare">
                         <label class="col col-sm-2 control-label"><?= __d('gl', '共有') ?></label>
 
                         <div class="col col-sm-7">

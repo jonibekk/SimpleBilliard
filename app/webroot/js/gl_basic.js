@@ -65,7 +65,8 @@ $(document).ready(function () {
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
-    //evTargetEnabled
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".check-target-toggle", evCheckboxCheckToggle);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -125,6 +126,23 @@ function evTargetEnabled() {
     var target_id = $obj.attr("target-id");
     $("#" + target_id).removeAttr("disabled");
     return true;
+}
+
+function evCheckboxCheckToggle() {
+    attrUndefinedCheck(this, 'target-id');
+    var target_id = $(this).attr('target-id');
+    if ($(this).attr('disabled')) {
+        return;
+    }
+    console.log($(this).value);
+    if ($(this).attr('checked')) {
+        //チェックされていない場合は選択時のクラスを追加
+        $("#" + target_id).show();
+    }
+    else {
+        //チェックされていた場合は選択時のクラスを削除
+        $("#" + target_id).hide();
+    }
 }
 
 function evBlankDisable() {
