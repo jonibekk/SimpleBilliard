@@ -161,7 +161,7 @@ class PostsControllerTest extends ControllerTestCase
     function testAddCommentFailValidate()
     {
         $this->_getPostsCommonMock();
-        $data = ['Comment' => ['comment_like_count' => 'test']];
+        $data = ['Comment' => ['post_id' => 1, 'comment_like_count' => 'test']];
         $this->testAction('/posts/comment_add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
