@@ -21,6 +21,8 @@ class PagesControllerTest extends ControllerTestCase
         'app.image',
         'app.badge',
         'app.team',
+        'app.circle',
+        'app.circle_member',
         'app.comment_like',
         'app.comment',
         'app.post',

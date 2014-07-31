@@ -32,6 +32,9 @@
     echo $this->Html->css('lightbox');
     echo $this->Html->css('showmore');
     echo $this->Html->css('bootstrap-ext-col');
+    echo $this->Html->css('select2');
+    echo $this->Html->css('select2-bootstrap');
+    echo $this->Html->css('bootstrap-ext-col');
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->fetch('css');
     echo $this->fetch('meta');

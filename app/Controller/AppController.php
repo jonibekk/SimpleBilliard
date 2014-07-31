@@ -160,4 +160,23 @@ class AppController extends Controller
         $this->User->TeamMember->updateLastLogin($team_id, $uid);
         $this->Session->write('current_team_id', $team_id);
     }
+
+    public function _ajaxPreProcess()
+    {
+        if (!$this->request->is('ajax')) {
+            throw new RuntimeException(__d('exception', '不正なアクセスです。'));
+        }
+        Configure::write('debug', 0);
+        $this->layout = 'ajax';
+        $this->viewPath = 'Elements';
+    }
+
+    public function _ajaxGetResponse($result)
+    {
+        //レスポンスをjsonで生成
+        $this->response->type('json');
+        $this->response->body(json_encode($result));
+        return $this->response;
+    }
+
 }

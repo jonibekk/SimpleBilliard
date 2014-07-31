@@ -39,6 +39,13 @@ class Team extends AppModel
         self::$TYPE[self::TYPE_PRO] = __d('gl', "プロ");
     }
 
+    /**
+     * Display field
+     *
+     * @var string
+     */
+    public $displayField = 'name';
+
     public $actsAs = [
         'Upload' => [
             'photo' => [

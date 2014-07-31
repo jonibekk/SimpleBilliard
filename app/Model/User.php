@@ -726,4 +726,37 @@ class User extends AppModel
         return false;
     }
 
+    public function getUsersByKeyword($keyword, $limit = 10, $not_me = true)
+    {
+        $user_list = $this->TeamMember->getAllMemberUserIdList();
+        $options = [
+            'conditions' => [
+                'User.id'              => $user_list,
+                'User.active_flg'      => true,
+                'User.username Like ?' => "%" . $keyword . "%",
+            ],
+            'limit'      => $limit,
+            'fields'     => $this->profileFields,
+        ];
+        if ($not_me) {
+            $options['conditions']['NOT']['User.id'] = $this->me['id'];
+        }
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    public function getUsersSelect2($keyword, $limit = 10)
+    {
+        $users = $this->getUsersByKeyword($keyword, $limit);
+        /** @noinspection PhpDeprecationInspection */
+        $user_list = Set::combine($users, '{n}.User.id', '{n}.User.username');
+        $res = [];
+        foreach ($user_list as $key => $val) {
+            $data['id'] = $key;
+            $data['text'] = $val;
+            $res[] = $data;
+        }
+        return ['results' => $res];
+    }
+
 }
