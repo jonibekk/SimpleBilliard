@@ -27,8 +27,11 @@ class PostsController extends AppController
                 $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             }
             else {
-                $this->Pnotify->outError(array_shift(array_shift($this->Post->validationErrors)),
-                                         ['title' => __d('gl', "投稿に失敗しました。")]);
+                if (!empty($this->Post->validationErrors)) {
+                    $this->Pnotify->outError(array_shift(array_shift($this->Post->validationErrors)),
+                                             ['title' => __d('gl', "投稿に失敗しました。")]);
+                }
+                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
             }
             $this->redirect($this->referer());
         }
@@ -290,8 +293,12 @@ class PostsController extends AppController
                 $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
             }
             else {
-                $this->Pnotify->outError(array_shift(array_shift($this->Post->Comment->validationErrors)),
-                                         ['title' => __d('gl', "コメントに失敗しました。")]);
+
+                if (!empty($this->Post->Comment->validationErrors)) {
+                    $this->Pnotify->outError(array_shift(array_shift($this->Post->Comment->validationErrors)),
+                                             ['title' => __d('gl', "コメントに失敗しました。")]);
+                }
+                $this->Pnotify->outError(__d('gl', "コメントに失敗しました。"));
             }
             $this->redirect($this->referer());
         }
