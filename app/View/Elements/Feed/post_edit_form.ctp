@@ -20,8 +20,8 @@ $this->Form->create('Post', [
     'class'         => '',
     'style'         => 'display: none',
     'novalidate'    => true,
-    'type' => 'file',
-    'id'   => "PostEditForm_{$post['Post']['id']}",
+    'type'          => 'file',
+    'id'            => "PostEditForm_{$post['Post']['id']}",
 ]); ?>
 <?=
 $this->Form->input('body', [
@@ -39,7 +39,8 @@ $this->Form->input('body', [
         <ul class="gl-input-images">
             <? for ($i = 1; $i <= 5; $i++): ?>
                 <li>
-                    <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i, 'data' => $post]) ?>
+                    <?= $this->element('Feed/photo_upload',
+                                       ['type' => 'post', 'index' => $i, 'data' => $post, 'submit_id' => "PostEditSubmit_{$post['Post']['id']}"]) ?>
                 </li>
             <? endfor ?>
         </ul>

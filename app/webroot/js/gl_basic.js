@@ -61,6 +61,11 @@ $(document).ready(function () {
     $(document).on("click", ".target-toggle-click", evTargetToggleClick);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".click-target-enabled", evTargetEnabled);
+    //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-target-enabled", evTargetEnabled);
+    //evTargetEnabled
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -112,6 +117,14 @@ function evTargetShowThisDelete() {
     $("#" + target_id).show();
     $obj.remove();
     return false;
+}
+
+function evTargetEnabled() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).removeAttr("disabled");
+    return true;
 }
 
 function evBlankDisable() {
