@@ -96,6 +96,20 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testAddFailValidate()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        $data = ['Post' => ['comment_count' => 'test']];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
     function testAddComment()
     {
         /**
@@ -140,6 +154,14 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $data = [];
+        $this->testAction('/posts/comment_add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testAddCommentFailValidate()
+    {
+        $this->_getPostsCommonMock();
+        $data = ['Comment' => ['post_id' => 1, 'comment_like_count' => 'test']];
         $this->testAction('/posts/comment_add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
@@ -589,9 +611,12 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         $data = [
-            'Post' => [
+            'Post'         => [
                 'body' => 'test_aaaa'
             ],
+            'photo_delete' => [
+                1 => 1
+            ]
         ];
 
         try {
@@ -754,11 +779,14 @@ class PostsControllerTest extends ControllerTestCase
         $team_id = 1;
 
         $comment_data = [
-            'Comment' => [
+            'Comment'      => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
                 'body'    => 'test'
             ],
+            'photo_delete' => [
+                1 => 1
+            ]
         ];
         $comment = $Posts->Post->Comment->save($comment_data);
         $data = [

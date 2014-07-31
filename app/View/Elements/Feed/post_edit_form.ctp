@@ -35,10 +35,14 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
-    <div class="gl-form-inline-fix" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
-    <? for ($i = 1; $i <= 5; $i++): ?>
-            <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i, 'data' => $post]) ?>
-        <? endfor ?>
+    <div class="form-group" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+        <ul class="gl-input-images">
+            <? for ($i = 1; $i <= 5; $i++): ?>
+                <li>
+                    <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i, 'data' => $post]) ?>
+                </li>
+            <? endfor ?>
+        </ul>
     </div>
 
     <div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">

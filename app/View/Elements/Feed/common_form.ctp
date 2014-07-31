@@ -46,10 +46,14 @@
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-                <div class="gl-form-inline-fix" id="PostFormImage" style="display: none">
-                <? for ($i = 1; $i <= 5; $i++): ?>
-                        <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i]) ?>
-                    <? endfor ?>
+                <div class="form-group" id="PostFormImage" style="display: none">
+                    <ul class="gl-input-images">
+
+                        <? for ($i = 1; $i <= 5; $i++): ?>
+                            <li>
+                            <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i]) ?>
+                            </li><? endfor ?>
+                    </ul>
                 </div>
                 <div class="" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-this-del" target-id="PostFormImage"><i class="fa fa-file-o"></i>&nbsp;<?=

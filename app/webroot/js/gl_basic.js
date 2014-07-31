@@ -37,6 +37,8 @@ $(document).ready(function () {
     //carousel
     $('.carousel').carousel({interval: false});
 
+    $('.gl-custom-radio-check').customRadioCheck();
+
 
     //form二重送信防止
     $('form').on('submit', function () {

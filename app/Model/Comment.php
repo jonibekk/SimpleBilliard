@@ -178,4 +178,17 @@ class Comment extends AppModel
         }
         return $res;
     }
+
+    function commentEdit($data)
+    {
+        if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
+            foreach ($data['photo_delete'] as $index => $val) {
+                if ($val) {
+                    $data['Comment']['photo' . $index] = null;
+                }
+            }
+        }
+        return $this->save($data);
+    }
+
 }

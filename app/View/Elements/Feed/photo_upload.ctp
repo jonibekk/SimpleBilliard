@@ -27,9 +27,11 @@ if (isset($type)) {
 ?>
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
-        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+        <div class="fileinput-preview thumbnail nailthumb-container gl-thumb-container" data-trigger="fileinput"
              style="width: 50px; height: 50px;">
+            <? $delete_style = null ?>
             <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
+                <? $delete_style = "display:block" ?>
                 <?=
                 $this->Html->image('ajax-loader.gif',
                                    [
@@ -42,6 +44,22 @@ if (isset($type)) {
                 ?>
             <? endif ?>
         </div>
+        <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
+            <div class="gl-custom-wrapper">
+                <?=
+                $this->Form->input('photo_delete.' . $index,
+                                   [
+                                       'type'         => 'checkbox',
+                                       'label'        => "",
+                                       'div'          => false,
+                                       'class'        => 'gl-custom-radio-check',
+                                       'wrapInput'    => false,
+                                       'errorMessage' => false,
+                                       'id'           => $model . "PhotoDelete" . $index
+                                   ]
+                )?>
+            </div>
+        <? endif; ?>
         <div>
                         <span class="btn-file">
                             <?=
@@ -49,7 +67,7 @@ if (isset($type)) {
                                                ['type'         => 'file',
                                                 'label'        => false,
                                                 'div'          => false,
-                                                'css'          => false,
+                                                'class' => false,
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
                                                 ''

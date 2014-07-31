@@ -20,8 +20,8 @@ $this->Form->create('Comment', [
     'class'         => '',
     'style'         => 'display: none',
     'novalidate'    => true,
-    'type' => 'file',
-    'id'   => "CommentEditForm_{$comment['id']}",
+    'type'          => 'file',
+    'id'            => "CommentEditForm_{$comment['id']}",
 ]); ?>
 <?=
 $this->Form->input('body', [
@@ -35,12 +35,16 @@ $this->Form->input('body', [
     'value'          => $comment['body'],
 ])
 ?>
-    <div class="gl-form-inline-fix" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
-    <? for ($i = 1; $i <= 5; $i++): ?>
-            <?=
-            $this->element('Feed/photo_upload',
-                           ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i]) ?>
-        <? endfor ?>
+    <div class="form-group" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
+        <ul class="gl-input-images">
+            <? for ($i = 1; $i <= 5; $i++): ?>
+                <li>
+                    <?=
+                    $this->element('Feed/photo_upload',
+                                   ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i]) ?>
+                </li>
+            <? endfor ?>
+        </ul>
     </div>
 
     <div class="" style="display: none" id="CommentEdit_<?= $comment['id'] ?>">
