@@ -46,9 +46,8 @@
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-                <div class="form-group" id="PostFormImage" style="display: none">
-                    <ul class="gl-input-images">
-
+                <div class="row form-group gl-no-margin" id="PostFormImage" style="display: none">
+                    <ul class="col gl-input-images">
                         <? for ($i = 1; $i <= 5; $i++): ?>
                             <li>
                             <?= $this->element('Feed/photo_upload',

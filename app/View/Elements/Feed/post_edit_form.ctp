@@ -35,12 +35,13 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
-    <div class="form-group" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
-        <ul class="gl-input-images">
+    <div class="row form-group gl-no-margin" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+        <ul class="col gl-input-images">
             <? for ($i = 1; $i <= 5; $i++): ?>
                 <li>
-                    <?= $this->element('Feed/photo_upload',
-                                       ['type' => 'post', 'index' => $i, 'data' => $post, 'submit_id' => "PostEditSubmit_{$post['Post']['id']}"]) ?>
+                    <?=
+                    $this->element('Feed/photo_upload',
+                                   ['type' => 'post', 'index' => $i, 'data' => $post, 'submit_id' => "PostEditSubmit_{$post['Post']['id']}"]) ?>
                 </li>
             <? endfor ?>
         </ul>
