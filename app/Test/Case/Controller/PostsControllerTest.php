@@ -611,9 +611,12 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         $data = [
-            'Post' => [
+            'Post'         => [
                 'body' => 'test_aaaa'
             ],
+            'photo_delete' => [
+                1 => 1
+            ]
         ];
 
         try {
@@ -776,11 +779,14 @@ class PostsControllerTest extends ControllerTestCase
         $team_id = 1;
 
         $comment_data = [
-            'Comment' => [
+            'Comment'      => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
                 'body'    => 'test'
             ],
+            'photo_delete' => [
+                1 => 1
+            ]
         ];
         $comment = $Posts->Post->Comment->save($comment_data);
         $data = [
