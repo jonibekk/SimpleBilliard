@@ -27,7 +27,7 @@
                     'div'       => 'form-group',
                     'label'     => false,
                     'wrapInput' => '',
-                    'class' => 'form-control',
+                    'class'     => 'form-control',
                 ],
                 'type'          => 'file',
                 'novalidate'    => true,
@@ -40,9 +40,9 @@
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'     => 'form-control tiny-form-text blank-disable',
+                    'class'                    => 'form-control tiny-form-text blank-disable',
                     'target_show_id'           => "PostFormFooter",
-                    'target-id' => "PostSubmit",
+                    'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
@@ -51,7 +51,8 @@
 
                         <? for ($i = 1; $i <= 5; $i++): ?>
                             <li>
-                            <?= $this->element('Feed/photo_upload', ['type' => 'post', 'index' => $i]) ?>
+                            <?= $this->element('Feed/photo_upload',
+                                               ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
                             </li><? endfor ?>
                     </ul>
                 </div>

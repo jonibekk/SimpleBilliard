@@ -240,7 +240,9 @@
                         <ul class="gl-input-images">
                             <? for ($i = 1; $i <= 5; $i++): ?>
                                 <li>
-                                    <?= $this->element('Feed/photo_upload', ['type' => 'comment', 'index' => $i]) ?>
+                                    <?=
+                                    $this->element('Feed/photo_upload',
+                                                   ['type' => 'comment', 'index' => $i, 'submit_id' => "CommentSubmit_{$post['Post']['id']}"]) ?>
                                 </li>
                             <? endfor ?>
                         </ul>
