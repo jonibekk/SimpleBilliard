@@ -41,7 +41,7 @@ $this->Form->input('body', [
                 <li>
                     <?=
                     $this->element('Feed/photo_upload',
-                                   ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i]) ?>
+                                   ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i, 'submit_id' => "CommentEditSubmit_{$comment['id']}"]) ?>
                 </li>
             <? endfor ?>
         </ul>

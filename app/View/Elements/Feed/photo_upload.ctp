@@ -6,6 +6,7 @@
  * Time: 11:05 AM
  *
  * @var                    $index
+ * @var                    $submit_id
  * @var                    $data
  * @var                    $type
  * @var CodeCompletionView $this
@@ -27,7 +28,9 @@ if (isset($type)) {
 ?>
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
-        <div class="fileinput-preview thumbnail nailthumb-container gl-thumb-container" data-trigger="fileinput"
+        <div class="fileinput-preview thumbnail nailthumb-container gl-thumb-container click-target-enabled"
+             data-trigger="fileinput"
+             target-id="<?= $submit_id ?>"
              style="width: 50px; height: 50px;">
             <? $delete_style = null ?>
             <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
@@ -52,7 +55,8 @@ if (isset($type)) {
                                        'type'         => 'checkbox',
                                        'label'        => "",
                                        'div'          => false,
-                                       'class'        => 'gl-custom-radio-check',
+                                       'class'        => 'gl-custom-radio-check change-target-enabled',
+                                       'target-id'    => $submit_id,
                                        'wrapInput'    => false,
                                        'errorMessage' => false,
                                        'id'           => $model . "PhotoDelete" . $index
@@ -67,10 +71,9 @@ if (isset($type)) {
                                                ['type'         => 'file',
                                                 'label'        => false,
                                                 'div'          => false,
-                                                'class' => false,
+                                                'class'        => false,
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
-                                                ''
                                                ]) ?>
                         </span>
         </div>
