@@ -85,7 +85,7 @@ class PostsController extends AppController
             throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
         }
         $this->request->allowMethod('post');
-        if ($this->Post->save($this->request->data)) {
+        if ($this->Post->postEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
         }
         else {
@@ -143,7 +143,7 @@ class PostsController extends AppController
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
         $this->request->allowMethod('post');
-        if ($this->Post->Comment->save($this->request->data)) {
+        if ($this->Post->Comment->commentEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コメントの変更を保存しました。"));
         }
         else {

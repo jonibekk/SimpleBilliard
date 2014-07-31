@@ -44,6 +44,22 @@ if (isset($type)) {
                 ?>
             <? endif ?>
         </div>
+        <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
+            <div class="gl-custom-wrapper">
+                <?=
+                $this->Form->input('photo_delete.' . $index,
+                                   [
+                                       'type'         => 'checkbox',
+                                       'label'        => "",
+                                       'div'          => false,
+                                       'class'        => 'gl-custom-radio-check',
+                                       'wrapInput'    => false,
+                                       'errorMessage' => false,
+                                       'id'           => $model . "PhotoDelete" . $index
+                                   ]
+                )?>
+            </div>
+        <? endif; ?>
         <div>
                         <span class="btn-file">
                             <?=
@@ -51,15 +67,12 @@ if (isset($type)) {
                                                ['type'         => 'file',
                                                 'label'        => false,
                                                 'div'          => false,
-                                                'css'          => false,
+                                                'class' => false,
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
                                                 ''
                                                ]) ?>
                         </span>
         </div>
-        <a href="#" class="fileinput-exists" data-dismiss="fileinput" style="<?= $delete_style ?>"><?=
-            __d('gl',
-                "削除") ?></a>
     </div>
 </div>

@@ -1,0 +1,44 @@
+.custom-label {
+    display: inline-block;
+    margin-right: .8em;
+    cursor: pointer;
+}
+
+.custom-radio, .custom-check {
+    vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    top: -0.15em;
+    margin: 0 .4em;
+    width: 20px;
+    height: 20px;
+    background: url(../img/customRadioCheck.png) 0 0 no-repeat;
+}
+
+.custom-radio {
+    background-position: 0 -20px;
+}
+
+.custom-check.focus {
+    background-position: -20px 0;
+}
+
+.custom-radio.focus {
+    background-position: -20px -20px;
+}
+
+.custom-check.checked {
+    background-position: -40px 0;
+}
+
+.custom-radio.checked {
+    background-position: -40px -20px;
+}
+
+.custom-check.checked.focus {
+    background-position: -60px 0;
+}
+
+.custom-radio.checked.focus {
+    background-position: -60px -20px;
+}

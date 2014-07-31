@@ -35,8 +35,9 @@ $(document).ready(function () {
     //noinspection JSUnresolvedFunction
     showMore();
     //carousel
-    $('.carousel').carousel({interval:false});
+    $('.carousel').carousel({interval: false});
 
+    $('.gl-custom-radio-check').customRadioCheck();
 
 
     //form二重送信防止

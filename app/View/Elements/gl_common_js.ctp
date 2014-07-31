@@ -23,6 +23,7 @@ echo $this->Html->script('lightbox.min');
 //echo $this->Html->script('jquery.showmore.min');
 echo $this->Html->script('jquery.showmore.min');
 echo $this->Html->script('placeholders.min');
+echo $this->Html->script('customRadioCheck.min');
 echo $this->Html->script('gl_basic');
 ?>
     <script type="text/javascript">

@@ -238,4 +238,16 @@ class Post extends AppModel
         }
         return $res;
     }
+
+    function postEdit($data)
+    {
+        if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
+            foreach ($data['photo_delete'] as $index => $val) {
+                if ($val) {
+                    $data['Post']['photo' . $index] = null;
+                }
+            }
+        }
+        return $this->save($data);
+    }
 }
