@@ -24,6 +24,7 @@ echo $this->Html->script('lightbox.min');
 echo $this->Html->script('jquery.showmore.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('customRadioCheck.min');
+echo $this->Html->script('select2.min');
 echo $this->Html->script('gl_basic');
 ?>
     <script type="text/javascript">
@@ -67,7 +68,57 @@ echo $this->Html->script('gl_basic');
             fields: {}
         });
 
+        $('#select2Member').select2({
+            multiple: true,
+            minimumInputLength: 2,
+            placeholder: '<?=__d('gl',"スペルを入力してください。")?>',
+            ajax: {
+                url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        term: term, //search term
+                        page_limit: 10 // page size
+                    };
+                },
+                results: function (data, page) {
+                    return { results: data.results };
+                }
+            }
+        });
     });
+    /**
+     * Select2 translation.
+     */
+    (function ($) {
+        "use strict";
+
+        $.fn.select2.locales['en'] = {
+            formatNoMatches: function () {
+                return "<?=__d('gl',"該当なし")?>";
+            },
+            formatInputTooShort: function (input, min) {
+                var n = min - input.length;
+                return "<?=__d('gl',"あと")?>" + n + "<?=__d('gl',"文字入れてください")?>";
+            },
+            formatInputTooLong: function (input, max) {
+                var n = input.length - max;
+                return "<?=__d('gl',"検索文字列が")?>" + n + "<?=__d('gl',"文字長すぎます")?>";
+            },
+            formatSelectionTooBig: function (limit) {
+                return "<?=__d('gl',"最多で")?>" + limit + "<?=__d('gl',"項目までしか選択できません")?>";
+            },
+            formatLoadMore: function (pageNumber) {
+                return "<?=__d('gl',"読込中･･･")?>";
+            },
+            formatSearching: function () {
+                return "<?=__d('gl',"検索中･･･")?>";
+            }
+        };
+
+        $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
+    })(jQuery);
 
     function evFeedMoreView() {
         attrUndefinedCheck(this, 'parent-id');

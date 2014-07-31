@@ -6,4 +6,8 @@
  * @var CodeCompletionView $this
  */
 ?>
-<?= $this->element('Feed/contents') ?>
+<? if ($this->Session->read('current_team_id')): ?>
+    <?= $this->element('Feed/contents') ?>
+<? else: ?>
+    <?= $this->Html->link(__d('gl', "チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
+<?endif; ?>

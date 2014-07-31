@@ -69,7 +69,7 @@ else {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_footer();
 } ?>
-<?= $this->element('modal_tutorial') ?>
+<?= $this->element('modals') ?>
 <?= $this->element('gl_common_js') ?>
 <?= $this->fetch('script') ?>
 </body>

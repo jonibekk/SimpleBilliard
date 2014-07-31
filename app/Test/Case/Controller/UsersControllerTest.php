@@ -1312,4 +1312,67 @@ class UsersControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[異常]招待で別のユーザ宛");
     }
 
+    function testAjaxSelect2Success()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->_getUsersCommonMock();
+        $Users->User->TeamMember->current_team_id = 1;
+        $Users->User->TeamMember->me['id'] = 1;
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_select2_get_users?term=test&page_limit=10', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function _getUsersCommonMock()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Ogp',
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['id', '1'],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->User->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->User->current_team_id = '1';
+        return $Users;
+    }
+
 }
