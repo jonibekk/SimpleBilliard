@@ -27,7 +27,7 @@
                     'div'       => 'form-group',
                     'label'     => false,
                     'wrapInput' => '',
-                    'class' => 'form-control',
+                    'class'     => 'form-control',
                 ],
                 'type'          => 'file',
                 'novalidate'    => true,
@@ -40,9 +40,9 @@
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'     => 'form-control tiny-form-text blank-disable',
+                    'class'                    => 'form-control tiny-form-text blank-disable',
                     'target_show_id'           => "PostFormFooter",
-                    'target-id' => "PostSubmit",
+                    'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
@@ -60,6 +60,18 @@
                         __d('gl',
                             "画像を追加する") ?>
                     </a>
+
+                    <div class="row form-horizontal form-group">
+                        <label class="col col-sm-2 control-label"><?= __d('gl', '共有') ?></label>
+
+                        <div class="col col-sm-7">
+                            <?=
+                            $this->Form->hidden('members',
+                                                ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
+                            <? $this->Form->unlockField('Circle.members') ?>
+                        </div>
+                    </div>
+
 
                     <?=
                     $this->Form->submit(__d('gl', "投稿する"),
