@@ -68,6 +68,7 @@ echo $this->Html->script('gl_basic');
             fields: {}
         });
 
+        //noinspection JSUnusedLocalSymbols
         $('#select2Member').select2({
             multiple: true,
             minimumInputLength: 2,
@@ -94,6 +95,7 @@ echo $this->Html->script('gl_basic');
     (function ($) {
         "use strict";
 
+        //noinspection JSUnusedLocalSymbols
         $.fn.select2.locales['en'] = {
             formatNoMatches: function () {
                 return "<?=__d('gl',"該当なし")?>";
@@ -161,6 +163,9 @@ echo $this->Html->script('gl_basic');
                     $obj.removeAttr('disabled');
                     //画像をレイジーロード
                     imageLazyOn();
+
+                    $('.gl-custom-radio-check').customRadioCheck();
+
                 }
                 else {
                     //ローダーを削除
@@ -216,6 +221,9 @@ echo $this->Html->script('gl_basic');
                     $obj.remove();
                     //画像をレイジーロード
                     imageLazyOn();
+
+                    $('.gl-custom-radio-check').customRadioCheck();
+
                 }
                 else {
                     //ローダーを削除
