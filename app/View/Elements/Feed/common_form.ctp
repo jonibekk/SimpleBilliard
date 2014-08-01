@@ -70,7 +70,7 @@
                     ]); ?>
 
                     <div class="row form-horizontal form-group" style="display: none" id="PostShare">
-                        <label class="col col-sm-2 control-label"><?= __d('gl', '共有') ?></label>
+                        <label class="col col-sm-2 control-label"><?= __d('gl', '共有範囲') ?></label>
 
                         <div class="col col-sm-7">
                             <?=
