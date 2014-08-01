@@ -127,4 +127,19 @@ class Circle extends AppModel
         return $this->saveAll($data);
     }
 
+    public function getCirclesByKeyword($keyword, $limit = 10)
+    {
+        $my_circle_list = $this->CircleMember->getMyCircleList();
+        $options = [
+            'conditions' => [
+                'id'          => $my_circle_list,
+                'name Like ?' => "%" . $keyword . "%",
+            ],
+            'limit'      => $limit,
+            'fields'     => ['name', 'id'],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }

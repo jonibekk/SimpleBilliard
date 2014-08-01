@@ -5,23 +5,24 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Email          $PrimaryEmail
- * @property Team           $DefaultTeam
- * @property Badge          $Badge
- * @property CommentLike    $CommentLike
- * @property CommentMention $CommentMention
- * @property CommentRead    $CommentRead
- * @property Comment        $Comment
- * @property Email          $Email
- * @property GivenBadge     $GivenBadge
- * @property Notification   $Notification
- * @property OauthToken     $OauthToken
- * @property PostLike       $PostLike
- * @property PostMention    $PostMention
- * @property PostRead       $PostRead
- * @property Post           $Post
- * @property TeamMember     $TeamMember
- * @property LocalName      $LocalName
+ * @property Email            $PrimaryEmail
+ * @property Team             $DefaultTeam
+ * @property Badge            $Badge
+ * @property CommentLike      $CommentLike
+ * @property CommentMention   $CommentMention
+ * @property CommentRead      $CommentRead
+ * @property Comment          $Comment
+ * @property Email            $Email
+ * @property GivenBadge       $GivenBadge
+ * @property Notification     $Notification
+ * @property OauthToken       $OauthToken
+ * @property PostLike         $PostLike
+ * @property PostMention      $PostMention
+ * @property PostRead         $PostRead
+ * @property Post             $Post
+ * @property TeamMember       $TeamMember
+ * @property CircleMember     $CircleMember
+ * @property LocalName        $LocalName
  */
 class User extends AppModel
 {
@@ -210,6 +211,7 @@ class User extends AppModel
         'Post',
         'TeamMember',
         'LocalName',
+        'CircleMember',
     ];
 
     /**
@@ -756,6 +758,31 @@ class User extends AppModel
             $data['text'] = $val;
             $res[] = $data;
         }
+        return ['results' => $res];
+    }
+
+    public function getUsersCirclesSelect2($keyword, $limit = 10)
+    {
+        $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
+        /** @noinspection PhpDeprecationInspection */
+        $circle_list = Set::combine($circles, '{n}.Circle.id', '{n}.Circle.name');
+        $circle_res = [];
+        foreach ($circle_list as $key => $val) {
+            $data['id'] = 'circle_' . $key;
+            $data['text'] = $val;
+            $circle_res[] = $data;
+        }
+
+        $users = $this->getUsersByKeyword($keyword, $limit);
+        /** @noinspection PhpDeprecationInspection */
+        $user_list = Set::combine($users, '{n}.User.id', '{n}.User.username');
+        $user_res = [];
+        foreach ($user_list as $key => $val) {
+            $data['id'] = 'user_' . $key;
+            $data['text'] = $val;
+            $user_res[] = $data;
+        }
+        $res = array_merge($circle_res, $user_res);
         return ['results' => $res];
     }
 

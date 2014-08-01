@@ -60,7 +60,6 @@
                         __d('gl',
                             "画像を追加する") ?>
                     </a>
-
                     <?php echo $this->Form->input('public_flg', [
                         'label'     => __d('gl', "公開"),
                         'class'     => "check-target-toggle",
@@ -68,19 +67,16 @@
                         'required'  => false,
                         'target-id' => 'PostShare'
                     ]); ?>
-
                     <div class="row form-horizontal form-group" style="display: none" id="PostShare">
                         <label class="col col-sm-2 control-label"><?= __d('gl', '共有範囲') ?></label>
 
                         <div class="col col-sm-7">
                             <?=
                             $this->Form->hidden('members',
-                                                ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
+                                                ['id' => 'select2PostCircleMember', 'value' => null, 'style' => "width: 100%",]) ?>
                             <? $this->Form->unlockField('Circle.members') ?>
                         </div>
                     </div>
-
-
                     <?=
                     $this->Form->submit(__d('gl', "投稿する"),
                                         ['class' => 'btn btn-primary pull-right', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
