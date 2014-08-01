@@ -66,7 +66,7 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
-    $(document).on("click", ".check-target-toggle", evCheckboxCheckToggle);
+    $(document).on("click", ".check-target-toggle", evToggle);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -128,21 +128,15 @@ function evTargetEnabled() {
     return true;
 }
 
-function evCheckboxCheckToggle() {
+//noinspection FunctionWithInconsistentReturnsJS
+function evToggle() {
     attrUndefinedCheck(this, 'target-id');
     var target_id = $(this).attr('target-id');
     if ($(this).attr('disabled')) {
         return;
     }
-    console.log($(this).value);
-    if ($(this).attr('checked')) {
-        //チェックされていない場合は選択時のクラスを追加
-        $("#" + target_id).show();
-    }
-    else {
-        //チェックされていた場合は選択時のクラスを削除
-        $("#" + target_id).hide();
-    }
+    $("#" + target_id).toggle();
+    return true;
 }
 
 function evBlankDisable() {
