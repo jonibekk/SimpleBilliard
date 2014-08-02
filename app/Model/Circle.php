@@ -136,7 +136,7 @@ class Circle extends AppModel
                 'name Like ?' => "%" . $keyword . "%",
             ],
             'limit'      => $limit,
-            'fields'     => ['name', 'id'],
+            'fields' => ['name', 'id', 'photo_file_name'],
         ];
         $res = $this->find('all', $options);
         return $res;

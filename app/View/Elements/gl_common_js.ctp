@@ -87,6 +87,11 @@ echo $this->Html->script('gl_basic');
                 results: function (data, page) {
                     return { results: data.results };
                 }
+            },
+            formatSelection: format,
+            formatResult: format,
+            escapeMarkup: function (m) {
+                return m;
             }
         });
         //noinspection JSUnusedLocalSymbols
@@ -108,9 +113,18 @@ echo $this->Html->script('gl_basic');
                 results: function (data, page) {
                     return { results: data.results };
                 }
+            },
+            formatSelection: format,
+            formatResult: format,
+            escapeMarkup: function (m) {
+                return m;
             }
         });
     });
+    function format(item) {
+        return "<img style='width:14px;height: 14px' src='" + item.image + "'/> " + item.text;
+    }
+
     /**
      * Select2 translation.
      */

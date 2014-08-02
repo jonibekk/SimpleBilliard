@@ -749,37 +749,39 @@ class User extends AppModel
 
     public function getUsersSelect2($keyword, $limit = 10)
     {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
         $users = $this->getUsersByKeyword($keyword, $limit);
-        /** @noinspection PhpDeprecationInspection */
-        $user_list = Set::combine($users, '{n}.User.id', '{n}.User.username');
-        $res = [];
-        foreach ($user_list as $key => $val) {
-            $data['id'] = $key;
-            $data['text'] = $val;
-            $res[] = $data;
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['username'];
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
         }
-        return ['results' => $res];
+        return ['results' => $user_res];
     }
 
     public function getUsersCirclesSelect2($keyword, $limit = 10)
     {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
         $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
-        /** @noinspection PhpDeprecationInspection */
-        $circle_list = Set::combine($circles, '{n}.Circle.id', '{n}.Circle.name');
         $circle_res = [];
-        foreach ($circle_list as $key => $val) {
-            $data['id'] = 'circle_' . $key;
-            $data['text'] = $val;
+        foreach ($circles as $val) {
+            $data['id'] = 'circle_' . $val['Circle']['id'];
+            $data['text'] = $val['Circle']['name'];
+            $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
             $circle_res[] = $data;
         }
 
         $users = $this->getUsersByKeyword($keyword, $limit);
-        /** @noinspection PhpDeprecationInspection */
-        $user_list = Set::combine($users, '{n}.User.id', '{n}.User.username');
         $user_res = [];
-        foreach ($user_list as $key => $val) {
-            $data['id'] = 'user_' . $key;
-            $data['text'] = $val;
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['username'];
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
         $res = array_merge($circle_res, $user_res);
