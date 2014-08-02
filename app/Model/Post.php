@@ -4,14 +4,16 @@ App::uses('AppModel', 'Model');
 /**
  * Post Model
  *
- * @property User           $User
- * @property Team           $Team
- * @property CommentMention $CommentMention
- * @property Comment        $Comment
- * @property GivenBadge     $GivenBadge
- * @property PostLike       $PostLike
- * @property PostMention    $PostMention
- * @property PostRead       $PostRead
+ * @property User               $User
+ * @property Team               $Team
+ * @property CommentMention     $CommentMention
+ * @property Comment            $Comment
+ * @property GivenBadge         $GivenBadge
+ * @property PostLike           $PostLike
+ * @property PostMention        $PostMention
+ * @property PostShareUser      $PostShareUser
+ * @property PostShareCircle    $PostShareCircle
+ * @property PostRead           $PostRead
  */
 class Post extends AppModel
 {
@@ -122,18 +124,24 @@ class Post extends AppModel
      */
     public $hasMany = [
         'CommentMention',
-        'Comment'  => [
+        'Comment'         => [
+            'dependent' => true,
+        ],
+        'PostShareUser'   => [
+            'dependent' => true,
+        ],
+        'PostShareCircle' => [
             'dependent' => true,
         ],
         'GivenBadge',
-        'PostLike' => [
+        'PostLike'        => [
             'dependent' => true,
         ],
         'PostMention',
-        'PostRead' => [
+        'PostRead'        => [
             'dependent' => true,
         ],
-        'MyPostLike' => [
+        'MyPostLike'      => [
             'className' => 'PostLike',
             'fields'    => ['id']
         ]

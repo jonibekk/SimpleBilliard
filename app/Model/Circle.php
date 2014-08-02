@@ -4,8 +4,9 @@ App::uses('AppModel', 'Model');
 /**
  * Circle Model
  *
- * @property Team         $Team
- * @property CircleMember $CircleMember
+ * @property Team            $Team
+ * @property CircleMember    $CircleMember
+ * @property PostShareCircle $PostShareCircle
  */
 class Circle extends AppModel
 {
@@ -96,7 +97,8 @@ class Circle extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CircleMember'
+        'CircleMember',
+        'PostShareCircle',
     ];
 
     /**
