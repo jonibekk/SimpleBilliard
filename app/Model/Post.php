@@ -167,6 +167,27 @@ class Post extends AppModel
         $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
         $res = $this->save($postData);
+        //関連ユーザ、関連サークルが存在する場合かつ、公開フラグoffの場合
+        if (!$postData['Post']['public_flg'] && !empty($postData['Post']['share'])) {
+            $share = explode(",", $postData['Post']['share']);
+            //ユーザとサークルに分割
+            $users = [];
+            $circles = [];
+            foreach ($share as $val) {
+                //ユーザの場合
+                if (stristr($val, 'user_')) {
+                    $users[] = str_replace('user_', '', $val);
+                }
+                //サークルの場合
+                elseif (stristr($val, 'circle_')) {
+                    $circles[] = str_replace('circle_', '', $val);
+                }
+            }
+            //共有ユーザ保存
+            $this->PostShareUser->add($this->getLastInsertID(), $users);
+            //共有サークル保存
+            $this->PostShareCircle->add($this->getLastInsertID(), $circles);
+        }
         return $res;
     }
 

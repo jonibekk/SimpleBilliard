@@ -34,4 +34,25 @@ class PostShareCircle extends AppModel
         'Circle',
         'Team',
     ];
+
+    public function add($post_id, $circles, $team_id = null)
+    {
+        if (empty($circles)) {
+            return false;
+        }
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $data = [];
+        foreach ($circles as $circle_id) {
+            $data[] = [
+                'circle_id' => $circle_id,
+                'post_id'   => $post_id,
+                'team_id'   => $team_id,
+            ];
+        }
+        return $this->saveAll($data);
+
+    }
+
 }

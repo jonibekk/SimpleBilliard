@@ -33,4 +33,23 @@ class PostShareUser extends AppModel
         'User',
         'Team',
     ];
+
+    public function add($post_id, $users, $team_id = null)
+    {
+        if (empty($users)) {
+            return false;
+        }
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $data = [];
+        foreach ($users as $uid) {
+            $data[] = [
+                'user_id' => $uid,
+                'post_id' => $post_id,
+                'team_id' => $team_id,
+            ];
+        }
+        return $this->saveAll($data);
+    }
 }

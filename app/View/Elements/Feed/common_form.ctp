@@ -72,9 +72,9 @@
 
                         <div class="col col-sm-7">
                             <?=
-                            $this->Form->hidden('members',
+                            $this->Form->hidden('share',
                                                 ['id' => 'select2PostCircleMember', 'value' => null, 'style' => "width: 100%",]) ?>
-                            <? $this->Form->unlockField('Circle.members') ?>
+                            <? $this->Form->unlockField('Post.share') ?>
                         </div>
                     </div>
                     <?=
