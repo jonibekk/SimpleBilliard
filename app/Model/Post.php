@@ -168,7 +168,7 @@ class Post extends AppModel
         $postData['Post']['type'] = $type;
         $res = $this->save($postData);
         //関連ユーザ、関連サークルが存在する場合かつ、公開フラグoffの場合
-        if (!$postData['Post']['public_flg'] && !empty($postData['Post']['share'])) {
+        if (isset($postData['Post']['public_flg']) && !$postData['Post']['public_flg'] && !empty($postData['Post']['share'])) {
             $share = explode(",", $postData['Post']['share']);
             //ユーザとサークルに分割
             $users = [];

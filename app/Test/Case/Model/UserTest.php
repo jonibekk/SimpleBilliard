@@ -30,6 +30,8 @@ class UserTest extends CakeTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
+        'app.post_share_user',
+        'app.post_share_circle',
         'app.images_post',
         'app.comment_read',
         'app.group',

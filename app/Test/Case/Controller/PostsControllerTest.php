@@ -39,7 +39,9 @@ class PostsControllerTest extends ControllerTestCase
         'app.oauth_token',
         'app.local_name',
         'app.image',
-        'app.images_post'
+        'app.images_post',
+        'app.post_share_user',
+        'app.post_share_circle',
     );
 
     function testAdd()
@@ -105,7 +107,7 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
-        $data = ['Post' => ['comment_count' => 'test']];
+        $data = ['Post' => ['comment_count' => 'test', 'public_flg' => 1]];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
