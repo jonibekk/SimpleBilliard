@@ -65,9 +65,12 @@ class PostShareUserTest extends CakeTestCase
         parent::tearDown();
     }
 
-    public function testDummy()
+    public function testAdd()
     {
-
+        $this->PostShareUser->me['id'] = 1;
+        $this->PostShareUser->current_team_id = 1;
+        $this->PostShareUser->add(1, []);
+        $this->PostShareUser->add(1, [1]);
     }
 
 }

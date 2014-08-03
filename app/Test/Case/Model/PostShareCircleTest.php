@@ -65,9 +65,12 @@ class PostShareCircleTest extends CakeTestCase
         parent::tearDown();
     }
 
-    public function testDummy()
+    public function testAdd()
     {
-
+        $this->PostShareCircle->me['id'] = 1;
+        $this->PostShareCircle->current_team_id = 1;
+        $this->PostShareCircle->add(1, []);
+        $this->PostShareCircle->add(1, [1]);
     }
 
 }
