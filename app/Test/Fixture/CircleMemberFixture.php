@@ -40,13 +40,13 @@ class CircleMemberFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'        => '',
-            'circle_id' => '',
-            'team_id'   => '',
-            'user_id'   => '',
+            'id'        => 1,
+            'circle_id' => 1,
+            'team_id'   => 1,
+            'user_id'   => 1,
             'admin_flg' => 1,
-            'del_flg'   => 1,
-            'deleted'   => 1,
+            'del_flg'   => 0,
+            'deleted'   => null,
             'created'   => 1,
             'modified'  => 1
         ),
