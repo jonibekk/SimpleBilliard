@@ -56,9 +56,15 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
+        $Posts->Post->PostShareCircle->me['id'] = 1;
+        $Posts->Post->PostShareCircle->current_team_id = 1;
+        $Posts->Post->PostShareUser->me['id'] = 1;
+        $Posts->Post->PostShareUser->current_team_id = 1;
         $data = [
             'Post' => [
-                'body' => 'test'
+                'body'       => 'test',
+                'public_flg' => false,
+                'share'      => 'circle_1,user_12'
             ],
         ];
         $this->testAction('/posts/add',
