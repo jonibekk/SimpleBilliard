@@ -429,6 +429,10 @@ ul.gl-input-images > li {
     margin: 0;
 }
 
+.panel {
+    margin-bottom: 10px;
+}
+
 .font-size_11 {
     font-size: 11px;
 }
