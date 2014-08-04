@@ -6,8 +6,10 @@
  * @var CodeCompletionView $this
  */
 ?>
+<!-- START app/View/Pages/logged_in_home.ctp -->
 <? if ($this->Session->read('current_team_id')): ?>
     <?= $this->element('Feed/contents') ?>
 <? else: ?>
     <?= $this->Html->link(__d('gl', "チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
 <?endif; ?>
+<!-- END app/View/Pages/logged_in_home.ctp -->

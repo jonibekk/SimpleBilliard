@@ -1,3 +1,4 @@
+<!-- START app/View/Pages/features.ctp -->
 <!-- start: title -->
 <div class="page-title">
     <div class="section-wrapper">
@@ -312,3 +313,4 @@ $this->Html
                'inline' => false
            ));
 ?>
+<!-- END app/View/Pages/features.ctp -->
