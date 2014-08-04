@@ -14,6 +14,7 @@
  * @var $this View
  */
 ?>
+<!-- START app/View/Pages/pp.ctp -->
 <div class="span12">
     <?= $this->element('privacy_policy') ?>
 </div>
@@ -22,3 +23,4 @@
         <div class="row"></div>
     </div>
 </div>
+<!-- END app/View/Pages/pp.ctp -->

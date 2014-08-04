@@ -10,6 +10,7 @@
  * @var                    $created
  */
 ?>
+<!-- START app/View/Elements/Feed/read_like_user.ctp -->
 <div class="col col-xxs-12">
     <?=
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
@@ -23,3 +24,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/Elements/Feed/read_like_user.ctp -->

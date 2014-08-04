@@ -4,6 +4,7 @@
  * @var $no_title
  */
 ?>
+<!-- START app/View/Elements/privacy_policy.ctp -->
 <? if (!isset($no_title) || !$no_title): ?>
     <h2>プライバシーポリシー</h2><br/>
 <? endif; ?>
@@ -116,3 +117,4 @@
 　　　03-5776-1379<br/>
 　　　0120-700-779<br/>
 　　※当社の商品・サービスに関する問合せ先ではございません。<br/>
+<!-- END app/View/Elements/privacy_policy.ctp -->

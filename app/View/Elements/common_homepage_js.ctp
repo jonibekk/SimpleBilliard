@@ -1,5 +1,5 @@
 <? /* @var $this View */ ?>
-
+<!-- START app/View/Elements/common_homepage_js.ctp -->
 <?= $this->Html->script('jquery-1.11.1.min') ?>
 <?= $this->Html->script('bootstrap.min') ?>
 <?= $this->Html->script('pnotify.custom.min') ?>
@@ -10,3 +10,4 @@
 <?= $this->Html->script('homepage/plax') ?>
 <?= $this->Html->script('homepage/tweet') ?>
 <?= $this->Html->script('homepage/custom') ?>
+<!-- END app/View/Elements/common_homepage_js.ctp -->

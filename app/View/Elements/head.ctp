@@ -9,6 +9,7 @@
  * @var $this             View
  */
 ?>
+<!-- START app/View/Elements/head.ctp -->
 <head>
     <?= $this->Html->charset(); ?>
     <title>
@@ -52,3 +53,4 @@
     }
     ?>
 </head>
+<!-- END app/View/Elements/head.ctp -->

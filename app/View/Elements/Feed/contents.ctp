@@ -9,6 +9,7 @@
  * @var                    $posts
  */
 ?>
+<!-- START app/View/Elements/Feed/contents.ctp -->
 <?= $this->element("Feed/common_form") ?>
 <?= $this->element("Feed/posts") ?>
 <? if (count($posts) == 20): ?>
@@ -25,3 +26,4 @@
         </div>
     </div>
 <? endif; ?>
+<!-- END app/View/Elements/Feed/contents.ctp -->

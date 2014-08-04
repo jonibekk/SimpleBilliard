@@ -6,6 +6,7 @@
  * @var string  $language_name
  */
 ?>
+<!-- START app/View/Users/add_profile.ctp -->
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -213,3 +214,4 @@
     });
 </script>
 <? $this->end() ?>
+<!-- END app/View/Users/add_profile.ctp -->

@@ -8,6 +8,7 @@
  * @var $post
  */
 ?>
+<!-- START app/View/Elements/Feed/post_edit_form.ctp -->
 <?=
 $this->Form->create('Post', [
     'url'           => ['controller' => 'posts', 'action' => 'post_edit', $post['Post']['id']],
@@ -35,26 +36,27 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
-    <div class="row form-group gl-no-margin" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
-        <ul class="col gl-input-images">
-            <? for ($i = 1; $i <= 5; $i++): ?>
-                <li>
-                    <?=
-                    $this->element('Feed/photo_upload',
-                                   ['type' => 'post', 'index' => $i, 'data' => $post, 'submit_id' => "PostEditSubmit_{$post['Post']['id']}"]) ?>
-                </li>
-            <? endfor ?>
-        </ul>
-    </div>
+<div class="row form-group gl-no-margin" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+    <ul class="col gl-input-images">
+        <? for ($i = 1; $i <= 5; $i++): ?>
+            <li>
+                <?=
+                $this->element('Feed/photo_upload',
+                               ['type' => 'post', 'index' => $i, 'data' => $post, 'submit_id' => "PostEditSubmit_{$post['Post']['id']}"]) ?>
+            </li>
+        <? endfor ?>
+    </ul>
+</div>
 
-    <div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">
-        <a href="#" class="target-show-this-del" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
-            <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
-        </a>
+<div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">
+    <a href="#" class="target-show-this-del" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
+        <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
+    </a>
 
-        <?=
-        $this->Form->submit(__d('gl', "変更を保存する"),
-                            ['class' => 'btn btn-primary pull-right', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
-        <div class="clearfix"></div>
-    </div>
+    <?=
+    $this->Form->submit(__d('gl', "変更を保存する"),
+                        ['class' => 'btn btn-primary pull-right', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
+    <div class="clearfix"></div>
+</div>
 <?= $this->Form->end() ?>
+<!-- END app/View/Elements/Feed/post_edit_form.ctp -->

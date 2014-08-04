@@ -3,6 +3,7 @@
  * @var View $this
  */
 ?>
+<!-- START app/View/Elements/modal_privacy_policy.ctp -->
 <div class="modal fade" id="modal-pp">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -21,3 +22,4 @@
     </div>
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!-- END app/View/Elements/modal_privacy_policy.ctp -->

@@ -7,6 +7,7 @@
  * @var $this             View
  */
 ?>
+<!-- START app/View/Layouts/setting.ctp -->
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="en">
@@ -47,3 +48,4 @@
 </script>
 </body>
 </html>
+<!-- END app/View/Layouts/setting.ctp -->

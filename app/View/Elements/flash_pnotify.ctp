@@ -11,6 +11,7 @@
  * @var $type
  */
 ?>
+<!-- START app/View/Elements/flash_pnotify.ctp -->
 <script type="text/javascript">
     new PNotify({
         title: '<?=$title?>',
@@ -19,3 +20,4 @@
         type: '<?=$type?>'
     });
 </script>
+<!-- END app/View/Elements/flash_pnotify.ctp -->

@@ -9,42 +9,43 @@
  * @var      $this CodeCompletionView
  */
 ?>
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading"><?= __d('gl', "チームを作成してください") ?></div>
-                <?=
-                $this->Form->create('Team', [
-                    'inputDefaults' => [
-                        'div'       => 'form-group',
-                        'label'     => [
-                            'class' => 'col col-sm-3 control-label'
-                        ],
-                        'wrapInput' => 'col col-sm-6',
-                        'class'     => 'form-control'
+<!-- START app/View/Teams/add.ctp -->
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?= __d('gl', "チームを作成してください") ?></div>
+            <?=
+            $this->Form->create('Team', [
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => [
+                        'class' => 'col col-sm-3 control-label'
                     ],
-                    'class'         => 'form-horizontal',
-                    'novalidate'    => true,
-                    'type'          => 'file',
-                    'id'            => 'AddTeamForm',
-                ]); ?>
-                <div class="panel-body">
-                    <?=
-                    $this->Form->input('name',
-                                       ['label'                    => __d('gl', "チーム名"),
-                                        'placeholder'              => __d('gl', "例) チームGoalous"),
-                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                       ]) ?>
-                    <hr>
-                    <div class="form-group">
-                        <label for="" class="col col-sm-3 control-label"><?= __d('gl', "チーム画像") ?></label>
+                    'wrapInput' => 'col col-sm-6',
+                    'class'     => 'form-control'
+                ],
+                'class'         => 'form-horizontal',
+                'novalidate'    => true,
+                'type'          => 'file',
+                'id'            => 'AddTeamForm',
+            ]); ?>
+            <div class="panel-body">
+                <?=
+                $this->Form->input('name',
+                                   ['label'                    => __d('gl', "チーム名"),
+                                    'placeholder'              => __d('gl', "例) チームGoalous"),
+                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                   ]) ?>
+                <hr>
+                <div class="form-group">
+                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "チーム画像") ?></label>
 
-                        <div class="col col-sm-6">
-                            <div class="fileinput fileinput-new" data-provides="fileinput">
-                                <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                                     style="width: 150px; height: 150px;">
-                                </div>
-                                <div>
+                    <div class="col col-sm-6">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                            <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                                 style="width: 150px; height: 150px;">
+                            </div>
+                            <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
                                 <?=
@@ -63,67 +64,68 @@
                                                 ''
                                                ]) ?>
                         </span>
-                                </div>
-                            </div>
-                            <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
-
-                            <div class="has-error">
-                                <?=
-                                $this->Form->error('photo', null,
-                                                   ['class' => 'help-block text-danger',
-                                                    'wrap'  => 'span'
-                                                   ]) ?>
                             </div>
                         </div>
+                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
 
-                    </div>
-                    <hr>
-                    <?=
-                    $this->Form->input('type', [
-                        'label'      => __d('gl', "プラン"),
-                        'type'       => 'select',
-                        'options'    => Team::$TYPE,
-                        'afterInput' => '<span class="help-block">' . __d('gl',
-                                                                          "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。") . '<br>' . __d('gl',
-                                                                                                                                    "このプランはチーム作成後にいつでも変更できます。") . '</span>'
-                    ])?>
-                </div>
-
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-sm-9 col-sm-offset-3">
+                        <div class="has-error">
                             <?=
-                            $this->Form->submit(__d('gl', "チームを作成"),
-                                                ['class' => 'btn btn-primary', 'div' => false]) ?>
-                            <?=
-                            $this->Html->link(__d('gl', "スキップ"), "/",
-                                              ['class' => 'btn btn-default', 'div' => false]) ?>
+                            $this->Form->error('photo', null,
+                                               ['class' => 'help-block text-danger',
+                                                'wrap'  => 'span'
+                                               ]) ?>
                         </div>
                     </div>
+
                 </div>
-                <?= $this->Form->end(); ?>
+                <hr>
+                <?=
+                $this->Form->input('type', [
+                    'label'      => __d('gl', "プラン"),
+                    'type'       => 'select',
+                    'options'    => Team::$TYPE,
+                    'afterInput' => '<span class="help-block">' . __d('gl',
+                                                                      "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。") . '<br>' . __d('gl',
+                                                                                                                                "このプランはチーム作成後にいつでも変更できます。") . '</span>'
+                ])?>
             </div>
+
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <?=
+                        $this->Form->submit(__d('gl', "チームを作成"),
+                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
+                        <?=
+                        $this->Html->link(__d('gl', "スキップ"), "/",
+                                          ['class' => 'btn btn-default', 'div' => false]) ?>
+                    </div>
+                </div>
+            </div>
+            <?= $this->Form->end(); ?>
         </div>
     </div>
+</div>
 <? $this->append('script') ?>
-    <script type="text/javascript">
-        $(document).ready(function () {
+<script type="text/javascript">
+    $(document).ready(function () {
 
-            $('[rel="tooltip"]').tooltip();
+        $('[rel="tooltip"]').tooltip();
 
-            $('#AddTeamForm').bootstrapValidator({
-                live: 'enabled',
-                feedbackIcons: {
-                    valid: 'fa fa-check',
-                    invalid: 'fa fa-times',
-                    validating: 'fa fa-refresh'
-                },
-                fields: {
-                    "data[Team][photo]": {
-                        enabled: false
-                    }
+        $('#AddTeamForm').bootstrapValidator({
+            live: 'enabled',
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                "data[Team][photo]": {
+                    enabled: false
                 }
-            });
+            }
         });
-    </script>
+    });
+</script>
 <? $this->end() ?>
+<!-- END app/View/Teams/add.ctp -->

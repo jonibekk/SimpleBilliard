@@ -8,6 +8,7 @@
  * @var View $this
  */
 ?>
+<!-- START app/View/Elements/User/modal_change_email.ctp -->
 <div class="modal fade" id="modal_change_email">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -25,7 +26,7 @@
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control'
                 ],
-                'url' => ['controller' => 'users', 'action' => 'change_email'],
+                'url'           => ['controller' => 'users', 'action' => 'change_email'],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'id'            => 'ChangeEmail',
@@ -90,3 +91,4 @@
     });
 </script>
 <? $this->end() ?>
+<!-- END app/View/Elements/User/modal_change_email.ctp -->

@@ -9,6 +9,7 @@
  * @var      $my_member_status
  */
 ?>
+<!-- START app/View/Elements/modal_add_circle.ctp -->
 <div class="modal fade" id="modal_add_circle">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -30,13 +31,13 @@
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id' => 'AddCircleForm',
+                'id'            => 'AddCircleForm',
             ]); ?>
             <div class="modal-body">
                 <?=
                 $this->Form->input('name',
                                    ['label'                    => __d('gl', "サークル名"),
-                                    'placeholder' => __d('gl', "例) 営業部"),
+                                    'placeholder'              => __d('gl', "例) 営業部"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                    ]) ?>
                 <hr>
@@ -162,3 +163,4 @@
     });
 </script>
 <? $this->end() ?>
+<!-- END app/View/Elements/modal_add_circle.ctp -->

@@ -10,6 +10,7 @@
  * @var string $email_id
  */
 ?>
+<!-- START app/View/Elements/User/modal_delete_email.ctp -->
 <div class="modal fade" id="modal_delete_email">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -34,3 +35,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/Elements/User/modal_delete_email.ctp -->
