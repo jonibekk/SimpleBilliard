@@ -10,6 +10,7 @@
  * @var $nav_disable
  */
 ?>
+<!-- START app/View/Elements/header_not_logged_in.ctp -->
 <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -17,3 +18,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/Elements/header_not_logged_in.ctp -->

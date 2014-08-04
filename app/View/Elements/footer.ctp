@@ -9,6 +9,7 @@
  * @var $this             View
  */
 ?>
+<!-- START app/View/Elements/footer.ctp -->
 <footer>
     <div class="row">
         <div class="col-lg-12">
@@ -49,3 +50,4 @@
         </div>
     </div>
 </footer>
+<!-- END app/View/Elements/footer.ctp -->

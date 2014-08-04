@@ -8,6 +8,7 @@
  * @var View $this
  */
 ?>
+<!-- START app/View/Elements/modal_tutorial.ctp -->
 <div class="modal fade" id="modal_tutorial">
     <div class="modal-dialog">
         <div class="modal-content gl-modal-no-margin">
@@ -67,3 +68,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/Elements/modal_tutorial.ctp -->

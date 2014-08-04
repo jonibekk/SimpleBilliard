@@ -4,6 +4,7 @@
  * @var $no_title
  */
 ?>
+<!-- START app/View/Elements/modal_tos.ctp -->
 <!-- modal tos -->
 <div class="modal fade" id="modal-tos">
     <div class="modal-dialog">
@@ -24,3 +25,4 @@
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- /modal tos-->
+<!-- END app/View/Elements/modal_tos.ctp -->

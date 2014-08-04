@@ -12,6 +12,7 @@
  * @var CodeCompletionView $this
  */
 ?>
+<!-- START app/View/Elements/Feed/comment.ctp -->
 <div class="col col-xxs-12">
     <?=
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
@@ -178,3 +179,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/Elements/Feed/comment.ctp -->

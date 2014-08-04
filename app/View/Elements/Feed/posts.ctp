@@ -10,6 +10,7 @@
  * @var CodeCompletionView $this
  */
 ?>
+<!-- START app/View/Elements/Feed/posts.ctp -->
 <? if (!empty($posts)): ?>
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
@@ -267,3 +268,4 @@
         </div>
     <? endforeach ?>
 <? endif ?>
+<!-- END app/View/Elements/Feed/posts.ctp -->

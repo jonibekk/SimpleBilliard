@@ -11,6 +11,7 @@
  * @var array $my_teams
  */
 ?>
+<!-- START app/View/Elements/header_logged_in.ctp -->
 <div class="navbar navbar-fixed-top navbar-default gl-navbar" style="">
     <div class="container gl-nav-container">
         <div class="navbar-header navbar-right">
@@ -108,3 +109,4 @@
         <!--/.nav-collapse -->
     </div>
 </div>
+<!-- END app/View/Elements/header_logged_in.ctp -->

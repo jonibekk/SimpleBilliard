@@ -26,6 +26,7 @@ if (isset($type)) {
     }
 }
 ?>
+<!-- START app/View/Elements/Feed/photo_upload.ctp -->
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
         <div class="fileinput-preview thumbnail nailthumb-container gl-thumb-container click-target-enabled"
@@ -79,3 +80,4 @@ if (isset($type)) {
         </div>
     </div>
 </div>
+<!-- END app/View/Elements/Feed/photo_upload.ctp -->

@@ -8,6 +8,7 @@
  * @var $comment
  */
 ?>
+<!-- START app/View/Elements/Feed/comment_edit_form.ctp -->
 <?=
 $this->Form->create('Comment', [
     'url'           => ['controller' => 'posts', 'action' => 'comment_edit', $comment['id']],
@@ -35,25 +36,26 @@ $this->Form->input('body', [
     'value'          => $comment['body'],
 ])
 ?>
-    <div class="form-group" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
-        <ul class="gl-input-images">
-            <? for ($i = 1; $i <= 5; $i++): ?>
-                <li>
-                    <?=
-                    $this->element('Feed/photo_upload',
-                                   ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i, 'submit_id' => "CommentEditSubmit_{$comment['id']}"]) ?>
-                </li>
-            <? endfor ?>
-        </ul>
-    </div>
+<div class="form-group" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
+    <ul class="gl-input-images">
+        <? for ($i = 1; $i <= 5; $i++): ?>
+            <li>
+                <?=
+                $this->element('Feed/photo_upload',
+                               ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i, 'submit_id' => "CommentEditSubmit_{$comment['id']}"]) ?>
+            </li>
+        <? endfor ?>
+    </ul>
+</div>
 
-    <div class="" style="display: none" id="CommentEdit_<?= $comment['id'] ?>">
-        <a href="#" class="target-show-this-del" target-id="CommentEditFormImage_<?= $comment['id'] ?>">
-            <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
-        </a>
-        <?=
-        $this->Form->submit(__d('gl', "変更を保存する"),
-                            ['class' => 'btn btn-primary pull-right', 'id' => "CommentEditSubmit_{$comment['id']}", 'disabled' => 'disabled']) ?>
-        <div class="clearfix"></div>
-    </div>
+<div class="" style="display: none" id="CommentEdit_<?= $comment['id'] ?>">
+    <a href="#" class="target-show-this-del" target-id="CommentEditFormImage_<?= $comment['id'] ?>">
+        <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
+    </a>
+    <?=
+    $this->Form->submit(__d('gl', "変更を保存する"),
+                        ['class' => 'btn btn-primary pull-right', 'id' => "CommentEditSubmit_{$comment['id']}", 'disabled' => 'disabled']) ?>
+    <div class="clearfix"></div>
+</div>
 <?= $this->Form->end() ?>
+<!-- END app/View/Elements/Feed/comment_edit_form.ctp -->

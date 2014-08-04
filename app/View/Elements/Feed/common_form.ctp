@@ -8,6 +8,7 @@
  * @var CodeCompletionView $this
  */
 ?>
+<!-- START app/View/Elements/Feed/common_form.ctp -->
 <div class="panel panel-default global-form">
     <div class="panel-heading">
         <!-- Nav tabs -->
@@ -90,5 +91,5 @@
         <div class="tab-pane fade" id="BadgeForm">
         </div>
     </div>
-
 </div>
+<!-- END app/View/Elements/Feed/common_form.ctp -->
