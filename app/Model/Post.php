@@ -210,6 +210,7 @@ class Post extends AppModel
             'conditions' => [
                 'Post.team_id'                  => $this->current_team_id,
                 'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                'Post.public_flg' => true
             ],
             'limit'      => $limit,
             'page'       => $page,
@@ -224,11 +225,8 @@ class Post extends AppModel
         $this->Comment->CommentRead->red($post_list);
         $options = [
             'conditions' => [
-                'Post.team_id'                  => $this->current_team_id,
-                'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                'Post.id' => $post_list,
             ],
-            'limit'      => $limit,
-            'page'       => $page,
             'order'      => [
                 'Post.modified' => 'desc'
             ],
