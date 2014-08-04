@@ -45,11 +45,11 @@
                 <?=
                 $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                            ['class' => 'gl-feed-img']) ?>
-                <div><?= h($post['User']['display_username']) ?></div>
-                <div><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
+                <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
+                <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
             </div>
-            <div class="col col-xxs-12 showmore">
-                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <div class="col col-xxs-12 showmore font-size_14">
+            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
             </div>
 
             <?
@@ -145,11 +145,15 @@
 
                             <div class="media-body">
                                 <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank">
-                                    <h4 class="media-heading"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                                    <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
                                 </a>
 
-                                <p><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
-                                <?= isset($site_info['description']) ? $site_info['description'] : null ?>
+                                <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                <? if (isset($site_info['description'])): ?>
+                                    <div class="font-size_12">
+                                        <?= $site_info['description'] ?>
+                                    </div>
+                                <? endif; ?>
                             </div>
                         </div>
                     </div>
@@ -161,8 +165,8 @@
                 </div>
             <? endif; ?>
 
-            <div class="col col-xxs-12">
-                <a href="#" class="click-like"
+            <div class="col col-xxs-12 font-size_12">
+            <a href="#" class="click-like"
                    like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                    model_id="<?= $post['Post']['id'] ?>"
                    like_type="post">
@@ -198,10 +202,13 @@
                     __d('gl', "他%s件のコメントを見る",
                         $post['Post']['comment_count'] - 3) ?></a>
             <? endif; ?>
+
             <? foreach ($post['Comment'] as $comment): ?>
+                <div class="font-size_12">
                 <?=
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                </div>
             <? endforeach ?>
             <div class="col col-xxs-12">
                 <?=
@@ -229,7 +236,7 @@
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
-                        'class'                    => 'form-control tiny-form-text blank-disable',
+                        'class' => 'form-control tiny-form-text blank-disable font-size_12',
                         'target_show_id'           => "Comment_{$post['Post']['id']}",
                         'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -249,7 +256,7 @@
                     </div>
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                     <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
-                        <a href="#" class="target-show-this-del"
+                        <a href="#" class="target-show-this-del font-size_12"
                            target-id="CommentFormImage_<?= $post['Post']['id'] ?>"><i class="fa fa-file-o"></i>&nbsp;<?=
                             __d('gl',
                                 "画像を追加する") ?>
