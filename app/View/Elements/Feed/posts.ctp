@@ -202,10 +202,13 @@
                     __d('gl', "他%s件のコメントを見る",
                         $post['Post']['comment_count'] - 3) ?></a>
             <? endif; ?>
+
             <? foreach ($post['Comment'] as $comment): ?>
+                <div class="font-size_12">
                 <?=
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                </div>
             <? endforeach ?>
             <div class="col col-xxs-12">
                 <?=
