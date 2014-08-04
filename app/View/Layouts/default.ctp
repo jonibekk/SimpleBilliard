@@ -7,6 +7,7 @@
  * @var $this             View
  */
 ?>
+<!-- START app/View/Layouts/default.ctp -->
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="en">
@@ -74,3 +75,4 @@ else {
 <?= $this->fetch('script') ?>
 </body>
 </html>
+<!-- END app/View/Layouts/default.ctp -->
