@@ -5,23 +5,24 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Email          $PrimaryEmail
- * @property Team           $DefaultTeam
- * @property Badge          $Badge
- * @property CommentLike    $CommentLike
- * @property CommentMention $CommentMention
- * @property CommentRead    $CommentRead
- * @property Comment        $Comment
- * @property Email          $Email
- * @property GivenBadge     $GivenBadge
- * @property Notification   $Notification
- * @property OauthToken     $OauthToken
- * @property PostLike       $PostLike
- * @property PostMention    $PostMention
- * @property PostRead       $PostRead
- * @property Post           $Post
- * @property TeamMember     $TeamMember
- * @property LocalName      $LocalName
+ * @property Email            $PrimaryEmail
+ * @property Team             $DefaultTeam
+ * @property Badge            $Badge
+ * @property CommentLike      $CommentLike
+ * @property CommentMention   $CommentMention
+ * @property CommentRead      $CommentRead
+ * @property Comment          $Comment
+ * @property Email            $Email
+ * @property GivenBadge       $GivenBadge
+ * @property Notification     $Notification
+ * @property OauthToken       $OauthToken
+ * @property PostLike         $PostLike
+ * @property PostMention      $PostMention
+ * @property PostRead         $PostRead
+ * @property Post             $Post
+ * @property TeamMember       $TeamMember
+ * @property CircleMember     $CircleMember
+ * @property LocalName        $LocalName
  */
 class User extends AppModel
 {
@@ -210,6 +211,7 @@ class User extends AppModel
         'Post',
         'TeamMember',
         'LocalName',
+        'CircleMember',
     ];
 
     /**
@@ -747,15 +749,42 @@ class User extends AppModel
 
     public function getUsersSelect2($keyword, $limit = 10)
     {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
         $users = $this->getUsersByKeyword($keyword, $limit);
-        /** @noinspection PhpDeprecationInspection */
-        $user_list = Set::combine($users, '{n}.User.id', '{n}.User.username');
-        $res = [];
-        foreach ($user_list as $key => $val) {
-            $data['id'] = $key;
-            $data['text'] = $val;
-            $res[] = $data;
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['username'];
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
         }
+        return ['results' => $user_res];
+    }
+
+    public function getUsersCirclesSelect2($keyword, $limit = 10)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
+        $circle_res = [];
+        foreach ($circles as $val) {
+            $data['id'] = 'circle_' . $val['Circle']['id'];
+            $data['text'] = $val['Circle']['name'];
+            $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
+            $circle_res[] = $data;
+        }
+
+        $users = $this->getUsersByKeyword($keyword, $limit);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['username'];
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
+        $res = array_merge($circle_res, $user_res);
         return ['results' => $res];
     }
 

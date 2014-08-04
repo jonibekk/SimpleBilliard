@@ -24,6 +24,8 @@ class CircleTest extends CakeTestCase
         'app.post',
         'app.post_like',
         'app.post_read',
+        'app.post_share_user',
+        'app.post_share_circle',
         'app.comment_mention',
         'app.given_badge',
         'app.post_mention',

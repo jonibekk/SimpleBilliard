@@ -46,9 +46,8 @@
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-                <div class="form-group" id="PostFormImage" style="display: none">
-                    <ul class="gl-input-images">
-
+                <div class="row form-group gl-no-margin" id="PostFormImage" style="display: none">
+                    <ul class="col gl-input-images">
                         <? for ($i = 1; $i <= 5; $i++): ?>
                             <li>
                             <?= $this->element('Feed/photo_upload',
@@ -61,7 +60,23 @@
                         __d('gl',
                             "画像を追加する") ?>
                     </a>
+                    <?php echo $this->Form->input('public_flg', [
+                        'label'     => __d('gl', "公開"),
+                        'class'     => "check-target-toggle",
+                        'default'   => true,
+                        'required'  => false,
+                        'target-id' => 'PostShare'
+                    ]); ?>
+                    <div class="row form-horizontal form-group" style="display: none" id="PostShare">
+                        <label class="col col-sm-2 control-label"><?= __d('gl', '共有範囲') ?></label>
 
+                        <div class="col col-sm-7">
+                            <?=
+                            $this->Form->hidden('share',
+                                                ['id' => 'select2PostCircleMember', 'value' => null, 'style' => "width: 100%",]) ?>
+                            <? $this->Form->unlockField('Post.share') ?>
+                        </div>
+                    </div>
                     <?=
                     $this->Form->submit(__d('gl', "投稿する"),
                                         ['class' => 'btn btn-primary pull-right', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>

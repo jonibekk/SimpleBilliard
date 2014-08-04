@@ -39,7 +39,9 @@ class PostsControllerTest extends ControllerTestCase
         'app.oauth_token',
         'app.local_name',
         'app.image',
-        'app.images_post'
+        'app.images_post',
+        'app.post_share_user',
+        'app.post_share_circle',
     );
 
     function testAdd()
@@ -54,9 +56,15 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
+        $Posts->Post->PostShareCircle->me['id'] = 1;
+        $Posts->Post->PostShareCircle->current_team_id = 1;
+        $Posts->Post->PostShareUser->me['id'] = 1;
+        $Posts->Post->PostShareUser->current_team_id = 1;
         $data = [
             'Post' => [
-                'body' => 'test'
+                'body'       => 'test',
+                'public_flg' => false,
+                'share'      => 'circle_1,user_12'
             ],
         ];
         $this->testAction('/posts/add',
@@ -105,7 +113,7 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
-        $data = ['Post' => ['comment_count' => 'test']];
+        $data = ['Post' => ['comment_count' => 'test', 'public_flg' => 1]];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }

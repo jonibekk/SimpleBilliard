@@ -4,7 +4,7 @@ App::uses('Comment', 'Model');
 /**
  * Comment Test Case
  *
- * @property mixed Comment
+ * @property Comment $Comment
  */
 class CommentTest extends CakeTestCase
 {
@@ -46,9 +46,15 @@ class CommentTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    function testCommentEdit()
     {
+        $data = [
+            'photo_delete' => [1 => true],
+            'Comment'      => [
+                'id' => 1,
+            ]
+        ];
+        $this->Comment->commentEdit($data);
     }
 
 }

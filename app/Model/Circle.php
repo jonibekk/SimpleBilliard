@@ -4,8 +4,9 @@ App::uses('AppModel', 'Model');
 /**
  * Circle Model
  *
- * @property Team         $Team
- * @property CircleMember $CircleMember
+ * @property Team            $Team
+ * @property CircleMember    $CircleMember
+ * @property PostShareCircle $PostShareCircle
  */
 class Circle extends AppModel
 {
@@ -96,7 +97,8 @@ class Circle extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CircleMember'
+        'CircleMember',
+        'PostShareCircle',
     ];
 
     /**
@@ -125,6 +127,21 @@ class Circle extends AppModel
             }
         }
         return $this->saveAll($data);
+    }
+
+    public function getCirclesByKeyword($keyword, $limit = 10)
+    {
+        $my_circle_list = $this->CircleMember->getMyCircleList();
+        $options = [
+            'conditions' => [
+                'id'          => $my_circle_list,
+                'name Like ?' => "%" . $keyword . "%",
+            ],
+            'limit'      => $limit,
+            'fields' => ['name', 'id', 'photo_file_name'],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
     }
 
 }

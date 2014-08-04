@@ -4,14 +4,16 @@ App::uses('AppModel', 'Model');
 /**
  * Post Model
  *
- * @property User           $User
- * @property Team           $Team
- * @property CommentMention $CommentMention
- * @property Comment        $Comment
- * @property GivenBadge     $GivenBadge
- * @property PostLike       $PostLike
- * @property PostMention    $PostMention
- * @property PostRead       $PostRead
+ * @property User               $User
+ * @property Team               $Team
+ * @property CommentMention     $CommentMention
+ * @property Comment            $Comment
+ * @property GivenBadge         $GivenBadge
+ * @property PostLike           $PostLike
+ * @property PostMention        $PostMention
+ * @property PostShareUser      $PostShareUser
+ * @property PostShareCircle    $PostShareCircle
+ * @property PostRead           $PostRead
  */
 class Post extends AppModel
 {
@@ -122,18 +124,24 @@ class Post extends AppModel
      */
     public $hasMany = [
         'CommentMention',
-        'Comment'  => [
+        'Comment'         => [
+            'dependent' => true,
+        ],
+        'PostShareUser'   => [
+            'dependent' => true,
+        ],
+        'PostShareCircle' => [
             'dependent' => true,
         ],
         'GivenBadge',
-        'PostLike' => [
+        'PostLike'        => [
             'dependent' => true,
         ],
         'PostMention',
-        'PostRead' => [
+        'PostRead'        => [
             'dependent' => true,
         ],
-        'MyPostLike' => [
+        'MyPostLike'      => [
             'className' => 'PostLike',
             'fields'    => ['id']
         ]
@@ -159,6 +167,27 @@ class Post extends AppModel
         $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
         $res = $this->save($postData);
+        //関連ユーザ、関連サークルが存在する場合かつ、公開フラグoffの場合
+        if (isset($postData['Post']['public_flg']) && !$postData['Post']['public_flg'] && !empty($postData['Post']['share'])) {
+            $share = explode(",", $postData['Post']['share']);
+            //ユーザとサークルに分割
+            $users = [];
+            $circles = [];
+            foreach ($share as $val) {
+                //ユーザの場合
+                if (stristr($val, 'user_')) {
+                    $users[] = str_replace('user_', '', $val);
+                }
+                //サークルの場合
+                elseif (stristr($val, 'circle_')) {
+                    $circles[] = str_replace('circle_', '', $val);
+                }
+            }
+            //共有ユーザ保存
+            $this->PostShareUser->add($this->getLastInsertID(), $users);
+            //共有サークル保存
+            $this->PostShareCircle->add($this->getLastInsertID(), $circles);
+        }
         return $res;
     }
 

@@ -77,6 +77,7 @@ echo $this->Html->script('gl_basic');
                 url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
                 dataType: 'json',
                 quietMillis: 100,
+                cache: true,
                 data: function (term, page) {
                     return {
                         term: term, //search term
@@ -86,9 +87,44 @@ echo $this->Html->script('gl_basic');
                 results: function (data, page) {
                     return { results: data.results };
                 }
+            },
+            formatSelection: format,
+            formatResult: format,
+            escapeMarkup: function (m) {
+                return m;
+            }
+        });
+        //noinspection JSUnusedLocalSymbols
+        $('#select2PostCircleMember').select2({
+            multiple: true,
+            minimumInputLength: 2,
+            placeholder: '<?=__d('gl',"スペルを入力してください。")?>',
+            ajax: {
+                url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
+                dataType: 'json',
+                quietMillis: 100,
+                cache: true,
+                data: function (term, page) {
+                    return {
+                        term: term, //search term
+                        page_limit: 10 // page size
+                    };
+                },
+                results: function (data, page) {
+                    return { results: data.results };
+                }
+            },
+            formatSelection: format,
+            formatResult: format,
+            escapeMarkup: function (m) {
+                return m;
             }
         });
     });
+    function format(item) {
+        return "<img style='width:14px;height: 14px' src='" + item.image + "'/> " + item.text;
+    }
+
     /**
      * Select2 translation.
      */

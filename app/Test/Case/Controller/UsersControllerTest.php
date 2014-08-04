@@ -40,7 +40,11 @@ class UsersControllerTest extends ControllerTestCase
         'app.message',
         'app.email',
         'app.send_mail',
-        'app.oauth_token'
+        'app.oauth_token',
+        'app.post_share_user',
+        'app.post_share_circle',
+        'app.circle',
+        'app.circle_member',
     );
 
     /**
@@ -1324,6 +1328,25 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_select2_get_users?term=test&page_limit=10', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSelect2GetUsers()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->_getUsersCommonMock();
+        $Users->User->TeamMember->current_team_id = 1;
+        $Users->User->TeamMember->me['id'] = 1;
+        $Users->User->CircleMember->me['id'] = 1;
+        $Users->User->CircleMember->current_team_id = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->me['id'] = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->current_team_id = 1;
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_select2_get_circles_users?term=test&page_limit=10', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

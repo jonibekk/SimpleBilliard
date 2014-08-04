@@ -523,6 +523,20 @@ class UsersController extends AppController
     }
 
     /**
+     * select2のユーザ検索
+     */
+    function ajax_select2_get_circles_users()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
      * チームに参加
      *
      * @param $token

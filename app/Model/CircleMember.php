@@ -39,4 +39,18 @@ class CircleMember extends AppModel
         'Team',
         'User',
     ];
+
+    public function getMyCircleList()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'user_id' => $this->me['id'],
+            ],
+            'fields'     => ['circle_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

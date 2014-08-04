@@ -424,3 +424,7 @@ ul.gl-input-images > li {
     margin-bottom: 0;
     padding-left: 0;
 }
+
+.gl-no-margin {
+    margin: 0;
+}

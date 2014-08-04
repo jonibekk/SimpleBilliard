@@ -29,7 +29,9 @@ class PostTest extends CakeTestCase
         'app.post_read',
         'app.image',
         'app.badge',
-        'app.images_post'
+        'app.images_post',
+        'app.post_share_user',
+        'app.post_share_circle',
     );
 
     /**
@@ -60,7 +62,10 @@ class PostTest extends CakeTestCase
         $uid = '1';
         $team_id = '1';
         $postData = [
-            'Post' => ['body' => 'test']
+            'Post' => [
+                'body'       => 'test',
+                'public_flg' => 1
+            ]
         ];
         $res = $this->Post->add($postData, Post::TYPE_NORMAL, $uid, $team_id);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
