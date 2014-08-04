@@ -60,10 +60,6 @@ Goalousで素早く開発を始められるよう心がけております。
 ターミナルを起動し、以下を実行   
 `vagrant ssh`   
 `sh ./etc/local/update_app.sh`   
-1. developブランチを作成   
-`git branch develop origin/develop`   
-1. developブランチにチェックアウト   
-`git checkout develop`   
 1. 作業用ブランチを作成   
 `git branch topic-xxxx`   
 1. 作業ブランチにチェックアウト   
