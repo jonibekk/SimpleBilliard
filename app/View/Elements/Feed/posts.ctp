@@ -14,8 +14,8 @@
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
         <div class="panel-body gl-feed">
-            <div class="col col-xxs-12">
-                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+            <div class="col col-xxs-12 font-size_14">
+            <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="pull-right">
                         <div class="dropdown">
                             <a href="#" class="" data-toggle="dropdown" id="download">

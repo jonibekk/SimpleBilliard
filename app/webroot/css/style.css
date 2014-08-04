@@ -428,3 +428,19 @@ ul.gl-input-images > li {
 .gl-no-margin {
     margin: 0;
 }
+
+.font-size_11 {
+    font-size: 11px;
+}
+
+.font-size_12 {
+    font-size: 12px;
+}
+
+.font-size_14 {
+    font-size: 14px;
+}
+
+.font-size_18 {
+    font-size: 18px;
+}
