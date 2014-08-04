@@ -14,8 +14,8 @@
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
         <div class="panel-body gl-feed">
-            <div class="col col-xxs-12 font-size_14">
-            <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+            <div class="col col-xxs-12">
+                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="pull-right">
                         <div class="dropdown">
                             <a href="#" class="" data-toggle="dropdown" id="download">
@@ -45,11 +45,11 @@
                 <?=
                 $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                            ['class' => 'gl-feed-img']) ?>
-                <div><?= h($post['User']['display_username']) ?></div>
-                <div><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
+                <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
+                <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
             </div>
-            <div class="col col-xxs-12 showmore">
-                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <div class="col col-xxs-12 showmore font-size_14">
+            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
             </div>
 
             <?
@@ -145,11 +145,15 @@
 
                             <div class="media-body">
                                 <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank">
-                                    <h4 class="media-heading"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                                    <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
                                 </a>
 
-                                <p><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
-                                <?= isset($site_info['description']) ? $site_info['description'] : null ?>
+                                <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                <? if (isset($site_info['description'])): ?>
+                                    <div class="font-size_12">
+                                        <?= $site_info['description'] ?>
+                                    </div>
+                                <? endif; ?>
                             </div>
                         </div>
                     </div>
@@ -161,8 +165,8 @@
                 </div>
             <? endif; ?>
 
-            <div class="col col-xxs-12">
-                <a href="#" class="click-like"
+            <div class="col col-xxs-12 font-size_12">
+            <a href="#" class="click-like"
                    like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                    model_id="<?= $post['Post']['id'] ?>"
                    like_type="post">
@@ -229,7 +233,7 @@
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
-                        'class'                    => 'form-control tiny-form-text blank-disable',
+                        'class' => 'form-control tiny-form-text blank-disable font-size_12',
                         'target_show_id'           => "Comment_{$post['Post']['id']}",
                         'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
