@@ -9,6 +9,7 @@
  * @var $this View
  */
 ?>
+<!-- START app/View/Users/password_reset_request.ctp -->
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -41,7 +42,7 @@
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                    <?= $this->Form->submit(__d('gl', "送信"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__d('gl', "送信"), ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>
@@ -49,3 +50,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/Users/password_reset_request.ctp -->

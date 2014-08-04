@@ -8,6 +8,7 @@
  * @var CodeCompletionView $this
  */
 ?>
+<!-- START app/View/Users/settings.ctp -->
 <? $this->start('sidebar') ?>
 <li class="active"><a href="#account"><?= __d('gl', "アカウント") ?></a></li>
 <li class=""><a href="#profile"><?= __d('gl', "プロフィール") ?></a></li>
@@ -28,3 +29,4 @@
 <!--<div id="link">-->
 
 <!--</div>-->
+<!-- END app/View/Users/settings.ctp -->
