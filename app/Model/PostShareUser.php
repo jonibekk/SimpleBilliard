@@ -52,4 +52,21 @@ class PostShareUser extends AppModel
         }
         return $this->saveAll($data);
     }
+
+    public function getShareWithMeList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'                  => $this->me['id'],
+                'team_id'                  => $this->current_team_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'order' => [$order => $order_direction],
+            'limit' => $limit,
+            'fields'     => ['post_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

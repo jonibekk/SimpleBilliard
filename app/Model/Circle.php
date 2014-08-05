@@ -120,6 +120,7 @@ class Circle extends AppModel
         if (!empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
+                $val = str_replace('user_', '', $val);;
                 $data['CircleMember'][] = [
                     'team_id' => $this->current_team_id,
                     'user_id' => $val

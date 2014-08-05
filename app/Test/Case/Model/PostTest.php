@@ -32,6 +32,8 @@ class PostTest extends CakeTestCase
         'app.images_post',
         'app.post_share_user',
         'app.post_share_circle',
+        'app.circle',
+        'app.circle_member',
     );
 
     /**
@@ -86,6 +88,12 @@ class PostTest extends CakeTestCase
         $this->Post->PostRead->current_team_id = $team_id;
         $this->Post->Comment->CommentRead->me['id'] = $uid;
         $this->Post->Comment->CommentRead->current_team_id = $team_id;
+        $this->Post->PostShareCircle->me['id'] = $uid;
+        $this->Post->PostShareCircle->current_team_id = $team_id;
+        $this->Post->PostShareUser->me['id'] = $uid;
+        $this->Post->PostShareUser->current_team_id = $team_id;
+        $this->Post->User->CircleMember->me['id'] = $uid;
+        $this->Post->User->CircleMember->current_team_id = $team_id;
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
     }
 

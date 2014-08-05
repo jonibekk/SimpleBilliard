@@ -55,4 +55,21 @@ class PostShareCircle extends AppModel
 
     }
 
+    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    {
+        $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
+        $options = [
+            'conditions' => [
+                'circle_id'                => $my_circle_list,
+                'team_id'                  => $this->current_team_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'order' => [$order => $order_direction],
+            'limit' => $limit,
+            'fields'     => ['post_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

@@ -21,8 +21,6 @@ class PagesControllerTest extends ControllerTestCase
         'app.image',
         'app.badge',
         'app.team',
-        'app.circle',
-        'app.circle_member',
         'app.comment_like',
         'app.comment',
         'app.post',
@@ -41,7 +39,11 @@ class PagesControllerTest extends ControllerTestCase
         'app.thread',
         'app.message',
         'app.email',
-        'app.oauth_token'
+        'app.oauth_token',
+        'app.post_share_user',
+        'app.post_share_circle',
+        'app.circle',
+        'app.circle_member',
     );
 
     /**
@@ -175,7 +177,7 @@ class PagesControllerTest extends ControllerTestCase
                 'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
-        $user_id = 3;
+        $user_id = 1;
         $team_id = 1;
         $value_map = [
             [null, $user_id],
@@ -216,6 +218,14 @@ class PagesControllerTest extends ControllerTestCase
             ]
         ];
         $Pages->User->Post->saveAll($post_data);
+        $share_user_data = [
+            'PostShareUser' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'post_id' => $Pages->User->Post->getLastInsertID()
+            ]
+        ];
+        $Pages->Post->PostShareUser->save($share_user_data);
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -225,9 +235,21 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->current_team_id = '1';
         $this->testAction('/');
     }
 
@@ -279,6 +301,18 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->current_team_id = '1';
 
         $this->testAction('/', ['return' => 'contents']);
     }
