@@ -209,7 +209,7 @@ footer p {
 }
 
 .gl-nav-team-select {
-    width: 150px !important;
+    width: 168px;
 }
 
 .gl-nav-form-group input, .gl-nav-form-group select {
@@ -226,7 +226,7 @@ footer p {
 
 .gl-nav-form-group {
     position: relative;
-    padding: 6px;
+    padding: 6px 0;
 }
 
 /*noinspection ALL*/
@@ -463,4 +463,8 @@ ul.gl-input-images > li {
 
 .layout-temp_padding9 {
     padding: 9px;
+}
+
+.layout-header_right {
+    padding: 0;
 }
