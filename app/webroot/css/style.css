@@ -1,5 +1,5 @@
 body {
-    padding-top: 50px;
+    padding-top: 52px;
 }
 
 img {
@@ -197,8 +197,9 @@ footer p {
     }
 }
 
+/*ここ修正必須です。8月5日*/
 .gl-nav-team-select {
-    width: 162px;
+    width: 100px;
 }
 
 .gl-nav-form-group input, .gl-nav-form-group select {
@@ -443,7 +444,7 @@ ul.gl-input-images > li {
 }
 
 .layout-main {
-    padding: 0 10px;
+    padding: 0 0 0 20px;
 }
 
 .layout-goal {
@@ -451,16 +452,37 @@ ul.gl-input-images > li {
 }
 
 .layout-temp_padding9 {
-    padding: 9px;
+    padding: 9px 19px;
 }
-
 .layout-header_right {
     padding: 0;
+}
+
+.navbar {
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 756px;
+    }
 }
 
 @media (min-width: 992px) {
     .container {
         width: 972px;
+    }
+
+    .gl-nav-team-select {
+        width: 162px;
+    }
+
+    .layout-main {
+        padding: 0 10px;
+    }
+
+    .layout-temp_padding9 {
+        padding: 9px;
     }
 }
 
@@ -468,7 +490,6 @@ ul.gl-input-images > li {
     .container {
         width: 1008px;
     }
-
     .gl-nav-team-select {
         width: 168px;
     }
