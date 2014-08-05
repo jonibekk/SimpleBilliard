@@ -55,6 +55,9 @@ class PostShareUser extends AppModel
 
     public function getShareWithMeList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
+        $backupPrimaryKey = $this->primaryKey;
+        $this->primaryKey = 'post_id';
+
         $options = [
             'conditions' => [
                 'user_id'                  => $this->me['id'],
@@ -66,6 +69,8 @@ class PostShareUser extends AppModel
             'fields'     => ['post_id'],
         ];
         $res = $this->find('list', $options);
+        $this->primaryKey = $backupPrimaryKey;
+
         return $res;
     }
 
