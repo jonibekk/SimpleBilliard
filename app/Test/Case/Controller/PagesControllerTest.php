@@ -177,7 +177,7 @@ class PagesControllerTest extends ControllerTestCase
                 'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
-        $user_id = 3;
+        $user_id = 1;
         $team_id = 1;
         $value_map = [
             [null, $user_id],
@@ -218,6 +218,14 @@ class PagesControllerTest extends ControllerTestCase
             ]
         ];
         $Pages->User->Post->saveAll($post_data);
+        $share_user_data = [
+            'PostShareUser' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'post_id' => $Pages->User->Post->getLastInsertID()
+            ]
+        ];
+        $Pages->Post->PostShareUser->save($share_user_data);
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
