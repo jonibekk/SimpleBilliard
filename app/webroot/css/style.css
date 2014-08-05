@@ -63,20 +63,10 @@ footer p {
 /*@media (min-width: 768px) {*/
 /*.container {*/
 /*width: 960px;*/
+
 /*}*/
 /*}*/
 
-@media (min-width: 1020px) {
-    .container {
-        width: 1008px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        width: 1008px;
-    }
-}
 
 [class*="col-"] {
     padding-left: 5px;
@@ -209,7 +199,7 @@ footer p {
 }
 
 .gl-nav-team-select {
-    width: 168px;
+    width: 162px;
 }
 
 .gl-nav-form-group input, .gl-nav-form-group select {
@@ -467,4 +457,26 @@ ul.gl-input-images > li {
 
 .layout-header_right {
     padding: 0;
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 972px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        width: 1008px;
+    }
+
+    .gl-nav-team-select {
+        width: 168px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1008px;
+    }
 }
