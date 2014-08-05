@@ -63,20 +63,9 @@ footer p {
 /*@media (min-width: 768px) {*/
 /*.container {*/
 /*width: 960px;*/
+
 /*}*/
 /*}*/
-
-@media (min-width: 992px) {
-    .container {
-        width: 970px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        width: 970px;
-    }
-}
 
 [class*="col-"] {
     padding-left: 5px;
@@ -209,7 +198,7 @@ footer p {
 }
 
 .gl-nav-team-select {
-    width: 150px !important;
+    width: 162px;
 }
 
 .gl-nav-form-group input, .gl-nav-form-group select {
@@ -226,7 +215,7 @@ footer p {
 
 .gl-nav-form-group {
     position: relative;
-    padding: 6px;
+    padding: 6px 0;
 }
 
 /*noinspection ALL*/
@@ -447,4 +436,46 @@ ul.gl-input-images > li {
 
 .font-size_18 {
     font-size: 18px;
+}
+
+.layout-sub {
+    padding: 0;
+}
+
+.layout-main {
+    padding: 0 10px;
+}
+
+.layout-goal {
+    padding: 0;
+}
+
+.layout-temp_padding9 {
+    padding: 9px;
+}
+
+.layout-header_right {
+    padding: 0;
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 972px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        width: 1008px;
+    }
+
+    .gl-nav-team-select {
+        width: 168px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1008px;
+    }
 }
