@@ -191,32 +191,6 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getPublicList($start, $end)
-    {
-        $options = [
-            'conditions' => [
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-                'public_flg'               => true
-            ],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
-    public function getMyPostList($start, $end)
-    {
-        $options = [
-            'conditions' => [
-                'user_id'                  => $this->me['id'],
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-            ],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
     public function get($page = 1, $limit = 20, $start = null, $end = null)
     {
         $one_month = 60 * 60 * 24 * 31;
@@ -233,10 +207,6 @@ class Post extends AppModel
             $end = strtotime($end);
         }
         $p_list = [];
-        //公開の投稿
-        $p_list = array_merge($p_list, $this->getPublicList($start, $end));
-        //自分の投稿
-        $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
         //自分が共有範囲指定された投稿
         $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
         //自分のサークルが共有範囲指定された投稿
@@ -244,7 +214,20 @@ class Post extends AppModel
 
         $post_options = [
             'conditions' => [
-                'Post.id' => $p_list,
+                'OR' => [
+                    //公開の投稿を取得
+                    [
+                        'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                        'Post.team_id'                  => $this->current_team_id,
+                        'Post.public_flg'               => true,
+                    ],
+                    //自分の投稿を取得
+                    [
+                        'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                        'Post.user_id'                  => $this->me['id'],
+                        'Post.team_id'                  => $this->current_team_id,
+                    ]
+                ]
             ],
             'limit'      => $limit,
             'page'       => $page,
@@ -252,6 +235,10 @@ class Post extends AppModel
                 'Post.modified' => 'desc'
             ],
         ];
+        //共有範囲指定の投稿を取得
+        if (!empty($p_list)) {
+            $post_options['conditions']['OR']['Post.id'] = $p_list;
+        }
         $post_list = $this->find('list', $post_options);
         //投稿を既読に
         $this->PostRead->red($post_list);
