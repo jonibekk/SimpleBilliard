@@ -27,7 +27,7 @@ else {
 ?>
 <div id="container" class="container">
     <div class="row">
-        <div class="col-md-2 col-sm-4 col-xs-3 hidden-xxs layout-sub">
+        <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <div class="well layout-temp_padding9">
             <p>test</p>
 
@@ -42,7 +42,7 @@ else {
                 <p>test</p>
             </div>
         </div>
-        <div class="col-md-6 col-sm-8 col-xs-9 col-xxs-12 layout-main" role="main">
+        <div class="col-md-6 col-sm-8 col-xs-8 col-xxs-12 layout-main" role="main">
         <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
