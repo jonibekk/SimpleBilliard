@@ -66,15 +66,15 @@ footer p {
 /*}*/
 /*}*/
 
-@media (min-width: 992px) {
+@media (min-width: 1020px) {
     .container {
-        width: 970px;
+        width: 1008px;
     }
 }
 
 @media (min-width: 1200px) {
     .container {
-        width: 970px;
+        width: 1008px;
     }
 }
 
@@ -447,4 +447,20 @@ ul.gl-input-images > li {
 
 .font-size_18 {
     font-size: 18px;
+}
+
+.layout-sub {
+    padding: 0;
+}
+
+.layout-main {
+    padding: 0 10px;
+}
+
+.layout-goal {
+    padding: 0;
+}
+
+.layout-temp_padding9 {
+    padding: 9px;
 }
