@@ -99,8 +99,7 @@ footer p {
 
 .gl-hamburger {
     float: left !important;
-    margin-left: 3px !important;
-    margin-right: 3px !important;
+    margin-left: 3px;
 }
 
 /* インラインで非表示にする */
@@ -444,7 +443,7 @@ ul.gl-input-images > li {
 }
 
 .layout-main {
-    padding: 0 0 0 20px;
+    padding: 5px;
 }
 
 .layout-goal {
@@ -452,7 +451,7 @@ ul.gl-input-images > li {
 }
 
 .layout-temp_padding9 {
-    padding: 9px 19px;
+    padding: 6px 9px;
 }
 .layout-header_right {
     padding: 0;
@@ -462,9 +461,31 @@ ul.gl-input-images > li {
     margin: 0;
 }
 
+.gl-nav-container {
+    color: #fff;
+}
+
+@media (min-width: 480px) {
+    .container {
+        width: 97.5%;
+    }
+
+    .layout-main {
+        padding: 0 0 0 2.5%;
+    }
+
+    .gl-hamburger {
+        margin-left: 0;
+    }
+}
+
 @media (min-width: 768px) {
     .container {
         width: 756px;
+    }
+
+    .layout-temp_padding9 {
+        padding: 9px 19px;
     }
 }
 
