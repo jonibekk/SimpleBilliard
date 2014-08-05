@@ -42,6 +42,8 @@ class PostsControllerTest extends ControllerTestCase
         'app.images_post',
         'app.post_share_user',
         'app.post_share_circle',
+        'app.circle',
+        'app.circle_member',
     );
 
     function testAdd()
@@ -56,10 +58,6 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
-        $Posts->Post->PostShareCircle->me['id'] = 1;
-        $Posts->Post->PostShareCircle->current_team_id = 1;
-        $Posts->Post->PostShareUser->me['id'] = 1;
-        $Posts->Post->PostShareUser->current_team_id = 1;
         $data = [
             'Post' => [
                 'body'       => 'test',
@@ -176,18 +174,7 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAjaxGetFeedNoPageNum()
     {
-        /**
-         * @var UsersController $Posts
-         */
-        $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostRead->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostRead->current_team_id = '1';
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentRead->current_team_id = '1';
+        $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_get_feed/', ['method' => 'GET']);
@@ -196,18 +183,7 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAjaxGetFeedWithPageNum()
     {
-        /**
-         * @var UsersController $Posts
-         */
-        $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostRead->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostRead->current_team_id = '1';
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentRead->current_team_id = '1';
+        $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_get_feed/2', ['method' => 'GET']);
@@ -231,10 +207,6 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentRead->current_team_id = '1';
 
         //投稿記事を20個いれる
         $user_id = 1;
@@ -277,10 +249,6 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostLike->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostLike->current_team_id = '1';
 
         //投稿記事を20個いれる
         $user_id = 1;
@@ -313,10 +281,6 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostLike->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostLike->current_team_id = '1';
 
         //投稿記事を20個いれる
         $user_id = 1;
@@ -358,10 +322,6 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->current_team_id = '1';
 
         //投稿記事を20個いれる
         $user_id = 1;
@@ -396,10 +356,6 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->current_team_id = '1';
 
         //投稿記事を20個いれる
         $user_id = 1;
@@ -440,10 +396,6 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->current_team_id = '1';
 
         $user_id = 1;
         $team_id = 1;
@@ -890,6 +842,35 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->Comment->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostShareCircle->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostShareUser->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostShareUser->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostShareCircle->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->User->CircleMember->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->User->CircleMember->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->Comment->CommentLike->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostLike->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->PostLike->current_team_id = '1';
+
         return $Posts;
     }
 

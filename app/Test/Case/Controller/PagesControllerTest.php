@@ -225,9 +225,21 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->current_team_id = '1';
         $this->testAction('/');
     }
 
@@ -279,6 +291,18 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareUser->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->PostShareCircle->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->Post->User->CircleMember->current_team_id = '1';
 
         $this->testAction('/', ['return' => 'contents']);
     }
