@@ -21,8 +21,6 @@ class PagesControllerTest extends ControllerTestCase
         'app.image',
         'app.badge',
         'app.team',
-        'app.circle',
-        'app.circle_member',
         'app.comment_like',
         'app.comment',
         'app.post',
@@ -41,7 +39,11 @@ class PagesControllerTest extends ControllerTestCase
         'app.thread',
         'app.message',
         'app.email',
-        'app.oauth_token'
+        'app.oauth_token',
+        'app.post_share_user',
+        'app.post_share_circle',
+        'app.circle',
+        'app.circle_member',
     );
 
     /**
