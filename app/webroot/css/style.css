@@ -438,24 +438,17 @@ ul.gl-input-images > li {
     font-size: 18px;
 }
 
-.layout-sub {
-    padding: 0;
-}
 
 .layout-main {
     padding: 5px;
 }
 
-.layout-goal {
+.layout-sub {
     padding: 0;
 }
 
-.layout-sub_padding {
-    padding: 6px 9px;
-}
-
-.layout-goal_padding {
-    padding: 6px 9px;
+.layout-goal {
+    padding: 0;
 }
 
 .layout-header_right {
@@ -474,56 +467,52 @@ ul.gl-input-images > li {
     width: 93.75%;
 }
 
+/*Extrasmall*/
 @media (min-width: 480px) {
     .container {
         width: 97.5%;
+    }
+    .gl-hamburger {
+        margin-left: 0;
     }
 
     .layout-main {
         padding: 0 0 0 2.5%;
     }
 
-    .gl-hamburger {
-        margin-left: 0;
+    .layout-sub_padding {
+        padding: 9px 1px;
     }
 }
 
+/*Small*/
 @media (min-width: 768px) {
     .container {
         width: 756px;
     }
-
-    .layout-sub_padding {
-        padding: 9px 19px;
-    }
-
-    .layout-goal_padding {
-        padding: 9px 19px;
-    }
 }
 
+/*Medium*/
 @media (min-width: 992px) {
     .container {
         width: 972px;
     }
-
     .gl-nav-team-select {
         width: 162px;
     }
-
     .layout-main {
         padding: 0 10px;
     }
-
     .layout-sub_padding {
-        padding: 9px;
+        padding: 9px 3px 9px 4px;
     }
 
     .layout-goal_padding {
-        padding: 9px;
+        padding: 9px 12px;
     }
 }
 
+/*ExtraMedium*/
 @media (min-width: 1024px) {
     .container {
         width: 1008px;
@@ -533,7 +522,7 @@ ul.gl-input-images > li {
     }
 
     .layout-sub_padding {
-        padding: 9px 12px;
+        padding: 9px 5px;
     }
 
     .layout-goal_padding {
