@@ -29,7 +29,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
-                            <li><a href="#" data-toggle="modal" data-target="#modal_add_circle"><?=
+                            <li>
+                                <a href="#" data-toggle="modal" data-target="#modal_add_circle"><?=
                                     __d('gl',
                                         "サークルを作成") ?></a>
                             </li>
@@ -39,8 +40,8 @@
                                               ['controller' => 'teams', 'action' => 'add']) ?></li>
                     </ul>
                 </div>
-                <a href="#"><i class="fa fa-envelope-o"></i></a>
-                <a href="#"><i class="fa fa-bell-o"></i></a>
+                <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o"></i></a>
+                <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o"></i></a>
 
                 <div class="dropdown gl-navbar-nav-fix">
                     <a href="#" class="dropdown-toggle me-menu-image" data-toggle="dropdown" href="#" id="download">
@@ -91,10 +92,10 @@
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
-                <li><a href="#"><i class="fa fa-bullseye"></i>&nbsp;
+                <li><a href="#"><i class="fa fa-bullseye develop--forbiddenLink"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
                     </a></li>
-                <li><a href="#"><i class="fa fa-users"></i>&nbsp;
+                <li><a href="#"><i class="fa fa-users develop--forbiddenLink"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
                     </a>
                 </li>
@@ -109,4 +110,18 @@
         <!--/.nav-collapse -->
     </div>
 </div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(function () {
+        $(".develop--forbiddenLink").hover(
+            function () {
+                $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
+            },
+            function () {
+                $(this).find("div:last").remove();
+            }
+        );
+    });
+</script>
+
 <!-- END app/View/Elements/header_logged_in.ctp -->
