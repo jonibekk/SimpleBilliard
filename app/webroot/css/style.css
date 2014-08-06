@@ -438,7 +438,6 @@ ul.gl-input-images > li {
     font-size: 18px;
 }
 
-
 .layout-main {
     padding: 5px;
 }
@@ -472,6 +471,7 @@ ul.gl-input-images > li {
     .container {
         width: 97.5%;
     }
+
     .gl-hamburger {
         margin-left: 0;
     }
@@ -497,12 +497,15 @@ ul.gl-input-images > li {
     .container {
         width: 972px;
     }
+
     .gl-nav-team-select {
         width: 162px;
     }
+
     .layout-main {
         padding: 0 10px;
     }
+
     .layout-sub_padding {
         padding: 9px 3px 9px 4px;
     }
@@ -517,6 +520,7 @@ ul.gl-input-images > li {
     .container {
         width: 1008px;
     }
+
     .gl-nav-team-select {
         width: 168px;
     }
