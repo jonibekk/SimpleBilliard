@@ -450,9 +450,14 @@ ul.gl-input-images > li {
     padding: 0;
 }
 
-.layout-temp_padding9 {
+.layout-sub_padding {
     padding: 6px 9px;
 }
+
+.layout-goal_padding {
+    padding: 6px 9px;
+}
+
 .layout-header_right {
     padding: 0;
 }
@@ -488,7 +493,11 @@ ul.gl-input-images > li {
         width: 756px;
     }
 
-    .layout-temp_padding9 {
+    .layout-sub_padding {
+        padding: 9px 19px;
+    }
+
+    .layout-goal_padding {
         padding: 9px 19px;
     }
 }
@@ -506,7 +515,11 @@ ul.gl-input-images > li {
         padding: 0 10px;
     }
 
-    .layout-temp_padding9 {
+    .layout-sub_padding {
+        padding: 9px;
+    }
+
+    .layout-goal_padding {
         padding: 9px;
     }
 }
@@ -517,6 +530,14 @@ ul.gl-input-images > li {
     }
     .gl-nav-team-select {
         width: 168px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 12px;
+    }
+
+    .layout-goal_padding {
+        padding: 9px 15px;
     }
 }
 
