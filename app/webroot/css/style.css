@@ -99,7 +99,7 @@ footer p {
 
 .gl-hamburger {
     float: left !important;
-    margin-left: 1.4%;
+    margin-left: 0;
 }
 
 /* インラインで非表示にする */
@@ -557,4 +557,66 @@ ul.gl-input-images > li {
     position: absolute;
     z-index: 100;
     opacity: 0.8;
+}
+
+.circle-icon_box {
+    display: block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    background: #999933;
+    float: left;
+    margin-right: 5px;
+}
+
+.circle-icon_box02 {
+    display: block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    background: #339999;
+    float: left;
+    margin-right: 5px;
+}
+
+.circle-name_box {
+    display: block;
+    width: 101px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 12px;
+    float: left;
+    margin-right: 3px;
+}
+
+.circle-count_box {
+    display: block;
+    width: 13px;
+    height: 16px;
+    line-height: 16px;
+    float: left;
+    margin-right: 3px;
+}
+
+.circle-function_box {
+    display: block;
+    width: 15px;
+    height: 16px;
+    line-height: 16px;
+    float: left;
+}
+
+.circle-layout {
+    width: 156px;
+    height: 16px;
+    margin: 0 0 8px;
+}
+
+.count-value {
+    color: #4e5665;
+    font-size: 11px;
+}
+
+.circle-function {
+    width: 15px;
 }

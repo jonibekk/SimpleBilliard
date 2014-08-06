@@ -29,7 +29,7 @@ else {
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
             <div class="well layout-sub_padding">
-            <p>test</p>
+                <p>test</p>
 
                 <p>test</p>
 
@@ -41,14 +41,42 @@ else {
 
                 <p>test</p>
             </div>
+            <div class="layout-sub_padding clearfix">
+                <div class="circle-layout clearfix">
+                    <div class="circle-icon_box">
+                    </div>
+                    <div class="circle-name_box">
+                        <p>Strong Circle</p>
+                    </div>
+                    <div class="circle-count_box">
+                        <p class="count-value">5</p>
+                    </div>
+                    <div class="circle-function_box">
+                        <i class="fa fa-cog circle-function"></i>
+                    </div>
+                </div>
+                <div class="circle-layout clearfix">
+                    <div class="circle-icon_box02">
+                    </div>
+                    <div class="circle-name_box">
+                        <p>Weak Circle</p>
+                    </div>
+                    <div class="circle-count_box">
+                        <p class="count-value">5</p>
+                    </div>
+                    <div class="circle-function_box">
+                        <i class="fa fa-cog circle-function"></i>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6 col-sm-8 col-xs-8 col-xxs-12 layout-main" role="main">
-        <?= $this->Session->flash(); ?>
+            <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
         <div class="col-md-4 visible-md visible-lg layout-goal">
             <div class="well layout-goal_padding">
-            <p>test</p>
+                <p>test</p>
 
                 <p>test</p>
 
@@ -60,7 +88,6 @@ else {
 
                 <p>test</p>
             </div>
-
         </div>
     </div>
 
