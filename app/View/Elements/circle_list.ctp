@@ -12,6 +12,7 @@
 ?>
 <!-- START app/View/Elements/circle_list.ctp -->
 <div class="layout-sub_padding clearfix">
+    <p class="circle_heading">Circles</p>
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix">

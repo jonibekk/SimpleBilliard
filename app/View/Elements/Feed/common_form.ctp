@@ -14,8 +14,12 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li class="active"><a href="#PostForm" role="tab" data-toggle="tab"><?= __d('gl', "投稿") ?></a></li>
-            <li><a href="#ActionForm" role="tab" data-toggle="tab"><?= __d('gl', "アクション") ?></a></li>
-            <li><a href="#BadgeForm" role="tab" data-toggle="tab"><?= __d('gl', "バッジ") ?></a></li>
+            <li><a href="#ActionForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?= __d('gl',
+                                                                                                          "アクション") ?></a>
+            </li>
+            <li><a href="#BadgeForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?= __d('gl',
+                                                                                                         "バッジ") ?></a>
+            </li>
         </ul>
     </div>
     <!-- Tab panes -->

@@ -24,7 +24,7 @@
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class'     => 'form-control'
+                    'class' => 'form-control modal_input-design'
                 ],
                 'url'           => ['controller' => 'users', 'action' => 'change_email'],
                 'class'         => 'form-horizontal',
@@ -47,8 +47,8 @@
                     'type'  => 'password',
                 ])?>
             </div>
-            <div class="modal-footer">
-                <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary']) ?>
+            <div class="modal-footer modal_pannel-footer">
+            <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary']) ?>
             </div>
             <?= $this->Form->end() ?>
         </div>
