@@ -30,7 +30,7 @@
             'class'         => 'form-horizontal',
             'novalidate'    => true,
             'type'          => 'file',
-            'id'            => 'EditCircleForm' . $this->request->data['Circle']['id'],
+            'id' => 'EditCircleForm',
         ]); ?>
         <?= $this->Form->hidden('id') ?>
         <div class="modal-body">
@@ -146,25 +146,4 @@
         </div>
     </div>
 </div>
-<? $this->append('script') ?>
-<script type="text/javascript">
-    $(document).ready(function () {
-        //noinspection JSJQueryEfficiency
-        $("#EditCircleForm<?=$this->request->data['Circle']['id']?>").bootstrapValidator({
-            excluded: [':disabled'],
-            live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
-            fields: {
-                "data[Circle][photo]": {
-                    enabled: false
-                }
-            }
-        });
-    });
-</script>
-<? $this->end() ?>
 <!-- END app/View/Elements/modal_edit_circle.ctp -->
