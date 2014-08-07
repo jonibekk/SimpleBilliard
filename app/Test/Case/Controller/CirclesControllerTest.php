@@ -63,6 +63,45 @@ class CirclesControllerTest extends ControllerTestCase
 
     }
 
+    function testAjaxGetEditModal()
+    {
+        $this->_getCirclesCommonMock();
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/circles/ajax_get_edit_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSelect2InitCircleMembers()
+    {
+        $this->_getCirclesCommonMock();
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/circles/ajax_select2_init_circle_members/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testEditSuccess()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                'id'   => 1,
+                'name' => 'xxx',
+            ],
+        ];
+        $this->testAction('/circles/edit', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testEditFail()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [];
+        $this->testAction('/circles/edit', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
     function _getCirclesCommonMock()
     {
         /**
