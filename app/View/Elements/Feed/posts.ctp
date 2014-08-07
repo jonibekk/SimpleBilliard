@@ -133,7 +133,7 @@
                                                            'class'         => 'lazy media-object',
                                                            'data-original' => $site_info['image'],
                                                            'width'         => '80px',
-                                                           'height'        => '80px'
+                                                           'height' => 'auto'
                                                        ]
                                     )
                                     ?>
