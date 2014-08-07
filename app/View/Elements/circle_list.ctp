@@ -24,7 +24,7 @@
                     <p title="<?= $circle['Circle']['name'] ?>"><?= $circle['Circle']['name'] ?></p>
                 </div>
                 <div class="circle-count_box">
-                    <p class="count-value">5</p>
+                    <p class="count-value"><?= $circle['CircleMember']['unread_count'] ?></p>
                 </div>
                 <div class="circle-function_box">
                     <? if ($circle['CircleMember']['admin_flg']): ?>

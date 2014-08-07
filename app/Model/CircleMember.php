@@ -64,6 +64,7 @@ class CircleMember extends AppModel
                 'CircleMember.id',
                 'CircleMember.circle_id',
                 'CircleMember.admin_flg',
+                'CircleMember.unread_count',
             ],
             'order'      => ['Circle.name asc'],
             'contain'    => [
