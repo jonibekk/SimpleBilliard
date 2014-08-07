@@ -90,7 +90,7 @@ class CirclesControllerTest extends ControllerTestCase
             'Circle' => [
                 'id'      => 1,
                 'name'    => 'xxx',
-                'members' => 'user_12'
+                'members' => 'user_12,user_13'
             ],
         ];
         $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
