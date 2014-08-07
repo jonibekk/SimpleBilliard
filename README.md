@@ -59,6 +59,7 @@ Goalousで素早く開発を始められるよう心がけております。
 1. アプリケーションをアップデート   
 ターミナルを起動し、以下を実行   
 `vagrant ssh`   
+`sudo su`   
 `sh ../etc/local/update_app.sh`
 1. 作業用ブランチを作成   
 `git branch topic-xxxx`   
