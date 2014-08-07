@@ -137,7 +137,6 @@ class Circle extends AppModel
         }
         //既存のメンバーを取得
         $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
-        $circle_members = [];
         if (!empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
@@ -146,10 +145,9 @@ class Circle extends AppModel
                     unset($exists_member_list[$key]);
                     continue;
                 }
-                $circle_members[] = [
+                $data['CircleMember'][] = [
                     'team_id'   => $this->current_team_id,
                     'user_id'   => $val,
-                    'circle_id' => $data['Circle']['id'],
                 ];
             }
         }
@@ -157,11 +155,7 @@ class Circle extends AppModel
         if (!empty($exists_member_list)) {
             $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
         }
-        //メンバーデータ保存
-        if (!empty($circle_members)) {
-            $this->CircleMember->saveAll($circle_members);
-        }
-        return $this->save($data);
+        return $this->saveAll($data);
     }
 
     public function getCirclesByKeyword($keyword, $limit = 10)
