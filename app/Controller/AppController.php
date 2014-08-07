@@ -86,7 +86,6 @@ class AppController extends Controller
         if (!$this->request->is('ajax')) {
             $this->_setMyTeam();
             $this->_setMyMemberStatus();
-            $this->_setMyCircle();
         }
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
