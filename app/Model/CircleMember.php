@@ -53,4 +53,33 @@ class CircleMember extends AppModel
         return $res;
     }
 
+    public function getMyCircle()
+    {
+        $options = [
+            'conditions' => [
+                'CircleMember.user_id' => $this->me['id'],
+                'CircleMember.team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'CircleMember.id',
+                'CircleMember.circle_id',
+                'CircleMember.admin_flg',
+            ],
+            'order'      => ['Circle.name asc'],
+            'contain'    => [
+                'Circle' => [
+                    'fields' => [
+                        'Circle.id',
+                        'Circle.name',
+                        'Circle.description',
+                        'Circle.public_flg',
+                        'Circle.photo_file_name',
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }

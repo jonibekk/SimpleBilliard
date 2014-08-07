@@ -82,9 +82,12 @@ class AppController extends Controller
         parent::beforeFilter();
 
         $this->_setAppLanguage();
-        $this->_setMyTeam();
-        $this->_setMyMemberStatus();
-
+        //ajaxの時以外で実行する
+        if (!$this->request->is('ajax')) {
+            $this->_setMyTeam();
+            $this->_setMyMemberStatus();
+            $this->_setMyCircle();
+        }
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }
@@ -97,6 +100,11 @@ class AppController extends Controller
     public function _setMyMemberStatus()
     {
         $this->set('my_member_status', $this->User->TeamMember->getWithTeam());
+    }
+
+    public function _setMyCircle()
+    {
+        $this->set('my_circles', $this->User->CircleMember->getMyCircle());
     }
 
     /**
