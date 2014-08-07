@@ -21,8 +21,8 @@
             <div class="modal-body">
                 <p><?= __d('gl', "%sへのメールアドレス変更をキャンセルしますか？", $email) ?></p>
             </div>
-            <div class="modal-footer">
-                <?=
+            <div class="modal-footer modal_pannel-footer">
+            <?=
                 $this->Form
                     ->postLink(__d('gl', "はい"),
                                [
