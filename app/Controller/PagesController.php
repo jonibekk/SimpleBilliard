@@ -58,6 +58,7 @@ class PagesController extends AppController
                     $this->Session->delete('add_new_mode');
                     $this->set('mode_view', MODE_VIEW_TUTORIAL);
                 }
+                $this->_setMyCircle();
                 $this->set(['posts' => $this->Post->get()]);
                 return $this->render('logged_in_home');
             }

@@ -587,6 +587,7 @@ ul.gl-input-images > li {
     font-size: 12px;
     float: left;
     margin-right: 3px;
+    overflow: hidden;
 }
 
 .circle-count_box {

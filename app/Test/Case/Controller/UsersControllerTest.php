@@ -1395,6 +1395,11 @@ class UsersControllerTest extends ControllerTestCase
         $Users->User->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->User->CircleMember->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->User->CircleMember->current_team_id = '1';
+
         return $Users;
     }
 
