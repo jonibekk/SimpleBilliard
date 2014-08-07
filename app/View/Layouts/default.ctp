@@ -28,7 +28,7 @@ else {
 <div id="container" class="container">
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
-            <div class="well layout-sub_padding">
+            <div class="well layout-sub_padding design-mystatus">
                 <p>test</p>
 
                 <p>test</p>
@@ -49,7 +49,7 @@ else {
             <?= $this->fetch('content'); ?>
         </div>
         <div class="col-md-4 visible-md visible-lg layout-goal">
-            <div class="well layout-goal_padding">
+            <div class="well layout-goal_padding design-goal">
                 <p>test</p>
 
                 <p>test</p>

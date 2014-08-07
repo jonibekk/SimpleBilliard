@@ -26,7 +26,7 @@
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class'     => 'form-control'
+                    'class' => 'form-control modal_input-design'
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
@@ -92,7 +92,8 @@
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                            <div class="fileinput-preview thumbnail nailthumb-container addcircle_photo-design"
+                                 data-trigger="fileinput"
                                  style="width: 150px; height: 150px;">
                             </div>
                             <div>
@@ -130,8 +131,8 @@
 
             </div>
 
-            <div class="modal-footer">
-                <div class="row">
+            <div class="modal-footer addcircle_pannel-footer">
+            <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
                         $this->Form->submit(__d('gl', "サークルを作成"),

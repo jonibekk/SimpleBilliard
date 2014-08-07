@@ -24,7 +24,7 @@
                     'class' => 'col col-sm-3 control-label'
                 ],
                 'wrapInput' => 'col col-sm-6',
-                'class'     => 'form-control'
+                'class'     => 'form-control setting_input-design'
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
@@ -119,7 +119,7 @@
                                 '11' => __d('gl', '11月'),
                                 '12' => __d('gl', '12月'),
                             ],
-                            'class'      => 'form-control gl-inline-fix',
+                            'class'      => 'form-control gl-inline-fix setting_input-design',
                             'label'      => __d('gl', '誕生日'),
                             'dateFormat' => 'YMD',
                             'empty'      => true,
@@ -190,7 +190,7 @@
 
             </div>
         </div>
-        <div class="panel-footer">
+        <div class="panel-footer setting_pannel-footer">
             <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
             <div class="clearfix"></div>
         </div>

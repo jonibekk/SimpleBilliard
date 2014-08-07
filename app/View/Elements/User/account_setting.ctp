@@ -26,7 +26,7 @@
                 'class' => 'col col-sm-3 control-label'
             ],
             'wrapInput' => 'col col-sm-6',
-            'class'     => 'form-control'
+            'class' => 'form-control setting_input-design'
         ],
         'class'         => 'form-horizontal',
         'novalidate'    => true,
@@ -110,8 +110,8 @@
             </div>
         </div>
     </div>
-    <div class="panel-footer">
-        <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+    <div class="panel-footer setting_pannel-footer">
+    <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
         <div class="clearfix"></div>
     </div>
     <?= $this->Form->end(); ?>
