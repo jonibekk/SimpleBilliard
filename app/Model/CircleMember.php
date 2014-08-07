@@ -83,4 +83,47 @@ class CircleMember extends AppModel
         return $res;
     }
 
+    public function getMemberList($circle_id, $with_admin = false)
+    {
+        $options = [
+            'conditions' => [
+                'circle_id' => $circle_id,
+                'admin_flg' => false,
+            ],
+            'fields'     => ['user_id']
+        ];
+        if ($with_admin) {
+            unset($options['conditions']['admin_flg']);
+        }
+        return $this->find('list', $options);
+    }
+
+    public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $options = [
+            'conditions' => [
+                'CircleMember.circle_id' => $circle_id,
+                'CircleMember.team_id'   => $this->current_team_id,
+                'CircleMember.admin_flg' => false,
+            ],
+            'contain'    => [
+                'User'
+            ]
+        ];
+        if ($with_admin) {
+            unset($options['conditions']['admin_flg']);
+        }
+        $users = $this->find('all', $options);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['username'];
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
+        return ['results' => $user_res];
+    }
+
 }

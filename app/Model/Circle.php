@@ -130,6 +130,40 @@ class Circle extends AppModel
         return $this->saveAll($data);
     }
 
+    function edit($data)
+    {
+        if (!isset($data['Circle']) || empty($data['Circle'])) {
+            return false;
+        }
+        //既存のメンバーを取得
+        $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
+        $circle_members = [];
+        if (!empty($data['Circle']['members'])) {
+            $members = explode(",", $data['Circle']['members']);
+            foreach ($members as $val) {
+                $val = str_replace('user_', '', $val);;
+                if ($key = array_search($val, $exists_member_list)) {
+                    unset($exists_member_list[$key]);
+                    continue;
+                }
+                $circle_members[] = [
+                    'team_id'   => $this->current_team_id,
+                    'user_id'   => $val,
+                    'circle_id' => $data['Circle']['id'],
+                ];
+            }
+        }
+        //既存メンバーで指定されないメンバーがいた場合、削除
+        if (!empty($exists_member_list)) {
+            $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
+        }
+        //メンバーデータ保存
+        if (!empty($circle_members)) {
+            $this->CircleMember->saveAll($circle_members);
+        }
+        return $this->save($data);
+    }
+
     public function getCirclesByKeyword($keyword, $limit = 10)
     {
         $my_circle_list = $this->CircleMember->getMyCircleList();
@@ -143,6 +177,30 @@ class Circle extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    public function getEditData($id)
+    {
+        $options = [
+            'conditions' => ['Circle.id' => $id],
+            'contain'    => [
+                'CircleMember' => [
+                    'conditions' => [
+                        'NOT' => ['CircleMember.user_id' => $this->me['id']]
+                    ]
+                ]
+            ]
+        ];
+        $circle = $this->find('first', $options);
+        $circle['Circle']['members'] = null;
+        if (!empty($circle['CircleMember'])) {
+            foreach ($circle['CircleMember'] as $val) {
+                $circle['Circle']['members'][] = 'user_' . $val['user_id'];
+            }
+            $circle['Circle']['members'] = implode(',', $circle['Circle']['members']);
+        }
+        unset($circle['CircleMember']);
+        return $circle;
     }
 
 }

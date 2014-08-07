@@ -75,7 +75,10 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                $('<div class="modal on fade">' + data + '</div>').modal();
+                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                //noinspection JSUnresolvedFunction
+                bindSelect2Members($modal_elm);
+                $modal_elm.modal();
             }).success(function () {
             });
         }
