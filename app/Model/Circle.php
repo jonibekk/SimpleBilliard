@@ -137,7 +137,7 @@ class Circle extends AppModel
         }
         //既存のメンバーを取得
         $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
-        if (!empty($data['Circle']['members'])) {
+        if (isset($data['Circle']['members']) && !empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
                 $val = str_replace('user_', '', $val);;
@@ -146,8 +146,8 @@ class Circle extends AppModel
                     continue;
                 }
                 $data['CircleMember'][] = [
-                    'team_id'   => $this->current_team_id,
-                    'user_id'   => $val,
+                    'team_id' => $this->current_team_id,
+                    'user_id' => $val,
                 ];
             }
         }

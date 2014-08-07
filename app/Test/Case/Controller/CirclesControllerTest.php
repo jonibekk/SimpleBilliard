@@ -92,14 +92,28 @@ class CirclesControllerTest extends ControllerTestCase
                 'name' => 'xxx',
             ],
         ];
-        $this->testAction('/circles/edit', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testEditFail()
     {
         $this->_getCirclesCommonMock();
+        $data = ['Circle' => ['id' => 1, 'name' => null]];
+        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testEditNotExists()
+    {
+        $this->_getCirclesCommonMock();
         $data = [];
-        $this->testAction('/circles/edit', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/circles/edit/99999', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testEditNotAdmin()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [];
+        $this->testAction('/circles/edit/2', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function _getCirclesCommonMock()

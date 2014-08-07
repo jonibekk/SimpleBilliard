@@ -56,16 +56,26 @@ class CirclesController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function edit()
+    public function edit($id)
     {
+        $this->Circle->id = $id;
+        try {
+            if (!$this->Circle->exists()) {
+                throw new RuntimeException(__('gl', "このサークルは存在しません。"));
+            }
+            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $id)) {
+                throw new RuntimeException(__('gl', "サークルの変更はサークル管理者のみです。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
         $this->request->allowMethod('put');
-        if (isset($this->request->data['Circle']) && !empty($this->request->data['Circle'])) {
-            if ($this->Circle->edit($this->request->data)) {
-                $this->Pnotify->outSuccess(__d('gl', "サークル設定を保存しました。"));
-            }
-            else {
-                $this->Pnotify->outError(__d('gl', "サークル設定の保存に失敗しました。"));
-            }
+        if ($this->Circle->edit($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "サークル設定を保存しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "サークル設定の保存に失敗しました。"));
         }
         $this->redirect($this->referer());
     }

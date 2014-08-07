@@ -126,4 +126,16 @@ class CircleMember extends AppModel
         return ['results' => $user_res];
     }
 
+    function isAdmin($user_id, $circle_id)
+    {
+        $options = [
+            'conditions' => [
+                'circle_id' => $circle_id,
+                'user_id'   => $user_id,
+                'admin_flg' => true,
+            ]
+        ];
+        return $this->find('first', $options);
+    }
+
 }

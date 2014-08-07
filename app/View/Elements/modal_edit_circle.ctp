@@ -18,7 +18,7 @@
         </div>
         <?=
         $this->Form->create('Circle', [
-            'url'           => ['controller' => 'circles', 'action' => 'edit'],
+            'url' => ['controller' => 'circles', 'action' => 'edit', $this->request->data['Circle']['id']],
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
