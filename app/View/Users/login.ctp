@@ -23,7 +23,7 @@
                             'class' => 'col col-sm-3 control-label'
                         ],
                         'wrapInput' => 'col col-sm-6',
-                        'class'     => 'form-control'
+                        'class' => 'form-control login_input-design'
                     ],
                     'class'         => 'form-horizontal',
                     'novalidate'    => true
