@@ -110,18 +110,5 @@
         <!--/.nav-collapse -->
     </div>
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script>
-    $(function () {
-        $(".develop--forbiddenLink").hover(
-            function () {
-                $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
-            },
-            function () {
-                $(this).find("div:last").remove();
-            }
-        );
-    });
-</script>
 
 <!-- END app/View/Elements/header_logged_in.ctp -->
