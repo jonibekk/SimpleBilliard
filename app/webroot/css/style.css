@@ -725,6 +725,26 @@ ul.gl-input-images > li {
     background: #f2f2f2;
 }
 
+.login_input-design {
+    background: #f2f2f2;
+    color: #333;
+}
+
+.register_input-design {
+    background: #f2f2f2;
+    color: #333;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.register_input-design::-webkit-input-placeholder {
+    color: #bbb;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.register_input-design:-moz-placeholder {
+    color: #bbb;
+}
+
 .select2-search-field {
     background: #f2f2f2;
     width: 100%;

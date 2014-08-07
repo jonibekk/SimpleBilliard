@@ -20,7 +20,7 @@
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class'     => 'form-control'
+                    'class' => 'form-control register_input-design'
                 ],
                 'class'         => 'form-horizontal validate',
                 'novalidate'    => true
