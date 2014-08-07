@@ -1,5 +1,5 @@
 body {
-    padding-top: 52px;
+    padding: 52px 0 0;
     background: #e5e5e5;
 }
 
@@ -608,6 +608,7 @@ ul.gl-input-images > li {
     float: left;
     margin-right: 3px;
     overflow: hidden;
+    color: #000;
 }
 
 .circle-count_box {
@@ -625,6 +626,12 @@ ul.gl-input-images > li {
     height: 16px;
     line-height: 16px;
     float: left;
+}
+
+.circle_heading {
+    margin: 0 0 4px;
+    font-weight: bold;
+    color: #a5a5a5;
 }
 
 .circle-layout {
@@ -735,4 +742,3 @@ ul.gl-input-images > li {
     border-top: solid 1px rgba(160, 0, 0, 0.2);
     padding-top: 2px;
 }
-
