@@ -28,28 +28,16 @@
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active">
-                            <?= $this->Html->image('homepage/home-slider/mv1.png') ?>
-                            <div class="carousel-caption">
-                                <?= __d('gl', "ゴール") ?>
-                            </div>
+                            <?= $this->Html->image('homepage/home-slider/slide1.png') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/mv2.png') ?>
-                            <div class="carousel-caption">
-                                <?= __d('gl', "オープン") ?>
-                            </div>
+                            <?= $this->Html->image('homepage/home-slider/slide2.png') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/mv3.png') ?>
-                            <div class="carousel-caption">
-                                <?= __d('gl', "コラボレーション") ?>
-                            </div>
+                            <?= $this->Html->image('homepage/home-slider/slide3.png') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/mv4.png') ?>
-                            <div class="carousel-caption">
-                                <?= __d('gl', "Goalous") ?>
-                            </div>
+                            <?= $this->Html->image('homepage/home-slider/slide4.png') ?>
                         </div>
                     </div>
 
