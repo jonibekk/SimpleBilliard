@@ -117,6 +117,24 @@ class CirclesControllerTest extends ControllerTestCase
         $this->testAction('/circles/edit/2', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testDeleteSuccess()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/1', ['method' => 'POST', 'return' => 'contents']);
+    }
+
+    function testDeleteNotExists()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/99999', ['method' => 'POST', 'return' => 'contents']);
+    }
+
+    function testDeleteNotAdmin()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/2', ['method' => 'POST', 'return' => 'contents']);
+    }
+
     function _getCirclesCommonMock()
     {
         /**

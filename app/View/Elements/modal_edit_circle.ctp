@@ -18,7 +18,7 @@
         </div>
         <?=
         $this->Form->create('Circle', [
-            'url' => ['controller' => 'circles', 'action' => 'edit', $this->request->data['Circle']['id']],
+            'url'           => ['controller' => 'circles', 'action' => 'edit', $this->request->data['Circle']['id']],
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
@@ -134,15 +134,16 @@
         </div>
 
         <div class="modal-footer">
-            <div class="row">
-                <div class="col-sm-9 col-sm-offset-3">
-                    <?=
-                    $this->Form->submit(__d('gl', "変更を保存"),
-                                        ['class' => 'btn btn-primary', 'div' => false,]) ?>
-                </div>
-            </div>
+            <?=
+            $this->Form->submit(__d('gl', "変更を保存"),
+                                ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
+            <?= $this->Form->end(); ?>
+            <?=
+            $this->Form->postLink(__d('gl', "サークルを削除"),
+                                  ['controller' => 'circles', 'action' => 'delete', $this->request->data['Circle']['id']],
+                                  ['class' => 'btn btn-default pull-left'], __d('gl', "本当にこのサークルを削除しますか？")) ?>
+
         </div>
-        <?= $this->Form->end(); ?>
     </div>
 </div>
 <? $this->append('script') ?>

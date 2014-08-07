@@ -64,7 +64,7 @@ class CirclesController extends AppController
                 throw new RuntimeException(__('gl', "このサークルは存在しません。"));
             }
             if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $id)) {
-                throw new RuntimeException(__('gl', "サークルの変更はサークル管理者のみです。"));
+                throw new RuntimeException(__('gl', "サークルの変更ができるのはサークル管理者のみです。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -77,6 +77,26 @@ class CirclesController extends AppController
         else {
             $this->Pnotify->outError(__d('gl', "サークル設定の保存に失敗しました。"));
         }
+        $this->redirect($this->referer());
+    }
+
+    public function delete($id)
+    {
+        $this->Circle->id = $id;
+        try {
+            if (!$this->Circle->exists()) {
+                throw new RuntimeException(__('gl', "このサークルは存在しません。"));
+            }
+            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $id)) {
+                throw new RuntimeException(__('gl', "サークルの削除ができるのはサークル管理者のみです。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->request->allowMethod('post');
+        $this->Circle->delete();
+        $this->Pnotify->outSuccess(__d('gl', "サークルを削除しました。"));
         $this->redirect($this->referer());
     }
 
