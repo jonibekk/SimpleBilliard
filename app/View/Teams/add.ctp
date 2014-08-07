@@ -22,7 +22,7 @@
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class'     => 'form-control'
+                    'class' => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
@@ -42,7 +42,8 @@
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                            <div class="fileinput-preview thumbnail nailthumb-container addteam_photo-design"
+                                 data-trigger="fileinput"
                                  style="width: 150px; height: 150px;">
                             </div>
                             <div>
@@ -90,8 +91,8 @@
                 ])?>
             </div>
 
-            <div class="panel-footer">
-                <div class="row">
+            <div class="panel-footer addteam_pannel-footer">
+            <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
                         $this->Form->submit(__d('gl', "チームを作成"),
