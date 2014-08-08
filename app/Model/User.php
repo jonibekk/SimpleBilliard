@@ -787,5 +787,4 @@ class User extends AppModel
         $res = array_merge($circle_res, $user_res);
         return ['results' => $res];
     }
-
 }

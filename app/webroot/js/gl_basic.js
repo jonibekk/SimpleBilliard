@@ -75,7 +75,37 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                $('<div class="modal on fade">' + data + '</div>').modal();
+                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                $modal_elm.modal();
+            }).success(function () {
+            });
+        }
+    });
+    $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url,function (data) {
+                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                //noinspection JSUnresolvedFunction
+                bindSelect2Members($modal_elm);
+                $modal_elm.find('#EditCircleForm').bootstrapValidator({
+                    excluded: [':disabled'],
+                    live: 'enabled',
+                    feedbackIcons: {
+                        valid: 'fa fa-check',
+                        invalid: 'fa fa-times',
+                        validating: 'fa fa-refresh'
+                    },
+                    fields: {
+                        "data[Circle][photo]": {
+                            enabled: false
+                        }
+                    }
+                });
+                $modal_elm.modal();
             }).success(function () {
             });
         }
