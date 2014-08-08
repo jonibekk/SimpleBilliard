@@ -193,7 +193,7 @@
             </div>
         </div>
         <div class="panel-body gl-feed gl-comment-block">
-            <? if ($post['Post']['comment_count'] > 3): ?>
+            <? if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                 <a href="#" class="btn btn-link click-comment-all"
                    id="Comments_<?= $post['Post']['id'] ?>"
                    parent-id="Comments_<?= $post['Post']['id'] ?>"
