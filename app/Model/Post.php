@@ -253,17 +253,19 @@ class Post extends AppModel
         $p_list = [];
 
         $org_param_exists = false;
-        foreach ($this->orgParams as $key => $val) {
-            if (array_key_exists($key, $params)) {
-                $org_param_exists = true;
-                $this->orgParams[$key] = $params[$key];
+        if ($params) {
+            foreach ($this->orgParams as $key => $val) {
+                if (array_key_exists($key, $params)) {
+                    $org_param_exists = true;
+                    $this->orgParams[$key] = $params[$key];
+                }
+                elseif (array_key_exists($key, $params['named'])) {
+                    $org_param_exists = true;
+                    $this->orgParams[$key] = $params['named'][$key];
+                }
             }
-            elseif (array_key_exists($key, $params['named'])) {
-                $org_param_exists = true;
-                $this->orgParams[$key] = $params['named'][$key];
-            }
-
         }
+
         //独自パラメータ指定なし
         if (!$org_param_exists) {
             //公開の投稿
