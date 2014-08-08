@@ -380,7 +380,6 @@ ul.example-indent {
 
 .site-info {
     padding: 9px 14px;
-    margin-bottom: 14px;
     background-color: #f7f7f9;
     border: 1px solid #e1e1e8;
     border-radius: 4px;
@@ -673,6 +672,7 @@ ul.gl-input-images > li {
 .setting_input-design {
     background: #fff;
 }
+
 .modal_input-design {
     background: #fff;
     color: #333;
@@ -702,6 +702,7 @@ ul.gl-input-images > li {
 .modal_input-design::-webkit-input-placeholder {
     color: #999;
 }
+
 /*noinspection CssInvalidPseudoSelector*/
 .modal_input-design:-moz-placeholder {
     color: #999;
@@ -711,11 +712,11 @@ ul.gl-input-images > li {
 .addteam_input-design::-webkit-input-placeholder {
     color: #bbb;
 }
+
 /*noinspection CssInvalidPseudoSelector*/
 .addteam_input-design:-moz-placeholder {
     color: #bbb;
 }
-
 
 /*noinspection CssInvalidPseudoSelector*/
 .addcircle_input-design::-webkit-input-placeholder {
