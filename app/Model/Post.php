@@ -238,6 +238,10 @@ class Post extends AppModel
         elseif (is_string($end)) {
             $end = strtotime($end);
         }
+        if (isset($params['named']['page']) || !empty($params['named']['page'])) {
+            $page = $params['named']['page'];
+            unset($params['named']['page']);
+        }
         $p_list = [];
         //パラメータ指定なし
         if (!isset($params['named']) || empty($params['named'])) {

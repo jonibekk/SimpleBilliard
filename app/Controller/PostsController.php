@@ -168,7 +168,6 @@ class PostsController extends AppController
         else {
             $page_num = 1;
         }
-
         $posts = $this->Post->get($page_num, 20, null, null, $this->request->params);
         $this->set(compact('posts'));
 
