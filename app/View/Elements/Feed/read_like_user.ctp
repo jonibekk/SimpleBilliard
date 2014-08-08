@@ -16,11 +16,12 @@
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
                                ['class' => 'gl-comment-img'])
     ?>
-    <div class="gl-comment-body"><span>
-                    <?= h($user['display_username']) ?></span>
+    <div class="gl-comment-body">
+        <div class="font-size_12 font-weight_bold modalFeedTextPadding">
+            <?= h($user['display_username']) ?></div>
 
-        <div>
-            <?= $this->TimeEx->elapsedTime(h($created)) ?>
+        <div class="font-size_12 color9197a3 modalFeedTextPaddingSmall">
+        <?= $this->TimeEx->elapsedTime(h($created)) ?>
         </div>
     </div>
 </div>
