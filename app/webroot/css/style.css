@@ -338,6 +338,13 @@ ul.example-indent {
     margin-left: 36px;
 }
 
+.mpTB0 {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 .gl-form-inline-fix .form-group {
     display: inline-block;
     margin-bottom: 0;
@@ -448,24 +455,20 @@ ul.gl-input-images > li {
 }
 
 .modalFeedTextPadding {
-    padding-top: 3px;
+    padding-top: 2px;
     padding-bottom: 6px;
     line-height: 12px;
 }
 
 .modalFeedTextPaddingSmall {
     padding-top: 0;
-    padding-bottom: 1px;
+    padding-bottom: 3px;
     line-height: 12px;
 }
 
 .modalFeed-body {
-    padding-top: 3px;
+    padding-top: 6px;
     padding-bottom: 3px;
-}
-
-.modalFeed-body:first-child {
-    margin-top: 3px;
 }
 
 .modalFeed-footer {
@@ -487,6 +490,7 @@ ul.gl-input-images > li {
 .layout-header_right {
     padding: 0;
 }
+
 .navbar {
     margin: 0;
 }
