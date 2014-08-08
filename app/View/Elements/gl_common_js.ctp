@@ -126,6 +126,7 @@ function format(item) {
     return "<img style='width:14px;height: 14px' src='" + item.image + "'/> " + item.text;
 }
 function bindSelect2Members($this) {
+    //noinspection JSUnusedLocalSymbols
     $this.find(".ajax_add_select2_members").select2({
         'val': null,
         multiple: true,
@@ -212,7 +213,7 @@ function evFeedMoreView() {
     $obj.after($loader_html);
     $.ajax({
         type: 'GET',
-        url: get_url + '/' + next_page_num,
+        url: get_url + '/page:' + next_page_num,
         async: true,
         dataType: 'json',
         success: function (data) {
