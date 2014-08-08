@@ -214,6 +214,32 @@ class Post extends AppModel
         return $res;
     }
 
+    public function isPublic($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'id'         => $post_id,
+                'team_id'    => $this->current_team_id,
+                'public_flg' => true,
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    public function isMyPost($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $post_id,
+                'team_id' => $this->current_team_id,
+                'user_id' => $this->me['id'],
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
@@ -285,19 +311,44 @@ class Post extends AppModel
                                       $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
                                                                                   1000, $this->orgParams['circle_id']));
             }
+            //単独投稿指定
+            elseif ($this->orgParams['post_id']) {
+                //アクセス可能かチェック
+                //公開か？
+                $p_list = $this->isPublic($this->orgParams['post_id']);
+                //自分の投稿か？
+                if (empty($p_list)) {
+                    $p_list = $this->isMyPost($this->orgParams['post_id']);
+                }
+                //自分が共有範囲指定された投稿か？
+                if (empty($p_list)) {
+                    $p_list = $this->PostShareUser->isShareWithMe($this->orgParams['post_id']);
+                }
+                //自分のサークルが共有範囲指定された投稿か？
+                if (empty($p_list)) {
+                    $p_list = $this->PostShareCircle->isMyCirclePost($this->orgParams['post_id']);
+                }
+            }
         }
 
-        $post_options = [
-            'conditions' => [
-                'Post.id' => $p_list,
-            ],
-            'limit'      => $limit,
-            'page'       => $page,
-            'order'      => [
-                'Post.modified' => 'desc'
-            ],
-        ];
-        $post_list = $this->find('list', $post_options);
+        if (!empty($this->orgParams['post_id'])) {
+            //単独投稿指定の場合はそのまま
+            $post_list = $p_list;
+        }
+        else {
+            //単独投稿以外は再度、件数、オーダーの条件を入れ取得
+            $post_options = [
+                'conditions' => [
+                    'Post.id' => $p_list,
+                ],
+                'limit'      => $limit,
+                'page'       => $page,
+                'order'      => [
+                    'Post.modified' => 'desc'
+                ],
+            ];
+            $post_list = $this->find('list', $post_options);
+        }
         //投稿を既読に
         $this->PostRead->red($post_list);
         //コメントを既読に
@@ -335,6 +386,11 @@ class Post extends AppModel
                 ],
             ],
         ];
+        if (!empty($this->orgParams['post_id'])) {
+            //単独の場合はコメントの件数上限外す
+            unset($options['contain']['Comment']['limit']);
+        }
+
         $res = $this->find('all', $options);
         //コメントを逆順に
         foreach ($res as $key => $val) {
