@@ -116,7 +116,7 @@ $(document).ready(function () {
                 return { results: data.results };
             }
         },
-        <?if($current_circle):?>
+        <?if(isset($current_circle)&&!empty($current_circle)):?>
         initSelection: function (element, callback) {
             var data = [
                 {
