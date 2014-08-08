@@ -44,8 +44,8 @@
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o"></i></a>
 
                 <div class="dropdown gl-navbar-nav-fix">
-                    <a href="#" class="dropdown-toggle me-menu-image" data-toggle="dropdown" href="#" id="download">
-                        <?=
+                    <a href="#" class="dropdown-toggle me-menu-image no-line" data-toggle="dropdown" id="download">
+                    <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
                                                    ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
                         <i class="fa fa-caret-down"></i></a>

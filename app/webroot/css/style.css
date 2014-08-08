@@ -665,7 +665,7 @@ ul.gl-input-images > li {
 }
 
 .addcircle_pannel-footer {
-    background: #fff;
+    background: #f0f0f0;
     border-radius: 0 0 6px 6px;
 }
 
@@ -767,3 +767,27 @@ ul.gl-input-images > li {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
 
+.open {
+    margin: 0;
+    padding: 0;
+}
+
+.no-line {
+    text-decoration: none !important;
+}
+
+.no-line:link {
+    text-decoration: none !important;
+}
+
+.no-line:active {
+    text-decoration: none !important;
+}
+
+.no-line:hover {
+    text-decoration: none !important;
+}
+
+.no-line:visited {
+    text-decoration: none !important;
+}
