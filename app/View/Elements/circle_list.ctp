@@ -16,14 +16,17 @@
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix">
-                <div class="circle-icon_box">
-                    <?=
-                    $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                                               ['width' => '16px', 'height' => '16px']) ?>
-                </div>
-                <div class="circle-name_box">
-                    <p title="<?= $circle['Circle']['name'] ?>"><?= $circle['Circle']['name'] ?></p>
-                </div>
+                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display', 'home', 'circle_id' => $circle['Circle']['id']]) ?>">
+                    <div class="circle-icon_box">
+                        <?=
+                        $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
+                                                   ['width' => '16px', 'height' => '16px']) ?>
+                    </div>
+                    <div class="circle-name_box">
+                        <p title="<?= $circle['Circle']['name'] ?>"><?= $circle['Circle']['name'] ?></p>
+                    </div>
+                </a>
+
                 <div class="circle-count_box">
                     <p class="count-value"><?= $circle['CircleMember']['unread_count'] ?></p>
                 </div>
