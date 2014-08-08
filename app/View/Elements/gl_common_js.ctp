@@ -410,16 +410,6 @@ function showMore(obj) {
         });
     }
 }
-$(function () {
-    $(".develop--forbiddenLink").hover(
-        function () {
-            $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
-        },
-        function () {
-            $(this).find("div:last").remove();
-        }
-    );
-});
 
 <?if(isset($mode_view)):?>
 <?if($mode_view == MODE_VIEW_TUTORIAL):?>

@@ -102,7 +102,7 @@
                 <li>
                     <form class="gl-nav-form-group" role="search">
                         <i class="fa fa-search"></i>
-                        <input type="text" class="form-control gl-nav-search" placeholder="Search">
+                        <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
                     </form>
                 </li>
             </ul>
