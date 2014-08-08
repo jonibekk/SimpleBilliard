@@ -22,7 +22,6 @@
                      'content' => "width=device-width, initial-scale=1, maximum-scale=1"
                     ]);
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
-    //echo $this->Html->css('bootstrap.min.css', array('media' => 'screen'));
     echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
     echo $this->Html->css('jasny-bootstrap.min');
