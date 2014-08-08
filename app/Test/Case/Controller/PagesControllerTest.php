@@ -340,7 +340,7 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->User->CircleMember->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
-        $this->testAction('/pages/display/home/circle_id:1');
+        $this->testAction('/circle_feed/1');
     }
 
     public function testHomeAuthNewProfile()

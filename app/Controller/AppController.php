@@ -105,12 +105,12 @@ class AppController extends Controller
     {
         $my_circles = $this->User->CircleMember->getMyCircle();
         $current_circle = null;
-        if (isset($this->request->params['named']['circle_id']) &&
-            !empty($this->request->params['named']['circle_id']) &&
+        if (isset($this->request->params['circle_id']) &&
+            !empty($this->request->params['circle_id']) &&
             !empty($my_circles)
         ) {
             foreach ($my_circles as $key => $circle) {
-                if ($circle['Circle']['id'] == $this->request->params['named']['circle_id']) {
+                if ($circle['Circle']['id'] == $this->request->params['circle_id']) {
                     $current_circle = $circle;
                     //未読件数を0セット
                     if ($circle['CircleMember']['unread_count'] != 0) {
@@ -123,6 +123,18 @@ class AppController extends Controller
         }
         $this->set('my_circles', $my_circles);
         $this->set('current_circle', $current_circle);
+    }
+
+    public function _setFeedMoreReadUrl()
+    {
+        $base_url = ["controller" => "posts", 'action' => 'ajax_get_feed'];
+        $url = array_merge($base_url, $this->request->params['named']);
+        foreach ($this->Post->orgParams as $key => $val) {
+            if (array_key_exists($key, $this->request->params)) {
+                $url = array_merge($url, [$key => $this->request->params[$key]]);
+            }
+        }
+        $this->set('feed_more_read_url', $url);
     }
 
     /**

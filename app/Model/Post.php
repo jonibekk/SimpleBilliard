@@ -24,6 +24,11 @@ class Post extends AppModel
     const TYPE_ACTION = 2;
     const TYPE_BADGE = 3;
 
+    public $orgParams = [
+        'circle_id' => null,
+        'post_id'   => null,
+    ];
+
     public $actsAs = [
         'Upload' => [
             'photo1' => [
@@ -244,9 +249,23 @@ class Post extends AppModel
             $page = $params['named']['page'];
             unset($params['named']['page']);
         }
+
         $p_list = [];
-        //パラメータ指定なし
-        if (!isset($params['named']) || empty($params['named'])) {
+
+        $org_param_exists = false;
+        foreach ($this->orgParams as $key => $val) {
+            if (array_key_exists($key, $params)) {
+                $org_param_exists = true;
+                $this->orgParams[$key] = $params[$key];
+            }
+            elseif (array_key_exists($key, $params['named'])) {
+                $org_param_exists = true;
+                $this->orgParams[$key] = $params['named'][$key];
+            }
+
+        }
+        //独自パラメータ指定なし
+        if (!$org_param_exists) {
             //公開の投稿
             $p_list = array_merge($p_list, $this->getPublicList($start, $end));
             //自分の投稿
@@ -259,10 +278,10 @@ class Post extends AppModel
         //パラメータ指定あり
         else {
             //サークル指定
-            if (isset($params['named']['circle_id']) && !empty($params['named']['circle_id'])) {
+            if ($this->orgParams['circle_id']) {
                 $p_list = array_merge($p_list,
                                       $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
-                                                                                  1000, $params['named']['circle_id']));
+                                                                                  1000, $this->orgParams['circle_id']));
             }
         }
 

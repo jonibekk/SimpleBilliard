@@ -59,6 +59,7 @@ class PagesController extends AppController
                     $this->set('mode_view', MODE_VIEW_TUTORIAL);
                 }
                 $this->_setMyCircle();
+                $this->_setFeedMoreReadUrl();
                 $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
                 return $this->render('logged_in_home');
             }

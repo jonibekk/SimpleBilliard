@@ -16,6 +16,7 @@
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
+Router::connect('/circle_feed/:circle_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 /**
  * トップページの言語切り換えの為のルーティング設定。
  * PagesControllerにのみ影響する。
