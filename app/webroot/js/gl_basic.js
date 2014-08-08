@@ -239,3 +239,22 @@ function attrUndefinedCheck(obj, attr_name) {
         throw new Error(msg);
     }
 }
+
+$(function () {
+    $(".develop--forbiddenLink").hover(
+        function () {
+            $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
+        },
+        function () {
+            $(this).find("div:last").remove();
+        }
+    );
+});
+
+$(function () {
+    $(".develop--search").click(
+        function () {
+            $(this).attr('placeholder', '準備中です。');
+        }
+    );
+});

@@ -338,6 +338,13 @@ ul.example-indent {
     margin-left: 36px;
 }
 
+.mpTB0 {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 .gl-form-inline-fix .form-group {
     display: inline-block;
     margin-bottom: 0;
@@ -422,6 +429,7 @@ ul.gl-input-images > li {
     margin-bottom: 10px;
 }
 
+/*fontDesign*/
 .font-size_11 {
     font-size: 11px;
 }
@@ -436,6 +444,35 @@ ul.gl-input-images > li {
 
 .font-size_18 {
     font-size: 18px;
+}
+
+.font-weight_bold {
+    font-weight: bold;
+}
+
+.color9197a3 {
+    color: #9197a3;
+}
+
+.modalFeedTextPadding {
+    padding-top: 2px;
+    padding-bottom: 6px;
+    line-height: 12px;
+}
+
+.modalFeedTextPaddingSmall {
+    padding-top: 0;
+    padding-bottom: 3px;
+    line-height: 12px;
+}
+
+.modalFeed-body {
+    padding-top: 6px;
+    padding-bottom: 3px;
+}
+
+.modalFeed-footer {
+    margin: 0;
 }
 
 .layout-main {
@@ -791,4 +828,9 @@ ul.gl-input-images > li {
 
 .no-line:visited {
     text-decoration: none !important;
+}
+
+.borderBottom > div:not(:last-child) {
+    border-bottom: 1px solid #e5e5e5;
+    margin: 0 0 3px;
 }

@@ -11,15 +11,15 @@
 ?>
 <!-- START app/View/Elements/Feed/modal_comment_liked_users.ctp -->
 <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <div class="modal-content modalFeed-content">
+        <div class="modal-header modalFeed-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h4 class="modal-title"><?= __d('gl', "このコメントに%s人が「いいね！」と言っています。", count($liked_users)) ?></h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body modalFeed-body">
             <? if (!empty($liked_users)): ?>
-                <div class="row">
-                    <? foreach ($liked_users as $user): ?>
+                <div class="row borderBottom">
+                <? foreach ($liked_users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
                                        ['user' => $user['User'], 'created' => $user['CommentLike']['created']]) ?>
@@ -29,8 +29,8 @@
                 <?= __d('gl', "まだ、いいね！と言っている人はいません。") ?>
             <?endif ?>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+        <div class="modal-footer modalFeed-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
         </div>
     </div>
 </div>
