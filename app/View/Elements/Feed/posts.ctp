@@ -205,11 +205,9 @@
             <? endif; ?>
 
             <? foreach ($post['Comment'] as $comment): ?>
-                <div class="font-size_12">
-                    <?=
-                    $this->element('Feed/comment',
-                                   ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
-                </div>
+                <?=
+                $this->element('Feed/comment',
+                               ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
             <div class="col col-xxs-12">
                 <?=
