@@ -28,7 +28,13 @@
                 </a>
 
                 <div class="circle-count_box">
-                    <p class="count-value"><?= $circle['CircleMember']['unread_count'] ?></p>
+                    <p class="count-value">
+                        <? if ($circle['CircleMember']['unread_count'] > 9): ?>
+                            9+
+                        <? elseif ($circle['CircleMember']['unread_count'] > 0): ?>
+                            <?= $circle['CircleMember']['unread_count'] ?>
+                        <?endif; ?>
+                    </p>
                 </div>
                 <div class="circle-function_box">
                     <? if ($circle['CircleMember']['admin_flg']): ?>
