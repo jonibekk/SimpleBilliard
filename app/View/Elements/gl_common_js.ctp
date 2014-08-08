@@ -125,7 +125,44 @@ $(document).ready(function () {
 function format(item) {
     return "<img style='width:14px;height: 14px' src='" + item.image + "'/> " + item.text;
 }
-
+function bindSelect2Members($this) {
+    $this.find(".ajax_add_select2_members").select2({
+        'val': null,
+        multiple: true,
+        minimumInputLength: 2,
+        placeholder: '<?=__d('gl',"スペルを入力してください。")?>',
+        ajax: {
+            url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return { results: data.results };
+            }
+        },
+        initSelection: function (element, callback) {
+            var circle_id = $(element).attr('circle_id');
+            if (circle_id !== "") {
+                $.ajax("<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/" + circle_id, {
+                    dataType: 'json'
+                }).done(function (data) {
+                    callback(data.results);
+                });
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        }
+    });
+}
 /**
  * Select2 translation.
  */

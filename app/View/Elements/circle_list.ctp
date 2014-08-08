@@ -29,7 +29,8 @@
                 </div>
                 <div class="circle-function_box">
                     <? if ($circle['CircleMember']['admin_flg']): ?>
-                        <i class="fa fa-cog circle-function develop--forbiddenLink"></i>
+                        <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', $circle['Circle']['id']]) ?>"
+                           class="modal-ajax-get-circle-edit"><i class="fa fa-cog circle-function"></i></a>
                     <? endif; ?>
                 </div>
             </div>

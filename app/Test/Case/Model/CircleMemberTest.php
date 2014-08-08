@@ -3,7 +3,8 @@ App::uses('CircleMember', 'Model');
 
 /**
  * CircleMember Test Case
-
+ *
+ * @property CircleMember $CircleMember
  */
 class CircleMemberTest extends CakeTestCase
 {
@@ -63,9 +64,27 @@ class CircleMemberTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    function _setDefault($uid, $team_id)
     {
+        $this->CircleMember->me['id'] = $uid;
+        $this->CircleMember->current_team_id = $team_id;
+        $this->CircleMember->Circle->me['id'] = $uid;
+        $this->CircleMember->Circle->current_team_id = $team_id;
     }
 
+    function testGetMemberList()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->_setDefault($uid, $team_id);
+        $this->CircleMember->getMemberList(1, true);
+    }
+
+    public function testGetCircleInitMemberSelect2()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->_setDefault($uid, $team_id);
+        $this->CircleMember->getCircleInitMemberSelect2(1, true);
+    }
 }

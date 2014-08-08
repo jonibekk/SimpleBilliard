@@ -37,7 +37,9 @@ class CirclesControllerTest extends ControllerTestCase
         'app.invite',
         'app.thread',
         'app.message',
-        'app.circle_member'
+        'app.circle_member',
+        'app.post_share_user',
+        'app.post_share_circle',
     );
 
     function testAddSuccess()
@@ -61,6 +63,78 @@ class CirclesControllerTest extends ControllerTestCase
         $this->testAction('/circles/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
+    }
+
+    function testAjaxGetEditModal()
+    {
+        $this->_getCirclesCommonMock();
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/circles/ajax_get_edit_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSelect2InitCircleMembers()
+    {
+        $this->_getCirclesCommonMock();
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/circles/ajax_select2_init_circle_members/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testEditSuccess()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                'id'      => 1,
+                'name'    => 'xxx',
+                'members' => 'user_12,user_13'
+            ],
+        ];
+        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testEditFail()
+    {
+        $this->_getCirclesCommonMock();
+        $data = ['Circle' => ['id' => 1, 'name' => null]];
+        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testEditNotExists()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [];
+        $this->testAction('/circles/edit/99999', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testEditNotAdmin()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [];
+        $this->testAction('/circles/edit/2', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testDeleteSuccess()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/1', ['method' => 'POST', 'return' => 'contents']);
+    }
+
+    function testDeleteNotExists()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/99999', ['method' => 'POST', 'return' => 'contents']);
+    }
+
+    function testDeleteNotAdmin()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/2', ['method' => 'POST', 'return' => 'contents']);
     }
 
     function _getCirclesCommonMock()
