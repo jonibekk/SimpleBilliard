@@ -6,6 +6,7 @@
  * Time: 10:45 AM
  *
  * @var CodeCompletionView $this
+ * @var                    $current_circle
  */
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
@@ -14,11 +15,13 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li class="active"><a href="#PostForm" role="tab" data-toggle="tab"><?= __d('gl', "投稿") ?></a></li>
-            <li><a href="#ActionForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?= __d('gl',
-                                                                                                          "アクション") ?></a>
+            <li><a href="#ActionForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?=
+                    __d('gl',
+                        "アクション") ?></a>
             </li>
-            <li><a href="#BadgeForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?= __d('gl',
-                                                                                                         "バッジ") ?></a>
+            <li><a href="#BadgeForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?=
+                    __d('gl',
+                        "バッジ") ?></a>
             </li>
         </ul>
     </div>
@@ -68,17 +71,18 @@
                     <?php echo $this->Form->input('public_flg', [
                         'label'     => __d('gl', "公開"),
                         'class'     => "check-target-toggle",
-                        'default'   => true,
+                        'default'   => $current_circle ? false : true,
                         'required'  => false,
                         'target-id' => 'PostShare'
                     ]); ?>
-                    <div class="row form-horizontal form-group" style="display: none" id="PostShare">
+                    <div class="row form-horizontal form-group" style="<?= $current_circle ? null : 'display: none' ?>"
+                         id="PostShare">
                         <label class="col col-sm-2 control-label"><?= __d('gl', '共有範囲') ?></label>
 
                         <div class="col col-sm-7">
                             <?=
                             $this->Form->hidden('share',
-                                                ['id' => 'select2PostCircleMember', 'value' => null, 'style' => "width: 100%",]) ?>
+                                                ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : null, 'style' => "width: 100%",]) ?>
                             <? $this->Form->unlockField('Post.share') ?>
                         </div>
                     </div>
