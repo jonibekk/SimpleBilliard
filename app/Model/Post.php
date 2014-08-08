@@ -81,23 +81,23 @@ class Post extends AppModel
         'public_flg'      => ['boolean' => ['rule' => ['boolean'],],],
         'important_flg'   => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'         => ['boolean' => ['rule' => ['boolean'],],],
-        'photo1' => [
+        'photo1'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo2' => [
+        'photo2'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo3' => [
+        'photo3'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo4' => [
+        'photo4'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo5' => [
+        'photo5'          => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
@@ -225,7 +225,6 @@ class Post extends AppModel
 
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null)
     {
-        $this->log($params);
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
             $start = time() - $one_month;

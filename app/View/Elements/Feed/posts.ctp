@@ -10,8 +10,8 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Elements/Feed/posts.ctp -->
 <? if (!empty($posts)): ?>
+    <!-- START app/View/Elements/Feed/posts.ctp -->
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
         <div class="panel-body gl-feed">
@@ -50,7 +50,7 @@
                 <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
             </div>
             <div class="col col-xxs-12 showmore font-size_14">
-            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
             </div>
 
             <?
@@ -167,7 +167,7 @@
             <? endif; ?>
 
             <div class="col col-xxs-12 font-size_12">
-            <a href="#" class="click-like"
+                <a href="#" class="click-like"
                    like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                    model_id="<?= $post['Post']['id'] ?>"
                    like_type="post">
@@ -206,9 +206,9 @@
 
             <? foreach ($post['Comment'] as $comment): ?>
                 <div class="font-size_12">
-                <?=
-                $this->element('Feed/comment',
-                               ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                    <?=
+                    $this->element('Feed/comment',
+                                   ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 </div>
             <? endforeach ?>
             <div class="col col-xxs-12">
@@ -274,5 +274,5 @@
         </div>
         </div>
     <? endforeach ?>
+    <!-- END app/View/Elements/Feed/posts.ctp -->
 <? endif ?>
-<!-- END app/View/Elements/Feed/posts.ctp -->

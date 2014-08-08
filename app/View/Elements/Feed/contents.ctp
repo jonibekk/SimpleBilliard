@@ -19,7 +19,9 @@
                 <a href="#" class="btn btn-link click-feed-read-more"
                    parent-id="FeedMoreRead"
                    next-page-num="2"
-                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_feed']) ?>"
+                   get-url="<?=
+                   $this->Html->url(array_merge(["controller" => "posts", 'action' => 'ajax_get_feed'],
+                                                $this->request->params['named'])) ?>"
                     >
                     <?= __d('gl', "もっと読む") ?></a>
             </div>
