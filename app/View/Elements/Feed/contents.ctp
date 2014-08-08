@@ -12,6 +12,15 @@
 <!-- START app/View/Elements/Feed/contents.ctp -->
 <?= $this->element("Feed/common_form") ?>
 <?= $this->element("Feed/posts") ?>
+<? if (empty($posts)): ?>
+    <div class="panel panel-default">
+        <div class="panel-body gl-feed">
+            <div class="col col-xxs-12">
+                <?= __d('gl', "投稿がありません。") ?>
+            </div>
+        </div>
+    </div>
+<? endif; ?>
 <? if (count($posts) == 20): ?>
     <div class="panel panel-default" id="FeedMoreRead">
         <div class="panel-body">
