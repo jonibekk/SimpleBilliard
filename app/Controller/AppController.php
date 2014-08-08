@@ -109,9 +109,14 @@ class AppController extends Controller
             !empty($this->request->params['named']['circle_id']) &&
             !empty($my_circles)
         ) {
-            foreach ($my_circles as $circle) {
+            foreach ($my_circles as $key => $circle) {
                 if ($circle['Circle']['id'] == $this->request->params['named']['circle_id']) {
                     $current_circle = $circle;
+                    //未読件数を0セット
+                    if ($circle['CircleMember']['unread_count'] != 0) {
+                        $this->User->CircleMember->updateUnreadCount($circle['Circle']['id']);
+                        $my_circles[$key]['CircleMember']['unread_count'] = 0;
+                    }
                     break;
                 }
             }
