@@ -158,15 +158,17 @@ class PostsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function ajax_get_feed($page_num = null)
+    public function ajax_get_feed()
     {
+        $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
-
-        if (!$page_num) {
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        else {
             $page_num = 1;
         }
-
-        $posts = $this->Post->get($page_num);
+        $posts = $this->Post->get($page_num, 20, null, null, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する

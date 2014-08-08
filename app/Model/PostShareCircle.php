@@ -55,9 +55,11 @@ class PostShareCircle extends AppModel
 
     }
 
-    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null)
     {
-        $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
+        if (!$my_circle_list) {
+            $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
+        }
         $backupPrimaryKey = $this->primaryKey;
         $this->primaryKey = 'post_id';
         $options = [

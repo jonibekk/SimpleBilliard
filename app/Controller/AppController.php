@@ -103,7 +103,21 @@ class AppController extends Controller
 
     public function _setMyCircle()
     {
-        $this->set('my_circles', $this->User->CircleMember->getMyCircle());
+        $my_circles = $this->User->CircleMember->getMyCircle();
+        $current_circle = null;
+        if (isset($this->request->params['named']['circle_id']) &&
+            !empty($this->request->params['named']['circle_id']) &&
+            !empty($my_circles)
+        ) {
+            foreach ($my_circles as $circle) {
+                if ($circle['Circle']['id'] == $this->request->params['named']['circle_id']) {
+                    $current_circle = $circle;
+                    break;
+                }
+            }
+        }
+        $this->set('my_circles', $my_circles);
+        $this->set('current_circle', $current_circle);
     }
 
     /**
