@@ -138,7 +138,7 @@ class CircleMember extends AppModel
         return $this->find('first', $options);
     }
 
-    function updateUnreadCount($circle_list, $without_me = true)
+    function incrementUnreadCount($circle_list, $without_me = true)
     {
         if (empty($circle_list)) {
             return false;
@@ -150,7 +150,20 @@ class CircleMember extends AppModel
         if ($without_me) {
             $conditions['NOT']['CircleMember.user_id'] = $this->me['id'];
         }
-        return $this->updateAll(['CircleMember.unread_count' => 'CircleMember.unread_count + 1'], $conditions);
+
+        $res = $this->updateAll(['CircleMember.unread_count' => 'CircleMember.unread_count + 1'], $conditions);
+        return $res;
+    }
+
+    function updateUnreadCount($circle_id, $set_count = 0)
+    {
+        $conditions = [
+            'CircleMember.circle_id' => $circle_id,
+            'CircleMember.user_id'   => $this->me['id'],
+            'CircleMember.team_id'   => $this->current_team_id,
+        ];
+        $res = $this->updateAll(['CircleMember.unread_count' => $set_count], $conditions);
+        return $res;
     }
 
 }
