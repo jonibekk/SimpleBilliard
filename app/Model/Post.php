@@ -223,8 +223,9 @@ class Post extends AppModel
         return $res;
     }
 
-    public function get($page = 1, $limit = 20, $start = null, $end = null)
+    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null)
     {
+        $this->log($params);
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
             $start = time() - $one_month;
@@ -239,14 +240,26 @@ class Post extends AppModel
             $end = strtotime($end);
         }
         $p_list = [];
-        //公開の投稿
-        $p_list = array_merge($p_list, $this->getPublicList($start, $end));
-        //自分の投稿
-        $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
-        //自分が共有範囲指定された投稿
-        $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
-        //自分のサークルが共有範囲指定された投稿
-        $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
+        //パラメータ指定なし
+        if (!isset($params['named']) || empty($params['named'])) {
+            //公開の投稿
+            $p_list = array_merge($p_list, $this->getPublicList($start, $end));
+            //自分の投稿
+            $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
+            //自分が共有範囲指定された投稿
+            $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
+            //自分のサークルが共有範囲指定された投稿
+            $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
+        }
+        //パラメータ指定あり
+        else {
+            //サークル指定
+            if (isset($params['named']['circle_id']) && !empty($params['named']['circle_id'])) {
+                $p_list = array_merge($p_list,
+                                      $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
+                                                                                  1000, $params['named']['circle_id']));
+            }
+        }
 
         $post_options = [
             'conditions' => [
