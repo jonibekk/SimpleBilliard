@@ -6,6 +6,7 @@
  * Time: 6:47 PM
  *
  * @var CodeCompletionView $this
+ * @var                    $current_circle
  */
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
@@ -115,6 +116,18 @@ $(document).ready(function () {
                 return { results: data.results };
             }
         },
+        <?if(isset($current_circle)&&!empty($current_circle)):?>
+        initSelection: function (element, callback) {
+            var data = [
+                {
+                    id: "circle_<?=$current_circle['Circle']['id']?>",
+                    text: "<?=$current_circle['Circle']['name']?>",
+                    image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
+                }
+            ];
+            callback(data);
+        },
+        <?endif;?>
         formatSelection: format,
         formatResult: format,
         escapeMarkup: function (m) {
