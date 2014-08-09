@@ -16,33 +16,30 @@
         <div class="panel panel-default">
         <div class="panel-body gl-feed">
             <div class="col col-xxs-12">
-                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                    <div class="pull-right">
-                        <div class="dropdown">
-                            <a href="#" class="" data-toggle="dropdown" id="download">
-                                <i class="fa fa-chevron-down"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                <div class="pull-right">
+                    <div class="dropdown">
+                        <a href="#" class="" data-toggle="dropdown" id="download">
+                            <i class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                            <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                 <li><a href="#" class="target-toggle-click"
                                        target-id="PostEditForm_<?= $post['Post']['id'] ?>"
                                        click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
                                         ><?= __d('gl', "投稿を編集") ?></a>
                                 </li>
+                            <? endif ?>
+                            <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                 <li><?=
                                     $this->Form->postLink(__d('gl', "投稿を削除"),
                                                           ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
                                                           null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
-                            </ul>
-                        </div>
+                            <? endif ?>
+                            <li><a href="#" class=""><?= __d('gl', "リンクをコピー") ?></a>
+                            </li>
+                        </ul>
                     </div>
-                <? elseif ($my_member_status['TeamMember']['admin_flg']): ?>
-                    <div class="pull-right">
-                        <?=
-                        $this->Form->postLink('<i class="fa fa-times"></i>',
-                                              ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
-                                              ['escape' => false], __d('gl', "本当にこの投稿を削除しますか？")) ?>
-                    </div>
-                <? endif; ?>
+                </div>
                 <?=
                 $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                            ['class' => 'gl-feed-img']) ?>
