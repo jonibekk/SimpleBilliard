@@ -87,4 +87,12 @@ class CircleMemberTest extends CakeTestCase
         $this->_setDefault($uid, $team_id);
         $this->CircleMember->getCircleInitMemberSelect2(1, true);
     }
+
+    public function testIncrementUnreadCount()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->_setDefault($uid, $team_id);
+        $this->CircleMember->incrementUnreadCount([]);
+    }
 }
