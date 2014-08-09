@@ -35,7 +35,11 @@
                                                           ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
                                                           null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
                             <? endif ?>
-                            <li><a href="#" class=""><?= __d('gl', "リンクをコピー") ?></a>
+                            <li><a href="#" class="copy_me"
+                                   data-clipboard-text="<?=
+                                   $this->Html->url(['controller' => 'pages', 'action' => 'display', 'home', 'post_id' => $post['Post']['id']],
+                                                    true) ?>">
+                                    <?= __d('gl', "リンクをコピー") ?></a>
                             </li>
                         </ul>
                     </div>
