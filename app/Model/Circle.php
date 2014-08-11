@@ -204,6 +204,7 @@ class Circle extends AppModel
                 'Circle.team_id'    => $this->current_team_id,
                 'Circle.public_flg' => true,
             ],
+            'order' => ['Circle.modified desc'],
             'contain'    => [
                 'CircleMember' => [
                     'conditions' => [
