@@ -27,6 +27,12 @@
                     </div>
                 </a>
 
+                <div class="circle-function_box">
+                    <? if ($circle['CircleMember']['admin_flg']): ?>
+                        <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', $circle['Circle']['id']]) ?>"
+                           class="modal-ajax-get-circle-edit"><i class="fa fa-cog circle-function"></i></a>
+                    <? endif; ?>
+                </div>
                 <div class="circle-count_box">
                     <p class="count-value">
                         <? if ($circle['CircleMember']['unread_count'] > 9): ?>
@@ -35,12 +41,6 @@
                             <?= $circle['CircleMember']['unread_count'] ?>
                         <?endif; ?>
                     </p>
-                </div>
-                <div class="circle-function_box">
-                    <? if ($circle['CircleMember']['admin_flg']): ?>
-                        <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', $circle['Circle']['id']]) ?>"
-                           class="modal-ajax-get-circle-edit"><i class="fa fa-cog circle-function"></i></a>
-                    <? endif; ?>
                 </div>
             </div>
         <? endforeach ?>
