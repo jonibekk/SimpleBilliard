@@ -45,5 +45,11 @@
             </div>
         <? endforeach ?>
     <? endif; ?>
+    <div class="circle-layout clearfix">
+        <?=
+        $this->Html->link(__d('gl', "公開サークル"),
+                          ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
+                          ['class' => 'modal-ajax-get']) ?>
+    </div>
 </div>
 <!-- END app/View/Elements/circle_list.ctp -->
