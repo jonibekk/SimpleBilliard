@@ -185,4 +185,43 @@ class CircleMember extends AppModel
         return $res;
     }
 
+    function joinCircle($postData)
+    {
+        if (!isset($postData['Circle']) || empty($postData['Circle'])) {
+            return false;
+        }
+        $un_join_circles = [];
+        $join_circles = [];
+        foreach ($postData['Circle'] as $val) {
+            if ($val['join']) {
+                $join_circles[] = $val['circle_id'];
+            }
+            else {
+                $un_join_circles[] = $val['circle_id'];
+            }
+        }
+        //offのサークルを削除
+        if (!empty($un_join_circles)) {
+            $conditions = [
+                'CircleMember.circle_id' => $un_join_circles,
+                'CircleMember.user_id'   => $this->me['id'],
+                'CircleMember.team_id'   => $this->current_team_id,
+            ];
+            $this->deleteAll($conditions);
+        }
+        //onサークルを追加
+        if (!empty($join_circles)) {
+            $data = [];
+            foreach ($join_circles as $circle) {
+                $data[] = [
+                    'circle_id' => $circle,
+                    'user_id'   => $this->me['id'],
+                    'team_id'   => $this->current_team_id,
+                ];
+            }
+            $this->saveAll($data);
+        }
+        return true;
+    }
+
 }

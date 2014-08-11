@@ -113,4 +113,16 @@ class CirclesController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function join()
+    {
+        $this->request->allowMethod('post');
+        if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定を保存しました。"));
+        }
+        else {
+            $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定の保存に失敗しました。"));
+        }
+        $this->redirect($this->referer());
+    }
+
 }
