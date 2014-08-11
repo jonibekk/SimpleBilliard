@@ -137,6 +137,48 @@ class CirclesControllerTest extends ControllerTestCase
         $this->testAction('/circles/delete/2', ['method' => 'POST', 'return' => 'contents']);
     }
 
+    function testAjaxGetPublicCirclesModal()
+    {
+        $this->_getCirclesCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/circles/ajax_get_public_circles_modal/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testJoinSuccess()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                [
+                    'join'      => true,
+                    'circle_id' => "1",
+                ],
+                [
+                    'join'      => false,
+                    'circle_id' => "2",
+                ],
+                [
+                    'join'      => true,
+                    'circle_id' => "3",
+                ],
+            ],
+        ];
+        $this->testAction('/circles/join',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
+    }
+
+    function testJoinFail()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [];
+        $this->testAction('/circles/join',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
+    }
+
     function _getCirclesCommonMock()
     {
         /**
@@ -182,6 +224,10 @@ class CirclesControllerTest extends ControllerTestCase
         $Circles->Circle->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
         $Circles->Circle->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Circles->Circle->CircleMember->me = ['id' => '1'];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Circles->Circle->CircleMember->current_team_id = '1';
         return $Circles;
     }
 
