@@ -18,7 +18,7 @@ $this->Form->create('Post', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class'         => '',
+    'class' => 'gl-feed-edit-form',
     'style'         => 'display: none',
     'novalidate'    => true,
     'type'          => 'file',

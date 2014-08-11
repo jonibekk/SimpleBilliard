@@ -15,7 +15,7 @@
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
         <div class="panel-body gl-feed">
-            <div class="col col-xxs-12">
+            <div class="col col-xxs-12 gl-feed-user">
                 <div class="pull-right">
                     <div class="dropdown">
                         <a href="#" class="" data-toggle="dropdown" id="download">
@@ -50,8 +50,8 @@
                 <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
                 <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
             </div>
-            <div class="col col-xxs-12 showmore font-size_14">
-                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <div class="col col-xxs-12 gl-feed-text showmore font-size_14">
+            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
             </div>
 
             <?
@@ -63,8 +63,8 @@
             }
             ?>
             <? if ($photo_count): ?>
-                <div class="col col-xxs-12">
-                    <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
+                <div class="col col-xxs-12 gl-feed-picture">
+                <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
                         <? if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
@@ -123,7 +123,7 @@
             <? endif; ?>
             <? if ($post['Post']['site_info']): ?>
                 <? $site_info = json_decode($post['Post']['site_info'], true) ?>
-                <div class="col col-xxs-12">
+                <div class="col col-xxs-12 gl-feed-site-link">
                     <div class="site-info">
                         <div class="media">
                             <div class="pull-left">
@@ -134,7 +134,7 @@
                                                            'class'         => 'lazy media-object',
                                                            'data-original' => $site_info['image'],
                                                            'width'         => '80px',
-                                                           'height' => 'auto'
+                                                           'height'        => 'auto'
                                                        ]
                                     )
                                     ?>
@@ -162,12 +162,12 @@
                 </div>
             <? endif; ?>
             <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                <div class="col col-xxs-12">
+                <div class="col col-xxs-12 gl-feed-edit">
                     <?= $this->element('Feed/post_edit_form', compact('post')) ?>
                 </div>
             <? endif; ?>
 
-            <div class="col col-xxs-12 font-size_12">
+            <div class="col col-xxs-12 font-size_12 gl-feed-click">
                 <a href="#" class="click-like"
                    like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                    model_id="<?= $post['Post']['id'] ?>"
@@ -210,8 +210,8 @@
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
-            <div class="col col-xxs-12">
-                <?=
+            <div class="col col-xxs-12 gl-comment-contents">
+            <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
                                            ['class' => 'gl-comment-img']) ?>
                 <div class="gl-comment-body">
@@ -236,7 +236,7 @@
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
-                        'class' => 'form-control tiny-form-text blank-disable font-size_12',
+                        'class'                    => 'form-control tiny-form-text blank-disable font-size_12',
                         'target_show_id'           => "Comment_{$post['Post']['id']}",
                         'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),

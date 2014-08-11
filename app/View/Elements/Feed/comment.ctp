@@ -14,14 +14,14 @@
 ?>
 <!-- START app/View/Elements/Feed/comment.ctp -->
 <div class="font-size_12">
-    <div class="col col-xxs-12">
+    <div class="col col-xxs-12 gl-comment-main">
         <?=
         $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
                                    ['class' => 'gl-comment-img'])
         ?>
         <div class="gl-comment-body">
-            <div class="col col-xxs-12 showmore">
-                <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+            <div class="col col-xxs-12 showmore gl-comment-text">
+            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
                         <a href="#" class="" data-toggle="dropdown" id="download">
                             <i class="fa fa-chevron-down"></i>
