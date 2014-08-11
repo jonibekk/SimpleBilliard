@@ -39,6 +39,8 @@ $(document).ready(function () {
 
     $('.gl-custom-radio-check').customRadioCheck();
 
+    //bootstrap switch
+    $(".bt-switch").bootstrapSwitch();
 
     //form二重送信防止
     $('form').on('submit', function () {
@@ -76,6 +78,20 @@ $(document).ready(function () {
         } else {
             $.get(url,function (data) {
                 var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                $modal_elm.modal();
+            }).success(function () {
+            });
+        }
+    });
+    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url,function (data) {
+                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
                 $modal_elm.modal();
             }).success(function () {
             });

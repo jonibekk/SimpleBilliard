@@ -49,7 +49,7 @@
         <?=
         $this->Html->link(__d('gl', "公開サークル"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
-                          ['class' => 'modal-ajax-get']) ?>
+                          ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
 </div>
 <!-- END app/View/Elements/circle_list.ctp -->

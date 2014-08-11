@@ -7,6 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $circle
+ * @var                    $key
  */
 ?>
 <!-- START app/View/Elements/public_circle_item.ctp -->
@@ -16,6 +17,12 @@
                                ['class' => 'gl-comment-img'])
     ?>
     <div class="gl-comment-body gl-modal-comment">
+        <div class="pull-right">
+            <?=
+            $this->Form->input("$key.join",
+                               ['label' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => !empty($circle['CircleMember']) ? true : false]) ?>
+            <?= $this->Form->hidden("$key.circle_id", ['value' => $circle['Circle']['id']]) ?>
+        </div>
         <div class="font-size_12 font-weight_bold modalFeedTextPadding">
             <?= h($circle['Circle']['name']) ?></div>
 
