@@ -60,9 +60,8 @@ class PostsControllerTest extends ControllerTestCase
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
         $data = [
             'Post' => [
-                'body'       => 'test',
-                'public_flg' => false,
-                'share'      => 'circle_1,user_12'
+                'body'  => 'test',
+                'share' => 'public,circle_1,user_12'
             ],
         ];
         $this->testAction('/posts/add',
