@@ -4,9 +4,11 @@
  * User: bigplants
  * Date: 5/22/14
  * Time: 6:47 PM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $current_circle
+ * @var                    $my_member_status
  */
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
@@ -33,6 +35,7 @@ echo $this->Html->script('gl_basic');
 $(document).ready(function () {
     //noinspection JSUnresolvedFunction
     var client = new ZeroClipboard(document.getElementsByClassName('copy_me'));
+    //noinspection JSUnusedLocalSymbols
     client.on("ready", function (readyEvent) {
         client.on("aftercopy", function (event) {
             alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
@@ -103,7 +106,7 @@ $(document).ready(function () {
             return m;
         }
     });
-    //noinspection JSUnusedLocalSymbols
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
         minimumInputLength: 2,
@@ -120,6 +123,12 @@ $(document).ready(function () {
                 };
             },
             results: function (data, page) {
+                var team = {
+                    'id': 'public',
+                    'text': "<?=__d('gl',"チーム全体")?>",
+                    'image': "<?=$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small'])?>"
+                };
+                data.results.push(team);
                 return { results: data.results };
             }
         },
@@ -130,6 +139,17 @@ $(document).ready(function () {
                     id: "circle_<?=$current_circle['Circle']['id']?>",
                     text: "<?=$current_circle['Circle']['name']?>",
                     image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
+                }
+            ];
+            callback(data);
+        },
+        <?else:?>
+        initSelection: function (element, callback) {
+            var data = [
+                {
+                    'id': 'public',
+                    'text': "<?=__d('gl',"チーム全体")?>",
+                    'image': "<?=$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small'])?>"
                 }
             ];
             callback(data);

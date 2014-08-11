@@ -168,13 +168,21 @@ class Post extends AppModel
             return false;
         }
         $this->setUidAndTeamId($uid, $team_id);
+        $share = null;
+        if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
+            $share = explode(",", $postData['Post']['share']);
+            foreach ($share as $key => $val) {
+                if (stristr($val, 'public')) {
+                    $postData['Post']['public_flg'] = true;
+                    unset($share[$key]);
+                }
+            }
+        }
         $postData['Post']['user_id'] = $this->uid;
         $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
         $res = $this->save($postData);
-        //関連ユーザ、関連サークルが存在する場合かつ、公開フラグoffの場合
-        if (isset($postData['Post']['public_flg']) && !$postData['Post']['public_flg'] && !empty($postData['Post']['share'])) {
-            $share = explode(",", $postData['Post']['share']);
+        if (!empty($share)) {
             //ユーザとサークルに分割
             $users = [];
             $circles = [];
