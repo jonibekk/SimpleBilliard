@@ -422,7 +422,7 @@ function showMore(obj) {
         $(obj).find('.showmore').showMore({
             speedDown: 300,
             speedUp: 300,
-            height: '125px',
+            height: '128px',
             showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
             hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
         });
@@ -431,7 +431,7 @@ function showMore(obj) {
         $('.showmore').showMore({
             speedDown: 300,
             speedUp: 300,
-            height: '125px',
+            height: '128px',
             showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
             hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
         });
