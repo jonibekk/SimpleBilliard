@@ -1,6 +1,6 @@
 body {
-    padding: 52px 0 0;
     background: #e5e5e5;
+    padding: 52px 0 0;
 }
 
 img {
@@ -346,6 +346,10 @@ ul.example-indent {
 .gl-comment-text {
     padding: 0;
     line-height: 18px;
+}
+
+.gl-modal-comment {
+    margin: 0;
 }
 
 .click-comment-all {
