@@ -4,11 +4,11 @@
  * User: bigplants
  * Date: 7/4/14
  * Time: 10:33 AM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView    $this
  * @var                    $posts
  * @var                    $current_circle
+ * @var                       $feed_more_read_url
  */
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
@@ -41,8 +41,7 @@
                    parent-id="FeedMoreRead"
                    next-page-num="2"
                    get-url="<?=
-                   $this->Html->url(array_merge(["controller" => "posts", 'action' => 'ajax_get_feed'],
-                                                $this->request->params['named'])) ?>"
+                   $this->Html->url($feed_more_read_url) ?>"
                     >
                     <?= __d('gl', "もっと読む") ?></a>
             </div>

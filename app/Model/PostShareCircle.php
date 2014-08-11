@@ -77,4 +77,22 @@ class PostShareCircle extends AppModel
         return $res;
     }
 
+    public function isMyCirclePost($post_id)
+    {
+        $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
+        $backupPrimaryKey = $this->primaryKey;
+        $this->primaryKey = 'post_id';
+        $options = [
+            'conditions' => [
+                'post_id'   => $post_id,
+                'circle_id' => $my_circle_list,
+                'team_id'   => $this->current_team_id,
+            ],
+            'fields'     => ['post_id'],
+        ];
+        $res = $this->find('list', $options);
+        $this->primaryKey = $backupPrimaryKey;
+        return $res;
+    }
+
 }

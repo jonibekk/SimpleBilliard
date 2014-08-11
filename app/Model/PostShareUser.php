@@ -74,4 +74,22 @@ class PostShareUser extends AppModel
         return $res;
     }
 
+    public function isShareWithMe($post_id)
+    {
+        $backupPrimaryKey = $this->primaryKey;
+        $this->primaryKey = 'post_id';
+
+        $options = [
+            'conditions' => [
+                'post_id' => $post_id,
+                'user_id' => $this->me['id'],
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => ['post_id'],
+        ];
+        $res = $this->find('list', $options);
+        $this->primaryKey = $backupPrimaryKey;
+        return $res;
+    }
+
 }

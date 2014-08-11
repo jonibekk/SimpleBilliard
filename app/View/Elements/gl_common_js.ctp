@@ -22,8 +22,8 @@ echo $this->Html->script('jquery.nailthumb.1.1.min');
 echo $this->Html->script('jquery.autosize.min');
 echo $this->Html->script('jquery.lazy.min');
 echo $this->Html->script('lightbox.min');
-//echo $this->Html->script('jquery.showmore.min');
 echo $this->Html->script('jquery.showmore.min');
+echo $this->Html->script('ZeroClipboard.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('customRadioCheck.min');
 echo $this->Html->script('select2.min');
@@ -31,6 +31,13 @@ echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
 $(document).ready(function () {
+    //noinspection JSUnresolvedFunction
+    var client = new ZeroClipboard(document.getElementsByClassName('copy_me'));
+    client.on("ready", function (readyEvent) {
+        client.on("aftercopy", function (event) {
+            alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
+        });
+    });
 
     $('[rel="tooltip"]').tooltip();
 
