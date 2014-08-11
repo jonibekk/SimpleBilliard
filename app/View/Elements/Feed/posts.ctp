@@ -124,6 +124,8 @@
             <? if ($post['Post']['site_info']): ?>
                 <? $site_info = json_decode($post['Post']['site_info'], true) ?>
                 <div class="col col-xxs-12 gl-feed-site-link">
+                    <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
+                       class="no-line">
                     <div class="site-info">
                         <div class="media">
                             <div class="pull-left">
@@ -146,9 +148,7 @@
                             </div>
 
                             <div class="media-body">
-                                <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank">
                                     <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
-                                </a>
 
                                 <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
                                 <? if (isset($site_info['description'])): ?>
@@ -159,6 +159,7 @@
                             </div>
                         </div>
                     </div>
+                    </a>
                 </div>
             <? endif; ?>
             <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
