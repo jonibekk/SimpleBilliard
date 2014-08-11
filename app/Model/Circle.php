@@ -197,4 +197,23 @@ class Circle extends AppModel
         return $circle;
     }
 
+    function getPublicCircles()
+    {
+        $options = [
+            'conditions' => [
+                'Circle.team_id'    => $this->current_team_id,
+                'Circle.public_flg' => true,
+            ],
+            'contain'    => [
+                'CircleMember' => [
+                    'conditions' => [
+                        'CircleMember.user_id' => $this->me['id']
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }

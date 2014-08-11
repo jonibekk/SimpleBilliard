@@ -35,7 +35,10 @@ class CircleMember extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Circle',
+        'Circle' => [
+            "counterCache" => true,
+            'counterScope' => ['CircleMember.del_flg' => false]
+        ],
         'Team',
         'User',
     ];
@@ -66,7 +69,7 @@ class CircleMember extends AppModel
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ],
-            'order' => ['CircleMember.unread_count desc', 'Circle.name asc'],
+            'order'      => ['CircleMember.unread_count desc', 'Circle.name asc'],
             'contain'    => [
                 'Circle' => [
                     'fields' => [

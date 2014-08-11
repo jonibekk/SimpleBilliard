@@ -103,9 +103,8 @@ class CirclesController extends AppController
     public function ajax_get_public_circles_modal()
     {
         $this->_ajaxPreProcess();
-//        $red_users = $this->Post->PostRead->getRedUsers($post_id);
-//        $this->set(compact('red_users'));
-
+        $circles = $this->Circle->getPublicCircles();
+        $this->set(compact('circles'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('modal_public_circles');
