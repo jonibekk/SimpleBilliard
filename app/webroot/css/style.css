@@ -825,6 +825,7 @@ ul.gl-input-images > li {
 
 .no-line {
     text-decoration: none !important;
+    color: #000;
 }
 
 .no-line:link {
