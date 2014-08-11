@@ -81,6 +81,7 @@ class AppController extends Controller
     {
         parent::beforeFilter();
 
+        $this->_setSecurity();
         $this->_setAppLanguage();
         //ajaxの時以外で実行する
         if (!$this->request->is('ajax')) {
@@ -89,6 +90,23 @@ class AppController extends Controller
         $this->_setMyMemberStatus();
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
+    }
+
+    public function _setSecurity()
+    {
+        // sslの判定をHTTP_X_FORWARDED_PROTOに変更
+        $this->request->addDetector('ssl', ['env' => 'HTTP_X_FORWARDED_PROTO', 'value' => 'https']);
+        //サーバー環境のみSSLを強制
+        if (ENV_NAME != "local") {
+            $this->Security->blackHoleCallback = 'forceSSL';
+            $this->Security->requireSecure();
+        }
+    }
+
+    public function forceSSL()
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->redirect('https://' . env('HTTP_HOST') . $this->here);
     }
 
     public function _setMyTeam()

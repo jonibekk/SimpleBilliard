@@ -15,6 +15,10 @@
  * its action called 'display', and we pass a param to select the view file
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
+if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
+    Router::fullbaseUrl('https://' . env('HTTP_HOST'));
+}
+
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/circle_feed/:circle_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
