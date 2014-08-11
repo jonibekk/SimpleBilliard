@@ -80,14 +80,6 @@ footer p {
     vertical-align: middle;
 }
 
-.gl-modal-no-margin .modal-body {
-    padding: 0;
-}
-
-.gl-modal-no-margin .modal-footer {
-    margin: 0;
-}
-
 .gl-me-menu-image {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -256,40 +248,6 @@ footer p {
     margin-top: -50px;
 }
 
-/*noinspection ALL*/
-.ribbon {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-
-    position: fixed;
-    width: 200px;
-    height: 30px;
-    background: red;
-    color: #fff;
-    line-height: 30px;
-    right: -40px;
-    top: 40px;
-    -webkit-transform: rotateZ(45deg);
-    -moz-transform: rotateZ(45deg);
-    -ms-transform: rotateZ(45deg);
-    -o-transform: rotateZ(45deg);
-    transform: rotateZ(45deg);
-    text-align: center;
-    box-shadow: 0 0 6px #666;
-    z-index: -1999;
-}
-
-.ribbon-local {
-    background: blue;
-}
-
-.ribbon-staging {
-    background: green;
-}
-
 ul.example-indent {
     list-style-type: none;
     padding-left: 25px;
@@ -336,13 +294,6 @@ ul.example-indent {
 
 .gl-comment-body {
     margin-left: 36px;
-}
-
-.mpTB0 {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
 }
 
 .gl-form-inline-fix .form-group {
@@ -429,7 +380,7 @@ ul.gl-input-images > li {
     margin-bottom: 10px;
 }
 
-/*fontDesign*/
+/*Fontの指定*/
 .font-size_11 {
     font-size: 11px;
 }
@@ -454,27 +405,9 @@ ul.gl-input-images > li {
     color: #9197a3;
 }
 
-.modalFeedTextPadding {
-    padding-top: 2px;
-    padding-bottom: 6px;
-    line-height: 12px;
-}
+/*/Fontの指定*/
 
-.modalFeedTextPaddingSmall {
-    padding-top: 0;
-    padding-bottom: 3px;
-    line-height: 12px;
-}
-
-.modalFeed-body {
-    padding-top: 6px;
-    padding-bottom: 3px;
-}
-
-.modalFeed-footer {
-    margin: 0;
-}
-
+/*レイアウトの指定*/
 .layout-main {
     padding: 0;
 }
@@ -490,6 +423,8 @@ ul.gl-input-images > li {
 .layout-header_right {
     padding: 0;
 }
+
+/*/レイアウトの指定*/
 
 .navbar {
     margin: 0;
@@ -534,6 +469,7 @@ ul.gl-input-images > li {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
+/*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
     .container {
@@ -608,25 +544,9 @@ ul.gl-input-images > li {
     }
 }
 
-.develop--forbiddenLink {
-    position: relative !important;
-}
+/*/メディアクエリで切り替え*/
 
-.develop--forbiddenLink__design {
-    width: 72px;
-    height: 24px;
-    line-height: 12px;
-    font-size: 12px;
-    padding: 5px;
-    border: solid 1px #999;
-    border-radius: 4px;
-    background: #ccc;
-    text-align: center;
-    position: absolute;
-    z-index: 100;
-    opacity: 0.8;
-}
-
+/*サークルのデザイン*/
 .circle-icon_box {
     width: 16px;
     height: 16px;
@@ -684,6 +604,8 @@ ul.gl-input-images > li {
 .circle-function {
     width: 15px;
 }
+
+/*/サークルのデザイン*/
 
 /*MergeLater_pannelFooter*/
 .setting_pannel-footer {
@@ -832,5 +754,92 @@ ul.gl-input-images > li {
 
 .borderBottom > div:not(:last-child) {
     border-bottom: 1px solid #e5e5e5;
-    margin: 0 0 3px;
+    padding-bottom: 4px;
+    margin: 0 0 4px;
+}
+
+/*modalのデザイン*/
+.gl-modal-no-margin .modal-body {
+    padding: 0;
+}
+
+.gl-modal-no-margin .modal-footer {
+    margin: 0;
+}
+
+.modalFeedTextPadding {
+    padding-top: 2px;
+    padding-bottom: 6px;
+    line-height: 12px;
+}
+
+.modalFeedTextPaddingSmall {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 12px;
+}
+
+.modalFeed-body {
+    padding-top: 8px;
+    padding-bottom: 4px;
+}
+
+.modalFeed-footer {
+    margin: 0;
+}
+
+/*/modalのデザイン*/
+
+/*暫定的な設定(修正必須)*/
+
+.develop--forbiddenLink {
+    position: relative !important;
+}
+
+.develop--forbiddenLink__design {
+    width: 72px;
+    height: 24px;
+    line-height: 12px;
+    font-size: 12px;
+    padding: 5px;
+    border: solid 1px #999;
+    border-radius: 4px;
+    background: #ccc;
+    text-align: center;
+    position: absolute;
+    z-index: 100;
+    opacity: 0.8;
+}
+
+/*noinspection ALL*/
+.ribbon {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    position: fixed;
+    width: 200px;
+    height: 30px;
+    background: red;
+    color: #fff;
+    line-height: 30px;
+    right: -40px;
+    top: 40px;
+    -webkit-transform: rotateZ(45deg);
+    -moz-transform: rotateZ(45deg);
+    -ms-transform: rotateZ(45deg);
+    -o-transform: rotateZ(45deg);
+    transform: rotateZ(45deg);
+    text-align: center;
+    box-shadow: 0 0 6px #666;
+    z-index: -1999;
+}
+
+.ribbon-local {
+    background: blue;
+}
+
+.ribbon-staging {
+    background: green;
 }
