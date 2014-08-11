@@ -223,8 +223,9 @@ class CircleMember extends AppModel
                 'CircleMember.team_id'   => $this->current_team_id,
             ];
             $this->deleteAll($conditions);
-            $this->updateCounterCache(['circle_id' => $un_join_circles]);
-
+            foreach ($un_join_circles as $val) {
+                $this->updateCounterCache(['circle_id' => $val]);
+            }
         }
         //onサークルを追加
         if (!empty($join_circles)) {
@@ -237,7 +238,9 @@ class CircleMember extends AppModel
                 ];
             }
             $this->saveAll($data);
-            $this->updateCounterCache(['circle_id' => $join_circles]);
+            foreach ($join_circles as $val) {
+                $this->updateCounterCache(['circle_id' => $val]);
+            }
         }
         return true;
     }
