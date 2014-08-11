@@ -289,6 +289,14 @@ ul.example-indent {
     margin-right: 8px;
 }
 
+.gl-feed-text {
+    padding: 10px 0 0 0;
+}
+
+.gl-feed-picture {
+    padding: 10px 0 0 0;
+}
+
 .gl-feed-site-link {
     padding: 10px 0 0 0;
 }
@@ -306,11 +314,15 @@ ul.example-indent {
 }
 
 .gl-comment-block {
-    padding: 10px 11px;
+    padding: 9px 11px 10px;
     border-top: 1px solid #dddddd;
     background-color: #f5f5f5;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
+}
+
+.gl-comment-contents {
+    padding: 0;
 }
 
 .gl-comment-img {
@@ -318,11 +330,27 @@ ul.example-indent {
     float: left;
     height: 32px;
     width: 32px;
-    margin-right: 4px;
+    margin-right: 8px;
 }
 
 .gl-comment-body {
-    margin-left: 36px;
+    margin-left: 40px;
+    margin-bottom: 4px;
+    vertical-align: text-top;
+}
+
+.gl-comment-main {
+    padding: 4px 0 0 0;
+}
+
+.gl-comment-text {
+    padding: 0;
+    line-height: 18px;
+}
+
+.click-comment-all {
+    padding: 0 0 4px 0;
+    font-size: 12px;
 }
 
 .gl-form-inline-fix .form-group {
@@ -334,7 +362,6 @@ ul.example-indent {
 .gl-form-inline-fix .form-control {
     display: inline-block;
     width: auto;
-    vertical-align: middle;
 }
 
 .gl-form-inline-fix .input-group > .form-control {
@@ -371,10 +398,8 @@ ul.example-indent {
     border: 1px solid #e1e1e8;
     border-radius: 4px;
 }
-
 .showmore {
     word-wrap: break-word;
-    padding: 10px 0 0 0;
 }
 
 .gl-thumb-container {
@@ -480,6 +505,11 @@ ul.gl-input-images > li {
 
 .panel-default > .panel-heading {
     background-color: #fff;
+    padding: 10px 11px;
+}
+
+.panel-body {
+    padding: 10px 11px;
 }
 
 .design-mystatus {

@@ -50,8 +50,8 @@
                 <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
                 <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
             </div>
-            <div class="col col-xxs-12 showmore font-size_14">
-                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <div class="col col-xxs-12 gl-feed-text showmore font-size_14">
+            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
             </div>
 
             <?
@@ -63,8 +63,8 @@
             }
             ?>
             <? if ($photo_count): ?>
-                <div class="col col-xxs-12">
-                    <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
+                <div class="col col-xxs-12 gl-feed-picture">
+                <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
                         <? if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
@@ -210,8 +210,8 @@
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
-            <div class="col col-xxs-12">
-                <?=
+            <div class="col col-xxs-12 gl-comment-contents">
+            <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
                                            ['class' => 'gl-comment-img']) ?>
                 <div class="gl-comment-body">
