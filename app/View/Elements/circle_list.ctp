@@ -47,7 +47,7 @@
     <? endif; ?>
     <div class="circle-layout clearfix">
         <?=
-        $this->Html->link(__d('gl', "公開サークル"),
+        $this->Html->link(__d('gl', "公開サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                           ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
