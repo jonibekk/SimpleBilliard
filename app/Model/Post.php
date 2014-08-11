@@ -315,6 +315,10 @@ class Post extends AppModel
         else {
             //サークル指定
             if ($this->orgParams['circle_id']) {
+                //サークル所属チェック
+                if (empty($this->User->CircleMember->isBelong($this->orgParams['circle_id']))) {
+                    throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
+                }
                 $p_list = array_merge($p_list,
                                       $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
                                                                                   1000, $this->orgParams['circle_id']));
