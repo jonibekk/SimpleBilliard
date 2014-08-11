@@ -96,12 +96,16 @@ class AppController extends Controller
     {
         // sslの判定をHTTP_X_FORWARDED_PROTOに変更
         $this->request->addDetector('ssl', ['env' => 'HTTP_X_FORWARDED_PROTO', 'value' => 'https']);
-        $this->Security->blackHoleCallback = 'forceSSL';
-        $this->Security->requireSecure();
+        //サーバー環境のみSSLを強制
+        if (ENV_NAME != "local") {
+            $this->Security->blackHoleCallback = 'forceSSL';
+            $this->Security->requireSecure();
+        }
     }
 
     public function forceSSL()
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->redirect('https://' . env('HTTP_HOST') . $this->here);
     }
 
