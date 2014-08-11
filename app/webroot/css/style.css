@@ -348,6 +348,10 @@ ul.example-indent {
     line-height: 18px;
 }
 
+.gl-modal-comment {
+    margin: 0;
+}
+
 .click-comment-all {
     padding: 0 0 4px 0;
     font-size: 12px;
