@@ -566,11 +566,12 @@ ul.gl-input-images > li {
     line-height: 16px;
     float: right;
     margin-right: 3px;
+    text-align: center;
 }
 
 .circle-function_box {
     display: block;
-    width: 15px;
+    width: 14px;
     height: 16px;
     line-height: 16px;
     float: right;
@@ -593,7 +594,8 @@ ul.gl-input-images > li {
 }
 
 .circle-function {
-    width: 15px;
+    width: 14px;
+    text-align: right;
 }
 
 /*/サークルのデザイン*/
@@ -629,7 +631,11 @@ ul.gl-input-images > li {
     }
 
     .circle-name_box {
-        width: 194px;
+        width: 160px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 19px 0;
     }
 }
 
@@ -656,7 +662,7 @@ ul.gl-input-images > li {
     }
 
     .circle-name_box {
-        width: 98px;
+        width: 100px;
     }
 }
 
@@ -679,7 +685,7 @@ ul.gl-input-images > li {
     }
 
     .circle-name_box {
-        width: 101px;
+        width: 103px;
     }
 }
 
