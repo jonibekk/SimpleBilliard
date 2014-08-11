@@ -291,9 +291,6 @@ class PostsController extends AppController
                     $error_msg = array_shift($this->Post->Comment->validationErrors);
                     throw new RuntimeException($error_msg[0]);
                 }
-                else {
-                    throw new RuntimeException(__d('gl', "問題が発生しました。"));
-                }
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "コメントに失敗しました。")]);

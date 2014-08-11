@@ -293,6 +293,7 @@ class AppModel extends Model
                 $this->alias . '.' . $this->primaryKey => $id
             ),
             'recursive'  => -1,
+            'callbacks' => false
         ));
     }
 
