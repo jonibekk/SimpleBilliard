@@ -402,6 +402,7 @@ ul.example-indent {
     border: 1px solid #e1e1e8;
     border-radius: 4px;
 }
+
 .showmore {
     word-wrap: break-word;
 }
@@ -587,6 +588,7 @@ ul.gl-input-images > li {
     height: 16px;
     margin: 0 0 8px;
 }
+
 .count-value {
     color: #4e5665;
     font-size: 11px;
@@ -690,7 +692,6 @@ ul.gl-input-images > li {
 }
 
 /*/メディアクエリで切り替え*/
-
 
 /*MergeLater_pannelFooter*/
 .setting_pannel-footer {
@@ -871,6 +872,11 @@ ul.gl-input-images > li {
 
 .modalFeed-footer {
     margin: 0;
+}
+
+.gl-circle-join-switch > .checkbox {
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /*/modalのデザイン*/

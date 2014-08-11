@@ -17,13 +17,13 @@
                                ['class' => 'gl-comment-img'])
     ?>
     <div class="gl-comment-body gl-modal-comment">
-        <div class="pull-right">
+        <div class="pull-right gl-circle-join-switch">
             <? if ($circle['CircleMember'][0]['admin_flg']): ?>
                 <?= __d('gl', "管理者の為、変更不可") ?>
             <? else: ?>
                 <?=
                 $this->Form->input("$key.join",
-                                   ['label' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => !empty($circle['CircleMember']) ? true : false]) ?>
+                                   ['label' => false, 'div' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => !empty($circle['CircleMember']) ? true : false]) ?>
                 <?= $this->Form->hidden("$key.circle_id", ['value' => $circle['Circle']['id']]) ?>
             <?endif; ?>
         </div>

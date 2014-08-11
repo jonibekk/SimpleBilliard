@@ -24,7 +24,7 @@
                 'label'     => [
                     'class' => ''
                 ],
-                'wrapInput' => '',
+                'wrapInput' => false,
                 'class'     => ''
             ],
             'class'         => '',
