@@ -100,4 +100,29 @@ class CirclesController extends AppController
         $this->redirect($this->referer());
     }
 
+    public function ajax_get_public_circles_modal()
+    {
+        $this->_ajaxPreProcess();
+        $circles = $this->Circle->getPublicCircles();
+        $this->set(compact('circles'));
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_public_circles');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function join()
+    {
+        $this->request->allowMethod('post');
+        if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定を保存しました。"));
+        }
+        else {
+            $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定の保存に失敗しました。"));
+        }
+        $this->redirect($this->referer());
+    }
+
 }

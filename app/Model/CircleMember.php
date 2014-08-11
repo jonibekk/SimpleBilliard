@@ -35,7 +35,10 @@ class CircleMember extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'Circle',
+        'Circle' => [
+            "counterCache" => true,
+            'counterScope' => ['CircleMember.del_flg' => false]
+        ],
         'Team',
         'User',
     ];
@@ -66,7 +69,7 @@ class CircleMember extends AppModel
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ],
-            'order' => ['CircleMember.unread_count desc', 'Circle.name asc'],
+            'order'      => ['CircleMember.unread_count desc', 'Circle.name asc'],
             'contain'    => [
                 'Circle' => [
                     'fields' => [
@@ -180,6 +183,63 @@ class CircleMember extends AppModel
         ];
         $res = $this->updateAll(['CircleMember.unread_count' => $set_count], $conditions);
         return $res;
+    }
+
+    function joinCircle($postData)
+    {
+        if (!isset($postData['Circle']) || empty($postData['Circle'])) {
+            return false;
+        }
+        //自分の所属しているサークルを取得
+        $my_circles = $this->getMyCircle();
+        $un_join_circles = [];
+        $join_circles = [];
+        foreach ($postData['Circle'] as $val) {
+            $joined = false;
+            foreach ($my_circles as $my_circle) {
+                if ($val['circle_id'] == $my_circle['CircleMember']['circle_id']) {
+                    $joined = true;
+                    break;
+                }
+            }
+            if ($val['join']) {
+                //既に参加しているサークル以外を追加
+                if (!$joined) {
+                    $join_circles[] = $val['circle_id'];
+                }
+            }
+            else {
+                //既に参加しているサークルを追加
+                if ($joined) {
+                    $un_join_circles[] = $val['circle_id'];
+                }
+            }
+        }
+        //offのサークルを削除
+        if (!empty($un_join_circles)) {
+            $conditions = [
+                'CircleMember.circle_id' => $un_join_circles,
+                'CircleMember.user_id'   => $this->me['id'],
+                'CircleMember.team_id'   => $this->current_team_id,
+            ];
+            $this->deleteAll($conditions);
+            $this->updateCounterCache(['circle_id' => $un_join_circles]);
+
+        }
+        //onサークルを追加
+        if (!empty($join_circles)) {
+            $data = [];
+            foreach ($join_circles as $circle) {
+                $data[] = [
+                    'circle_id' => $circle,
+                    'user_id'   => $this->me['id'],
+                    'team_id'   => $this->current_team_id,
+                ];
+            }
+            $this->saveAll($data);
+            $this->updateCounterCache(['circle_id' => $join_circles]);
+        }
+        return true;
     }
 
 }

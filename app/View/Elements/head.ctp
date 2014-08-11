@@ -28,6 +28,7 @@
     echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('jquery.nailthumb.1.1');
     echo $this->Html->css('bootstrapValidator.min');
+    echo $this->Html->css('bootstrap-switch.min');
     echo $this->Html->css('pnotify.custom.min');
     echo $this->Html->css('lightbox');
     echo $this->Html->css('showmore');

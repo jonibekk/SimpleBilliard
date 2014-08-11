@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 5/22/14
  * Time: 6:47 PM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $current_circle
  * @var                    $my_member_status
  */
@@ -18,6 +17,7 @@ echo $this->Html->script('jquery-1.11.1.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('jasny-bootstrap.min');
 echo $this->Html->script('bootstrapValidator.min');
+echo $this->Html->script('bootstrap-switch.min');
 echo $this->Html->script('bvAddition');
 echo $this->Html->script('pnotify.custom.min');
 echo $this->Html->script('jquery.nailthumb.1.1.min');
