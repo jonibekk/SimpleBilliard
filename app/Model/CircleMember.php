@@ -138,6 +138,22 @@ class CircleMember extends AppModel
         return $this->find('first', $options);
     }
 
+    function isBelong($circle_id, $user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = $this->me['id'];
+        }
+        $options = [
+            'conditions' => [
+                'user_id'   => $user_id,
+                'circle_id' => $circle_id,
+                'team_id'   => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
     function incrementUnreadCount($circle_list, $without_me = true)
     {
         if (empty($circle_list)) {

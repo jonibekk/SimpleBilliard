@@ -60,7 +60,12 @@ class PagesController extends AppController
                 }
                 $this->_setMyCircle();
                 $this->_setFeedMoreReadUrl();
-                $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
+                try {
+                    $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
+                } catch (RuntimeException $e) {
+                    $this->Pnotify->outError($e->getMessage());
+                    $this->redirect($this->referer());
+                }
                 return $this->render('logged_in_home');
             }
             else {
