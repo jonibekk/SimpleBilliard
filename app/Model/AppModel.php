@@ -270,4 +270,30 @@ class AppModel extends Model
         $this->setTeamId($team_id);
     }
 
+    /**
+     * 基底クラスのオーバーライド
+     * (SoftDeletableのコールバックが実行されない為)
+     *
+     * @param null $id
+     *
+     * @return bool
+     */
+    public function exists($id = null)
+    {
+        if ($id === null) {
+            $id = $this->getID();
+        }
+
+        if ($id === false) {
+            return false;
+        }
+
+        return (bool)$this->find('count', array(
+            'conditions' => array(
+                $this->alias . '.' . $this->primaryKey => $id
+            ),
+            'recursive'  => -1,
+        ));
+    }
+
 }

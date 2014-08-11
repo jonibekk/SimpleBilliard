@@ -163,6 +163,14 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testAddCommentFailNotFound()
+    {
+        $this->_getPostsCommonMock();
+        $data = ['Comment' => ['post_id' => 9999999999]];
+        $this->testAction('/posts/comment_add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
     function testAddCommentFailValidate()
     {
         $this->_getPostsCommonMock();

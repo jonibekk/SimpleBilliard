@@ -270,7 +270,13 @@ class PostsController extends AppController
 
     public function comment_add()
     {
-        if ($this->request->is('post')) {
+        $this->request->allowMethod('post');
+        $this->Post->id = isset($this->request->data['Comment']['post_id']) ? $this->request->data['Comment']['post_id'] : null;
+        try {
+            if (!$this->Post->exists()) {
+                throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
+            }
+
             if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
                 $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
                 if (isset($ogp['title']) && isset($ogp['description'])) {
@@ -281,21 +287,18 @@ class PostsController extends AppController
                 $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
             }
             else {
-
                 if (!empty($this->Post->Comment->validationErrors)) {
                     $error_msg = array_shift($this->Post->Comment->validationErrors);
-                    $this->Pnotify->outError($error_msg[0],
-                                             ['title' => __d('gl', "コメントに失敗しました。")]);
+                    throw new RuntimeException($error_msg[0]);
                 }
                 else {
-                    $this->Pnotify->outError(__d('gl', "コメントに失敗しました。"));
+                    throw new RuntimeException(__d('gl', "問題が発生しました。"));
                 }
             }
-            $this->redirect($this->referer());
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "コメントに失敗しました。")]);
         }
-        else {
-            throw new RuntimeException(__d('exception', "不正な画面遷移です。"));
-        }
+        $this->redirect($this->referer());
     }
 
 }
