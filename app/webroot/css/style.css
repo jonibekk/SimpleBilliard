@@ -540,6 +540,11 @@ ul.gl-input-images > li {
     line-height: 16px;
     float: left;
     margin-right: 5px;
+    margin-top: 0;
+}
+
+.circle-icon_box > img {
+    position: absolute;
 }
 
 .circle-name_box {
@@ -582,7 +587,6 @@ ul.gl-input-images > li {
     height: 16px;
     margin: 0 0 8px;
 }
-
 .count-value {
     color: #4e5665;
     font-size: 11px;
