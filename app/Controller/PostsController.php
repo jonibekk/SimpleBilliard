@@ -298,4 +298,14 @@ class PostsController extends AppController
         $this->redirect($this->referer());
     }
 
+    function feed()
+    {
+        try {
+            $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+    }
+
 }

@@ -809,6 +809,80 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[異常ValidationError]コメント編集");
     }
 
+    function testFeedCircle()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $user_id = 1;
+        $team_id = 1;
+        $post_data = [
+            'Post'    => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+            'Comment' => [
+                [
+                    'user_id' => $user_id,
+                    'team_id' => $team_id,
+                    'body'    => 'test'
+                ]
+            ]
+        ];
+        $Posts->Post->saveAll($post_data);
+        $share_user_data = [
+            'PostShareUser' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'post_id' => $Posts->Post->getLastInsertID()
+            ]
+        ];
+        $Posts->Post->PostShareUser->save($share_user_data);
+        $this->testAction('/circle_feed/1');
+    }
+
+    function testFeedCircleNotFound()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/circle_feed/9999999999');
+    }
+
+    function testFeedPermanentLink()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $user_id = 1;
+        $team_id = 1;
+        $post_data = [
+            'Post'    => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+            'Comment' => [
+                [
+                    'user_id' => $user_id,
+                    'team_id' => $team_id,
+                    'body'    => 'test'
+                ]
+            ]
+        ];
+        $Posts->Post->saveAll($post_data);
+        $share_user_data = [
+            'PostShareUser' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'post_id' => $Posts->Post->getLastInsertID()
+            ]
+        ];
+        $Posts->Post->PostShareUser->save($share_user_data);
+        $this->testAction('/post_permanent/1');
+    }
+
     function _getPostsCommonMock()
     {
         /**

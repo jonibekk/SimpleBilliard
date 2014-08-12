@@ -83,11 +83,16 @@ class AppController extends Controller
 
         $this->_setSecurity();
         $this->_setAppLanguage();
-        //ajaxの時以外で実行する
-        if (!$this->request->is('ajax')) {
-            $this->_setMyTeam();
+        //ログイン済みの場合のみ実行する
+        if ($this->Auth->user()) {
+            //ajaxの時以外で実行する
+            if (!$this->request->is('ajax')) {
+                $this->_setMyTeam();
+                $this->_setMyCircle();
+                $this->_setFeedMoreReadUrl();
+            }
+            $this->_setMyMemberStatus();
         }
-        $this->_setMyMemberStatus();
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }

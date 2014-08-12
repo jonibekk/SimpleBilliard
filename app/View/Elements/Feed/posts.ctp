@@ -37,7 +37,7 @@
                             <? endif ?>
                             <li><a href="#" class="copy_me"
                                    data-clipboard-text="<?=
-                                   $this->Html->url(['controller' => 'pages', 'action' => 'display', 'home', 'post_id' => $post['Post']['id']],
+                                   $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
                                                     true) ?>">
                                     <?= __d('gl', "リンクをコピー") ?></a>
                             </li>
@@ -51,7 +51,7 @@
                 <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
             </div>
             <div class="col col-xxs-12 gl-feed-text showmore font-size_14">
-            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
             </div>
 
             <?
@@ -64,7 +64,7 @@
             ?>
             <? if ($photo_count): ?>
                 <div class="col col-xxs-12 gl-feed-picture">
-                <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
+                    <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
                         <? if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
@@ -126,39 +126,39 @@
                 <div class="col col-xxs-12 gl-feed-site-link">
                     <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
                        class="no-line">
-                    <div class="site-info">
-                        <div class="media">
-                            <div class="pull-left">
-                                <? if (isset($site_info['image'])): ?>
-                                    <?=
-                                    $this->Html->image('ajax-loader.gif',
-                                                       [
-                                                           'class'         => 'lazy media-object',
-                                                           'data-original' => $site_info['image'],
-                                                           'width'         => '80px',
-                                                           'height'        => 'auto'
-                                                       ]
-                                    )
-                                    ?>
-                                <? else: ?>
-                                    <?=
-                                    $this->Html->image('no-image.jpg',
-                                                       ['class' => 'media-object', 'width' => '80px', 'height' => '80px']) ?>
-                                <?endif; ?>
-                            </div>
+                        <div class="site-info">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <? if (isset($site_info['image'])): ?>
+                                        <?=
+                                        $this->Html->image('ajax-loader.gif',
+                                                           [
+                                                               'class'         => 'lazy media-object',
+                                                               'data-original' => $site_info['image'],
+                                                               'width'         => '80px',
+                                                               'height'        => 'auto'
+                                                           ]
+                                        )
+                                        ?>
+                                    <? else: ?>
+                                        <?=
+                                        $this->Html->image('no-image.jpg',
+                                                           ['class' => 'media-object', 'width' => '80px', 'height' => '80px']) ?>
+                                    <?endif; ?>
+                                </div>
 
-                            <div class="media-body">
+                                <div class="media-body">
                                     <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
 
-                                <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
-                                <? if (isset($site_info['description'])): ?>
-                                    <div class="font-size_12">
-                                        <?= $site_info['description'] ?>
-                                    </div>
-                                <? endif; ?>
+                                    <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                    <? if (isset($site_info['description'])): ?>
+                                        <div class="font-size_12">
+                                            <?= $site_info['description'] ?>
+                                        </div>
+                                    <? endif; ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </a>
                 </div>
             <? endif; ?>
@@ -212,7 +212,7 @@
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
             <div class="col col-xxs-12 gl-comment-contents">
-            <?=
+                <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
                                            ['class' => 'gl-comment-img']) ?>
                 <div class="gl-comment-body">

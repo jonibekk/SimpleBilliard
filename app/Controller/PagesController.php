@@ -58,8 +58,6 @@ class PagesController extends AppController
                     $this->Session->delete('add_new_mode');
                     $this->set('mode_view', MODE_VIEW_TUTORIAL);
                 }
-                $this->_setMyCircle();
-                $this->_setFeedMoreReadUrl();
                 try {
                     $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
                 } catch (RuntimeException $e) {
@@ -83,7 +81,7 @@ class PagesController extends AppController
     {
         $this->_setLanguage();
         //全ページ許可
-        $this->Auth->allow();
+        $this->Auth->allow('display');
         //切り換え可能な言語をセット
         $this->set('lang_list', $this->_getPageLanguageList());
         parent::beforeFilter();
