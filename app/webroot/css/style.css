@@ -935,3 +935,28 @@ ul.gl-input-images > li {
 .ribbon-staging {
     background: green;
 }
+
+/*Small*/
+@media (min-width: 768px) {
+    .header-search-group {
+        margin-left: 8px;
+    }
+
+    .navbar-nav > li > .header-logo {
+        padding-left: 18px;
+    }
+}
+
+/*Medium*/
+@media (min-width: 992px) {
+    .navbar-nav > li > .header-logo {
+        padding-left: 4px;
+    }
+}
+
+/*ExtraMedium*/
+@media (min-width: 1024px) {
+}
+
+@media (min-width: 1200px) {
+}
