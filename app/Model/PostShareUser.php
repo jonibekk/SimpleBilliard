@@ -92,4 +92,19 @@ class PostShareUser extends AppModel
         return $res;
     }
 
+    public function getShareUsersByPost($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'PostShareUser.post_id' => $post_id,
+                'PostShareUser.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User' => ['fields' => $this->User->profileFields]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }

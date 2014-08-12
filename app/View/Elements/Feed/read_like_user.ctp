@@ -17,12 +17,14 @@
                                ['class' => 'gl-comment-img'])
     ?>
     <div class="gl-comment-body gl-modal-comment">
-    <div class="font-size_12 font-weight_bold modalFeedTextPadding">
-            <?= h($user['display_username']) ?></div>
+        <div class="font-size_12 font-weight_bold modalFeedTextPadding">
+        <?= h($user['display_username']) ?></div>
 
-        <div class="font-size_12 color9197a3 modalFeedTextPaddingSmall">
-            <?= $this->TimeEx->elapsedTime(h($created)) ?>
-        </div>
+        <? if ($created): ?>
+            <div class="font-size_12 color9197a3 modalFeedTextPaddingSmall">
+                <?= $this->TimeEx->elapsedTime(h($created)) ?>
+            </div>
+        <? endif; ?>
     </div>
 </div>
 <!-- END app/View/Elements/Feed/read_like_user.ctp -->

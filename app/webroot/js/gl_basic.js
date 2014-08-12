@@ -97,6 +97,19 @@ $(document).ready(function () {
             });
         }
     });
+    $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url,function (data) {
+                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                $modal_elm.modal();
+            }).success(function () {
+            });
+        }
+    });
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var url = $(this).attr('href');

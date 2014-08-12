@@ -48,7 +48,13 @@
                 $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                            ['class' => 'gl-feed-img']) ?>
                 <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
-                <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
+                <div class="font-size_11">
+                    <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
+                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                       class="modal-ajax-get-share-circles-users">
+                        <i class="fa fa-check"></i>
+                    </a>
+                </div>
             </div>
             <div class="col col-xxs-12 gl-feed-text showmore font-size_14">
                 <?= $this->TextEx->autoLink($post['Post']['body']) ?>
