@@ -26,9 +26,16 @@ if (!isset($form)) {
                 <? if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者の為、変更不可") ?>
                 <? else: ?>
-                    <?=
-                    $this->Form->input("$key.join",
-                                       ['label' => false, 'div' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => !empty($circle['CircleMember']) ? true : false]) ?>
+                    <?
+                    $joined = false;
+                    foreach ($circle['CircleMember'] as $member) {
+                        if ($member['user_id'] == $this->Session->read('Auth.User.id')) {
+                            $joined = true;
+                            break;
+                        }
+                    }
+                    echo $this->Form->input("$key.join",
+                                            ['label' => false, 'div' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => $joined ? true : false]) ?>
                     <?= $this->Form->hidden("$key.circle_id", ['value' => $circle['Circle']['id']]) ?>
                 <?endif; ?>
             </div>
