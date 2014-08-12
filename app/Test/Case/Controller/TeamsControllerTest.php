@@ -251,8 +251,20 @@ class TeamsControllerTest extends ControllerTestCase
             ->method('_validatePost')
             ->will($this->returnValue(true));
         $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
             ['id', $uid],
         ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
         /** @noinspection PhpUndefinedFieldInspection */
         $Teams->Team->TeamMember->myStatusWithTeam = null;
         $data = [
@@ -273,10 +285,6 @@ class TeamsControllerTest extends ControllerTestCase
         $session_value_map = [
             ['current_team_id', $Teams->Team->getLastInsertId()]
         ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-            );
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($session_value_map)
@@ -308,6 +316,11 @@ class TeamsControllerTest extends ControllerTestCase
             ->method('_validatePost')
             ->will($this->returnValue(true));
         $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
             ['id', $uid],
         ];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -368,6 +381,11 @@ class TeamsControllerTest extends ControllerTestCase
             ->method('_validatePost')
             ->will($this->returnValue(true));
         $value_map = [
+            [null, [
+                'id'         => $uid,
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
             ['id', $uid],
         ];
         /** @noinspection PhpUndefinedFieldInspection */

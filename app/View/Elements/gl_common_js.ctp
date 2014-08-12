@@ -126,7 +126,7 @@ $(document).ready(function () {
                 var team = {
                     'id': 'public',
                     'text': "<?=__d('gl',"チーム全体")?>",
-                    'image': "<?=$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small'])?>"
+                    'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
                 };
                 data.results.push(team);
                 return { results: data.results };
@@ -149,7 +149,7 @@ $(document).ready(function () {
                 {
                     'id': 'public',
                     'text': "<?=__d('gl',"チーム全体")?>",
-                    'image': "<?=$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small'])?>"
+                    'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
                 }
             ];
             callback(data);

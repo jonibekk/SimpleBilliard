@@ -300,6 +300,8 @@ class PostsController extends AppController
 
     function feed()
     {
+        $this->_setMyCircle();
+        $this->_setFeedMoreReadUrl();
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {

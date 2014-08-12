@@ -58,6 +58,8 @@ class PagesController extends AppController
                     $this->Session->delete('add_new_mode');
                     $this->set('mode_view', MODE_VIEW_TUTORIAL);
                 }
+                $this->_setMyCircle();
+                $this->_setFeedMoreReadUrl();
                 try {
                     $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
                 } catch (RuntimeException $e) {

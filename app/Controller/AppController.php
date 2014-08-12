@@ -88,8 +88,6 @@ class AppController extends Controller
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
                 $this->_setMyTeam();
-                $this->_setMyCircle();
-                $this->_setFeedMoreReadUrl();
             }
             $this->_setMyMemberStatus();
         }
