@@ -83,7 +83,7 @@ class PagesController extends AppController
     {
         $this->_setLanguage();
         //全ページ許可
-        $this->Auth->allow();
+        $this->Auth->allow('display');
         //切り換え可能な言語をセット
         $this->set('lang_list', $this->_getPageLanguageList());
         parent::beforeFilter();

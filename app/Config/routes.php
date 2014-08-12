@@ -20,8 +20,8 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
 }
 
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/circle_feed/:circle_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/post_permanent/:post_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
+Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'feed',]);
+Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 /**
  * トップページの言語切り換えの為のルーティング設定。
  * PagesControllerにのみ影響する。

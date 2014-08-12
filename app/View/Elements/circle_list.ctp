@@ -16,7 +16,7 @@
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix">
-                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display', 'home', 'circle_id' => $circle['Circle']['id']]) ?>">
+                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
                     <div class="circle-icon_box">
                         <?=
                         $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
