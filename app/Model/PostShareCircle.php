@@ -103,27 +103,11 @@ class PostShareCircle extends AppModel
                 'PostShareCircle.team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'PostShareCircle.id',
+                'PostShareCircle.circle_id',
             ],
-            'contain'    => [
-                'Circle' => [
-                    'fields'       => [
-                        'Circle.name',
-                        'Circle.photo_file_name',
-                        'Circle.circle_member_count',
-                    ],
-                    'CircleMember' => [
-                        'fields' => [
-                            'CircleMember.id'
-                        ],
-                        'User'   => [
-                            'fields' => $this->Circle->CircleMember->User->profileFields
-                        ]
-                    ]
-                ]
-            ]
         ];
-        $res = $this->find('all', $options);
+        $circle_list = $this->find('list', $options);
+        $res = $this->Circle->getCirclesAndMemberById($circle_list);
         return $res;
     }
 

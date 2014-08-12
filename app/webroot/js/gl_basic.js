@@ -41,7 +41,10 @@ $(document).ready(function () {
 
     //bootstrap switch
     $(".bt-switch").bootstrapSwitch();
-
+    //bootstrap tooltip
+    $('body').tooltip({
+        selector: '[data-toggle="tooltip"]'
+    });
     //form二重送信防止
     $('form').on('submit', function () {
         $(this).find('input:submit').attr('disabled', 'disabled');

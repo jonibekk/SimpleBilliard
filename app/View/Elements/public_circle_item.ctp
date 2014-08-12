@@ -4,9 +4,8 @@
  * User: daikihirakata
  * Date: 2014/07/19
  * Time: 23:28
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $circle
  * @var                    $key
  * @var                    $form
@@ -38,7 +37,19 @@ if (!isset($form)) {
             <?= h($circle['Circle']['name']) ?></div>
 
         <div class="font-size_12 color9197a3 modalFeedTextPaddingSmall">
-            <?= __d('gl', "%s人のメンバーが所属", $circle['Circle']['circle_member_count']) ?>
+            <?
+            $title = '<ul class="gl-user-list-in-tooltip">';
+            foreach ($circle['CircleMember'] as $member) {
+                $img = $this->Upload->uploadImage($member, 'User.photo', ['style' => 'small'],
+                                                  ['width' => '16px', 'height' => '16px']);
+                $username = $member['User']['display_username'];
+                $title .= "<li>{$img}&nbsp;{$username}</li>";
+            }
+            $title .= "</ul>";
+            ?>
+            <a href="#" data-triger="click" data-toggle="tooltip" data-placement="bottom" data-html="true"
+               data-original-title='<?= $title ?>'>
+                <?= __d('gl', "%s人のメンバーが所属", $circle['Circle']['circle_member_count']) ?></a>
         </div>
     </div>
 </div>

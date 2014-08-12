@@ -215,9 +215,39 @@ class Circle extends AppModel
                 'CircleMember' => [
                     'conditions' => [
                         'CircleMember.user_id' => $this->me['id']
+                    ],
+                    'User'       => [
+                        'fields' => $this->CircleMember->User->profileFields
                     ]
                 ]
             ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    function getCirclesAndMemberById($circle_ids)
+    {
+        $options = [
+            'conditions' => [
+                'Circle.id'      => $circle_ids,
+                'Circle.team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'Circle.name',
+                'Circle.photo_file_name',
+                'Circle.circle_member_count',
+            ],
+            'contain'    => [
+                'CircleMember' => [
+                    'fields' => [
+                        'CircleMember.id'
+                    ],
+                    'User'   => [
+                        'fields' => $this->CircleMember->User->profileFields
+                    ]
+                ]
+            ],
         ];
         $res = $this->find('all', $options);
         return $res;
