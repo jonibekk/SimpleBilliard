@@ -575,7 +575,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
+            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test']]]));
 
         $user_id = 1;
         $team_id = 1;
@@ -755,7 +755,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
+            ->will($this->returnValueMap([['test_aaa', ['title' => 'test', 'description' => 'test']]]));
 
         $user_id = 1;
         $team_id = 1;
