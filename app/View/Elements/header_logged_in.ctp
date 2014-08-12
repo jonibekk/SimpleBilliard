@@ -13,7 +13,7 @@
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <div class="navbar navbar-fixed-top navbar-default gl-navbar" style="">
-    <div class="container gl-nav-container">
+    <div class="gl-nav-container header-container">
         <div class="navbar-header navbar-right">
             <button type="button" class="navbar-toggle gl-hamburger" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas"
@@ -23,8 +23,10 @@
                 <span class="icon-bar"></span>
             </button>
             <div class="pull-right gl-navbar-icons">
-                <div class="dropdown gl-navbar-nav-fix">
-                    <a href="#" data-toggle="dropdown" id="download">
+                <a href="#" class="header-home">ホーム</a>
+
+                <div class="dropdown gl-navbar-nav-fix header-circle">
+                <a href="#" data-toggle="dropdown" id="download">
                         <i class="fa fa-plus-circle"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
@@ -44,8 +46,9 @@
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o"></i></a>
 
                 <div class="dropdown gl-navbar-nav-fix">
-                    <a href="#" class="dropdown-toggle me-menu-image no-line" data-toggle="dropdown" id="download">
-                        <?=
+                    <a href="#" class="dropdown-toggle me-menu-image no-line header-user-profile" data-toggle="dropdown"
+                       id="download">
+                    <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
                                                    ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
                         <i class="fa fa-caret-down"></i></a>
@@ -77,6 +80,13 @@
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
+                <li><a href="#" class="header-goal"><i class="fa fa-bullseye develop--forbiddenLink"></i>&nbsp;
+                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
+                    </a></li>
+                <li><a href="#" class="header-team"><i class="fa fa-users develop--forbiddenLink"></i>&nbsp;
+                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
+                    </a>
+                </li>
                 <li>
                     <form class="gl-nav-form-group" role="search">
                         <?
@@ -94,13 +104,6 @@
                                                 ))
                         ?>
                     </form>
-                </li>
-                <li><a href="#"><i class="fa fa-bullseye develop--forbiddenLink"></i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
-                    </a></li>
-                <li><a href="#"><i class="fa fa-users develop--forbiddenLink"></i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
-                    </a>
                 </li>
                 <li class="header-search-group">
                 <form class="gl-nav-form-group" role="search">

@@ -42,7 +42,7 @@
     echo $this->fetch('meta');
     ?>
     <!--suppress HtmlUnknownTarget -->
-    <link href="img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
+    <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
     <!--[if lt IE 9]>
     <?= $this->Html->script('html5shiv')?>
     <?= $this->Html->script('respond.min')?>

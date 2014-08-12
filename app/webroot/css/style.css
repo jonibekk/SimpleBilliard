@@ -23,6 +23,33 @@ footer p {
     margin-bottom: 0;
 }
 
+/*Fontの指定*/
+.font-size_11 {
+    font-size: 11px;
+}
+
+.font-size_12 {
+    font-size: 12px;
+}
+
+.font-size_14 {
+    font-size: 14px;
+}
+
+.font-size_18 {
+    font-size: 18px;
+}
+
+.font-weight_bold {
+    font-weight: bold;
+}
+
+.color9197a3 {
+    color: #9197a3;
+}
+
+/*/Fontの指定*/
+
 .required label:after {
     color: #E00;
     content: " *";
@@ -111,14 +138,14 @@ footer p {
 .gl-navbar-icons > a {
     float: left;
     font-size: 20px;
-    padding: 6px 15px;
+    padding: 6px 10px;
     color: #000000;
 }
 
 .gl-navbar-icons > .dropdown > a {
     float: left;
     font-size: 20px;
-    padding: 6px 15px;
+    padding: 6px 10px;
     color: #000000;
 }
 
@@ -191,7 +218,7 @@ footer p {
 
 /*ここ修正必須です。8月5日*/
 .gl-nav-team-select {
-    width: 100px;
+    width: 112px;
 }
 
 .gl-nav-form-group input, .gl-nav-form-group select {
@@ -440,58 +467,25 @@ ul.gl-input-images > li {
     margin-bottom: 10px;
 }
 
-/*Fontの指定*/
-.font-size_11 {
-    font-size: 11px;
-}
 
-.font-size_12 {
-    font-size: 12px;
-}
-
-.font-size_14 {
-    font-size: 14px;
-}
-
-.font-size_18 {
-    font-size: 18px;
-}
-
-.font-weight_bold {
-    font-weight: bold;
-}
-
-.color9197a3 {
-    color: #9197a3;
-}
-
-/*/Fontの指定*/
 
 /*レイアウトの指定*/
 .layout-main {
     padding: 0;
 }
-
 .layout-sub {
     padding: 0;
 }
-
 .layout-goal {
     padding: 0;
 }
-
 .layout-header_right {
     padding: 0;
 }
-
 /*/レイアウトの指定*/
 
 .navbar {
     margin: 0;
-}
-
-.gl-nav-container {
-    color: #fff;
 }
 
 .nav-tabs > li.active > a,
@@ -599,13 +593,41 @@ ul.gl-input-images > li {
     width: 14px;
     text-align: right;
 }
-
 /*/サークルのデザイン*/
+
+/*HEADER*/
+.gl-nav-container {
+    color: #fff;
+    width: 93.75%;
+    margin: auto;
+}
+
+.header-circle {
+    padding-left: 0;
+}
+
+.header-user-profile {
+    padding-right: 0 !important;
+    padding-left: 10px !important;
+}
+
+.header-home {
+    font-size: 12px !important;
+    line-height: 30px;
+    margin-right: 10px;
+    color: #808080 !important;
+}
+
+/*/HEADER*/
 
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
     .container {
+        width: 97.5%;
+    }
+
+    .gl-nav-container {
         width: 97.5%;
     }
 
@@ -632,6 +654,29 @@ ul.gl-input-images > li {
         width: 756px;
     }
 
+    .gl-nav-container {
+        width: 756px;
+    }
+
+    .header-search-group {
+        margin-left: 20px;
+    }
+
+    .navbar-nav > li > .header-logo {
+        padding-left: 4px;
+        padding-right: 10px;
+    }
+
+    .navbar-nav > li > .header-goal,
+    .navbar-nav > li > .header-team {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .gl-nav-team-select {
+        margin-left: 16px;
+    }
+
     .circle-name_box {
         width: 160px;
     }
@@ -647,8 +692,35 @@ ul.gl-input-images > li {
         width: 972px;
     }
 
+    .gl-nav-container {
+        width: 972px;
+    }
+
+    .navbar-nav > li > .header-logo {
+        margin-left: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    .navbar-nav > li > .header-goal {
+        padding-left: 4px;
+        margin-left: 30px;
+        padding-right: 4px;
+    }
+
+    .navbar-nav > li > .header-team {
+        padding-left: 4px;
+        margin-left: 30px;
+        padding-right: 4px;
+    }
+
     .gl-nav-team-select {
-        width: 162px;
+        width: 166px;
+        margin-left: 16px;
+    }
+
+    .header-search-group {
+        margin-left: 98px;
     }
 
     .layout-main {
@@ -674,8 +746,21 @@ ul.gl-input-images > li {
         width: 1008px;
     }
 
+    .gl-nav-container {
+        width: 1008px;
+    }
+
+    .navbar-nav > li > .header-goal {
+        margin-left: 34px;
+    }
+
+    .navbar-nav > li > .header-team {
+        margin-left: 34px;
+    }
+
     .gl-nav-team-select {
-        width: 168px;
+        width: 184px;
+        margin-left: 15px;
     }
 
     .layout-sub_padding {
@@ -951,27 +1036,3 @@ ul.gl-input-images > li {
     background: green;
 }
 
-/*Small*/
-@media (min-width: 768px) {
-    .header-search-group {
-        margin-left: 8px;
-    }
-
-    .navbar-nav > li > .header-logo {
-        padding-left: 18px;
-    }
-}
-
-/*Medium*/
-@media (min-width: 992px) {
-    .navbar-nav > li > .header-logo {
-        padding-left: 4px;
-    }
-}
-
-/*ExtraMedium*/
-@media (min-width: 1024px) {
-}
-
-@media (min-width: 1200px) {
-}
