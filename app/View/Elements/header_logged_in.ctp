@@ -23,7 +23,7 @@
                 <span class="icon-bar"></span>
             </button>
             <div class="pull-right gl-navbar-icons">
-                <a href="#" class="header-home">ホーム</a>
+                <a href="<?= $this->Html->url('/') ?>" class="header-home">ホーム</a>
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
                 <a href="#" data-toggle="dropdown" id="download">
