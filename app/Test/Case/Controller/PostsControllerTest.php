@@ -555,7 +555,7 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
+                'body' => 'test'
             ],
         ];
         $post = $Posts->Post->save($post_data);
@@ -573,6 +573,9 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
 
         $user_id = 1;
         $team_id = 1;
@@ -581,14 +584,14 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
+                'body' => 'test'
             ],
         ];
         $post = $Posts->Post->save($post_data);
 
         $data = [
             'Post'         => [
-                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
+                'body' => 'test_aaaa'
             ],
             'photo_delete' => [
                 1 => 1
@@ -750,6 +753,9 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
 
         $user_id = 1;
         $team_id = 1;
@@ -758,7 +764,7 @@ class PostsControllerTest extends ControllerTestCase
             'Comment'      => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
+                'body' => 'test'
             ],
             'photo_delete' => [
                 1 => 1
