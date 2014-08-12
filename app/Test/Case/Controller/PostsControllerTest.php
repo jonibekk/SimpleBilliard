@@ -555,7 +555,7 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body'    => 'test'
+                'body' => 'http://www.isao.co.jp/ test'
             ],
         ];
         $post = $Posts->Post->save($post_data);
@@ -581,7 +581,7 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body'    => 'test'
+                'body' => 'http://www.isao.co.jp/ test'
             ],
         ];
         $post = $Posts->Post->save($post_data);

@@ -16,30 +16,26 @@ class PostsController extends AppController
      */
     public function add()
     {
-        if ($this->request->is('post')) {
-            if (isset($this->request->data['Post']['body']) && !empty($this->request->data['Post']['body'])) {
-                $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
-                if (isset($ogp['title']) && isset($ogp['description'])) {
-                    $this->request->data['Post']['site_info'] = json_encode($ogp);
-                }
+        $this->request->allowMethod('post');
+        if (isset($this->request->data['Post']['body']) && !empty($this->request->data['Post']['body'])) {
+            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
+            if (isset($ogp['title']) && isset($ogp['description'])) {
+                $this->request->data['Post']['site_info'] = json_encode($ogp);
             }
-            if ($this->Post->add($this->request->data)) {
-                $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
-            }
-            else {
-                if (!empty($this->Post->validationErrors)) {
-                    $error_msg = array_shift($this->Post->validationErrors);
-                    $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
-                }
-                else {
-                    $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
-                }
-            }
-            $this->redirect($this->referer());
+        }
+        if ($this->Post->add($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
         }
         else {
-            throw new RuntimeException(__d('exception', "不正な画面遷移です。"));
+            if (!empty($this->Post->validationErrors)) {
+                $error_msg = array_shift($this->Post->validationErrors);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
+            }
         }
+        $this->redirect($this->referer());
     }
 
     /**
@@ -79,6 +75,7 @@ class PostsController extends AppController
      */
     public function post_edit($id)
     {
+        $this->request->allowMethod('post');
         $this->Post->id = $id;
         if (!$this->Post->exists()) {
             throw new NotFoundException(__('gl', "この投稿は存在しません。"));
@@ -86,7 +83,13 @@ class PostsController extends AppController
         if (!$this->Post->isOwner($this->Auth->user('id'))) {
             throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
         }
-        $this->request->allowMethod('post');
+        if (isset($this->request->data['Post']['body']) && !empty($this->request->data['Post']['body'])) {
+            $this->request->data['Post']['site_info'] = null;
+            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
+            if (isset($ogp['title']) && isset($ogp['description'])) {
+                $this->request->data['Post']['site_info'] = json_encode($ogp);
+            }
+        }
         if ($this->Post->postEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
         }
