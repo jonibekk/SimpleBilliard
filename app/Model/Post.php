@@ -416,7 +416,6 @@ class Post extends AppModel
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
         }
-//        $this->log($res);
         return $res;
     }
 
