@@ -96,6 +96,10 @@ class Circle extends AppModel
         'CircleMember'    => [
             'dependent' => true,
         ],
+        'CircleAdmin' => [
+            'className'  => 'CircleMember',
+            'conditions' => ['CircleAdmin.admin_flg' => true],
+        ],
         'PostShareCircle' => [
             'dependent' => true,
         ],
@@ -213,12 +217,21 @@ class Circle extends AppModel
             'order'      => ['Circle.modified desc'],
             'contain'    => [
                 'CircleMember' => [
-                    'conditions' => [
-                        'CircleMember.user_id' => $this->me['id']
+                    'fields' => [
+                        'CircleMember.id'
                     ],
-                    'User'       => [
+                    'User'   => [
                         'fields' => $this->CircleMember->User->profileFields
                     ]
+                ],
+                'CircleAdmin'  => [
+                    'conditions' => [
+                        'CircleAdmin.user_id'   => $this->me['id'],
+                        'CircleAdmin.admin_flg' => true
+                    ],
+                    'fields'     => [
+                        'CircleAdmin.id'
+                    ],
                 ]
             ]
         ];

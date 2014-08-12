@@ -23,7 +23,7 @@ if (!isset($form)) {
     <div class="gl-comment-body gl-modal-comment">
         <? if ($form): ?>
             <div class="pull-right gl-circle-join-switch">
-                <? if ($circle['CircleMember'][0]['admin_flg']): ?>
+                <? if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者の為、変更不可") ?>
                 <? else: ?>
                     <?=
