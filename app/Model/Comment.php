@@ -131,9 +131,6 @@ class Comment extends AppModel
      */
     public function add($postData, $uid = null, $team_id = null)
     {
-        if (!isset($postData['Comment']) || empty($postData['Comment'])) {
-            return false;
-        }
         $this->setUidAndTeamId($uid, $team_id);
         $postData['Comment']['user_id'] = $this->uid;
         $postData['Comment']['team_id'] = $this->team_id;
@@ -188,7 +185,8 @@ class Comment extends AppModel
                 }
             }
         }
-        return $this->save($data);
+        $res = $this->save($data);
+        return $res;
     }
 
 }
