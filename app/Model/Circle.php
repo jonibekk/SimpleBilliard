@@ -127,7 +127,10 @@ class Circle extends AppModel
                 ];
             }
         }
-        return $this->saveAll($data);
+        if ($res = $this->saveAll($data)) {
+            $this->CircleMember->updateCounterCache(['circle_id' => $this->getLastInsertID()]);
+        }
+        return $res;
     }
 
     function edit($data)
@@ -155,7 +158,10 @@ class Circle extends AppModel
         if (!empty($exists_member_list)) {
             $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
         }
-        return $this->saveAll($data);
+        if ($res = $this->saveAll($data)) {
+            $this->CircleMember->updateCounterCache(['circle_id' => $data['Circle']['id']]);
+        }
+        return $res;
     }
 
     public function getCirclesByKeyword($keyword, $limit = 10)
