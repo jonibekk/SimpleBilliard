@@ -555,7 +555,7 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'http://www.isao.co.jp/ test'
+                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
             ],
         ];
         $post = $Posts->Post->save($post_data);
@@ -581,14 +581,14 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'http://www.isao.co.jp/ test'
+                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
             ],
         ];
         $post = $Posts->Post->save($post_data);
 
         $data = [
             'Post'         => [
-                'body' => 'test_aaaa'
+                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
             ],
             'photo_delete' => [
                 1 => 1
@@ -758,7 +758,7 @@ class PostsControllerTest extends ControllerTestCase
             'Comment'      => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body'    => 'test'
+                'body' => 'http://kakaku.com/item/K0000575241/?lid=ksearch_kakakuitem_image'
             ],
             'photo_delete' => [
                 1 => 1

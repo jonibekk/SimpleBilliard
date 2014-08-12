@@ -149,6 +149,13 @@ class PostsController extends AppController
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
         $this->request->allowMethod('post');
+        if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
+            $this->request->data['Comment']['site_info'] = null;
+            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
+            if (isset($ogp['title']) && isset($ogp['description'])) {
+                $this->request->data['Comment']['site_info'] = json_encode($ogp);
+            }
+        }
         if ($this->Post->Comment->commentEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コメントの変更を保存しました。"));
         }
