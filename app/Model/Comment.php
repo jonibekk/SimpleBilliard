@@ -14,7 +14,7 @@ class Comment extends AppModel
 {
     public $actsAs = [
         'Upload' => [
-            'photo1' => [
+            'photo1'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -22,7 +22,7 @@ class Comment extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo2' => [
+            'photo2'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -30,7 +30,7 @@ class Comment extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo3' => [
+            'photo3'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -38,7 +38,7 @@ class Comment extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo4' => [
+            'photo4'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -46,10 +46,17 @@ class Comment extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo5' => [
+            'photo5'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'site_photo' => [
+                'styles'  => [
+                    'small' => '80w',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
@@ -65,23 +72,27 @@ class Comment extends AppModel
         'comment_like_count' => ['numeric' => ['rule' => ['numeric']]],
         'comment_read_count' => ['numeric' => ['rule' => ['numeric']]],
         'del_flg'            => ['boolean' => ['rule' => ['boolean']]],
-        'photo1' => [
+        'photo1'     => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo2' => [
+        'photo2'     => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo3' => [
+        'photo3'     => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo4' => [
+        'photo4'     => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo5' => [
+        'photo5'     => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'site_photo' => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],

@@ -31,7 +31,7 @@ class Post extends AppModel
 
     public $actsAs = [
         'Upload' => [
-            'photo1' => [
+            'photo1'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -39,7 +39,7 @@ class Post extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo2' => [
+            'photo2'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -47,7 +47,7 @@ class Post extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo3' => [
+            'photo3'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -55,7 +55,7 @@ class Post extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo4' => [
+            'photo4'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
@@ -63,10 +63,17 @@ class Post extends AppModel
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
             ],
-            'photo5' => [
+            'photo5'     => [
                 'styles'  => [
                     'small' => '511l',
                     'large' => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 100,
+            ],
+            'site_photo' => [
+                'styles'  => [
+                    'small' => '80w',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality' => 100,
@@ -103,6 +110,10 @@ class Post extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'photo5'          => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'site_photo' => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
