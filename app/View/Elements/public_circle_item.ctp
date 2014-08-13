@@ -24,7 +24,7 @@ if (!isset($form)) {
         <? if ($form): ?>
             <div class="pull-right gl-circle-join-switch">
                 <? if (!empty($circle['CircleAdmin'])): ?>
-                    <?= __d('gl', "管理者の為、変更不可") ?>
+                    <?= __d('gl', "管理者") ?>
                 <? else: ?>
                     <?
                     $joined = false;
@@ -56,7 +56,7 @@ if (!isset($form)) {
             ?>
             <a href="#" data-triger="click" data-toggle="tooltip" data-placement="bottom" data-html="true"
                data-original-title='<?= $title ?>'>
-                <?= __d('gl', "%s人のメンバーが所属", $circle['Circle']['circle_member_count']) ?></a>
+                <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?></a>
         </div>
     </div>
 </div>
