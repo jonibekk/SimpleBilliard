@@ -164,7 +164,7 @@
                                 <?=
                                 $this->Html->image('ajax-loader.gif',
                                                    [
-                                                       'class'         => 'lazy',
+                                                       'class' => 'lazy media-object',
                                                        'data-original' => $this->Upload->uploadUrl($post,
                                                                                                    "Post.site_photo",
                                                                                                    ['style' => 'small']),

@@ -123,32 +123,37 @@
             <? if ($comment['site_info']): ?>
                 <? $site_info = json_decode($comment['site_info'], true) ?>
                 <div class="col col-xxs-12">
-                    <div class="site-info">
-                        <div class="media">
-                            <div class="pull-left">
-                                <?=
-                                $this->Html->image('ajax-loader.gif',
-                                                   [
-                                                       'class'         => 'lazy',
-                                                       'data-original' => $this->Upload->uploadUrl($comment,
-                                                                                                   "Comment.site_photo",
-                                                                                                   ['style' => 'small']),
-                                                       'width'         => '80px',
-                                                   ]
-                                )
-                                ?>
-                            </div>
+                    <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
+                       class="no-line">
+                        <div class="site-info">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <?=
+                                    $this->Html->image('ajax-loader.gif',
+                                                       [
+                                                           'class'         => 'lazy media-object',
+                                                           'data-original' => $this->Upload->uploadUrl($comment,
+                                                                                                       "Comment.site_photo",
+                                                                                                       ['style' => 'small']),
+                                                           'width'         => '80px',
+                                                       ]
+                                    )
+                                    ?>
+                                </div>
 
-                            <div class="media-body">
-                                <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank">
-                                    <h4 class="media-heading"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
-                                </a>
+                                <div class="media-body">
+                                    <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
 
-                                <p><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
-                                <?= isset($site_info['description']) ? $site_info['description'] : null ?>
+                                    <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                    <? if (isset($site_info['description'])): ?>
+                                        <div class="font-size_12">
+                                            <?= $site_info['description'] ?>
+                                        </div>
+                                    <? endif; ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             <? endif; ?>
 
