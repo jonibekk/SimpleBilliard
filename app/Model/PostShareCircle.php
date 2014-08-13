@@ -95,4 +95,20 @@ class PostShareCircle extends AppModel
         return $res;
     }
 
+    public function getShareCirclesByPost($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'PostShareCircle.post_id' => $post_id,
+                'PostShareCircle.team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'PostShareCircle.circle_id',
+            ],
+        ];
+        $circle_list = $this->find('list', $options);
+        $res = $this->Circle->getCirclesAndMemberById($circle_list);
+        return $res;
+    }
+
 }

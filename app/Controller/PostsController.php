@@ -320,4 +320,19 @@ class PostsController extends AppController
         }
     }
 
+    public function ajax_get_share_circles_users_modal($post_id)
+    {
+        $this->_ajaxPreProcess();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $circles = $this->Post->PostShareCircle->getShareCirclesByPost($post_id);
+        $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
+        $this->set(compact('circles', 'users'));
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_share_circles_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
 }

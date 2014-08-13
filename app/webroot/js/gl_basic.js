@@ -41,7 +41,10 @@ $(document).ready(function () {
 
     //bootstrap switch
     $(".bt-switch").bootstrapSwitch();
-
+    //bootstrap tooltip
+    $('body').tooltip({
+        selector: '[data-toggle="tooltip"]'
+    });
     //form二重送信防止
     $('form').on('submit', function () {
         $(this).find('input:submit').attr('disabled', 'disabled');
@@ -92,6 +95,19 @@ $(document).ready(function () {
             $.get(url,function (data) {
                 var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
                 $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
+                $modal_elm.modal();
+            }).success(function () {
+            });
+        }
+    });
+    $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url,function (data) {
+                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
                 $modal_elm.modal();
             }).success(function () {
             });
@@ -255,7 +271,6 @@ function attrUndefinedCheck(obj, attr_name) {
         throw new Error(msg);
     }
 }
-
 $(function () {
     $(".develop--forbiddenLink").hover(
         function () {
