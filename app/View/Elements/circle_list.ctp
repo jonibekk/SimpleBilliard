@@ -48,11 +48,17 @@
             </div>
         <? endforeach ?>
     <? endif; ?>
-    <div class="circle-layout clearfix">
-        <?=
+    <div class="clearfix develop--circle-seek">
+        <i class="fa fa-eye circle-function circle-seek-icon"></i><?=
         $this->Html->link(__d('gl', "公開サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                           ['class' => 'modal-ajax-get-public-circles']) ?>
+    </div>
+    <div class="clearfix develop--circle-make">
+        <i class="fa fa-plus-circle circle-function circle-make-icon"></i><?=
+        $this->Html->link(__d('gl', "サークルを作成する"),
+                          ['controller' => '#', 'action' => '#'],
+                          ['class' => '#']) ?>
     </div>
 </div>
 <!-- END app/View/Elements/circle_list.ctp -->

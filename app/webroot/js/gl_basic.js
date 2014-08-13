@@ -271,15 +271,6 @@ function attrUndefinedCheck(obj, attr_name) {
         throw new Error(msg);
     }
 }
-/*
- $(function(){
- $(".circle-layout").hover(
- function(){
- $(this).append()
- },
- )
- });
- */
 $(function () {
     $(".develop--forbiddenLink").hover(
         function () {
