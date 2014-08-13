@@ -49,7 +49,7 @@ class CommentFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'       => '',
+            'id'       => 1,
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -59,10 +59,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725681
         ),
         array(
-            'id'       => '',
+            'id'       => 2,
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -72,10 +72,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725682
         ),
         array(
-            'id'       => '',
+            'id' => 3,
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -88,7 +88,7 @@ class CommentFixture extends CakeTestFixture
             'modified' => 1400725683
         ),
         array(
-            'id'       => '',
+            'id'       => '4',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -98,10 +98,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725684
         ),
         array(
-            'id'       => '',
+            'id'       => '5',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -111,10 +111,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725685
         ),
         array(
-            'id'       => '',
+            'id'       => '6',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -124,10 +124,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725686
         ),
         array(
-            'id'       => '',
+            'id'       => '7',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -137,10 +137,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725687
         ),
         array(
-            'id'       => '',
+            'id'       => '8',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -150,10 +150,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725688
         ),
         array(
-            'id'       => '',
+            'id'       => '9',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -163,10 +163,10 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725689
         ),
         array(
-            'id'       => '',
+            'id'       => '10',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -176,7 +176,7 @@ class CommentFixture extends CakeTestFixture
             'del_flg'            => 1,
             'deleted'  => 1400725683,
             'created'  => 1400725683,
-            'modified' => 1400725683
+            'modified' => 1400725690
         ),
     );
 
