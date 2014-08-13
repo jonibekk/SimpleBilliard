@@ -50,6 +50,20 @@ footer p {
 
 /*/Fontの指定*/
 
+.link-gray {
+    color: #c1c4c7;
+}
+
+.link-gray:hover,
+.link-gray:active,
+.link-gray:focus {
+    color: #b4b8bf;
+}
+
+.gl-feed-arrow {
+    vertical-align: top;
+}
+
 .required label:after {
     color: #E00;
     content: " *";

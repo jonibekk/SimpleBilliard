@@ -18,8 +18,8 @@
         <div class="col col-xxs-12 gl-feed-user">
             <div class="pull-right">
                 <div class="dropdown">
-                    <a href="#" class="" data-toggle="dropdown" id="download">
-                        <i class="fa fa-chevron-down"></i>
+                    <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
+                        <i class="fa fa-chevron-down gl-feed-arrow"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
