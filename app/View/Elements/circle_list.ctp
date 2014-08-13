@@ -55,8 +55,9 @@
                           ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
     <div class="clearfix develop--circle-make">
-        <i class="fa fa-plus-circle circle-function circle-make-icon"></i>
-        <a href="#" data-toggle="modal" data-target="#modal_add_circle"><?= __d('gl', "サークルを作成する") ?></a>
+        <i class="fa fa-plus-circle circle-function circle-make-icon"></i><a href="#" data-toggle="modal"
+                                                                             data-target="#modal_add_circle"><?= __d('gl',
+                                                                                                                     "サークルを作成する") ?></a>
     </div>
 </div>
 <!-- END app/View/Elements/circle_list.ctp -->
