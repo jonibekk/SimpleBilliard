@@ -23,8 +23,8 @@
             <div class="col col-xxs-12 showmore gl-comment-text">
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
-                        <a href="#" class="" data-toggle="dropdown" id="download">
-                            <i class="fa fa-chevron-down"></i>
+                        <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
+                            <i class="fa fa-chevron-down gl-comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
@@ -39,10 +39,10 @@
                         </ul>
                     </div>
                 <? elseif ($my_member_status['TeamMember']['admin_flg']): ?>
-                    <div class="pull-right">
-                        <?=
-                        $this->Form->postLink('<i class="fa fa-times"></i>',
-                                              ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
+                <div class="pull-right develop--link-gray">
+                    <?=
+                    $this->Form->postLink('<i class="fa fa-times gl-comment-cross"></i>',
+                                          ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>

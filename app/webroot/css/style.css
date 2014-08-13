@@ -60,7 +60,18 @@ footer p {
     color: #b4b8bf;
 }
 
-.gl-feed-arrow {
+.develop--link-gray a {
+    color: #c1c4c7;
+}
+
+.develop--link-gray a:hover {
+    color: #b4b8bf;
+
+}
+
+.gl-feed-arrow,
+.gl-comment-arrow,
+.gl-commetn-cross {
     vertical-align: top;
 }
 
