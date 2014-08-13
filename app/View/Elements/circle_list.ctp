@@ -16,31 +16,34 @@
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix">
-                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
-                    <div class="circle-icon_box">
-                        <?=
-                        $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                                                   ['width' => '16px', 'height' => '16px']) ?>
-                    </div>
-                    <div class="circle-name_box">
-                        <p title="<?= $circle['Circle']['name'] ?>"><?= $circle['Circle']['name'] ?></p>
-                    </div>
-                </a>
+                <div class="circle-link">
+                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
+                        <div class="circle-icon_box">
+                            <?=
+                            $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
+                                                       ['width' => '16px', 'height' => '16px']) ?>
+                        </div>
+                        <div class="circle-name_box">
+                            <p title="<?= $circle['Circle']['name'] ?>"><?= $circle['Circle']['name'] ?></p>
+                        </div>
+                    </a>
 
-                <div class="circle-function_box">
+                    <div class="circle-count_box">
+                        <p class="count-value">
+                            <? if ($circle['CircleMember']['unread_count'] > 9): ?>
+                                9+
+                            <? elseif ($circle['CircleMember']['unread_count'] > 0): ?>
+                                <?= $circle['CircleMember']['unread_count'] ?>
+                            <?endif; ?>
+                        </p>
+                    </div>
+                </div>
+                <div class="circle-function_box clearfix">
                     <? if ($circle['CircleMember']['admin_flg']): ?>
                         <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', $circle['Circle']['id']]) ?>"
-                           class="modal-ajax-get-circle-edit"><i class="fa fa-cog circle-function"></i></a>
+                           class="modal-ajax-get-circle-edit link-gray develop-floatleft"><i
+                                class="fa fa-cog circle-function"></i></a>
                     <? endif; ?>
-                </div>
-                <div class="circle-count_box">
-                    <p class="count-value">
-                        <? if ($circle['CircleMember']['unread_count'] > 9): ?>
-                            9+
-                        <? elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                            <?= $circle['CircleMember']['unread_count'] ?>
-                        <?endif; ?>
-                    </p>
                 </div>
             </div>
         <? endforeach ?>
