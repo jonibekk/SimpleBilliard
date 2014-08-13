@@ -608,16 +608,15 @@ ul.gl-input-images > li {
 }
 
 .circle_heading {
-    margin: 0;
+    margin: 0 0 2px;
     font-weight: bold;
     color: #a5a5a5;
 }
 
 .circle-layout {
     width: 100%;
-    line-height: 16px;
+    height: 24px;
     position: relative;
-    padding: 4px 0;
 }
 
 .count-value {
@@ -629,6 +628,32 @@ ul.gl-input-images > li {
     width: 14px;
     text-align: right;
 }
+
+.develop--circle-seek {
+    font-size: 12px;
+    line-height: 16px;
+    padding: 8px 0 3px 0;
+}
+
+.develop--circle-make {
+    font-size: 12px;
+    line-height: 16px;
+    padding: 3px 0 3px 0;
+}
+
+.circle-seek-icon {
+    text-align: center;
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+.circle-make-icon {
+    width: 14px;
+    font-size: 14px;
+    text-align: center;
+    margin-right: 6px;
+}
+
 /*/サークルのデザイン*/
 
 /*HEADER*/
