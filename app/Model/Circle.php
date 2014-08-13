@@ -96,6 +96,10 @@ class Circle extends AppModel
         'CircleMember'    => [
             'dependent' => true,
         ],
+        'CircleAdmin' => [
+            'className'  => 'CircleMember',
+            'conditions' => ['CircleAdmin.admin_flg' => true],
+        ],
         'PostShareCircle' => [
             'dependent' => true,
         ],
@@ -127,7 +131,10 @@ class Circle extends AppModel
                 ];
             }
         }
-        return $this->saveAll($data);
+        if ($res = $this->saveAll($data)) {
+            $this->CircleMember->updateCounterCache(['circle_id' => $this->getLastInsertID()]);
+        }
+        return $res;
     }
 
     function edit($data)
@@ -155,7 +162,10 @@ class Circle extends AppModel
         if (!empty($exists_member_list)) {
             $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
         }
-        return $this->saveAll($data);
+        if ($res = $this->saveAll($data)) {
+            $this->CircleMember->updateCounterCache(['circle_id' => $data['Circle']['id']]);
+        }
+        return $res;
     }
 
     public function getCirclesByKeyword($keyword, $limit = 10)
@@ -204,12 +214,24 @@ class Circle extends AppModel
                 'Circle.team_id'    => $this->current_team_id,
                 'Circle.public_flg' => true,
             ],
-            'order' => ['Circle.modified desc'],
+            'order'      => ['Circle.modified desc'],
             'contain'    => [
                 'CircleMember' => [
-                    'conditions' => [
-                        'CircleMember.user_id' => $this->me['id']
+                    'fields' => [
+                        'CircleMember.id'
+                    ],
+                    'User'   => [
+                        'fields' => $this->CircleMember->User->profileFields
                     ]
+                ],
+                'CircleAdmin'  => [
+                    'conditions' => [
+                        'CircleAdmin.user_id'   => $this->me['id'],
+                        'CircleAdmin.admin_flg' => true
+                    ],
+                    'fields'     => [
+                        'CircleAdmin.id'
+                    ],
                 ]
             ]
         ];
@@ -217,4 +239,30 @@ class Circle extends AppModel
         return $res;
     }
 
+    function getCirclesAndMemberById($circle_ids)
+    {
+        $options = [
+            'conditions' => [
+                'Circle.id'      => $circle_ids,
+                'Circle.team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'Circle.name',
+                'Circle.photo_file_name',
+                'Circle.circle_member_count',
+            ],
+            'contain'    => [
+                'CircleMember' => [
+                    'fields' => [
+                        'CircleMember.id'
+                    ],
+                    'User'   => [
+                        'fields' => $this->CircleMember->User->profileFields
+                    ]
+                ]
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }

@@ -457,6 +457,14 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetShareCirclesUsersModal()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_share_circles_users_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     /**
      * testDelete method
      *
@@ -755,7 +763,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-            ->will($this->returnValueMap([['test_aaa', ['title' => 'test', 'description' => 'test']]]));
+            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test']]]));
 
         $user_id = 1;
         $team_id = 1;

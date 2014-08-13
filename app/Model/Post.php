@@ -373,16 +373,16 @@ class Post extends AppModel
                 'Post.modified' => 'desc'
             ],
             'contain'    => [
-                'User'       => [
+                'User'            => [
                     'fields' => $this->User->profileFields
                 ],
-                'MyPostLike' => [
+                'MyPostLike'      => [
                     'conditions' => [
                         'MyPostLike.user_id' => $this->me['id'],
                         'MyPostLike.team_id' => $this->current_team_id,
                     ],
                 ],
-                'Comment'    => [
+                'Comment'         => [
                     'conditions'    => ['Comment.team_id' => $this->current_team_id],
                     'order'         => [
                         'Comment.created' => 'desc'
@@ -395,6 +395,12 @@ class Post extends AppModel
                             'MyCommentLike.team_id' => $this->current_team_id,
                         ]
                     ],
+                ],
+                'PostShareCircle' => [
+                    'fields' => ["PostShareCircle.id"]
+                ],
+                'PostShareUser'   => [
+                    'fields' => ["PostShareUser.id"]
                 ],
             ],
         ];

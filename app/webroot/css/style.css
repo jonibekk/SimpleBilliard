@@ -966,6 +966,15 @@ ul.gl-input-images > li {
     margin: 0;
 }
 
+.gl-user-list-in-tooltip {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.gl-user-list-in-tooltip > li {
+    text-align: left;
+}
+
 .gl-circle-join-switch > .checkbox {
     margin-top: auto;
     margin-bottom: auto;

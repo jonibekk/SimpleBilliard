@@ -15,171 +15,203 @@
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
         <div class="panel-body gl-feed">
-            <div class="col col-xxs-12 gl-feed-user">
-                <div class="pull-right">
-                    <div class="dropdown">
-                        <a href="#" class="" data-toggle="dropdown" id="download">
-                            <i class="fa fa-chevron-down"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                            <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                <li><a href="#" class="target-toggle-click"
-                                       target-id="PostEditForm_<?= $post['Post']['id'] ?>"
-                                       click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
-                                        ><?= __d('gl', "投稿を編集") ?></a>
-                                </li>
-                            <? endif ?>
-                            <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                <li><?=
-                                    $this->Form->postLink(__d('gl', "投稿を削除"),
-                                                          ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
-                                                          null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
-                            <? endif ?>
-                            <li><a href="#" class="copy_me"
-                                   data-clipboard-text="<?=
-                                   $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
-                                                    true) ?>">
-                                    <?= __d('gl', "リンクをコピー") ?></a>
+        <div class="col col-xxs-12 gl-feed-user">
+            <div class="pull-right">
+                <div class="dropdown">
+                    <a href="#" class="" data-toggle="dropdown" id="download">
+                        <i class="fa fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                        <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                            <li><a href="#" class="target-toggle-click"
+                                   target-id="PostEditForm_<?= $post['Post']['id'] ?>"
+                                   click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
+                                    ><?= __d('gl', "投稿を編集") ?></a>
                             </li>
-                        </ul>
-                    </div>
+                        <? endif ?>
+                        <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                            <li><?=
+                                $this->Form->postLink(__d('gl', "投稿を削除"),
+                                                      ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
+                                                      null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
+                        <? endif ?>
+                        <li><a href="#" class="copy_me"
+                               data-clipboard-text="<?=
+                               $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
+                                                true) ?>">
+                                <?= __d('gl', "リンクをコピー") ?></a>
+                        </li>
+                    </ul>
                 </div>
-                <?=
-                $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
-                                           ['class' => 'gl-feed-img']) ?>
-                <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
-                <div class="font-size_11"><?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?></div>
             </div>
-            <div class="col col-xxs-12 gl-feed-text showmore font-size_14">
-                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <?=
+            $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
+                                       ['class' => 'gl-feed-img']) ?>
+            <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
+            <div class="font-size_11">
+                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
+                <?
+                //公開の場合
+                if ($post['Post']['public_flg']): ?>
+                    <i class="fa fa-group"></i>&nbsp;<?= __d('gl', "チーム全体に共有") ?>
+                <?
+                //自分のみ
+                elseif (empty($post['PostShareUser']) && empty($post['PostShareCircle'])): ?>
+                    <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "自分のみ") ?>
+                <?
+                //共有サークル、共有ユーザ
+                elseif (!empty($post['PostShareUser']) && !empty($post['PostShareCircle'])): ?>
+                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                       class="modal-ajax-get-share-circles-users">
+                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークル他に共有") ?>
+                    </a>
+                <?
+                //共有サークルのみ
+                elseif (!empty($post['PostShareCircle'])): ?>
+                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                       class="modal-ajax-get-share-circles-users">
+                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークルに共有") ?>
+                    </a>
+                <?
+                //共有ユーザのみ
+                elseif (!empty($post['PostShareUser'])): ?>
+                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                       class="modal-ajax-get-share-circles-users">
+                        <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "メンバーに共有") ?>
+                    </a>
+                <? endif; ?>
             </div>
+        </div>
+        <div class="col col-xxs-12 gl-feed-text showmore font-size_14">
+            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+        </div>
 
-            <?
-            $photo_count = 0;
-            for ($i = 1; $i <= 5; $i++) {
-                if ($post['Post']["photo{$i}_file_name"]) {
-                    $photo_count++;
-                }
+        <?
+        $photo_count = 0;
+        for ($i = 1; $i <= 5; $i++) {
+            if ($post['Post']["photo{$i}_file_name"]) {
+                $photo_count++;
             }
-            ?>
-            <? if ($photo_count): ?>
-                <div class="col col-xxs-12 gl-feed-picture">
-                    <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
-                        <!-- Indicators -->
-                        <? if ($photo_count >= 2): ?>
-                            <ol class="carousel-indicators">
-                                <? $index = 0 ?>
-                                <? for ($i = 1; $i <= 5; $i++): ?>
-                                    <? if ($post['Post']["photo{$i}_file_name"]): ?>
-                                        <li data-target="#CarouselPost_<?= $post['Post']['id'] ?>"
-                                            data-slide-to="<?= $index ?>"
-                                            class="<?= ($index === 0) ? "active" : null ?>"></li>
-                                        <? $index++ ?>
-                                    <? endif ?>
-                                <? endfor ?>
-                            </ol>
-                        <? endif; ?>
-                        <!-- Wrapper for slides -->
-                        <div class="carousel-inner">
+        }
+        ?>
+        <? if ($photo_count): ?>
+            <div class="col col-xxs-12 gl-feed-picture">
+                <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <? if ($photo_count >= 2): ?>
+                        <ol class="carousel-indicators">
                             <? $index = 0 ?>
                             <? for ($i = 1; $i <= 5; $i++): ?>
                                 <? if ($post['Post']["photo{$i}_file_name"]): ?>
-                                    <div class="item <?= ($index === 0) ? "active" : null ?>">
-                                        <a href="<?=
-                                        $this->Upload->uploadUrl($post, "Post.photo" . $i,
-                                                                 ['style' => 'large']) ?>"
-                                           rel="lightbox" data-lightbox="LightBoxPost_<?= $post['Post']['id'] ?>">
-                                            <?=
-                                            $this->Html->image('ajax-loader.gif',
-                                                               [
-                                                                   'class'         => 'lazy',
-                                                                   'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                               "Post.photo" . $i,
-                                                                                                               ['style' => 'small'])
-                                                               ]
-                                            )
-                                            ?>
-                                        </a>
-                                        <? $index++ ?>
-                                    </div>
+                                    <li data-target="#CarouselPost_<?= $post['Post']['id'] ?>"
+                                        data-slide-to="<?= $index ?>"
+                                        class="<?= ($index === 0) ? "active" : null ?>"></li>
+                                    <? $index++ ?>
                                 <? endif ?>
                             <? endfor ?>
-                        </div>
-
-                        <!-- Controls -->
-                        <? if ($photo_count >= 2): ?>
-                            <a class="left carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
-                               data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                            </a>
-                            <a class="right carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
-                               data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                            </a>
-                        <? endif; ?>
-                    </div>
-
-                </div>
-            <? endif; ?>
-            <? if ($post['Post']['site_info']): ?>
-                <? $site_info = json_decode($post['Post']['site_info'], true) ?>
-                <div class="col col-xxs-12 gl-feed-site-link">
-                    <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
-                       class="no-line">
-                        <div class="site-info">
-                            <div class="media">
-                                <div class="pull-left">
-                                    <? if (isset($site_info['image'])): ?>
+                        </ol>
+                    <? endif; ?>
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <? $index = 0 ?>
+                        <? for ($i = 1; $i <= 5; $i++): ?>
+                            <? if ($post['Post']["photo{$i}_file_name"]): ?>
+                                <div class="item <?= ($index === 0) ? "active" : null ?>">
+                                    <a href="<?=
+                                    $this->Upload->uploadUrl($post, "Post.photo" . $i,
+                                                             ['style' => 'large']) ?>"
+                                       rel="lightbox" data-lightbox="LightBoxPost_<?= $post['Post']['id'] ?>">
                                         <?=
                                         $this->Html->image('ajax-loader.gif',
                                                            [
-                                                               'class'         => 'lazy media-object',
-                                                               'data-original' => $site_info['image'],
-                                                               'width'         => '80px',
-                                                               'height'        => 'auto'
+                                                               'class'         => 'lazy',
+                                                               'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                           "Post.photo" . $i,
+                                                                                                           ['style' => 'small'])
                                                            ]
                                         )
                                         ?>
-                                    <? else: ?>
-                                        <?=
-                                        $this->Html->image('no-image.jpg',
-                                                           ['class' => 'media-object', 'width' => '80px', 'height' => '80px']) ?>
-                                    <?endif; ?>
+                                    </a>
+                                    <? $index++ ?>
                                 </div>
+                            <? endif ?>
+                        <? endfor ?>
+                    </div>
 
-                                <div class="media-body">
-                                    <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                    <!-- Controls -->
+                    <? if ($photo_count >= 2): ?>
+                        <a class="left carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
+                           data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                        <a class="right carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
+                           data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                    <? endif; ?>
+                </div>
 
-                                    <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
-                                    <? if (isset($site_info['description'])): ?>
-                                        <div class="font-size_12">
-                                            <?= $site_info['description'] ?>
-                                        </div>
-                                    <? endif; ?>
-                                </div>
+            </div>
+        <? endif; ?>
+        <? if ($post['Post']['site_info']): ?>
+            <? $site_info = json_decode($post['Post']['site_info'], true) ?>
+            <div class="col col-xxs-12 gl-feed-site-link">
+                <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
+                   class="no-line">
+                    <div class="site-info">
+                        <div class="media">
+                            <div class="pull-left">
+                                <? if (isset($site_info['image'])): ?>
+                                    <?=
+                                    $this->Html->image('ajax-loader.gif',
+                                                       [
+                                                           'class'         => 'lazy media-object',
+                                                           'data-original' => $site_info['image'],
+                                                           'width'         => '80px',
+                                                           'height'        => 'auto'
+                                                       ]
+                                    )
+                                    ?>
+                                <? else: ?>
+                                    <?=
+                                    $this->Html->image('no-image.jpg',
+                                                       ['class' => 'media-object', 'width' => '80px', 'height' => '80px']) ?>
+                                <?endif; ?>
+                            </div>
+
+                            <div class="media-body">
+                                <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+
+                                <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                <? if (isset($site_info['description'])): ?>
+                                    <div class="font-size_12">
+                                        <?= $site_info['description'] ?>
+                                    </div>
+                                <? endif; ?>
                             </div>
                         </div>
-                    </a>
-                </div>
-            <? endif; ?>
-            <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                <div class="col col-xxs-12 gl-feed-edit">
-                    <?= $this->element('Feed/post_edit_form', compact('post')) ?>
-                </div>
-            <? endif; ?>
+                    </div>
+                </a>
+            </div>
+        <? endif; ?>
+        <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+            <div class="col col-xxs-12 gl-feed-edit">
+                <?= $this->element('Feed/post_edit_form', compact('post')) ?>
+            </div>
+        <? endif; ?>
 
-            <div class="col col-xxs-12 font-size_12 gl-feed-click">
-                <a href="#" class="click-like"
-                   like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
-                   model_id="<?= $post['Post']['id'] ?>"
-                   like_type="post">
-                    <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
+        <div class="col col-xxs-12 font-size_12 gl-feed-click">
+            <a href="#" class="click-like"
+               like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
+               model_id="<?= $post['Post']['id'] ?>"
+               like_type="post">
+                <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
 
-                &nbsp;<a class="trigger-click"
-                         href="#"
-                         target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
-                    __d('gl',
-                        "コメントする") ?></a>
+            &nbsp;<a class="trigger-click"
+                     href="#"
+                     target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
+                __d('gl',
+                    "コメントする") ?></a>
                                 <span class="pull-right">
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
                                class="modal-ajax-get">
@@ -192,7 +224,7 @@
             </a>
             </span>
 
-            </div>
+        </div>
         </div>
         <div class="panel-body gl-feed gl-comment-block">
             <? if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
