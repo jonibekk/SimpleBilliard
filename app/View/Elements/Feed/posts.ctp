@@ -161,22 +161,17 @@
                     <div class="site-info">
                         <div class="media">
                             <div class="pull-left">
-                                <? if (isset($site_info['image'])): ?>
-                                    <?=
-                                    $this->Html->image('ajax-loader.gif',
-                                                       [
-                                                           'class'         => 'lazy media-object',
-                                                           'data-original' => $site_info['image'],
-                                                           'width'         => '80px',
-                                                           'height'        => 'auto'
-                                                       ]
-                                    )
-                                    ?>
-                                <? else: ?>
-                                    <?=
-                                    $this->Html->image('no-image.jpg',
-                                                       ['class' => 'media-object', 'width' => '80px', 'height' => '80px']) ?>
-                                <?endif; ?>
+                                <?=
+                                $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'lazy',
+                                                       'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                   "Post.site_photo",
+                                                                                                   ['style' => 'small']),
+                                                       'width'         => '80px',
+                                                   ]
+                                )
+                                ?>
                             </div>
 
                             <div class="media-body">

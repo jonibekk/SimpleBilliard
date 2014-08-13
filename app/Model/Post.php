@@ -72,11 +72,12 @@ class Post extends AppModel
                 'quality' => 100,
             ],
             'site_photo' => [
-                'styles'  => [
+                'styles'      => [
                     'small' => '80w',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
         ],
     ];

@@ -21,7 +21,7 @@
         ?>
         <div class="gl-comment-body">
             <div class="col col-xxs-12 showmore gl-comment-text">
-            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+                <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
                         <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
                             <i class="fa fa-chevron-down gl-comment-arrow"></i>
@@ -39,10 +39,10 @@
                         </ul>
                     </div>
                 <? elseif ($my_member_status['TeamMember']['admin_flg']): ?>
-                <div class="pull-right develop--link-gray">
-                    <?=
-                    $this->Form->postLink('<i class="fa fa-times gl-comment-cross"></i>',
-                                          ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
+                    <div class="pull-right develop--link-gray">
+                        <?=
+                        $this->Form->postLink('<i class="fa fa-times gl-comment-cross"></i>',
+                                              ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
@@ -126,22 +126,17 @@
                     <div class="site-info">
                         <div class="media">
                             <div class="pull-left">
-                                <? if (isset($site_info['image'])): ?>
-                                    <?=
-                                    $this->Html->image('ajax-loader.gif',
-                                                       [
-                                                           'class'         => 'lazy media-object',
-                                                           'data-original' => $site_info['image'],
-                                                           'width'         => '80px',
-                                                           'height'        => '80px'
-                                                       ]
-                                    )
-                                    ?>
-                                <? else: ?>
-                                    <?=
-                                    $this->Html->image('no-image.jpg',
-                                                       ['class' => 'media-object', 'width' => '80px', 'height' => '80px']) ?>
-                                <?endif; ?>
+                                <?=
+                                $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'lazy',
+                                                       'data-original' => $this->Upload->uploadUrl($comment,
+                                                                                                   "Comment.site_photo",
+                                                                                                   ['style' => 'small']),
+                                                       'width'         => '80px',
+                                                   ]
+                                )
+                                ?>
                             </div>
 
                             <div class="media-body">
