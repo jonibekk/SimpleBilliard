@@ -1039,7 +1039,7 @@ ul.gl-input-images > li {
     transform: rotateZ(45deg);
     text-align: center;
     box-shadow: 0 0 6px #666;
-    z-index: -1998;
+    z-index: -1999;
 }
 
 .ribbon-local {
