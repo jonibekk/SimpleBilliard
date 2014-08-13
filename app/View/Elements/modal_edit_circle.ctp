@@ -61,15 +61,6 @@
                                                                                          "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
             $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block">' . __d('gl',
                                                                                           "サークル名と参加メンバー、投稿はこのサークルの感化メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
-            if (isset($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']) {
-                //管理者の場合はデフォルトがon
-                $default = Circle::TYPE_PUBLIC_ON;
-                $disabled = "";
-            }
-            else {
-                $default = Circle::TYPE_PUBLIC_OFF;
-                $disabled = "disabled";
-            }
             ?>
             <?php echo $this->Form->input('public_flg', array(
                 'type'    => 'radio',
@@ -77,8 +68,6 @@
                 'legend'  => false,
                 'class'   => false,
                 'options' => $privacy_option,
-                'default' => $default,
-                $disabled => $disabled,
             )); ?>
             <hr>
             <?=
