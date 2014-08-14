@@ -285,7 +285,8 @@
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                     <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
                         <a href="#" class="target-show-this-del font-size_12"
-                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>"><i class="fa fa-file-o"></i>&nbsp;<?=
+                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>"><i
+                                class="fa fa-picture-o"></i>&nbsp;<?=
                             __d('gl',
                                 "画像を追加する") ?>
                         </a>
