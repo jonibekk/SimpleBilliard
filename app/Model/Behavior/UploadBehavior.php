@@ -129,14 +129,17 @@ class UploadBehavior extends ModelBehavior
     private function _fetchFromUrl($url)
     {
         $data = array('remote' => true);
-        $data['name'] = end(explode('/', $url));
-        $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end(explode('.', $url));
+        $urlExplodedBySlash = explode('/', $url);
+        $data['name'] = end($urlExplodedBySlash);
+        $urlExplodedByDot = explode('.', $url);
+        $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
 
         $httpSocket = new HttpSocket();
         $raw = $httpSocket->get($url);
         $response = $httpSocket->response;
         $data['size'] = strlen($raw);
-        $data['type'] = reset(explode(';', $response['header']['Content-Type']));
+        $headerContentType = explode(';', $response['header']['Content-Type']);
+        $data['type'] = reset($headerContentType);
 
         file_put_contents($data['tmp_name'], $raw);
         return $data;
@@ -691,7 +694,7 @@ class UploadBehavior extends ModelBehavior
                     'ContentType'          => $type,
                     'StorageClass'         => 'STANDARD',
                     'ServerSideEncryption' => 'AES256',
-                    'ACL' => CannedAcl::AUTHENTICATED_READ
+                    'ACL'                  => CannedAcl::AUTHENTICATED_READ
                 ));
             return $response;
 

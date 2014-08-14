@@ -57,7 +57,7 @@ class PostsControllerTest extends ControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
+            ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
             'Post' => [
                 'body'  => 'test',
@@ -130,7 +130,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->save($data);
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test']]]));
+            ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
             'Comment' => [
                 'body'    => 'test',
@@ -583,7 +583,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test']]]));
+            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
 
         $user_id = 1;
         $team_id = 1;
@@ -763,7 +763,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test']]]));
+            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
 
         $user_id = 1;
         $team_id = 1;

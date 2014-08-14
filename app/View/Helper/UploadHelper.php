@@ -175,7 +175,9 @@ class UploadHelper extends AppHelper
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
 
-        $url = "http://$bucket.s3.amazonaws.com/$file";
+        $protocol = env('HTTP_X_FORWARDED_PROTO');
+
+        $url = $protocol . "://$bucket.s3.amazonaws.com/$file";
         $url .= '?AWSAccessKeyId=' . $awsKeyId
             . '&Expires=' . $expires
             . '&Signature=' . $signature;

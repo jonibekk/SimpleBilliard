@@ -21,6 +21,9 @@ class PostsController extends AppController
             $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
             if (isset($ogp['title']) && isset($ogp['description'])) {
                 $this->request->data['Post']['site_info'] = json_encode($ogp);
+                if (isset($ogp['image'])) {
+                    $this->request->data['Post']['site_photo'] = $ogp['image'];
+                }
             }
         }
         if ($this->Post->add($this->request->data)) {
@@ -88,6 +91,9 @@ class PostsController extends AppController
             $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
             if (isset($ogp['title']) && isset($ogp['description'])) {
                 $this->request->data['Post']['site_info'] = json_encode($ogp);
+                if (isset($ogp['image'])) {
+                    $this->request->data['Post']['site_photo'] = $ogp['image'];
+                }
             }
         }
         if ($this->Post->postEdit($this->request->data)) {
@@ -154,6 +160,9 @@ class PostsController extends AppController
             $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
             if (isset($ogp['title']) && isset($ogp['description'])) {
                 $this->request->data['Comment']['site_info'] = json_encode($ogp);
+                if (isset($ogp['image'])) {
+                    $this->request->data['Comment']['site_photo'] = $ogp['image'];
+                }
             }
         }
         if ($this->Post->Comment->commentEdit($this->request->data)) {
@@ -291,6 +300,9 @@ class PostsController extends AppController
                 $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
                 if (isset($ogp['title']) && isset($ogp['description'])) {
                     $this->request->data['Comment']['site_info'] = json_encode($ogp);
+                    if (isset($ogp['image'])) {
+                        $this->request->data['Comment']['site_photo'] = $ogp['image'];
+                    }
                 }
             }
             if ($this->Post->Comment->add($this->request->data)) {
