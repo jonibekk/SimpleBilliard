@@ -37,6 +37,7 @@
                     'wrapInput' => '',
                     'class'     => 'form-control',
                 ],
+                'id'            => 'PostDisplayForm',
                 'type'          => 'file',
                 'novalidate'    => true,
             ]); ?>
