@@ -1033,6 +1033,10 @@ ul.gl-input-images > li {
     padding-top: 2px;
 }
 
+.select2-results {
+    max-height: 150px;
+}
+
 .gl-navbar {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
