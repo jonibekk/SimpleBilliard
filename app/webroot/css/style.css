@@ -1043,6 +1043,21 @@ ul.gl-input-images > li {
 
 /*/modalのデザイン*/
 
+.photo-plus {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    color: #dddddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.photo-plus-frame {
+    border: 2px #ddd dashed;
+    background-color: #fff;
+}
+
 /*暫定的な設定(修正必須)*/
 
 .develop--forbiddenLink {

@@ -29,8 +29,9 @@ if (isset($type)) {
 <!-- START app/View/Elements/Feed/photo_upload.ctp -->
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
-        <div class="fileinput-preview thumbnail nailthumb-container gl-thumb-container click-target-enabled"
-             data-trigger="fileinput"
+        <div
+            class="fileinput-preview thumbnail nailthumb-container gl-thumb-container click-target-enabled photo-plus-frame"
+            data-trigger="fileinput"
              target-id="<?= $submit_id ?>"
              style="width: 50px; height: 50px;">
             <? $delete_style = null ?>
@@ -46,7 +47,7 @@ if (isset($type)) {
                                    ]
                 )
                 ?>
-            <? endif ?>
+            <? endif ?><? if ($index == 1): ?><i class="fa fa-plus photo-plus"></i><? endif; ?>
         </div>
         <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
             <div class="gl-custom-wrapper">
