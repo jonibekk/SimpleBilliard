@@ -153,6 +153,7 @@ $(document).ready(function () {
         <?endif;?>
         formatSelection: format,
         formatResult: format,
+        dropdownCssClass: 'gl-s2-post-dropdown',
         escapeMarkup: function (m) {
             return m;
         }

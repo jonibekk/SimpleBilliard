@@ -52,6 +52,7 @@ $(document).ready(function () {
     /**
      * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
      */
+    $(document).on("focus", ".click-height-up", evThisHeightUp);
     $(document).on("click", ".tiny-form-text", evShowAndThisWide);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
@@ -258,6 +259,17 @@ function evShowAndThisWide() {
     $(this).autosize();
     //submitボタンを表示
     $("#" + $(this).attr('target_show_id')).show();
+    //クリック済みにする
+    $(this).addClass('clicked');
+}
+
+function evThisHeightUp() {
+    //クリック済みの場合は処理しない
+    if ($(this).hasClass('clicked'))return;
+    attrUndefinedCheck(this, 'after-height');
+    var after_height = $(this).attr("after-height");
+    //現在のheightを倍にする。
+    $(this).height(after_height);
     //クリック済みにする
     $(this).addClass('clicked');
 }

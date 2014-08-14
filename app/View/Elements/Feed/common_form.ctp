@@ -74,8 +74,8 @@
                             __d('gl',
                                 '共有範囲') ?></label>
 
-                        <div class="col col-sm-10 post-share-range-list">
-                            <?=
+                        <div class="col col-sm-10 post-share-range-list click-height-up" after-height="170px">
+                        <?=
                             $this->Form->hidden('share',
                                                 ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
                             <? $this->Form->unlockField('Post.share') ?>

@@ -1024,6 +1024,11 @@ ul.gl-input-images > li {
     background: #fff;
 }
 
+.gl-s2-post-dropdown {
+    border: none;
+    box-shadow: none;
+}
+
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
@@ -1034,7 +1039,7 @@ ul.gl-input-images > li {
 }
 
 .select2-results {
-    max-height: 150px;
+    max-height: 123px;
 }
 
 .gl-navbar {
