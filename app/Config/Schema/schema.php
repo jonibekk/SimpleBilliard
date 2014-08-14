@@ -353,7 +353,7 @@ class AppSchema extends CakeSchema
 
     public $notify_settings = array(
         'id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
-        'user_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
+        'user_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
         'feed_app_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '投稿アプリ通知'),
         'feed_email_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '投稿メール通知'),
         'circle_app_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'サークル アプリ通知'),
@@ -364,6 +364,7 @@ class AppSchema extends CakeSchema
         'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
         'indexes'          => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
+            'user_id' => array('column' => 'user_id', 'unique' => 0),
             'del_flg' => array('column' => 'del_flg', 'unique' => 0)
         ),
         'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
