@@ -17,22 +17,26 @@ class NotifySetting extends AppModel
     public $validate = [
         'feed_app_flg'     => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule'       => ['boolean'],
+                'allowEmpty' => true,
             ],
         ],
         'feed_email_flg'   => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule'       => ['boolean'],
+                'allowEmpty' => true,
             ],
         ],
         'circle_app_flg'   => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule'       => ['boolean'],
+                'allowEmpty' => true,
             ],
         ],
         'circle_email_flg' => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule'       => ['boolean'],
+                'allowEmpty' => true,
             ],
         ],
         'del_flg'          => [

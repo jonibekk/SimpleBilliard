@@ -31,12 +31,16 @@
             'type'          => 'file',
             'id'            => 'ChangeProfileForm'
         ]); ?>
+        <?= $this->Form->hidden('NotifySetting.user_id', ['value' => $this->Session->read('Auth.User.id')]) ?>
+        <?=
+        $this->Form->hidden('NotifySetting.id',
+                            ['value' => isset($this->request->data['NotifySetting']['id']) ? $this->request->data['NotifySetting']['id'] : null]) ?>
         <div class="panel-body">
             <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label"><?= __d('gl', '自分の投稿への反応') ?></label>
                 <?
                 //TODO 現状、アプリ内通知は必須の為、コメントアウト
-                //                echo $this->Form->input("feed_app_flg",
+                //                echo $this->Form->input("NotifySetting.feed_app_flg",
                 //                                   [
                 //                                       'label'       => false,
                 //                                       'beforeInput' => '<i class="fa fa-bell-o gl-icon-before-input" data-toggle="tooltip" title="' .
@@ -48,7 +52,7 @@
                 //                                   ])
                 ?>
                 <?=
-                $this->Form->input("feed_email_flg",
+                $this->Form->input("NotifySetting.feed_email_flg",
                                    [
                                        'label'       => false,
                                        'beforeInput' => '<i class="fa fa-envelope-o gl-icon-before-input" data-toggle="tooltip" title="' .
@@ -64,7 +68,7 @@
                 <label class="col col-sm-3 col-xxs-12 control-label"><?= __d('gl', 'サークルの更新') ?></label>
                 <?
                 //TODO 現状、アプリ内通知は必須の為、コメントアウト
-                //                echo $this->Form->input("circle_app_flg",
+                //                echo $this->Form->input("NotifySetting.circle_app_flg",
                 //                                   [
                 //                                       'label'       => false,
                 //                                       'beforeInput' => '<i class="fa fa-bell-o gl-icon-before-input" data-toggle="tooltip" title="' .
@@ -76,7 +80,7 @@
                 //                                   ])
                 ?>
                 <?=
-                $this->Form->input("circle_email_flg",
+                $this->Form->input("NotifySetting.circle_email_flg",
                                    [
                                        'label'       => false,
                                        'beforeInput' => '<i class="fa fa-envelope-o gl-icon-before-input" data-toggle="tooltip" title="' .

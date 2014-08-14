@@ -189,7 +189,7 @@ class User extends AppModel
     ];
 
     public $hasOne = [
-        'NotifySetting'
+        'NotifySetting',
     ];
 
     /**

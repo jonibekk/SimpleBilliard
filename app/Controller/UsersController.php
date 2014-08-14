@@ -379,7 +379,8 @@ class UsersController extends AppController
         }
         if ($this->request->is('put') && !empty($this->request->data)) {
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
-            $this->request->data['User'] = array_merge($me['User'], $this->request->data['User']);
+            $this->request->data['User'] = array_merge($me['User'],
+                                                       isset($this->request->data['User']) ? $this->request->data['User'] : []);
             $this->User->id = $this->Auth->user('id');
             if ($this->User->saveAll($this->request->data)) {
                 //セッション更新
