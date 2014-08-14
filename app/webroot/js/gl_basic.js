@@ -53,6 +53,7 @@ $(document).ready(function () {
      * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
      */
     $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
     //noinspection SpellCheckingInspection
     $(document).on("keyup", ".blank-disable", evBlankDisable);
@@ -222,6 +223,24 @@ function evTriggerClick() {
     $("#" + target_id).focus();
     return false;
 }
+/**
+ * クリックしたら、
+ * 指定した要素を表示する。(一度だけ)
+ */
+function evShow() {
+    //クリック済みの場合は処理しない
+    if ($(this).hasClass('clicked'))return;
+
+    //autosizeを一旦、切る。
+    $(this).trigger('autosize.destroy');
+    //再度autosizeを有効化
+    $(this).autosize();
+    //submitボタンを表示
+    $("#" + $(this).attr('target_show_id')).show();
+    //クリック済みにする
+    $(this).addClass('clicked');
+}
+
 /**
  * クリックした要素のheightを倍にし、
  * 指定した要素を表示する。(一度だけ)
