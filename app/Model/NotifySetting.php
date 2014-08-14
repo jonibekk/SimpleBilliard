@@ -8,6 +8,13 @@ App::uses('AppModel', 'Model');
  */
 class NotifySetting extends AppModel
 {
+    /**
+     * 通知タイプ
+     */
+    const TYPE_FEED_APP = "feed_app_flg";
+    const TYPE_FEED_MAIL = "feed_email_flg";
+    const TYPE_CIRCLE_APP = "circle_app_flg";
+    const TYPE_CIRCLE_EMAIL = "circle_email_flg";
 
     /**
      * Validation rules
@@ -54,4 +61,24 @@ class NotifySetting extends AppModel
     public $belongsTo = [
         'User'
     ];
+
+    function isOnNotify($type, $user_id)
+    {
+        $options = array(
+            'conditions' => array(
+                'user_id' => $user_id,
+            )
+        );
+        $result = $this->find('first', $options);
+        if (empty($result)) {
+            return true;
+        }
+        if ($result['NotifySetting'][$type]) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }
