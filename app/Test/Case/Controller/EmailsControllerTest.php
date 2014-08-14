@@ -18,7 +18,7 @@ class EmailsControllerTest extends ControllerTestCase
         'app.local_name',
         'app.cake_session',
         'app.email',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.badge',
         'app.comment_like',

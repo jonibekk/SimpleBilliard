@@ -18,7 +18,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.cake_session',
         'app.team',
         'app.image',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.email',
         'app.badge',
         'app.comment_like',

@@ -17,7 +17,7 @@ class CommentReadTest extends CakeTestCase
     public $fixtures = array(
         'app.comment_read',
         'app.comment',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.post'
     );

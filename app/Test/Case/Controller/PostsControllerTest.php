@@ -17,7 +17,7 @@ class PostsControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.cake_session',
         'app.post',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.badge',
         'app.comment_like',
@@ -57,7 +57,7 @@ class PostsControllerTest extends ControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-            ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
             'Post' => [
                 'body'  => 'test',
@@ -130,7 +130,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->save($data);
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-            ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
             'Comment' => [
                 'body'    => 'test',
@@ -563,7 +563,7 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'test'
+                'body'    => 'test'
             ],
         ];
         $post = $Posts->Post->save($post_data);
@@ -583,7 +583,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
 
         $user_id = 1;
         $team_id = 1;
@@ -592,7 +592,7 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'test'
+                'body'    => 'test'
             ],
         ];
         $post = $Posts->Post->save($post_data);
@@ -763,7 +763,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-            ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
 
         $user_id = 1;
         $team_id = 1;
@@ -772,7 +772,7 @@ class PostsControllerTest extends ControllerTestCase
             'Comment'      => [
                 'user_id' => $user_id,
                 'team_id' => $team_id,
-                'body' => 'test'
+                'body'    => 'test'
             ],
             'photo_delete' => [
                 1 => 1

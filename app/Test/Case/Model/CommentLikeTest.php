@@ -17,7 +17,7 @@ class CommentLikeTest extends CakeTestCase
     public $fixtures = array(
         'app.comment_like',
         'app.comment',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team'
     );
 

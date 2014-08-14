@@ -17,7 +17,7 @@ class CommentMentionTest extends CakeTestCase
     public $fixtures = array(
         'app.comment_mention',
         'app.post',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team'
     );
 

@@ -17,7 +17,7 @@ class PostReadTest extends CakeTestCase
     public $fixtures = array(
         'app.post_read',
         'app.post',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team'
     );
 

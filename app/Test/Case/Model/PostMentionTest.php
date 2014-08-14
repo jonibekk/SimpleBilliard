@@ -17,7 +17,7 @@ class PostMentionTest extends CakeTestCase
     public $fixtures = array(
         'app.post_mention',
         'app.post',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team'
     );
 

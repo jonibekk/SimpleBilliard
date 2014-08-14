@@ -17,7 +17,7 @@ class PostShareCircleTest extends CakeTestCase
     public $fixtures = array(
         'app.post_share_circle',
         'app.post',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.badge',
         'app.comment_like',

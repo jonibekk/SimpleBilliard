@@ -15,7 +15,7 @@ class LocalNameTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.local_name',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.badge',
         'app.comment_like',

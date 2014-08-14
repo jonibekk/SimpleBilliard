@@ -17,7 +17,7 @@ class PostShareUserTest extends CakeTestCase
     public $fixtures = array(
         'app.post_share_user',
         'app.post',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.badge',
         'app.comment_like',
