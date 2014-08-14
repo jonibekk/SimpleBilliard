@@ -47,8 +47,8 @@
                     'type'                     => 'textarea',
                     'rows'                     => 1,
                     'required'                 => true,
-                    'placeholder' => __d('gl', "・何か投稿しよう"),
-                    'class'       => 'form-control click-show blank-disable post-form',
+                    'placeholder'              => __d('gl', "・何か投稿しよう"),
+                    'class'                    => 'form-control click-show blank-disable post-form',
                     'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -74,8 +74,9 @@
                             __d('gl',
                                 '共有範囲') ?></label>
 
-                        <div class="col col-sm-10 post-share-range-list click-height-up" after-height="170px">
-                        <?=
+                        <div class="col col-sm-10 post-share-range-list click-height-up blur-height-reset"
+                             after-height="170px">
+                            <?=
                             $this->Form->hidden('share',
                                                 ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
                             <? $this->Form->unlockField('Post.share') ?>
