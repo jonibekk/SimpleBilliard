@@ -23,6 +23,13 @@ $(document).ready(function () {
             location.href = data;
         });
     });
+    //投稿の共有範囲切り替え
+    $('#ChangeShareSelect2').click(function () {
+        attrUndefinedCheck(this, 'target-id');
+        var target_id = $(this).attr('target-id');
+        $("#" + target_id).find('ul.select2-choices').click();
+        return false;
+    });
     //autosize
     //noinspection JSJQueryEfficiency
     $('textarea').autosize();
@@ -150,6 +157,7 @@ $(document).ready(function () {
         e.preventDefault();
         imageLazyOn();
     });
+
 });
 
 function imageLazyOn() {
@@ -219,6 +227,7 @@ function evBlankDisable() {
 function evTriggerClick() {
     attrUndefinedCheck(this, 'target-id');
     var target_id = $(this).attr("target-id");
+    console.log(target_id);
     //noinspection JSJQueryEfficiency
     $("#" + target_id).trigger('click');
     //noinspection JSJQueryEfficiency
