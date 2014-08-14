@@ -12,8 +12,8 @@
 <? $this->start('sidebar') ?>
 <li class="active"><a href="#account"><?= __d('gl', "アカウント") ?></a></li>
 <li class=""><a href="#profile"><?= __d('gl', "プロフィール") ?></a></li>
-<li class=""><!--suppress HtmlUnknownAnchorTarget -->
-    <a class="develop--forbiddenLink" href="#notification"><?= __d('gl', "通知") ?></a></li>
+<li class="">
+    <a class="" href="#notification"><?= __d('gl', "通知") ?></a></li>
 <li class=""><!--suppress HtmlUnknownAnchorTarget -->
     <a class="develop--forbiddenLink" href="#link"><?= __d('gl', "リンク") ?></a></li>
 <? $this->end() ?>
@@ -23,9 +23,9 @@
 <div id="profile">
     <?= $this->element('User/profile_setting') ?>
 </div>
-<!--<div id="notification">-->
-<!---->
-<!--</div>-->
+<div id="notification">
+    <?= $this->element('User/notify_setting') ?>
+</div>
 <!--<div id="link">-->
 
 <!--</div>-->
