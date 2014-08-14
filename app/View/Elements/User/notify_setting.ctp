@@ -23,7 +23,7 @@
                 'label'     => [
                     'class' => 'col col-sm-3 control-label'
                 ],
-                'wrapInput' => 'col col-sm-6',
+                'wrapInput' => 'col col-xxs-5 col-sm-3 gl-notify-setting-switch',
                 'class'     => 'form-control setting_input-design'
             ],
             'class'         => 'form-horizontal',
@@ -32,7 +32,62 @@
             'id'            => 'ChangeProfileForm'
         ]); ?>
         <div class="panel-body">
-
+            <div class="form-group">
+                <label class="col col-sm-3 col-xxs-12 control-label"><?= __d('gl', '自分の投稿への反応') ?></label>
+                <?
+                //TODO 現状、アプリ内通知は必須の為、コメントアウト
+                //                echo $this->Form->input("feed_app_flg",
+                //                                   [
+                //                                       'label'       => false,
+                //                                       'beforeInput' => '<i class="fa fa-bell-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                //                                           __d('gl', "アプリ通知") . '"></i>&nbsp;',
+                //                                       'div'         => false,
+                //                                       'type'        => 'checkbox',
+                //                                       'class'       => 'bt-switch',
+                //                                       'default'     => true,
+                //                                   ])
+                ?>
+                <?=
+                $this->Form->input("feed_email_flg",
+                                   [
+                                       'label'       => false,
+                                       'beforeInput' => '<i class="fa fa-envelope-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                                           __d('gl', "メール通知") . '"></i>&nbsp;',
+                                       'div'         => false,
+                                       'type'        => 'checkbox',
+                                       'class'       => 'bt-switch',
+                                       'default'     => true,
+                                   ])
+                ?>
+            </div>
+            <div class="form-group">
+                <label class="col col-sm-3 col-xxs-12 control-label"><?= __d('gl', 'サークルの更新') ?></label>
+                <?
+                //TODO 現状、アプリ内通知は必須の為、コメントアウト
+                //                echo $this->Form->input("circle_app_flg",
+                //                                   [
+                //                                       'label'       => false,
+                //                                       'beforeInput' => '<i class="fa fa-bell-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                //                                           __d('gl', "アプリ通知") . '"></i>&nbsp;',
+                //                                       'div'         => false,
+                //                                       'type'        => 'checkbox',
+                //                                       'class'       => 'bt-switch',
+                //                                       'default'     => true,
+                //                                   ])
+                ?>
+                <?=
+                $this->Form->input("circle_email_flg",
+                                   [
+                                       'label'       => false,
+                                       'beforeInput' => '<i class="fa fa-envelope-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                                           __d('gl', "メール通知") . '"></i>&nbsp;',
+                                       'div'         => false,
+                                       'type'        => 'checkbox',
+                                       'class'       => 'bt-switch',
+                                       'default'     => true,
+                                   ])
+                ?>
+            </div>
         </div>
         <div class="panel-footer setting_pannel-footer">
             <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
