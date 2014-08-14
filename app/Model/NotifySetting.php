@@ -62,7 +62,7 @@ class NotifySetting extends AppModel
         'User'
     ];
 
-    function isOnNotify($type, $user_id)
+    function isOnNotify($user_id, $type)
     {
         $options = array(
             'conditions' => array(

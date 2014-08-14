@@ -4,7 +4,7 @@ App::uses('NotifySetting', 'Model');
 /**
  * NotifySetting Test Case
  *
- * @property mixed NotifySetting $NotifySetting
+ * @property NotifySetting $NotifySetting
  */
 class NotifySettingTest extends CakeTestCase
 {
@@ -67,8 +67,18 @@ class NotifySettingTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testIsOnNotify()
     {
-
+        $uid = 1;
+        $res = $this->NotifySetting->isOnNotify($uid, NotifySetting::TYPE_FEED_APP);
+        $this->assertTrue($res, "通知設定なし");
+        $data = ['feed_app_flg' => false, 'user_id' => $uid];
+        $this->NotifySetting->save($data);
+        $res = $this->NotifySetting->isOnNotify($uid, NotifySetting::TYPE_FEED_APP);
+        $this->assertFalse($res, "通知設定あり、off");
+        $data = ['feed_app_flg' => true, 'user_id' => $uid];
+        $this->NotifySetting->save($data);
+        $res = $this->NotifySetting->isOnNotify($uid, NotifySetting::TYPE_FEED_APP);
+        $this->assertTrue($res, "通知設定あり、on");
     }
 }
