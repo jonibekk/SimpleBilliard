@@ -11,10 +11,8 @@ class NotifySetting extends AppModel
     /**
      * 通知タイプ
      */
-    const TYPE_FEED_APP = "feed_app_flg";
-    const TYPE_FEED_MAIL = "feed_email_flg";
-    const TYPE_CIRCLE_APP = "circle_app_flg";
-    const TYPE_CIRCLE_EMAIL = "circle_email_flg";
+    const TYPE_FEED = "feed";
+    const TYPE_CIRCLE = "circle";
 
     /**
      * Validation rules
@@ -62,23 +60,56 @@ class NotifySetting extends AppModel
         'User'
     ];
 
-    function isOnNotify($user_id, $type)
+    /**
+     * 指定タイプのアプリ、メールの通知設定を返却
+     * ユーザ指定は単数、複数の両方対応
+     * 返却値は[uid=>['app'=>true,'email'=>true],,,,]
+     *
+     * @param $user_ids
+     * @param $type
+     *
+     * @return array
+     */
+    function getAppEmailNotifySetting($user_ids, $type)
     {
+        if (!is_array($user_ids)) {
+            $user_ids = [$user_ids];
+        }
+        $default_data = [
+            'app'   => true,
+            'email' => true,
+        ];
         $options = array(
             'conditions' => array(
-                'user_id' => $user_id,
+                'user_id' => $user_ids,
             )
         );
-        $result = $this->find('first', $options);
-        if (empty($result)) {
-            return true;
+        $result = $this->find('all', $options);
+        $res_data = [];
+        if (!empty($result)) {
+            foreach ($result as $val) {
+                $res_data[$val['NotifySetting']['user_id']] = $default_data;
+                if (!$val['NotifySetting'][$type . '_app_flg']) {
+                    //アプリがoff
+                    $res_data[$val['NotifySetting']['user_id']]['app'] = false;
+                }
+                if (!$val['NotifySetting'][$type . '_email_flg']) {
+                    //メールがoff
+                    $res_data[$val['NotifySetting']['user_id']]['email'] = false;
+                }
+                //引数のユーザリストから除去
+                if (($array_key = array_search($val['NotifySetting']['user_id'], $user_ids)) !== false) {
+                    unset($user_ids[$array_key]);
+                }
+            }
         }
-        if ($result['NotifySetting'][$type]) {
-            return true;
+        //設定なしユーザはデフォルトを適用
+        if (!empty($user_ids)) {
+            foreach ($user_ids as $uid) {
+                $res_data[$uid] = $default_data;
+            }
         }
-        else {
-            return false;
-        }
+        return $res_data;
     }
 
 }

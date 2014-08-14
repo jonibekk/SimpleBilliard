@@ -69,16 +69,34 @@ class NotifySettingTest extends CakeTestCase
 
     function testIsOnNotify()
     {
-        $uid = 1;
-        $res = $this->NotifySetting->isOnNotify($uid, NotifySetting::TYPE_FEED_APP);
-        $this->assertTrue($res, "通知設定なし");
-        $data = ['feed_app_flg' => false, 'user_id' => $uid];
+        $uid = 1000000;
+        $uid2 = 9999999;
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $expected = [
+            $uid => ['app' => true, 'email' => true]
+        ];
+        $this->assertEquals($expected, $res, "通知設定なし");
+        $data = ['feed_app_flg' => false, 'feed_email_flg' => false, 'user_id' => $uid];
         $this->NotifySetting->save($data);
-        $res = $this->NotifySetting->isOnNotify($uid, NotifySetting::TYPE_FEED_APP);
-        $this->assertFalse($res, "通知設定あり、off");
-        $data = ['feed_app_flg' => true, 'user_id' => $uid];
+        $notifi_setting_id = $this->NotifySetting->getLastInsertID();
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $expected = [
+            $uid => ['app' => false, 'email' => false]
+        ];
+        $this->assertEquals($expected, $res, "通知設定あり、off");
+        $data = ['id' => $notifi_setting_id, 'feed_app_flg' => true, 'feed_email_flg' => true];
+        $this->NotifySetting->create();
         $this->NotifySetting->save($data);
-        $res = $this->NotifySetting->isOnNotify($uid, NotifySetting::TYPE_FEED_APP);
-        $this->assertTrue($res, "通知設定あり、on");
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $expected = [
+            $uid => ['app' => true, 'email' => true]
+        ];
+        $this->assertEquals($expected, $res, "通知設定あり、on");
+        $res = $this->NotifySetting->getAppEmailNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED);
+        $expected = [
+            $uid  => ['app' => true, 'email' => true],
+            $uid2 => ['app' => true, 'email' => true]
+        ];
+        $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");
     }
 }
