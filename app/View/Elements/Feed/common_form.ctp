@@ -11,9 +11,9 @@
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
 <div class="panel panel-default global-form">
-    <div class="panel-heading">
+    <div class="panel-heading post-panel-heading">
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs font-size_12" role="tablist">
             <li class="active"><a href="#PostForm" role="tab" data-toggle="tab"><?= __d('gl', "投稿") ?></a></li>
             <li><a href="#ActionForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?=
                     __d('gl',
@@ -40,15 +40,15 @@
                 'type'          => 'file',
                 'novalidate'    => true,
             ]); ?>
-            <div class="panel-body">
+            <div class="panel-body develop--post-form-check">
                 <?=
                 $this->Form->input('body', [
                     'label'                    => false,
                     'type'                     => 'textarea',
                     'rows'                     => 1,
                     'required'                 => true,
-                    'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'                    => 'form-control tiny-form-text blank-disable',
+                    'placeholder' => __d('gl', "・何か投稿しよう"),
+                    'class'       => 'form-control tiny-form-text blank-disable post-form',
                     'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -63,16 +63,18 @@
                             </li><? endfor ?>
                     </ul>
                 </div>
-                <div class="" style="display: none" id="PostFormFooter">
-                    <a href="#" class="target-show-this-del" target-id="PostFormImage"><i class="fa fa-file-o"></i>&nbsp;<?=
+                <div class="font-size_12" style="display: none" id="PostFormFooter">
+                    <a href="#" class="target-show-this-del" target-id="PostFormImage"><i class="fa fa-picture-o"></i>&nbsp;<?=
                         __d('gl',
                             "画像を追加する") ?>
                     </a>
 
-                    <div class="row form-horizontal form-group" id="PostShare">
-                        <label class="col col-sm-2 control-label"><?= __d('gl', '共有範囲') ?></label>
+                    <div class="row form-horizontal form-group post-share-range" id="PostShare">
+                        <label class="col col-sm-2 control-label post-share-range-label"><?=
+                            __d('gl',
+                                '共有範囲') ?></label>
 
-                        <div class="col col-sm-7">
+                        <div class="col col-sm-10 post-share-range-list">
                             <?=
                             $this->Form->hidden('share',
                                                 ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
@@ -81,7 +83,7 @@
                     </div>
                     <?=
                     $this->Form->submit(__d('gl', "投稿する"),
-                                        ['class' => 'btn btn-primary pull-right', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
+                                        ['class' => 'btn btn-primary pull-right post-share-range-buttom', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
                     <div class="clearfix"></div>
                 </div>
             </div>
