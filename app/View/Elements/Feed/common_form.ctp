@@ -73,15 +73,11 @@
                         </a>
                     </div>
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
-                        <div class="col col-xxs-12">
+                        <label class="col col-sm-2 control-label post-share-range-label">
                             <a href="#" id="ChangeShareSelect2" target-id="PostShareInputWrap">
-                                <?= __d('gl', "共有範囲を変更する") ?>
+                                <i class="fa fa-plus"></i><?= __d('gl', '共有範囲') ?>
                             </a>
-                        </div>
-
-                        <label class="col col-sm-2 control-label post-share-range-label"><?=
-                            __d('gl',
-                                '共有範囲') ?></label>
+                        </label>
 
                         <div class="col col-sm-10 post-share-range-list click-height-up blur-height-reset"
                              after-height="170px" id="PostShareInputWrap">
