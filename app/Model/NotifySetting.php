@@ -9,7 +9,7 @@ App::uses('AppModel', 'Model');
 class NotifySetting extends AppModel
 {
     /**
-     * 通知タイプ
+     * 通知設定タイプ
      */
     const TYPE_FEED = "feed";
     const TYPE_CIRCLE = "circle";
