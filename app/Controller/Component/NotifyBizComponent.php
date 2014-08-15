@@ -159,9 +159,7 @@ class NotifyBizComponent extends Object
             ];
             $datas[] = $data;
         }
-        if ($this->Notification->saveAll($datas)) {
-
-        }
+        $this->Notification->saveNotify($datas);
     }
 
 }

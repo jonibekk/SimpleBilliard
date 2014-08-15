@@ -76,4 +76,33 @@ class Notification extends AppModel
         $this->_setTypeDefault();
     }
 
+    function saveNotify($notifyDatas)
+    {
+        //既に存在するモデルの場合はupdateし、unset
+        foreach ($notifyDatas as $key => $data) {
+            if ($this->updateBeforeFirstSave($data)) {
+                unset($notifyDatas[$key]);
+            }
+        }
+        if (!empty($notifyDatas)) {
+            $this->saveAll($notifyDatas);
+        }
+    }
+
+    function updateBeforeFirstSave($data)
+    {
+        $conditions = [
+            'model_id' => $data['model_id'],
+            'user_id'  => $data['user_id'],
+            'type'     => $data['type'],
+        ];
+        $notify = $this->find('first', $conditions);
+        if (!empty($notify)) {
+            $notify['Notification'] = array_merge($notify['Notification'], $data);
+            $this->save($notify);
+            return true;
+        }
+        return false;
+    }
+
 }
