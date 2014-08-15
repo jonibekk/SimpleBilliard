@@ -121,6 +121,8 @@ class NotifyBizComponent extends Object
     {
         //宛先は投稿主
         $post = $this->Post->findById($post_id);
+        //TODO 投稿主の通知設定確認
+
         if (empty($post)) {
             throw new RuntimeException();
         }
