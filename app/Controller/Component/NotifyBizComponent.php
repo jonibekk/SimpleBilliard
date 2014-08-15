@@ -128,5 +128,19 @@ class NotifyBizComponent extends Object
         $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_options[] = $notify_option;
     }
-
+//
+//    function saveNotifications()
+//    {
+//        if (empty($this->notify_options)) {
+//            return;
+//        }
+//        //Notification用データに変換
+//        $datas = [];
+//        foreach ($this->notify_options as $option) {
+//            $data = [
+//                ''
+//            ];
+//        }
+//    }
+//
 }
