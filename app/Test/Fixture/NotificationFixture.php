@@ -20,10 +20,11 @@ class NotificationFixture extends CakeTestFixture
         'from_user_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '通知元ユーザID(belongsToでUserモデルに関連)'),
         'body'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '通知本文', 'charset' => 'utf8'),
         'item_name'       => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アイテム名(投稿内容、コメント内容等)', 'charset' => 'utf8'),
-        'model_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'モデルID(feedならpost_id,circleならcircle_id)'),
+        'model_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'モデルID(feedならpost_id,circleならcircle_id)'),
         'url_data'        => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'URLデータ(json)', 'charset' => 'utf8'),
         'count_num'       => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メッセージ内で利用する件数'),
         'unread_flg'      => array('type' => 'boolean', 'null' => false, 'default' => '1', 'key' => 'index', 'comment' => '未読フラグ(通知を開いたらOff)'),
+        'enable_flg'      => array('type' => 'boolean', 'null' => false, 'default' => '1', 'key' => 'index', 'comment' => '有効フラグ(通知設定offの場合はfalse)'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '通知を削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '通知を追加した日付時刻'),
@@ -34,8 +35,10 @@ class NotificationFixture extends CakeTestFixture
             'team_id'      => array('column' => 'team_id', 'unique' => 0),
             'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),
             'del_flg'      => array('column' => 'del_flg', 'unique' => 0),
-            'unread_flg' => array('column' => 'unread_flg', 'unique' => 0),
-            'modified'   => array('column' => 'modified', 'unique' => 0)
+            'unread_flg'   => array('column' => 'unread_flg', 'unique' => 0),
+            'modified'     => array('column' => 'modified', 'unique' => 0),
+            'model_id'     => array('column' => 'model_id', 'unique' => 0),
+            'enable_flg'   => array('column' => 'enable_flg', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
