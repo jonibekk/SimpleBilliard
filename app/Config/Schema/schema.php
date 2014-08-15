@@ -546,6 +546,7 @@ class AppSchema extends CakeSchema
         'from_user_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '送信元ユーザID(belongsToでUserモデルに関連)'),
         'to_user_id'      => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '送信先ユーザID(belongsToでUserモデルに関連)'),
         'team_id'         => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'notification_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '通知ID(belongsToでNotificationモデルに関連)'),
         'template_type'   => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => 'メールテンプレタイプ'),
         'item'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アイテム(JSONエンコード)', 'charset' => 'utf8'),
         'sent_datetime'   => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を実行した日付時刻'),
@@ -554,11 +555,12 @@ class AppSchema extends CakeSchema
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'      => array('column' => 'id', 'unique' => 1),
-            'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),
-            'to_user_id'   => array('column' => 'to_user_id', 'unique' => 0),
-            'team_id'      => array('column' => 'team_id', 'unique' => 0),
-            'del_flg'      => array('column' => 'del_flg', 'unique' => 0)
+            'PRIMARY'         => array('column' => 'id', 'unique' => 1),
+            'from_user_id'    => array('column' => 'from_user_id', 'unique' => 0),
+            'to_user_id'      => array('column' => 'to_user_id', 'unique' => 0),
+            'team_id'         => array('column' => 'team_id', 'unique' => 0),
+            'del_flg'         => array('column' => 'del_flg', 'unique' => 0),
+            'notification_id' => array('column' => 'notification_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );

@@ -4,9 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * SendMail Model
  *
- * @property User $FromUser
- * @property User $ToUser
- * @property Team $Team
+ * @property User         $FromUser
+ * @property User         $ToUser
+ * @property Team         $Team
+ * @property Notification $Notification
  */
 class SendMail extends AppModel
 {
@@ -103,6 +104,7 @@ class SendMail extends AppModel
         'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
         'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
         'Team',
+        'Notification',
     ];
 
     /**
@@ -131,12 +133,12 @@ class SendMail extends AppModel
 
     /**
      * 詳細なユーザ名等を含んだデータを返す
+     *
+     * @param      $id
+     * @param null $lang
 
      *
-*@param      $id
-     * @param null $lang
-     *
-     * @return array|null
+*@return array|null
      */
     public function getDetail($id, $lang = null)
     {
