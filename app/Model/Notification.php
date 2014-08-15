@@ -99,6 +99,7 @@ class Notification extends AppModel
         ];
         $notify = $this->find('first', $conditions);
         if (!empty($notify)) {
+            unset($notify['Notification']['modified']);
             $notify['Notification'] = array_merge($notify['Notification'], $data);
             $this->save($notify);
             return true;

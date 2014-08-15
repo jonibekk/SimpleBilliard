@@ -39,6 +39,21 @@ class NotifyBizComponent extends Object
      */
     var $Post;
 
+    public $notify_option_default = [
+        'from_user_id'      => null,
+        'to_user_id'        => null,
+        'url_data'          => null,
+        'count_num'         => null,
+        'notify_type'       => null,
+        'model_id'          => null,
+        'item_name'         => null,
+        'app_notify_enable' => true,
+    ];
+
+    public $notify_options = [];
+
+    public $notify_settings = [];
+
     public $components = [
         'GlEmailComponent',
     ];
@@ -72,18 +87,6 @@ class NotifyBizComponent extends Object
     function beforeRedirect()
     {
     }
-
-    public $notify_option_default = [
-        'from_user_id' => null,
-        'to_user_id'   => null,
-        'url_data'     => null,
-        'count_num'    => null,
-        'notify_type'  => null,
-        'model_id'     => null,
-        'item_name'    => null,
-    ];
-
-    public $notify_options = [];
 
     function sendNotify($notify_type, $model_id)
     {
@@ -121,21 +124,28 @@ class NotifyBizComponent extends Object
     {
         //宛先は投稿主
         $post = $this->Post->findById($post_id);
-        //TODO 投稿主の通知設定確認
 
         if (empty($post)) {
-            throw new RuntimeException();
+            return;
         }
+        //自分の投稿へのコメントの場合は処理しない
+        if ($post['Post']['user_id'] == $this->Auth->user('id')) {
+            return;
+        }
+        //投稿主の通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($post['Post']['user_id'],
+                                                                                NotifySetting::TYPE_FEED);
         $comment = $this->Post->Comment->read();
 
         $notify_option = $this->notify_option_default;
         $notify_option['to_user_id'] = $post['Post']['user_id'];
         $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_POST;
-        $notify_option['count_num'] = $post['Post']['comment_count'] - 1;
+        $notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id) - 1;
         $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $notify_option['model_id'] = $post_id;
         $notify_option['item_name'] = !empty($comment) ?
             mb_strimwidth($comment['Comment']['body'], 0, 40, "...") : null;
+        $notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
         $this->notify_options[] = $notify_option;
     }
 
@@ -156,6 +166,7 @@ class NotifyBizComponent extends Object
                 'url_data'     => json_encode($option['url_data']),
                 'count_num'    => $option['count_num'],
                 'item_name'    => $option['item_name'],
+                'enable_flg'   => $option['app_notify_enable'],
             ];
             $datas[] = $data;
         }
