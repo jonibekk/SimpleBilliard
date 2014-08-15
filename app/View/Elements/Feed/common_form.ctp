@@ -14,12 +14,15 @@
     <div class="panel-heading post-panel-heading">
         <!-- Nav tabs -->
         <ul class="gl-feed-switch clearfix" role="tab-list">
-            <li class="switch-post active"><a href="#PostForm" role="tab" data-toggle="tab"><i
-                        class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a></li>
-            <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><i
-                        class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a></li>
-            <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><i
-                        class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a></li>
+            <li class="switch-post active"><a href="#PostForm" role="tab" data-toggle="tab"
+                                              class="switch-post-anchor"><i
+                    class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a></li>
+            <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
+                                         class="switch-action-anchor develop--forbiddenLink"><i
+                    class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a></li>
+            <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab"
+                                        class="switch-badge-anchor develop--forbiddenLink"><i
+                    class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a></li>
         </ul>
     </div>
     <!-- Tab panes -->
@@ -46,8 +49,8 @@
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "・何か投稿しよう"),
-                    'class'                    => 'form-control click-show blank-disable post-form',
-                    'target_show_id'           => "PostFormFooter",
+                'class' => 'form-control click-show blank-disable post-form feed-post-form',
+                'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
@@ -62,20 +65,21 @@
                     </ul>
                 </div>
                 <div class="font-size_12" style="display: none" id="PostFormFooter">
-                    <div>
-                        <a href="#" class="target-show-this-del" target-id="PostFormImage"><i
-                                class="fa fa-picture-o"></i>&nbsp;<?=
+                    <span class="border-gray">
+                        <a href="#" class="target-show-this-del border-none link-red" target-id="PostFormImage"><i
+                                class="fa fa-picture-o link-red post-icon"></i>&nbsp;<?=
                             __d('gl',
                                 "画像を追加する") ?>
                         </a>
-                    </div>
+                    </span>
+
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
-                        <label class="col col-sm-2 control-label post-share-range-label">
-                            <a href="#" id="ChangeShareSelect2" target-id="PostShareInputWrap">
-                                <i class="fa fa-plus"></i><?= __d('gl', '共有範囲') ?>
+                        <label class="col col-sm-2 control-label post-share-range-label border-gray">
+                            <a href="#" id="ChangeShareSelect2" target-id="PostShareInputWrap"
+                               class="border-none link-red font-weight_normal">
+                                <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?= __d('gl', '共有範囲') ?>
                             </a>
                         </label>
-
                         <div class="col col-sm-10 post-share-range-list click-height-up blur-height-reset"
                              after-height="170px" id="PostShareInputWrap">
                             <?=

@@ -23,6 +23,18 @@ footer p {
     margin-bottom: 0;
 }
 
+.no-line {
+    text-decoration: none !important;
+    color: #000;
+}
+
+.no-line:link,
+.no-line:active,
+.no-line:hover,
+.no-line:visited {
+    text-decoration: none !important;
+}
+
 .navbar {
     margin: 0;
 }
@@ -93,6 +105,17 @@ footer p {
 }
 
 /*/Fontの指定*/
+/*
+.link-red{
+    color: #d9230f;
+}
+.link-red:hover{
+    color: #91170a;
+}
+*/
+.font-weight_normal {
+    font-weight: normal;
+}
 
 .link-gray {
     color: #c1c4c7;
@@ -573,31 +596,70 @@ ul.gl-input-images > li {
 }
 
 .gl-feed-switch li {
+    font-size: 12px;
     float: left;
     text-align: center;
-    padding-right: 12px;
+    margin-right: 12px;
+    height: 20px;
+}
+
+.gl-feed-switch a {
+    line-height: 14px;
+    vertical-align: baseline;
+    color: #999;
+}
+
+.gl-feed-switch .active a {
+    color: #231814 !important;
+    font-weight: bold;
+}
+
+.gl-feed-switch .active i {
+    color: #231814 !important;
+    font-weight: bold;
 }
 
 .gl-feed-switch i {
     padding-right: 2px;
-    line-height: 12px;
-    vertical-align: middle;
-}
-
-.gl-feed-switch a {
-    vertical-align: middle;
+    line-height: 14px;
+    vertical-align: baseline;
 }
 
 .switch-post {
-    width: 80px;
+    width: 44px;
 }
 
 .switch-action {
-    width: 100px;
+    width: 76px;
 }
 
 .switch-badge {
-    width: 80px
+    width: 52px
+}
+
+.gl-feed-switch .active {
+    border-bottom: 2px #ddd solid;
+}
+
+.switch-post:hover,
+.switch-action:hover,
+.switch-badge:hover {
+    border-bottom: 2px #ddd solid;
+}
+
+.switch-post:hover a,
+.switch-action:hover a,
+.switch-badge:hover a {
+    color: #333;
+}
+
+.switch-post-anchor,
+.switch-action-anchor,
+.switch-badge-anchor,
+.switch-post-anchor:hover,
+.switch-action-anchor:hover,
+.switch-badge-anchor:hover {
+    text-decoration: none;
 }
 
 /*/タブで切り替え*/
@@ -608,6 +670,9 @@ ul.gl-input-images > li {
 }
 
 .post-panel-heading {
+    background: #f5f5f5 !important;
+    padding-top: 4px !important;
+    padding-bottom: 0 !important;
 }
 
 .post-form {
@@ -623,6 +688,11 @@ ul.gl-input-images > li {
     resize: none;
 }
 
+.feed-post-form {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
 .post-form:focus, .post-form:target {
     border-top: none;
     border-right: none;
@@ -631,13 +701,13 @@ ul.gl-input-images > li {
     box-shadow: none;
 }
 .post-share-range {
-    margin: 12px 0 0 0;
+    margin: 0 0 0 0;
     padding: 0;
     border-bottom: 1px solid #ddd;
 }
 
 .post-share-range-label {
-    width: 57px;
+    width: 64px;
     margin-top: 0;
     margin-right: 0;
     margin-bottom: 0;
@@ -653,13 +723,30 @@ ul.gl-input-images > li {
 }
 
 .post-share-range-list ul {
-    width: 404px;
+    width: 392px;
     border-top: none !important;
     border-right: none !important;
     border-bottom: none !important;
     border-left: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+}
+
+.border-gray:hover {
+    border-bottom: 1px solid #666;
+}
+
+.border-none {
+    text-decoration: none !important;
+}
+
+.dark-gray {
+    color: #666 !important;
+}
+
+.post-icon {
+    width: 12px;
+    text-align: left;
 }
 
 /*/PostAreaのデザイン*/
@@ -1054,22 +1141,17 @@ ul.gl-input-images > li {
 }
 
 .gl-s2-post-dropdown {
-    border: 1px #eee solid;
+    width: 386px !important;
+    border: 1px #ddd solid;
     box-shadow: none;
+    border-radius: 0;
+    margin-left: 5px;
 }
 
-/*
-.gl-s2-post-dropdown > ul{
-    overflow-y: scroll;
-    scrollbar-face-color: #99ff99;
-    scrollbar-3dlight-color: #009900;
-    scrollbar-highlight-color: #009900;
-    scrollbar-shadow-color: #009900;
-    scrollbar-darkshadow-color: #009900;
-    scrollbar-arrow-color: #009900;
-    scrollbar-track-color: #ffffff;
+.gl-s2-post-dropdown li {
+    border-top: none !important;
+    font-size: 12px;
 }
-*/
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
@@ -1090,27 +1172,6 @@ ul.gl-input-images > li {
 .open {
     margin: 0;
     padding: 0;
-}
-
-.no-line {
-    text-decoration: none !important;
-    color: #000;
-}
-
-.no-line:link {
-    text-decoration: none !important;
-}
-
-.no-line:active {
-    text-decoration: none !important;
-}
-
-.no-line:hover {
-    text-decoration: none !important;
-}
-
-.no-line:visited {
-    text-decoration: none !important;
 }
 
 .borderBottom > div:not(:last-child) {
