@@ -335,8 +335,8 @@ class AppSchema extends CakeSchema
         'type'            => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 3, 'unsigned' => true, 'comment' => 'タイプ(1:ゴール,2:投稿,3:etc ...)'),
         'from_user_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '通知元ユーザID(belongsToでUserモデルに関連)'),
         'body'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '通知本文', 'charset' => 'utf8'),
-        'item_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アイテム名(投稿内容、コメント内容等)', 'charset' => 'utf8'),
-        'model_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'モデルID(feedならpost_id,circleならcircle_id)'),
+        'item_name'       => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アイテム名(投稿内容、コメント内容等)', 'charset' => 'utf8'),
+        'model_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'モデルID(feedならpost_id,circleならcircle_id)'),
         'url_data'        => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'URLデータ(json)', 'charset' => 'utf8'),
         'count_num'       => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メッセージ内で利用する件数'),
         'unread_flg'      => array('type' => 'boolean', 'null' => false, 'default' => '1', 'key' => 'index', 'comment' => '未読フラグ(通知を開いたらOff)'),
@@ -351,7 +351,8 @@ class AppSchema extends CakeSchema
             'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),
             'del_flg'      => array('column' => 'del_flg', 'unique' => 0),
             'unread_flg'   => array('column' => 'unread_flg', 'unique' => 0),
-            'modified'     => array('column' => 'modified', 'unique' => 0)
+            'modified'     => array('column' => 'modified', 'unique' => 0),
+            'model_id'     => array('column' => 'model_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -577,7 +578,7 @@ class AppSchema extends CakeSchema
         'invitation_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '招待中フラグ(招待済みで非アクティブユーザの管理用途)'),
         'evaluation_enable_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '評価対象フラグ(Offの場合は評価が不可能。対象ページへのアクセスおよび、一切の評価のアクションが行えない。)'),
         'admin_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => 'チーム管理者フラグ(Onの場合はチーム設定が可能)'),
-        'notify_unread_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '通知未読件数'),
+        'notify_unread_count'   => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '通知未読件数'),
         'last_login'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チーム最終ログイン日時'),
         'del_flg'               => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
         'deleted'               => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームから外れた日付時刻'),
