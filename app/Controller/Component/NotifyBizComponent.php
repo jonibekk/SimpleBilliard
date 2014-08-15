@@ -79,7 +79,8 @@ class NotifyBizComponent extends Object
         'url_data'     => null,
         'count_num'    => null,
         'notify_type'  => null,
-        'model_id' => null,
+        'model_id'  => null,
+        'item_name' => null,
     ];
 
     public $notify_options = [];
@@ -122,12 +123,19 @@ class NotifyBizComponent extends Object
         if (empty($post)) {
             throw new RuntimeException();
         }
+        $comment = $this->Post->Comment->read();
+        $item_name = null;
+        if (!empty($comment)) {
+            $item_name = mb_strimwidth($comment['Comment']['body'], 0, 40, "...");
+        }
+
         $notify_option = $this->notify_option_default;
         $notify_option['to_user_id'] = $post['Post']['user_id'];
         $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_POST;
         $notify_option['count_num'] = $post['Post']['comment_count'] - 1;
         $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $notify_option['model_id'] = $post_id;
+        $notify_option['item_name'] = $item_name;
         $this->notify_options[] = $notify_option;
     }
 
@@ -147,6 +155,7 @@ class NotifyBizComponent extends Object
                 'model_id'     => $option['model_id'],
                 'url_data'     => json_encode($option['url_data']),
                 'count_num'    => $option['count_num'],
+                'item_name' => $option['item_name'],
             ];
             $datas[] = $data;
         }
