@@ -105,6 +105,7 @@ class NotifyBizComponent extends Object
                 break;
         }
         //アプリ通知データ保存
+        $this->saveNotifications();
 
         //メール送信
     }

@@ -4,10 +4,15 @@ App::uses('AppController', 'Controller');
 /**
  * Posts Controller
  *
- * @property Post $Post
+ * @property Post               $Post
+ * @property NotifyBizComponent $NotifyBiz
  */
 class PostsController extends AppController
 {
+    public $components = [
+        'NotifyBiz',
+    ];
+
     /**
      * add method
      *
@@ -306,6 +311,8 @@ class PostsController extends AppController
                 }
             }
             if ($this->Post->Comment->add($this->request->data)) {
+                $this->NotifyBiz->sendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST,
+                                             $this->Post->Comment->getLastInsertID());
                 $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
             }
             else {
