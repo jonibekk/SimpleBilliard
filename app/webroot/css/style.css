@@ -23,6 +23,50 @@ footer p {
     margin-bottom: 0;
 }
 
+.navbar {
+    margin: 0;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    color: #555555;
+    background-color: #fff;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+    cursor: default;
+}
+
+.container {
+    width: 93.75%;
+}
+
+.panel-default > .panel-heading {
+    background-color: #fff;
+    padding: 10px 11px;
+}
+
+.panel-body {
+    padding: 10px 11px;
+}
+
+.design-mystatus {
+    background: #fff;
+    border: solid 1px #ddd;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.design-goal {
+    background: #fff;
+    border: solid 1px #ddd;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.site-info {
+    background: #fff;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
 /*Fontの指定*/
 .font-size_11 {
     font-size: 11px;
@@ -519,7 +563,49 @@ ul.gl-input-images > li {
 }
 
 /*/レイアウトの指定*/
+
+/*タブで切り替え*/
+
+.gl-feed-switch {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.gl-feed-switch li {
+    float: left;
+    text-align: center;
+    padding-right: 12px;
+}
+
+.gl-feed-switch i {
+    padding-right: 2px;
+    line-height: 12px;
+    vertical-align: middle;
+}
+
+.gl-feed-switch a {
+    vertical-align: middle;
+}
+
+.switch-post {
+    width: 80px;
+}
+
+.switch-action {
+    width: 100px;
+}
+
+.switch-badge {
+    width: 80px
+}
+
+/*/タブで切り替え*/
+
 /*PostAreaのデザイン*/
+.post-panel-body {
+    padding: 5px 11px 10px;
+}
 
 .post-panel-heading {
 }
@@ -544,19 +630,6 @@ ul.gl-input-images > li {
     border-color: #ddd;
     box-shadow: none;
 }
-
-.develop--post-form-check .has-feedback {
-    position: relative;
-}
-
-.develop--post-form-check .has-feedback .fa-check {
-    vertical-align: top;
-    position: absolute !important;
-    bottom: 80px !important;
-    right: 0;
-    z-index: 100;
-}
-
 .post-share-range {
     margin: 12px 0 0 0;
     padding: 0;
@@ -590,50 +663,6 @@ ul.gl-input-images > li {
 }
 
 /*/PostAreaのデザイン*/
-
-.navbar {
-    margin: 0;
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-    color: #555555;
-    background-color: #fff;
-    border: 1px solid #dddddd;
-    border-bottom-color: transparent;
-    cursor: default;
-}
-
-.container {
-    width: 93.75%;
-}
-
-.panel-default > .panel-heading {
-    background-color: #fff;
-    padding: 10px 11px;
-}
-
-.panel-body {
-    padding: 10px 11px;
-}
-
-.design-mystatus {
-    background: #fff;
-    border: solid 1px #ddd;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
-.design-goal {
-    background: #fff;
-    border: solid 1px #ddd;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
-.site-info {
-    background: #fff;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
 
 /*サークルのデザイン*/
 .circle-icon_box {
@@ -1025,10 +1054,22 @@ ul.gl-input-images > li {
 }
 
 .gl-s2-post-dropdown {
-    border: none;
+    border: 1px #eee solid;
     box-shadow: none;
 }
 
+/*
+.gl-s2-post-dropdown > ul{
+    overflow-y: scroll;
+    scrollbar-face-color: #99ff99;
+    scrollbar-3dlight-color: #009900;
+    scrollbar-highlight-color: #009900;
+    scrollbar-shadow-color: #009900;
+    scrollbar-darkshadow-color: #009900;
+    scrollbar-arrow-color: #009900;
+    scrollbar-track-color: #ffffff;
+}
+*/
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {

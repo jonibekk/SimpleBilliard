@@ -13,16 +13,13 @@
 <div class="panel panel-default global-form">
     <div class="panel-heading post-panel-heading">
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs font-size_12" role="tablist">
-            <li class="active"><a href="#PostForm" role="tab" data-toggle="tab"><?= __d('gl', "投稿") ?></a></li>
-            <li><a href="#ActionForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?=
-                    __d('gl',
-                        "アクション") ?></a>
-            </li>
-            <li><a href="#BadgeForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><?=
-                    __d('gl',
-                        "バッジ") ?></a>
-            </li>
+        <ul class="gl-feed-switch clearfix" role="tab-list">
+            <li class="switch-post active"><a href="#PostForm" role="tab" data-toggle="tab"><i
+                        class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a></li>
+            <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><i
+                        class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a></li>
+            <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab" class="develop--forbiddenLink"><i
+                        class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a></li>
         </ul>
     </div>
     <!-- Tab panes -->
@@ -41,8 +38,8 @@
                 'type'          => 'file',
                 'novalidate'    => true,
             ]); ?>
-            <div class="panel-body develop--post-form-check">
-                <?=
+            <div class="panel-body post-panel-body">
+            <?=
                 $this->Form->input('body', [
                     'label'                    => false,
                     'type'                     => 'textarea',
@@ -96,8 +93,10 @@
             <?= $this->Form->end() ?>
         </div>
         <div class="tab-pane fade" id="ActionForm">
+            action
         </div>
         <div class="tab-pane fade" id="BadgeForm">
+            badge
         </div>
     </div>
 </div>
