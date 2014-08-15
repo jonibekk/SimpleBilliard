@@ -179,4 +179,20 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    function incrementNotifyUnreadCount($user_ids)
+    {
+        if (empty($user_ids)) {
+            return false;
+        }
+
+        $conditions = [
+            'TeamMember.user_id' => $user_ids,
+            'TeamMember.team_id' => $this->current_team_id,
+        ];
+
+        $res = $this->updateAll(['TeamMember.notify_unread_count' => 'TeamMember.notify_unread_count + 1'],
+                                $conditions);
+        return $res;
+    }
+
 }

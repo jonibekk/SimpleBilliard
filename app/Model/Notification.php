@@ -79,15 +79,25 @@ class Notification extends AppModel
 
     function saveNotify($notifyDatas)
     {
+        $update_notify_count_uids = [];
         //既に存在するモデルの場合はupdateし、unset
         foreach ($notifyDatas as $key => $data) {
             if ($this->updateBeforeFirstSave($data)) {
+                if ($data['enable_flg']) {
+                    $update_notify_count_uids[] = $data['user_id'];
+                }
                 unset($notifyDatas[$key]);
             }
         }
         if (!empty($notifyDatas)) {
             $this->saveAll($notifyDatas);
+            foreach ($notifyDatas as $data) {
+                if ($data['enable_flg']) {
+                    $update_notify_count_uids[] = $data['user_id'];
+                }
+            }
         }
+        $this->Team->TeamMember->incrementNotifyUnreadCount($update_notify_count_uids);
     }
 
     function updateBeforeFirstSave($data)
