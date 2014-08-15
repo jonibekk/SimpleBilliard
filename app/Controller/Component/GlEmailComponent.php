@@ -161,11 +161,12 @@ class GlEmailComponent extends Object
 
     /**
      * メールにて招待メールを送信
+
      *
-     * @param array $invite_data
+*@param array $invite_data
      * @param       $team_name
      *
-*@return bool
+     * @return bool
      */
     public function sendMailInvite($invite_data, $team_name)
     {

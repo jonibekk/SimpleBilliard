@@ -19,6 +19,12 @@ class SendMail extends AppModel
     const TYPE_TMPL_TOKEN_RESEND = 4;
     const TYPE_TMPL_CHANGE_EMAIL_VERIFY = 5;
     const TYPE_TMPL_INVITE = 6;
+    const TYPE_FEED_COMMENTED_ON_MY_POST = 7;
+    const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST = 8;
+    const TYPE_CIRCLE_USER_JOIN = 9;
+    const TYPE_CIRCLE_POSTED_ON_MY_CIRCLE = 10;
+    const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 11;
+
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
             'subject'  => null,
@@ -125,11 +131,12 @@ class SendMail extends AppModel
 
     /**
      * 詳細なユーザ名等を含んだデータを返す
+
      *
-     * @param      $id
+*@param      $id
      * @param null $lang
      *
-*@return array|null
+     * @return array|null
      */
     public function getDetail($id, $lang = null)
     {
