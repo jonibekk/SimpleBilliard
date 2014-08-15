@@ -5,24 +5,25 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Email            $PrimaryEmail
- * @property Team             $DefaultTeam
- * @property Badge            $Badge
- * @property CommentLike      $CommentLike
- * @property CommentMention   $CommentMention
- * @property CommentRead      $CommentRead
- * @property Comment          $Comment
- * @property Email            $Email
- * @property GivenBadge       $GivenBadge
- * @property Notification     $Notification
- * @property OauthToken       $OauthToken
- * @property PostLike         $PostLike
- * @property PostMention      $PostMention
- * @property PostRead         $PostRead
- * @property Post             $Post
- * @property TeamMember       $TeamMember
- * @property CircleMember     $CircleMember
- * @property LocalName        $LocalName
+ * @property Email             $PrimaryEmail
+ * @property Team              $DefaultTeam
+ * @property Badge             $Badge
+ * @property CommentLike       $CommentLike
+ * @property CommentMention    $CommentMention
+ * @property CommentRead       $CommentRead
+ * @property Comment           $Comment
+ * @property Email             $Email
+ * @property GivenBadge        $GivenBadge
+ * @property Notification      $Notification
+ * @property NotifySetting     $NotifySetting
+ * @property OauthToken        $OauthToken
+ * @property PostLike          $PostLike
+ * @property PostMention       $PostMention
+ * @property PostRead          $PostRead
+ * @property Post              $Post
+ * @property TeamMember        $TeamMember
+ * @property CircleMember      $CircleMember
+ * @property LocalName         $LocalName
  */
 class User extends AppModel
 {
@@ -188,6 +189,7 @@ class User extends AppModel
     ];
 
     public $hasOne = [
+        'NotifySetting',
     ];
 
     /**

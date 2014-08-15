@@ -501,21 +501,23 @@ ul.gl-input-images > li {
     margin-bottom: 10px;
 }
 
-
-
 /*レイアウトの指定*/
 .layout-main {
     padding: 0;
 }
+
 .layout-sub {
     padding: 0;
 }
+
 .layout-goal {
     padding: 0;
 }
+
 .layout-header_right {
     padding: 0;
 }
+
 /*/レイアウトの指定*/
 
 .navbar {
@@ -1039,6 +1041,18 @@ ul.gl-input-images > li {
 .gl-circle-join-switch > .checkbox {
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.gl-notify-setting-switch > .checkbox {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 0;
+    display: inline;
+}
+
+.gl-icon-before-input {
+    font-size: 18px;
+    vertical-align: middle;
 }
 
 /*/modalのデザイン*/

@@ -17,10 +17,10 @@ class SendMailTest extends CakeTestCase
     public $fixtures = array(
         'app.local_name',
         'app.send_mail',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.image',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.email',
         'app.badge',
         'app.comment_like',

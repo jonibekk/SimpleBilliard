@@ -18,7 +18,7 @@ class ThreadTest extends CakeTestCase
         'app.thread',
         'app.team',
         'app.image',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.badge',
         'app.post',
         //'app.goal',

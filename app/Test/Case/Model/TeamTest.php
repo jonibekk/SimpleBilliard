@@ -18,7 +18,7 @@ class TeamTest extends CakeTestCase
         'app.local_name',
         'app.team',
         'app.image',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.badge',
         'app.post',
         //'app.goal',

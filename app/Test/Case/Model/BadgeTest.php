@@ -16,7 +16,7 @@ class BadgeTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.badge',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team',
         'app.image',
     );

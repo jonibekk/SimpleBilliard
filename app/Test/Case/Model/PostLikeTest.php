@@ -17,7 +17,7 @@ class PostLikeTest extends CakeTestCase
     public $fixtures = array(
         'app.post_like',
         'app.post',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.team'
     );
 

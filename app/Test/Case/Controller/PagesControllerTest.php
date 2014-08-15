@@ -17,7 +17,7 @@ class PagesControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.local_name',
         'app.cake_session',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.image',
         'app.badge',
         'app.team',

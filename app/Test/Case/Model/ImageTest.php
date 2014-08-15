@@ -16,7 +16,7 @@ class ImageTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.image',
-        'app.user',
+        'app.user', 'app.notify_setting',
         'app.badge',
         'app.team',
         'app.post',
