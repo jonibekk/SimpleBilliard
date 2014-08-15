@@ -72,11 +72,7 @@ $(document).ready(function () {
     });
     $('#PostDisplayForm').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
+        feedbackIcons: {},
         fields: {}
     });
 
@@ -110,7 +106,7 @@ $(document).ready(function () {
     $('#select2PostCircleMember').select2({
         multiple: true,
         minimumInputLength: 2,
-        placeholder: '<?=__d('gl',"スペルを入力してください。")?>',
+        placeholder: '<?=__d('gl',"指定なしの為、この投稿は自分以外の人には見えません。")?>',
         ajax: {
             url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
             dataType: 'json',
@@ -157,6 +153,7 @@ $(document).ready(function () {
         <?endif;?>
         formatSelection: format,
         formatResult: format,
+        dropdownCssClass: 'gl-s2-post-dropdown',
         escapeMarkup: function (m) {
             return m;
         }

@@ -23,6 +23,13 @@ $(document).ready(function () {
             location.href = data;
         });
     });
+    //投稿の共有範囲切り替え
+    $('#ChangeShareSelect2').click(function () {
+        attrUndefinedCheck(this, 'target-id');
+        var target_id = $(this).attr('target-id');
+        $("#" + target_id).find('ul.select2-choices').click();
+        return false;
+    });
     //autosize
     //noinspection JSJQueryEfficiency
     $('textarea').autosize();
@@ -52,7 +59,10 @@ $(document).ready(function () {
     /**
      * ajaxで取得するコンテンツにバインドする必要のあるイベントは以下記述で追加
      */
+    $(document).on("blur", ".blur-height-reset", evThisHeightReset);
+    $(document).on("focus", ".click-height-up", evThisHeightUp);
     $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
     //noinspection SpellCheckingInspection
     $(document).on("keyup", ".blank-disable", evBlankDisable);
@@ -147,6 +157,7 @@ $(document).ready(function () {
         e.preventDefault();
         imageLazyOn();
     });
+
 });
 
 function imageLazyOn() {
@@ -216,12 +227,31 @@ function evBlankDisable() {
 function evTriggerClick() {
     attrUndefinedCheck(this, 'target-id');
     var target_id = $(this).attr("target-id");
+    console.log(target_id);
     //noinspection JSJQueryEfficiency
     $("#" + target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + target_id).focus();
     return false;
 }
+/**
+ * クリックしたら、
+ * 指定した要素を表示する。(一度だけ)
+ */
+function evShow() {
+    //クリック済みの場合は処理しない
+    if ($(this).hasClass('clicked'))return;
+
+    //autosizeを一旦、切る。
+    $(this).trigger('autosize.destroy');
+    //再度autosizeを有効化
+    $(this).autosize();
+    //submitボタンを表示
+    $("#" + $(this).attr('target_show_id')).show();
+    //クリック済みにする
+    $(this).addClass('clicked');
+}
+
 /**
  * クリックした要素のheightを倍にし、
  * 指定した要素を表示する。(一度だけ)
@@ -241,6 +271,15 @@ function evShowAndThisWide() {
     $("#" + $(this).attr('target_show_id')).show();
     //クリック済みにする
     $(this).addClass('clicked');
+}
+
+function evThisHeightUp() {
+    attrUndefinedCheck(this, 'after-height');
+    var after_height = $(this).attr("after-height");
+    $(this).height(after_height);
+}
+function evThisHeightReset() {
+    $(this).css('height', "");
 }
 
 /**

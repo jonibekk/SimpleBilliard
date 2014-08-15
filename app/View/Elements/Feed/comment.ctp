@@ -59,9 +59,9 @@
             }
             ?>
             <? if ($photo_count): ?>
-                <div class="col col-xxs-12">
+                <div class="col col-xxs-12 gl-comment-photo">
 
-                    <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
+                <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
                         <? if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
