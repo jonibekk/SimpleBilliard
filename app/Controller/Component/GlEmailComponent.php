@@ -201,11 +201,12 @@ class GlEmailComponent extends Object
         if (empty($data)) {
             return;
         }
-        $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, [], $data['from_user_id'],
-                                      $this->SendMail->current_team_id, $data['notification_id']);
-
-        //TODO いまここ
-
+        //同一通知IDで３時間以内にメール送信していない場合のみ通知
+        if (!$this->SendMail->isNotifySentBefore($data['notification_id'])) {
+            $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, [], $data['from_user_id'],
+                                          $this->SendMail->current_team_id, $data['notification_id']);
+            //TODO いまここ
+        }
     }
 
     /**
