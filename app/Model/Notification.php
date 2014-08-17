@@ -105,7 +105,7 @@ class Notification extends AppModel
         return $res;
     }
 
-    function getTitle($type, $user_name, $count_num)
+    function getTitle($type, $user_name, $count_num, $item_name_1 = null, $item_name_2 = null)
     {
         $title = null;
         switch ($type) {
@@ -116,6 +116,20 @@ class Notification extends AppModel
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
                 $title = __d('gl', '%1$sさん%2$sがあなたのコメントした投稿にコメントしました。', $user_name,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                break;
+            case self::TYPE_CIRCLE_USER_JOIN:
+                $title = __d('gl', '%1$sさん%2$sが%2$sに参加しました。', $user_name,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
+                             $item_name_1);
+                break;
+            case self::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE:
+                $title = __d('gl', '%1$sさん%2$sが%2$sに投稿しました。', $user_name,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
+                             $item_name_1);
+                break;
+            case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
+                $title = __d('gl', '%1$sさんが%1$sのプライバシー設定を%2$sに変更しました。', $user_name,
+                             $item_name_1, $item_name_2);
                 break;
             default:
                 break;
