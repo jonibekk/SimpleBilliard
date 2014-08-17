@@ -9,6 +9,8 @@ App::uses('AppModel', 'Model');
  * @property Team         $Team
  * @property Notification $Notification
  */
+
+/** @noinspection PhpDocSignatureInspection */
 class SendMail extends AppModel
 {
     /**
@@ -20,11 +22,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_TOKEN_RESEND = 4;
     const TYPE_TMPL_CHANGE_EMAIL_VERIFY = 5;
     const TYPE_TMPL_INVITE = 6;
-    const TYPE_FEED_COMMENTED_ON_MY_POST = 7;
-    const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST = 8;
-    const TYPE_CIRCLE_USER_JOIN = 9;
-    const TYPE_CIRCLE_POSTED_ON_MY_CIRCLE = 10;
-    const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 11;
+    const TYPE_TMPL_NOTIFY = 7;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
@@ -42,17 +40,17 @@ class SendMail extends AppModel
             'template' => 'password_reset_complete',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_TOKEN_RESEND        => [
+        self::TYPE_TMPL_TOKEN_RESEND            => [
             'subject'  => null,
             'template' => 'token_resend',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY => [
+        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY     => [
             'subject'  => null,
             'template' => 'change_email',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_INVITE              => [
+        self::TYPE_TMPL_INVITE                  => [
             'subject'  => null,
             'template' => 'invite',
             'layout'   => 'default',
@@ -118,14 +116,15 @@ class SendMail extends AppModel
      *
      * @return bool
      */
-    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null)
+    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null, $notify_id = null)
     {
         $data = [
-            'to_user_id'    => $to_uid,
-            'template_type' => $tmpl_type,
-            'item'          => (!empty($item)) ? json_encode($item) : null,
-            'from_user_id'  => ($from_uid) ? $from_uid : null,
-            'team_id'       => ($team_id) ? $team_id : null,
+            'to_user_id'      => $to_uid,
+            'template_type'   => $tmpl_type,
+            'item'            => (!empty($item)) ? json_encode($item) : null,
+            'from_user_id'    => $from_uid,
+            'team_id'         => $team_id,
+            'notification_id' => $notify_id,
         ];
         $this->create();
         return $this->save($data);
@@ -136,9 +135,8 @@ class SendMail extends AppModel
      *
      * @param      $id
      * @param null $lang
-
      *
-*@return array|null
+     * @return array|null
      */
     public function getDetail($id, $lang = null)
     {

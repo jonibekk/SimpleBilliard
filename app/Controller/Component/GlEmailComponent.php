@@ -117,7 +117,7 @@ class GlEmailComponent extends Object
                      [
                          'admin'      => false,
                          'controller' => 'users',
-                         'action' => 'change_email_verify',
+                         'action'     => 'change_email_verify',
                          $email_token,
                      ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_CHANGE_EMAIL_VERIFY,
@@ -161,9 +161,8 @@ class GlEmailComponent extends Object
 
     /**
      * メールにて招待メールを送信
-
      *
-*@param array $invite_data
+     * @param array $invite_data
      * @param       $team_name
      *
      * @return bool
@@ -195,6 +194,18 @@ class GlEmailComponent extends Object
         );
         $this->execSendMailById($this->SendMail->id);
         return true;
+    }
+
+    public function sendMailNotify($data)
+    {
+        if (empty($data)) {
+            return;
+        }
+        $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, [], $data['from_user_id'],
+                                      $this->SendMail->current_team_id, $data['notification_id']);
+
+        //TODO いまここ
+
     }
 
     /**

@@ -3,7 +3,6 @@ App::uses('ModelType', 'Model');
 
 /**
  * @author daikihirakata
- * @property GlEmailComponent $GlEmail
  */
 class NotifyBizComponent extends Object
 {
@@ -48,15 +47,12 @@ class NotifyBizComponent extends Object
         'model_id'          => null,
         'item_name'         => null,
         'app_notify_enable' => true,
+        'notify_id'         => null,
     ];
 
     public $notify_options = [];
 
     public $notify_settings = [];
-
-    public $components = [
-        'GlEmailComponent',
-    ];
 
     function initialize()
     {
@@ -94,7 +90,7 @@ class NotifyBizComponent extends Object
 
         switch ($notify_type) {
             case Notification::TYPE_FEED_COMMENTED_ON_MY_POST:
-                $this->setFeedCommentedOnMyPostOption($model_id);
+                $this->_setFeedCommentedOnMyPostOption($model_id);
                 break;
             case Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
                 break;
@@ -108,9 +104,9 @@ class NotifyBizComponent extends Object
                 break;
         }
         //アプリ通知データ保存
-        $this->saveNotifications();
-
+        $this->_saveNotifications();
         //メール送信
+        $this->_sendNotifyEmail();
     }
 
     /**
@@ -120,7 +116,7 @@ class NotifyBizComponent extends Object
      *
      * @throws RuntimeException
      */
-    function setFeedCommentedOnMyPostOption($post_id)
+    private function _setFeedCommentedOnMyPostOption($post_id)
     {
         //宛先は投稿主
         $post = $this->Post->findById($post_id);
@@ -149,14 +145,13 @@ class NotifyBizComponent extends Object
         $this->notify_options[] = $notify_option;
     }
 
-    function saveNotifications()
+    private function _saveNotifications()
     {
         if (empty($this->notify_options)) {
             return;
         }
-        //Notification用データに変換
-        $datas = [];
-        foreach ($this->notify_options as $option) {
+        //Notification用データに変換して保存
+        foreach ($this->notify_options as $key => $option) {
             $data = [
                 'user_id'      => $option['to_user_id'],
                 'team_id'      => $this->Notification->current_team_id,
@@ -168,9 +163,23 @@ class NotifyBizComponent extends Object
                 'item_name'    => $option['item_name'],
                 'enable_flg'   => $option['app_notify_enable'],
             ];
-            $datas[] = $data;
+            $res = $this->Notification->saveNotify($data);
+            $this->notify_options[$key]['notification_id'] = $res['Notification']['id'];
         }
-        $this->Notification->saveNotify($datas);
+    }
+
+    private function _sendNotifyEmail()
+    {
+        if (empty($this->notify_settings) || empty($this->notify_options)) {
+            return;
+        }
+        foreach ($this->notify_options as $option) {
+            //メール送信offの場合は処理しない
+            if (!$this->notify_settings[$option['to_user_id']]['email']) {
+                continue;
+            }
+            $this->Controller->GlEmail->sendMailNotify($option);
+        }
     }
 
 }

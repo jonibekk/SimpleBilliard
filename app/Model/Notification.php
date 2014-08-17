@@ -77,44 +77,28 @@ class Notification extends AppModel
         $this->_setTypeDefault();
     }
 
-    function saveNotify($notifyDatas)
+    function saveNotify($data)
     {
-        $update_notify_count_uids = [];
-        //既に存在するモデルの場合はupdateし、unset
-        foreach ($notifyDatas as $key => $data) {
-            if ($this->updateBeforeFirstSave($data)) {
-                if ($data['enable_flg']) {
-                    $update_notify_count_uids[] = $data['user_id'];
-                }
-                unset($notifyDatas[$key]);
-            }
-        }
-        if (!empty($notifyDatas)) {
-            $this->saveAll($notifyDatas);
-            foreach ($notifyDatas as $data) {
-                if ($data['enable_flg']) {
-                    $update_notify_count_uids[] = $data['user_id'];
-                }
-            }
-        }
-        $this->Team->TeamMember->incrementNotifyUnreadCount($update_notify_count_uids);
-    }
-
-    function updateBeforeFirstSave($data)
-    {
-        $conditions = [
-            'model_id' => $data['model_id'],
-            'user_id'  => $data['user_id'],
-            'type'     => $data['type'],
+        $option = [
+            'conditions' => [
+                'model_id' => $data['model_id'],
+                'user_id'  => $data['user_id'],
+                'type'     => $data['type'],
+            ]
         ];
-        $notify = $this->find('first', $conditions);
+        $notify = $this->find('first', $option);
+        $this->create();
         if (!empty($notify)) {
             unset($notify['Notification']['modified']);
             $notify['Notification'] = array_merge($notify['Notification'], $data);
-            $this->save($notify);
-            return true;
+            $res = $this->save($notify);
         }
-        return false;
+        else {
+            $res = $this->save($data);
+        }
+        if ($data['enable_flg']) {
+            $this->Team->TeamMember->incrementNotifyUnreadCount($res['Notification']['user_id']);
+        }
+        return $res;
     }
-
 }
