@@ -133,14 +133,14 @@ class NotifyBizComponent extends Object
         if (empty($commented_user_list)) {
             return;
         }
-        //投稿主の通知設定確認
+        //コメント主の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($commented_user_list,
                                                                                 NotifySetting::TYPE_FEED);
         $comment = $this->Post->Comment->read();
 
         $notify_option = $this->notify_option_default;
         $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
-        $notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id) - 2;
+        $notify_option['count_num'] = count($commented_user_list);
         $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $notify_option['model_id'] = $post_id;
         $notify_option['item_name'] = !empty($comment) ?
@@ -179,7 +179,8 @@ class NotifyBizComponent extends Object
         $notify_option = $this->notify_option_default;
         $notify_option['to_user_id'] = $post['Post']['user_id'];
         $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_POST;
-        $notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id) - 1;
+        $notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
+                                                                                      [$this->Post->me['id'], $post['Post']['user_id']]);
         $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $notify_option['model_id'] = $post_id;
         $notify_option['item_name'] = !empty($comment) ?

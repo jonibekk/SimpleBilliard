@@ -201,7 +201,7 @@ class Comment extends AppModel
         return $res;
     }
 
-    function getCountCommentUniqueUser($post_id)
+    function getCountCommentUniqueUser($post_id, $without_user_id_list = [])
     {
         $options = [
             'conditions' => [
@@ -212,6 +212,9 @@ class Comment extends AppModel
                 'COUNT(DISTINCT user_id) as count',
             ]
         ];
+        if (!empty($without_user_id_list)) {
+            $options['conditions']['NOT']['user_id'] = $without_user_id_list;
+        }
         $res = $this->find('count', $options);
         return $res;
     }
