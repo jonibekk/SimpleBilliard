@@ -150,7 +150,8 @@ class SendMail extends AppModel
             'contain'    => [
                 'ToUser'   => ['PrimaryEmail'],
                 'FromUser' => ['PrimaryEmail'],
-                'Team'
+                'Team',
+                'Notification'
             ]
         ];
         $res = $this->find('first', $options);

@@ -6,6 +6,8 @@
  * @property User          $User
  * @property SendMail      $SendMail
  */
+
+/** @noinspection PhpDocSignatureInspection */
 class GlEmailComponent extends Object
 {
 
@@ -17,6 +19,9 @@ class GlEmailComponent extends Object
 
     public $User;
 
+    /**
+     * @var SendMail $SendMail
+     */
     public $SendMail;
 
     public $components = array(
@@ -203,9 +208,15 @@ class GlEmailComponent extends Object
         }
         //同一通知IDで３時間以内にメール送信していない場合のみ通知
         if (!$this->SendMail->isNotifySentBefore($data['notification_id'])) {
-            $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, [], $data['from_user_id'],
+            //
+            $url = Router::url($data['url_data'], true);
+            $item = [
+                'url' => $url,
+            ];
+            $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
                                           $this->SendMail->current_team_id, $data['notification_id']);
-            //TODO いまここ
+            //メール送信を実行
+            $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
         }
     }
 
@@ -214,18 +225,17 @@ class GlEmailComponent extends Object
      *
      * @param $id
      */
-    public function execSendMailById($id)
+    public function execSendMailById($id, $method_name = "send_mail_by_id")
     {
         $set_web_env = "";
         $php = "/usr/bin/php ";
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
-        $cmd = " send_mail send_mail_by_id";
+        $cmd = " send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $cake_cmd . $cake_app . $cmd . $cmd_end;
 
         exec($all_cmd);
     }
-
 }

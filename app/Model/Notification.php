@@ -25,22 +25,25 @@ class Notification extends AppModel
     const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 5;
 
     static public $TYPE = [
-        self::TYPE_FEED_COMMENTED_ON_MY_POST           => [],
-        self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST => [],
-        self::TYPE_CIRCLE_USER_JOIN                    => [],
-        self::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE          => [],
-        self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [],
-    ];
-
-    public $default_type_setting = [
-        'notify_type' => null,
+        self::TYPE_FEED_COMMENTED_ON_MY_POST           => [
+            'mail_template' => "notify_basic",
+        ],
+        self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST => [
+            'mail_template' => "notify_basic",
+        ],
+        self::TYPE_CIRCLE_USER_JOIN                    => [
+            'mail_template' => "notify_basic",
+        ],
+        self::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE          => [
+            'mail_template' => "notify_basic",
+        ],
+        self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [
+            'mail_template' => "notify_basic",
+        ],
     ];
 
     public function _setTypeDefault()
     {
-        foreach (self::$TYPE as $type_name => $values) {
-            self::$TYPE[$type_name] = $this->default_type_setting;
-        }
         self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_POST]['notify_type'] = NotifySetting::TYPE_FEED;
         self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['notify_type'] = NotifySetting::TYPE_FEED;
         self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['notify_type'] = NotifySetting::TYPE_CIRCLE;
@@ -101,4 +104,23 @@ class Notification extends AppModel
         }
         return $res;
     }
+
+    function getTitle($type, $user_name, $count_num)
+    {
+        $title = null;
+        switch ($type) {
+            case self::TYPE_FEED_COMMENTED_ON_MY_POST:
+                $title = __d('gl', '%1$sさん%2$sがあなたの投稿にコメントしました。', $user_name,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                break;
+            case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
+                $title = __d('gl', '%1$sさん%2$sがあなたのコメントした投稿にコメントしました。', $user_name,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                break;
+            default:
+                break;
+        }
+        return $title;
+    }
+
 }
