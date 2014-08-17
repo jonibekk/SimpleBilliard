@@ -93,6 +93,7 @@ class NotifyBizComponent extends Object
                 $this->_setFeedCommentedOnMyPostOption($model_id);
                 break;
             case Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
+                $this->_setFeedCommentedOnMyCommentedPostOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_USER_JOIN:
                 break;
@@ -110,6 +111,49 @@ class NotifyBizComponent extends Object
     }
 
     /**
+     * 自分のコメントした投稿にコメントがあった場合のオプション取得
+     *
+     * @param $post_id
+     *
+     * @throws RuntimeException
+     */
+    private function _setFeedCommentedOnMyCommentedPostOption($post_id)
+    {
+        //宛先は自分以外のコメント主(投稿主ものぞく)
+        $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id);
+        if (empty($commented_user_list)) {
+            return;
+        }
+        $post = $this->Post->findById($post_id);
+        if (empty($post)) {
+            return;
+        }
+        //投稿主を除外
+        unset($commented_user_list[$post['Post']['user_id']]);
+        if (empty($commented_user_list)) {
+            return;
+        }
+        //投稿主の通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($commented_user_list,
+                                                                                NotifySetting::TYPE_FEED);
+        $comment = $this->Post->Comment->read();
+
+        $notify_option = $this->notify_option_default;
+        $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
+        $notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id) - 2;
+        $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $notify_option['model_id'] = $post_id;
+        $notify_option['item_name'] = !empty($comment) ?
+            mb_strimwidth($comment['Comment']['body'], 0, 40, "...") : null;
+
+        foreach ($commented_user_list as $user_id) {
+            $notify_option['app_notify_enable'] = $this->notify_settings[$user_id]['app'];
+            $notify_option['to_user_id'] = $user_id;
+            $this->notify_options[] = $notify_option;
+        }
+    }
+
+    /**
      * 自分の投稿にコメントがあった場合のオプション取得
      *
      * @param $post_id
@@ -120,7 +164,6 @@ class NotifyBizComponent extends Object
     {
         //宛先は投稿主
         $post = $this->Post->findById($post_id);
-
         if (empty($post)) {
             return;
         }

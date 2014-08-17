@@ -216,4 +216,24 @@ class Comment extends AppModel
         return $res;
     }
 
+    function getCommentedUniqueUsersList($post_id, $without_me = true)
+    {
+        $options = [
+            'conditions' => [
+                'post_id' => $post_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'DISTINCT user_id',
+            ]
+        ];
+        if ($without_me) {
+            $options['conditions']['NOT']['user_id'] = $this->me['id'];
+        }
+        $res = $this->find('all', $options);
+        /** @noinspection PhpDeprecationInspection */
+        $res = Set::combine($res, '{n}.Comment.user_id', '{n}.Comment.user_id');
+        return $res;
+    }
+
 }
