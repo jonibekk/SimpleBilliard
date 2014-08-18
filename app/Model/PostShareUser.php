@@ -64,8 +64,8 @@ class PostShareUser extends AppModel
                 'team_id'                  => $this->current_team_id,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
-            'order' => [$order => $order_direction],
-            'limit' => $limit,
+            'order'      => [$order => $order_direction],
+            'limit'      => $limit,
             'fields'     => ['post_id'],
         ];
         $res = $this->find('list', $options);
@@ -104,6 +104,19 @@ class PostShareUser extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+        return $res;
+    }
+
+    public function getShareUserListByPost($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'PostShareUser.post_id' => $post_id,
+                'PostShareUser.team_id' => $this->current_team_id,
+            ],
+            'fields'     => ['PostShareUser.user_id']
+        ];
+        $res = $this->find('list', $options);
         return $res;
     }
 

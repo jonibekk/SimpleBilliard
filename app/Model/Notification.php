@@ -18,13 +18,16 @@ class Notification extends AppModel
     /**
      * 通知タイプ
      */
-    const TYPE_FEED_COMMENTED_ON_MY_POST = 1;
-    const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST = 2;
-    const TYPE_CIRCLE_USER_JOIN = 3;
-    const TYPE_CIRCLE_POSTED_ON_MY_CIRCLE = 4;
+    const TYPE_FEED_POST = 1;
+    const TYPE_FEED_COMMENTED_ON_MY_POST = 2;
+    const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST = 3;
+    const TYPE_CIRCLE_USER_JOIN = 4;
     const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 5;
 
     static public $TYPE = [
+        self::TYPE_FEED_POST => [
+            'mail_template' => "notify_basic",
+        ],
         self::TYPE_FEED_COMMENTED_ON_MY_POST           => [
             'mail_template' => "notify_basic",
         ],
@@ -34,9 +37,6 @@ class Notification extends AppModel
         self::TYPE_CIRCLE_USER_JOIN                    => [
             'mail_template' => "notify_basic",
         ],
-        self::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE          => [
-            'mail_template' => "notify_basic",
-        ],
         self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [
             'mail_template' => "notify_basic",
         ],
@@ -44,10 +44,10 @@ class Notification extends AppModel
 
     public function _setTypeDefault()
     {
+        self::$TYPE[self::TYPE_FEED_POST]['notify_type'] = NotifySetting::TYPE_FEED;
         self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_POST]['notify_type'] = NotifySetting::TYPE_FEED;
         self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['notify_type'] = NotifySetting::TYPE_FEED;
         self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['notify_type'] = NotifySetting::TYPE_CIRCLE;
-        self::$TYPE[self::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE]['notify_type'] = NotifySetting::TYPE_CIRCLE;
         self::$TYPE[self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING]['notify_type'] = NotifySetting::TYPE_CIRCLE;
     }
 
@@ -109,6 +109,9 @@ class Notification extends AppModel
     {
         $title = null;
         switch ($type) {
+            case self::TYPE_FEED_POST:
+                $title = __d('gl', '%1$sさんが投稿しました。', $user_name);
+                break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $title = __d('gl', '%1$sさん%2$sがあなたの投稿にコメントしました。', $user_name,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
@@ -119,11 +122,6 @@ class Notification extends AppModel
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
                 $title = __d('gl', '%1$sさん%2$sがサークル「%3$s」に参加しました。', $user_name,
-                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
-                             $item_name_1);
-                break;
-            case self::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE:
-                $title = __d('gl', '%1$sさん%2$sがサークル「%3$s」に投稿しました。', $user_name,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
                              $item_name_1);
                 break;

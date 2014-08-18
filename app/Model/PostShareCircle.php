@@ -95,7 +95,14 @@ class PostShareCircle extends AppModel
         return $res;
     }
 
-    public function getShareCirclesByPost($post_id)
+    public function getShareCirclesAndMembers($post_id)
+    {
+        $circle_list = $this->getShareCircleList($post_id);
+        $res = $this->Circle->getCirclesAndMemberById($circle_list);
+        return $res;
+    }
+
+    public function getShareCircleList($post_id)
     {
         $options = [
             'conditions' => [
@@ -106,8 +113,14 @@ class PostShareCircle extends AppModel
                 'PostShareCircle.circle_id',
             ],
         ];
-        $circle_list = $this->find('list', $options);
-        $res = $this->Circle->getCirclesAndMemberById($circle_list);
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    public function getShareCircleMemberList($post_id)
+    {
+        $circle_list = $this->getShareCircleList($post_id);
+        $res = $this->Circle->CircleMember->getMemberList($circle_list, true, false);
         return $res;
     }
 

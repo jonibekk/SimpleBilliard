@@ -91,6 +91,9 @@ class NotifyBizComponent extends Object
         $this->notify_option_default['from_user_id'] = $this->Auth->user('id');
 
         switch ($notify_type) {
+            case Notification::TYPE_FEED_POST:
+                $this->_setFeedPostOption($model_id);
+                break;
             case Notification::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $this->_setFeedCommentedOnMyPostOption($model_id);
                 break;
@@ -99,8 +102,6 @@ class NotifyBizComponent extends Object
                 break;
             case Notification::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
-                break;
-            case Notification::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE:
                 break;
             case Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
                 break;
@@ -111,6 +112,39 @@ class NotifyBizComponent extends Object
         $this->_saveNotifications();
         //メール送信
         $this->_sendNotifyEmail();
+    }
+
+    /**
+     * 自分が閲覧可能な投稿があった場合
+     *
+     * @param $post_id
+     *
+     * @throws RuntimeException
+     */
+    private function _setFeedPostOption($post_id)
+    {
+        $post = $this->Post->findById($post_id);
+        if (empty($post)) {
+            return;
+        }
+        //宛先は閲覧可能な全ユーザ
+        $members = $this->Post->getShareAllMemberList($post_id);
+
+        //対象ユーザの通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
+                                                                                NotifySetting::TYPE_FEED);
+        $notify_option = $this->notify_option_default;
+        $notify_option['notify_type'] = Notification::TYPE_FEED_POST;
+        $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $notify_option['model_id'] = null;
+        $notify_option['item_name'] = !empty($post['Post']['body']) ?
+            mb_strimwidth($post['Post']['body'], 0, 40, "...") : null;
+
+        foreach ($members as $user_id) {
+            $notify_option['app_notify_enable'] = $this->notify_settings[$user_id]['app'];
+            $notify_option['to_user_id'] = $user_id;
+            $this->notify_options[] = $notify_option;
+        }
     }
 
     /**

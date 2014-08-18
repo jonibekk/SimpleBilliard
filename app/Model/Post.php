@@ -442,4 +442,33 @@ class Post extends AppModel
         }
         return $this->save($data);
     }
+
+    /**
+     * 投稿の全共有メンバーのリストを返す
+     *
+     * @param $post_id
+     *
+     * @return array
+     */
+    function getShareAllMemberList($post_id)
+    {
+        $post = $this->findById($post_id);
+        if (empty($post)) {
+            return [];
+        }
+        $share_member_list = [];
+        //チーム全体なら
+        if ($post['Post']['public_flg']) {
+            $share_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
+        }
+        else {
+            //サークル共有ユーザを追加
+            $share_member_list = array_merge($share_member_list,
+                                             $this->PostShareCircle->getShareCircleMemberList($post_id));
+            //メンバー共有なら
+            $share_member_list = array_merge($share_member_list,
+                                             $this->PostShareUser->getShareUserListByPost($post_id));
+        }
+        return $share_member_list;
+    }
 }

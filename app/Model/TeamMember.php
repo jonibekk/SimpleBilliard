@@ -166,7 +166,7 @@ class TeamMember extends AppModel
         return $this->save($data);
     }
 
-    public function getAllMemberUserIdList()
+    public function getAllMemberUserIdList($with_me = true)
     {
         $options = [
             'conditions' => [
@@ -175,6 +175,9 @@ class TeamMember extends AppModel
             ],
             'fields'     => ['user_id'],
         ];
+        if (!$with_me) {
+            $options['conditions']['NOT']['user_id'] = $this->me['id'];
+        }
         $res = $this->find('list', $options);
         return $res;
     }
