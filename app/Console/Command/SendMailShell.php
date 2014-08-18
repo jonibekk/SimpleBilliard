@@ -227,6 +227,7 @@ class SendMailShell extends AppShell
             'layout'   => 'default'
         );
         $options = array_merge($defaults, $options);
+        $options['subject'] = "[" . SERVICE_NAME . "]" . $options['subject'];
 
         /**
          * @var CakeEmail $Email

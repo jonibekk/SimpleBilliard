@@ -65,10 +65,6 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __d('mail', "メールアドレス認証");
         self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __d('mail', "メールアドレス変更に伴う認証");
         self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __d('mail', "Goalousのチームへ招待");
-        //subjectにサービス名のプレフィックスを追加
-        foreach (self::$TYPE_TMPL as $key => $val) {
-            self::$TYPE_TMPL[$key]['subject'] = "[" . SERVICE_NAME . "]" . $val['subject'];
-        }
     }
 
     function __construct($id = false, $table = null, $ds = null)
