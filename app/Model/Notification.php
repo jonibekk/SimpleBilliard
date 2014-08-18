@@ -57,9 +57,8 @@ class Notification extends AppModel
      * @var array
      */
     public $validate = [
-        'type'       => ['numeric' => ['rule' => ['numeric'],],],
-        'unread_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'del_flg'    => ['boolean' => ['rule' => ['boolean'],],],
+        'type'    => ['numeric' => ['rule' => ['numeric'],],],
+        'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 
     /**
