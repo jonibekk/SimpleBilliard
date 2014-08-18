@@ -7,7 +7,6 @@ App::uses('AppModel', 'Model');
  * @property SendMail     $SendMail
  * @property User         $User
  * @property Team         $Team
- * @property Notification $Notification
  */
 class SendMailToUser extends AppModel
 {
@@ -34,7 +33,6 @@ class SendMailToUser extends AppModel
         'SendMail',
         'User',
         'Team',
-        'Notification',
     ];
 
     function getToUserList($send_mail_id)
