@@ -795,6 +795,7 @@ class User extends AppModel
         $backup_lang = null;
         if ($lang) {
             $backup_lang = $this->me['language'];
+            $this->me['language'] = $lang;
         }
 
         $options = [
