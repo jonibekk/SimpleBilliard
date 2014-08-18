@@ -136,7 +136,8 @@ class NotifyBizComponent extends Object
                                                                                 NotifySetting::TYPE_CIRCLE);
         $notify_option = $this->notify_option_default;
         $notify_option['notify_type'] = Notification::TYPE_CIRCLE_USER_JOIN;
-        $notify_option['count_num'] = count($circle_member_list);
+        //通知先ユーザ分を-1
+        $notify_option['count_num'] = count($circle_member_list) - 1;
         $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $notify_option['model_id'] = $circle_id;
         $notify_option['item_name'] = $circle['Circle']['name'];
@@ -178,7 +179,7 @@ class NotifyBizComponent extends Object
 
         $notify_option = $this->notify_option_default;
         $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
-        $notify_option['count_num'] = count($commented_user_list);
+        $notify_option['count_num'] = count($commented_user_list) - 1;
         $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $notify_option['model_id'] = $post_id;
         $notify_option['item_name'] = !empty($comment) ?
