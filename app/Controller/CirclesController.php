@@ -117,6 +117,11 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
+            if (!empty($this->Circle->CircleMember->new_joined_circle_list)) {
+                foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
+                    $this->NotifyBiz->sendNotify(Notification::TYPE_CIRCLE_USER_JOIN, $circle_id);
+                }
+            }
             $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定を保存しました。"));
         }
         else {

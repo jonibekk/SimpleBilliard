@@ -43,6 +43,8 @@ class CircleMember extends AppModel
         'User',
     ];
 
+    public $new_joined_circle_list = [];
+
     public function getMyCircleList()
     {
         $options = [
@@ -232,6 +234,7 @@ class CircleMember extends AppModel
         }
         //onサークルを追加
         if (!empty($join_circles)) {
+            $this->new_joined_circle_list = $join_circles;
             $data = [];
             foreach ($join_circles as $circle) {
                 $data[] = [

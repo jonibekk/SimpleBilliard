@@ -119,7 +119,9 @@ class SendMailShell extends AppShell
         $notify_option = Notification::$TYPE[$data['Notification']['type']];
         $subject = $this->User->Notification->getTitle($data['Notification']['type'],
                                                        $data['FromUser']['display_username'],
-                                                       $data['Notification']['count_num']);
+                                                       $data['Notification']['count_num'],
+                                                       $data['Notification']['item_name']
+        );
         $options = [
             'to'       => $data['ToUser']['PrimaryEmail']['email'],
             'subject'  => $subject,

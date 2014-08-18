@@ -5,13 +5,9 @@ App::uses('AppController', 'Controller');
  * Posts Controller
  *
  * @property Post               $Post
- * @property NotifyBizComponent $NotifyBiz
  */
 class PostsController extends AppController
 {
-    public $components = [
-        'NotifyBiz',
-    ];
 
     /**
      * add method
