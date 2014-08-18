@@ -90,8 +90,6 @@ class SendMail extends AppModel
         ],
     ];
 
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
-
     /**
      * belongsTo associations
      *
@@ -102,6 +100,10 @@ class SendMail extends AppModel
         'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
         'Team',
         'Notification',
+    ];
+
+    public $hasMany = [
+        'SendMailToUser'
     ];
 
     /**
