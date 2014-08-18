@@ -124,6 +124,9 @@ class Notification extends AppModel
                 'team_id'  => $this->current_team_id
             ]
         ];
+        if (!$model_id) {
+            unset($option['conditions']['model_id']);
+        }
         $res = $this->find('first', $option);
         return $res;
     }

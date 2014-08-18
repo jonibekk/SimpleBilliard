@@ -120,7 +120,7 @@ class PostShareCircle extends AppModel
     public function getShareCircleMemberList($post_id)
     {
         $circle_list = $this->getShareCircleList($post_id);
-        $res = $this->Circle->CircleMember->getMemberList($circle_list, true, false);
+        $res = $this->Circle->CircleMember->getMemberList($circle_list, true);
         return $res;
     }
 

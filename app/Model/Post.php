@@ -469,6 +469,10 @@ class Post extends AppModel
             $share_member_list = array_merge($share_member_list,
                                              $this->PostShareUser->getShareUserListByPost($post_id));
         }
+        //自分自身を除外
+        if ($key = array_search($this->me['id'], $share_member_list)) {
+            unset($share_member_list[$key]);
+        }
         return $share_member_list;
     }
 }
