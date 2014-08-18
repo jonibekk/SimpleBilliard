@@ -4,9 +4,8 @@ App::uses('NotifySetting', 'Model');
 
 /**
  * Notification Model
-
  *
-*@property User          $User
+ * @property User          $User
  * @property Team          $Team
  * @property User          $FromUser
  * @property NotifySetting $NotifySetting
@@ -27,7 +26,7 @@ class Notification extends AppModel
     const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 5;
 
     static public $TYPE = [
-        self::TYPE_FEED_POST => [
+        self::TYPE_FEED_POST                           => [
             'mail_template' => "notify_basic",
         ],
         self::TYPE_FEED_COMMENTED_ON_MY_POST           => [
@@ -85,16 +84,11 @@ class Notification extends AppModel
         $this->_setTypeDefault();
     }
 
-    function saveNotify($data)
+    function saveNotify($data, $user_ids)
     {
-        $option = [
-            'conditions' => [
-                'model_id' => $data['model_id'],
-                'user_id'  => $data['user_id'],
-                'type'     => $data['type'],
-            ]
-        ];
-        $notify = $this->find('first', $option);
+        $notify = $this->getNotify($data['model_id'], $data['type']);
+
+        //既に存在する通知リストを取得
         $this->create();
         if (!empty($notify)) {
             unset($notify['Notification']['modified']);
@@ -104,9 +98,33 @@ class Notification extends AppModel
         else {
             $res = $this->save($data);
         }
-        if ($data['enable_flg']) {
-            $this->Team->TeamMember->incrementNotifyUnreadCount($res['Notification']['user_id']);
+        //関連する通知ユーザを削除
+        $this->NotifyUser->deleteAll(['NotifyUser.notification_id' => $this->id]);
+        //保存データ
+        $notify_user_data = [];
+        foreach ($user_ids as $uid) {
+            $notify_user_data[] = [
+                'notification_id' => $this->id,
+                'user_id'         => $uid,
+                'team_id'         => $this->current_team_id
+            ];
         }
+        $this->NotifyUser->create();
+        $this->NotifyUser->saveAll($notify_user_data);
+        $this->Team->TeamMember->incrementNotifyUnreadCount($user_ids);
+        return $res;
+    }
+
+    function getNotify($model_id, $type)
+    {
+        $option = [
+            'conditions' => [
+                'model_id' => $model_id,
+                'type'     => $type,
+                'team_id'  => $this->current_team_id
+            ]
+        ];
+        $res = $this->find('first', $option);
         return $res;
     }
 

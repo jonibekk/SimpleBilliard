@@ -40,16 +40,13 @@ class NotifyBizComponent extends Object
      */
     var $Post;
 
-    public $notify_option_default = [
-        'from_user_id'      => null,
-        'to_user_id'        => null,
-        'url_data'          => null,
-        'count_num'         => null,
-        'notify_type'       => null,
-        'model_id'          => null,
-        'item_name'         => null,
-        'app_notify_enable' => true,
-        'notify_id'         => null,
+    public $notify_option = [
+        'from_user_id' => null,
+        'url_data'     => null,
+        'count_num'    => null,
+        'notify_type'  => null,
+        'model_id'     => null,
+        'item_name'    => null,
     ];
 
     public $notify_options = [];
@@ -88,7 +85,7 @@ class NotifyBizComponent extends Object
 
     function sendNotify($notify_type, $model_id)
     {
-        $this->notify_option_default['from_user_id'] = $this->Auth->user('id');
+        $this->notify_option['from_user_id'] = $this->Auth->user('id');
 
         switch ($notify_type) {
             case Notification::TYPE_FEED_POST:
@@ -133,18 +130,11 @@ class NotifyBizComponent extends Object
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED);
-        $notify_option = $this->notify_option_default;
-        $notify_option['notify_type'] = Notification::TYPE_FEED_POST;
-        $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
-        $notify_option['model_id'] = null;
-        $notify_option['item_name'] = !empty($post['Post']['body']) ?
+        $this->notify_option['notify_type'] = Notification::TYPE_FEED_POST;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             mb_strimwidth($post['Post']['body'], 0, 40, "...") : null;
-
-        foreach ($members as $user_id) {
-            $notify_option['app_notify_enable'] = $this->notify_settings[$user_id]['app'];
-            $notify_option['to_user_id'] = $user_id;
-            $this->notify_options[] = $notify_option;
-        }
     }
 
     /**
@@ -168,19 +158,12 @@ class NotifyBizComponent extends Object
         //コメント主の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
                                                                                 NotifySetting::TYPE_CIRCLE);
-        $notify_option = $this->notify_option_default;
-        $notify_option['notify_type'] = Notification::TYPE_CIRCLE_USER_JOIN;
+        $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_USER_JOIN;
         //通知先ユーザ分を-1
-        $notify_option['count_num'] = count($circle_member_list) - 1;
-        $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
-        $notify_option['model_id'] = $circle_id;
-        $notify_option['item_name'] = $circle['Circle']['name'];
-
-        foreach ($circle_member_list as $user_id) {
-            $notify_option['app_notify_enable'] = $this->notify_settings[$user_id]['app'];
-            $notify_option['to_user_id'] = $user_id;
-            $this->notify_options[] = $notify_option;
-        }
+        $this->notify_option['count_num'] = count($circle_member_list) - 1;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
+        $this->notify_option['model_id'] = $circle_id;
+        $this->notify_option['item_name'] = $circle['Circle']['name'];
     }
 
     /**
@@ -211,19 +194,12 @@ class NotifyBizComponent extends Object
                                                                                 NotifySetting::TYPE_FEED);
         $comment = $this->Post->Comment->read();
 
-        $notify_option = $this->notify_option_default;
-        $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
-        $notify_option['count_num'] = count($commented_user_list) - 1;
-        $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
-        $notify_option['model_id'] = $post_id;
-        $notify_option['item_name'] = !empty($comment) ?
+        $this->notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
+        $this->notify_option['count_num'] = count($commented_user_list) - 1;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['model_id'] = $post_id;
+        $this->notify_option['item_name'] = !empty($comment) ?
             mb_strimwidth($comment['Comment']['body'], 0, 40, "...") : null;
-
-        foreach ($commented_user_list as $user_id) {
-            $notify_option['app_notify_enable'] = $this->notify_settings[$user_id]['app'];
-            $notify_option['to_user_id'] = $user_id;
-            $this->notify_options[] = $notify_option;
-        }
     }
 
     /**
@@ -249,78 +225,62 @@ class NotifyBizComponent extends Object
                                                                                 NotifySetting::TYPE_FEED);
         $comment = $this->Post->Comment->read();
 
-        $notify_option = $this->notify_option_default;
-        $notify_option['to_user_id'] = $post['Post']['user_id'];
-        $notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_POST;
-        $notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
-                                                                                      [$this->Post->me['id'], $post['Post']['user_id']]);
-        $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
-        $notify_option['model_id'] = $post_id;
-        $notify_option['item_name'] = !empty($comment) ?
+        $this->notify_option['to_user_id'] = $post['Post']['user_id'];
+        $this->notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_POST;
+        $this->notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
+                                                                                            [$this->Post->me['id'], $post['Post']['user_id']]);
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['model_id'] = $post_id;
+        $this->notify_option['item_name'] = !empty($comment) ?
             mb_strimwidth($comment['Comment']['body'], 0, 40, "...") : null;
-        $notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
-        $this->notify_options[] = $notify_option;
+        $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
     }
 
     private function _saveNotifications()
     {
-        if (empty($this->notify_options)) {
+        //通知onのユーザを取得
+        $uids = [];
+        foreach ($this->notify_settings as $user_id => $val) {
+            if ($val['app']) {
+                $uids[] = $user_id;
+            }
+        }
+        if (empty($uids)) {
             return;
         }
-        //Notification用データに変換して保存
-        foreach ($this->notify_options as $key => $option) {
-            $data = [
-                'user_id'      => $option['to_user_id'],
-                'team_id'      => $this->Notification->current_team_id,
-                'type'         => $option['notify_type'],
-                'from_user_id' => $option['from_user_id'],
-                'model_id'     => $option['model_id'],
-                'url_data'     => json_encode($option['url_data']),
-                'count_num'    => $option['count_num'],
-                'item_name'    => $option['item_name'],
-                'enable_flg'   => $option['app_notify_enable'],
-            ];
-            $res = $this->Notification->saveNotify($data);
-            $this->notify_options[$key]['notification_id'] = $res['Notification']['id'];
-        }
+        $data = [
+            'team_id'      => $this->Notification->current_team_id,
+            'type'         => $this->notify_option['notify_type'],
+            'from_user_id' => $this->notify_option['from_user_id'],
+            'model_id'     => $this->notify_option['model_id'],
+            'url_data'     => json_encode($this->notify_option['url_data']),
+            'count_num'    => $this->notify_option['count_num'],
+            'item_name'    => $this->notify_option['item_name'],
+        ];
+        $this->Notification->saveNotify($data, $uids);
     }
 
     private function _sendNotifyEmail()
     {
-        if (empty($this->notify_settings) || empty($this->notify_options)) {
-            return;
-        }
-        //共通のオプション
-        $common_option = $this->notify_options[0];
-        unset($common_option['to_user_id']);
-        unset($common_option['notification_id']);
-
-        $send_notify_ids = [];
-        $send_notify_options = [];
-        foreach ($this->notify_options as $option) {
-            //メール送信offの場合は処理しない
-            if (!$this->notify_settings[$option['to_user_id']]['email']) {
-                continue;
+        //メール通知onのユーザを取得
+        $uids = [];
+        foreach ($this->notify_settings as $user_id => $val) {
+            if ($val['email']) {
+                $uids[] = $user_id;
             }
-            $send_notify_ids[] = $option['notification_id'];
-            $send_notify_options[] = $option;
+        }
+        if (empty($uids)) {
+            return;
         }
 
         //送信できないユーザIDリスト
-        $invalid_send_notification_ids = $this->Controller->GlEmail->SendMail->SendMailToUser->getInvalidSendNotificationIdList($send_notify_ids);
-        foreach ($send_notify_options as $key => $option) {
-            if (in_array($option['notification_id'], $invalid_send_notification_ids)) {
-                unset($send_notify_options[$key]);
+        $invalid_uids = $this->Controller->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($this->Notification->id);
+        foreach ($uids as $key => $val) {
+            if (in_array($val, $invalid_uids)) {
+                unset($uids[$key]);
             }
         }
-        $send_to_users = [];
-        foreach ($send_notify_options as $option) {
-            $send_to_users[] = [
-                'user_id'         => $option['to_user_id'],
-                'notification_id' => $option['notification_id']
-            ];
-        }
-        $this->Controller->GlEmail->sendMailNotify($common_option, $send_to_users);
+        $this->Controller->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 
 }

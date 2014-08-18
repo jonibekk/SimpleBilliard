@@ -130,7 +130,18 @@ class SendMail extends AppModel
         $this->create();
         $res = $this->save($data);
         if ($to_uid) {
-            $this->SendMailToUser->save(['user_id' => $to_uid, 'team_id' => $this->SendMailToUser->current_team_id, 'send_mail_id' => $this->getLastInsertID()]);
+            if (!is_array($to_uid)) {
+                $to_uid = [$to_uid];
+            }
+            $send_to_users = [];
+            foreach ($to_uid as $val) {
+                $send_to_users[] = [
+                    'user_id'      => $val,
+                    'send_mail_id' => $this->id,
+                    'team_id'      => $this->current_team_id,
+                ];
+            }
+            $this->SendMailToUser->saveAll($send_to_users);
         }
         return $res;
     }

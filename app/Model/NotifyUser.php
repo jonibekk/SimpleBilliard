@@ -22,11 +22,6 @@ class NotifyUser extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
-        'enable_flg' => [
-            'boolean' => [
-                'rule' => ['boolean'],
-            ],
-        ],
         'del_flg'    => array(
             'boolean' => array(
                 'rule' => array('boolean'),
@@ -44,4 +39,9 @@ class NotifyUser extends AppModel
         'User',
         'Team',
     );
+
+    function getNotifyUser()
+    {
+
+    }
 }

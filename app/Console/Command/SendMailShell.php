@@ -133,25 +133,14 @@ class SendMailShell extends AppShell
         $this->item = json_decode($data['SendMail']['item'], true);
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
-        //TODO 一時的に通知データ取得の為のロジックを追加したが、DB設計上重大な問題あり。詳しくは#42のIssueに記載する
-        $options = [
-            'conditions' => [
-                'send_mail_id' => $data['SendMail']['id']
-            ],
-            'fields'     => ['notification_id']
-        ];
-        $res = $this->SendMail->SendMailToUser->find('first', $options);
-
-        $notification = $this->SendMail->Notification->findById($res['SendMailToUser']['notification_id']);
-
-        $notify_option = Notification::$TYPE[$notification['Notification']['type']];
-        $subject = $this->User->Notification->getTitle($notification['Notification']['type'],
-                                                       $data['FromUser']['display_username'],
-                                                       $notification['Notification']['count_num'],
-                                                       $notification['Notification']['item_name']
-        );
+        $notify_option = Notification::$TYPE[$data['Notification']['type']];
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id);
+            $subject = $this->User->Notification->getTitle($data['Notification']['type'],
+                                                           $data['FromUser']['display_username'],
+                                                           $data['Notification']['count_num'],
+                                                           $data['Notification']['item_name']
+            );
 
             $options = [
                 'to'       => $data['ToUser']['PrimaryEmail']['email'],
@@ -164,7 +153,7 @@ class SendMailShell extends AppShell
                 'from_user_name' => $data['FromUser']['display_username'],
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
-                'body' => $notification['Notification']['item_name'],
+                'body' => $data['Notification']['item_name'],
             ];
             $this->_sendMailItem($options, $viewVars);
 

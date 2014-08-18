@@ -211,13 +211,8 @@ class GlEmailComponent extends Object
             'url' => $url,
         ];
 
-        $this->SendMail->saveMailData(null, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
-                                      $this->SendMail->current_team_id);
-        foreach ($send_to_users as $key => $val) {
-            $send_to_users[$key]['send_mail_id'] = $this->SendMail->id;
-            $send_to_users[$key]['team_id'] = $this->SendMail->current_team_id;
-        }
-        $this->SendMail->SendMailToUser->saveAll($send_to_users);
+        $this->SendMail->saveMailData($send_to_users, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
+                                      $this->SendMail->current_team_id, $this->SendMail->Notification->id);
         //メール送信を実行
         $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
 
