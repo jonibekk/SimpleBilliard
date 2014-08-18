@@ -280,6 +280,10 @@ class NotifyBizComponent extends Object
                 unset($uids[$key]);
             }
         }
+        if (empty($uids)) {
+            return;
+        }
+        $this->notify_option['notification_id'] = $this->Notification->id;
         $this->Controller->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 

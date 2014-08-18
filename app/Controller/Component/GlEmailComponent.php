@@ -212,7 +212,7 @@ class GlEmailComponent extends Object
         ];
 
         $this->SendMail->saveMailData($send_to_users, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
-                                      $this->SendMail->current_team_id, $this->SendMail->Notification->id);
+                                      $this->SendMail->current_team_id, $data['notification_id']);
         //メール送信を実行
         $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
 
