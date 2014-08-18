@@ -17,6 +17,7 @@ class SendMailTest extends CakeTestCase
     public $fixtures = array(
         'app.local_name',
         'app.send_mail',
+        'app.send_mail_to_user',
         'app.user', 'app.notify_setting',
         'app.team',
         'app.image',
@@ -71,9 +72,7 @@ class SendMailTest extends CakeTestCase
         $id = "1";
         $res = $this->SendMail->getDetail($id);
         $from = "from@email.com";
-        $to = "to@email.com";
         $this->assertEquals($from, $res['FromUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
-        $this->assertEquals($to, $res['ToUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
     }
 
     public function testGetDetailWithLang()
@@ -81,9 +80,7 @@ class SendMailTest extends CakeTestCase
         $id = "1";
         $res = $this->SendMail->getDetail($id, "jpn");
         $from = "from@email.com";
-        $to = "to@email.com";
         $this->assertEquals($from, $res['FromUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
-        $this->assertEquals($to, $res['ToUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
     }
 
 }

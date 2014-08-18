@@ -40,6 +40,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.message',
         'app.email',
         'app.send_mail',
+        'app.send_mail_to_user',
         'app.oauth_token',
         'app.post_share_user',
         'app.post_share_circle',
@@ -118,7 +119,7 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session'  => ['setFlash'],
-                'Auth' => ['user'],
+                'Auth'     => ['user'],
                 'Security' => ['_validateCsrf', '_validatePost'],
             ]
         ]);
@@ -861,7 +862,7 @@ class UsersControllerTest extends ControllerTestCase
         ]);
         $value_map = [
             [null, [
-                'id' => "12",
+                'id'       => "12",
                 'language' => 'jpn',
             ]],
             ['id', "12"],
@@ -904,7 +905,7 @@ class UsersControllerTest extends ControllerTestCase
 
         $value_map = [
             [null, [
-                'id' => "12",
+                'id'       => "12",
                 'language' => 'jpn',
             ]],
             ['id', "12"],
@@ -1013,7 +1014,7 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $data = [
             'User' => [
-                'id' => '12',
+                'id'               => '12',
                 'old_password'     => '12345678',
                 'password'         => '12345678',
                 'password_confirm' => '12345678'
@@ -1047,7 +1048,7 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $data = [
             'User' => [
-                'id' => '12',
+                'id'               => '12',
                 'old_password'     => '1234567890',
                 'password'         => '12345678',
                 'password_confirm' => '12345678'

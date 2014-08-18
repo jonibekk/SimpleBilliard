@@ -905,10 +905,11 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->generate('Posts', [
             'components' => [
                 'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
+                'Auth'      => ['user', 'loggedIn'],
+                'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-            ]
+                'NotifyBiz' => ['sendNotify']
+            ],
         ]);
         $value_map = [
             [null, [
@@ -938,6 +939,9 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
+        /** @noinspection PhpUndefinedFieldInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
+        //$Posts->NotifyBiz->expects($this->any())->method('sendNotify')->will($this->returnValue(true));
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */
