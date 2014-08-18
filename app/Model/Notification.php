@@ -118,17 +118,17 @@ class Notification extends AppModel
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
-                $title = __d('gl', '%1$sさん%2$sが%2$sに参加しました。', $user_name,
+                $title = __d('gl', '%1$sさん%2$sがサークル「%2$s」に参加しました。', $user_name,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
                              $item_name_1);
                 break;
             case self::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE:
-                $title = __d('gl', '%1$sさん%2$sが%2$sに投稿しました。', $user_name,
+                $title = __d('gl', '%1$sさん%2$sがサークル「%2$s」に投稿しました。', $user_name,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
                              $item_name_1);
                 break;
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $title = __d('gl', '%1$sさんが%1$sのプライバシー設定を%2$sに変更しました。', $user_name,
+                $title = __d('gl', '%1$sさんがサークル「%1$s」のプライバシー設定を%2$sに変更しました。', $user_name,
                              $item_name_1, $item_name_2);
                 break;
             default:

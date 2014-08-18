@@ -86,7 +86,7 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getMemberList($circle_id, $with_admin = false)
+    public function getMemberList($circle_id, $with_admin = false, $with_me = true)
     {
         $options = [
             'conditions' => [
@@ -97,6 +97,9 @@ class CircleMember extends AppModel
         ];
         if ($with_admin) {
             unset($options['conditions']['admin_flg']);
+        }
+        if (!$with_me) {
+            $options['conditions']['NOT']['user_id'] = $this->me['id'];
         }
         return $this->find('list', $options);
     }

@@ -4,6 +4,8 @@ App::uses('ModelType', 'Model');
 /**
  * @author daikihirakata
  */
+
+/** @noinspection PhpDocSignatureInspection */
 class NotifyBizComponent extends Object
 {
 
@@ -96,6 +98,7 @@ class NotifyBizComponent extends Object
                 $this->_setFeedCommentedOnMyCommentedPostOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_USER_JOIN:
+                $this->_setCircleUserJoinOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_POSTED_ON_MY_CIRCLE:
                 break;
@@ -108,6 +111,41 @@ class NotifyBizComponent extends Object
         $this->_saveNotifications();
         //メール送信
         $this->_sendNotifyEmail();
+    }
+
+    /**
+     * 自分の所属するサークルにメンバーが参加した時の通知
+     *
+     * @param $post_id
+     *
+     * @throws RuntimeException
+     */
+    private function _setCircleUserJoinOption($circle_id)
+    {
+        //宛先は自分以外のサークルメンバー
+        $circle_member_list = $this->Post->User->CircleMember->getMemberList($circle_id, true, false);
+        if (empty($circle_member_list)) {
+            return;
+        }
+        $circle = $this->Post->User->CircleMember->Circle->findById($circle_id);
+        if (empty($circle)) {
+            return;
+        }
+        //コメント主の通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
+                                                                                NotifySetting::TYPE_CIRCLE);
+        $notify_option = $this->notify_option_default;
+        $notify_option['notify_type'] = Notification::TYPE_CIRCLE_USER_JOIN;
+        $notify_option['count_num'] = count($circle_member_list);
+        $notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
+        $notify_option['model_id'] = $circle_id;
+        $notify_option['item_name'] = $circle['Circle']['name'];
+
+        foreach ($circle_member_list as $user_id) {
+            $notify_option['app_notify_enable'] = $this->notify_settings[$user_id]['app'];
+            $notify_option['to_user_id'] = $user_id;
+            $this->notify_options[] = $notify_option;
+        }
     }
 
     /**
