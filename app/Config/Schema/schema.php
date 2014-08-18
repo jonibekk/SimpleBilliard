@@ -65,8 +65,8 @@ class AppSchema extends CakeSchema
             'team_id'   => array('column' => 'team_id', 'unique' => 0),
             'circle_id' => array('column' => 'circle_id', 'unique' => 0),
             'user_id'   => array('column' => 'user_id', 'unique' => 0),
-            'admin_flg' => array('column' => 'admin_flg', 'unique' => 0),
-            'del_flg'   => array('column' => 'del_flg', 'unique' => 0)
+            'del_flg'   => array('column' => 'del_flg', 'unique' => 0),
+            'admin_flg' => array('column' => 'admin_flg', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -372,8 +372,8 @@ class AppSchema extends CakeSchema
         'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
         'indexes'          => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
-            'del_flg' => array('column' => 'del_flg', 'unique' => 0),
-            'user_id' => array('column' => 'user_id', 'unique' => 0)
+            'user_id' => array('column' => 'user_id', 'unique' => 0),
+            'del_flg' => array('column' => 'del_flg', 'unique' => 0)
         ),
         'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -548,6 +548,7 @@ class AppSchema extends CakeSchema
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'メール送信ID'),
         'from_user_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '送信元ユーザID(belongsToでUserモデルに関連)'),
         'to_user_id'      => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '送信先ユーザID(belongsToでUserモデルに関連)'),
+        'to_user_ids' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '送信元ユーザID(複数)jsonエンコード', 'charset' => 'utf8'),
         'team_id'         => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'notification_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '通知ID(belongsToでNotificationモデルに関連)'),
         'template_type'   => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => 'メールテンプレタイプ'),
