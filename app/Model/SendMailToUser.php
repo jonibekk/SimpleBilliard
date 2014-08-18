@@ -36,4 +36,32 @@ class SendMailToUser extends AppModel
         'Team',
         'Notification',
     ];
+
+    function getToUserList($send_mail_id)
+    {
+        $options = [
+            'conditions' => [
+                'send_mail_id' => $send_mail_id,
+            ],
+            'fields'     => ['user_id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    public function getInvalidSendNotificationIdList($notification_ids, $before_hours = 3)
+    {
+        $options = [
+            'conditions' => [
+                'notification_id' => $notification_ids,
+                'modified >'      => time() - (60 * 60 * $before_hours),
+            ],
+            'fields'     => [
+                'notification_id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

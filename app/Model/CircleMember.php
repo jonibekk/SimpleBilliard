@@ -90,6 +90,8 @@ class CircleMember extends AppModel
 
     public function getMemberList($circle_id, $with_admin = false, $with_me = true)
     {
+        $primary_backup = $this->primaryKey;
+        $this->primaryKey = 'user_id';
         $options = [
             'conditions' => [
                 'circle_id' => $circle_id,
@@ -103,7 +105,9 @@ class CircleMember extends AppModel
         if (!$with_me) {
             $options['conditions']['NOT']['user_id'] = $this->me['id'];
         }
-        return $this->find('list', $options);
+        $res = $this->find('list', $options);
+        $this->primaryKey = $primary_backup;
+        return $res;
     }
 
     public function getCircleInitMemberSelect2($circle_id, $with_admin = false)

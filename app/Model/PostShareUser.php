@@ -109,6 +109,8 @@ class PostShareUser extends AppModel
 
     public function getShareUserListByPost($post_id)
     {
+        $primary_backup = $this->primaryKey;
+        $this->primaryKey = 'user_id';
         $options = [
             'conditions' => [
                 'PostShareUser.post_id' => $post_id,
@@ -117,6 +119,7 @@ class PostShareUser extends AppModel
             'fields'     => ['PostShareUser.user_id']
         ];
         $res = $this->find('list', $options);
+        $this->primaryKey = $primary_backup;
         return $res;
     }
 

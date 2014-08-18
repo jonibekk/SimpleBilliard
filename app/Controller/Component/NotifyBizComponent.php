@@ -290,14 +290,37 @@ class NotifyBizComponent extends Object
         if (empty($this->notify_settings) || empty($this->notify_options)) {
             return;
         }
-        $this->log($this->notify_options);
+        //共通のオプション
+        $common_option = $this->notify_options[0];
+        unset($common_option['to_user_id']);
+        unset($common_option['notification_id']);
+
+        $send_notify_ids = [];
+        $send_notify_options = [];
         foreach ($this->notify_options as $option) {
             //メール送信offの場合は処理しない
             if (!$this->notify_settings[$option['to_user_id']]['email']) {
                 continue;
             }
-            $this->Controller->GlEmail->sendMailNotify($option);
+            $send_notify_ids[] = $option['notification_id'];
+            $send_notify_options[] = $option;
         }
+
+        //送信できないユーザIDリスト
+        $invalid_send_notification_ids = $this->Controller->GlEmail->SendMail->SendMailToUser->getInvalidSendNotificationIdList($send_notify_ids);
+        foreach ($send_notify_options as $key => $option) {
+            if (in_array($option['notification_id'], $invalid_send_notification_ids)) {
+                unset($send_notify_options[$key]);
+            }
+        }
+        $send_to_users = [];
+        foreach ($send_notify_options as $option) {
+            $send_to_users[] = [
+                'user_id'         => $option['to_user_id'],
+                'notification_id' => $option['notification_id']
+            ];
+        }
+        $this->Controller->GlEmail->sendMailNotify($common_option, $send_to_users);
     }
 
 }

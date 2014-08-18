@@ -5,10 +5,11 @@ App::uses('AppModel', 'Model');
 /**
  * SendMail Model
  *
- * @property User         $FromUser
- * @property User         $ToUser
- * @property Team         $Team
- * @property Notification $Notification
+ * @property User           $FromUser
+ * @property User           $ToUser
+ * @property Team           $Team
+ * @property Notification   $Notification
+ * @property SendMailToUser $SendMailToUser
  */
 class SendMail extends AppModel
 {
@@ -117,13 +118,9 @@ class SendMail extends AppModel
      *
      * @return bool
      */
-    public function saveMailData($to_uids = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null, $notify_id = null)
+    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null, $notify_id = null)
     {
-        if (!is_array($to_uids)) {
-            $to_uids = [$to_uids];
-        }
         $data = [
-            'to_user_ids' => json_encode($to_uids),
             'template_type'   => $tmpl_type,
             'item'            => (!empty($item)) ? json_encode($item) : null,
             'from_user_id'    => $from_uid,
@@ -131,7 +128,11 @@ class SendMail extends AppModel
             'notification_id' => $notify_id,
         ];
         $this->create();
-        return $this->save($data);
+        $res = $this->save($data);
+        if ($to_uid) {
+            $this->SendMailToUser->save(['user_id' => $to_uid, 'team_id' => $this->SendMailToUser->current_team_id, 'send_mail_id' => $this->getLastInsertID()]);
+        }
+        return $res;
     }
 
     /**

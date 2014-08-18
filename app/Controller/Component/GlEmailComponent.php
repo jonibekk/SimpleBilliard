@@ -201,21 +201,23 @@ class GlEmailComponent extends Object
         return true;
     }
 
-    public function sendMailNotify($data)
+    public function sendMailNotify($data, $send_to_users)
     {
         if (empty($data)) {
-            return;
-        }
-        //同一通知IDで３時間以内にメール送信していない場合のみ通知
-        if ($this->SendMail->isNotifySentBefore($data['notification_id'])) {
             return;
         }
         $url = Router::url($data['url_data'], true);
         $item = [
             'url' => $url,
         ];
-        $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
-                                      $this->SendMail->current_team_id, $data['notification_id']);
+
+        $this->SendMail->saveMailData(null, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
+                                      $this->SendMail->current_team_id);
+        foreach ($send_to_users as $key => $val) {
+            $send_to_users[$key]['send_mail_id'] = $this->SendMail->id;
+            $send_to_users[$key]['team_id'] = $this->SendMail->current_team_id;
+        }
+        $this->SendMail->SendMailToUser->saveAll($send_to_users);
         //メール送信を実行
         $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
 
@@ -236,7 +238,6 @@ class GlEmailComponent extends Object
         $cmd .= " -i " . $id;
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $cake_cmd . $cake_app . $cmd . $cmd_end;
-
         exec($all_cmd);
     }
 }
