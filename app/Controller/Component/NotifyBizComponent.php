@@ -290,6 +290,7 @@ class NotifyBizComponent extends Object
         if (empty($this->notify_settings) || empty($this->notify_options)) {
             return;
         }
+        $this->log($this->notify_options);
         foreach ($this->notify_options as $option) {
             //メール送信offの場合は処理しない
             if (!$this->notify_settings[$option['to_user_id']]['email']) {

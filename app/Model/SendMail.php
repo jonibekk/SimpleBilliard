@@ -115,10 +115,13 @@ class SendMail extends AppModel
      *
      * @return bool
      */
-    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null, $notify_id = null)
+    public function saveMailData($to_uids = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null, $notify_id = null)
     {
+        if (!is_array($to_uids)) {
+            $to_uids = [$to_uids];
+        }
         $data = [
-            'to_user_id'      => $to_uid,
+            'to_user_ids' => json_encode($to_uids),
             'template_type'   => $tmpl_type,
             'item'            => (!empty($item)) ? json_encode($item) : null,
             'from_user_id'    => $from_uid,
@@ -143,12 +146,10 @@ class SendMail extends AppModel
         if ($lang) {
             $lang_backup = isset($this->me['language']) ? $this->me['language'] : null;
             $this->FromUser->me['language'] = $lang;
-            $this->ToUser->me['language'] = $lang;
         }
         $options = [
             'conditions' => ['SendMail.id' => $id],
             'contain'    => [
-                'ToUser'   => ['PrimaryEmail'],
                 'FromUser' => ['PrimaryEmail'],
                 'Team',
                 'Notification'

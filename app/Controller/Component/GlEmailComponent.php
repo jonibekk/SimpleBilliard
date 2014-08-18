@@ -207,17 +207,18 @@ class GlEmailComponent extends Object
             return;
         }
         //同一通知IDで３時間以内にメール送信していない場合のみ通知
-        if (!$this->SendMail->isNotifySentBefore($data['notification_id'])) {
-            //
-            $url = Router::url($data['url_data'], true);
-            $item = [
-                'url' => $url,
-            ];
-            $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
-                                          $this->SendMail->current_team_id, $data['notification_id']);
-            //メール送信を実行
-            $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
+        if ($this->SendMail->isNotifySentBefore($data['notification_id'])) {
+            return;
         }
+        $url = Router::url($data['url_data'], true);
+        $item = [
+            'url' => $url,
+        ];
+        $this->SendMail->saveMailData($data['to_user_id'], SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
+                                      $this->SendMail->current_team_id, $data['notification_id']);
+        //メール送信を実行
+        $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
+
     }
 
     /**
