@@ -4,11 +4,13 @@ App::uses('NotifySetting', 'Model');
 
 /**
  * Notification Model
+
  *
- * @property User          $User
+*@property User          $User
  * @property Team          $Team
  * @property User          $FromUser
  * @property NotifySetting $NotifySetting
+ * @property NotifyUser    $NotifyUser
  */
 class Notification extends AppModel
 {
@@ -70,6 +72,10 @@ class Notification extends AppModel
         'User',
         'Team',
         'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
+    ];
+
+    public $hasMany = [
+        'NotifyUser'
     ];
 
     function __construct($id = false, $table = null, $ds = null)
