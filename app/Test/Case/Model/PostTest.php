@@ -97,4 +97,24 @@ class PostTest extends CakeTestCase
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
     }
 
+    function testGetShareAllMemberList()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $post_id = 1;
+        $this->Post->me['id'] = $uid;
+        $this->Post->current_team_id = $team_id;
+        $this->Post->Team->TeamMember->me['id'] = $uid;
+        $this->Post->Team->TeamMember->current_team_id = $team_id;
+        $this->Post->PostShareCircle->me['id'] = $uid;
+        $this->Post->PostShareCircle->current_team_id = $team_id;
+        $this->Post->PostShareUser->me['id'] = $uid;
+        $this->Post->PostShareUser->current_team_id = $team_id;
+
+        $this->Post->getShareAllMemberList($post_id);
+        $this->Post->id = $post_id;
+        $this->Post->saveField('public_flg', false);
+        $this->Post->getShareAllMemberList($post_id);
+    }
+
 }

@@ -73,4 +73,9 @@ class PostShareCircleTest extends CakeTestCase
         $this->PostShareCircle->add(1, [1]);
     }
 
+    public function testGetShareCircleMemberList()
+    {
+        $this->PostShareCircle->current_team_id = 1;
+        $this->PostShareCircle->getShareCircleMemberList(1);
+    }
 }
