@@ -126,6 +126,88 @@ class Notification extends AppModel
         return $res;
     }
 
+    function getNotifyFromTodayUtc($type)
+    {
+        $options = [
+            'conditions' => [
+                'Notification.team_id'    => $this->current_team_id,
+                'Notification.type'       => $type,
+                'Notification.modified >' => strtotime("today"),
+            ],
+            'contain'    => [
+                'NotifyToUser'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
+     * @param $data
+     * @param $user_ids
+     *
+     * @return array $saved_notify_ids
+     */
+    function saveNotifyOneOnOne($data, $user_ids)
+    {
+        //当日のutcの0:00以降の通知が既に存在する場合はupdate、存在しない場合はinsert
+        $notifies = $this->getNotifyFromTodayUtc($data['type']);
+        $insert_notify_uids = $user_ids;
+        $saved_notify_ids = [];
+        if (!empty($notifies)) {
+            foreach ($notifies as $notify) {
+                //存在する場合はupdate
+                $insert_user_key = array_search($notify['NotifyToUser'][0]['user_id'], $insert_notify_uids);
+                if ($insert_user_key !== false) {
+                    //insertユーザから除外
+                    unset($insert_notify_uids[$insert_user_key]);
+                    //更新用のデータをマージ
+                    $notify['Notification'] = array_merge($notify['Notification'], $data);
+                    //更新日を更新
+                    unset($notify['Notification']['modified']);
+                    unset($notify['NotifyToUser'][0]['modified']);
+                    $notify['NotifyToUser'][0]['unread_flg'] = true;
+                    $notify['NotifyFromUser'] = [
+                        [
+                            'user_id' => $this->me['id'],
+                            'team_id' => $this->current_team_id,
+                        ]
+                    ];
+                    $this->create();
+                    $this->saveAll($notify);
+                    $saved_notify_ids[] = $notify['Notification']['id'];
+                }
+            }
+        }
+
+        //insert処理
+        if (!empty($insert_notify_uids)) {
+            foreach ($insert_notify_uids as $uid) {
+                $save_data = [
+                    'Notification'   => $data,
+                    'NotifyFromUser' => [
+                        [
+                            'user_id' => $this->me['id'],
+                            'team_id' => $this->current_team_id,
+                        ]
+                    ],
+                    'NotifyToUser'   => [
+                        [
+                            'user_id' => $uid,
+                            'team_id' => $this->current_team_id,
+                        ]
+                    ]
+                ];
+                $this->create();
+                $this->saveAll($save_data);
+                $saved_notify_ids[] = $this->getLastInsertID();
+            }
+        }
+
+        $this->Team->TeamMember->incrementNotifyUnreadCount($user_ids);
+        return $saved_notify_ids;
+    }
+
     function getNotify($model_id, $type)
     {
         $option = [
@@ -178,5 +260,4 @@ class Notification extends AppModel
         }
         return $title;
     }
-
 }

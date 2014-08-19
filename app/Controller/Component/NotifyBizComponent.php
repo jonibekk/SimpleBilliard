@@ -103,10 +103,18 @@ class NotifyBizComponent extends Object
             default:
                 break;
         }
-        //アプリ通知データ保存
-        $this->_saveNotifications();
-        //メール送信
-        $this->_sendNotifyEmail();
+        if ($notify_type == Notification::TYPE_FEED_POST) {
+            //ユーザ個別ののアプリ通知データ保存
+            $notify_ids = $this->_saveOneOnOneNotifications();
+            //ユーザ個別の通知メール送信
+            $this->_sendOneOnOneNotifyEmail($notify_ids);
+        }
+        else {
+            //通常のアプリ通知データ保存
+            $this->_saveNotifications();
+            //通常の通知メール送信
+            $this->_sendNotifyEmail();
+        }
     }
 
     /**
@@ -215,7 +223,7 @@ class NotifyBizComponent extends Object
             return;
         }
         //自分の投稿へのコメントの場合は処理しない
-        if ($post['Post']['user_id'] == $this->Auth->user('id')) {
+        if ($post['Post']['user_id'] == $this->Notification->me['id']) {
             return;
         }
         //投稿主の通知設定確認
@@ -257,7 +265,30 @@ class NotifyBizComponent extends Object
         $this->Notification->saveNotify($data, $uids);
     }
 
-    private function _sendNotifyEmail()
+    private function _saveOneOnOneNotifications()
+    {
+        //通知onのユーザを取得
+        $uids = [];
+        foreach ($this->notify_settings as $user_id => $val) {
+            if ($val['app']) {
+                $uids[] = $user_id;
+            }
+        }
+        if (empty($uids)) {
+            return [];
+        }
+        $data = [
+            'team_id'   => $this->Notification->current_team_id,
+            'type'      => $this->notify_option['notify_type'],
+            'model_id'  => $this->notify_option['model_id'],
+            'url_data'  => json_encode($this->notify_option['url_data']),
+            'item_name' => $this->notify_option['item_name'],
+        ];
+        $res = $this->Notification->saveNotifyOneOnOne($data, $uids);
+        return $res;
+    }
+
+    private function _getSendNotifyUserList($notify_ids)
     {
         //メール通知onのユーザを取得
         $uids = [];
@@ -267,21 +298,39 @@ class NotifyBizComponent extends Object
             }
         }
         if (empty($uids)) {
-            return;
+            return $uids;
         }
 
         //送信できないユーザIDリスト
-        $invalid_uids = $this->Controller->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($this->Notification->id);
+        $invalid_uids = $this->Controller->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($notify_ids);
+        //送信できないユーザを除外
         foreach ($uids as $key => $val) {
             if (in_array($val, $invalid_uids)) {
                 unset($uids[$key]);
             }
         }
-        if (empty($uids)) {
-            return;
-        }
+        return $uids;
+    }
+
+    private function _sendNotifyEmail()
+    {
+        $uids = $this->_getSendNotifyUserList($this->Notification->id);
         $this->notify_option['notification_id'] = $this->Notification->id;
         $this->Controller->GlEmail->sendMailNotify($this->notify_option, $uids);
+    }
+
+    private function _sendOneOnOneNotifyEmail($notify_ids)
+    {
+        $uids = $this->_getSendNotifyUserList($notify_ids);
+
+        $notify_to_users = $this->Notification->NotifyToUser->getNotifyIdUserIdList($notify_ids);
+        foreach ($notify_to_users as $notification_id => $user_id) {
+            if (!in_array($user_id, $uids)) {
+                continue;
+            }
+            $this->notify_option['notification_id'] = $notification_id;
+            $this->Controller->GlEmail->sendMailNotify($this->notify_option, $user_id);
+        }
     }
 
 }
