@@ -896,6 +896,18 @@ ul.gl-input-images > li {
     margin-right: 0;
 }
 
+.gl-circle-join-switch {
+    height: 32px;
+    line-height: 32px;
+    vertical-align: middle;
+    text-align: center;
+    width: 80px;
+}
+
+.gl-circle-join-switch .checkbox {
+    padding-left: 0;
+}
+
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
