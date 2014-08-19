@@ -31,8 +31,8 @@
             'type'          => 'file',
             'id'            => 'ChangeProfileForm'
         ]); ?>
-        <div class="panel-body">
-            <?
+        <div class="panel-body profile-setting-panel-body">
+        <?
             if (!$is_not_use_local_name) {
                 //ローカル名を使う国のみ表示
                 //姓と名は言語によって表示順を変える

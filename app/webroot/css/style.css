@@ -913,8 +913,13 @@ ul.gl-input-images > li {
     max-height: 300px;
     overflow-y: scroll;
 }
-
 /*/モーダル全体*/
+/*login*/
+.login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
+    padding: 20px;
+}
+
+/*/login*/
 
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
@@ -1020,6 +1025,10 @@ ul.gl-input-images > li {
 
     .modal-body {
         max-height: 460px;
+    }
+
+    .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
+        padding: 10px;
     }
 }
 
