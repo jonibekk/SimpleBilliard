@@ -908,6 +908,14 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
+/*モーダル全体*/
+.modal-body {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+/*/モーダル全体*/
+
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
@@ -1008,6 +1016,10 @@ ul.gl-input-images > li {
     .gl-s2-post-dropdown {
         width: 386px !important;
         margin-right: 4px;
+    }
+
+    .modal-body {
+        max-height: 460px;
     }
 }
 
