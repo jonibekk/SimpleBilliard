@@ -46,8 +46,8 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <span><?= h($user['display_username']) ?></span>
-                <?= $this->TextEx->autoLink($comment['body']) ?>
+                <div><?= h($user['display_username']) ?></div>
+                <div><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
@@ -162,13 +162,13 @@
             <? endif; ?>
 
             <div>
-                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?>
+                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span> ･ </span>
                 <a href="#" class="click-like"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
                     <?= empty($like) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
-            <span class="pull-right">
+            <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"
                                class="modal-ajax-get">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
