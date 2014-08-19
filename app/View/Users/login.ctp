@@ -14,7 +14,7 @@
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "Goalousにログイン！") ?></div>
-            <div class="panel-body">
+            <div class="panel-body login-panel-body">
                 <?=
                 $this->Form->create('User', [
                     'inputDefaults' => [
@@ -25,7 +25,7 @@
                         'wrapInput' => 'col col-sm-6',
                         'class' => 'form-control login_input-design'
                     ],
-                    'class'         => 'form-horizontal',
+                    'class' => 'form-horizontal login-form',
                     'novalidate'    => true
                 ]); ?>
                 <?=

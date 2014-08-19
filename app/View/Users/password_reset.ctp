@@ -27,8 +27,8 @@
                 'class'         => 'form-horizontal validate',
                 'novalidate'    => true
             ]); ?>
-            <div class="panel-body">
-                <?=
+            <div class="panel-body reset-password-panel-body">
+            <?=
                 $this->Form->input('password', [
                     'label'                    => __d('gl', "パスワードを作成"),
                     'placeholder'              => __d('gl', '8文字以上'),

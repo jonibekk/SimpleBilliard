@@ -757,6 +757,19 @@ ul.gl-input-images > li {
     text-align: left;
 }
 
+.gl-comment-name {
+    line-height: 12px;
+    margin-bottom: 2px;
+}
+
+.gl-comment-contents {
+    line-height: 15px;
+}
+
+.gl-comment-info {
+    line-height: 15px;
+}
+
 /*/PostAreaのデザイン*/
 
 /*サークルのデザイン*/
@@ -877,6 +890,49 @@ ul.gl-input-images > li {
 }
 
 /*/HEADER*/
+.post-share-range-label {
+    width: 23%;
+    float: left;
+}
+
+.post-share-range-list {
+    width: 76%;
+    float: right;
+}
+
+.post-share-range-list ul {
+    width: 100%;
+}
+
+.gl-s2-post-dropdown {
+    width: 63% !important;
+    margin-right: 0;
+}
+
+.gl-circle-join-switch {
+    height: 32px;
+    line-height: 32px;
+    vertical-align: middle;
+    text-align: center;
+    width: 80px;
+}
+
+.gl-circle-join-switch .checkbox {
+    padding-left: 0;
+}
+
+/*モーダル全体*/
+.modal-body {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+/*/モーダル全体*/
+/*login*/
+.login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
+    padding: 20px;
+}
+
+/*/login*/
 
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
@@ -903,6 +959,25 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 64%;
+    }
+
+    .post-share-range-label {
+        width: 23%;
+        float: left;
+    }
+
+    .post-share-range-list {
+        width: 75%;
+        float: left;
+    }
+
+    .post-share-range-list ul {
+        width: 100%;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 42% !important;
+        margin-right: 0;
     }
 }
 
@@ -941,6 +1016,32 @@ ul.gl-input-images > li {
 
     .layout-sub_padding {
         padding: 9px 19px 0;
+    }
+
+    .post-share-range-label {
+        width: 64px;
+    }
+
+    .post-share-range-list {
+        float: left;
+        width: 396px;
+    }
+
+    .post-share-range-list ul {
+        width: 374px;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 386px !important;
+        margin-right: 4px;
+    }
+
+    .modal-body {
+        max-height: 460px;
+    }
+
+    .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
+        padding: 10px;
     }
 }
 
@@ -996,6 +1097,18 @@ ul.gl-input-images > li {
     .circle-name_box {
         width: 100px;
     }
+
+    .post-share-range-label {
+        width: 64px;
+    }
+
+    .post-share-range-list ul {
+        width: 374px;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 368px !important;
+    }
 }
 
 /*ExtraMedium*/
@@ -1031,6 +1144,14 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 103px;
+    }
+
+    .post-share-range-list ul {
+        width: 374px;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 386px !important;
     }
 }
 
@@ -1149,7 +1270,6 @@ ul.gl-input-images > li {
 }
 
 .gl-s2-post-dropdown {
-    width: 386px !important;
     border: 1px #ddd solid;
     box-shadow: none;
     border-radius: 0;
