@@ -65,8 +65,8 @@ class AppSchema extends CakeSchema
             'team_id'   => array('column' => 'team_id', 'unique' => 0),
             'circle_id' => array('column' => 'circle_id', 'unique' => 0),
             'user_id'   => array('column' => 'user_id', 'unique' => 0),
-            'admin_flg' => array('column' => 'admin_flg', 'unique' => 0),
-            'del_flg'   => array('column' => 'del_flg', 'unique' => 0)
+            'del_flg'   => array('column' => 'del_flg', 'unique' => 0),
+            'admin_flg' => array('column' => 'admin_flg', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -337,7 +337,7 @@ class AppSchema extends CakeSchema
         'item_name'       => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アイテム名(投稿内容、コメント内容等)', 'charset' => 'utf8'),
         'model_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'モデルID(feedならpost_id,circleならcircle_id)'),
         'url_data'        => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'URLデータ(json)', 'charset' => 'utf8'),
-        'count_num'       => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メッセージ内で利用する件数'),
+        'count_num'       => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'メッセージ内で利用する件数'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '通知を削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '通知を追加した日付時刻'),
@@ -367,8 +367,8 @@ class AppSchema extends CakeSchema
         'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
         'indexes'          => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
-            'del_flg' => array('column' => 'del_flg', 'unique' => 0),
-            'user_id' => array('column' => 'user_id', 'unique' => 0)
+            'user_id' => array('column' => 'user_id', 'unique' => 0),
+            'del_flg' => array('column' => 'del_flg', 'unique' => 0)
         ),
         'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
