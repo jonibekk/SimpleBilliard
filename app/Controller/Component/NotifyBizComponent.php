@@ -43,7 +43,7 @@ class NotifyBizComponent extends Object
     public $notify_option = [
         'from_user_id' => null,
         'url_data'     => null,
-        'count_num'    => null,
+        'count_num' => 0,
         'notify_type'  => null,
         'model_id'     => null,
         'item_name'    => null,

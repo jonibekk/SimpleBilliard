@@ -1,12 +1,12 @@
 <?php
-App::uses('NotifyUser', 'Model');
+App::uses('NotifyToUser', 'Model');
 
 /**
- * NotifyUser Test Case
+ * NotifyToUser Test Case
  *
- * @property NotifyUser $NotifyUser
+ * @property NotifyToUser $NotifyToUser
  */
-class NotifyUserTest extends CakeTestCase
+class NotifyToUserTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class NotifyUserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.notify_user',
+        'app.notify_to_user',
         'app.notification',
         'app.user',
         'app.team',
@@ -53,7 +53,7 @@ class NotifyUserTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->NotifyUser = ClassRegistry::init('NotifyUser');
+        $this->NotifyToUser = ClassRegistry::init('NotifyToUser');
     }
 
     /**
@@ -63,7 +63,7 @@ class NotifyUserTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->NotifyUser);
+        unset($this->NotifyToUser);
 
         parent::tearDown();
     }

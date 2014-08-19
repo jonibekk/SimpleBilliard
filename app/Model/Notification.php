@@ -5,11 +5,11 @@ App::uses('NotifySetting', 'Model');
 /**
  * Notification Model
  *
- * @property User          $User
- * @property Team          $Team
- * @property User          $FromUser
- * @property NotifySetting $NotifySetting
- * @property NotifyUser    $NotifyUser
+ * @property User            $User
+ * @property Team            $Team
+ * @property User            $FromUser
+ * @property NotifySetting   $NotifySetting
+ * @property NotifyToUser    $NotifyToUser
  */
 class Notification extends AppModel
 {
@@ -74,7 +74,7 @@ class Notification extends AppModel
     ];
 
     public $hasMany = [
-        'NotifyUser'
+        'NotifyToUser'
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -99,7 +99,7 @@ class Notification extends AppModel
             $res = $this->save($data);
         }
         //関連する通知ユーザを削除
-        $this->NotifyUser->deleteAll(['NotifyUser.notification_id' => $this->id]);
+        $this->NotifyToUser->deleteAll(['NotifyToUser.notification_id' => $this->id]);
         //保存データ
         $notify_user_data = [];
         foreach ($user_ids as $uid) {
@@ -109,8 +109,8 @@ class Notification extends AppModel
                 'team_id'         => $this->current_team_id
             ];
         }
-        $this->NotifyUser->create();
-        $this->NotifyUser->saveAll($notify_user_data);
+        $this->NotifyToUser->create();
+        $this->NotifyToUser->saveAll($notify_user_data);
         $this->Team->TeamMember->incrementNotifyUnreadCount($user_ids);
         return $res;
     }

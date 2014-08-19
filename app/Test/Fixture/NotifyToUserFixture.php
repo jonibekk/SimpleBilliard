@@ -1,10 +1,10 @@
 <?php
 
 /**
- * NotifyUserFixture
+ * NotifyToUserFixture
 
  */
-class NotifyUserFixture extends CakeTestFixture
+class NotifyToUserFixture extends CakeTestFixture
 {
 
     /**

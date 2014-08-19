@@ -2,13 +2,13 @@
 App::uses('AppModel', 'Model');
 
 /**
- * NotifyUser Model
+ * NotifyToUser Model
  *
- * @property Notification $Notification
+*@property Notification $Notification
  * @property User         $User
  * @property Team         $Team
  */
-class NotifyUser extends AppModel
+class NotifyToUser extends AppModel
 {
 
     /**
@@ -40,7 +40,7 @@ class NotifyUser extends AppModel
         'Team',
     );
 
-    function getNotifyUser()
+    function getNotifyToUser()
     {
 
     }
