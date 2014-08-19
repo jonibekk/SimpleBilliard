@@ -39,12 +39,12 @@ class PostShareUserFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'       => '',
-            'post_id'  => '',
-            'user_id'  => '',
-            'team_id'  => '',
-            'del_flg'  => 1,
-            'deleted'  => 1,
+            'id'      => '1',
+            'post_id' => '1',
+            'user_id' => '1',
+            'team_id' => '1',
+            'del_flg' => false,
+            'deleted' => null,
             'created'  => 1,
             'modified' => 1
         ),

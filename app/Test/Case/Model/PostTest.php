@@ -34,6 +34,7 @@ class PostTest extends CakeTestCase
         'app.post_share_circle',
         'app.circle',
         'app.circle_member',
+        'app.team_member'
     );
 
     /**
@@ -113,8 +114,9 @@ class PostTest extends CakeTestCase
 
         $this->Post->getShareAllMemberList($post_id);
         $this->Post->id = $post_id;
-        $this->Post->saveField('public_flg', false);
+        $this->Post->saveField('public_flg', true);
         $this->Post->getShareAllMemberList($post_id);
+        $this->Post->getShareAllMemberList(9999999999);
     }
 
 }
