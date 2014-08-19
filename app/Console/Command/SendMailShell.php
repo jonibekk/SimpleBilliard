@@ -134,10 +134,15 @@ class SendMailShell extends AppShell
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
         $notify_option = Notification::$TYPE[$data['Notification']['type']];
+
         foreach ($to_user_ids as $to_user_id) {
-            $data = $this->_getLangToUserData($to_user_id);
+            $data = $this->_getLangToUserData($to_user_id, true);
+            $from_user_names = [];
+            foreach ($data['Notification']['NotifyFromUser'] as $user) {
+                $from_user_names[] = $user['User']['display_username'];
+            }
             $subject = $this->User->Notification->getTitle($data['Notification']['type'],
-                                                           $data['FromUser']['display_username'],
+                                                           $from_user_names,
                                                            $data['Notification']['count_num'],
                                                            $data['Notification']['item_name']
             );
@@ -176,7 +181,7 @@ class SendMailShell extends AppShell
         return $data;
     }
 
-    function _getLangToUserData($to_user_id)
+    function _getLangToUserData($to_user_id, $with_notify_from_user = false)
     {
         $data = $this->init_data;
         //ユーザデータを取得
@@ -203,7 +208,7 @@ class SendMailShell extends AppShell
             $data = $this->lang_data[$lang];
         }
         else {
-            $data = $this->SendMail->getDetail($this->params['id'], $lang);
+            $data = $this->SendMail->getDetail($this->params['id'], $lang, $with_notify_from_user);
             $this->lang_data[$lang] = $data;
         }
         //ToUserデータを付加

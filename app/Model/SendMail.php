@@ -150,24 +150,44 @@ class SendMail extends AppModel
      *
      * @return array|null
      */
-    public function getDetail($id, $lang = null)
+    public function getDetail($id, $lang = null, $with_notify_from_user = false)
     {
         $lang_backup = null;
         if ($lang) {
             $lang_backup = isset($this->me['language']) ? $this->me['language'] : null;
             $this->FromUser->me['language'] = $lang;
+            $this->SendMailToUser->User->me['language'] = $lang;
         }
         $options = [
             'conditions' => ['SendMail.id' => $id],
             'contain'    => [
-                'FromUser' => ['PrimaryEmail'],
+                'FromUser'     => [
+                    'fields' => $this->SendMailToUser->User->profileFields,
+                    'PrimaryEmail'
+                ],
                 'Team',
-                'Notification'
+                'Notification' => []
             ]
         ];
+        if ($with_notify_from_user) {
+            $options['contain']['Notification'] =
+                [
+                    'NotifyFromUser' => [
+                        'limit'  => 2,
+                        'order'  => ['NotifyFromUser.modified desc'],
+                        'fields' => [
+                            'DISTINCT NotifyFromUser.user_id',
+                        ],
+                        'User'   => [
+                            'fields' => $this->SendMailToUser->User->profileFields,
+                        ]
+                    ]
+                ];
+        }
         $res = $this->find('first', $options);
         if ($lang) {
             $this->me['language'] = $lang_backup;
+            $this->SendMailToUser->User->me['language'] = $lang_backup;
         }
         return $res;
     }

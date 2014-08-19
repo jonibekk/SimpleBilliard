@@ -41,12 +41,11 @@ class NotifyBizComponent extends Object
     var $Post;
 
     public $notify_option = [
-        'from_user_id' => null,
-        'url_data'     => null,
-        'count_num' => 0,
-        'notify_type'  => null,
-        'model_id'     => null,
-        'item_name'    => null,
+        'url_data'    => null,
+        'count_num'   => 0,
+        'notify_type' => null,
+        'model_id'    => null,
+        'item_name'   => null,
     ];
 
     public $notify_options = [];
@@ -86,7 +85,6 @@ class NotifyBizComponent extends Object
     function sendNotify($notify_type, $model_id)
     {
         $this->notify_option['from_user_id'] = $this->Auth->user('id');
-
         switch ($notify_type) {
             case Notification::TYPE_FEED_POST:
                 $this->_setFeedPostOption($model_id);
@@ -249,13 +247,12 @@ class NotifyBizComponent extends Object
             return;
         }
         $data = [
-            'team_id'      => $this->Notification->current_team_id,
-            'type'         => $this->notify_option['notify_type'],
-            'from_user_id' => $this->notify_option['from_user_id'],
-            'model_id'     => $this->notify_option['model_id'],
-            'url_data'     => json_encode($this->notify_option['url_data']),
-            'count_num'    => $this->notify_option['count_num'],
-            'item_name'    => $this->notify_option['item_name'],
+            'team_id'   => $this->Notification->current_team_id,
+            'type'      => $this->notify_option['notify_type'],
+            'model_id'  => $this->notify_option['model_id'],
+            'url_data'  => json_encode($this->notify_option['url_data']),
+            'count_num' => $this->notify_option['count_num'],
+            'item_name' => $this->notify_option['item_name'],
         ];
         $this->Notification->saveNotify($data, $uids);
     }
