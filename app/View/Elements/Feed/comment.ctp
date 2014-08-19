@@ -46,8 +46,8 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <div><?= h($user['display_username']) ?></div>
-                <div><?= $this->TextEx->autoLink($comment['body']) ?></div>
+                <div class="gl-comment-name"><?= h($user['display_username']) ?></div>
+                <div class="gl-comment-contents"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
@@ -161,8 +161,8 @@
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
 
-            <div>
-                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span> ･ </span>
+            <div class="gl-comment-info">
+            <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span> ･ </span>
                 <a href="#" class="click-like"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"

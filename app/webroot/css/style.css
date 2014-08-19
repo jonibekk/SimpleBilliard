@@ -757,6 +757,19 @@ ul.gl-input-images > li {
     text-align: left;
 }
 
+.gl-comment-name {
+    line-height: 12px;
+    margin-bottom: 2px;
+}
+
+.gl-comment-contents {
+    line-height: 15px;
+}
+
+.gl-comment-info {
+    line-height: 15px;
+}
+
 /*/PostAreaのデザイン*/
 
 /*サークルのデザイン*/
