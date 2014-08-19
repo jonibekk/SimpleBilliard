@@ -74,7 +74,8 @@ class Notification extends AppModel
     ];
 
     public $hasMany = [
-        'NotifyToUser'
+        'NotifyToUser',
+        'NotifyFromUser',
     ];
 
     function __construct($id = false, $table = null, $ds = null)
