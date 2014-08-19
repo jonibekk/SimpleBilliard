@@ -638,6 +638,7 @@ class UserTest extends CakeTestCase
     function testGetProfileAndEmail()
     {
         $this->User->me['id'] = 1;
+        $this->User->me['language'] = "eng";
         $this->User->getProfileAndEmail(1, 'jpn');
     }
 
