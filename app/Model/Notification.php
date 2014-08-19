@@ -176,6 +176,8 @@ class Notification extends AppModel
                     $this->create();
                     $this->saveAll($notify);
                     $saved_notify_ids[] = $notify['Notification']['id'];
+                    //count_numを更新
+                    $this->updateCountNum($notify['Notification']['id'], $notify['NotifyToUser'][0]['user_id']);
                 }
             }
         }
@@ -204,8 +206,28 @@ class Notification extends AppModel
             }
         }
 
+        //通知未読件数を更新
         $this->Team->TeamMember->incrementNotifyUnreadCount($user_ids);
+
         return $saved_notify_ids;
+    }
+
+    function updateCountNum($id, $without_user_id_list)
+    {
+        $options = [
+            'conditions' => [
+                'notification_id' => $id,
+            ],
+            'fields'     => [
+                'COUNT(DISTINCT user_id) as count',
+            ]
+        ];
+        if (!empty($without_user_id_list)) {
+            $options['conditions']['NOT']['user_id'] = $without_user_id_list;
+        }
+        $res = $this->NotifyFromUser->find('count', $options);
+        $this->id = $id;
+        $this->saveField('count_num', $res);
     }
 
     function getNotify($model_id, $type)
@@ -228,6 +250,8 @@ class Notification extends AppModel
     {
         $title = null;
         $user_text = null;
+        //カウント数はユーザ名リストを引いた数
+        $count_num -= count($from_user_names);
         if (!is_array($from_user_names)) {
             $from_user_names = [$from_user_names];
         }
@@ -239,7 +263,8 @@ class Notification extends AppModel
         }
         switch ($type) {
             case self::TYPE_FEED_POST:
-                $title = __d('gl', '%1$sが投稿しました。', $user_text);
+                $title = __d('gl', '%1$s%2$sが投稿しました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $title = __d('gl', '%1$s%2$sがあなたの投稿にコメントしました。', $user_text,

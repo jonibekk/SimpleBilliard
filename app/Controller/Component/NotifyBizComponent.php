@@ -42,14 +42,11 @@ class NotifyBizComponent extends Object
 
     public $notify_option = [
         'url_data'    => null,
-        'count_num'   => 0,
+        'count_num' => 1,
         'notify_type' => null,
         'model_id'    => null,
         'item_name'   => null,
     ];
-
-    public $notify_options = [];
-
     public $notify_settings = [];
 
     function initialize()
@@ -161,12 +158,12 @@ class NotifyBizComponent extends Object
         if (empty($circle)) {
             return;
         }
-        //コメント主の通知設定確認
+        //サークルメンバーの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
                                                                                 NotifySetting::TYPE_CIRCLE);
         $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_USER_JOIN;
         //通知先ユーザ分を-1
-        $this->notify_option['count_num'] = count($circle_member_list) - 1;
+        $this->notify_option['count_num'] = count($circle_member_list);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = $circle['Circle']['name'];
@@ -201,7 +198,7 @@ class NotifyBizComponent extends Object
         $comment = $this->Post->Comment->read();
 
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
-        $this->notify_option['count_num'] = count($commented_user_list) - 1;
+        $this->notify_option['count_num'] = count($commented_user_list);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
@@ -234,7 +231,7 @@ class NotifyBizComponent extends Object
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_POST;
         $this->notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
-                                                                                            [$this->Post->me['id'], $post['Post']['user_id']]);
+                                                                                            [$post['Post']['user_id']]);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
@@ -281,6 +278,7 @@ class NotifyBizComponent extends Object
             'team_id'   => $this->Notification->current_team_id,
             'type'      => $this->notify_option['notify_type'],
             'model_id'  => $this->notify_option['model_id'],
+            'count_num' => $this->notify_option['count_num'],
             'url_data'  => json_encode($this->notify_option['url_data']),
             'item_name' => $this->notify_option['item_name'],
         ];
