@@ -22,14 +22,14 @@
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class' => 'form-control addteam_input-design'
+                    'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
                 'id'            => 'AddTeamForm',
             ]); ?>
-            <div class="panel-body">
+            <div class="panel-body add-team-panel-body">
                 <?=
                 $this->Form->input('name',
                                    ['label'                    => __d('gl', "チーム名"),
@@ -92,7 +92,7 @@
             </div>
 
             <div class="panel-footer addteam_pannel-footer">
-            <div class="row">
+                <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
                         $this->Form->submit(__d('gl', "チームを作成"),

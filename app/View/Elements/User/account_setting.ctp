@@ -32,8 +32,8 @@
         'novalidate'    => true,
         'id'            => 'UserAccountForm',
     ]); ?>
-    <div class="panel-body">
-        <div class="form-group">
+    <div class="panel-body user-setting-panel-body">
+    <div class="form-group">
             <label for="PrimaryEmailEmail" class="col col-sm-3 control-label"><?= __d('gl', "メール") ?></label>
 
             <div class="col col-sm-6">

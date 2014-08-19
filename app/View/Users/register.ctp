@@ -25,8 +25,8 @@
                 'class'         => 'form-horizontal validate',
                 'novalidate'    => true
             ]); ?>
-            <div class="panel-body">
-                <?
+            <div class="panel-body register-panel-body">
+            <?
                 //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __d('gl', "姓(ローマ字)"),

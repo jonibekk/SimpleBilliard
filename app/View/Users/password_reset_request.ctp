@@ -27,8 +27,8 @@
                 'class'         => 'form-horizontal validate',
                 'novalidate'    => true
             ]); ?>
-            <div class="panel-body">
-                <p><?= __d('gl', "Goalousに登録しているメールアドレスを入力して送信してください。") ?></p>
+            <div class="panel-body reset-password-panel-body">
+            <p><?= __d('gl', "Goalousに登録しているメールアドレスを入力して送信してください。") ?></p>
 
                 <p><?= __d('gl', "Goalousからパスワード再設定用のURLを送信いたします。") ?></p>
                 <?=
