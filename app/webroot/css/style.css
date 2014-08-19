@@ -81,19 +81,31 @@ footer p {
 
 /*Fontの指定*/
 .font-size_11 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 11px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.1rem;
 }
 
 .font-size_12 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 12px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.2rem;
 }
 
 .font-size_14 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 14px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.4rem;
 }
 
 .font-size_18 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 18px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.8rem;
 }
 
 .font-weight_bold {
