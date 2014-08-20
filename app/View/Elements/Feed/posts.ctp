@@ -264,7 +264,7 @@
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
-                        'class'                    => 'form-control tiny-form-text blank-disable font-size_12',
+                        'class' => 'form-control tiny-form-text blank-disable font-size_12 comment-post-form',
                         'target_show_id'           => "Comment_{$post['Post']['id']}",
                         'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
