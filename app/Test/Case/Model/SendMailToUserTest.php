@@ -69,9 +69,16 @@ class SendMailToUserTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetToUserList()
     {
+        $this->SendMailToUser->getToUserList(1);
+    }
 
+    public function testGetInvalidSendUserList()
+    {
+        $this->SendMailToUser->me['id'] = 1;
+        $this->SendMailToUser->current_team_id = 1;
+        $this->SendMailToUser->getInvalidSendUserList(1);
     }
 
 }
