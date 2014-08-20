@@ -1403,6 +1403,11 @@ ul.gl-input-images > li {
     background-color: #fff;
 }
 
+.tooltip {
+    position: fixed;
+    z-index: 2000;
+}
+
 /*================================
 暫定的な設定(修正必須)
 ================================*/
