@@ -3,42 +3,23 @@ App::uses('ModelType', 'Model');
 
 /**
  * @author daikihirakata
+ * @property SessionComponent $Session
+ * @property AuthComponent    $Auth
+ * @property GlEmailComponent $GlEmail
+ * @property Notification     $Notification
+ * @property NotifySetting    $NotifySetting
+ * @property Post             $Post
  */
-
-/** @noinspection PhpDocSignatureInspection */
-class NotifyBizComponent extends Object
+class NotifyBizComponent extends Component
 {
 
     public $name = "NotifyBiz";
 
-    /**
-     * @var AppController
-     */
-    var $Controller;
-
-    /**
-     * @var SessionComponent
-     */
-    var $Session;
-
-    /**
-     * @var AuthComponent
-     */
-    var $Auth;
-
-    /**
-     * @var Notification
-     */
-    var $Notification;
-
-    /**
-     * @var NotifySetting
-     */
-    var $NotifySetting;
-    /**
-     * @var Post
-     */
-    var $Post;
+    public $components = [
+        'Auth',
+        'Session',
+        'GlEmail'
+    ];
 
     public $notify_option = [
         'url_data'    => null,
@@ -49,34 +30,13 @@ class NotifyBizComponent extends Object
     ];
     public $notify_settings = [];
 
-    function initialize()
+    public function __construct(ComponentCollection $collection, $settings = array())
     {
-    }
+        $this->Notification = ClassRegistry::init('Notification');
+        $this->NotifySetting = ClassRegistry::init('NotifySetting');
+        $this->Post = ClassRegistry::init('Post');
 
-    function startup(&$controller)
-    {
-        $this->Controller = $controller;
-        $this->Auth = $this->Controller->Auth;
-        $this->Session = $this->Controller->Session;
-
-        ClassRegistry::init('Notification');
-        $this->Notification = new Notification();
-        ClassRegistry::init('NotifySetting');
-        $this->NotifySetting = new NotifySetting();
-        ClassRegistry::init('Post');
-        $this->Post = new Post();
-    }
-
-    function beforeRender()
-    {
-    }
-
-    function shutdown()
-    {
-    }
-
-    function beforeRedirect()
-    {
+        parent::__construct($collection, $settings);
     }
 
     function sendNotify($notify_type, $model_id)
@@ -143,9 +103,9 @@ class NotifyBizComponent extends Object
     /**
      * 自分の所属するサークルにメンバーが参加した時の通知
      *
-     * @param $post_id
+     * @param $circle_id
      *
-     * @throws RuntimeException
+     * @internal param $post_id
      */
     private function _setCircleUserJoinOption($circle_id)
     {
@@ -300,7 +260,7 @@ class NotifyBizComponent extends Object
         }
 
         //送信できないユーザIDリスト
-        $invalid_uids = $this->Controller->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($notify_ids);
+        $invalid_uids = $this->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($notify_ids);
         //送信できないユーザを除外
         foreach ($uids as $key => $val) {
             if (in_array($val, $invalid_uids)) {
@@ -314,7 +274,7 @@ class NotifyBizComponent extends Object
     {
         $uids = $this->_getSendNotifyUserList($this->Notification->id);
         $this->notify_option['notification_id'] = $this->Notification->id;
-        $this->Controller->GlEmail->sendMailNotify($this->notify_option, $uids);
+        $this->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 
     private function _sendOneOnOneNotifyEmail($notify_ids)
@@ -327,8 +287,35 @@ class NotifyBizComponent extends Object
                 continue;
             }
             $this->notify_option['notification_id'] = $notification_id;
-            $this->Controller->GlEmail->sendMailNotify($this->notify_option, $user_id);
+            $this->GlEmail->sendMailNotify($this->notify_option, $user_id);
         }
+    }
+
+    /**
+     * execコマンドにて通知を行う
+     *
+     * @param $type
+     * @param $model_id
+     *
+     * @internal param $id
+     */
+    public function execSendNotify($type, $model_id)
+    {
+        $session_id = $this->Session->id();
+        $set_web_env = "";
+        $nohup = "nohup ";
+        $php = "/usr/bin/php ";
+        $cake_cmd = $php . APP . "Console" . DS . "cake.php";
+        $cake_app = " -app " . APP;
+        $cmd = " notify";
+        $cmd .= " -t " . $type;
+        if ($model_id) {
+            $cmd .= " -m " . $model_id;
+        }
+        $cmd .= " -s " . $session_id;
+        $cmd_end = " > /dev/null &";
+        $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
+        exec($all_cmd);
     }
 
 }

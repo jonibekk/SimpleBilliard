@@ -28,7 +28,7 @@ class PostsController extends AppController
             }
         }
         if ($this->Post->add($this->request->data)) {
-            $this->NotifyBiz->sendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+            $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
         }
         else {
@@ -308,8 +308,9 @@ class PostsController extends AppController
                 }
             }
             if ($this->Post->Comment->add($this->request->data)) {
-                $this->NotifyBiz->sendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id);
-                $this->NotifyBiz->sendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, $this->Post->id);
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id);
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                                                 $this->Post->id);
                 $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
             }
             else {

@@ -6,49 +6,22 @@
  * @property User          $User
  * @property SendMail      $SendMail
  */
-
-/** @noinspection PhpDocSignatureInspection */
-class GlEmailComponent extends Object
+class GlEmailComponent extends Component
 {
 
     public $name = "GlEmail";
-
-    public $Controller;
-
     public $notifi_mails = array();
-
-    public $User;
-
-    /**
-     * @var SendMail $SendMail
-     */
-    public $SendMail;
 
     public $components = array(
         'Lang',
     );
 
-    function initialize()
+    public function __construct(ComponentCollection $collection, $settings = array())
     {
-    }
-
-    function startup(&$controller)
-    {
-        $this->Controller = $controller;
         $this->User = ClassRegistry::init('User');
         $this->SendMail = ClassRegistry::init('SendMail');
-    }
 
-    function beforeRender()
-    {
-    }
-
-    function shutdown()
-    {
-    }
-
-    function beforeRedirect()
-    {
+        parent::__construct($collection, $settings);
     }
 
     /**
@@ -221,18 +194,20 @@ class GlEmailComponent extends Object
     /**
      * execコマンドにてidを元にメール送信を行う
      *
-     * @param $id
+     * @param        $id
+     * @param string $method_name
      */
     public function execSendMailById($id, $method_name = "send_mail_by_id")
     {
         $set_web_env = "";
+        $nohup = "nohup ";
         $php = "/usr/bin/php ";
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
         $cmd = " send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd_end = " > /dev/null &";
-        $all_cmd = $set_web_env . $cake_cmd . $cake_app . $cmd . $cmd_end;
+        $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
     }
 }
