@@ -25,6 +25,7 @@ class Notification extends AppModel
     const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST = 3;
     const TYPE_CIRCLE_USER_JOIN = 4;
     const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 5;
+    const TYPE_CIRCLE_ADD_USER = 6;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                           => [
@@ -42,6 +43,9 @@ class Notification extends AppModel
         self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [
             'mail_template' => "notify_basic",
         ],
+        self::TYPE_CIRCLE_ADD_USER => [
+            'mail_template' => "notify_basic",
+        ],
     ];
 
     public function _setTypeDefault()
@@ -51,6 +55,7 @@ class Notification extends AppModel
         self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['notify_type'] = NotifySetting::TYPE_FEED;
         self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['notify_type'] = NotifySetting::TYPE_CIRCLE;
         self::$TYPE[self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING]['notify_type'] = NotifySetting::TYPE_CIRCLE;
+        self::$TYPE[self::TYPE_CIRCLE_ADD_USER]['notify_type'] = NotifySetting::TYPE_CIRCLE;
     }
 
     /**
@@ -282,6 +287,10 @@ class Notification extends AppModel
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
                 $title = __d('gl', '%1$sがサークル「%1$s」のプライバシー設定を%2$sに変更しました。', $user_text,
                              $item_name_1, $item_name_2);
+                break;
+            case self::TYPE_CIRCLE_ADD_USER:
+                $title = __d('gl', '%1$sがサークル「%2$s」にあなたを追加しました。', $user_text,
+                             $item_name_1);
                 break;
             default:
                 break;

@@ -30,6 +30,10 @@ class NotifyBizComponent extends Component
     ];
     public $notify_settings = [];
 
+    public $has_send_mail_interval_time = true;
+
+    public $is_one_on_one_notify = false;
+
     public function __construct(ComponentCollection $collection, $settings = array())
     {
         $this->Notification = ClassRegistry::init('Notification');
@@ -39,11 +43,12 @@ class NotifyBizComponent extends Component
         parent::__construct($collection, $settings);
     }
 
-    function sendNotify($notify_type, $model_id)
+    function sendNotify($notify_type, $model_id, $to_user_list = null)
     {
         $this->notify_option['from_user_id'] = $this->Auth->user('id');
         switch ($notify_type) {
             case Notification::TYPE_FEED_POST:
+                $this->is_one_on_one_notify = true;
                 $this->_setFeedPostOption($model_id);
                 break;
             case Notification::TYPE_FEED_COMMENTED_ON_MY_POST:
@@ -57,10 +62,15 @@ class NotifyBizComponent extends Component
                 break;
             case Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
                 break;
+            case Notification::TYPE_CIRCLE_ADD_USER:
+                $this->has_send_mail_interval_time = false;
+                $this->is_one_on_one_notify = true;
+                $this->_setCircleAddUserOption($model_id, $to_user_list);
+                break;
             default:
                 break;
         }
-        if ($notify_type == Notification::TYPE_FEED_POST) {
+        if ($this->is_one_on_one_notify) {
             //ユーザ個別ののアプリ通知データ保存
             $notify_ids = $this->_saveOneOnOneNotifications();
             //ユーザ個別の通知メール送信
@@ -124,6 +134,28 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_USER_JOIN;
         //通知先ユーザ分を-1
         $this->notify_option['count_num'] = count($circle_member_list);
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
+        $this->notify_option['model_id'] = $circle_id;
+        $this->notify_option['item_name'] = $circle['Circle']['name'];
+    }
+
+    /**
+     * 管理者が自分をサークルに参加させたときのオプション
+     *
+     * @param $circle_id
+     * @param $user_id
+     *
+     * @internal param $post_id
+     */
+    private function _setCircleAddUserOption($circle_id, $user_id)
+    {
+        $circle = $this->Post->User->CircleMember->Circle->findById($circle_id);
+        if (empty($circle)) {
+            return;
+        }
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($user_id, NotifySetting::TYPE_CIRCLE);
+        $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_ADD_USER;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = $circle['Circle']['name'];
@@ -246,7 +278,7 @@ class NotifyBizComponent extends Component
         return $res;
     }
 
-    private function _getSendNotifyUserList($notify_ids, $has_interval_time = true)
+    private function _getSendNotifyUserList($notify_ids)
     {
         //メール通知onのユーザを取得
         $uids = [];
@@ -259,7 +291,7 @@ class NotifyBizComponent extends Component
             return $uids;
         }
         //インターバルありの場合
-        if ($has_interval_time) {
+        if ($this->has_send_mail_interval_time) {
             //送信できないユーザIDリスト
             $invalid_uids = $this->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($notify_ids);
             //送信できないユーザを除外
@@ -272,16 +304,16 @@ class NotifyBizComponent extends Component
         return $uids;
     }
 
-    private function _sendNotifyEmail($has_interval_time = true)
+    private function _sendNotifyEmail()
     {
-        $uids = $this->_getSendNotifyUserList($this->Notification->id, $has_interval_time);
+        $uids = $this->_getSendNotifyUserList($this->Notification->id);
         $this->notify_option['notification_id'] = $this->Notification->id;
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 
-    private function _sendOneOnOneNotifyEmail($notify_ids, $has_interval_time = true)
+    private function _sendOneOnOneNotifyEmail($notify_ids)
     {
-        $uids = $this->_getSendNotifyUserList($notify_ids, $has_interval_time);
+        $uids = $this->_getSendNotifyUserList($notify_ids);
 
         $notify_to_users = $this->Notification->NotifyToUser->getNotifyIdUserIdList($notify_ids);
         foreach ($notify_to_users as $notification_id => $user_id) {
@@ -296,12 +328,13 @@ class NotifyBizComponent extends Component
     /**
      * execコマンドにて通知を行う
      *
-     * @param $type
-     * @param $model_id
+     * @param       $type
+     * @param       $model_id
+     * @param array $to_user_list json_encodeしてbase64_encodeする
      *
-     * @internal param $id
+*@internal param $id
      */
-    public function execSendNotify($type, $model_id)
+    public function execSendNotify($type, $model_id, $to_user_list = null)
     {
         $session_id = $this->Session->id();
         $set_web_env = "";
@@ -313,6 +346,10 @@ class NotifyBizComponent extends Component
         $cmd .= " -t " . $type;
         if ($model_id) {
             $cmd .= " -m " . $model_id;
+        }
+        if ($to_user_list) {
+            $to_user_list = base64_encode(json_encode($to_user_list));
+            $cmd .= " -u " . $to_user_list;
         }
         $cmd .= " -s " . $session_id;
         $cmd_end = " > /dev/null &";
