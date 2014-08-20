@@ -70,7 +70,7 @@ class SendMailTest extends CakeTestCase
     public function testGetDetail()
     {
         $id = "1";
-        $res = $this->SendMail->getDetail($id);
+        $res = $this->SendMail->getDetail($id, null, true);
         $from = "from@email.com";
         $this->assertEquals($from, $res['FromUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
     }
@@ -82,5 +82,4 @@ class SendMailTest extends CakeTestCase
         $from = "from@email.com";
         $this->assertEquals($from, $res['FromUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
     }
-
 }
