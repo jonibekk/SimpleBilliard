@@ -38,13 +38,13 @@ class Notification extends AppModel
             'mail_template' => "notify_basic",
         ],
         self::TYPE_CIRCLE_USER_JOIN                    => [
-            'mail_template' => "notify_basic",
+            'mail_template' => "notify_not_use_body",
         ],
         self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [
-            'mail_template' => "notify_basic",
+            'mail_template' => "notify_not_use_body",
         ],
-        self::TYPE_CIRCLE_ADD_USER => [
-            'mail_template' => "notify_basic",
+        self::TYPE_CIRCLE_ADD_USER                     => [
+            'mail_template' => "notify_not_use_body",
         ],
     ];
 
