@@ -100,6 +100,20 @@ class CirclesControllerTest extends ControllerTestCase
         $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testEditSuccessChangePrivacy()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                'id'         => 1,
+                'name'       => 'xxx',
+                'members'    => 'user_12,user_13',
+                'public_flg' => false,
+            ],
+        ];
+        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
     function testEditFail()
     {
         $this->_getCirclesCommonMock();
