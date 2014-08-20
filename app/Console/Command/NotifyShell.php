@@ -34,6 +34,9 @@ class NotifyShell extends AppShell
             CakeSession::id($this->params['session_id']);
             CakeSession::start();
         }
+        if ($this->params['base_url']) {
+            Router::fullBaseUrl($this->params['base_url']);
+        }
         $this->components = new ComponentCollection();
         $this->AppController = new AppController();
         $this->NotifyBiz = new NotifyBizComponent($this->components);
@@ -52,6 +55,7 @@ class NotifyShell extends AppShell
         $options = [
             'type'       => ['short' => 't', 'help' => '通知タイプ', 'required' => true,],
             'session_id' => ['short' => 's', 'help' => 'セッションID', 'required' => true,],
+            'base_url'  => ['short' => 'b', 'help' => 'ベースURL', 'required' => true,],
             'model_id'   => ['short' => 'm', 'help' => 'モデルID', 'required' => false,],
             'user_list' => ['short' => 'u', 'help' => '送信先ユーザリスト', 'required' => false,],
         ];

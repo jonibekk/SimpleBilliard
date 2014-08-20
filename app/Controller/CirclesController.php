@@ -29,8 +29,10 @@ class CirclesController extends AppController
         $this->Circle->create();
 
         if ($this->Circle->add($this->request->data)) {
-            $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                                             $this->Circle->add_new_member_list);
+            if (!empty($this->Circle->add_new_member_list)) {
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                                                 $this->Circle->add_new_member_list);
+            }
             $this->Pnotify->outSuccess(__d('gl', "サークルを作成しました。"));
         }
         else {
@@ -75,8 +77,10 @@ class CirclesController extends AppController
         }
         $this->request->allowMethod('put');
         if ($this->Circle->edit($this->request->data)) {
-            $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                                             $this->Circle->add_new_member_list);
+            if (!empty($this->Circle->add_new_member_list)) {
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                                                 $this->Circle->add_new_member_list);
+            }
             $this->Pnotify->outSuccess(__d('gl', "サークル設定を保存しました。"));
         }
         else {

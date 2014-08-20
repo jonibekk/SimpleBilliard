@@ -327,12 +327,13 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
+
      *
-     * @param       $type
+*@param       $type
      * @param       $model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
      *
-*@internal param $id
+     * @internal param $id
      */
     public function execSendNotify($type, $model_id, $to_user_list = null)
     {
@@ -351,6 +352,7 @@ class NotifyBizComponent extends Component
             $to_user_list = base64_encode(json_encode($to_user_list));
             $cmd .= " -u " . $to_user_list;
         }
+        $cmd .= " -b " . Router::fullBaseUrl();
         $cmd .= " -s " . $session_id;
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
