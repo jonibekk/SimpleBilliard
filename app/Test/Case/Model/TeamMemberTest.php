@@ -233,5 +233,6 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->current_team_id = $team_id;
         $this->TeamMember->me['id'] = $uid;
         $this->TeamMember->incrementNotifyUnreadCount([1]);
+        $this->TeamMember->incrementNotifyUnreadCount([]);
     }
 }
