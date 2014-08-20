@@ -79,7 +79,10 @@ class CirclesController extends AppController
         $before_circle = $this->Circle->read();
         //プライバシー設定が変更されているか判定
         $is_privacy_changed = false;
-        if ($before_circle['Circle']['public_flg'] != $this->request->data['Circle']['public_flg']) {
+        if (isset($before_circle['Circle']['public_flg']) &&
+            isset($this->request->data['Circle']['public_flg']) &&
+            $before_circle['Circle']['public_flg'] != $this->request->data['Circle']['public_flg']
+        ) {
             $is_privacy_changed = true;
         }
         if ($this->Circle->edit($this->request->data)) {
