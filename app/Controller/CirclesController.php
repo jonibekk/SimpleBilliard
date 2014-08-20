@@ -76,10 +76,20 @@ class CirclesController extends AppController
             $this->redirect($this->referer());
         }
         $this->request->allowMethod('put');
+        $before_circle = $this->Circle->read();
+        //プライバシー設定が変更されているか判定
+        $is_privacy_changed = false;
+        if ($before_circle['Circle']['public_flg'] != $this->request->data['Circle']['public_flg']) {
+            $is_privacy_changed = true;
+        }
         if ($this->Circle->edit($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
                                                  $this->Circle->add_new_member_list);
+            }
+            if ($is_privacy_changed) {
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
+                                                 $this->Circle->id);
             }
             $this->Pnotify->outSuccess(__d('gl', "サークル設定を保存しました。"));
         }

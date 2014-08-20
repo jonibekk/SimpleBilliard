@@ -61,6 +61,9 @@ class NotifyBizComponent extends Component
                 $this->_setCircleUserJoinOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
+                $this->is_one_on_one_notify = true;
+                $this->has_send_mail_interval_time = false;
+                $this->_setCircleChangePrivacyOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_ADD_USER:
                 $this->has_send_mail_interval_time = false;
@@ -107,7 +110,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = "/";
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
-            mb_strimwidth($post['Post']['body'], 0, 40, "...") : null;
+            json_encode([mb_strimwidth($post['Post']['body'], 0, 40, "...")]) : null;
     }
 
     /**
@@ -136,7 +139,35 @@ class NotifyBizComponent extends Component
         $this->notify_option['count_num'] = count($circle_member_list);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
-        $this->notify_option['item_name'] = $circle['Circle']['name'];
+        $this->notify_option['item_name'] = json_encode([$circle['Circle']['name']]);
+    }
+
+    /**
+     * 自分の所属するのプライバシー設定が変更になったとき
+     *
+     * @param $circle_id
+     *
+     * @internal param $post_id
+     */
+    private function _setCircleChangePrivacyOption($circle_id)
+    {
+        //宛先は自分以外のサークルメンバー
+        $circle_member_list = $this->Post->User->CircleMember->getMemberList($circle_id, true, false);
+        if (empty($circle_member_list)) {
+            return;
+        }
+        $circle = $this->Post->User->CircleMember->Circle->findById($circle_id);
+        if (empty($circle)) {
+            return;
+        }
+        $privacy_name = Circle::$TYPE_PUBLIC[$circle['Circle']['public_flg']];
+        //サークルメンバーの通知設定
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
+                                                                                NotifySetting::TYPE_CIRCLE);
+        $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
+        $this->notify_option['model_id'] = $circle_id;
+        $this->notify_option['item_name'] = json_encode([$circle['Circle']['name'], $privacy_name]);
     }
 
     /**
@@ -158,7 +189,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_ADD_USER;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
-        $this->notify_option['item_name'] = $circle['Circle']['name'];
+        $this->notify_option['item_name'] = json_encode([$circle['Circle']['name']]);
     }
 
     /**
@@ -194,7 +225,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            mb_strimwidth($comment['Comment']['body'], 0, 40, "...") : null;
+            json_encode([mb_strimwidth($comment['Comment']['body'], 0, 40, "...")]) : null;
     }
 
     /**
@@ -227,7 +258,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            mb_strimwidth($comment['Comment']['body'], 0, 40, "...") : null;
+            json_encode([mb_strimwidth($comment['Comment']['body'], 0, 40, "...")]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
     }
 
@@ -327,13 +358,13 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
-
      *
-*@param       $type
+     * @param       $type
      * @param       $model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
+
      *
-     * @internal param $id
+*@internal param $id
      */
     public function execSendNotify($type, $model_id, $to_user_list = null)
     {

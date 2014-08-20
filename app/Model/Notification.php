@@ -251,8 +251,9 @@ class Notification extends AppModel
         return $res;
     }
 
-    function getTitle($type, $from_user_names, $count_num, $item_name_1 = null, $item_name_2 = null)
+    function getTitle($type, $from_user_names, $count_num, $item_name)
     {
+        $item_name = json_decode($item_name, true);
         $title = null;
         $user_text = null;
         //カウント数はユーザ名リストを引いた数
@@ -282,15 +283,15 @@ class Notification extends AppModel
             case self::TYPE_CIRCLE_USER_JOIN:
                 $title = __d('gl', '%1$s%2$sがサークル「%3$s」に参加しました。', $user_text,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
-                             $item_name_1);
+                             $item_name[0]);
                 break;
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $title = __d('gl', '%1$sがサークル「%1$s」のプライバシー設定を%2$sに変更しました。', $user_text,
-                             $item_name_1, $item_name_2);
+                $title = __d('gl', '%1$sがサークル「%2$s」のプライバシー設定を「%3$s」に変更しました。', $user_text,
+                             $item_name[0], $item_name[1]);
                 break;
             case self::TYPE_CIRCLE_ADD_USER:
                 $title = __d('gl', '%1$sがサークル「%2$s」にあなたを追加しました。', $user_text,
-                             $item_name_1);
+                             $item_name[0]);
                 break;
             default:
                 break;
