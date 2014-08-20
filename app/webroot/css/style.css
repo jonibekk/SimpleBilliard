@@ -139,6 +139,11 @@ footer p {
     color: #b4b8bf;
 }
 
+.zeroclipboard-is-hover {
+    color: #fff !important;
+    background: #d9230f !important;
+}
+
 .develop--link-gray a {
     color: #c1c4c7;
 }
