@@ -897,6 +897,32 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/post_permanent/1');
     }
 
+    function testFeedPermanentLinkNotShare()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $user_id = 1;
+        $team_id = 1;
+        $post_data = [
+            'Post'    => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+            'Comment' => [
+                [
+                    'user_id' => $user_id,
+                    'team_id' => $team_id,
+                    'body'    => 'test'
+                ]
+            ]
+        ];
+        $Posts->Post->saveAll($post_data);
+        $this->testAction('/post_permanent/1');
+    }
+
     function _getPostsCommonMock()
     {
         /**
