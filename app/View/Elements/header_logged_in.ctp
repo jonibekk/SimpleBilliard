@@ -107,8 +107,8 @@
                 </li>
                 <li class="header-search-group">
                 <form class="gl-nav-form-group" role="search">
-                        <i class="fa fa-search"></i>
-                        <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
+                    <i class="fa fa-search gl-nav-form-icon"></i>
+                    <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
                     </form>
                 </li>
             </ul>

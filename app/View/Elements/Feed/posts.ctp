@@ -49,7 +49,7 @@
                                        ['class' => 'gl-feed-img']) ?>
             <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
             <div class="font-size_11">
-                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
+                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span> ･ </span>
                 <?
                 //公開の場合
                 if ($post['Post']['public_flg']): ?>
@@ -201,18 +201,18 @@
                model_id="<?= $post['Post']['id'] ?>"
                like_type="post">
                 <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
-
-            &nbsp;<a class="trigger-click"
-                     href="#"
+            <span> ･ </span>
+            <a class="trigger-click"
+               href="#"
                      target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
                 __d('gl',
-                    "コメントする") ?></a>
-                                <span class="pull-right">
+                    "コメントする") ?></a><span> ･ </span>
+                                <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
                                class="modal-ajax-get">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
-                            </a>
+                            </a><span> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"
                class="modal-ajax-get"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
