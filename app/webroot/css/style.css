@@ -81,19 +81,31 @@ footer p {
 
 /*Fontの指定*/
 .font-size_11 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 11px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.1rem;
 }
 
 .font-size_12 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 12px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.2rem;
 }
 
 .font-size_14 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 14px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.4rem;
 }
 
 .font-size_18 {
+    /*noinspection CssOverwrittenProperties*/
     font-size: 18px;
+    /*noinspection CssOverwrittenProperties*/
+    font-size: 1.8rem;
 }
 
 .font-weight_bold {
@@ -305,21 +317,6 @@ footer p {
 .navbar-nav > li > a {
     padding-top: 9px;
     padding-bottom: 9px;
-}
-
-.gl-nav-search {
-    width: 200px !important;
-}
-
-@media (max-width: 768px) {
-    .gl-nav-search {
-        width: 100% !important;
-    }
-}
-
-/*ここ修正必須です。8月5日*/
-.gl-nav-team-select {
-    width: 112px;
 }
 
 .gl-nav-form-group input, .gl-nav-form-group select {
@@ -931,8 +928,19 @@ ul.gl-input-images > li {
 .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
     padding: 20px;
 }
-
 /*/login*/
+
+/*ハンバーガー*/
+.gl-nav-team-select, .gl-nav-search {
+    width: 180px;
+    margin: auto;
+}
+
+.gl-nav-form-icon {
+    margin-left: 10px;
+}
+
+/*/ハンバーガー*/
 
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
@@ -1007,7 +1015,16 @@ ul.gl-input-images > li {
     }
 
     .gl-nav-team-select {
+        width: 112px;
         margin-left: 16px;
+    }
+
+    .gl-nav-search {
+        width: 200px;
+    }
+
+    .gl-nav-form-icon {
+        margin-left: 0;
     }
 
     .circle-name_box {
