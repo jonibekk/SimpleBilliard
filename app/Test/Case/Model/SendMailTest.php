@@ -82,4 +82,16 @@ class SendMailTest extends CakeTestCase
         $from = "from@email.com";
         $this->assertEquals($from, $res['FromUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
     }
+
+    public function testIsNotifySentBefore()
+    {
+        $this->SendMail->isNotifySentBefore(999);
+        $notify = [
+            'model_id' => 1,
+            'type'     => 1,
+            'team_id'  => 1
+        ];
+        $this->SendMail->Notification->save($notify);
+        $this->SendMail->isNotifySentBefore($this->SendMail->Notification->getLastInsertID());
+    }
 }
