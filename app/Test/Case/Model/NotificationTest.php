@@ -18,6 +18,11 @@ class NotificationTest extends CakeTestCase
         'app.notification',
         'app.user', 'app.notify_setting',
         'app.team',
+        'app.team_member',
+        'app.notify_from_user',
+        'app.notify_to_user',
+        'app.group',
+        'app.job_category',
     );
 
     /**
@@ -81,12 +86,25 @@ class NotificationTest extends CakeTestCase
         $this->Notification->current_team_id = $team_id;
         $this->Notification->Team->TeamMember->me['id'] = $uid;
         $this->Notification->Team->TeamMember->current_team_id = $team_id;
+        $save_data = [
+            'Notification' => [
+                'model_id' => 1,
+                'type'     => 1,
+                'team_id'  => $team_id
+            ],
+            'NotifyToUser' => [
+                [
+                    'user_id' => $uid,
+                    'team_id' => $team_id
+                ]
+            ]
+        ];
+        $this->Notification->saveAll($save_data);
         $data = [
             'model_id' => 1,
             'type'     => 1,
             'team_id'  => $team_id
         ];
-        $this->Notification->save($data);
         $this->Notification->saveNotifyOneOnOne($data, [$uid, 2]);
     }
 
