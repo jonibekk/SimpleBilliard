@@ -217,4 +217,21 @@ class TeamMemberTest extends CakeTestCase
         $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
     }
 
+    function testGetAllMemberUserIdList()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->TeamMember->current_team_id = $team_id;
+        $this->TeamMember->me['id'] = $uid;
+        $this->TeamMember->getAllMemberUserIdList(false);
+    }
+
+    function testIncrementNotifyUnreadCount()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->TeamMember->current_team_id = $team_id;
+        $this->TeamMember->me['id'] = $uid;
+        $this->TeamMember->incrementNotifyUnreadCount([1]);
+    }
 }
