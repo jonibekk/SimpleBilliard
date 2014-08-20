@@ -246,7 +246,7 @@ class NotifyBizComponent extends Component
         return $res;
     }
 
-    private function _getSendNotifyUserList($notify_ids)
+    private function _getSendNotifyUserList($notify_ids, $has_interval_time = true)
     {
         //メール通知onのユーザを取得
         $uids = [];
@@ -258,28 +258,30 @@ class NotifyBizComponent extends Component
         if (empty($uids)) {
             return $uids;
         }
-
-        //送信できないユーザIDリスト
-        $invalid_uids = $this->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($notify_ids);
-        //送信できないユーザを除外
-        foreach ($uids as $key => $val) {
-            if (in_array($val, $invalid_uids)) {
-                unset($uids[$key]);
+        //インターバルありの場合
+        if ($has_interval_time) {
+            //送信できないユーザIDリスト
+            $invalid_uids = $this->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($notify_ids);
+            //送信できないユーザを除外
+            foreach ($uids as $key => $val) {
+                if (in_array($val, $invalid_uids)) {
+                    unset($uids[$key]);
+                }
             }
         }
         return $uids;
     }
 
-    private function _sendNotifyEmail()
+    private function _sendNotifyEmail($has_interval_time = true)
     {
-        $uids = $this->_getSendNotifyUserList($this->Notification->id);
+        $uids = $this->_getSendNotifyUserList($this->Notification->id, $has_interval_time);
         $this->notify_option['notification_id'] = $this->Notification->id;
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 
-    private function _sendOneOnOneNotifyEmail($notify_ids)
+    private function _sendOneOnOneNotifyEmail($notify_ids, $has_interval_time = true)
     {
-        $uids = $this->_getSendNotifyUserList($notify_ids);
+        $uids = $this->_getSendNotifyUserList($notify_ids, $has_interval_time);
 
         $notify_to_users = $this->Notification->NotifyToUser->getNotifyIdUserIdList($notify_ids);
         foreach ($notify_to_users as $notification_id => $user_id) {
