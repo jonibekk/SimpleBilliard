@@ -2,27 +2,22 @@ body {
     background: #e5e5e5;
     padding: 52px 0 0;
 }
-
 img {
     margin-left: auto;
     margin-right: auto;
 }
-
 footer {
     margin: 2em 0;
 }
-
 footer li {
     float: left;
     margin-right: 1.5em;
     margin-bottom: 1.5em;
 }
-
 footer p {
     clear: left;
     margin-bottom: 0;
 }
-
 .no-line {
     text-decoration: none !important;
     color: #000;
@@ -162,6 +157,7 @@ footer p {
 .circle-link {
     position: absolute;
     padding: 4px 0;
+    width: 92%;
 }
 
 .circle-link:hover {
@@ -1131,6 +1127,10 @@ ul.gl-input-images > li {
     .gl-s2-post-dropdown {
         width: 368px !important;
     }
+
+    .circle-link {
+        width: 92%;
+    }
 }
 
 /*ExtraMedium*/
@@ -1403,7 +1403,9 @@ ul.gl-input-images > li {
     background-color: #fff;
 }
 
-/*暫定的な設定(修正必須)*/
+/*================================
+暫定的な設定(修正必須)
+================================*/
 
 .develop--forbiddenLink {
     position: relative !important;
