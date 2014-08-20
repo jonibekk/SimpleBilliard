@@ -78,6 +78,11 @@ class NotificationTest extends CakeTestCase
         $this->Notification->getNotifyFromTodayUtc(1);
     }
 
+    function testGetNotify()
+    {
+        $this->Notification->getNotify(null, 1);
+    }
+
     function testSaveNotifyOneOnOne()
     {
         $uid = 1;
