@@ -122,6 +122,7 @@ class NotificationTest extends CakeTestCase
                                       $item_name);
         $this->Notification->getTitle(Notification::TYPE_CIRCLE_USER_JOIN, $from_user_names, $count_num, $item_name);
         $this->Notification->getTitle(Notification::TYPE_CIRCLE_ADD_USER, $from_user_names, $count_num, $item_name);
+        $this->Notification->getTitle(999, "abc", $count_num, $item_name);
     }
 
 }
