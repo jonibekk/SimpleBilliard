@@ -276,7 +276,7 @@ class Notification extends AppModel
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                $title = __d('gl', '%1$s%2$sがあなたのコメントした投稿にコメントしました。', $user_text,
+                $title = __d('gl', '%1$s%2$sも投稿にコメントしました。', $user_text,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
