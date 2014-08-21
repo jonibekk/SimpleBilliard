@@ -131,15 +131,27 @@ class UploadBehavior extends ModelBehavior
         $data = array('remote' => true);
         $urlExplodedBySlash = explode('/', $url);
         $data['name'] = end($urlExplodedBySlash);
+//        $data['name'] = end($urlExplodedBySlash).".png";
         $urlExplodedByDot = explode('.', $url);
+//        $this->log($data['name']);
+//        $this->log(end($urlExplodedByDot));
+//        $this->log(strpos(end($urlExplodedByDot),"/"));
+//        if(strpos($data['name'],"/") || strpos(end($urlExplodedByDot),"/")){
+//            $data['tmp_name'] = tempnam(sys_get_temp_dir(), urlencode($data['name'])) . '.' . urlencode(end($urlExplodedByDot));
+//        }
+//        $data['tmp_name'] = tempnam(sys_get_temp_dir(), urlencode($data['name'])) . '.' . urlencode(end($urlExplodedByDot)).".png";
         $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
 
-        $httpSocket = new HttpSocket();
+        $config = [
+            'ssl_verify_host' => false,
+        ];
+        $httpSocket = new HttpSocket($config);
         $raw = $httpSocket->get($url);
         $response = $httpSocket->response;
         $data['size'] = strlen($raw);
         $headerContentType = explode(';', $response['header']['Content-Type']);
         $data['type'] = reset($headerContentType);
+//        $this->log($data);
 
         file_put_contents($data['tmp_name'], $raw);
         return $data;
