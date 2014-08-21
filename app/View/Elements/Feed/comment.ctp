@@ -20,7 +20,7 @@
                                    ['class' => 'gl-comment-img'])
         ?>
         <div class="gl-comment-body">
-            <div class="col col-xxs-12 showmore gl-comment-text">
+            <div class="col col-xxs-12 gl-comment-text gl-comment-user">
                 <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
                         <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
@@ -47,6 +47,8 @@
                     </div>
                 <? endif; ?>
                 <div class="gl-comment-name"><?= h($user['display_username']) ?></div>
+            </div>
+            <div class="col col-xxs-12 showmore gl-comment-text">
                 <div class="gl-comment-contents"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
