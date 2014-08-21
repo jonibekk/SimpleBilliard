@@ -76,31 +76,19 @@ footer p {
 
 /*Fontの指定*/
 .font-size_11 {
-    /*noinspection CssOverwrittenProperties*/
     font-size: 11px;
-    /*noinspection CssOverwrittenProperties*/
-    font-size: 1.1rem;
 }
 
 .font-size_12 {
-    /*noinspection CssOverwrittenProperties*/
     font-size: 12px;
-    /*noinspection CssOverwrittenProperties*/
-    font-size: 1.2rem;
 }
 
 .font-size_14 {
-    /*noinspection CssOverwrittenProperties*/
     font-size: 14px;
-    /*noinspection CssOverwrittenProperties*/
-    font-size: 1.4rem;
 }
 
 .font-size_18 {
-    /*noinspection CssOverwrittenProperties*/
     font-size: 18px;
-    /*noinspection CssOverwrittenProperties*/
-    font-size: 1.8rem;
 }
 
 .font-weight_bold {
@@ -650,7 +638,7 @@ ul.gl-input-images > li {
 
 .gl-feed-switch {
     list-style: none;
-    padding: 0;
+    padding: 10px 0;
     margin: 0;
 }
 
@@ -696,6 +684,7 @@ ul.gl-input-images > li {
     width: 52px
 }
 
+/*
 .gl-feed-switch .active {
     border-bottom: 2px #ddd solid;
 }
@@ -705,7 +694,7 @@ ul.gl-input-images > li {
 .switch-badge:hover {
     border-bottom: 2px #ddd solid;
 }
-
+*/
 .switch-post:hover a,
 .switch-action:hover a,
 .switch-badge:hover a {
@@ -722,7 +711,29 @@ ul.gl-input-images > li {
 }
 
 /*/タブで切り替え*/
+/*切り替えスイッチ*/
+.switch-post, .switch-action, .switch-badge {
+    position: relative;
+}
 
+.switch-arrow {
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 10px solid #fff;
+    position: absolute;
+    left: 10px;
+    bottom: -12px;
+    z-index: 2;
+    visibility: hidden;
+}
+
+.active .switch-arrow {
+    visibility: visible;
+}
+
+/*/切り替えスイッチ*/
 /*PostAreaのデザイン*/
 .post-panel-body {
     padding: 5px 11px 10px;
@@ -730,7 +741,7 @@ ul.gl-input-images > li {
 
 .post-panel-heading {
     background: #f5f5f5 !important;
-    padding-top: 4px !important;
+    padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
 
