@@ -196,25 +196,25 @@
         <? endif; ?>
 
         <div class="col col-xxs-12 font-size_12 gl-feed-click">
-            <a href="#" class="click-like"
+            <a href="#" class="click-like link-rose-red"
                like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                model_id="<?= $post['Post']['id'] ?>"
                like_type="post">
                 <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
             <span> ･ </span>
-            <a class="trigger-click"
+            <a class="trigger-click link-rose-red"
                href="#"
                      target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
                 __d('gl',
                     "コメントする") ?></a><span> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
-                               class="modal-ajax-get">
-                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
+                               class="modal-ajax-get link-rose-red">
+                            <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
                             </a><span> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"
-               class="modal-ajax-get"><i
+               class="modal-ajax-get link-rose-red"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>

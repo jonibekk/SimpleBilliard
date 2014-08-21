@@ -120,6 +120,17 @@ footer p {
     color: #91170a;
 }
 */
+.link-rose-red {
+    color: #b46d6d;
+}
+
+.link-rose-red:hover,
+.link-rose-red:active,
+.link-rose-red:focus {
+    color: #b46d6d;
+    text-decoration-color: #b46d6d;
+}
+
 .font-weight_normal {
     font-weight: normal;
 }
