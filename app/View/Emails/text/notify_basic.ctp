@@ -23,7 +23,7 @@ echo "\n";
 echo "\n";
 echo $body_title;
 echo "\n";
-echo __d('mail', '「%s」', $body);
+echo __d('mail', '「%s」', $body[0]);
 echo "\n";
 echo "\n";
 echo __d('mail', '以下のリンクから内容の確認ができます。');
