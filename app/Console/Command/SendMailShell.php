@@ -158,7 +158,7 @@ class SendMailShell extends AppShell
                 'from_user_name' => $data['FromUser']['display_username'],
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
-                'body' => $data['Notification']['item_name'],
+                'body' => json_decode($data['Notification']['item_name'], true),
             ];
             $this->_sendMailItem($options, $viewVars);
 
