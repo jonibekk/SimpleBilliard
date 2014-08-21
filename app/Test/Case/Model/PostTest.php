@@ -119,4 +119,36 @@ class PostTest extends CakeTestCase
         $this->Post->getShareAllMemberList(9999999999);
     }
 
+    public function testIsPublic()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->me['id'] = $uid;
+        $this->Post->current_team_id = $team_id;
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $team_id,
+            'public_flg' => true,
+            'body'       => 'test'
+        ];
+        $this->Post->save($data);
+        $this->Post->isPublic($this->Post->id);
+    }
+
+    public function testIsMyPost()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->me['id'] = $uid;
+        $this->Post->current_team_id = $team_id;
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $team_id,
+            'public_flg' => true,
+            'body'       => 'test'
+        ];
+        $this->Post->save($data);
+        $this->Post->isMyPost($this->Post->id);
+    }
+
 }
