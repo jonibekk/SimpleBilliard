@@ -16,13 +16,13 @@
         <ul class="gl-feed-switch clearfix" role="tab-list">
             <li class="switch-post active"><a href="#PostForm" role="tab" data-toggle="tab"
                                               class="switch-post-anchor"><i
-                    class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a></li>
+                        class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
-                                         class="switch-action-anchor develop--forbiddenLink"><i
-                    class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a></li>
+                                         class="switch-action-anchor develop--forbiddenLink-"><i
+                        class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab"
-                                        class="switch-badge-anchor develop--forbiddenLink"><i
-                    class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a></li>
+                                        class="switch-badge-anchor develop--forbiddenLink-"><i
+                        class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a><span class="switch-arrow"></span></li>
         </ul>
     </div>
     <!-- Tab panes -->

@@ -684,6 +684,7 @@ ul.gl-input-images > li {
     width: 52px
 }
 
+/*
 .gl-feed-switch .active {
     border-bottom: 2px #ddd solid;
 }
@@ -693,7 +694,7 @@ ul.gl-input-images > li {
 .switch-badge:hover {
     border-bottom: 2px #ddd solid;
 }
-
+*/
 .switch-post:hover a,
 .switch-action:hover a,
 .switch-badge:hover a {
@@ -710,7 +711,29 @@ ul.gl-input-images > li {
 }
 
 /*/タブで切り替え*/
+/*切り替えスイッチ*/
+.switch-post, .switch-action, .switch-badge {
+    position: relative;
+}
 
+.switch-arrow {
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 10px solid #fff;
+    position: absolute;
+    left: 10px;
+    bottom: -12px;
+    z-index: 2;
+    visibility: hidden;
+}
+
+.active .switch-arrow {
+    visibility: visible;
+}
+
+/*/切り替えスイッチ*/
 /*PostAreaのデザイン*/
 .post-panel-body {
     padding: 5px 11px 10px;
