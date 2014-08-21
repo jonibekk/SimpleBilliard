@@ -132,7 +132,9 @@ class PostTest extends CakeTestCase
             'body'       => 'test'
         ];
         $this->Post->save($data);
-        $this->Post->isPublic($this->Post->id);
+
+        $res = $this->Post->isPublic($this->Post->id);
+        $this->assertTrue($res);
     }
 
     public function testIsMyPost()
@@ -148,7 +150,8 @@ class PostTest extends CakeTestCase
             'body'       => 'test'
         ];
         $this->Post->save($data);
-        $this->Post->isMyPost($this->Post->id);
+        $res = $this->Post->isMyPost($this->Post->id);
+        $this->assertTrue($res);
     }
 
 }
