@@ -33,7 +33,7 @@
                 'type'          => 'file',
                 'id'            => 'AddCircleForm',
             ]); ?>
-            <div class="modal-body">
+            <div class="modal-body modal-circle-body">
                 <?=
                 $this->Form->input('name',
                                    ['label'                    => __d('gl', "サークル名"),
@@ -49,7 +49,7 @@
                         $this->Form->hidden('members',
                                             ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
                         <? $this->Form->unlockField('Circle.members') ?>
-                        <span class="help-block"><?=
+                        <span class="help-block font-size_11"><?=
                             __d('gl', "管理者：%s",
                                 $this->Session->read('Auth.User.display_username')) ?></span>
                     </div>
@@ -57,10 +57,10 @@
                 <hr>
                 <?
                 $privacy_option = Circle::$TYPE_PUBLIC;
-                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block">' . __d('gl',
-                                                                                             "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
-                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block">' . __d('gl',
-                                                                                              "サークル名と参加メンバー、投稿はこのサークルの感化メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font-size_11">' . __d('gl',
+                                                                                                          "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font-size_11">' . __d('gl',
+                                                                                                           "サークル名と参加メンバー、投稿はこのサークルの感化メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'    => 'radio',
@@ -81,10 +81,11 @@
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "サークル画像") ?></label>
 
                     <div class="col col-sm-6">
-                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container addcircle_photo-design"
                                  data-trigger="fileinput"
-                                 style="width: 150px; height: 150px;">
+                                 style="width: 96px; height: 96px;">
+                                <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
                         <span class="btn btn-default btn-file">
@@ -105,9 +106,10 @@
                                                 ''
                                                ]) ?>
                         </span>
+                                <span class="help-block font-size_11 fileinput-limit_mb"><?= __d('gl',
+                                                                                                 '10MB以下') ?></span>
                             </div>
                         </div>
-                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=

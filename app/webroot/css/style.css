@@ -921,14 +921,32 @@ ul.gl-input-images > li {
 
 /*モーダル全体*/
 .modal-body {
-    max-height: 300px;
+    max-height: 324px;
     overflow-y: scroll;
 }
 /*/モーダル全体*/
+/*モーダル個別*/
+.modal-circle-body hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.modal-circle-body {
+    padding-top: 10px;
+    padding-bottom: 2px;
+}
+
+.fileinput-limit_mb {
+    display: inline-block;
+}
+
+/*/モーダル個別*/
+
 /*login*/
 .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
     padding: 20px;
 }
+
 /*/login*/
 
 /*ハンバーガー*/
@@ -1061,6 +1079,10 @@ ul.gl-input-images > li {
     .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
         padding: 10px;
     }
+
+    .circle-link {
+        width: 94%;
+    }
 }
 
 /*Medium*/
@@ -1128,9 +1150,6 @@ ul.gl-input-images > li {
         width: 368px !important;
     }
 
-    .circle-link {
-        width: 92%;
-    }
 }
 
 /*ExtraMedium*/
@@ -1203,6 +1222,7 @@ ul.gl-input-images > li {
 .addcircle_pannel-footer {
     background: #f0f0f0;
     border-radius: 0 0 6px 6px;
+    margin-top: 0;
 }
 
 /*MergeLater_inputDesign*/
@@ -1281,6 +1301,7 @@ ul.gl-input-images > li {
 
 .addcircle_photo-design {
     background: #fff;
+    border: 1px dashed #ddd;
 }
 
 .select2-search-field {
@@ -1393,6 +1414,16 @@ ul.gl-input-images > li {
     height: 50px;
     line-height: 50px;
     font-size: 18px;
+    color: #dddddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.photo-plus-large {
+    width: 96px;
+    height: 96px;
+    line-height: 96px;
+    font-size: 30px;
     color: #dddddd;
     text-align: center;
     vertical-align: middle;
