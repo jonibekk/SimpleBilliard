@@ -43,7 +43,7 @@ class NotifyBizComponent extends Component
         parent::__construct($collection, $settings);
     }
 
-    function sendNotify($notify_type, $model_id, $to_user_list = null)
+    function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null)
     {
         $this->notify_option['from_user_id'] = $this->Auth->user('id');
         switch ($notify_type) {
@@ -52,10 +52,10 @@ class NotifyBizComponent extends Component
                 $this->_setFeedPostOption($model_id);
                 break;
             case Notification::TYPE_FEED_COMMENTED_ON_MY_POST:
-                $this->_setFeedCommentedOnMyPostOption($model_id);
+                $this->_setFeedCommentedOnMyPostOption($model_id, $sub_model_id);
                 break;
             case Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                $this->_setFeedCommentedOnMyCommentedPostOption($model_id);
+                $this->_setFeedCommentedOnMyCommentedPostOption($model_id, $sub_model_id);
                 break;
             case Notification::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
@@ -194,12 +194,12 @@ class NotifyBizComponent extends Component
 
     /**
      * 自分のコメントした投稿にコメントがあった場合のオプション取得
+
      *
-     * @param $post_id
-     *
-     * @throws RuntimeException
+*@param $post_id
+     * @param $comment_id
      */
-    private function _setFeedCommentedOnMyCommentedPostOption($post_id)
+    private function _setFeedCommentedOnMyCommentedPostOption($post_id, $comment_id)
     {
         //宛先は自分以外のコメント主(投稿主ものぞく)
         $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id);
@@ -215,10 +215,10 @@ class NotifyBizComponent extends Component
         if (empty($commented_user_list)) {
             return;
         }
-        //コメント主の通知設定確認
+        //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($commented_user_list,
                                                                                 NotifySetting::TYPE_FEED);
-        $comment = $this->Post->Comment->read();
+        $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
         $this->notify_option['count_num'] = count($commented_user_list);
@@ -230,12 +230,12 @@ class NotifyBizComponent extends Component
 
     /**
      * 自分の投稿にコメントがあった場合のオプション取得
+
      *
-     * @param $post_id
-     *
-     * @throws RuntimeException
+*@param $post_id
+     * @param $comment_id
      */
-    private function _setFeedCommentedOnMyPostOption($post_id)
+    private function _setFeedCommentedOnMyPostOption($post_id, $comment_id)
     {
         //宛先は投稿主
         $post = $this->Post->findById($post_id);
@@ -246,10 +246,10 @@ class NotifyBizComponent extends Component
         if ($post['Post']['user_id'] == $this->Notification->me['id']) {
             return;
         }
-        //投稿主の通知設定確認
+        //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($post['Post']['user_id'],
                                                                                 NotifySetting::TYPE_FEED);
-        $comment = $this->Post->Comment->read();
+        $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_POST;
@@ -358,15 +358,17 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
-     *
-     * @param       $type
-     * @param       $model_id
-     * @param array $to_user_list json_encodeしてbase64_encodeする
 
+
+*
+*@param       $type
+     * @param       $model_id
+     * @param       $sub_model_id
+     * @param array $to_user_list json_encodeしてbase64_encodeする
      *
-*@internal param $id
+     * @internal param $id
      */
-    public function execSendNotify($type, $model_id, $to_user_list = null)
+    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
     {
         $session_id = $this->Session->id();
         $set_web_env = "";
@@ -378,6 +380,9 @@ class NotifyBizComponent extends Component
         $cmd .= " -t " . $type;
         if ($model_id) {
             $cmd .= " -m " . $model_id;
+        }
+        if ($sub_model_id) {
+            $cmd .= " -n " . $sub_model_id;
         }
         if ($to_user_list) {
             $to_user_list = base64_encode(json_encode($to_user_list));

@@ -31,7 +31,7 @@ class CirclesController extends AppController
         if ($this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                                                 $this->Circle->add_new_member_list);
+                                                 null, $this->Circle->add_new_member_list);
             }
             $this->Pnotify->outSuccess(__d('gl', "サークルを作成しました。"));
         }
@@ -88,7 +88,7 @@ class CirclesController extends AppController
         if ($this->Circle->edit($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                                                 $this->Circle->add_new_member_list);
+                                                 null, $this->Circle->add_new_member_list);
             }
             if ($is_privacy_changed) {
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
