@@ -30,5 +30,3 @@ echo $url;
 echo "\n";
 echo "\n";
 echo "\n";
-echo __d('mail', 'なかまと共にみんなのゴールに到達するため、ほめ合うため、そして有用なフィードバックを集めるためにGoalousを使おう！');
-echo "\n";
