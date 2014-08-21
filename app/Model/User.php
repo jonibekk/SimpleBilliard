@@ -789,4 +789,37 @@ class User extends AppModel
         $res = array_merge($circle_res, $user_res);
         return ['results' => $res];
     }
+
+    function getProfileAndEmail($uid, $lang = null)
+    {
+        $backup_lang = null;
+        if ($lang) {
+            $backup_lang = $this->me['language'];
+            $this->me['language'] = $lang;
+        }
+
+        $options = [
+            'conditions' => [
+                'User.id' => $uid,
+            ],
+            'fields'     => $this->profileFields,
+            'contain'    => [
+                'PrimaryEmail' => [
+                    'fields' => [
+                        'PrimaryEmail.email'
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['PrimaryEmail'])) {
+            $res['User']['PrimaryEmail'] = $res['PrimaryEmail'];
+            unset($res['PrimaryEmail']);
+        }
+
+        if ($backup_lang) {
+            $this->me['language'] = $backup_lang;
+        }
+        return $res;
+    }
 }

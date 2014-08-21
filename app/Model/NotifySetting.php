@@ -9,7 +9,7 @@ App::uses('AppModel', 'Model');
 class NotifySetting extends AppModel
 {
     /**
-     * 通知タイプ
+     * 通知設定タイプ
      */
     const TYPE_FEED = "feed";
     const TYPE_CIRCLE = "circle";
@@ -82,6 +82,7 @@ class NotifySetting extends AppModel
         $options = array(
             'conditions' => array(
                 'user_id' => $user_ids,
+                'NOT' => ['user_id' => $this->me['id']]
             )
         );
         $result = $this->find('all', $options);

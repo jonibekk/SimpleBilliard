@@ -17,9 +17,11 @@ class CirclesControllerTest extends ControllerTestCase
         'app.circle',
         'app.team',
         'app.badge',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.email',
         'app.comment_like',
+        'app.send_mail',
         'app.comment',
         'app.post',
         'app.post_like',
@@ -93,6 +95,20 @@ class CirclesControllerTest extends ControllerTestCase
                 'id'      => 1,
                 'name'    => 'xxx',
                 'members' => 'user_12,user_13'
+            ],
+        ];
+        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testEditSuccessChangePrivacy()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                'id'         => 1,
+                'name'       => 'xxx',
+                'members'    => 'user_12,user_13',
+                'public_flg' => false,
             ],
         ];
         $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);

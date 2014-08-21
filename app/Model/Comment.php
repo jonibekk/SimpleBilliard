@@ -73,27 +73,27 @@ class Comment extends AppModel
         'comment_like_count' => ['numeric' => ['rule' => ['numeric']]],
         'comment_read_count' => ['numeric' => ['rule' => ['numeric']]],
         'del_flg'            => ['boolean' => ['rule' => ['boolean']]],
-        'photo1'     => [
+        'photo1'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo2'     => [
+        'photo2'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo3'     => [
+        'photo3'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo4'     => [
+        'photo4'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo5'     => [
+        'photo5'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'site_photo' => [
+        'site_photo'         => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
@@ -198,6 +198,44 @@ class Comment extends AppModel
             }
         }
         $res = $this->save($data);
+        return $res;
+    }
+
+    function getCountCommentUniqueUser($post_id, $without_user_id_list = [])
+    {
+        $options = [
+            'conditions' => [
+                'post_id' => $post_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'COUNT(DISTINCT user_id) as count',
+            ]
+        ];
+        if (!empty($without_user_id_list)) {
+            $options['conditions']['NOT']['user_id'] = $without_user_id_list;
+        }
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
+    function getCommentedUniqueUsersList($post_id, $without_me = true)
+    {
+        $options = [
+            'conditions' => [
+                'post_id' => $post_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'DISTINCT user_id',
+            ]
+        ];
+        if ($without_me) {
+            $options['conditions']['NOT']['user_id'] = $this->me['id'];
+        }
+        $res = $this->find('all', $options);
+        /** @noinspection PhpDeprecationInspection */
+        $res = Set::combine($res, '{n}.Comment.user_id', '{n}.Comment.user_id');
         return $res;
     }
 

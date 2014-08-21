@@ -17,6 +17,8 @@ class Circle extends AppModel
     const TYPE_PUBLIC_OFF = 0;
     static public $TYPE_PUBLIC = [self::TYPE_PUBLIC_ON => "", self::TYPE_PUBLIC_OFF => "",];
 
+    public $add_new_member_list = [];
+
     /**
      * 公開タイプの名前をセット
      */
@@ -129,6 +131,7 @@ class Circle extends AppModel
                     'team_id' => $this->current_team_id,
                     'user_id' => $val
                 ];
+                $this->add_new_member_list[] = $val;
             }
         }
         if ($res = $this->saveAll($data)) {
@@ -156,6 +159,7 @@ class Circle extends AppModel
                     'team_id' => $this->current_team_id,
                     'user_id' => $val,
                 ];
+                $this->add_new_member_list[] = $val;
             }
         }
         //既存メンバーで指定されないメンバーがいた場合、削除

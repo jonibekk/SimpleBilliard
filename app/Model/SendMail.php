@@ -1,12 +1,15 @@
 <?php
 App::uses('AppModel', 'Model');
+/** @noinspection PhpDocSignatureInspection */
 
 /**
  * SendMail Model
  *
- * @property User $FromUser
- * @property User $ToUser
- * @property Team $Team
+ * @property User           $FromUser
+ * @property User           $ToUser
+ * @property Team           $Team
+ * @property Notification   $Notification
+ * @property SendMailToUser $SendMailToUser
  */
 class SendMail extends AppModel
 {
@@ -19,6 +22,8 @@ class SendMail extends AppModel
     const TYPE_TMPL_TOKEN_RESEND = 4;
     const TYPE_TMPL_CHANGE_EMAIL_VERIFY = 5;
     const TYPE_TMPL_INVITE = 6;
+    const TYPE_TMPL_NOTIFY = 7;
+
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
             'subject'  => null,
@@ -35,17 +40,17 @@ class SendMail extends AppModel
             'template' => 'password_reset_complete',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_TOKEN_RESEND        => [
+        self::TYPE_TMPL_TOKEN_RESEND            => [
             'subject'  => null,
             'template' => 'token_resend',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY => [
+        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY     => [
             'subject'  => null,
             'template' => 'change_email',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_INVITE              => [
+        self::TYPE_TMPL_INVITE                  => [
             'subject'  => null,
             'template' => 'invite',
             'layout'   => 'default',
@@ -60,10 +65,6 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __d('mail', "メールアドレス認証");
         self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __d('mail', "メールアドレス変更に伴う認証");
         self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __d('mail', "Goalousのチームへ招待");
-        //subjectにサービス名のプレフィックスを追加
-        foreach (self::$TYPE_TMPL as $key => $val) {
-            self::$TYPE_TMPL[$key]['subject'] = "[" . SERVICE_NAME . "]" . $val['subject'];
-        }
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -86,8 +87,6 @@ class SendMail extends AppModel
         ],
     ];
 
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
-
     /**
      * belongsTo associations
      *
@@ -97,6 +96,11 @@ class SendMail extends AppModel
         'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
         'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
         'Team',
+        'Notification',
+    ];
+
+    public $hasMany = [
+        'SendMailToUser'
     ];
 
     /**
@@ -110,17 +114,32 @@ class SendMail extends AppModel
      *
      * @return bool
      */
-    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null)
+    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null, $notify_id = null)
     {
         $data = [
-            'to_user_id'    => $to_uid,
-            'template_type' => $tmpl_type,
-            'item'          => (!empty($item)) ? json_encode($item) : null,
-            'from_user_id'  => ($from_uid) ? $from_uid : null,
-            'team_id'       => ($team_id) ? $team_id : null,
+            'template_type'   => $tmpl_type,
+            'item'            => (!empty($item)) ? json_encode($item) : null,
+            'from_user_id'    => $from_uid,
+            'team_id'         => $team_id,
+            'notification_id' => $notify_id,
         ];
         $this->create();
-        return $this->save($data);
+        $res = $this->save($data);
+        if ($to_uid) {
+            if (!is_array($to_uid)) {
+                $to_uid = [$to_uid];
+            }
+            $send_to_users = [];
+            foreach ($to_uid as $val) {
+                $send_to_users[] = [
+                    'user_id'      => $val,
+                    'send_mail_id' => $this->id,
+                    'team_id'      => $this->current_team_id,
+                ];
+            }
+            $this->SendMailToUser->saveAll($send_to_users);
+        }
+        return $res;
     }
 
     /**
@@ -129,28 +148,64 @@ class SendMail extends AppModel
      * @param      $id
      * @param null $lang
      *
-*@return array|null
+     * @return array|null
      */
-    public function getDetail($id, $lang = null)
+    public function getDetail($id, $lang = null, $with_notify_from_user = false)
     {
         $lang_backup = null;
         if ($lang) {
             $lang_backup = isset($this->me['language']) ? $this->me['language'] : null;
             $this->FromUser->me['language'] = $lang;
-            $this->ToUser->me['language'] = $lang;
+            $this->SendMailToUser->User->me['language'] = $lang;
         }
         $options = [
             'conditions' => ['SendMail.id' => $id],
             'contain'    => [
-                'ToUser'   => ['PrimaryEmail'],
-                'FromUser' => ['PrimaryEmail'],
-                'Team'
+                'FromUser'     => [
+                    'fields' => $this->SendMailToUser->User->profileFields,
+                    'PrimaryEmail'
+                ],
+                'Team',
+                'Notification' => []
             ]
         ];
+        if ($with_notify_from_user) {
+            $options['contain']['Notification'] =
+                [
+                    'NotifyFromUser' => [
+                        'limit'  => 2,
+                        'order'  => ['NotifyFromUser.modified desc'],
+                        'fields' => [
+                            'DISTINCT NotifyFromUser.user_id',
+                        ],
+                        'User'   => [
+                            'fields' => $this->SendMailToUser->User->profileFields,
+                        ]
+                    ]
+                ];
+        }
         $res = $this->find('first', $options);
         if ($lang) {
             $this->me['language'] = $lang_backup;
+            $this->SendMailToUser->User->me['language'] = $lang_backup;
         }
         return $res;
+    }
+
+    public function isNotifySentBefore($notification_id, $before_hours = 3)
+    {
+        $options = [
+            'conditions' => [
+                'notification_id' => $notification_id,
+                'modified >'      => time() - (60 * 60 * $before_hours),
+            ],
+        ];
+        $res = $this->find('first', $options);
+        //指定時刻以内の送信履歴あり
+        if (!empty($res)) {
+            return true;
+        }
+        //指定時刻以内の送信履歴なし
+        return false;
     }
 }

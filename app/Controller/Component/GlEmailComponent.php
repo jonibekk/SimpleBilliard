@@ -6,44 +6,22 @@
  * @property User          $User
  * @property SendMail      $SendMail
  */
-class GlEmailComponent extends Object
+class GlEmailComponent extends Component
 {
 
     public $name = "GlEmail";
-
-    public $Controller;
-
     public $notifi_mails = array();
-
-    public $User;
-
-    public $SendMail;
 
     public $components = array(
         'Lang',
     );
 
-    function initialize()
+    public function __construct(ComponentCollection $collection, $settings = array())
     {
-    }
-
-    function startup(&$controller)
-    {
-        $this->Controller = $controller;
         $this->User = ClassRegistry::init('User');
         $this->SendMail = ClassRegistry::init('SendMail');
-    }
 
-    function beforeRender()
-    {
-    }
-
-    function shutdown()
-    {
-    }
-
-    function beforeRedirect()
-    {
+        parent::__construct($collection, $settings);
     }
 
     /**
@@ -117,7 +95,7 @@ class GlEmailComponent extends Object
                      [
                          'admin'      => false,
                          'controller' => 'users',
-                         'action' => 'change_email_verify',
+                         'action'     => 'change_email_verify',
                          $email_token,
                      ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_CHANGE_EMAIL_VERIFY,
@@ -165,7 +143,7 @@ class GlEmailComponent extends Object
      * @param array $invite_data
      * @param       $team_name
      *
-*@return bool
+     * @return bool
      */
     public function sendMailInvite($invite_data, $team_name)
     {
@@ -196,23 +174,40 @@ class GlEmailComponent extends Object
         return true;
     }
 
+    public function sendMailNotify($data, $send_to_users)
+    {
+        if (empty($data)) {
+            return;
+        }
+        $url = Router::url($data['url_data'], true);
+        $item = [
+            'url' => $url,
+        ];
+
+        $this->SendMail->saveMailData($send_to_users, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
+                                      $this->SendMail->current_team_id, $data['notification_id']);
+        //メール送信を実行
+        $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
+
+    }
+
     /**
      * execコマンドにてidを元にメール送信を行う
      *
-     * @param $id
+     * @param        $id
+     * @param string $method_name
      */
-    public function execSendMailById($id)
+    public function execSendMailById($id, $method_name = "send_mail_by_id")
     {
         $set_web_env = "";
+        $nohup = "nohup ";
         $php = "/usr/bin/php ";
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
-        $cmd = " send_mail send_mail_by_id";
+        $cmd = " send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd_end = " > /dev/null &";
-        $all_cmd = $set_web_env . $cake_cmd . $cake_app . $cmd . $cmd_end;
-
+        $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
     }
-
 }

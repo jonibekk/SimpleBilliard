@@ -635,4 +635,11 @@ class UserTest extends CakeTestCase
         $this->assertFalse($res, "[異常]デフォルトチーム更新");
     }
 
+    function testGetProfileAndEmail()
+    {
+        $this->User->me['id'] = 1;
+        $this->User->me['language'] = "eng";
+        $this->User->getProfileAndEmail(1, 'jpn');
+    }
+
 }

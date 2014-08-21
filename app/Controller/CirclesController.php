@@ -27,7 +27,12 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Circle->create();
+
         if ($this->Circle->add($this->request->data)) {
+            if (!empty($this->Circle->add_new_member_list)) {
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                                                 $this->Circle->add_new_member_list);
+            }
             $this->Pnotify->outSuccess(__d('gl', "サークルを作成しました。"));
         }
         else {
@@ -71,7 +76,24 @@ class CirclesController extends AppController
             $this->redirect($this->referer());
         }
         $this->request->allowMethod('put');
+        $before_circle = $this->Circle->read();
+        //プライバシー設定が変更されているか判定
+        $is_privacy_changed = false;
+        if (isset($before_circle['Circle']['public_flg']) &&
+            isset($this->request->data['Circle']['public_flg']) &&
+            $before_circle['Circle']['public_flg'] != $this->request->data['Circle']['public_flg']
+        ) {
+            $is_privacy_changed = true;
+        }
         if ($this->Circle->edit($this->request->data)) {
+            if (!empty($this->Circle->add_new_member_list)) {
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                                                 $this->Circle->add_new_member_list);
+            }
+            if ($is_privacy_changed) {
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
+                                                 $this->Circle->id);
+            }
             $this->Pnotify->outSuccess(__d('gl', "サークル設定を保存しました。"));
         }
         else {
@@ -117,6 +139,11 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
+            if (!empty($this->Circle->CircleMember->new_joined_circle_list)) {
+                foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
+                    $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_USER_JOIN, $circle_id);
+                }
+            }
             $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定を保存しました。"));
         }
         else {

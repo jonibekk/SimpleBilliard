@@ -43,6 +43,8 @@ class CircleMember extends AppModel
         'User',
     ];
 
+    public $new_joined_circle_list = [];
+
     public function getMyCircleList()
     {
         $options = [
@@ -86,8 +88,10 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getMemberList($circle_id, $with_admin = false)
+    public function getMemberList($circle_id, $with_admin = false, $with_me = true)
     {
+        $primary_backup = $this->primaryKey;
+        $this->primaryKey = 'user_id';
         $options = [
             'conditions' => [
                 'circle_id' => $circle_id,
@@ -98,7 +102,12 @@ class CircleMember extends AppModel
         if ($with_admin) {
             unset($options['conditions']['admin_flg']);
         }
-        return $this->find('list', $options);
+        if (!$with_me) {
+            $options['conditions']['NOT']['user_id'] = $this->me['id'];
+        }
+        $res = $this->find('list', $options);
+        $this->primaryKey = $primary_backup;
+        return $res;
     }
 
     public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
@@ -229,6 +238,7 @@ class CircleMember extends AppModel
         }
         //onサークルを追加
         if (!empty($join_circles)) {
+            $this->new_joined_circle_list = $join_circles;
             $data = [];
             foreach ($join_circles as $circle) {
                 $data[] = [

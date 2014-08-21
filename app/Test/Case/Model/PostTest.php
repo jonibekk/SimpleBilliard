@@ -34,6 +34,7 @@ class PostTest extends CakeTestCase
         'app.post_share_circle',
         'app.circle',
         'app.circle_member',
+        'app.team_member'
     );
 
     /**
@@ -95,6 +96,62 @@ class PostTest extends CakeTestCase
         $this->Post->User->CircleMember->me['id'] = $uid;
         $this->Post->User->CircleMember->current_team_id = $team_id;
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
+    }
+
+    function testGetShareAllMemberList()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $post_id = 1;
+        $this->Post->me['id'] = $uid;
+        $this->Post->current_team_id = $team_id;
+        $this->Post->Team->TeamMember->me['id'] = $uid;
+        $this->Post->Team->TeamMember->current_team_id = $team_id;
+        $this->Post->PostShareCircle->me['id'] = $uid;
+        $this->Post->PostShareCircle->current_team_id = $team_id;
+        $this->Post->PostShareUser->me['id'] = $uid;
+        $this->Post->PostShareUser->current_team_id = $team_id;
+
+        $this->Post->getShareAllMemberList($post_id);
+        $this->Post->id = $post_id;
+        $this->Post->saveField('public_flg', true);
+        $this->Post->getShareAllMemberList($post_id);
+        $this->Post->getShareAllMemberList(9999999999);
+    }
+
+    public function testIsPublic()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->me['id'] = $uid;
+        $this->Post->current_team_id = $team_id;
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $team_id,
+            'public_flg' => true,
+            'body'       => 'test'
+        ];
+        $this->Post->save($data);
+
+        $res = $this->Post->isPublic($this->Post->id);
+        $this->assertTrue($res);
+    }
+
+    public function testIsMyPost()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->me['id'] = $uid;
+        $this->Post->current_team_id = $team_id;
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $team_id,
+            'public_flg' => true,
+            'body'       => 'test'
+        ];
+        $this->Post->save($data);
+        $res = $this->Post->isMyPost($this->Post->id);
+        $this->assertTrue($res);
     }
 
 }

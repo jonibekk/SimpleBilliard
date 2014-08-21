@@ -897,6 +897,27 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/post_permanent/1');
     }
 
+    function testFeedPermanentLinkNotShare()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $user_id = 5;
+        $team_id = 1;
+        $post_data = [
+            'Post' => [
+                'user_id'    => $user_id,
+                'team_id'    => $team_id,
+                'public_flg' => false,
+                'body'       => 'test'
+            ],
+        ];
+        $Posts->Post->save($post_data);
+
+        $this->testAction('/post_permanent/' . $Posts->Post->getLastInsertID());
+    }
+
     function _getPostsCommonMock()
     {
         /**
@@ -905,10 +926,11 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->generate('Posts', [
             'components' => [
                 'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
+                'Auth'      => ['user', 'loggedIn'],
+                'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-            ]
+                'NotifyBiz' => ['sendNotify']
+            ],
         ]);
         $value_map = [
             [null, [
@@ -938,6 +960,9 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
             );
+        /** @noinspection PhpUndefinedFieldInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
+        //$Posts->NotifyBiz->expects($this->any())->method('sendNotify')->will($this->returnValue(true));
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->me = ['id' => '1'];
         /** @noinspection PhpUndefinedFieldInspection */

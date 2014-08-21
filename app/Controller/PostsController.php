@@ -4,10 +4,11 @@ App::uses('AppController', 'Controller');
 /**
  * Posts Controller
  *
- * @property Post $Post
+ * @property Post               $Post
  */
 class PostsController extends AppController
 {
+
     /**
      * add method
      *
@@ -27,6 +28,7 @@ class PostsController extends AppController
             }
         }
         if ($this->Post->add($this->request->data)) {
+            $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
         }
         else {
@@ -306,6 +308,9 @@ class PostsController extends AppController
                 }
             }
             if ($this->Post->Comment->add($this->request->data)) {
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id);
+                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                                                 $this->Post->id);
                 $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
             }
             else {
@@ -336,7 +341,7 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         /** @noinspection PhpUndefinedMethodInspection */
-        $circles = $this->Post->PostShareCircle->getShareCirclesByPost($post_id);
+        $circles = $this->Post->PostShareCircle->getShareCirclesAndMembers($post_id);
         $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
         $this->set(compact('circles', 'users'));
         //エレメントの出力を変数に格納する
