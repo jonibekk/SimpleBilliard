@@ -2,9 +2,10 @@
 
 /**
  * @author daikihirakata
- * @property LangComponent $Lang
- * @property User          $User
- * @property SendMail      $SendMail
+ * @property LangComponent    $Lang
+ * @property SessionComponent $Session
+ * @property User             $User
+ * @property SendMail         $SendMail
  */
 class GlEmailComponent extends Component
 {
@@ -14,14 +15,15 @@ class GlEmailComponent extends Component
 
     public $components = array(
         'Lang',
+        'Session',
     );
 
     public function __construct(ComponentCollection $collection, $settings = array())
     {
+        parent::__construct($collection, $settings);
+        CakeSession::start();
         $this->User = ClassRegistry::init('User');
         $this->SendMail = ClassRegistry::init('SendMail');
-
-        parent::__construct($collection, $settings);
     }
 
     /**
@@ -185,7 +187,7 @@ class GlEmailComponent extends Component
         ];
 
         $this->SendMail->saveMailData($send_to_users, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
-                                      $this->SendMail->current_team_id, $data['notification_id']);
+                                      $this->SendMail->SendMailToUser->current_team_id, $data['notification_id']);
         //メール送信を実行
         $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
 
@@ -206,6 +208,7 @@ class GlEmailComponent extends Component
         $cake_app = " -app " . APP;
         $cmd = " send_mail {$method_name}";
         $cmd .= " -i " . $id;
+        $cmd .= " -s " . $this->Session->id();
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);

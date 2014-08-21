@@ -67,10 +67,12 @@ class NotifyShell extends AppShell
     public function main()
     {
         $to_user_list = null;
-        if ($this->params['user_list']) {
+        if (isset($this->params['user_list'])) {
             $to_user_list = json_decode(base64_decode($this->params['user_list']), true);
         }
-        $this->NotifyBiz->sendNotify($this->params['type'], $this->params['model_id'], $this->params['sub_model_id'],
+        $this->NotifyBiz->sendNotify($this->params['type'],
+                                     $this->params['model_id'],
+                                     isset($this->params['sub_model_id']) ? $this->params['sub_model_id'] : null,
                                      $to_user_list);
     }
 

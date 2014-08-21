@@ -36,11 +36,12 @@ class NotifyBizComponent extends Component
 
     public function __construct(ComponentCollection $collection, $settings = array())
     {
+        parent::__construct($collection, $settings);
+        CakeSession::start();
         $this->Notification = ClassRegistry::init('Notification');
         $this->NotifySetting = ClassRegistry::init('NotifySetting');
         $this->Post = ClassRegistry::init('Post');
 
-        parent::__construct($collection, $settings);
     }
 
     function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null)
@@ -102,7 +103,6 @@ class NotifyBizComponent extends Component
         }
         //宛先は閲覧可能な全ユーザ
         $members = $this->Post->getShareAllMemberList($post_id);
-
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED);
@@ -194,15 +194,14 @@ class NotifyBizComponent extends Component
 
     /**
      * 自分のコメントした投稿にコメントがあった場合のオプション取得
-
      *
-*@param $post_id
+     * @param $post_id
      * @param $comment_id
      */
     private function _setFeedCommentedOnMyCommentedPostOption($post_id, $comment_id)
     {
         //宛先は自分以外のコメント主(投稿主ものぞく)
-        $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id);
+        $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id, false);
         if (empty($commented_user_list)) {
             return;
         }
@@ -230,9 +229,8 @@ class NotifyBizComponent extends Component
 
     /**
      * 自分の投稿にコメントがあった場合のオプション取得
-
      *
-*@param $post_id
+     * @param $post_id
      * @param $comment_id
      */
     private function _setFeedCommentedOnMyPostOption($post_id, $comment_id)
@@ -337,6 +335,9 @@ class NotifyBizComponent extends Component
 
     private function _sendNotifyEmail()
     {
+        if (!$this->Notification->id) {
+            return;
+        }
         $uids = $this->_getSendNotifyUserList($this->Notification->id);
         $this->notify_option['notification_id'] = $this->Notification->id;
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
@@ -358,19 +359,17 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
-
-
-*
-*@param       $type
+     *
+     * @param       $type
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
+
      *
-     * @internal param $id
+*@internal param $id
      */
     public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
     {
-        $session_id = $this->Session->id();
         $set_web_env = "";
         $nohup = "nohup ";
         $php = "/usr/bin/php ";
@@ -389,7 +388,7 @@ class NotifyBizComponent extends Component
             $cmd .= " -u " . $to_user_list;
         }
         $cmd .= " -b " . Router::fullBaseUrl();
-        $cmd .= " -s " . $session_id;
+        $cmd .= " -s " . $this->Session->id();
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);

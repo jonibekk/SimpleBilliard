@@ -41,8 +41,13 @@ class SendMailShell extends AppShell
     public function startup()
     {
         parent::startup();
+        if ($this->params['session_id']) {
+            CakeSession::destroy();
+            CakeSession::id($this->params['session_id']);
+            CakeSession::start();
+        }
         $this->components = new ComponentCollection();
-        $this->Lang = $this->components->load('Lang');
+        $this->Lang = new LangComponent($this->components);
         $this->AppController = new AppController();
         $this->components->disable('Security');
     }
@@ -62,7 +67,8 @@ class SendMailShell extends AppShell
                 'help'   => 'SendMailのidを元にメールを送信する',
                 'parser' => [
                     'options' => [
-                        'id' => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
+                        'id'         => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
+                        'session_id' => ['short' => 's', 'help' => 'Session ID', 'required' => true,],
                     ]
                 ]
             ],
@@ -70,7 +76,8 @@ class SendMailShell extends AppShell
                 'help'   => 'SendMailのidを元に通知メールを送信する',
                 'parser' => [
                     'options' => [
-                        'id' => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
+                        'id'         => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
+                        'session_id' => ['short' => 's', 'help' => 'Session ID', 'required' => true,],
                     ]
                 ]
             ],
@@ -158,7 +165,7 @@ class SendMailShell extends AppShell
                 'from_user_name' => $data['FromUser']['display_username'],
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
-                'body' => json_decode($data['Notification']['item_name'], true),
+                'body'           => json_decode($data['Notification']['item_name'], true),
             ];
             $this->_sendMailItem($options, $viewVars);
 
