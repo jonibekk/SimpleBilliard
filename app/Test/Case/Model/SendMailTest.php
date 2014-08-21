@@ -92,6 +92,11 @@ class SendMailTest extends CakeTestCase
             'team_id'  => 1
         ];
         $this->SendMail->Notification->save($notify);
+        $send_mail = [
+            'template_type'   => 1,
+            'notification_id' => $this->SendMail->Notification->getLastInsertID()
+        ];
+        $this->SendMail->save($send_mail);
         $this->SendMail->isNotifySentBefore($this->SendMail->Notification->getLastInsertID());
     }
 }
