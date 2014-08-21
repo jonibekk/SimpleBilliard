@@ -244,7 +244,10 @@ class Post extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
-        return $res;
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
     }
 
     public function isMyPost($post_id)
@@ -257,7 +260,10 @@ class Post extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
-        return $res;
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
     }
 
     public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
@@ -338,19 +344,17 @@ class Post extends AppModel
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {
                 //アクセス可能かチェック
-                //公開か？
-                $p_list = $this->isPublic($this->orgParams['post_id']);
-                //自分の投稿か？
-                if (empty($p_list)) {
-                    $p_list = $this->isMyPost($this->orgParams['post_id']);
-                }
-                //自分が共有範囲指定された投稿か？
-                if (empty($p_list)) {
-                    $p_list = $this->PostShareUser->isShareWithMe($this->orgParams['post_id']);
-                }
-                //自分のサークルが共有範囲指定された投稿か？
-                if (empty($p_list)) {
-                    $p_list = $this->PostShareCircle->isMyCirclePost($this->orgParams['post_id']);
+                if (
+                    //公開か？
+                    $this->isPublic($this->orgParams['post_id']) ||
+                    //自分の投稿か？
+                    $this->isMyPost($this->orgParams['post_id']) ||
+                    //自分が共有範囲指定された投稿か？
+                    $this->PostShareUser->isShareWithMe($this->orgParams['post_id']) ||
+                    //自分のサークルが共有範囲指定された投稿か？
+                    $this->PostShareCircle->isMyCirclePost($this->orgParams['post_id'])
+                ) {
+                    $p_list = $this->orgParams['post_id'];
                 }
             }
         }

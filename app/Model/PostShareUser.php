@@ -89,7 +89,10 @@ class PostShareUser extends AppModel
         ];
         $res = $this->find('list', $options);
         $this->primaryKey = $backupPrimaryKey;
-        return $res;
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
     }
 
     public function getShareUsersByPost($post_id)

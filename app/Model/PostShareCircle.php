@@ -92,7 +92,10 @@ class PostShareCircle extends AppModel
         ];
         $res = $this->find('list', $options);
         $this->primaryKey = $backupPrimaryKey;
-        return $res;
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
     }
 
     public function getShareCirclesAndMembers($post_id)
