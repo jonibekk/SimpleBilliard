@@ -135,6 +135,26 @@ footer p {
     font-weight: normal;
 }
 
+.link-light-red {
+    color: #d1bab8;
+}
+
+.link-light-red:hover,
+.link-light-red:hover,
+.link-light-red:hover {
+    color: #91170a;
+}
+
+.gl-feed-text a {
+    color: #d1bab8;
+}
+
+.gl-feed-text a:hover,
+.gl-feed-text a:hover,
+.gl-feed-text a:hover {
+    color: #91170a;
+}
+
 .link-gray {
     color: #c1c4c7;
 }
@@ -143,6 +163,17 @@ footer p {
 .link-gray:active,
 .link-gray:focus {
     color: #b4b8bf;
+}
+
+.link-dark-gray {
+    color: #808080;
+}
+
+.link-dark-gray:hover,
+.link-dark-gray:active,
+.link-dark-gray:focus {
+    color: #505050;
+    text-decoration-color: #505050;
 }
 
 .zeroclipboard-is-hover {
@@ -1206,6 +1237,10 @@ ul.gl-input-images > li {
 
     .gl-s2-post-dropdown {
         width: 368px !important;
+    }
+
+    .circle-link {
+        width: 91%;
     }
 
 }
