@@ -903,24 +903,19 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-        $user_id = 1;
+        $user_id = 5;
         $team_id = 1;
         $post_data = [
-            'Post'    => [
-                'user_id' => $user_id,
-                'team_id' => $team_id,
-                'body'    => 'test'
+            'Post' => [
+                'user_id'    => $user_id,
+                'team_id'    => $team_id,
+                'public_flg' => false,
+                'body'       => 'test'
             ],
-            'Comment' => [
-                [
-                    'user_id' => $user_id,
-                    'team_id' => $team_id,
-                    'body'    => 'test'
-                ]
-            ]
         ];
-        $Posts->Post->saveAll($post_data);
-        $this->testAction('/post_permanent/1');
+        $Posts->Post->save($post_data);
+
+        $this->testAction('/post_permanent/' . $Posts->Post->getLastInsertID());
     }
 
     function _getPostsCommonMock()
