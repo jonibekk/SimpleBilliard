@@ -47,9 +47,9 @@
             <?=
             $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                        ['class' => 'gl-feed-img']) ?>
-            <div class="font-size_14"><?= h($post['User']['display_username']) ?></div>
-            <div class="font-size_11">
-                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span> ･ </span>
+            <div class="font-size_14 font-verydark"><?= h($post['User']['display_username']) ?></div>
+            <div class="font-size_11 font-lightgray">
+                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font-lightgray"> ･ </span>
                 <?
                 //公開の場合
                 if ($post['Post']['public_flg']): ?>
@@ -82,8 +82,8 @@
                 <? endif; ?>
             </div>
         </div>
-        <div class="col col-xxs-12 gl-feed-text showmore font-size_14">
-            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+        <div class="col col-xxs-12 gl-feed-text showmore font-size_14 font-verydark">
+        <?= $this->TextEx->autoLink($post['Post']['body']) ?>
         </div>
 
         <?
@@ -201,18 +201,18 @@
                model_id="<?= $post['Post']['id'] ?>"
                like_type="post">
                 <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
-            <span> ･ </span>
+            <span class="font-lightgray"> ･ </span>
             <a class="trigger-click link-rose-red"
                href="#"
                      target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
                 __d('gl',
-                    "コメントする") ?></a><span> ･ </span>
+                    "コメントする") ?></a><span class="font-lightgray"> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
                                class="modal-ajax-get link-rose-red">
                             <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
-                            </a><span> ･ </span>
+                            </a><span class="font-lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"
                class="modal-ajax-get link-rose-red"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>

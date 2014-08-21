@@ -43,8 +43,8 @@ if (!isset($form)) {
         <div class="font-size_12 font-weight_bold modalFeedTextPadding">
             <?= h($circle['Circle']['name']) ?></div>
 
-        <div class="font-size_12 color9197a3 modalFeedTextPaddingSmall">
-            <?
+        <div class="font-size_12 font-lightgray modalFeedTextPaddingSmall">
+        <?
             $title = '<ul class="gl-user-list-in-tooltip">';
             foreach ($circle['CircleMember'] as $member) {
                 $img = $this->Upload->uploadImage($member, 'User.photo', ['style' => 'small'],
