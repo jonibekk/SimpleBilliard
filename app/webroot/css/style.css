@@ -95,8 +95,12 @@ footer p {
     font-weight: bold;
 }
 
-.color9197a3 {
+.font-lightgray {
     color: #9197a3;
+}
+
+.font-verydark {
+    color: #231814;
 }
 
 /*/Fontの指定*/

@@ -21,8 +21,8 @@
         <?= h($user['display_username']) ?></div>
 
         <? if ($created): ?>
-            <div class="font-size_12 color9197a3 modalFeedTextPaddingSmall">
-                <?= $this->TimeEx->elapsedTime(h($created)) ?>
+            <div class="font-size_12 font-lightgray modalFeedTextPaddingSmall">
+            <?= $this->TimeEx->elapsedTime(h($created)) ?>
             </div>
         <? endif; ?>
     </div>
