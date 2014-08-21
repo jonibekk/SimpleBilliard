@@ -46,10 +46,10 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <div class="gl-comment-name"><?= h($user['display_username']) ?></div>
+                <div class="gl-comment-name font-verydark"><?= h($user['display_username']) ?></div>
             </div>
             <div class="col col-xxs-12 showmore gl-comment-text">
-                <div class="gl-comment-contents"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+                <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
@@ -164,17 +164,19 @@
             <? endif; ?>
 
             <div class="gl-comment-info">
-            <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span> ･ </span>
+                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font-lightgray"> ･ </span>
                 <a href="#" class="click-like link-rose-red"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
-                    <?= empty($like) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a><span> ･ </span>
+                    <?= empty($like) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a><span
+                    class="font-lightgray"> ･ </span>
             <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"
                                class="modal-ajax-get link-rose-red">
                             <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
-                                    id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span> ･ </span>
+                                    id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
+                    class="font-lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
                class="modal-ajax-get link-rose-red"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
