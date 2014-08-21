@@ -53,11 +53,12 @@ class NotifyShell extends AppShell
     {
         $parser = parent::getOptionParser();
         $options = [
-            'type'       => ['short' => 't', 'help' => '通知タイプ', 'required' => true,],
-            'session_id' => ['short' => 's', 'help' => 'セッションID', 'required' => true,],
-            'base_url'  => ['short' => 'b', 'help' => 'ベースURL', 'required' => true,],
-            'model_id'   => ['short' => 'm', 'help' => 'モデルID', 'required' => false,],
-            'user_list' => ['short' => 'u', 'help' => '送信先ユーザリスト', 'required' => false,],
+            'type'         => ['short' => 't', 'help' => '通知タイプ', 'required' => true,],
+            'session_id'   => ['short' => 's', 'help' => 'セッションID', 'required' => true,],
+            'base_url'     => ['short' => 'b', 'help' => 'ベースURL', 'required' => true,],
+            'model_id'     => ['short' => 'm', 'help' => 'モデルID', 'required' => false,],
+            'sub_model_id' => ['short' => 'n', 'help' => 'サブモデルID', 'required' => false,],
+            'user_list'    => ['short' => 'u', 'help' => '送信先ユーザリスト', 'required' => false,],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -69,7 +70,8 @@ class NotifyShell extends AppShell
         if ($this->params['user_list']) {
             $to_user_list = json_decode(base64_decode($this->params['user_list']), true);
         }
-        $this->NotifyBiz->sendNotify($this->params['type'], $this->params['model_id'], $to_user_list);
+        $this->NotifyBiz->sendNotify($this->params['type'], $this->params['model_id'], $this->params['sub_model_id'],
+                                     $to_user_list);
     }
 
 }
