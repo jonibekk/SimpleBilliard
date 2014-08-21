@@ -49,19 +49,22 @@ else {
             <?= $this->fetch('content'); ?>
         </div>
         <div class="col-md-4 visible-md visible-lg layout-goal">
-            <div class="well layout-goal_padding design-goal">
-                <p>test</p>
+            <img src="../img/develop--goals-column.jpg" class="develop--goals-column" alt="ちゃんと消しますよ？">
+            <!--
+                        <div class="well layout-goal_padding design-goal">
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
-            </div>
+                            <p>test</p>
+                        </div>
+            -->
         </div>
     </div>
 
