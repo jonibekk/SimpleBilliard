@@ -51,6 +51,9 @@
             <div class="col col-xxs-12 showmore gl-comment-text">
                 <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
+            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+                <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
+            <? endif; ?>
 
             <?
             $photo_count = 0;
@@ -159,9 +162,6 @@
                 </div>
             <? endif; ?>
 
-            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-                <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
-            <? endif; ?>
 
             <div class="gl-comment-info">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font-lightgray"> ･ </span>

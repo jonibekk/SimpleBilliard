@@ -806,6 +806,32 @@ ul.gl-input-images > li {
     box-shadow: none !important;
 }
 
+/*注意:feed-edit-formとcomment-edit-formはMediaQueryの切り替え毎にwidthをきっちり指定しないと崩れる恐れあり*/
+.edit-form {
+    color: #231814;
+    border-radius: 0;
+    box-shadow: none !important;
+    padding-top: 2px;
+    padding-right: 2px !important;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    margin-left: -3px;
+    margin-right: -3px;
+    resize: none;
+}
+
+.feed-edit-form {
+    width: 101%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.comment-edit-form {
+    width: 102%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
 .border-gray:hover {
     border-bottom: 1px solid #666;
 }

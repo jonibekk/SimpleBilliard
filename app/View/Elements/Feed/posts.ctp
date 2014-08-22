@@ -85,6 +85,11 @@
         <div class="col col-xxs-12 gl-feed-text showmore font-size_14 font-verydark">
         <?= $this->TextEx->autoLink($post['Post']['body']) ?>
         </div>
+        <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+            <div class="col col-xxs-12 gl-feed-edit">
+                <?= $this->element('Feed/post_edit_form', compact('post')) ?>
+            </div>
+        <? endif; ?>
 
         <?
         $photo_count = 0;
