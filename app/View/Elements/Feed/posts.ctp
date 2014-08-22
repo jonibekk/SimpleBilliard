@@ -26,6 +26,7 @@
                             <li><a href="#" class="target-toggle-click"
                                    target-id="PostEditForm_<?= $post['Post']['id'] ?>"
                                    click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
+                                   hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
                                     ><?= __d('gl', "投稿を編集") ?></a>
                             </li>
                         <? endif ?>
@@ -63,34 +64,34 @@
                 elseif (!empty($post['PostShareUser']) && !empty($post['PostShareCircle'])): ?>
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
                        class="modal-ajax-get-share-circles-users link-dark-gray">
-                    <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークル他に共有") ?>
+                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークル他に共有") ?>
                     </a>
                 <?
                 //共有サークルのみ
                 elseif (!empty($post['PostShareCircle'])): ?>
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
                        class="modal-ajax-get-share-circles-users link-dark-gray">
-                    <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークルに共有") ?>
+                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークルに共有") ?>
                     </a>
                 <?
                 //共有ユーザのみ
                 elseif (!empty($post['PostShareUser'])): ?>
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
                        class="modal-ajax-get-share-circles-users link-dark-gray">
-                    <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "メンバーに共有") ?>
+                        <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "メンバーに共有") ?>
                     </a>
                 <? endif; ?>
             </div>
-        </div>
-        <div class="col col-xxs-12 gl-feed-text showmore font-size_14 font-verydark">
-        <?= $this->TextEx->autoLink($post['Post']['body']) ?>
         </div>
         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
             <div class="col col-xxs-12 gl-feed-edit">
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
-
+        <div class="col col-xxs-12 gl-feed-text showmore font-size_14 font-verydark"
+             id="PostTextBody_<?= $post['Post']['id'] ?>">
+            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+        </div>
         <?
         $photo_count = 0;
         for ($i = 1; $i <= 5; $i++) {
@@ -209,13 +210,13 @@
             <span class="font-lightgray"> ･ </span>
             <a class="trigger-click link-rose-red"
                href="#"
-                     target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
+               target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
                 __d('gl',
                     "コメントする") ?></a><span class="font-lightgray"> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
                                class="modal-ajax-get link-rose-red">
-                            <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
+                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
                             </a><span class="font-lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"

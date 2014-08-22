@@ -178,9 +178,13 @@ function imageLazyOn() {
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
+
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     var click_target_id = $obj.attr("click-target-id");
+    if ($obj.attr("hidden-target-id")) {
+        $('#' + $obj.attr("hidden-target-id")).hide();
+    }
     $("#" + target_id).toggle();
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).trigger('click');
