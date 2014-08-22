@@ -723,7 +723,7 @@ class User extends AppModel
     public function updateDefaultTeam($team_id, $force = false)
     {
         if (!$this->me['default_team_id'] || $force) {
-            $this->id = $this->me['id'];
+            $this->id = $this->my_uid;
             $this->saveField('default_team_id', $team_id);
             return true;
         }
@@ -743,7 +743,7 @@ class User extends AppModel
             'fields'     => $this->profileFields,
         ];
         if ($not_me) {
-            $options['conditions']['NOT']['User.id'] = $this->me['id'];
+            $options['conditions']['NOT']['User.id'] = $this->my_uid;
         }
         $res = $this->find('all', $options);
         return $res;

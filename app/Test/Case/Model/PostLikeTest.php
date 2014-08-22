@@ -48,7 +48,7 @@ class PostLikeTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
-        $this->PostLike->me['id'] = $uid;
+        $this->PostLike->my_uid = $uid;
         $this->PostLike->current_team_id = $team_id;
         $this->PostLike->changeLike(null);
     }

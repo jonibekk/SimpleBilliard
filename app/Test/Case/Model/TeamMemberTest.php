@@ -155,7 +155,7 @@ class TeamMemberTest extends CakeTestCase
             ]
         ];
         $this->TeamMember->Team->saveAll($data);
-        $this->TeamMember->me['id'] = 1;
+        $this->TeamMember->my_uid = 1;
         $this->TeamMember->getWithTeam();
     }
 
@@ -222,7 +222,7 @@ class TeamMemberTest extends CakeTestCase
         $uid = 1;
         $team_id = 1;
         $this->TeamMember->current_team_id = $team_id;
-        $this->TeamMember->me['id'] = $uid;
+        $this->TeamMember->my_uid = $uid;
         $this->TeamMember->getAllMemberUserIdList(false);
     }
 
@@ -231,7 +231,7 @@ class TeamMemberTest extends CakeTestCase
         $uid = 1;
         $team_id = 1;
         $this->TeamMember->current_team_id = $team_id;
-        $this->TeamMember->me['id'] = $uid;
+        $this->TeamMember->my_uid = $uid;
         $this->TeamMember->incrementNotifyUnreadCount([1]);
         $this->TeamMember->incrementNotifyUnreadCount([]);
     }

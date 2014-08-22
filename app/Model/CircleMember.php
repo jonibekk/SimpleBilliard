@@ -49,7 +49,7 @@ class CircleMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'user_id' => $this->me['id'],
+                'user_id' => $this->my_uid,
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => ['circle_id'],
@@ -62,7 +62,7 @@ class CircleMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'CircleMember.user_id' => $this->me['id'],
+                'CircleMember.user_id' => $this->my_uid,
                 'CircleMember.team_id' => $this->current_team_id,
             ],
             'fields'     => [
@@ -103,7 +103,7 @@ class CircleMember extends AppModel
             unset($options['conditions']['admin_flg']);
         }
         if (!$with_me) {
-            $options['conditions']['NOT']['user_id'] = $this->me['id'];
+            $options['conditions']['NOT']['user_id'] = $this->my_uid;
         }
         $res = $this->find('list', $options);
         $this->primaryKey = $primary_backup;
@@ -153,7 +153,7 @@ class CircleMember extends AppModel
     function isBelong($circle_id, $user_id = null)
     {
         if (!$user_id) {
-            $user_id = $this->me['id'];
+            $user_id = $this->my_uid;
         }
         $options = [
             'conditions' => [
@@ -176,7 +176,7 @@ class CircleMember extends AppModel
             'CircleMember.team_id'   => $this->current_team_id,
         ];
         if ($without_me) {
-            $conditions['NOT']['CircleMember.user_id'] = $this->me['id'];
+            $conditions['NOT']['CircleMember.user_id'] = $this->my_uid;
         }
 
         $res = $this->updateAll(['CircleMember.unread_count' => 'CircleMember.unread_count + 1'], $conditions);
@@ -187,7 +187,7 @@ class CircleMember extends AppModel
     {
         $conditions = [
             'CircleMember.circle_id' => $circle_id,
-            'CircleMember.user_id'   => $this->me['id'],
+            'CircleMember.user_id'   => $this->my_uid,
             'CircleMember.team_id'   => $this->current_team_id,
         ];
         $res = $this->updateAll(['CircleMember.unread_count' => $set_count], $conditions);
@@ -228,7 +228,7 @@ class CircleMember extends AppModel
         if (!empty($un_join_circles)) {
             $conditions = [
                 'CircleMember.circle_id' => $un_join_circles,
-                'CircleMember.user_id'   => $this->me['id'],
+                'CircleMember.user_id'   => $this->my_uid,
                 'CircleMember.team_id'   => $this->current_team_id,
             ];
             $this->deleteAll($conditions);
@@ -243,7 +243,7 @@ class CircleMember extends AppModel
             foreach ($join_circles as $circle) {
                 $data[] = [
                     'circle_id' => $circle,
-                    'user_id'   => $this->me['id'],
+                    'user_id'   => $this->my_uid,
                     'team_id'   => $this->current_team_id,
                 ];
             }

@@ -108,7 +108,7 @@ class Notification extends AppModel
         //from_userを保存
         $data = [
             'notification_id' => $this->id,
-            'user_id'         => $this->me['id'],
+            'user_id'         => $this->my_uid,
             'team_id'         => $this->current_team_id,
         ];
         $this->NotifyFromUser->save($data);
@@ -174,7 +174,7 @@ class Notification extends AppModel
                     $notify['NotifyToUser'][0]['unread_flg'] = true;
                     $notify['NotifyFromUser'] = [
                         [
-                            'user_id' => $this->me['id'],
+                            'user_id' => $this->my_uid,
                             'team_id' => $this->current_team_id,
                         ]
                     ];
@@ -194,7 +194,7 @@ class Notification extends AppModel
                     'Notification'   => $data,
                     'NotifyFromUser' => [
                         [
-                            'user_id' => $this->me['id'],
+                            'user_id' => $this->my_uid,
                             'team_id' => $this->current_team_id,
                         ]
                     ],
