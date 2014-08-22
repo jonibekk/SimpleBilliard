@@ -82,7 +82,7 @@ script:
   - mkdir -p build/logs
   - cd ./app
   - ./Console/cake migrations.migration run all
-  - ./Console/cake test app AllTests --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
+  - ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
   - cd ../
 
 after_script:

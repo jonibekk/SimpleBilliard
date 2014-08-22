@@ -21,6 +21,10 @@ class GlEmailComponent extends Component
     public function __construct(ComponentCollection $collection, $settings = array())
     {
         parent::__construct($collection, $settings);
+    }
+
+    public function startup(Controller $controller)
+    {
         CakeSession::start();
         $this->User = ClassRegistry::init('User');
         $this->SendMail = ClassRegistry::init('SendMail');

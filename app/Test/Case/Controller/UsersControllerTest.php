@@ -174,6 +174,8 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session',
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         /** @noinspection PhpUndefinedMethodInspection */
@@ -197,6 +199,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -223,6 +227,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -259,6 +265,8 @@ class UsersControllerTest extends ControllerTestCase
                 'Session'  => ['setFlash'],
                 'Auth',
                 'Security' => ['_validateCsrf', '_validatePost'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -303,6 +311,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth',
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -322,6 +332,8 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session',
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -345,6 +357,8 @@ class UsersControllerTest extends ControllerTestCase
         $Users = $this->generate('Users', [
             'components' => [
                 'Session',
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -383,6 +397,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth',
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -409,6 +425,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth',
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -454,6 +472,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -618,6 +638,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -654,6 +676,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -685,8 +709,29 @@ class UsersControllerTest extends ControllerTestCase
 
     function testPasswordReset()
     {
+        $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
         $this->testAction('/users/password_reset');
+    }
+
+    function testPasswordResetWithParam()
+    {
+        $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
         $this->testAction('/users/password_reset/aaaaa');
+
     }
 
     function testPasswordResetAuthenticated()
@@ -698,6 +743,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -722,6 +769,15 @@ class UsersControllerTest extends ControllerTestCase
 
     function testPasswordResetPost()
     {
+        $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
+
         App::uses('UserTest', 'Test/Case/Model');
         $UserTest = new UserTest;
         $UserTest->setUp();
@@ -735,6 +791,14 @@ class UsersControllerTest extends ControllerTestCase
 
     function testPasswordResetPostToken()
     {
+        $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
         App::uses('UserTest', 'Test/Case/Model');
         $UserTest = new UserTest;
         $UserTest->setUp();
@@ -751,7 +815,15 @@ class UsersControllerTest extends ControllerTestCase
 
     function testPasswordResetPostPassword()
     {
-        $Users = $this->generate('Users');
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
+
         $basic_data = [
             'User'  => [
                 'first_name'     => 'basic',
@@ -784,6 +856,14 @@ class UsersControllerTest extends ControllerTestCase
 
     function testTokenResend()
     {
+        $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
         $this->_testAction('users/token_resend');
     }
 
@@ -796,6 +876,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -819,7 +901,14 @@ class UsersControllerTest extends ControllerTestCase
 
     function testTokenResendPostEmail()
     {
-        $Users = $this->generate('Users');
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
         $basic_data = [
             'User'  => [
                 'first_name'     => 'basic',
@@ -858,6 +947,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -890,6 +981,8 @@ class UsersControllerTest extends ControllerTestCase
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
                 'Security' => ['_validateCsrf', '_validatePost'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         /** @noinspection PhpUndefinedMethodInspection */
@@ -937,6 +1030,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -967,6 +1062,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -998,6 +1095,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1032,6 +1131,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1066,6 +1167,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1093,6 +1196,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1121,6 +1226,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1149,6 +1256,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1176,6 +1285,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1202,6 +1313,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1233,6 +1346,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1263,6 +1378,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1294,6 +1411,8 @@ class UsersControllerTest extends ControllerTestCase
             'components' => [
                 'Session',
                 'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [
@@ -1362,6 +1481,8 @@ class UsersControllerTest extends ControllerTestCase
                 'Auth'     => ['user', 'loggedIn'],
                 'Security' => ['_validateCsrf', '_validatePost'],
                 'Ogp',
+                'NotifyBiz',
+                'GlEmail',
             ]
         ]);
         $value_map = [

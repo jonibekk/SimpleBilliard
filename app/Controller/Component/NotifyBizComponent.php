@@ -37,11 +37,16 @@ class NotifyBizComponent extends Component
     public function __construct(ComponentCollection $collection, $settings = array())
     {
         parent::__construct($collection, $settings);
+
+    }
+
+    public function startup(Controller $controller)
+    {
         CakeSession::start();
         $this->Notification = ClassRegistry::init('Notification');
         $this->NotifySetting = ClassRegistry::init('NotifySetting');
         $this->Post = ClassRegistry::init('Post');
-
+        $this->GlEmail->startup($controller);
     }
 
     function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null)
@@ -359,14 +364,14 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
-
      *
-*@param       $type
+     * @param       $type
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
+
      *
-     * @internal param $id
+*@internal param $id
      */
     public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
     {

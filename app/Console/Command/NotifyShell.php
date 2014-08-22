@@ -41,6 +41,7 @@ class NotifyShell extends AppShell
         $this->AppController = new AppController();
         $this->NotifyBiz = new NotifyBizComponent($this->components);
         $this->components->disable('Security');
+        $this->NotifyBiz->startup($this->AppController);
     }
 
     public function __destruct()
