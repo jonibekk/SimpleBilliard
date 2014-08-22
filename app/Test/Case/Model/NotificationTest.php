@@ -52,7 +52,7 @@ class NotificationTest extends CakeTestCase
     {
         $uid = 1;
         $team_id = 1;
-        $this->Notification->me['id'] = $uid;
+        $this->Notification->my_uid = $uid;
         $this->Notification->current_team_id = $team_id;
         $data = [
             'model_id' => 1,
@@ -73,7 +73,7 @@ class NotificationTest extends CakeTestCase
     {
         $uid = 1;
         $team_id = 1;
-        $this->Notification->me['id'] = $uid;
+        $this->Notification->my_uid = $uid;
         $this->Notification->current_team_id = $team_id;
         $this->Notification->getNotifyFromTodayUtc(1);
     }
@@ -87,9 +87,9 @@ class NotificationTest extends CakeTestCase
     {
         $uid = 1;
         $team_id = 1;
-        $this->Notification->me['id'] = $uid;
+        $this->Notification->my_uid = $uid;
         $this->Notification->current_team_id = $team_id;
-        $this->Notification->Team->TeamMember->me['id'] = $uid;
+        $this->Notification->Team->TeamMember->my_uid = $uid;
         $this->Notification->Team->TeamMember->current_team_id = $team_id;
         $save_data = [
             'Notification' => [

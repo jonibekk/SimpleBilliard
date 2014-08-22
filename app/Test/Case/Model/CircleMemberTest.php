@@ -66,9 +66,9 @@ class CircleMemberTest extends CakeTestCase
 
     function _setDefault($uid, $team_id)
     {
-        $this->CircleMember->me['id'] = $uid;
+        $this->CircleMember->my_uid = $uid;
         $this->CircleMember->current_team_id = $team_id;
-        $this->CircleMember->Circle->me['id'] = $uid;
+        $this->CircleMember->Circle->my_uid = $uid;
         $this->CircleMember->Circle->current_team_id = $team_id;
     }
 

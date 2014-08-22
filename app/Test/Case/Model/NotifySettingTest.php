@@ -71,7 +71,7 @@ class NotifySettingTest extends CakeTestCase
     {
         $uid = 1000000;
         $uid2 = 9999999;
-        $this->NotifySetting->me['id'] = 1;
+        $this->NotifySetting->my_uid = 1;
         $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
         $expected = [
             $uid => ['app' => true, 'email' => true]

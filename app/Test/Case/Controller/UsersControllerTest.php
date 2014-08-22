@@ -1324,7 +1324,7 @@ class UsersControllerTest extends ControllerTestCase
          */
         $Users = $this->_getUsersCommonMock();
         $Users->User->TeamMember->current_team_id = 1;
-        $Users->User->TeamMember->me['id'] = 1;
+        $Users->User->TeamMember->my_uid = 1;
 
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
@@ -1339,10 +1339,10 @@ class UsersControllerTest extends ControllerTestCase
          */
         $Users = $this->_getUsersCommonMock();
         $Users->User->TeamMember->current_team_id = 1;
-        $Users->User->TeamMember->me['id'] = 1;
-        $Users->User->CircleMember->me['id'] = 1;
+        $Users->User->TeamMember->my_uid = 1;
+        $Users->User->CircleMember->my_uid = 1;
         $Users->User->CircleMember->current_team_id = 1;
-        $Users->User->CircleMember->Circle->PostShareCircle->me['id'] = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->my_uid = 1;
         $Users->User->CircleMember->Circle->PostShareCircle->current_team_id = 1;
 
         /** @noinspection PhpUndefinedFieldInspection */
@@ -1393,11 +1393,11 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map)
             );
         /** @noinspection PhpUndefinedFieldInspection */
-        $Users->User->me = ['id' => '1'];
+        $Users->User->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Users->User->CircleMember->me = ['id' => '1'];
+        $Users->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->CircleMember->current_team_id = '1';
 

@@ -35,9 +35,16 @@ class AppModel extends Model
     public $me = [];
 
     /**
+     * 自分のuser_id
+     *
+     * @var int
+     */
+    public $my_uid = null;
+
+    /**
      * 現在のチームID
      *
-     * @var string
+     * @var int
      */
     public $current_team_id = null;
 
@@ -67,12 +74,12 @@ class AppModel extends Model
 
     function _setSessionVariable()
     {
-        if (isset($_SESSION['Auth']['User'])) {
-            $this->me = $_SESSION['Auth']['User'];
-        }
-        if (isset($_SESSION['current_team_id'])) {
-            $this->current_team_id = $_SESSION['current_team_id'];
-        }
+        App::uses('CakeSession', 'Model/Datasource');
+        $Session = new CakeSession();
+
+        $this->me = $Session->read('Auth.User');
+        $this->current_team_id = $Session->read('current_team_id');
+        $this->my_uid = $Session->read('Auth.User.id');
 
     }
 
@@ -236,7 +243,7 @@ class AppModel extends Model
     public function setUid($uid = null)
     {
         if (!$uid) {
-            $this->uid = $this->me['id'];
+            $this->uid = $this->my_uid;
         }
         else {
             $this->uid = $uid;

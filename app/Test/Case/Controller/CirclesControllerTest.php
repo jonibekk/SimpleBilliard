@@ -238,11 +238,11 @@ class CirclesControllerTest extends ControllerTestCase
                       ->will($this->returnValueMap($value_map)
             );
         /** @noinspection PhpUndefinedFieldInspection */
-        $Circles->Circle->me = ['id' => '1'];
+        $Circles->Circle->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Circles->Circle->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Circles->Circle->CircleMember->me = ['id' => '1'];
+        $Circles->Circle->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Circles->Circle->CircleMember->current_team_id = '1';
         return $Circles;

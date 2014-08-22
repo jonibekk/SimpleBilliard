@@ -241,7 +241,7 @@ class NotifyBizComponent extends Component
             return;
         }
         //自分の投稿へのコメントの場合は処理しない
-        if ($post['Post']['user_id'] == $this->Notification->me['id']) {
+        if ($post['Post']['user_id'] == $this->Notification->my_uid) {
             return;
         }
         //通知対象者の通知設定確認
@@ -359,14 +359,14 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
+
      *
-     * @param       $type
+*@param       $type
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
-
      *
-*@internal param $id
+     * @internal param $id
      */
     public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
     {

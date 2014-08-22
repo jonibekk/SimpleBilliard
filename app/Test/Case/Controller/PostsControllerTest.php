@@ -964,39 +964,39 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         //$Posts->NotifyBiz->expects($this->any())->method('sendNotify')->will($this->returnValue(true));
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->me = ['id' => '1'];
+        $Posts->Post->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->me = ['id' => '1'];
+        $Posts->Post->Comment->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostShareCircle->me = ['id' => '1'];
+        $Posts->Post->PostShareCircle->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostShareUser->me = ['id' => '1'];
+        $Posts->Post->PostShareUser->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostShareUser->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostShareCircle->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->User->CircleMember->me = ['id' => '1'];
+        $Posts->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->User->CircleMember->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostRead->me = ['id' => '1'];
+        $Posts->Post->PostRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentRead->me = ['id' => '1'];
+        $Posts->Post->Comment->CommentRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->CommentRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->Comment->CommentLike->me = ['id' => '1'];
+        $Posts->Post->Comment->CommentLike->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->Comment->CommentLike->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Posts->Post->PostLike->me = ['id' => '1'];
+        $Posts->Post->PostLike->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostLike->current_team_id = '1';
 

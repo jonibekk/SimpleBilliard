@@ -172,7 +172,7 @@ class Comment extends AppModel
                 ],
                 'MyCommentLike' => [
                     'conditions' => [
-                        'MyCommentLike.user_id' => $this->me['id'],
+                        'MyCommentLike.user_id' => $this->my_uid,
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
@@ -231,7 +231,7 @@ class Comment extends AppModel
             ]
         ];
         if ($without_me) {
-            $options['conditions']['NOT']['user_id'] = $this->me['id'];
+            $options['conditions']['NOT']['user_id'] = $this->my_uid;
         }
         $res = $this->find('all', $options);
         /** @noinspection PhpDeprecationInspection */
