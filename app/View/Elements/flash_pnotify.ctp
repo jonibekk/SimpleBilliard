@@ -17,7 +17,9 @@
         title: '<?=$title?>',
         text: '<?=$message?>',
         icon: '<?=$icon?>',
-        type: '<?=$type?>'
+        type: '<?=$type?>',
+        delay: 4000,
+        mouse_reset: false
     });
 </script>
 <!-- END app/View/Elements/flash_pnotify.ctp -->
