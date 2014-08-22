@@ -30,7 +30,7 @@ $this->Form->input('body', [
     'label'          => false,
     'type'           => 'textarea',
     'rows'           => 1,
-    'class'          => 'form-control tiny-form-text blank-disable',
+    'class' => 'form-control tiny-form-text blank-disable edit-form feed-edit-form',
     'target_show_id' => "PostEdit_{$post['Post']['id']}",
     'target-id'      => "PostEditSubmit_{$post['Post']['id']}",
     'value'          => $post['Post']['body'],
@@ -49,8 +49,8 @@ $this->Form->input('body', [
 </div>
 
 <div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">
-    <a href="#" class="target-show-this-del" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
-        <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
+    <a href="#" class="target-show-this-del font-size_12" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
+        <i class="fa fa-picture-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
     </a>
 
     <?=
