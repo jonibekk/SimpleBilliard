@@ -73,7 +73,7 @@ class PostTest extends CakeTestCase
         $res = $this->Post->add($postData, Post::TYPE_NORMAL, $uid, $team_id);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
 
-        $this->Post->me['id'] = $uid;
+        $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $res = $this->Post->add($postData);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
@@ -83,17 +83,17 @@ class PostTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
-        $this->Post->me['id'] = $uid;
+        $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
-        $this->Post->PostRead->me['id'] = $uid;
+        $this->Post->PostRead->my_uid = $uid;
         $this->Post->PostRead->current_team_id = $team_id;
-        $this->Post->Comment->CommentRead->me['id'] = $uid;
+        $this->Post->Comment->CommentRead->my_uid = $uid;
         $this->Post->Comment->CommentRead->current_team_id = $team_id;
-        $this->Post->PostShareCircle->me['id'] = $uid;
+        $this->Post->PostShareCircle->my_uid = $uid;
         $this->Post->PostShareCircle->current_team_id = $team_id;
-        $this->Post->PostShareUser->me['id'] = $uid;
+        $this->Post->PostShareUser->my_uid = $uid;
         $this->Post->PostShareUser->current_team_id = $team_id;
-        $this->Post->User->CircleMember->me['id'] = $uid;
+        $this->Post->User->CircleMember->my_uid = $uid;
         $this->Post->User->CircleMember->current_team_id = $team_id;
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
     }
@@ -103,13 +103,13 @@ class PostTest extends CakeTestCase
         $uid = '1';
         $team_id = '1';
         $post_id = 1;
-        $this->Post->me['id'] = $uid;
+        $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
-        $this->Post->Team->TeamMember->me['id'] = $uid;
+        $this->Post->Team->TeamMember->my_uid = $uid;
         $this->Post->Team->TeamMember->current_team_id = $team_id;
-        $this->Post->PostShareCircle->me['id'] = $uid;
+        $this->Post->PostShareCircle->my_uid = $uid;
         $this->Post->PostShareCircle->current_team_id = $team_id;
-        $this->Post->PostShareUser->me['id'] = $uid;
+        $this->Post->PostShareUser->my_uid = $uid;
         $this->Post->PostShareUser->current_team_id = $team_id;
 
         $this->Post->getShareAllMemberList($post_id);
@@ -123,7 +123,7 @@ class PostTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
-        $this->Post->me['id'] = $uid;
+        $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $data = [
             'user_id'    => $uid,
@@ -141,7 +141,7 @@ class PostTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
-        $this->Post->me['id'] = $uid;
+        $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $data = [
             'user_id'    => $uid,

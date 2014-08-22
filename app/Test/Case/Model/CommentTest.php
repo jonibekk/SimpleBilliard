@@ -59,14 +59,14 @@ class CommentTest extends CakeTestCase
 
     function testGetCountCommentUniqueUser()
     {
-        $this->Comment->me['id'] = 1;
+        $this->Comment->my_uid = 1;
         $this->Comment->current_team_id = 1;
         $this->Comment->getCountCommentUniqueUser(1, [1]);
     }
 
     function testGetCommentedUniqueUsersList()
     {
-        $this->Comment->me['id'] = 1;
+        $this->Comment->my_uid = 1;
         $this->Comment->current_team_id = 1;
         $this->Comment->getCommentedUniqueUsersList(1);
     }

@@ -67,7 +67,7 @@ class PostShareCircleTest extends CakeTestCase
 
     public function testAdd()
     {
-        $this->PostShareCircle->me['id'] = 1;
+        $this->PostShareCircle->my_uid = 1;
         $this->PostShareCircle->current_team_id = 1;
         $this->PostShareCircle->add(1, []);
         $this->PostShareCircle->add(1, [1]);
@@ -81,9 +81,9 @@ class PostShareCircleTest extends CakeTestCase
 
     public function testIsMyCirclePost()
     {
-        $this->PostShareCircle->me['id'] = 1;
+        $this->PostShareCircle->my_uid = 1;
         $this->PostShareCircle->current_team_id = 1;
-        $this->PostShareCircle->Circle->CircleMember->me['id'] = 1;
+        $this->PostShareCircle->Circle->CircleMember->my_uid = 1;
         $this->PostShareCircle->Circle->CircleMember->current_team_id = 1;
         $this->PostShareCircle->isMyCirclePost(1);
     }

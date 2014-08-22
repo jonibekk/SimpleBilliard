@@ -43,14 +43,14 @@ class PostLike extends AppModel
             'count'   => 0
         ];
 
-        $exists = $this->find('first', ['conditions' => ['post_id' => $post_id, 'user_id' => $this->me['id']]]);
+        $exists = $this->find('first', ['conditions' => ['post_id' => $post_id, 'user_id' => $this->my_uid]]);
         if (isset($exists['PostLike']['id'])) {
             $this->delete($exists['PostLike']['id']);
             $this->updateCounterCache(['post_id' => $exists['PostLike']['id']]);
         }
         else {
             $data = [
-                'user_id' => $this->me['id'],
+                'user_id' => $this->my_uid,
                 'team_id' => $this->current_team_id,
                 'post_id' => $post_id
             ];

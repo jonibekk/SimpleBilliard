@@ -134,7 +134,7 @@ class SendMail extends AppModel
                 $send_to_users[] = [
                     'user_id'      => $val,
                     'send_mail_id' => $this->id,
-                    'team_id'      => $this->current_team_id,
+                    'team_id'      => $this->SendMailToUser->current_team_id,
                 ];
             }
             $this->SendMailToUser->saveAll($send_to_users);

@@ -48,7 +48,7 @@ class PostReadTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
-        $this->PostRead->me['id'] = $uid;
+        $this->PostRead->my_uid = $uid;
         $this->PostRead->current_team_id = $team_id;
         $test_save_data = [
             'Post' => [

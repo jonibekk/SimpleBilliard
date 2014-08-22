@@ -54,7 +54,7 @@ class CommentLikeTest extends CakeTestCase
 
     function _setDefault($uid, $team_id)
     {
-        $this->CommentLike->me['id'] = $uid;
+        $this->CommentLike->my_uid = $uid;
         $this->CommentLike->current_team_id = $team_id;
     }
 

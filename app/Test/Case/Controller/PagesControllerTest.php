@@ -227,27 +227,27 @@ class PagesControllerTest extends ControllerTestCase
         ];
         $Pages->Post->PostShareUser->save($share_user_data);
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->me = ['id' => '1'];
+        $Pages->Post->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostRead->me = ['id' => '1'];
+        $Pages->Post->PostRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostShareUser->me = ['id' => '1'];
+        $Pages->Post->PostShareUser->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostShareCircle->me = ['id' => '1'];
+        $Pages->Post->PostShareCircle->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostShareUser->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostShareCircle->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
+        $Pages->Post->Comment->CommentRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->User->CircleMember->me = ['id' => '1'];
+        $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
         $this->testAction('/');
@@ -317,27 +317,27 @@ class PagesControllerTest extends ControllerTestCase
         ];
         $Pages->Post->PostShareUser->save($share_user_data);
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->me = ['id' => '1'];
+        $Pages->Post->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostRead->me = ['id' => '1'];
+        $Pages->Post->PostRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostShareUser->me = ['id' => '1'];
+        $Pages->Post->PostShareUser->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostShareCircle->me = ['id' => '1'];
+        $Pages->Post->PostShareCircle->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostShareUser->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostShareCircle->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
+        $Pages->Post->Comment->CommentRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->User->CircleMember->me = ['id' => '1'];
+        $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
         $this->testAction('/pages/display/home/circle_id:11111111');
@@ -380,27 +380,27 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->me = ['id' => '1'];
+        $Pages->Post->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostRead->me = ['id' => '1'];
+        $Pages->Post->PostRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->Comment->CommentRead->me = ['id' => '1'];
+        $Pages->Post->Comment->CommentRead->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->Comment->CommentRead->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostShareUser->me = ['id' => '1'];
+        $Pages->Post->PostShareUser->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->PostShareCircle->me = ['id' => '1'];
+        $Pages->Post->PostShareCircle->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostShareUser->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->PostShareCircle->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Pages->Post->User->CircleMember->me = ['id' => '1'];
+        $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
 

@@ -1610,3 +1610,60 @@ ul.gl-input-images > li {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
+.dropdown-menu {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.frame-arrow-icon {
+    top: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ccc;
+}
+
+.frame-arrow-pic {
+    top: 98%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ccc;
+}
+
+.frame-arrow-icon::before {
+    content: "";
+    border: 8px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 8px solid #fff;
+    position: absolute;
+    right: 6%;
+    top: -15px;
+    z-index: 2;
+}
+
+.frame-arrow-icon::after {
+    content: "";
+    border: 8px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 8px solid #ccc;
+    position: absolute;
+    right: 6%;
+    top: -16px;
+}
+
+.frame-arrow-pic::before {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid #fff;
+    position: absolute;
+    right: 14%;
+    top: -14px;
+    z-index: 2;
+}
+
+.frame-arrow-pic::after {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid #ccc;
+    position: absolute;
+    right: 14%;
+    top: -15px;
+}

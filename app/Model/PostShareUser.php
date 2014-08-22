@@ -60,7 +60,7 @@ class PostShareUser extends AppModel
 
         $options = [
             'conditions' => [
-                'user_id'                  => $this->me['id'],
+                'user_id'                  => $this->my_uid,
                 'team_id'                  => $this->current_team_id,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
@@ -82,7 +82,7 @@ class PostShareUser extends AppModel
         $options = [
             'conditions' => [
                 'post_id' => $post_id,
-                'user_id' => $this->me['id'],
+                'user_id' => $this->my_uid,
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => ['post_id'],

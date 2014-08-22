@@ -624,12 +624,12 @@ class UserTest extends CakeTestCase
     function testUpdateDefaultTeam()
     {
         $uid = $this->generateBasicUser();
-        $this->User->me['id'] = $uid;
+        $this->User->my_uid = $uid;
         $this->User->me['default_team_id'] = null;
         $res = $this->User->updateDefaultTeam('team_aaaaaaa');
         $this->assertTrue($res, "[正常]デフォルトチーム更新");
 
-        $this->User->me['id'] = $uid;
+        $this->User->my_uid = $uid;
         $this->User->me['default_team_id'] = "team_xxxxxxxx";
         $res = $this->User->updateDefaultTeam('team_aaaaaaa');
         $this->assertFalse($res, "[異常]デフォルトチーム更新");
@@ -637,7 +637,7 @@ class UserTest extends CakeTestCase
 
     function testGetProfileAndEmail()
     {
-        $this->User->me['id'] = 1;
+        $this->User->my_uid = 1;
         $this->User->me['language'] = "eng";
         $this->User->getProfileAndEmail(1, 'jpn');
     }
