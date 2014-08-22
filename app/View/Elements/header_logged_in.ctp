@@ -29,8 +29,8 @@
                 <a href="#" data-toggle="dropdown" id="download">
                         <i class="fa fa-plus-circle"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                        <? if ($this->Session->read('current_team_id')): ?>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
+                    <? if ($this->Session->read('current_team_id')): ?>
                             <li>
                                 <a href="#" data-toggle="modal" data-target="#modal_add_circle"><?=
                                     __d('gl',
@@ -52,8 +52,8 @@
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
                                                    ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
                         <i class="fa fa-caret-down"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                        <li>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
+                    <li>
                             <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
                         </li>
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
