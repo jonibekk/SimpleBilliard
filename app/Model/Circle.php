@@ -98,7 +98,7 @@ class Circle extends AppModel
         'CircleMember'    => [
             'dependent' => true,
         ],
-        'CircleAdmin' => [
+        'CircleAdmin'     => [
             'className'  => 'CircleMember',
             'conditions' => ['CircleAdmin.admin_flg' => true],
         ],
@@ -122,7 +122,7 @@ class Circle extends AppModel
         $data['Circle']['team_id'] = $this->current_team_id;
         $data['CircleMember'][0]['team_id'] = $this->current_team_id;
         $data['CircleMember'][0]['admin_flg'] = true;
-        $data['CircleMember'][0]['user_id'] = $this->me['id'];
+        $data['CircleMember'][0]['user_id'] = $this->my_uid;
         if (!empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
@@ -194,7 +194,7 @@ class Circle extends AppModel
             'contain'    => [
                 'CircleMember' => [
                     'conditions' => [
-                        'NOT' => ['CircleMember.user_id' => $this->me['id']]
+                        'NOT' => ['CircleMember.user_id' => $this->my_uid]
                     ]
                 ]
             ]
@@ -230,7 +230,7 @@ class Circle extends AppModel
                 ],
                 'CircleAdmin'  => [
                     'conditions' => [
-                        'CircleAdmin.user_id'   => $this->me['id'],
+                        'CircleAdmin.user_id'   => $this->my_uid,
                         'CircleAdmin.admin_flg' => true
                     ],
                     'fields'     => [

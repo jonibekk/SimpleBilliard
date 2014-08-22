@@ -43,14 +43,14 @@ class CommentLike extends AppModel
             'count'   => 0
         ];
 
-        $exists = $this->find('first', ['conditions' => ['comment_id' => $comment_id, 'user_id' => $this->me['id']]]);
+        $exists = $this->find('first', ['conditions' => ['comment_id' => $comment_id, 'user_id' => $this->my_uid]]);
         if (isset($exists['CommentLike']['id'])) {
             $this->delete($exists['CommentLike']['id']);
             $this->updateCounterCache(['comment_id' => $exists['CommentLike']['id']]);
         }
         else {
             $data = [
-                'user_id'    => $this->me['id'],
+                'user_id'    => $this->my_uid,
                 'team_id'    => $this->current_team_id,
                 'comment_id' => $comment_id
             ];

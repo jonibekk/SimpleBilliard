@@ -86,8 +86,8 @@ class TeamMember extends AppModel
             $team_id = $this->current_team_id;
         }
         if (!$uid) {
-            if (isset($this->me['id'])) {
-                $uid = $this->me['id'];
+            if (isset($this->my_uid)) {
+                $uid = $this->my_uid;
             }
             else {
                 return [];
@@ -176,7 +176,7 @@ class TeamMember extends AppModel
             'fields'     => ['user_id'],
         ];
         if (!$with_me) {
-            $options['conditions']['NOT']['user_id'] = $this->me['id'];
+            $options['conditions']['NOT']['user_id'] = $this->my_uid;
         }
         $res = $this->find('list', $options);
         return $res;

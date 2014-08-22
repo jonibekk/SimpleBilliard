@@ -82,7 +82,7 @@ class NotifySetting extends AppModel
         $options = array(
             'conditions' => array(
                 'user_id' => $user_ids,
-                'NOT' => ['user_id' => $this->me['id']]
+                'NOT'     => ['user_id' => $this->my_uid]
             )
         );
         $result = $this->find('all', $options);

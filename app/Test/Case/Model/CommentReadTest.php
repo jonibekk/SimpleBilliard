@@ -49,7 +49,7 @@ class CommentReadTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
-        $this->CommentRead->me['id'] = $uid;
+        $this->CommentRead->my_uid = $uid;
         $this->CommentRead->current_team_id = $team_id;
         $test_save_data = [
             'Post'    => [

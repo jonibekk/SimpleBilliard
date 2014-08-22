@@ -114,7 +114,7 @@ class Post extends AppModel
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'site_photo' => [
+        'site_photo'      => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
@@ -256,7 +256,7 @@ class Post extends AppModel
             'conditions' => [
                 'id'      => $post_id,
                 'team_id' => $this->current_team_id,
-                'user_id' => $this->me['id'],
+                'user_id' => $this->my_uid,
             ]
         ];
         $res = $this->find('list', $options);
@@ -270,7 +270,7 @@ class Post extends AppModel
     {
         $options = [
             'conditions' => [
-                'user_id'                  => $this->me['id'],
+                'user_id'                  => $this->my_uid,
                 'team_id'                  => $this->current_team_id,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
@@ -394,7 +394,7 @@ class Post extends AppModel
                 ],
                 'MyPostLike'      => [
                     'conditions' => [
-                        'MyPostLike.user_id' => $this->me['id'],
+                        'MyPostLike.user_id' => $this->my_uid,
                         'MyPostLike.team_id' => $this->current_team_id,
                     ],
                 ],
@@ -407,7 +407,7 @@ class Post extends AppModel
                     'User'          => ['fields' => $this->User->profileFields],
                     'MyCommentLike' => [
                         'conditions' => [
-                            'MyCommentLike.user_id' => $this->me['id'],
+                            'MyCommentLike.user_id' => $this->my_uid,
                             'MyCommentLike.team_id' => $this->current_team_id,
                         ]
                     ],
@@ -474,7 +474,7 @@ class Post extends AppModel
                                              $this->PostShareUser->getShareUserListByPost($post_id));
         }
         //自分自身を除外
-        if ($key = array_search($this->me['id'], $share_member_list)) {
+        if ($key = array_search($this->my_uid, $share_member_list)) {
             unset($share_member_list[$key]);
         }
         return $share_member_list;

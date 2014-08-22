@@ -67,7 +67,7 @@ class PostShareUserTest extends CakeTestCase
 
     public function testAdd()
     {
-        $this->PostShareUser->me['id'] = 1;
+        $this->PostShareUser->my_uid = 1;
         $this->PostShareUser->current_team_id = 1;
         $this->PostShareUser->add(1, []);
         $this->PostShareUser->add(1, [1]);

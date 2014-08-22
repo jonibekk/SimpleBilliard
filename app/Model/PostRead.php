@@ -42,7 +42,7 @@ class PostRead extends AppModel
         $options = [
             'conditions' => [
                 'post_id' => $post_list,
-                'user_id' => $this->me['id'],
+                'user_id' => $this->my_uid,
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => ['post_id']
@@ -52,7 +52,7 @@ class PostRead extends AppModel
         /** @noinspection PhpDeprecationInspection */
         $read_list = Set::combine($read, '{n}.PostRead.post_id', '{n}.PostRead.post_id');
         $common_data = [
-            'user_id' => $this->me['id'],
+            'user_id' => $this->my_uid,
             'team_id' => $this->current_team_id
         ];
         $post_data = [];

@@ -48,7 +48,7 @@ class CommentRead extends AppModel
             'contain'    => [
                 'CommentRead' => [
                     'conditions' => [
-                        'user_id' => $this->me['id'],
+                        'user_id' => $this->my_uid,
                         'team_id' => $this->current_team_id,
                     ],
                     'fields'     => ['id']
@@ -57,7 +57,7 @@ class CommentRead extends AppModel
         ];
         $all_read = $this->Comment->find('all', $options);
         $common_data = [
-            'user_id' => $this->me['id'],
+            'user_id' => $this->my_uid,
             'team_id' => $this->current_team_id
         ];
         $comment_data = [];
