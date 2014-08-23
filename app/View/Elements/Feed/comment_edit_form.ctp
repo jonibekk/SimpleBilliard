@@ -30,7 +30,7 @@ $this->Form->input('body', [
     'label'          => false,
     'type'           => 'textarea',
     'rows'           => 1,
-    'class' => 'form-control tiny-form-text blank-disable font-size_12',
+    'class' => 'form-control tiny-form-text blank-disable font-size_12 edit-form comment-edit-form',
     'target_show_id' => "CommentEdit_{$comment['id']}",
     'target-id'      => "CommentEditSubmit_{$comment['id']}",
     'value'          => $comment['body'],
@@ -50,7 +50,7 @@ $this->Form->input('body', [
 
 <div class="" style="display: none" id="CommentEdit_<?= $comment['id'] ?>">
     <a href="#" class="target-show-this-del" target-id="CommentEditFormImage_<?= $comment['id'] ?>">
-        <i class="fa fa-file-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
+        <i class="fa fa-picture-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
     </a>
     <?=
     $this->Form->submit(__d('gl', "変更を保存する"),

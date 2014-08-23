@@ -30,6 +30,7 @@
                             <li><a href="#" class="target-toggle-click"
                                    target-id="CommentEditForm_<?= $comment['id'] ?>"
                                    click-target-id="CommentEditFormBody_<?= $comment['id'] ?>"
+                                   hidden-target-id="CommentTextBody_<?= $comment['id'] ?>"
 
                                     ><?= __d('gl', "コメントを編集") ?></a></li>
                             <li><?=
@@ -48,7 +49,10 @@
                 <? endif; ?>
                 <div class="gl-comment-name font-verydark"><?= h($user['display_username']) ?></div>
             </div>
-            <div class="col col-xxs-12 showmore gl-comment-text">
+            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+                <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
+            <? endif; ?>
+            <div class="col col-xxs-12 showmore gl-comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
                 <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
@@ -63,8 +67,8 @@
             <? if ($photo_count): ?>
                 <div class="col col-xxs-12 gl-comment-photo">
 
-                <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
-                        <!-- Indicators -->
+                    <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
                         <? if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
                                 <? $index = 0 ?>
@@ -159,9 +163,6 @@
                 </div>
             <? endif; ?>
 
-            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-                <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
-            <? endif; ?>
 
             <div class="gl-comment-info">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font-lightgray"> ･ </span>
@@ -174,7 +175,7 @@
             <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"
                                class="modal-ajax-get link-rose-red">
-                            <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
+                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
                     class="font-lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
