@@ -16,50 +16,50 @@ class Comment extends AppModel
         'Upload' => [
             'photo1'     => [
                 'styles'  => [
-                    'small' => '511l',
+                    'small' => '420l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'quality' => 40,
             ],
             'photo2'     => [
                 'styles'  => [
-                    'small' => '511l',
+                    'small' => '420l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'quality' => 40,
             ],
             'photo3'     => [
                 'styles'  => [
-                    'small' => '511l',
+                    'small' => '420l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'quality' => 40,
             ],
             'photo4'     => [
                 'styles'  => [
-                    'small' => '511l',
+                    'small' => '420l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'quality' => 40,
             ],
             'photo5'     => [
                 'styles'  => [
-                    'small' => '511l',
+                    'small' => '420l',
                     'large' => '2048l',
                 ],
                 'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'quality' => 40,
             ],
             'site_photo' => [
                 'styles'      => [
                     'small' => '80w',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality'     => 100,
+                'quality' => 75,
                 'default_url' => 'no-image.jpg',
             ],
         ],
