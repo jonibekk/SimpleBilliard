@@ -4,9 +4,10 @@
  * User: bigplants
  * Date: 5/28/14
  * Time: 5:04 PM
+
  *
- * @var       $title_for_layout string
- * @var       $this             View
+*@var       $title_for_layout string
+ * @var       $this             CodeCompletionView
  * @var       $nav_disable
  * @var array $my_teams
  */
@@ -26,11 +27,11 @@
                 <a href="<?= $this->Html->url('/') ?>" class="header-home">ホーム</a>
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
-                <a href="#" data-toggle="dropdown" id="download">
+                    <a href="#" data-toggle="dropdown" id="download">
                         <i class="fa fa-plus-circle"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
-                    <? if ($this->Session->read('current_team_id')): ?>
+                        <? if ($this->Session->read('current_team_id')): ?>
                             <li>
                                 <a href="#" data-toggle="modal" data-target="#modal_add_circle"><?=
                                     __d('gl',
@@ -48,12 +49,12 @@
                 <div class="dropdown gl-navbar-nav-fix">
                     <a href="#" class="dropdown-toggle me-menu-image no-line header-user-profile" data-toggle="dropdown"
                        id="download">
-                    <?=
+                        <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
                                                    ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
                         <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
-                    <li>
+                        <li>
                             <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
                         </li>
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
@@ -106,10 +107,13 @@
                     </form>
                 </li>
                 <li class="header-search-group">
-                <form class="gl-nav-form-group" role="search">
-                    <i class="fa fa-search gl-nav-form-icon"></i>
-                    <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
+                    <form class="gl-nav-form-group" role="search">
+                        <i class="fa fa-search gl-nav-form-icon"></i>
+                        <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
                     </form>
+                </li>
+                <li class="circle-list-in-hamburger visible-xxs visible-xs">
+                    <?= $this->element('circle_list_in_hamburger') ?>
                 </li>
             </ul>
         </div>
