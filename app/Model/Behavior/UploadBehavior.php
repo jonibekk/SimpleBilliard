@@ -34,6 +34,13 @@ class UploadBehavior extends ModelBehavior
      */
     private $s3;
 
+    private $supportedExtensions = [
+        'jpg',
+        'jpeg',
+        'png',
+        'gif'
+    ];
+
     public function setup(Model $model, $settings = array())
     {
         $defaults = array(
@@ -105,6 +112,7 @@ class UploadBehavior extends ModelBehavior
         foreach (self::$__settings[$model->name] as $field => $settings) {
             if (isset($model->data[$model->name][$field])) {
                 $data = $model->data[$model->name][$field];
+
                 if ((empty($data) || is_array($data) && empty($data['tmp_name'])) && !empty($settings['urlField']) && !empty($model->data[$model->name][$settings['urlField']])) {
                     $data = $model->data[$model->name][$settings['urlField']];
                 }
@@ -132,9 +140,19 @@ class UploadBehavior extends ModelBehavior
         $urlExplodedBySlash = explode('/', $url);
         $data['name'] = end($urlExplodedBySlash);
         $urlExplodedByDot = explode('.', $url);
-        $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
+        //サポートしている拡張子かチェック
+        if (in_array($urlExplodedByDot, $this->supportedExtensions)) {
+            $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
+        }
+        else {
+            $data['name'] .= '.' . self::_getImgExtensionFromUrl($url);
+            $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . self::_getImgExtensionFromUrl($url);
+        }
 
-        $httpSocket = new HttpSocket();
+        $config = [
+            'ssl_verify_host' => false,
+        ];
+        $httpSocket = new HttpSocket($config);
         $raw = $httpSocket->get($url);
         $response = $httpSocket->response;
         $data['size'] = strlen($raw);
@@ -143,6 +161,25 @@ class UploadBehavior extends ModelBehavior
 
         file_put_contents($data['tmp_name'], $raw);
         return $data;
+    }
+
+    static private function _getImgExtensionFromUrl($url)
+    {
+        $img_types = [
+            IMAGETYPE_PNG      => 'png',
+            IMAGETYPE_GIF      => 'gif',
+            IMAGETYPE_JPEG     => 'jpg',
+            IMAGETYPE_JPEG2000 => 'jpg',
+        ];
+        $imageInfo = @getimagesize($url);
+        if (empty($imageInfo)) {
+            return null;
+        }
+        list(, , $type,) = $imageInfo;
+        if (array_key_exists($type, $img_types)) {
+            return $img_types[$type];
+        }
+        return null;
     }
 
     private function _prepareToWriteFiles(&$model, $field)

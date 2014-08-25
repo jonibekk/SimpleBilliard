@@ -160,7 +160,7 @@ $(document).ready(function () {
     });
 });
 function format(item) {
-    return "<img style='width:14px;height: 14px' src='" + item.image + "'/> " + item.text;
+    return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
 }
 function bindSelect2Members($this) {
     //noinspection JSUnusedLocalSymbols
@@ -423,12 +423,26 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
             hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
         });
+        $(obj).find('.showmore-comment').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '105px',
+            showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
+            hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+        });
     }
     else {
         $('.showmore').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '128px',
+            showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
+            hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+        });
+        $('.showmore-comment').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '105px',
             showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
             hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
         });
