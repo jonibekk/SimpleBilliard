@@ -360,7 +360,7 @@ class User extends AppModel
             ]
         ];
         $res = $this->LocalName->find('first', $options);
-        if (empty($res)) {
+        if (empty($res) || (empty($res['LocalName']['last_name']) && empty($res['LocalName']['first_name']))) {
             return null;
         }
         //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
