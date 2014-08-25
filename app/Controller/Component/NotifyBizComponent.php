@@ -112,7 +112,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED);
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_POST;
-        $this->notify_option['url_data'] = "/";
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([mb_strimwidth($post['Post']['body'], 0, 40, "...")]) : null;
@@ -364,14 +364,14 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
+
      *
-     * @param       $type
+*@param       $type
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
-
      *
-*@internal param $id
+     * @internal param $id
      */
     public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
     {
