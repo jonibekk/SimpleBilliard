@@ -27,11 +27,7 @@
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
                     <a href="#" data-toggle="dropdown" id="download">
-<<<<<<< HEAD
                         <i class="fa fa-plus-circle"></i>
-=======
-                    <i class="fa fa-plus-circle"></i>
->>>>>>> remotes/origin/develop
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
@@ -58,11 +54,7 @@
                         <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li>
-<<<<<<< HEAD
                             <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
-=======
-                        <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
->>>>>>> remotes/origin/develop
                         </li>
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
                                 __d('gl',

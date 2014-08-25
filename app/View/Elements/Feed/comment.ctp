@@ -53,7 +53,7 @@
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
             <div class="col col-xxs-12 showmore-comment gl-comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
-            <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+                <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?

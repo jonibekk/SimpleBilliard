@@ -76,7 +76,7 @@ class Post extends AppModel
                     'small' => '80w',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 75,
+                'quality'     => 75,
                 'default_url' => 'no-image.jpg',
             ],
         ],

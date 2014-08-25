@@ -23,7 +23,7 @@ class NotifyBizComponent extends Component
 
     public $notify_option = [
         'url_data'    => null,
-        'count_num' => 1,
+        'count_num'   => 1,
         'notify_type' => null,
         'model_id'    => null,
         'item_name'   => null,
@@ -364,9 +364,8 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
-
      *
-*@param       $type
+     * @param       $type
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
