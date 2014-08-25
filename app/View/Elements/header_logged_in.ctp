@@ -6,7 +6,7 @@
  * Time: 5:04 PM
  *
  * @var       $title_for_layout string
- * @var       $this             View
+ * @var       $this             CodeCompletionView
  * @var       $nav_disable
  * @var array $my_teams
  */
@@ -27,7 +27,7 @@
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
                     <a href="#" data-toggle="dropdown" id="download">
-                    <i class="fa fa-plus-circle"></i>
+                        <i class="fa fa-plus-circle"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
@@ -54,7 +54,7 @@
                         <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li>
-                        <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
+                            <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
                         </li>
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
                                 __d('gl',
@@ -110,6 +110,9 @@
                         <i class="fa fa-search gl-nav-form-icon"></i>
                         <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
                     </form>
+                </li>
+                <li class="circle-list-in-hamburger visible-xxs hidden-xs">
+                    <?= $this->element('circle_list_in_hamburger') ?>
                 </li>
             </ul>
         </div>
