@@ -160,7 +160,7 @@ $(document).ready(function () {
     });
 });
 function format(item) {
-    return "<img style='width:14px;height: 14px' src='" + item.image + "'/> " + "<span class='select2-item-txt'>" + item.text + "</span";
+    return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
 }
 function bindSelect2Members($this) {
     //noinspection JSUnusedLocalSymbols
