@@ -57,7 +57,7 @@ class User extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image.jpg',
-                'quality'     => 100,
+                'quality' => 75,
             ]
         ]
     ];
