@@ -52,8 +52,8 @@
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
-            <div class="col col-xxs-12 showmore gl-comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
-                <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+            <div class="col col-xxs-12 showmore-comment gl-comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
+            <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
@@ -68,7 +68,7 @@
                 <div class="col col-xxs-12 gl-comment-photo">
 
                     <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
-                    <!-- Indicators -->
+                        <!-- Indicators -->
                         <? if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
                                 <? $index = 0 ?>
