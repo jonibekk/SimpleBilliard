@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-06-24 07:46+0000\n"
+"POT-Creation-Date: 2014-08-25 06:54+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,49 +14,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
+#: Controller/CirclesController.php:69;72;110;113
 #: Controller/EmailsController.php:27;30
+#: Controller/PostsController.php:59;62;86;89;127;130;154;157
 msgid "gl"
 msgstr ""
 
-#: Model/Badge.php:validation for field user_id;validation for field team_id
-#: Model/Comment.php:validation for field post_id;validation for field user_id;validation for field team_id
-#: Model/CommentLike.php:validation for field comment_id;validation for field user_id;validation for field team_id
-#: Model/CommentMention.php:validation for field post_id;validation for field user_id;validation for field team_id
-#: Model/CommentRead.php:validation for field comment_id;validation for field user_id;validation for field team_id
-#: Model/Email.php:validation for field user_id
-#: Model/GivenBadge.php:validation for field user_id;validation for field grant_user_id;validation for field team_id;validation for field post_id
-#: Model/Group.php:validation for field team_id
-#: Model/Image.php:validation for field user_id
-#: Model/ImagesPost.php:validation for field post_id;validation for field image_id
-#: Model/Invite.php:validation for field from_user_id;validation for field team_id
-#: Model/JobCategory.php:validation for field team_id
-#: Model/Message.php:validation for field from_user_id;validation for field to_user_id;validation for field thread_id
-#: Model/Notification.php:validation for field user_id;validation for field team_id
-#: Model/OauthToken.php:validation for field user_id
-#: Model/Post.php:validation for field user_id;validation for field team_id
-#: Model/PostLike.php:validation for field post_id;validation for field user_id;validation for field team_id
-#: Model/PostMention.php:validation for field post_id;validation for field user_id;validation for field team_id
-#: Model/PostRead.php:validation for field post_id;validation for field user_id;validation for field team_id
-#: Model/SendMail.php:validation for field to_user_id
-#: Model/TeamMember.php:validation for field user_id;validation for field team_id
-#: Model/Thread.php:validation for field from_user_id;validation for field to_user_id;validation for field team_id
-#: Model/User.php:validation for field primary_email_id
-msgid "uuid"
-msgstr ""
-
 #: Model/Badge.php:validation for field name
+#: Model/Circle.php:validation for field name
 #: Model/Email.php:validation for field user_id;validation for field email
 #: Model/Group.php:validation for field name
-#: Model/Image.php:validation for field item_file_name
 #: Model/JobCategory.php:validation for field name
+#: Model/LocalName.php:validation for field language
 #: Model/OauthToken.php:validation for field uid
-#: Model/Team.php:validation for field name
+#: Model/Team.php:validation for field name;validation for field emails
 #: Model/Thread.php:validation for field name
 #: Model/User.php:validation for field first_name;validation for field last_name;validation for field old_password;validation for field password_request;validation for field password_request2;validation for field password;validation for field password_confirm
 msgid "notEmpty"
 msgstr ""
 
 #: Model/Badge.php:validation for field active_flg;validation for field del_flg
+#: Model/Circle.php:validation for field del_flg
+#: Model/CircleMember.php:validation for field del_flg;validation for field admin_flg
 #: Model/Comment.php:validation for field del_flg
 #: Model/CommentLike.php:validation for field del_flg
 #: Model/CommentMention.php:validation for field del_flg
@@ -64,18 +43,23 @@ msgstr ""
 #: Model/Email.php:validation for field email_verified;validation for field del_flg
 #: Model/GivenBadge.php:validation for field del_flg
 #: Model/Group.php:validation for field active_flg;validation for field del_flg
-#: Model/Image.php:validation for field del_flg
-#: Model/ImagesPost.php:validation for field del_flg
 #: Model/Invite.php:validation for field email_verified;validation for field del_flg
 #: Model/JobCategory.php:validation for field active_flg;validation for field del_flg
+#: Model/LocalName.php:validation for field del_flg
 #: Model/Message.php:validation for field del_flg
-#: Model/Notification.php:validation for field unread_flg;validation for field del_flg
+#: Model/Notification.php:validation for field del_flg
+#: Model/NotifyFromUser.php:validation for field del_flg
+#: Model/NotifySetting.php:validation for field feed_app_flg;validation for field feed_email_flg;validation for field circle_app_flg;validation for field circle_email_flg;validation for field del_flg
+#: Model/NotifyToUser.php:validation for field unread_flg;validation for field del_flg
 #: Model/OauthToken.php:validation for field del_flg
 #: Model/Post.php:validation for field public_flg;validation for field important_flg;validation for field del_flg
 #: Model/PostLike.php:validation for field del_flg
 #: Model/PostMention.php:validation for field del_flg
 #: Model/PostRead.php:validation for field del_flg
+#: Model/PostShareCircle.php:validation for field del_flg
+#: Model/PostShareUser.php:validation for field del_flg
 #: Model/SendMail.php:validation for field del_flg
+#: Model/SendMailToUser.php:validation for field del_flg
 #: Model/Team.php:validation for field domain_limited_flg;validation for field del_flg
 #: Model/TeamMember.php:validation for field active_flg;validation for field evaluation_enable_flg;validation for field invitation_flg;validation for field admin_flg;validation for field del_flg
 #: Model/Thread.php:validation for field del_flg
@@ -83,11 +67,28 @@ msgstr ""
 msgid "boolean"
 msgstr ""
 
+#: Model/Circle.php:validation for field photo
+#: Model/Comment.php:validation for field photo1;validation for field photo2;validation for field photo3;validation for field photo4;validation for field photo5;validation for field site_photo
+#: Model/Post.php:validation for field photo1;validation for field photo2;validation for field photo3;validation for field photo4;validation for field photo5;validation for field site_photo
+#: Model/Team.php:validation for field photo
+#: Model/User.php:validation for field photo
+msgid "image_max_size"
+msgstr ""
+
+#: Model/Circle.php:validation for field photo
+#: Model/Comment.php:validation for field photo1;validation for field photo2;validation for field photo3;validation for field photo4;validation for field photo5;validation for field site_photo
+#: Model/Post.php:validation for field photo1;validation for field photo2;validation for field photo3;validation for field photo4;validation for field photo5;validation for field site_photo
+#: Model/Team.php:validation for field photo
+#: Model/User.php:validation for field photo
+msgid "image_type"
+msgstr ""
+
 #: Model/Comment.php:validation for field comment_like_count;validation for field comment_read_count
-#: Model/Image.php:validation for field type
+#: Model/CommentLike.php:validation for field comment_id
 #: Model/Notification.php:validation for field type
 #: Model/OauthToken.php:validation for field type
 #: Model/Post.php:validation for field comment_count;validation for field post_like_count;validation for field post_read_count
+#: Model/PostLike.php:validation for field post_id
 #: Model/SendMail.php:validation for field template_type
 #: Model/Team.php:validation for field type;validation for field start_term_month;validation for field border_months
 #: Model/Thread.php:validation for field type;validation for field status
@@ -101,6 +102,10 @@ msgstr ""
 
 #: Model/Email.php:validation for field email
 msgid "emailIsUnique"
+msgstr ""
+
+#: Model/Team.php:validation for field emails
+msgid "emailsCheck"
 msgstr ""
 
 #: Model/User.php:validation for field first_name;validation for field last_name
@@ -121,9 +126,5 @@ msgstr ""
 
 #: Model/User.php:validation for field password_confirm
 msgid "passwordSameCheck"
-msgstr ""
-
-#: Model/User.php:validation for field photo
-msgid "image_max_size"
 msgstr ""
 
