@@ -16,7 +16,7 @@ msgstr ""
 
 #: Controller/AppController.php:229
 msgid "不正なアクセスです。"
-msgstr ""
+msgstr "Invalid access."
 
 #: Controller/UsersController.php:493
 msgid "別のユーザ宛のチーム招待です。"
