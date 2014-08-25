@@ -636,6 +636,11 @@ ul.gl-input-images > li {
     padding: 0;
 }
 
+.layout-circle-humbarger {
+    width: 199px;
+    padding: 9px 10px;
+}
+
 /*/レイアウトの指定*/
 
 /*タブで切り替え*/
@@ -688,17 +693,6 @@ ul.gl-input-images > li {
     width: 52px
 }
 
-/*
-.gl-feed-switch .active {
-    border-bottom: 2px #ddd solid;
-}
-
-.switch-post:hover,
-.switch-action:hover,
-.switch-badge:hover {
-    border-bottom: 2px #ddd solid;
-}
-*/
 .switch-post:hover a,
 .switch-action:hover a,
 .switch-badge:hover a {
@@ -736,8 +730,64 @@ ul.gl-input-images > li {
 .active .switch-arrow {
     visibility: visible;
 }
-
 /*/切り替えスイッチ*/
+/*メニューなどの▲マーク*/
+.frame-arrow-icon {
+    top: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ccc;
+}
+
+.frame-arrow-pic {
+    top: 98%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ccc;
+}
+
+.frame-arrow-icon::before {
+    content: "";
+    border: 8px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 8px solid #fff;
+    position: absolute;
+    right: 6%;
+    top: -15px;
+    z-index: 2;
+}
+
+.frame-arrow-icon::after {
+    content: "";
+    border: 8px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 8px solid #ccc;
+    position: absolute;
+    right: 6%;
+    top: -16px;
+}
+
+.frame-arrow-pic::before {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid #fff;
+    position: absolute;
+    right: 14%;
+    top: -14px;
+    z-index: 2;
+}
+
+.frame-arrow-pic::after {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid #ccc;
+    position: absolute;
+    right: 14%;
+    top: -15px;
+}
+
+/*/メニューなどの▲マーク*/
+
 /*PostAreaのデザイン*/
 .post-panel-body {
     padding: 5px 11px 10px;
@@ -916,7 +966,7 @@ ul.gl-input-images > li {
 
 .circle-name_box {
     display: block;
-/ / width : 90 %;
+    width: 120px;
     height: 16px;
     line-height: 16px;
     font-size: 12px;
@@ -1090,6 +1140,10 @@ ul.gl-input-images > li {
 }
 
 /*/ハンバーガー*/
+
+.navbar-nav i {
+    font-size: 14px;
+}
 
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
@@ -1640,56 +1694,3 @@ ul.gl-input-images > li {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.frame-arrow-icon {
-    top: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ccc;
-}
-
-.frame-arrow-pic {
-    top: 98%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ccc;
-}
-
-.frame-arrow-icon::before {
-    content: "";
-    border: 8px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 8px solid #fff;
-    position: absolute;
-    right: 6%;
-    top: -15px;
-    z-index: 2;
-}
-
-.frame-arrow-icon::after {
-    content: "";
-    border: 8px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 8px solid #ccc;
-    position: absolute;
-    right: 6%;
-    top: -16px;
-}
-
-.frame-arrow-pic::before {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #fff;
-    position: absolute;
-    right: 14%;
-    top: -14px;
-    z-index: 2;
-}
-
-.frame-arrow-pic::after {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #ccc;
-    position: absolute;
-    right: 14%;
-    top: -15px;
-}

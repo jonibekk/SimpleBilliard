@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 5/28/14
  * Time: 5:04 PM
-
  *
-*@var       $title_for_layout string
+ * @var       $title_for_layout string
  * @var       $this             CodeCompletionView
  * @var       $nav_disable
  * @var array $my_teams
@@ -112,7 +111,7 @@
                         <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
                     </form>
                 </li>
-                <li class="circle-list-in-hamburger visible-xxs visible-xs">
+                <li class="circle-list-in-hamburger visible-xxs hidden-xs">
                     <?= $this->element('circle_list_in_hamburger') ?>
                 </li>
             </ul>

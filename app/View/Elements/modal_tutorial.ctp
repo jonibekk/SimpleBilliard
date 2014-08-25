@@ -28,16 +28,16 @@
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active">
-                            <?= $this->Html->image('homepage/home-slider/slide1.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide1.jpg') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/slide2.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide2.jpg') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/slide3.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide3.jpg') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/slide4.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide4.jpg') ?>
                         </div>
                     </div>
 
