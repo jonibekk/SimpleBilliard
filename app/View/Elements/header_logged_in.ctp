@@ -32,14 +32,14 @@
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
                             <li>
-                                <a href="#" data-toggle="modal" data-target="#modal_add_circle"><?=
+                                <a href="#" data-toggle="modal" data-target="#modal_add_circle"><i
+                                        class="fa fa-circle-o header-drop-icons"></i><?=
                                     __d('gl',
                                         "サークルを作成") ?></a>
                             </li>
                         <? endif; ?>
-                        <li><?=
-                            $this->Html->link(__d('gl', "チームを作成"),
-                                              ['controller' => 'teams', 'action' => 'add']) ?></li>
+                        <li><a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>"><i
+                                    class="fa fa-users header-drop-icons"></i><?= __d('gl', 'チームを作成') ?></a></li>
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o"></i></a>

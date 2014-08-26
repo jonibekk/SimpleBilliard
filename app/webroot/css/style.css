@@ -18,6 +18,11 @@ footer p {
     clear: left;
     margin-bottom: 0;
 }
+
+.dropdown-menu li a {
+    color: #231814;
+}
+
 .no-line {
     text-decoration: none !important;
     color: #000;
@@ -740,6 +745,7 @@ ul.gl-input-images > li {
     visibility: visible;
 }
 /*/切り替えスイッチ*/
+
 /*メニューなどの▲マーク*/
 .frame-arrow-icon {
     top: 100%;
@@ -1073,6 +1079,12 @@ ul.gl-input-images > li {
     line-height: 30px;
     margin-right: 10px;
     color: #808080 !important;
+}
+
+.header-drop-icons {
+    padding-right: 4px;
+    width: 18px;
+    text-align: center;
 }
 
 /*/HEADER*/
