@@ -97,6 +97,7 @@ $(document).ready(function () {
                 var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
                 $modal_elm.modal();
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
@@ -111,6 +112,7 @@ $(document).ready(function () {
                 $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
                 $modal_elm.modal();
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
@@ -124,6 +126,7 @@ $(document).ready(function () {
                 var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
                 $modal_elm.modal();
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
@@ -153,6 +156,7 @@ $(document).ready(function () {
                 });
                 $modal_elm.modal();
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
