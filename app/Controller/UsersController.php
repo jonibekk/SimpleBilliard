@@ -111,6 +111,9 @@ class UsersController extends AppController
      */
     public function register()
     {
+        //TODO basic認証 本番公開後に外す
+        $this->_setBasicAuth();
+
         $this->layout = LAYOUT_ONE_COLUMN;
         //ログイン済の場合はトップへ
         if ($this->Auth->user()) {

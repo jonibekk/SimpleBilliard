@@ -33,6 +33,8 @@
             'content' => "width=device-width, initial-scale=1, maximum-scale=1"
         ));
     echo $this->fetch('meta');
+    //TODO botの拒否。一般公開前に必ず外す。
+    echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
     echo $this->Html->css('homepage/bootstrap');
     echo $this->Html->css('homepage/bootstrap-responsive');
     echo $this->Html->css('font-awesome.min');

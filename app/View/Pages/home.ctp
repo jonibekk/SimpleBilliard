@@ -33,36 +33,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="top-account">
 
-                    <a href="<?=
-                    $this->Html
-                        ->url(
-                        array(
-                            'controller' => 'auth',
-                            'action'     => 'facebook'
-                        ))
-                    ?>"
-                       class="fb-signup social-signup"><i
-                            class="icon-facebook social-signup-icon"></i> <span
-                            class="social-signup-text"> <?= __d('home', 'Sign up with facebook') ?>
-					</span></a>
-                </div>
-                <div class="top-account">
-                    <a
-                        href="<?=
-                        $this->Html
-                            ->url(
-                            array(
-                                'controller' => 'auth',
-                                'action' => 'google'
-                            ))
-                        ?>"
-                        class="google-signup social-signup"><i
-                            class="icon-google-plus social-signup-icon"></i> <span
-                            class="social-signup-text"> <?= __d('home', 'Sign up with google') ?>
-					</span> </a>
-                </div>
                 <div class="signup-email">
                     <? $signup_link = $this->Html
                         ->link(__d('home', 'here'),

@@ -22,6 +22,9 @@
                      'content' => "width=device-width, initial-scale=1, maximum-scale=1"
                     ]);
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
+    //TODO botの拒否。一般公開前に必ず外す。
+    echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
+
     echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
     echo $this->Html->css('jasny-bootstrap.min');
@@ -40,6 +43,7 @@
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->fetch('css');
     echo $this->fetch('meta');
+
     ?>
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
