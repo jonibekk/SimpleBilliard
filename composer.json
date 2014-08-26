@@ -7,13 +7,16 @@
         }
     ],
     "require": {
-        "pear-cakephp/cakephp": "2.4.5",
+        "pear-cakephp/cakephp": "2.5.*",
         "phpunit/phpunit": "3.7.*",
         "cakephp/debug_kit": "2.2.*",
         "cakedc/migrations": "2.*",
+        "cakedc/utils": "dev-master",
         "slywalker/boost_cake": "*",
+        "ichikaway/cakeplus": "2.0.*@dev",
         "satooshi/php-coveralls": "dev-master",
-        "mixpanel/mixpanel-php": "2.*"
+        "mixpanel/mixpanel-php": "2.*",
+        "aws/aws-sdk-php": "2.6.*"
     },
     "config": {
         "vendor-dir": "Vendor/"

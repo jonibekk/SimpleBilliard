@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="Vendor/autoload.php">
     <filter>
-        <blacklist>
-            <directory suffix=".php">app/Config</directory>
-            <directory suffix=".php">app/Test</directory>
-            <directory suffix=".php">app/Vendor</directory>
-            <directory suffix=".php">Vendor</directory>
-            <directory suffix=".php">Plugin</directory>
-        </blacklist>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">app/View</directory>
+            <directory suffix=".php">app/Controller</directory>
+            <directory suffix=".php">app/Model</directory>
+            <exclude>
+                <directory suffix=".php">app/Controller/Component</directory>
+                <directory suffix=".php">app/View/Helper</directory>
+                <directory suffix=".php">app/Model/Behavior</directory>
+                <directory suffix=".php">app/Config</directory>
+                <directory suffix=".php">app/Test</directory>
+                <directory suffix=".php">app/Vendor</directory>
+                <directory suffix=".php">app/Lib</directory>
+                <directory suffix=".php">app/Utility</directory>
+                <directory suffix=".php">Vendor</directory>
+                <directory suffix=".php">Plugin</directory>
+            </exclude>
+        </whitelist>
     </filter>
 </phpunit>

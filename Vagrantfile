@@ -7,7 +7,8 @@ Vagrant.configure("2") do |config|
   src_dir = './'
   doc_root = '/vagrant_data/app/webroot'
   app_root = '/vagrant_data/'
-  config.vm.network :forwarded_port, guest: 80, host: 8081
+  # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
+  config.vm.network "private_network", ip: "192.168.50.4"
 
   config.vm.provider :virtualbox do |vb|
     # 仮想OSに割り当てるメモリ量
@@ -23,6 +24,7 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "apt"
     chef.add_recipe "php_nginx"
     chef.add_recipe "local_db"
+    chef.add_recipe "local_etc"
     chef.add_recipe "deploy_cake_local"
     chef.json = {doc_root: doc_root,app_root: app_root}
   end

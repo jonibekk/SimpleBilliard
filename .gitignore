@@ -13,6 +13,7 @@ Berksfile.lock
 /app/tmp/xprof/*
 /app/webroot/upload/*
 /app/Config/database_local.php
+/app/webroot/files
 .project
 .buildpath
 junit.xml

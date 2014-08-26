@@ -16,19 +16,11 @@ App::uses('AppController', 'Controller');
  *
  * @package       app.Controller
  * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
+ * @property User $User
+ * @noinspection  PhpInconsistentReturnPointsInspection
  */
-
-/** @noinspection PhpInconsistentReturnPointsInspection */
 class PagesController extends AppController
 {
-
-    /**
-     * This controller does not use a model
-     *
-     * @var array
-     */
-    public $uses = array();
-
     /**
      * Displays a view
      *
@@ -41,31 +33,81 @@ class PagesController extends AppController
     public function display()
     {
         $path = func_get_args();
-
-        $count = count($path);
-        if (!$count) {
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->redirect('/');
-        }
+//TODO 現状これが必要になるケースが無いため、一旦コメントアウト
+//        $count = count($path);
+//        if (!$count) {
+//            /** @noinspection PhpVoidFunctionResultUsedInspection */
+//            return $this->redirect('/');
+//        }
         $page = $subpage = null;
 
         if (!empty($path[0])) {
             $page = $path[0];
         }
-        if (!empty($path[1])) {
-            $subpage = $path[1];
-        }
+//TODO 現状これが必要になるケースが無いため、一旦コメントアウト
+//        if (!empty($path[1])) {
+//            $subpage = $path[1];
+//        }
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
-        try {
-            $this->render(implode('/', $path));
-        } catch (MissingViewException $e) {
-            if (Configure::read('debug')) {
-                throw $e;
+        //ログインしている場合とそうでない場合の切り分け
+        if ($this->Auth->user()) {
+            if ($path[0] == 'home') {
+                if ($this->Session->read('add_new_mode') === MODE_NEW_PROFILE) {
+                    $this->Session->delete('add_new_mode');
+                    $this->set('mode_view', MODE_VIEW_TUTORIAL);
+                }
+                $this->_setMyCircle();
+                $this->_setFeedMoreReadUrl();
+                try {
+                    $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
+                } catch (RuntimeException $e) {
+                    $this->Pnotify->outError($e->getMessage());
+                    $this->redirect($this->referer());
+                }
+                return $this->render('logged_in_home');
             }
-            throw new NotFoundException();
+            else {
+                $this->layout = LAYOUT_ONE_COLUMN;
+                return $this->render(implode('/', $path));
+            }
         }
-        return $this->render(implode('/', $path));
+        else {
+            $this->layout = 'homepage';
+            return $this->render(implode('/', $path));
+        }
+    }
+
+    public function beforeFilter()
+    {
+        $this->_setLanguage();
+        //全ページ許可
+        $this->Auth->allow('display');
+        //切り換え可能な言語をセット
+        $this->set('lang_list', $this->_getPageLanguageList());
+        parent::beforeFilter();
+    }
+
+    public function _setLanguage()
+    {
+        // パラメータから言語をセット
+        $this->set('top_lang', null);
+        if (isset($this->request->params['lang'])) {
+            $this->set('top_lang', $this->request->params['lang']);
+            Configure::write('Config.language', $this->request->params['lang']);
+        }
+    }
+
+    /**
+     * トップ用言語リスト
+     */
+    public function _getPageLanguageList()
+    {
+        $lang_list = [
+            'ja' => __d('home', "Japanese"),
+            'en' => __d('home', "English"),
+        ];
+        return $lang_list;
     }
 }

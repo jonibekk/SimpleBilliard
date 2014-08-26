@@ -1,3 +1,5 @@
+<a href="http://zhb.io/zhb-now" target="_blank"><img src="https://raw.github.com/axiomzen/zenhub-now/master/powered-by-zenhub-720.png" width="200px" alt="Powered by ZenHub"/></a>
+
 # Goalous 2.0
 Goalous 2.0のリポジトリです。  
 旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)  
@@ -20,10 +22,20 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 Goalousの開発に関して。  
 Goalousで素早く開発を始められるよう心がけております。
 ## Requirements
-- [Virtual Box](https://www.virtualbox.org/wiki/Downloads) `version >= 4.3.10`
-- [Vagrant](http://www.vagrantup.com/downloads.html) `version >= 1.5.0`
-- [Git](http://git-scm.com/downloads) `version >= 1.8.5`
-- [Chef Client](http://www.getchef.com/chef/install/) `version >= 11.4`
+以下のツールはローカルにおける開発時に必須である為、必ずインストールしてください。   
+- Virtual Box `version >= 4.3.10`
+- Vagrant `version >= 1.5.0`
+- Git `version >= 1.8.5`
+- Chef Client `version >= 11.4`
+
+[インストール手順(windows)](https://docs.google.com/a/isao.co.jp/document/d/1LnGo5AMdjAFdgnxh0wivFH8LJbewL77bfl64gQe1F0M/edit?usp=sharing)   
+[インストール手順(mac)](https://docs.google.com/a/isao.co.jp/document/d/12OQ5xXhRfkQWKt1B_ckSz6pAg-5uhpyILqjGbr5-rEU/edit?usp=sharing)   
+
+## Recommend
+- [hubコマンド](http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3)（mac,linuxのみ）
+
+## IDE
+当リポジトリは[Phpstorm](http://www.jetbrains.com/phpstorm/)に最適化されています。
 
 ## Installation
 1. ソースファイルをClone  
@@ -33,9 +45,34 @@ Goalousで素早く開発を始められるよう心がけております。
 ターミナルで以下を実行  
 `cd goalous2`  
 `vagrant up`  
+[vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](https://docs.google.com/a/isao.co.jp/document/d/1IeZfGQPrJtNO_piMxvcsV5KS8ZX1iq0Mv93kpgIioA4/edit?usp=sharing)   
 1. 動作確認  
 ブラウザから以下にアクセス  
-`http://127.0.0.1:8081`  
+`http://192.168.50.4`
+
+## A Development Routine
+ターミナルでコマンドを実行  
+
+1. vagrantを起動  
+`cd goalous2`  
+`vagrant up`  
+1. アプリケーションをアップデート   
+ターミナルを起動し、以下を実行   
+`vagrant ssh`   
+`sudo su`   
+`sh ../etc/local/update_app.sh`
+1. 作業用ブランチを作成   
+`git branch topic-xxxx`   
+1. 作業ブランチにチェックアウト   
+`git checkout topic-xxxx`   
+1. 作業後にコミット(関連するIssue番号をコミットログにつける。)   
+`git add .`   
+`git commit`   
+1. GitHubにプッシュ   
+`git push origin topic-xxx`   
+1. hubコマンドでIssueに関連付けたPull Requestを発行する   
+`hub pull-request [ブランチ名] -i [issue番号]`   
+1. 第三者にレビューをしてもらいマージしてもらう   
 
 ## Contributing
 みなさんの貢献は大いに歓迎します。  
@@ -59,8 +96,13 @@ Goalousチームについて
 
 # Documentation
 Goalous開発におけるすべてのドキュメントは[ここ](https://drive.google.com/a/isao.co.jp/#folders/0B6mjvNcPiJ6PLXBlTUJsZWphMG8)にあります。
+
 ## Development
 - [開発フロー](https://www.lucidchart.com/documents/edit/ae4a8af6-88c8-41fe-a67b-e121f973026b)
+
+## Design Documentation
+- [ER図](https://www.lucidchart.com/documents/edit/4f5b2ed4-5153-79ec-ba7f-70600a004117/0)
+- [DBスキーマ設計書](https://docs.google.com/a/isao.co.jp/spreadsheets/d/156jnN_MQ9FRyVGRgTKtQd0GiAQ1frN_7JoVF6TqmDRg/edit?usp=sharing)
 
 ## Operations
 ## Infrastructure

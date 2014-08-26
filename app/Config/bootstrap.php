@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is loaded automatically by the app/webroot/index.php file after core.php
- *
  * This file should load/create any application wide configuration settings, such as
  * Caching, Logging, loading additional configuration files.
- *
  * You should also use this file to include any files that provide global functions/constants
  * that your application uses.
  *
@@ -18,7 +16,6 @@ Cache::config('default', array('engine' => 'File'));
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
- *
  * App::build(array(
  *     'Model'                     => array('/path/to/models/', '/next/path/to/models/'),
  *     'Model/Behavior'            => array('/path/to/behaviors/', '/next/path/to/behaviors/'),
@@ -39,45 +36,40 @@ Cache::config('default', array('engine' => 'File'));
  *     'Vendor'                    => array('/path/to/vendors/', '/next/path/to/vendors/'),
  *     'Plugin'                    => array('/path/to/plugins/', '/next/path/to/plugins/'),
  * ));
- *
+
  */
 
 /**
  * Custom Inflector rules can be set to correctly pluralize or singularize table, model, controller names or whatever other
  * string is passed to the inflection functions
- *
  * Inflector::rules('singular', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
- *
+
  */
 
 /**
  * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
  * Uncomment one of the lines below, as you need. Make sure you read the documentation on CakePlugin to use more
  * advanced ways of loading plugins
- *
  * CakePlugin::loadAll(); // Loads all plugins at once
  * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
- *
+
  */
 
 /**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter . By default CakePHP bundles two filters:
- *
  * - AssetDispatcher filter will serve your asset files (css, images, js, etc) from your themes and plugins
  * - CacheDispatcher filter will read the Cache.check configure variable and try to serve cached content generated from controllers
- *
  * Feel free to remove or add filters as you see fit for your application. A few examples:
- *
  * Configure::write('Dispatcher.filters', array(
  *        'MyCacheFilter', //  will use MyCacheFilter class from the Routing/Filter package in your app.
  *        'MyPlugin.MyFilter', // will use MyFilter class from the Routing/Filter package in MyPlugin plugin.
  *        array('callable' => $aFunction, 'on' => 'before', 'priority' => 9), // A valid PHP callback type to be called on beforeDispatch
  *        array('callable' => $anotherMethod, 'on' => 'after'), // A valid PHP callback type to be called on afterDispatch
- *
  * ));
  */
 // composerのautoloadを読み込み
+/** @noinspection PhpIncludeInspection */
 require ROOT . '/Vendor/autoload.php';
 
 // CakePHPのオートローダーをいったん削除し、composerより先に評価されるように先頭に追加する
@@ -122,3 +114,19 @@ CakePlugin::loadAll();
  * Goalous独自定数
  */
 define('SERVICE_NAME', "Goalous2.0");
+//トークン期限
+define('TOKEN_EXPIRE_SEC_REGISTER', 86400); //1day
+define('TOKEN_EXPIRE_SEC_ADD_EMAIL', 86400); //1day
+define('TOKEN_EXPIRE_SEC_INVITE', 1209600); //2weeks
+//レイアウトファイル名
+define('LAYOUT_ONE_COLUMN', "one_column");
+define('LAYOUT_SETTING', "setting");
+//セッションのモード
+define('MODE_NEW_PROFILE', 1);
+define('MODE_NEW_TEAM', 2);
+//View側のモード
+define('MODE_VIEW_TUTORIAL', 1);
+//aws s3のurl
+define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
+define('S3_TRIM_PATH', '/upload/');
+

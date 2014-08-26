@@ -24,6 +24,7 @@
       <w>classname</w>
       <w>combi</w>
       <w>compleation</w>
+      <w>csrf</w>
       <w>csspp</w>
       <w>datasource</w>
       <w>dirname</w>
@@ -42,6 +43,8 @@
       <w>htaccess</w>
       <w>inflector</w>
       <w>inno</w>
+      <w>isset</w>
+      <w>jumbotron</w>
       <w>kaigi</w>
       <w>lastname</w>
       <w>mailto</w>
@@ -58,6 +61,7 @@
       <w>opsworks</w>
       <w>pageview</w>
       <w>paypal</w>
+      <w>pnotify</w>
       <w>postgre</w>
       <w>quickribbon</w>
       <w>readlink</w>
@@ -75,6 +79,7 @@
       <w>thomaspark</w>
       <w>timestamping</w>
       <w>uninflected</w>
+      <w>unixtime</w>
       <w>unregister</w>
       <w>unstyled</w>
       <w>viewport</w>

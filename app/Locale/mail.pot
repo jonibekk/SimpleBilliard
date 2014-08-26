@@ -1,0 +1,111 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-06-24 07:46+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Model/SendMail.php:51
+msgid "アカウントの仮登録が完了しました"
+msgstr ""
+
+#: Model/SendMail.php:52
+msgid "パスワードの再設定"
+msgstr ""
+
+#: Model/SendMail.php:53
+msgid "パスワードの再設定が完了しました"
+msgstr ""
+
+#: Model/SendMail.php:54
+msgid "メールアドレス認証"
+msgstr ""
+
+#: Model/SendMail.php:55
+msgid "メールアドレス変更に伴う認証"
+msgstr ""
+
+#: View/Elements/Email/goalous_web.ctp:18
+msgid "◆Follow on Facebook"
+msgstr ""
+
+#: View/Elements/Email/goalous_web.ctp:22
+msgid "◆Goalous Blog"
+msgstr ""
+
+#: View/Elements/Email/goalous_web.ctp:26
+msgid "◆Goalousホーム"
+msgstr ""
+
+#: View/Elements/Email/login_url.ctp:5
+msgid "◆Goalousログイン"
+msgstr ""
+
+#: View/Elements/Email/no_reply.ctp:4
+msgid "□本メールは送信専用のため、"
+msgstr ""
+
+#: View/Elements/Email/no_reply.ctp:6
+msgid " 返信しないようお願いします。"
+msgstr ""
+
+#: View/Elements/Email/stop_mail.ctp:4
+msgid "□配信停止"
+msgstr ""
+
+#: View/Elements/Email/stop_mail.ctp:6
+msgid "　[ログイン]->[設定]->[通知]"
+msgstr ""
+
+#: View/Emails/text/account_verification.ctp:13
+#: View/Emails/text/change_email.ctp:13
+#: View/Emails/text/password_reset.ctp:13
+#: View/Emails/text/password_reset_complete.ctp:13
+#: View/Emails/text/token_resend.ctp:13
+msgid "こんにちは %sさん、"
+msgstr ""
+
+#: View/Emails/text/account_verification.ctp:15
+#: View/Emails/text/token_resend.ctp:15
+msgid "Goalousへようこそ！"
+msgstr ""
+
+#: View/Emails/text/account_verification.ctp:18
+msgid "以下のリンクをクリックしてアカウントを有効化してください。"
+msgstr ""
+
+#: View/Emails/text/change_email.ctp:16
+#: View/Emails/text/token_resend.ctp:18
+msgid "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
+msgstr ""
+
+#: View/Emails/text/change_email.ctp:21
+#: View/Emails/text/password_reset.ctp:21
+msgid "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+msgstr ""
+
+#: View/Emails/text/password_reset.ctp:16
+msgid "以下のリンクをクリックしてパスワードを再設定してください。"
+msgstr ""
+
+#: View/Emails/text/password_reset_complete.ctp:16
+msgid "パスワードの再設定が完了しました。"
+msgstr ""
+
+#: View/Emails/text/password_reset_complete.ctp:19
+msgid "もし、このメールに心当たりがない場合は、第三者が不正にあなたのパスワードを利用してログインしている可能性があります。"
+msgstr ""
+
+#: View/Emails/text/password_reset_complete.ctp:21
+msgid "その場合は直ちに以下にご連絡ください。"
+msgstr ""
+
