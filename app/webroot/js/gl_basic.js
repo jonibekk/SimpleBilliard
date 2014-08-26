@@ -94,7 +94,7 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
                 $modal_elm.modal();
             }).success(function () {
             });
@@ -107,7 +107,7 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
                 $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
                 $modal_elm.modal();
             }).success(function () {
@@ -121,7 +121,7 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
                 $modal_elm.modal();
             }).success(function () {
             });
@@ -134,7 +134,7 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({

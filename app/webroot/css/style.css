@@ -2,18 +2,22 @@ body {
     background: #e5e5e5;
     padding: 52px 0 0;
 }
+
 img {
     margin-left: auto;
     margin-right: auto;
 }
+
 footer {
     margin: 2em 0;
 }
+
 footer li {
     float: left;
     margin-right: 1.5em;
     margin-bottom: 1.5em;
 }
+
 footer p {
     clear: left;
     margin-bottom: 0;
@@ -744,6 +748,7 @@ ul.gl-input-images > li {
 .active .switch-arrow {
     visibility: visible;
 }
+
 /*/切り替えスイッチ*/
 
 /*メニューなどの▲マーク*/
@@ -839,6 +844,7 @@ ul.gl-input-images > li {
     border-color: #ddd;
     box-shadow: none;
 }
+
 .post-share-range {
     margin: 0 0 0 0;
     padding: 0;
@@ -1124,6 +1130,7 @@ ul.gl-input-images > li {
     max-height: 324px;
     overflow-y: scroll;
 }
+
 /*/モーダル全体*/
 /*モーダル個別*/
 .modal-circle-body hr {
@@ -1554,6 +1561,7 @@ ul.gl-input-images > li {
     border-top: none !important;
     font-size: 12px;
 }
+
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
@@ -1687,9 +1695,9 @@ ul.gl-input-images > li {
     z-index: 2000;
 }
 
-/*================================
-暫定的な設定(修正必須)
-================================*/
+/*=================================
+Temporary Properties - YOU MUST FIX
+==================================*/
 
 .develop--forbiddenLink {
     position: relative !important;
