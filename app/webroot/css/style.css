@@ -462,6 +462,10 @@ ul.example-indent {
 
 .gl-feed-text {
     padding: 10px 0 0 0;
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
 .gl-feed-picture {
@@ -494,6 +498,7 @@ ul.example-indent {
 
 .gl-comment-contents {
     padding: 0;
+    word-wrap: break-word;
 }
 
 .gl-comment-img {
@@ -520,6 +525,10 @@ ul.example-indent {
     padding-bottom: 2px;
     padding-left: 0;
     line-height: 18px;
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
 .gl-comment-photo {
@@ -856,28 +865,27 @@ ul.gl-input-images > li {
     box-shadow: none !important;
 }
 
-/*注意:feed-edit-formとcomment-edit-formはMediaQueryの切り替え毎にwidthをきっちり指定しないと崩れる恐れあり*/
 .edit-form {
     color: #231814;
     border-radius: 0;
     box-shadow: none !important;
-    padding-top: 2px;
-    padding-right: 2px !important;
-    padding-bottom: 2px;
-    padding-left: 2px;
-    margin-left: -3px;
-    margin-right: -3px;
+    padding-top: 4px;
+    padding-right: 0 !important;
+    padding-bottom: 4px;
+    padding-left: 0;
+    margin-left: -1px;
+    margin-right: -1px;
     resize: none;
 }
 
 .feed-edit-form {
-    width: 101%;
+    width: 100%;
     padding-top: 4px;
     padding-bottom: 4px;
 }
 
 .comment-edit-form {
-    width: 102%;
+    width: 100%;
     padding-top: 4px;
     padding-bottom: 4px;
 }
