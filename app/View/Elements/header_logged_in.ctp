@@ -39,7 +39,7 @@
                             </li>
                         <? endif; ?>
                         <li><a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>"><i
-                                    class="fa fa-users header-drop-icons"></i><?= __d('gl', 'チーム作成') ?></a></li>
+                                    class="fa fa-users header-drop-icons"></i><?= __d('gl', 'チームを作成') ?></a></li>
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o"></i></a>
