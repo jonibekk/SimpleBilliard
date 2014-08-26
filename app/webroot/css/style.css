@@ -1075,6 +1075,12 @@ ul.gl-input-images > li {
     color: #808080 !important;
 }
 
+.header-drop-icons {
+    padding-right: 4px;
+    width: 18px;
+    text-align: center;
+}
+
 /*/HEADER*/
 .post-share-range-label {
     width: 23%;
