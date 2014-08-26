@@ -15,21 +15,21 @@ App::uses('Controller', 'Controller');
  * Application Controller
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
-
  *
-*@package        app.Controller
+ * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent              $Lang
- * @property SessionComponent           $Session
- * @property TimezoneComponent          $Timezone
- * @property CookieComponent            $Cookie
- * @property GlEmailComponent           $GlEmail
- * @property PnotifyComponent           $Pnotify
- * @property MixpanelComponent          $Mixpanel
- * @property OgpComponent               $Ogp
- * @property User                       $User
- * @property Post                       $Post
- * @property NotifyBizComponent         $NotifyBiz
+ * @property LangComponent               $Lang
+ * @property SessionComponent            $Session
+ * @property SecurityComponent           $Security
+ * @property TimezoneComponent           $Timezone
+ * @property CookieComponent             $Cookie
+ * @property GlEmailComponent            $GlEmail
+ * @property PnotifyComponent            $Pnotify
+ * @property MixpanelComponent           $Mixpanel
+ * @property OgpComponent                $Ogp
+ * @property User                        $User
+ * @property Post                        $Post
+ * @property NotifyBizComponent          $NotifyBiz
  */
 class AppController extends Controller
 {
@@ -239,6 +239,27 @@ class AppController extends Controller
         $this->response->type('json');
         $this->response->body(json_encode($result));
         return $this->response;
+    }
+
+    function _setBasicAuth()
+    {
+        $loginId = 'isao';
+        $loginPassword = '1qaz2wsx';
+
+        $this->autoRender = false;
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="Private Page"');
+            header('HTTP/1.0 401 Unauthorized');
+            die("id / password Required");
+        }
+        else {
+            if ($_SERVER['PHP_AUTH_USER'] != $loginId || $_SERVER['PHP_AUTH_PW'] != $loginPassword) {
+                header('WWW-Authenticate: Basic realm="Private Page"');
+                header('HTTP/1.0 401 Unauthorized');
+                die("Invalid id / password combination.  Please try again");
+            }
+        }
+        $this->autoRender = true;
     }
 
 }
