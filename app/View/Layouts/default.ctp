@@ -28,19 +28,22 @@ else {
 <div id="container" class="container">
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
-            <div class="well layout-sub_padding design-mystatus">
-                <p>test</p>
+            <img src="/img/develop--submenu.jpg" class="develop--goals-column" alt="ちゃんと消しますよ？">
+            <!--
+                        <div class="well layout-sub_padding design-mystatus">
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
+                            <p>test</p>
 
-                <p>test</p>
-            </div>
+                            <p>test</p>
+                        </div>
+            -->
             <?= $this->element('circle_list') ?>
 
         </div>
