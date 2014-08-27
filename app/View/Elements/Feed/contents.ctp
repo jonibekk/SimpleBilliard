@@ -34,17 +34,15 @@
     </div>
 <? endif; ?>
 <? if (count($posts) == 20): ?>
-    <div class="panel panel-default" id="FeedMoreRead">
-        <div class="panel-body">
-            <div class="col col-xxs-12">
-                <a href="#" class="btn btn-link click-feed-read-more"
+    <div class="panel panel-default feed-read-more" id="FeedMoreRead">
+        <div class="panel-body panel-read-more-body">
+            <a href="#" class="btn btn-link click-feed-read-more"
                    parent-id="FeedMoreRead"
                    next-page-num="2"
                    get-url="<?=
                    $this->Html->url($feed_more_read_url) ?>"
                     >
-                    <?= __d('gl', "もっと読む") ?></a>
-            </div>
+                <?= __d('gl', "もっと読む ▼") ?></a>
         </div>
     </div>
 <? endif; ?>
