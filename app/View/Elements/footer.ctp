@@ -51,4 +51,5 @@
         </div>
     </div>
 </footer>
+<div id="layer-black"></div>
 <!-- END app/View/Elements/footer.ctp -->
