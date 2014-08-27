@@ -3,11 +3,13 @@ App::uses('AppModel', 'Model');
 
 /**
  * Post Model
+
  *
- * @property User               $User
+*@property User               $User
  * @property Team               $Team
  * @property CommentMention     $CommentMention
  * @property Comment            $Comment
+ * @property Goal               $Goal
  * @property GivenBadge         $GivenBadge
  * @property PostLike           $PostLike
  * @property PostMention        $PostMention
@@ -130,8 +132,7 @@ class Post extends AppModel
     public $belongsTo = [
         'User',
         'Team',
-        //TODO ゴールのモデルを追加した後にコメントアウト解除
-        //'Goal',
+        'Goal',
     ];
 
     /**
