@@ -1634,6 +1634,17 @@ ul.gl-input-images > li {
     line-height: 14px;
 }
 
+#layer-black {
+    display: none;
+    position: fixed;
+    z-index: 500;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .4);
+}
+
 .gl-navbar {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
@@ -1736,6 +1747,7 @@ ul.gl-input-images > li {
     position: fixed;
     z-index: 2000;
 }
+
 /*=================================
 Temporary Properties - YOU MUST FIX
 ==================================*/
