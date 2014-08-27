@@ -16,9 +16,8 @@
     <div class="gl-nav-container header-container">
         <div class="navbar-header navbar-right">
             <button type="button" class="navbar-toggle gl-hamburger" data-toggle="offcanvas"
-                    data-target=".navbar-offcanvas"
-                    data-canvas="body">
-                <span class="icon-bar"></span>
+                    data-target=".navbar-offcanvas">
+            <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
