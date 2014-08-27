@@ -2,18 +2,22 @@ body {
     background: #e5e5e5;
     padding: 52px 0 0;
 }
+
 img {
     margin-left: auto;
     margin-right: auto;
 }
+
 footer {
     margin: 2em 0;
 }
+
 footer li {
     float: left;
     margin-right: 1.5em;
     margin-bottom: 1.5em;
 }
+
 footer p {
     clear: left;
     margin-bottom: 0;
@@ -589,6 +593,24 @@ ul.example-indent {
     top: 0;
 }
 
+.panel-read-more-body {
+    padding: 0;
+}
+
+.feed-read-more {
+    margin-top: 20px;
+    background: #f4edf2;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    height: 40px;
+}
+
+.click-feed-read-more {
+    color: #b36e6f;
+    width: 100%;
+    height: 100%;
+}
+
 .site-info {
     padding: 9px 14px;
     background-color: #f7f7f9;
@@ -744,6 +766,7 @@ ul.gl-input-images > li {
 .active .switch-arrow {
     visibility: visible;
 }
+
 /*/切り替えスイッチ*/
 
 /*メニューなどの▲マーク*/
@@ -839,6 +862,7 @@ ul.gl-input-images > li {
     border-color: #ddd;
     box-shadow: none;
 }
+
 .post-share-range {
     margin: 0 0 0 0;
     padding: 0;
@@ -1124,6 +1148,7 @@ ul.gl-input-images > li {
     max-height: 324px;
     overflow-y: scroll;
 }
+
 /*/モーダル全体*/
 /*モーダル個別*/
 .modal-circle-body hr {
@@ -1237,6 +1262,30 @@ ul.gl-input-images > li {
 
 /*Small*/
 @media (min-width: 768px) {
+
+    #gotop {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-size: 150%;
+        margin: 0;
+    }
+
+    #gotop a {
+        background: #fff;
+        text-decoration: none;
+        color: #ccc;
+        width: 44px;
+        height: 44px;
+        line-height: 44px;
+        padding: 0;
+        text-align: center;
+        display: block;
+        border-radius: 4px;
+        opacity: 0.7;
+        vertical-align: middle;
+    }
+
     .container {
         width: 756px;
     }
@@ -1554,6 +1603,7 @@ ul.gl-input-images > li {
     border-top: none !important;
     font-size: 12px;
 }
+
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
@@ -1686,10 +1736,9 @@ ul.gl-input-images > li {
     position: fixed;
     z-index: 2000;
 }
-
-/*================================
-暫定的な設定(修正必須)
-================================*/
+/*=================================
+Temporary Properties - YOU MUST FIX
+==================================*/
 
 .develop--forbiddenLink {
     position: relative !important;

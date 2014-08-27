@@ -15,7 +15,8 @@
         <div class="col-lg-12">
 
             <ul class="list-unstyled">
-                <li class="pull-right"><a href="#top"><?= __d('gl', "トップに戻る") ?></a></li>
+                <li id="gotop" class="pull-right"><!--suppress HtmlUnknownAnchorTarget -->
+                    <a href="#top"><i class="fa fa-arrow-up"></i></a></li>
                 <li><?=
                     $this->Html->link(__d('home', 'Features'),
                                       [

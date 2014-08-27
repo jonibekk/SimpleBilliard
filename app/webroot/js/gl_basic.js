@@ -89,52 +89,60 @@ $(document).ready(function () {
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
-                $modal_elm.modal();
+                $modal_elm.append(data);
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                $modal_elm.append(data);
                 $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
-                $modal_elm.modal();
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
-                $modal_elm.modal();
+                $modal_elm.append(data);
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+                $modal_elm.append(data);
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({
@@ -153,6 +161,7 @@ $(document).ready(function () {
                 });
                 $modal_elm.modal();
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
@@ -335,4 +344,45 @@ $(function () {
             $(this).attr('placeholder', '準備中です。');
         }
     );
+});
+
+
+// Workaround for buggy header/footer fixed position when virtual keyboard is on/off
+$('input, textarea')
+    .on('focus', function () {
+        $('.navbar').css('position', 'absolute');
+    })
+    .on('blur', function () {
+        $('.navbar').css('position', 'fixed');
+        //force page redraw to fix incorrectly positioned fixed elements
+        setTimeout(function () {
+            window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+        }, 20);
+    });
+
+
+// goTop
+$(function () {
+    var showFlag = false;
+    var topBtn = $("#gotop");
+    topBtn.css("bottom", "-100px");
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 500) {
+            if (showFlag == false) {
+                showFlag = true;
+                topBtn.stop().animate({"bottom": "20px"}, 200);
+            }
+        } else {
+            if (showFlag) {
+                showFlag = false;
+                topBtn.stop().animate({"bottom": "-100px"}, 200);
+            }
+        }
+    });
+    topBtn.click(function () {
+        $("body,html").animate({
+            scrollTop: 0
+        }, 500, 'swing');
+        return false;
+    });
 });

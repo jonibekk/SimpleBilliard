@@ -169,22 +169,27 @@ class SendMail extends AppModel
                 'Notification' => []
             ]
         ];
-        if ($with_notify_from_user) {
-            $options['contain']['Notification'] =
-                [
-                    'NotifyFromUser' => [
-                        'limit'  => 2,
-                        'order'  => ['NotifyFromUser.modified desc'],
-                        'fields' => [
-                            'DISTINCT NotifyFromUser.user_id',
-                        ],
-                        'User'   => [
-                            'fields' => $this->SendMailToUser->User->profileFields,
-                        ]
-                    ]
-                ];
-        }
         $res = $this->find('first', $options);
+        if ($with_notify_from_user && !empty($res['Notification'])) {
+            $options = [
+                'conditions' => [
+                    'NotifyFromUser.notification_id' => $res['Notification']['id'],
+                ],
+                'limit'      => 2,
+                'order'      => ['MAX(NotifyFromUser.modified) desc'],
+                'group'      => ['NotifyFromUser.user_id'],
+                'contain'    => [
+                    'User' => [
+                        'fields' => $this->SendMailToUser->User->profileFields,
+                    ]
+                ]
+            ];
+            $from_users = $this->Notification->NotifyFromUser->find('all', $options);
+            if (!empty($from_users)) {
+                $res['NotifyFromUser'] = $from_users;
+            }
+        }
+
         if ($lang) {
             $this->me['language'] = $lang_backup;
             $this->SendMailToUser->User->me['language'] = $lang_backup;
