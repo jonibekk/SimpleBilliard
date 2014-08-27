@@ -89,13 +89,14 @@ $(document).ready(function () {
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
-                $modal_elm.modal();
+                $modal_elm.append(data);
             }).success(function () {
                 $('body').addClass('modal-open');
             });
@@ -103,14 +104,15 @@ $(document).ready(function () {
     });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
+                $modal_elm.append(data);
                 $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
-                $modal_elm.modal();
             }).success(function () {
                 $('body').addClass('modal-open');
             });
@@ -118,13 +120,14 @@ $(document).ready(function () {
     });
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
-                $modal_elm.modal();
+                $modal_elm.append(data);
             }).success(function () {
                 $('body').addClass('modal-open');
             });
@@ -132,12 +135,14 @@ $(document).ready(function () {
     });
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade" tabindex="-1">' + data + '</div>');
+                $modal_elm.append(data);
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({
