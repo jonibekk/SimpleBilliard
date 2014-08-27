@@ -206,7 +206,7 @@ class NotifyBizComponent extends Component
     private function _setFeedCommentedOnMyCommentedPostOption($post_id, $comment_id)
     {
         //宛先は自分以外のコメント主(投稿主ものぞく)
-        $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id, false);
+        $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id);
         if (empty($commented_user_list)) {
             return;
         }
