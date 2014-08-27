@@ -171,6 +171,15 @@ $(document).ready(function () {
         imageLazyOn();
     });
 
+    //noinspection JSJQueryEfficiency
+    $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
+        $('#layer-black').css('display', 'block');
+    });
+    //noinspection JSJQueryEfficiency
+    $('.navbar-offcanvas').on('hide.bs.offcanvas', function () {
+        $('#layer-black').css('display', 'none');
+    });
+
 });
 
 function imageLazyOn() {
