@@ -145,7 +145,7 @@ class SendMailShell extends AppShell
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
             $from_user_names = [];
-            foreach ($data['Notification']['NotifyFromUser'] as $user) {
+            foreach ($data['NotifyFromUser'] as $user) {
                 $from_user_names[] = $user['User']['display_username'];
             }
             $subject = $this->User->Notification->getTitle($data['Notification']['type'],
