@@ -1,12 +1,12 @@
 <?php
-App::uses('Goal', 'Model');
+App::uses('KeyResult', 'Model');
 
 /**
- * Goal Test Case
+ * KeyResult Test Case
  *
- * @property Goal $Goal
+ * @property KeyResult $KeyResult
  */
-class GoalTest extends CakeTestCase
+class KeyResultTest extends CakeTestCase
 {
 
     /**
@@ -15,14 +15,17 @@ class GoalTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.goal',
         'app.key_result',
-        'app.user',
         'app.team',
         'app.badge',
+        'app.user',
+        'app.email',
+        'app.notify_setting',
         'app.comment_like',
         'app.comment',
         'app.post',
+        'app.goal',
+        'app.goal_category',
         'app.post_share_user',
         'app.post_share_circle',
         'app.circle',
@@ -33,20 +36,17 @@ class GoalTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.group',
-        'app.team_member',
-        'app.job_category',
-        'app.invite',
         'app.notification',
         'app.notify_to_user',
         'app.notify_from_user',
-        'app.thread',
-        'app.message',
-        'app.email',
-        'app.notify_setting',
         'app.oauth_token',
+        'app.team_member',
+        'app.group',
+        'app.job_category',
         'app.local_name',
-        'app.goal_category'
+        'app.invite',
+        'app.thread',
+        'app.message'
     );
 
     /**
@@ -57,7 +57,7 @@ class GoalTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Goal = ClassRegistry::init('Goal');
+        $this->KeyResult = ClassRegistry::init('KeyResult');
     }
 
     /**
@@ -67,7 +67,7 @@ class GoalTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->Goal);
+        unset($this->KeyResult);
 
         parent::tearDown();
     }

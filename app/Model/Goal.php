@@ -4,10 +4,11 @@ App::uses('AppModel', 'Model');
 /**
  * Goal Model
  *
- * @property User         $User
- * @property Team         $Team
- * @property GoalCategory $GoalCategory
- * @property Post         $Post
+ * @property User              $User
+ * @property Team              $Team
+ * @property GoalCategory      $GoalCategory
+ * @property Post              $Post
+ * @property KeyResult         $KeyResult
  */
 class Goal extends AppModel
 {
@@ -107,7 +108,8 @@ class Goal extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Post'
+        'Post',
+        'KeyResult',
     ];
 
     function __construct($id = false, $table = null, $ds = null)
