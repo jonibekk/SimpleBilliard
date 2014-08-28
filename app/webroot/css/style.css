@@ -1213,6 +1213,10 @@ ul.gl-input-images > li {
     font-size: 14px;
 }
 
+#gotop-text {
+    display: none;
+}
+
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
@@ -1265,7 +1269,7 @@ ul.gl-input-images > li {
 
     #gotop {
         position: fixed;
-        bottom: 20px;
+        bottom: 28px;
         right: 20px;
         font-size: 150%;
         margin: 0;
@@ -1284,6 +1288,15 @@ ul.gl-input-images > li {
         border-radius: 4px;
         opacity: 0.7;
         vertical-align: middle;
+    }
+
+    #gotop-text {
+        display: inline-block;
+        position: fixed;
+        bottom: 8px;
+        right: -140px;
+        font-size: 50%;
+        margin: 0;
     }
 
     .container {

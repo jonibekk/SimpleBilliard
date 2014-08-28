@@ -595,6 +595,7 @@ class UsersController extends AppController
         if ($this->Auth->user('default_team_id')) {
             $this->User->TeamMember->updateLastLogin($this->Auth->user('default_team_id'), $this->Auth->user('id'));
         }
+        $this->User->_setSessionVariable();
         $this->Mixpanel->setUser($this->User->id);
     }
 
