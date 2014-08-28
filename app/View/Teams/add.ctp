@@ -42,9 +42,10 @@
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container addteam_photo-design"
+                            <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
                                  style="width: 150px; height: 150px;">
+                                <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
                         <span class="btn btn-default btn-file">

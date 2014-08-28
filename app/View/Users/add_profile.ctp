@@ -7,7 +7,7 @@
  */
 ?>
 <!-- START app/View/Users/add_profile.ctp -->
-<div class="row">
+<div class="row add-profile">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "プロフィールを入力してください") ?></div>
@@ -83,11 +83,11 @@
                 $this->Form->input('gender_type',
                                    [
                                        'type'    => 'radio',
-                                       'before' => '<label class="col col-sm-3 control-label">'
+                                       'before' => '<label class="col col-sm-3 control-label profile-radio-label">'
                                            . __d('gl', '性別') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
-                                       'class'   => 'radio-inline'
+                                       'class'  => 'radio-inline profile-radio-inline'
                                    ])
                 ?>
                 <hr>
@@ -140,8 +140,11 @@
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                                 style="width: 150px; height: 150px;"></div>
+                            <div class="fileinput-preview thumbnail nailthumb-container photo-design"
+                                 data-trigger="fileinput"
+                                 style="width: 150px; height: 150px;">
+                                <i class="fa fa-plus photo-plus-large"></i>
+                            </div>
                             <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
