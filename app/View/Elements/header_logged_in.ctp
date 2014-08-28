@@ -17,7 +17,7 @@
         <div class="navbar-header navbar-right">
             <button type="button" class="navbar-toggle gl-hamburger" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
-            <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
@@ -39,6 +39,8 @@
                         <? endif; ?>
                         <li><a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>"><i
                                     class="fa fa-users header-drop-icons"></i><?= __d('gl', 'チームを作成') ?></a></li>
+                        <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"><i
+                                    class="fa fa-flag header-drop-icons"></i><?= __d('gl', 'ゴールを作成') ?></a></li>
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o"></i></a>
