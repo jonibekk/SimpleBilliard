@@ -379,7 +379,7 @@ $(function () {
         if ($(this).scrollTop() > 500) {
             if (showFlag == false) {
                 showFlag = true;
-                topBtn.stop().animate({"bottom": "20px"}, 200);
+                topBtn.stop().animate({"bottom": "28px"}, 200);
             }
         } else {
             if (showFlag) {
@@ -394,4 +394,15 @@ $(function () {
         }, 500, 'swing');
         return false;
     });
+});
+
+$(function () {
+    $("#gotop").hover(
+        function () {
+            $("#gotop-text").animate({'right': '14px'}, 500);
+        },
+        function () {
+            $("#gotop-text").animate({'right': '-140px'}, 500);
+        }
+    );
 });
