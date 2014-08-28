@@ -22,6 +22,7 @@ class GoalFixture extends CakeTestFixture
         'due_date'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '期限(unixtime)'),
         'goal_value'       => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '目標値'),
         'goal_value_unit'  => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '目標値の単位'),
+        'photo_file_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'ゴール画像', 'charset' => 'utf8'),
         'valued_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '価値フラグ'),
         'evaluate_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価フラグ'),
         'status'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'ステータス(0 = 進行中, 1 = 中断, 2 = 完了)'),

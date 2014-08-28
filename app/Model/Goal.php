@@ -36,6 +36,23 @@ class Goal extends AppModel
      */
     public $displayField = 'goal';
 
+    public $actsAs = [
+        'Upload' => [
+            'photo' => [
+                'styles'      => [
+                    'small'        => '32x32',
+                    'medium'       => '48x48',
+                    'medium_large' => '96x96',
+                    'large'        => '128x128',
+                    'x_large'      => '256x256',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image.jpg',
+                'quality'     => 100,
+            ]
+        ]
+    ];
+
     /**
      * Validation rules
      *
@@ -66,6 +83,10 @@ class Goal extends AppModel
             'boolean' => [
                 'rule' => ['boolean'],
             ],
+        ],
+        'photo'        => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
     ];
 

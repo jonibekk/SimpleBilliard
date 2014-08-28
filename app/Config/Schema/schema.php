@@ -250,6 +250,7 @@ class AppSchema extends CakeSchema
         'due_date'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '期限(unixtime)'),
         'goal_value'       => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '目標値'),
         'goal_value_unit'  => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '目標値の単位'),
+        'photo_file_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'ゴール画像', 'charset' => 'utf8'),
         'valued_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '価値フラグ'),
         'evaluate_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価フラグ'),
         'status'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'ステータス(0 = 進行中, 1 = 中断, 2 = 完了)'),
@@ -435,8 +436,8 @@ class AppSchema extends CakeSchema
         'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
         'indexes'          => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
-            'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'del_flg' => array('column' => 'del_flg', 'unique' => 0)
+            'del_flg' => array('column' => 'del_flg', 'unique' => 0),
+            'user_id' => array('column' => 'user_id', 'unique' => 0)
         ),
         'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -609,6 +610,7 @@ class AppSchema extends CakeSchema
             'user_id'          => array('column' => 'user_id', 'unique' => 0),
             'team_id'          => array('column' => 'team_id', 'unique' => 0),
             'goal_id'          => array('column' => 'goal_id', 'unique' => 0),
+            'modified' => array('column' => 'modified', 'unique' => 0),
             'del_flg'          => array('column' => 'del_flg', 'unique' => 0),
             'type'             => array('column' => 'type', 'unique' => 0),
             'public_flg'       => array('column' => 'public_flg', 'unique' => 0),
