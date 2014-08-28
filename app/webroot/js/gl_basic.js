@@ -86,6 +86,10 @@ $(document).ready(function () {
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
+    $(document).on("touchend", "#layer-black", function () {
+        console.log('hide');
+        $('.navbar-offcanvas').offcanvas('hide');
+    });
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -173,10 +177,12 @@ $(document).ready(function () {
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
+        $('.container').css('position', 'fixed');
         $('#layer-black').css('display', 'block');
     });
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('hide.bs.offcanvas', function () {
+        $('.container').css('position', '');
         $('#layer-black').css('display', 'none');
     });
 
