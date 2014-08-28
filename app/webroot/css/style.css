@@ -679,6 +679,22 @@ ul.gl-input-images > li {
 
 /*/レイアウトの指定*/
 
+/*プロフィール入力画面*/
+.add-profile hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.profile-radio-label {
+    padding-top: 6px !important;
+}
+
+.profile-radio-inline {
+    padding-top: 4px !important;
+}
+
+/*/プロフィール入力画面*/
+
 /*タブで切り替え*/
 
 .gl-feed-switch {
@@ -1591,8 +1607,12 @@ ul.gl-input-images > li {
 .addteam_photo-design {
     background: #fff;
 }
-
 .addcircle_photo-design {
+    background: #fff;
+    border: 1px dashed #ddd;
+}
+
+.photo-design {
     background: #fff;
     border: 1px dashed #ddd;
 }
