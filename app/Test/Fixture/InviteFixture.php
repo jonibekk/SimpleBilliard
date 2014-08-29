@@ -109,7 +109,7 @@ class InviteFixture extends CakeTestFixture
             'from_user_id'        => '1',
             'to_user_id'          => null,
             'team_id'             => '1',
-            'email'               => 'test@aaa.com',
+            'email' => 'from@email.com',
             'message'             => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'email_verified'      => false,
             'email_token'         => 'token_test004',

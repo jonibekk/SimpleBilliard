@@ -1417,10 +1417,10 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $value_map = [
-            ['id', "2"],
+            ['id', "1"],
             [null, true]
         ];
-        $user = $Users->User->getDetail("2");
+        $user = $Users->User->getDetail("1");
         $Users->User->me = $user['User'];
 
         /** @noinspection PhpUndefinedMethodInspection */
