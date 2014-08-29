@@ -1285,7 +1285,7 @@ ul.gl-input-images > li {
 
     #gotop {
         position: fixed;
-        bottom: 28px;
+        bottom: -100px;
         right: 20px;
         font-size: 150%;
         margin: 0;
