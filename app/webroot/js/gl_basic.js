@@ -412,3 +412,12 @@ $(function () {
         }
     );
 });
+
+
+$(document).ready(function () {
+    $("a").hover(function () {
+        $(this).stop().animate({color: "#0096c1"}, 800);//ONマウス時のカラーと速度
+    }, function () {
+        $(this).stop().animate({color: "#111" }, 800);//OFFマウス時のカラーと速度
+    });
+});
