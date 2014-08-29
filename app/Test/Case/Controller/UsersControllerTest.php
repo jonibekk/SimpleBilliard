@@ -1335,7 +1335,7 @@ class UsersControllerTest extends ControllerTestCase
 
     function testAcceptInvite()
     {
-        $intite_token = 'token_test002';
+        $invite_token = 'token_test002';
         //$invite_id = '2';
 
         //ユーザ有,未ログイン,
@@ -1359,12 +1359,15 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map));
-        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+        $this->testAction('users/accept_invite/' . $invite_token, ['method' => 'GET', 'return' => 'contents']);
 
         //ユーザなし
-        $intite_token = "token_not_user_001";
-        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+        $invite_token = "token_not_user_001";
+        $this->testAction('users/accept_invite/' . $invite_token, ['method' => 'GET', 'return' => 'contents']);
 
+        //新規
+        $invite_token = 'token_test003';
+        $this->testAction('users/accept_invite/' . $invite_token, ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testAcceptInviteLoggedInForMe()
@@ -1396,7 +1399,37 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map));
         $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
+    }
 
+    function testAcceptInviteLoggedInForMeNotToUserId()
+    {
+        $intite_token = 'token_test004';
+        //ユーザ有,ログイン済,自分あてのtoken
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Auth' => ['user', 'loggedIn'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
+        $value_map = [
+            ['id', "1"],
+            [null, true]
+        ];
+        $user = $Users->User->getDetail("1");
+        $Users->User->me = $user['User'];
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
     }
 
     function testAcceptInviteLoggedInForOther()
