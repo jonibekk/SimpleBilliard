@@ -94,7 +94,12 @@ class InviteTest extends CakeTestCase
 
         $this->Invite->tokenData['Invite']['to_user_id'] = null;
         $res = $this->Invite->isUser($token);
+        $this->assertTrue($res, "[正常]存在するユーザか？");
+
+        $this->Invite->tokenData['Invite']['email'] = "not_found";
+        $res = $this->Invite->isUser($token);
         $this->assertFalse($res, "[正常]存在するユーザか？");
+
     }
 
     function testIsForMe()
