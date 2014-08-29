@@ -67,13 +67,11 @@ class NotifyBizComponent extends Component
                 $this->_setCircleUserJoinOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $this->is_one_on_one_notify = true;
                 $this->has_send_mail_interval_time = false;
                 $this->_setCircleChangePrivacyOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_ADD_USER:
                 $this->has_send_mail_interval_time = false;
-                $this->is_one_on_one_notify = true;
                 $this->_setCircleAddUserOption($model_id, $to_user_list);
                 break;
             default:
