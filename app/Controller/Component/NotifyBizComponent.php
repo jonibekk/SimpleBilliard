@@ -115,7 +115,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
-            json_encode([mb_strimwidth($post['Post']['body'], 0, 40, "...")]) : null;
+            json_encode([mb_strimwidth(trim($post['Post']['body']), 0, 40, "...")]) : null;
     }
 
     /**
@@ -229,7 +229,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([mb_strimwidth($comment['Comment']['body'], 0, 40, "...")]) : null;
+            json_encode([mb_strimwidth(trim($comment['Comment']['body']), 0, 40, "...")]) : null;
     }
 
     /**
@@ -261,7 +261,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([mb_strimwidth($comment['Comment']['body'], 0, 40, "...")]) : null;
+            json_encode([mb_strimwidth(trim($comment['Comment']['body']), 0, 40, "...")]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
     }
 
