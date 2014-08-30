@@ -135,6 +135,14 @@ class UsersController extends AppController
             $this->request->data['User']['language'] = $this->Lang->getLanguage();
             //トークン付きは本登録
             if (isset($this->request->params['named']['invite_token'])) {
+                try {
+                    //トークンが有効かチェック
+                    $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+                } catch (RuntimeException $e) {
+                    $this->Pnotify->outError($e->getMessage());
+                    $this->redirect('/');
+                }
+
                 //ユーザ登録成功
                 if ($this->User->userRegistration($this->request->data, false)) {
                     //ログイン
