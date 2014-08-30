@@ -113,6 +113,15 @@ class UsersControllerTest extends ControllerTestCase
         );
         $this->assertTextContains('<input type="hidden" name="data[Email][0][email]"', $this->view, "【正常系】[ユーザ登録画面]招待");
 
+        //異常系（トークンが存在しない）
+        $this->testAction(
+             '/users/register/invite_token:not_found_token',
+             [
+                 'return' => 'contents',
+                 'method' => 'get',
+             ]
+        );
+
         /**
          * @var UsersController $Users
          */
