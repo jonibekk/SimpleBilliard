@@ -405,19 +405,29 @@ $(function () {
 $(function () {
     $("#gotop").hover(
         function () {
-            $("#gotop-text").animate({'right': '14px'}, 500);
+            $("#gotop-text").stop().animate({'right': '14px'}, 500);
         },
         function () {
-            $("#gotop-text").animate({'right': '-140px'}, 500);
+            $("#gotop-text").stop().animate({'right': '-140px'}, 500);
         }
     );
 });
 
 
-$(document).ready(function () {
-    $("a").hover(function () {
-        $(this).stop().animate({color: "#0096c1"}, 800);//ONマウス時のカラーと速度
-    }, function () {
-        $(this).stop().animate({color: "#111" }, 800);//OFFマウス時のカラーと速度
-    });
+$(function () {
+    $(".header-link").hover(
+        function () {
+            $(this).stop().css("color", "#b43d3d").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
+        }, function () {
+            $(this).stop().css("color", "dimgray").animate({opacity: ".7" }, 400);//OFFマウス時のカラーと速度
+        });
+});
+
+$(function () {
+    $("#header").hover(
+        function () {
+            $(".header-link").stop().animate({opacity: ".7"}, 300);//ONマウス時のカラーと速度
+        }, function () {
+            $(".header-link").stop().animate({opacity: ".4" }, 600);//OFFマウス時のカラーと速度
+        });
 });

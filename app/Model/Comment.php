@@ -60,7 +60,7 @@ class Comment extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality'     => 75,
-                'default_url' => 'no-image.jpg',
+                'default_url' => 'no-image-link.png',
             ],
         ],
     ];

@@ -122,6 +122,7 @@ footer p {
 }
 */
 .link-rose-red {
+
     color: #b46d6d;
 }
 
@@ -1505,6 +1506,12 @@ ul.gl-input-images > li {
     }
 }
 
+@media (min-width: 1025px) {
+    .header-link {
+        opacity: .4;
+    }
+}
+
 @media (min-width: 1200px) {
     .container {
         width: 1008px;
@@ -1857,4 +1864,3 @@ Temporary Properties - YOU MUST FIX
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
-
