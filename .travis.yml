@@ -92,12 +92,8 @@ before_deploy:
   - php Vendor/bin/coveralls -v
 
 notifications:
-  hipchat:
-    rooms:
-      - 9a2786129965fc9a2d33d93a09a2b9@goalous2
-    template:
-      - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Change view</a>)'
-    format: html
+  slack: isao:Mcgs4pORm8368wH6Rwo5a6Rh
+
 deploy:
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA

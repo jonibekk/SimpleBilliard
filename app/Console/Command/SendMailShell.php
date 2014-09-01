@@ -229,13 +229,7 @@ class SendMailShell extends AppShell
         }
         Configure::write('Config.language', $lang);
         //送信データを再取得
-        if (isset($this->lang_data[$lang])) {
-            $data = $this->lang_data[$lang];
-        }
-        else {
-            $data = $this->SendMail->getDetail($this->params['id'], $lang, $with_notify_from_user);
-            $this->lang_data[$lang] = $data;
-        }
+        $data = $this->SendMail->getDetail($this->params['id'], $lang, $with_notify_from_user, $to_user_id);
         //ToUserデータを付加
         $to_user = $this->User->getProfileAndEmail($to_user_id, $lang);
         $data['ToUser'] = $to_user['User'];

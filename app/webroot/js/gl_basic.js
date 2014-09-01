@@ -106,22 +106,6 @@ $(document).ready(function () {
             });
         }
     });
-    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
-        e.preventDefault();
-        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.modal();
-        var url = $(this).attr('href');
-        if (url.indexOf('#') == 0) {
-            $(url).modal('open');
-        } else {
-            $.get(url,function (data) {
-                $modal_elm.append(data);
-                $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
-            }).success(function () {
-                $('body').addClass('modal-open');
-            });
-        }
-    });
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -149,6 +133,7 @@ $(document).ready(function () {
                 $modal_elm.append(data);
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
+                $modal_elm.find('textarea').autosize();
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
@@ -405,10 +390,29 @@ $(function () {
 $(function () {
     $("#gotop").hover(
         function () {
-            $("#gotop-text").animate({'right': '14px'}, 500);
+            $("#gotop-text").stop().animate({'right': '14px'}, 500);
         },
         function () {
-            $("#gotop-text").animate({'right': '-140px'}, 500);
+            $("#gotop-text").stop().animate({'right': '-140px'}, 500);
         }
     );
+});
+
+
+$(function () {
+    $(".header-link").hover(
+        function () {
+            $(this).stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
+        }, function () {
+            $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
+        });
+});
+
+$(function () {
+    $("#header").hover(
+        function () {
+            $(".header-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
+        }, function () {
+            $(".header-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
+        });
 });

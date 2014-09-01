@@ -79,7 +79,7 @@ class Post extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'quality'     => 75,
-                'default_url' => 'no-image.jpg',
+                'default_url' => 'no-image-link.png',
             ],
         ],
     ];
@@ -476,7 +476,8 @@ class Post extends AppModel
         }
         $share_member_list = array_unique($share_member_list);
         //自分自身を除外
-        if ($key = array_search($this->my_uid, $share_member_list)) {
+        $key = array_search($this->my_uid, $share_member_list);
+        if ($key !== false) {
             unset($share_member_list[$key]);
         }
         return $share_member_list;

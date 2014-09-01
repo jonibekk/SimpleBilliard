@@ -158,6 +158,23 @@ $(document).ready(function () {
             return m;
         }
     });
+    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url,function (data) {
+                $modal_elm.append(data);
+                $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small", onText: "<?=__d('gl',"参加")?>", offText: "<?=__d('gl',"不参加")?>"});
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    });
+
 });
 function format(item) {
     return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";

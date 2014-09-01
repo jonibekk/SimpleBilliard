@@ -121,6 +121,20 @@ class UsersController extends AppController
         if ($this->Auth->user()) {
             $this->redirect('/');
         }
+        //トークン付きの場合はメアドデータを取得
+        if (isset($this->request->params['named']['invite_token'])) {
+            try {
+                //トークンが有効かチェック
+                $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            } catch (RuntimeException $e) {
+                $this->Pnotify->outError($e->getMessage());
+                $this->redirect('/');
+            }
+            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
+            if (isset($invite['Invite']['email'])) {
+                $this->set(['email' => $invite['Invite']['email']]);
+            }
+        }
 
         if ($this->request->is('post') && !empty($this->request->data)) {
             //タイムゾーンをセット
@@ -156,15 +170,6 @@ class UsersController extends AppController
                     $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
                     $this->redirect(['action' => 'sent_mail']);
                 }
-            }
-        }
-        //トークン付きの場合はメアドデータを取得
-        if (isset($this->request->params['named']['invite_token'])) {
-            //トークンチェック
-            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
-            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
-            if (isset($invite['Invite']['email'])) {
-                $this->set(['email' => $invite['Invite']['email']]);
             }
         }
 
