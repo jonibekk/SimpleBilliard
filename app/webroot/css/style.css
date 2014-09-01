@@ -1115,11 +1115,11 @@ ul.gl-input-images > li {
     padding-left: 10px !important;
 }
 
-.header-home {
-    font-size: 12px !important;
+.gl-navbar-icons .header-home {
+    font-size: 12px;
     line-height: 30px;
     margin-right: 10px;
-    color: #808080 !important;
+    color: #808080;
 }
 
 .header-drop-icons {
@@ -1160,6 +1160,9 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
+.header-icon {
+    width: 20px;
+}
 /*モーダル全体*/
 .modal-body {
     max-height: 324px;

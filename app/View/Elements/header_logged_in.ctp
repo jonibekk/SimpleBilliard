@@ -26,7 +26,7 @@
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
                     <a href="#" data-toggle="dropdown" id="download">
-                        <i class="fa fa-plus-circle header-link"></i>
+                        <i class="fa fa-plus-circle header-link header-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
@@ -41,8 +41,8 @@
                                     class="fa fa-users header-drop-icons"></i><?= __d('gl', 'チームを作成') ?></a></li>
                     </ul>
                 </div>
-                <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link"></i></a>
-                <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o header-link"></i></a>
+                <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
+                <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o header-link header-icon"></i></a>
 
                 <div class="dropdown gl-navbar-nav-fix">
                     <a href="#" class="dropdown-toggle me-menu-image no-line header-user-profile" data-toggle="dropdown"
@@ -79,10 +79,12 @@
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
-                <li><a href="#" class="header-goal develop--forbiddenLink"><i class="fa fa-bullseye header-link"></i>&nbsp;
+                <li><a href="#" class="header-goal develop--forbiddenLink"><i
+                            class="fa fa-bullseye header-link header-icon"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
                     </a></li>
-                <li><a href="#" class="header-team develop--forbiddenLink"><i class="fa fa-users header-link"></i>&nbsp;
+                <li><a href="#" class="header-team develop--forbiddenLink"><i
+                            class="fa fa-users header-link header-icon"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
                     </a>
                 </li>
