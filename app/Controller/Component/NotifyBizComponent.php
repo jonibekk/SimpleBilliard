@@ -106,6 +106,7 @@ class NotifyBizComponent extends Component
         }
         //宛先は閲覧可能な全ユーザ
         $members = $this->Post->getShareAllMemberList($post_id);
+
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED);
