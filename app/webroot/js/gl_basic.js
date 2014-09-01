@@ -106,22 +106,6 @@ $(document).ready(function () {
             });
         }
     });
-    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
-        e.preventDefault();
-        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.modal();
-        var url = $(this).attr('href');
-        if (url.indexOf('#') == 0) {
-            $(url).modal('open');
-        } else {
-            $.get(url,function (data) {
-                $modal_elm.append(data);
-                $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
-            }).success(function () {
-                $('body').addClass('modal-open');
-            });
-        }
-    });
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
