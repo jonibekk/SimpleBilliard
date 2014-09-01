@@ -79,10 +79,20 @@ footer p {
 }
 
 .site-info {
-    background: #fff;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    padding: 9px;
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    border-radius: 4px;
 }
 
+.media-heading {
+    margin-bottom: 3px;
+}
+
+.media-url {
+    margin-bottom: 3px;
+}
 /*Fontの指定*/
 .font-size_11 {
     font-size: 11px;
@@ -122,6 +132,7 @@ footer p {
 }
 */
 .link-rose-red {
+
     color: #b46d6d;
 }
 
@@ -609,13 +620,6 @@ ul.example-indent {
     color: #b36e6f;
     width: 100%;
     height: 100%;
-}
-
-.site-info {
-    padding: 9px 14px;
-    background-color: #f7f7f9;
-    border: 1px solid #e1e1e8;
-    border-radius: 4px;
 }
 
 .showmore {
@@ -1114,13 +1118,6 @@ ul.gl-input-images > li {
     padding-left: 10px !important;
 }
 
-.header-home {
-    font-size: 12px !important;
-    line-height: 30px;
-    margin-right: 10px;
-    color: #808080 !important;
-}
-
 .header-drop-icons {
     padding-right: 4px;
     width: 18px;
@@ -1159,6 +1156,20 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
+.header-icon {
+    width: 20px;
+}
+
+.gl-navbar-icons .header-home {
+    font-size: 12px;
+    line-height: 30px;
+    margin-right: 10px;
+    color: #808080;
+}
+
+#header .header-icon {
+    color: #505050;
+}
 /*モーダル全体*/
 .modal-body {
     max-height: 324px;
@@ -1505,6 +1516,12 @@ ul.gl-input-images > li {
     }
 }
 
+@media (min-width: 1025px) {
+    .header-link {
+        opacity: 0.54;
+    }
+}
+
 @media (min-width: 1200px) {
     .container {
         width: 1008px;
@@ -1832,12 +1849,12 @@ Temporary Properties - YOU MUST FIX
     z-index: -1999;
 }
 
-.ribbon-local {
-    background: blue;
-}
-
 .ribbon-staging {
     background: green;
+}
+
+.ribbon-local {
+    background: blue;
 }
 
 .develop--submenu {
@@ -1857,4 +1874,3 @@ Temporary Properties - YOU MUST FIX
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
-
