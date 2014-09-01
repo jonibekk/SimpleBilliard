@@ -183,7 +183,7 @@
                             <div class="media-body">
                                 <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
 
-                                <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                <p class="font-size_11 media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
                                 <? if (isset($site_info['description'])): ?>
                                     <div class="font-size_12">
                                         <?= $site_info['description'] ?>
