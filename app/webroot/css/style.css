@@ -1115,13 +1115,6 @@ ul.gl-input-images > li {
     padding-left: 10px !important;
 }
 
-.gl-navbar-icons .header-home {
-    font-size: 12px;
-    line-height: 30px;
-    margin-right: 10px;
-    color: #808080;
-}
-
 .header-drop-icons {
     padding-right: 4px;
     width: 18px;
@@ -1162,6 +1155,17 @@ ul.gl-input-images > li {
 
 .header-icon {
     width: 20px;
+}
+
+.gl-navbar-icons .header-home {
+    font-size: 12px;
+    line-height: 30px;
+    margin-right: 10px;
+    color: #808080;
+}
+
+#header .header-icon {
+    color: #505050;
 }
 /*モーダル全体*/
 .modal-body {
@@ -1511,7 +1515,7 @@ ul.gl-input-images > li {
 
 @media (min-width: 1025px) {
     .header-link {
-        opacity: .4;
+        opacity: 0.54;
     }
 }
 
