@@ -150,8 +150,9 @@ class Circle extends AppModel
         if (isset($data['Circle']['members']) && !empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
-                $val = str_replace('user_', '', $val);;
-                if ($key = array_search($val, $exists_member_list)) {
+                $val = str_replace('user_', '', $val);
+                $key = array_search($val, $exists_member_list);
+                if ($key !== false) {
                     unset($exists_member_list[$key]);
                     continue;
                 }
