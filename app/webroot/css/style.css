@@ -1846,12 +1846,12 @@ Temporary Properties - YOU MUST FIX
     z-index: -1999;
 }
 
-.ribbon-local {
-    background: blue;
-}
-
 .ribbon-staging {
     background: green;
+}
+
+.ribbon-local {
+    background: blue;
 }
 
 .develop--submenu {
