@@ -146,11 +146,10 @@ class SendMail extends AppModel
      * 詳細なユーザ名等を含んだデータを返す
      * $to_user_idは送信先ユーザID。このIDが指定された場合はNotifyFromUserから送信先ユーザを除外する
      *
-*@param      $id
+     * @param      $id
      * @param null $lang
-
      *
-*@return array|null
+     * @return array|null
      */
     public function getDetail($id, $lang = null, $with_notify_from_user = false, $to_user_id = null)
     {

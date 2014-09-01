@@ -37,107 +37,19 @@ class NotifyFromUserFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array(
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 1,
-            'created'         => 1,
-            'modified'        => 1
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 2,
-            'created'         => 2,
-            'modified'        => 2
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 3,
-            'created'         => 3,
-            'modified'        => 3
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 4,
-            'created'         => 4,
-            'modified'        => 4
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 5,
-            'created'         => 5,
-            'modified'        => 5
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 6,
-            'created'         => 6,
-            'modified'        => 6
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 7,
-            'created'         => 7,
-            'modified'        => 7
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 8,
-            'created'         => 8,
-            'modified'        => 8
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 9,
-            'created'         => 9,
-            'modified'        => 9
-        ),
-        array(
-            'id'              => '',
-            'notification_id' => '',
-            'user_id'         => '',
-            'team_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 10,
-            'created'         => 10,
-            'modified'        => 10
-        ),
-    );
+    public $records = [
+        [
+            'id'              => '1',
+            'notification_id' => '1',
+            'user_id'         => '1',
+            'team_id'         => '1',
+        ],
+        [
+            'id'              => '2',
+            'notification_id' => '1',
+            'user_id'         => '2',
+            'team_id'         => '1',
+        ],
+    ];
 
 }
