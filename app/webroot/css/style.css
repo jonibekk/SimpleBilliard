@@ -1115,13 +1115,6 @@ ul.gl-input-images > li {
     padding-left: 10px !important;
 }
 
-.header-home {
-    font-size: 12px !important;
-    line-height: 30px;
-    margin-right: 10px;
-    color: #808080 !important;
-}
-
 .header-drop-icons {
     padding-right: 4px;
     width: 18px;
@@ -1160,6 +1153,20 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
+.header-icon {
+    width: 20px;
+}
+
+.gl-navbar-icons .header-home {
+    font-size: 12px;
+    line-height: 30px;
+    margin-right: 10px;
+    color: #808080;
+}
+
+#header .header-icon {
+    color: #505050;
+}
 /*モーダル全体*/
 .modal-body {
     max-height: 324px;
@@ -1508,7 +1515,7 @@ ul.gl-input-images > li {
 
 @media (min-width: 1025px) {
     .header-link {
-        opacity: .4;
+        opacity: 0.54;
     }
 }
 
@@ -1839,12 +1846,12 @@ Temporary Properties - YOU MUST FIX
     z-index: -1999;
 }
 
-.ribbon-local {
-    background: blue;
-}
-
 .ribbon-staging {
     background: green;
+}
+
+.ribbon-local {
+    background: blue;
 }
 
 .develop--submenu {
