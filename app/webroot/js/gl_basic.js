@@ -133,6 +133,7 @@ $(document).ready(function () {
                 $modal_elm.append(data);
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
+                $modal_elm.find('textarea').autosize();
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',

@@ -1192,6 +1192,10 @@ ul.gl-input-images > li {
     display: inline-block;
 }
 
+.fileinput-new {
+    margin-bottom: 0;
+}
+
 /*/モーダル個別*/
 
 /*login*/
