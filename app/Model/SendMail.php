@@ -144,13 +144,15 @@ class SendMail extends AppModel
 
     /**
      * 詳細なユーザ名等を含んだデータを返す
+     * $to_user_idは送信先ユーザID。このIDが指定された場合はNotifyFromUserから送信先ユーザを除外する
      *
-     * @param      $id
+*@param      $id
      * @param null $lang
+
      *
-     * @return array|null
+*@return array|null
      */
-    public function getDetail($id, $lang = null, $with_notify_from_user = false)
+    public function getDetail($id, $lang = null, $with_notify_from_user = false, $to_user_id = null)
     {
         $lang_backup = null;
         if ($lang) {
@@ -184,6 +186,9 @@ class SendMail extends AppModel
                     ]
                 ]
             ];
+            if ($to_user_id) {
+                $options['conditions']['NOT']['NotifyFromUser.user_id'] = $to_user_id;
+            }
             $from_users = $this->Notification->NotifyFromUser->find('all', $options);
             if (!empty($from_users)) {
                 $res['NotifyFromUser'] = $from_users;
