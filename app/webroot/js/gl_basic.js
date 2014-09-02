@@ -134,6 +134,15 @@ $(document).ready(function () {
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
                 $modal_elm.find('textarea').autosize();
+                //アップロード画像選択時にトリムして表示
+                $modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 96,
+                        height: 96,
+                        fitDirection: 'center center'
+                    });
+                });
+
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
@@ -407,12 +416,20 @@ $(function () {
             $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
         });
 });
+$(function () {
+    $(".header-user-profile").hover(
+        function () {
+            $(".header-profile-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
+        }, function () {
+            $(".header-profile-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
+        });
+});
 
 $(function () {
     $("#header").hover(
         function () {
-            $(".header-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
+            $(".header-link , .header-profile-icon").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
         }, function () {
-            $(".header-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
+            $(".header-link , .header-profile-icon").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
         });
 });

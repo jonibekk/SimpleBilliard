@@ -1177,6 +1177,10 @@ ul.gl-input-images > li {
     width: 20px;
 }
 
+.header-profile-icon {
+    width: 16px;
+}
+
 .gl-navbar-icons .header-home {
     font-size: 12px;
     line-height: 30px;
@@ -1184,9 +1188,6 @@ ul.gl-input-images > li {
     color: #808080;
 }
 
-#header .header-icon {
-    color: #505050;
-}
 /*モーダル全体*/
 .modal-body {
     max-height: 324px;
@@ -1222,6 +1223,35 @@ ul.gl-input-images > li {
 
 /*/login*/
 
+/*キャンセルボタンのデザイン*/
+.design-cancel {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    background-image: none;
+    color: #777;
+}
+
+.design-cancel:target,
+.design-cancel:hover {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    background-image: none;
+    color: #231814;
+    text-decoration: none;
+}
+
+.btn[disabled] {
+    opacity: 0.3;
+}
+
+.team-button {
+    margin-right: 12px;
+}
+
+/*/キャンセルボタンのデザイン*/
+
 /*共有範囲の画像とテキスト*/
 .select2-item-img {
     display: inline-block;
@@ -1242,7 +1272,6 @@ ul.gl-input-images > li {
     vertical-align: middle;
     text-decoration: none !important;
 }
-
 /*/共有範囲の画像とテキスト*/
 
 /*ハンバーガー*/
@@ -1540,6 +1569,18 @@ ul.gl-input-images > li {
 @media (min-width: 1025px) {
     .header-link {
         opacity: 0.54;
+    }
+
+    #header .header-icon {
+        color: #505050;
+    }
+
+    .header-profile-icon {
+        opacity: 0.54;
+    }
+
+    #header .header-profile-icon {
+        color: #505050;
     }
 }
 
@@ -1903,4 +1944,8 @@ Temporary Properties - YOU MUST FIX
 
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.margin-right-8px {
+    margin-right: 8px;
 }

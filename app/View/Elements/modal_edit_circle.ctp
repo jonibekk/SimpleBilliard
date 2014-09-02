@@ -81,12 +81,13 @@
                 <label for="" class="col col-sm-3 control-label"><?= __d('gl', "サークル画像") ?></label>
 
                 <div class="col col-sm-6">
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput_small fileinput-new" data-provides="fileinput">
                         <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                             style="width: 150px; height: 150px;">
+                             style="width: 96px; height: 96px; line-height: 96px;"
+                            >
                             <?=
                             $this->Upload->uploadImage($this->request->data, 'Circle.photo',
-                                                       ['style' => 'x_large']) ?>
+                                                       ['style' => 'medium_large']) ?>
                         </div>
                         <div>
                         <span class="btn btn-default btn-file">
@@ -128,6 +129,8 @@
             $this->Form->submit(__d('gl', "変更を保存"),
                                 ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
             <?= $this->Form->end(); ?>
+            <button type="button" class="btn btn-link design-cancel pull-right margin-right-8px"
+                    data-dismiss="modal"><?= __d('gl', "キャンセル") ?></button>
             <?=
             $this->Form->postLink(__d('gl', "サークルを削除"),
                                   ['controller' => 'circles', 'action' => 'delete', $this->request->data['Circle']['id']],

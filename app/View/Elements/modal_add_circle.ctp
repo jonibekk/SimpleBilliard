@@ -84,7 +84,7 @@
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
-                                 style="width: 96px; height: 96px;">
+                                 style="width: 96px; height: 96px; line-height:96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
@@ -125,10 +125,13 @@
 
             <div class="modal-footer addcircle_pannel-footer">
                 <div class="row">
-                <div class="col-sm-9 col-sm-offset-3">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <button type="button" class="btn btn-link design-cancel" data-dismiss="modal"><?= __d('gl',
+                                                                                                              "キャンセル") ?></button>
                         <?=
                         $this->Form->submit(__d('gl', "サークルを作成"),
-                                            ['class' => 'btn btn-primary', 'div' => false,]) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+
                     </div>
                 </div>
             </div>
