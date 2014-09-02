@@ -23,13 +23,13 @@
                     'label'     => [
                         'class' => 'col col-sm-3 control-label'
                     ],
-                    'wrapInput' => 'col col-sm-6',
+                    'wrapInput' => 'col col-sm-7',
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id' => 'AddGoalForm',
+                'id'            => 'AddGoalForm',
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <?=
@@ -47,6 +47,25 @@
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'afterInput'               => '<span class="help-block">' . __d('gl',
                                                                                                     "例）世界から貧困を減らすこと") . '</span>'
+                                   ]) ?>
+                <hr>
+                <?=
+                $this->Form->input('KeyResult.0.name',
+                                   ['label'       => __d('gl', "なにをどうする？"),
+                                    'placeholder' => __d('gl', "具体的に何をどうするかを絞り込んで書く"),
+                                    'rows'        => 1,
+                                    'afterInput'  => '<span class="help-block">' . __d('gl',
+                                                                                       "例）極度な貧困率を減少させる") . '</span>'
+                                   ]) ?>
+                <?=
+                $this->Form->input('KeyResult.0.desired_value',
+                                   ['label' => __d('gl', "達成時"),
+                                    'type'  => 'number',
+                                   ]) ?>
+                <?=
+                $this->Form->input('KeyResult.0.current_value',
+                                   ['label' => __d('gl', "現在"),
+                                    'type'  => 'number',
                                    ]) ?>
                 <hr>
                 <?=
