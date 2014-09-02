@@ -47,8 +47,9 @@
             <? if (!empty($circles)): ?>
                 <?=
                 $this->Form->submit(__d('gl', "変更を保存"),
-                                    ['class' => 'btn btn-primary pull-right', 'div' => false, 'disabled' => 'disabled']) ?>
-                <button type="button" class="btn btn-link design-cancel" data-dismiss="modal"><?= __d('gl',
+                                    ['class' => 'btn btn-primary pull-right', 'div' => false /*, 'disabled' => 'disabled'*/]) ?>
+                <button type="button" class="btn btn-link design-cancel margin-right-8px"
+                        data-dismiss="modal"><?= __d('gl',
                                                                                                       "キャンセル") ?></button>
             <? else: ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
