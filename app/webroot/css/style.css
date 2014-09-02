@@ -168,13 +168,13 @@ footer p {
 }
 
 .link-gray {
-    color: #c1c4c7;
+    color: #aaa;
 }
 
 .link-gray:hover,
 .link-gray:active,
 .link-gray:focus {
-    color: #b4b8bf;
+    color: #666;
 }
 
 .link-dark-gray {
@@ -278,6 +278,11 @@ footer p {
     padding-left: 5px;
     padding-right: 5px;
 }
+
+.feed-share-range .col {
+    padding-left: 0;
+}
+
 
 /*inlineのフォームでスマホでも幅を固定する*/
 .gl-inline-fix {
@@ -468,6 +473,18 @@ ul.example-indent {
     padding-top: 5px;
 }
 */
+.feed-share-range {
+    background: #e5e5e5;
+    border: none;
+    box-shadow: none;
+}
+
+.feed-share-range .panel-body {
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 3px;
+}
+
 .gl-feed-user {
     padding: 0;
 }
@@ -1533,6 +1550,15 @@ ul.gl-input-images > li {
 }
 
 /*/メディアクエリで切り替え*/
+
+.feed-share-range {
+    margin-bottom: 0;
+}
+
+.feed-share-range-circle {
+    color: #231814;
+    font-weight: bold;
+}
 
 /*MergeLater_pannelFooter*/
 .setting_pannel-footer {
