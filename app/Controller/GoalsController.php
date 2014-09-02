@@ -19,6 +19,8 @@ class GoalsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         if ($this->request->is('post') && !empty($this->request->data)) {
         }
+        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
+        $this->set(compact('goal_category_list'));
     }
 
 }

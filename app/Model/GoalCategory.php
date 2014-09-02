@@ -53,4 +53,30 @@ class GoalCategory extends AppModel
         'Goal',
     ];
 
+    function getCategoryList()
+    {
+        $res = $this->find('list', ['conditions' => ['team_id' => $this->current_team_id]]);
+        if (empty($res)) {
+            $this->saveDefaultCategory();
+            $res = $this->find('list', ['conditions' => ['team_id' => $this->current_team_id]]);
+        }
+        return $res;
+    }
+
+    function saveDefaultCategory()
+    {
+        $data = [
+            [
+                'name'    => __d('gl', "職務"),
+                'team_id' => $this->current_team_id,
+            ],
+            [
+                'name'    => __d('gl', "成長"),
+                'team_id' => $this->current_team_id,
+            ],
+        ];
+        $res = $this->saveAll($data);
+        return $res;
+    }
+
 }

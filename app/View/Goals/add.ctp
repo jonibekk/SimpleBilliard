@@ -4,9 +4,11 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
+
  *
- * @var View $this
+*@var View $this
  * @var      $this CodeCompletionView
+ * @var      $goal_category_list
  */
 ?>
 <!-- START app/View/Goals/add.ctp -->
@@ -35,6 +37,13 @@
                                    ['label'       => __d('gl', "目的"),
                                     'placeholder' => __d('gl', "例) 昇級したい"),
                                    ]) ?>
+                <hr>
+                <?=
+                $this->Form->input('goal_category_id', [
+                    'label'   => __d('gl', "カテゴリ"),
+                    'type'    => 'select',
+                    'options' => $goal_category_list,
+                ])?>
                 <hr>
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "ゴール画像") ?></label>
