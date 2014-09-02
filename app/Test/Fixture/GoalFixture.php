@@ -18,7 +18,6 @@ class GoalFixture extends CakeTestFixture
         'team_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'goal_category_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ゴールカテゴリ'),
         'purpose'          => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '目的', 'charset' => 'utf8'),
-        'due_date'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '期限(unixtime)'),
         'photo_file_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'ゴール画像', 'charset' => 'utf8'),
         'valued_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '価値フラグ'),
         'evaluate_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価フラグ'),
