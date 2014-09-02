@@ -134,6 +134,15 @@ $(document).ready(function () {
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
                 $modal_elm.find('textarea').autosize();
+                //アップロード画像選択時にトリムして表示
+                $modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 96,
+                        height: 96,
+                        fitDirection: 'center center'
+                    });
+                });
+
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
