@@ -28,7 +28,9 @@ class GoalsController extends AppController
         }
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
-        $this->set(compact('goal_category_list', 'priority_list'));
+        $kr_priority_list = $this->Goal->KeyResult->priority_list;
+        $kr_value_unit_list = KeyResult::$UNIT;
+        $this->set(compact('goal_category_list', 'priority_list', 'kr_priority_list', 'kr_value_unit_list'));
     }
 
 }
