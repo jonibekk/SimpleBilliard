@@ -30,6 +30,14 @@ class Goal extends AppModel
         self::$STATUS[self::STATUS_COMPLETE] = __d('gl', "完了");
     }
 
+    public $priority_list = [
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+    ];
+
     /**
      * Display field
      *

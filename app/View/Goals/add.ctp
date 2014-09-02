@@ -4,11 +4,11 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
-
  *
-*@var View $this
+ * @var View    $this
  * @var      $this CodeCompletionView
  * @var      $goal_category_list
+ * @var         $priority_list
  */
 ?>
 <!-- START app/View/Goals/add.ctp -->
@@ -43,6 +43,16 @@
                     'label'   => __d('gl', "カテゴリ"),
                     'type'    => 'select',
                     'options' => $goal_category_list,
+                ])?>
+                <hr>
+                <?=
+                $this->Form->input('priority', [
+                    'label'    => __d('gl', "重要度"),
+                    'type'     => 'select',
+                    'default'  => 3,
+                    'required' => false,
+                    'style'    => 'width:50px',
+                    'options'  => $priority_list,
                 ])?>
                 <hr>
                 <div class="form-group">

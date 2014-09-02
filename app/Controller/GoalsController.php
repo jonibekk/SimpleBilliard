@@ -20,7 +20,8 @@ class GoalsController extends AppController
         if ($this->request->is('post') && !empty($this->request->data)) {
         }
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
-        $this->set(compact('goal_category_list'));
+        $priority_list = $this->Goal->priority_list;
+        $this->set(compact('goal_category_list', 'priority_list'));
     }
 
 }
