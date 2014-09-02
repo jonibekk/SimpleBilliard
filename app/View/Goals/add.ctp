@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
-
  *
-*@var View    $this
+ * @var View $this
  * @var         $this CodeCompletionView
  * @var         $goal_category_list
  * @var         $priority_list
@@ -30,21 +29,25 @@
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
+                'id' => 'AddGoalForm',
             ]); ?>
             <div class="panel-body add-team-panel-body">
-                <?=
-                $this->Form->input('purpose',
-                                   ['label'       => __d('gl', "目的"),
-                                    'placeholder' => __d('gl', "例) 昇級したい"),
-                                    'rows' => 1,
-                                   ]) ?>
-                <hr>
                 <?=
                 $this->Form->input('goal_category_id', [
                     'label'   => __d('gl', "カテゴリ"),
                     'type'    => 'select',
                     'options' => $goal_category_list,
                 ])?>
+                <hr>
+                <?=
+                $this->Form->input('purpose',
+                                   ['label'                    => __d('gl', "達成したいことは？"),
+                                    'placeholder'              => __d('gl', "本気で達成したいことをぼんやりと書く"),
+                                    'rows'                     => 1,
+                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                    'afterInput'               => '<span class="help-block">' . __d('gl',
+                                                                                                    "例）世界から貧困を減らすこと") . '</span>'
+                                   ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('priority', [
@@ -55,6 +58,13 @@
                     'style'    => 'width:50px',
                     'options'  => $priority_list,
                 ])?>
+                <hr>
+                <?=
+                $this->Form->input('description',
+                                   ['label'       => __d('gl', "詳細"),
+                                    'placeholder' => __d('gl', "詳細を書く"),
+                                    'rows'        => 1,
+                                   ]) ?>
                 <hr>
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "ゴール画像") ?></label>
@@ -105,8 +115,8 @@
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
-                        $this->Form->submit(__d('gl', "ゴールを作成"),
-                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
+                        $this->Form->submit(__d('gl', "この内容で作成"),
+                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>
@@ -114,4 +124,23 @@
         </div>
     </div>
 </div>
+<? $this->append('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#AddGoalForm').bootstrapValidator({
+            live: 'enabled',
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                "data[Goal][photo]": {
+                    enabled: false
+                }
+            }
+        });
+    });
+</script>
+<? $this->end() ?>
 <!-- END app/View/Goals/add.ctp -->

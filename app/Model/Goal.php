@@ -68,6 +68,11 @@ class Goal extends AppModel
      * @var array
      */
     public $validate = [
+        'purpose' => [
+            'notEmpty' => [
+                'rule' => 'notEmpty',
+            ],
+        ],
         'valued_flg'   => [
             'boolean' => [
                 'rule' => ['boolean'],
