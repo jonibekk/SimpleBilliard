@@ -1177,6 +1177,10 @@ ul.gl-input-images > li {
     width: 20px;
 }
 
+.header-profile-icon {
+    width: 16px;
+}
+
 .gl-navbar-icons .header-home {
     font-size: 12px;
     line-height: 30px;
@@ -1184,9 +1188,6 @@ ul.gl-input-images > li {
     color: #808080;
 }
 
-#header .header-icon {
-    color: #505050;
-}
 /*モーダル全体*/
 .modal-body {
     max-height: 324px;
@@ -1540,6 +1541,18 @@ ul.gl-input-images > li {
 @media (min-width: 1025px) {
     .header-link {
         opacity: 0.54;
+    }
+
+    #header .header-icon {
+        color: #505050;
+    }
+
+    .header-profile-icon {
+        opacity: 0.54;
+    }
+
+    #header .header-profile-icon {
+        color: #505050;
     }
 }
 
