@@ -125,4 +125,15 @@ class Goal extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setStatusName();
     }
+
+    function add($data)
+    {
+        if (!isset($data['Goal']) || empty($data['Goal'])) {
+            return false;
+        }
+        $data['Goal']['team_id'] = $this->current_team_id;
+        $data['Goal']['user_id'] = $this->my_uid;
+        $res = $this->save($data);
+        return $res;
+    }
 }

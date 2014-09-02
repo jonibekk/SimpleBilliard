@@ -4,10 +4,11 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
+
  *
- * @var View    $this
- * @var      $this CodeCompletionView
- * @var      $goal_category_list
+*@var View    $this
+ * @var         $this CodeCompletionView
+ * @var         $goal_category_list
  * @var         $priority_list
  */
 ?>
@@ -29,13 +30,13 @@
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id'            => 'AddTeamForm',
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <?=
-                $this->Form->input('name',
+                $this->Form->input('purpose',
                                    ['label'       => __d('gl', "目的"),
                                     'placeholder' => __d('gl', "例) 昇級したい"),
+                                    'rows' => 1,
                                    ]) ?>
                 <hr>
                 <?=
@@ -113,26 +114,4 @@
         </div>
     </div>
 </div>
-<? $this->append('script') ?>
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        $('[rel="tooltip"]').tooltip();
-
-        $('#AddTeamForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
-            fields: {
-                "data[Team][photo]": {
-                    enabled: false
-                }
-            }
-        });
-    });
-</script>
-<? $this->end() ?>
 <!-- END app/View/Goals/add.ctp -->
