@@ -1,12 +1,12 @@
 <?php
-App::uses('KeyResult', 'Model');
+App::uses('KeyResultUser', 'Model');
 
 /**
- * KeyResult Test Case
+ * KeyResultUser Test Case
  *
- * @property KeyResult $KeyResult
+ * @property KeyResultUser $KeyResultUser
  */
-class KeyResultTest extends CakeTestCase
+class KeyResultUserTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,6 @@ class KeyResultTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.key_result',
         'app.key_result_user',
         'app.team',
         'app.badge',
@@ -27,6 +26,7 @@ class KeyResultTest extends CakeTestCase
         'app.post',
         'app.goal',
         'app.goal_category',
+        'app.key_result',
         'app.post_share_user',
         'app.post_share_circle',
         'app.circle',
@@ -58,7 +58,7 @@ class KeyResultTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->KeyResult = ClassRegistry::init('KeyResult');
+        $this->KeyResultUser = ClassRegistry::init('KeyResultUser');
     }
 
     /**
@@ -68,7 +68,7 @@ class KeyResultTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->KeyResult);
+        unset($this->KeyResultUser);
 
         parent::tearDown();
     }

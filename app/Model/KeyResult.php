@@ -4,8 +4,9 @@ App::uses('AppModel', 'Model');
 /**
  * KeyResult Model
  *
- * @property Team $Team
- * @property Goal $Goal
+ * @property Team          $Team
+ * @property Goal          $Goal
+ * @property KeyResultUser $KeyResultUser
  */
 class KeyResult extends AppModel
 {
@@ -48,5 +49,9 @@ class KeyResult extends AppModel
     public $belongsTo = [
         'Team',
         'Goal',
+    ];
+
+    public $hasMany = [
+        'KeyResultUser'
     ];
 }
