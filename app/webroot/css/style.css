@@ -1222,6 +1222,35 @@ ul.gl-input-images > li {
 
 /*/login*/
 
+/*キャンセルボタンのデザイン*/
+.design-cancel {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    background-image: none;
+    color: #777;
+}
+
+.design-cancel:target,
+.design-cancel:hover {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    background-image: none;
+    color: #231814;
+    text-decoration: none;
+}
+
+.btn[disabled] {
+    opacity: 0.3;
+}
+
+.team-button {
+    margin-right: 12px;
+}
+
+/*/キャンセルボタンのデザイン*/
+
 /*共有範囲の画像とテキスト*/
 .select2-item-img {
     display: inline-block;
@@ -1242,7 +1271,6 @@ ul.gl-input-images > li {
     vertical-align: middle;
     text-decoration: none !important;
 }
-
 /*/共有範囲の画像とテキスト*/
 
 /*ハンバーガー*/
@@ -1903,4 +1931,8 @@ Temporary Properties - YOU MUST FIX
 
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.margin-right-8px {
+    margin-right: 8px;
 }
