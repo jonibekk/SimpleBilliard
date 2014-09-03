@@ -57,7 +57,7 @@ class Team extends AppModel
                     'x_large'      => '256x256',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image.jpg',
+                'default_url' => 'no-image-team.jpg',
                 'quality'     => 100,
             ]
         ]
