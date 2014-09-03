@@ -1953,3 +1953,7 @@ Temporary Properties - YOU MUST FIX
 .margin-right-8px {
     margin-right: 8px;
 }
+
+.nailthumb-container img {
+    max-width: 100%;
+}
