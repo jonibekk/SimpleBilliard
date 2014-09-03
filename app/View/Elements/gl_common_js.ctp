@@ -292,6 +292,10 @@ function evFeedMoreView() {
                 $obj.removeAttr('disabled');
                 //画像をレイジーロード
                 imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
+                });
 
                 $('.gl-custom-radio-check').customRadioCheck();
 
@@ -350,6 +354,10 @@ function evCommentAllView() {
                 $obj.remove();
                 //画像をレイジーロード
                 imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
+                });
 
                 $('.gl-custom-radio-check').customRadioCheck();
 
