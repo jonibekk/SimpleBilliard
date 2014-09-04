@@ -623,6 +623,10 @@ ul.example-indent {
 
 .panel-read-more-body {
     padding: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 38px;
+    text-align: center;
 }
 
 .feed-read-more {
@@ -1174,7 +1178,7 @@ ul.gl-input-images > li {
 }
 
 .header-icon {
-    width: 20px;
+    width: 22px;
 }
 
 .header-profile-icon {
@@ -1401,7 +1405,7 @@ ul.gl-input-images > li {
 
     .gl-nav-team-select {
         width: 112px;
-        margin-left: 16px;
+        margin-left: 10px;
     }
 
     .gl-nav-search {
@@ -1481,7 +1485,7 @@ ul.gl-input-images > li {
 
     .gl-nav-team-select {
         width: 166px;
-        margin-left: 16px;
+        margin-left: 12px;
     }
 
     .header-search-group {
@@ -1542,7 +1546,7 @@ ul.gl-input-images > li {
 
     .gl-nav-team-select {
         width: 184px;
-        margin-left: 15px;
+        margin-left: 10px;
     }
 
     .layout-sub_padding {
@@ -1948,4 +1952,8 @@ Temporary Properties - YOU MUST FIX
 
 .margin-right-8px {
     margin-right: 8px;
+}
+
+.nailthumb-container img {
+    max-width: 100%;
 }
