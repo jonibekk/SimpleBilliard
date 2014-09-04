@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
-
  *
-*@var View                   $this
+ * @var View $this
  * @var                        $this CodeCompletionView
  * @var                        $goal_category_list
  * @var                        $priority_list
@@ -89,7 +88,8 @@
                         __d('gl', "開始日") ?></label>
 
                     <div class="col col-sm-7">
-                        <p class="form-control-static" id="KeyResult0StartDateDefault"><?= $kr_start_date_format ?>
+                        <p class="form-control-static"
+                           id="KeyResult0StartDateDefault"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
                             &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                            show-target-id="KeyResult0StartDateInputWrap"
                                            delete-target-id="KeyResult0StartDateDefault"><?= __d('gl', "変更") ?></a></p>
