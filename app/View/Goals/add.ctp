@@ -5,10 +5,11 @@
  * Date: 6/11/14
  * Time: 11:40 AM
  *
- * @var View $this
+ * @var View          $this
  * @var         $this CodeCompletionView
  * @var         $goal_category_list
  * @var         $priority_list
+ * @var               $kr_value_unit_list
  */
 ?>
 <!-- START app/View/Goals/add.ctp -->
@@ -51,7 +52,7 @@
                 <hr>
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['label'       => __d('gl', "なにをどうする？"),
+                                   ['label' => __d('gl', "指標として何をどうする？"),
                                     'placeholder' => __d('gl', "具体的に何をどうするかを絞り込んで書く"),
                                     'rows'        => 1,
                                     'afterInput'  => '<span class="help-block">' . __d('gl',
@@ -59,13 +60,26 @@
                                    ]) ?>
                 <?=
                 $this->Form->input('KeyResult.0.desired_value',
-                                   ['label' => __d('gl', "達成時"),
-                                    'type'  => 'number',
+                                   ['label'     => __d('gl', "数値の単位"),
+                                    'before'    => '<label class="col col-sm-2 control-label">' . __d('gl',
+                                                                                                      "どのくらい？") . '</label>',
+                                    'wrapInput' => 'col col-sm-5',
+                                    'type'      => 'select',
+                                    'options'   => $kr_value_unit_list
                                    ]) ?>
                 <?=
-                $this->Form->input('KeyResult.0.current_value',
-                                   ['label' => __d('gl', "現在"),
-                                    'type'  => 'number',
+                $this->Form->input('KeyResult.0.target_value',
+                                   ['label'     => __d('gl', "達成時"),
+                                    'before'    => '<label class="col col-sm-2 control-label"></label>',
+                                    'wrapInput' => 'col col-sm-5',
+                                    'type'      => 'number',
+                                   ]) ?>
+                <?=
+                $this->Form->input('KeyResult.0.start_value',
+                                   ['label'     => __d('gl', "現在"),
+                                    'before'    => '<label class="col col-sm-2 control-label"></label>',
+                                    'wrapInput' => 'col col-sm-5',
+                                    'type'      => 'number',
                                    ]) ?>
                 <hr>
                 <?=
@@ -89,10 +103,10 @@
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "ゴール画像") ?></label>
 
                     <div class="col col-sm-6">
-                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
-                                 style="width: 150px; height: 150px;">
+                                 style="width: 96px; height: 96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
