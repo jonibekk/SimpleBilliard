@@ -4,12 +4,13 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
+
  *
- * @var View                   $this
- * @var               $this CodeCompletionView
- * @var               $goal_category_list
- * @var               $priority_list
- * @var               $kr_value_unit_list
+*@var View                   $this
+ * @var                        $this CodeCompletionView
+ * @var                        $goal_category_list
+ * @var                        $priority_list
+ * @var                        $kr_value_unit_list
  * @var                        $kr_start_date_format
  * @var                        $kr_end_date_format
  */
@@ -83,6 +84,24 @@
                                     'wrapInput' => 'col col-sm-4',
                                     'type'      => 'number',
                                    ]) ?>
+                <div class="form-group" id="KeyResult0StartDateContainer">
+                    <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
+                        __d('gl', "開始日") ?></label>
+
+                    <div class="col col-sm-7">
+                        <p class="form-control-static" id="KeyResult0StartDateDefault"><?= $kr_start_date_format ?>
+                            &nbsp;&nbsp;<a href="#" class="target-show-target-del"
+                                           show-target-id="KeyResult0StartDateInputWrap"
+                                           delete-target-id="KeyResult0StartDateDefault"><?= __d('gl', "変更") ?></a></p>
+
+                        <div class="input-group date" style="display: none" id="KeyResult0StartDateInputWrap">
+                            <?=
+                            $this->Form->input('KeyResult.0.start_date',
+                                               ['value' => $kr_start_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                            <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group" id="KeyResult0EndDateContainer">
                     <label for="KeyResult0EndDate" class="col col-sm-3 control-label"><?=
                         __d('gl',
@@ -189,6 +208,14 @@
                 }
             }
         });
+    });
+    //noinspection JSJQueryEfficiency
+    $('#KeyResult0StartDateContainer .input-group.date').datepicker({
+        format: "yyyy/mm/dd",
+        todayBtn: 'linked',
+        language: "ja",
+        autoclose: true,
+        todayHighlight: true
     });
     //noinspection JSJQueryEfficiency
     $('#KeyResult0EndDateContainer .input-group.date').datepicker({

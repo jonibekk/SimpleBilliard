@@ -81,6 +81,8 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
     //noinspection JSUnresolvedVariable
+    $(document).on("click", ".target-show-target-del", evTargetShowTargetDelete);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
@@ -216,6 +218,16 @@ function evTargetShowThisDelete() {
     var target_id = $obj.attr("target-id");
     $("#" + target_id).show();
     $obj.remove();
+    return false;
+}
+function evTargetShowTargetDelete() {
+    attrUndefinedCheck(this, 'show-target-id');
+    attrUndefinedCheck(this, 'delete-target-id');
+    var $obj = $(this);
+    var show_target_id = $obj.attr("show-target-id");
+    var delete_target_id = $obj.attr("delete-target-id");
+    $("#" + show_target_id).show();
+    $("#" + delete_target_id).remove();
     return false;
 }
 
