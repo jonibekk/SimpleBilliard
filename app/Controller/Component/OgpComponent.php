@@ -111,11 +111,10 @@ class OgpComponent extends Object
     /**
      * Fetches a URI and parses it for Open Graph data, returns
      * false on error.
-
      *
-*@param $URI    URI to page to parse for Open Graph data
+     * @param $URI    URI to page to parse for Open Graph data
      *
-     * @return mixed
+*@return mixed
      */
     public function fetch($URI)
     {
@@ -131,7 +130,8 @@ class OgpComponent extends Object
 
         $response = curl_exec($curl);
         //文字化け対策
-        $response = mb_convert_encoding($response, 'HTML-ENTITIES', 'auto');
+        $charset = mb_detect_encoding($response, "JIS, eucjp-win, sjis-win, UTF8");
+        $response = mb_convert_encoding($response, 'HTML-ENTITIES', empty($charset) ? 'auto' : $charset);
 
         curl_close($curl);
 
@@ -147,11 +147,11 @@ class OgpComponent extends Object
     /**
      * Parses HTML and extracts Open Graph data, this assumes
      * the document is at least well formed.
+     *
+     * @param $HTML    HTML to parse
 
      *
-*@param $HTML    HTML to parse
-     *
-     * @return mixed
+*@return mixed
      */
     static private function _parse($HTML)
     {
