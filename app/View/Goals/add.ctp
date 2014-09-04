@@ -4,11 +4,12 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
+
  *
- * @var View          $this
- * @var         $this CodeCompletionView
- * @var         $goal_category_list
- * @var         $priority_list
+*@var View          $this
+ * @var               $this CodeCompletionView
+ * @var               $goal_category_list
+ * @var               $priority_list
  * @var               $kr_value_unit_list
  */
 ?>
@@ -61,26 +62,40 @@
                 <?=
                 $this->Form->input('KeyResult.0.desired_value',
                                    ['label'     => __d('gl', "数値の単位"),
-                                    'before'    => '<label class="col col-sm-2 control-label">' . __d('gl',
+                                    'before'    => '<label class="col col-sm-3 control-label">' . __d('gl',
                                                                                                       "どのくらい？") . '</label>',
-                                    'wrapInput' => 'col col-sm-5',
+                                    'wrapInput' => 'col col-sm-4',
                                     'type'      => 'select',
                                     'options'   => $kr_value_unit_list
                                    ]) ?>
                 <?=
                 $this->Form->input('KeyResult.0.target_value',
                                    ['label'     => __d('gl', "達成時"),
-                                    'before'    => '<label class="col col-sm-2 control-label"></label>',
-                                    'wrapInput' => 'col col-sm-5',
+                                    'before'    => '<label class="col col-sm-3 control-label"></label>',
+                                    'wrapInput' => 'col col-sm-4',
                                     'type'      => 'number',
                                    ]) ?>
                 <?=
                 $this->Form->input('KeyResult.0.start_value',
                                    ['label'     => __d('gl', "現在"),
-                                    'before'    => '<label class="col col-sm-2 control-label"></label>',
-                                    'wrapInput' => 'col col-sm-5',
+                                    'before'    => '<label class="col col-sm-3 control-label"></label>',
+                                    'wrapInput' => 'col col-sm-4',
                                     'type'      => 'number',
                                    ]) ?>
+                <div class="form-group" id="KeyResult0EndDateContainer">
+                    <label for="KeyResult0EndDate" class="col col-sm-3 control-label"><?=
+                        __d('gl',
+                            "いつまでに？") ?></label>
+
+                    <div class="col col-sm-7">
+                        <div class="input-group date">
+                            <?=
+                            $this->Form->input('KeyResult.0.end_date',
+                                               ['label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                            <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                        </div>
+                    </div>
+                </div>
                 <hr>
                 <?=
                 $this->Form->input('priority', [
@@ -173,6 +188,13 @@
                 }
             }
         });
+    });
+    $('#KeyResult0EndDateContainer .input-group.date').datepicker({
+        format: "yyyy/mm/dd",
+        todayBtn: 'linked',
+        language: "ja",
+        autoclose: true,
+        todayHighlight: true
     });
 </script>
 <? $this->end() ?>
