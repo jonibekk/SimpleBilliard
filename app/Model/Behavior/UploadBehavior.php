@@ -134,6 +134,7 @@ class UploadBehavior extends ModelBehavior
         $this->toDelete = null;
     }
 
+    /** @noinspection PhpUndefinedClassInspection */
     private function _fetchFromUrl($url)
     {
         $data = array('remote' => true);
@@ -154,7 +155,14 @@ class UploadBehavior extends ModelBehavior
         ];
         $httpSocket = new HttpSocket($config);
         $raw = $httpSocket->get($url);
+        /**
+         * @var HttpResponse $response
+         */
         $response = $httpSocket->response;
+        //404ならnull返す
+        if ($response->code == "404") {
+            return null;
+        }
         $data['size'] = strlen($raw);
         $headerContentType = explode(';', $response['header']['Content-Type']);
         $data['type'] = reset($headerContentType);
