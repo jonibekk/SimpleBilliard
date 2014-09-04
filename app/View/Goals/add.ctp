@@ -5,7 +5,7 @@
  * Date: 6/11/14
  * Time: 11:40 AM
  *
- * @var View $this
+ * @var View                   $this
  * @var                        $this CodeCompletionView
  * @var                        $goal_category_list
  * @var                        $priority_list
@@ -54,11 +54,12 @@
                 <hr>
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['label' => __d('gl', "指標として何をどうする？"),
-                                    'placeholder' => __d('gl', "具体的に何をどうするかを絞り込んで書く"),
-                                    'rows'        => 1,
-                                    'afterInput'  => '<span class="help-block">' . __d('gl',
-                                                                                       "例）極度な貧困率を減少させる") . '</span>'
+                                   ['label'                    => __d('gl', "指標として何をどうする？"),
+                                    'placeholder'              => __d('gl', "具体的に何をどうするかを絞り込んで書く"),
+                                    'rows'                     => 1,
+                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                    'afterInput'               => '<span class="help-block">' . __d('gl',
+                                                                                                    "例）極度な貧困率を減少させる") . '</span>'
                                    ]) ?>
                 <?=
                 $this->Form->input('KeyResult.0.desired_value',
@@ -71,17 +72,20 @@
                                    ]) ?>
                 <?=
                 $this->Form->input('KeyResult.0.target_value',
-                                   ['label'     => __d('gl', "達成時"),
-                                    'before'    => '<label class="col col-sm-3 control-label"></label>',
-                                    'wrapInput' => 'col col-sm-4',
-                                    'type'      => 'number',
+                                   ['label'                   => __d('gl', "達成時"),
+                                    'before'                  => '<label class="col col-sm-3 control-label"></label>',
+                                    'wrapInput'               => 'col col-sm-4',
+                                    'type'                    => 'number',
+                                    'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
                                    ]) ?>
                 <?=
                 $this->Form->input('KeyResult.0.start_value',
-                                   ['label'     => __d('gl', "現在"),
-                                    'before'    => '<label class="col col-sm-3 control-label"></label>',
-                                    'wrapInput' => 'col col-sm-4',
-                                    'type'      => 'number',
+                                   ['label'                   => __d('gl', "現在"),
+                                    'before'                  => '<label class="col col-sm-3 control-label"></label>',
+                                    'wrapInput'               => 'col col-sm-4',
+                                    'type'                    => 'number',
+                                    'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
+                                    'data-bv-integer'         => "true",
                                    ]) ?>
                 <div class="form-group" id="KeyResult0StartDateContainer">
                     <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
@@ -195,19 +199,19 @@
 <? $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#AddGoalForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
-            fields: {
-                "data[Goal][photo]": {
-                    enabled: false
-                }
+    });
+    $('#AddGoalForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields: {
+            "data[Goal][photo]": {
+                enabled: false
             }
-        });
+        }
     });
     //noinspection JSJQueryEfficiency
     $('#KeyResult0StartDateContainer .input-group.date').datepicker({
