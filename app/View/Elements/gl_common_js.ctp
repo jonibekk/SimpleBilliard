@@ -29,6 +29,7 @@ echo $this->Html->script('ZeroClipboard.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('customRadioCheck.min');
 echo $this->Html->script('select2.min');
+echo $this->Html->script('bootstrap-datepicker.min');
 echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
