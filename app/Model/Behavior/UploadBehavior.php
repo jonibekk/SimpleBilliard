@@ -351,8 +351,8 @@ class UploadBehavior extends ModelBehavior
                 break;
             case 'png':
                 $createHandler = 'imagecreatefrompng';
-                $outputHandler = 'imagepng';
-                $quality = null;
+                //pngはjpegに変換
+                $outputHandler = 'imagejpeg';
                 break;
             default:
                 return false;
@@ -441,6 +441,7 @@ class UploadBehavior extends ModelBehavior
             }
 
             $img = imagecreatetruecolor($destW, $destH);
+
             if ($alpha === true) {
                 switch (strtolower($pathinfo['extension'])) {
                     case 'gif':
