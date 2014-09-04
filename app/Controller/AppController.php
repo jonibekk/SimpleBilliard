@@ -262,4 +262,29 @@ class AppController extends Controller
         $this->autoRender = true;
     }
 
+    /**
+     * 指定ヶ月後の月末のUnixtimeを返す
+     *
+     * @param int    $month_count
+     * @param string $symbol
+     *
+     * @return int
+     */
+    function getEndMonthLocalDateTime($month_count = 6, $symbol = "+")
+    {
+        if (!is_numeric($month_count)) {
+            return null;
+        }
+        if (!in_array($symbol, ["+", "-"])) {
+            return null;
+        }
+        $month_count++;
+        $add_date = strtotime("{$symbol}{$month_count} month", time() + ($this->Auth->user('timezone') * 60 * 60));
+        $year = date("Y", $add_date);
+        $month = date("m", $add_date);
+        $first_day = $year . "-" . $month . "-01";
+        $end_day = strtotime("-1 day", strtotime($first_day));
+        return $end_day;
+    }
+
 }

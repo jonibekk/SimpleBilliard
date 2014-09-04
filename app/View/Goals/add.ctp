@@ -4,13 +4,14 @@
  * User: bigplants
  * Date: 6/11/14
  * Time: 11:40 AM
-
  *
-*@var View          $this
+ * @var View                   $this
  * @var               $this CodeCompletionView
  * @var               $goal_category_list
  * @var               $priority_list
  * @var               $kr_value_unit_list
+ * @var                        $kr_start_date_format
+ * @var                        $kr_end_date_format
  */
 ?>
 <!-- START app/View/Goals/add.ctp -->
@@ -91,7 +92,7 @@
                         <div class="input-group date">
                             <?=
                             $this->Form->input('KeyResult.0.end_date',
-                                               ['label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                                               ['value' => $kr_end_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
                             <span class="input-group-addon"><i class="fa fa-th"></i></span>
                         </div>
                     </div>
@@ -189,6 +190,7 @@
             }
         });
     });
+    //noinspection JSJQueryEfficiency
     $('#KeyResult0EndDateContainer .input-group.date').datepicker({
         format: "yyyy/mm/dd",
         todayBtn: 'linked',
