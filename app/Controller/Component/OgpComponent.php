@@ -130,7 +130,7 @@ class OgpComponent extends Object
 
         $response = curl_exec($curl);
         //文字化け対策
-        $charset = mb_detect_encoding($response, "JIS, eucjp-win, sjis-win");
+        $charset = mb_detect_encoding($response, "JIS, eucjp-win, sjis-win, UTF8");
         $response = mb_convert_encoding($response, 'HTML-ENTITIES', empty($charset) ? 'auto' : $charset);
 
         curl_close($curl);
