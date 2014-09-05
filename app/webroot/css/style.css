@@ -1298,9 +1298,15 @@ ul.gl-input-images > li {
     display: none;
 }
 
+.navbar-toggle {
+    margin-right: 6px;
+}
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
+    .navbar-toggle {
+        margin-right: 15px;
+    }
     .container {
         width: 97.5%;
     }
