@@ -3,6 +3,7 @@ App::uses('GoalsController', 'Controller');
 
 /**
  * GoalsController Test Case
+ * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
 
  */
 class GoalsControllerTest extends ControllerTestCase
@@ -45,12 +46,114 @@ class GoalsControllerTest extends ControllerTestCase
         'app.oauth_token',
         'app.local_name',
         'app.goal_category',
-        'app.key_result'
+        'app.key_result',
+        'app.key_result_user',
     );
 
-    function testDummy()
+    function testAdd()
     {
-
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/add', ['method' => 'GET']);
     }
 
+    function testAddPost()
+    {
+        $this->_getGoalsCommonMock();
+        $data = [
+            'Goal'      => [
+                'purpose' => 'test',
+            ],
+            'KeyResult' => [
+                [
+                    'name'         => 'test',
+                    'target_value' => 1,
+                    'start_value'  => 0,
+                    'value_unit'   => 2,
+                    'start_date'   => '2014/07/07',
+                    'end_date'     => '2014/10/07',
+                ]
+            ]
+        ];
+        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddPostEmptyKr()
+    {
+        $this->_getGoalsCommonMock();
+        $data = [
+            'Goal' => [
+                'purpose' => 'test',
+            ],
+        ];
+        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddPostEmpty()
+    {
+        $this->_getGoalsCommonMock();
+        $data = [];
+        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function _getGoalsCommonMock()
+    {
+        /**
+         * @var GoalsController $Goals
+         */
+        $Goals = $this->generate('Goals', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Ogp',
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['id', '1'],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+            );
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->GoalCategory->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->GoalCategory->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->KeyResult->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->KeyResult->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->KeyResult->KeyResultUser->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->KeyResult->KeyResultUser->current_team_id = '1';
+        return $Goals;
+    }
 }
