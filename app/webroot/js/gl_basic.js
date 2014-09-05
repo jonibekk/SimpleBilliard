@@ -81,9 +81,13 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
     //noinspection JSUnresolvedVariable
+    $(document).on("click", ".target-show-target-del", evTargetShowTargetDelete);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
+    //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
     $(document).on("touchend", "#layer-black", function () {
@@ -218,12 +222,36 @@ function evTargetShowThisDelete() {
     $obj.remove();
     return false;
 }
+function evTargetShowTargetDelete() {
+    attrUndefinedCheck(this, 'show-target-id');
+    attrUndefinedCheck(this, 'delete-target-id');
+    var $obj = $(this);
+    var show_target_id = $obj.attr("show-target-id");
+    var delete_target_id = $obj.attr("delete-target-id");
+    $("#" + show_target_id).show();
+    $("#" + delete_target_id).remove();
+    return false;
+}
 
 function evTargetEnabled() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     $("#" + target_id).removeAttr("disabled");
+    return true;
+}
+function evSelectOptionTargetHidden() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'hidden-option-value');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var hidden_option_value = $obj.attr("hidden-option-value");
+    if ($obj.val() == hidden_option_value) {
+        $("#" + target_id).hide();
+    }
+    else {
+        $("#" + target_id).show();
+    }
     return true;
 }
 

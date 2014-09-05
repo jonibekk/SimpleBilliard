@@ -15,6 +15,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.goal',
         'app.cake_session',
         'app.post',
         'app.user', 'app.notify_setting',
