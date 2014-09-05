@@ -13,7 +13,8 @@
 <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close font-size_33" data-dismiss="modal" aria-hidden="true"><span
+                        class="close-icon">×</span></button>
                 <h4 class="modal-title"><?= __d('gl', "メールアドレスの変更") ?></h4>
             </div>
             <?=

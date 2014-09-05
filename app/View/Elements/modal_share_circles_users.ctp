@@ -14,7 +14,8 @@
 <div class="modal-dialog">
     <div class="modal-content modalFeed-content">
         <div class="modal-header modalFeed-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <button type="button" class="close font-size_33" data-dismiss="modal" aria-hidden="true"><span
+                    class="close-icon">×</span></button>
             <h4 class="modal-title font-size_18 font-weight_bold"><?= __d('gl', "共有範囲") ?></h4>
         </div>
         <div class="modal-body modalFeed-body">

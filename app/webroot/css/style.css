@@ -110,6 +110,21 @@ footer p {
     font-size: 18px;
 }
 
+.font-size_33 {
+    font-size: 33px;
+}
+
+.modal-content > .modal-header > .close-design {
+    width: 33px;
+    height: 33px;
+}
+
+.close-icon {
+    height: 33px;
+    line-height: 19px;
+    vertical-align: top;
+}
+
 .font-weight_bold {
     font-weight: bold;
 }
