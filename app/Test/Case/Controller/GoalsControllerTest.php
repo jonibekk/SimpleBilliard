@@ -95,6 +95,13 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testGetEndMonthLocalDateTime()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $Goals->getEndMonthLocalDateTime('test');
+        $Goals->getEndMonthLocalDateTime(null, 'test');
+    }
+
     function _getGoalsCommonMock()
     {
         /**
