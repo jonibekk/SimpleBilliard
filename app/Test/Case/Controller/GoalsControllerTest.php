@@ -91,7 +91,7 @@ class GoalsControllerTest extends ControllerTestCase
     function testAddPostEmpty()
     {
         $this->_getGoalsCommonMock();
-        $data = [];
+        $data = ['Goal' => []];
         $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
     }
 
