@@ -61,7 +61,7 @@
                                                                                        "例）極度な貧困率を減少させる") . '</span>'
                                    ]) ?>
                 <?=
-                $this->Form->input('KeyResult.0.desired_value',
+                $this->Form->input('KeyResult.0.value_unit',
                                    ['label'               => __d('gl', "数値の単位"),
                                     'before'              => '<label class="col col-sm-3 control-label">' . __d('gl',
                                                                                                                 "どのくらい？") . '</label>',

@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('KeyResultUser', 'Model');
+App::uses('KeyResult', 'Model');
 
 /**
  * Goal Model
@@ -138,7 +140,38 @@ class Goal extends AppModel
         }
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
-        $res = $this->save($data);
+        //KeyResultの処理
+        //KeyResultの名前が存在しない場合はKeyResultを保存しない。
+        if (!isset($data['KeyResult'][0]['name']) || empty($data['KeyResult'][0]['name'])) {
+            unset($data['KeyResult']);
+        }
+        else {
+            //SKRをセット
+            $data['KeyResult'][0]['team_id'] = $this->current_team_id;
+            $data['KeyResult'][0]['user_id'] = $this->my_uid;
+            $data['KeyResult'][0]['special_flg'] = true;
+            //on/offの場合は現在値0,目標値1をセット
+            if ($data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY) {
+                $data['KeyResult'][0]['start_value'] = 0;
+                $data['KeyResult'][0]['target_value'] = 1;
+            }
+            $data['KeyResult'][0]['current_value'] = $data['KeyResult'][0]['start_value'];
+
+            //時間をunixtimeに変換
+            if (!empty($data['KeyResult'][0]['start_date'])) {
+                $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - ($this->me['timezone'] * 60 * 60);
+            }
+            //期限を+1day-1secする
+            if (!empty($data['KeyResult'][0]['end_date'])) {
+                $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
+                                                              strtotime($data['KeyResult'][0]['end_date'])) - ($this->me['timezone'] * 60 * 60);
+            }
+        }
+        $res = $this->saveAll($data);
+        //SKRユーザの保存
+        if ($this->KeyResult->getLastInsertID()) {
+            $this->KeyResult->KeyResultUser->add($this->KeyResult->getLastInsertID(), null, KeyResultUser::TYPE_OWNER);
+        }
         return $res;
     }
 }
