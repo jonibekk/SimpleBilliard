@@ -876,12 +876,27 @@ ul.gl-input-images > li {
     background: #f5f5f5 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
+
+}
+
+.post-panel-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #eee;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.post-form-picture {
+    height: 12px;
+    font-size: 12px;
+    display: none;
 }
 
 .post-form {
     border-radius: 0;
     border-top: none;
     border-right: none;
+    border-bottom: none;
     border-left: none;
     box-shadow: none !important;
     padding-top: 2px;
@@ -907,7 +922,6 @@ ul.gl-input-images > li {
 .post-share-range {
     margin: 0 0 0 0;
     padding: 0;
-    border-bottom: 1px solid #ddd;
 }
 
 .post-share-range-label {
@@ -922,8 +936,37 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
-.post-share-range-buttom {
-    margin-top: 12px;
+.post-share-range-button {
+    margin: 6px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #777;
+}
+
+.post-share-range-button:hover,
+.post-share-range-button:target,
+.post-share-range-button:active {
+    color: #777;
+    text-decoration: solid;
+    background: #f9f9f9;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-image: none;
+    box-shadow: none;
+}
+
+.post-camera-icon {
+    padding: 4px;
+    margin: 11px 0;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+}
+
+.post-submit-button {
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .post-share-range-list ul {
@@ -934,6 +977,10 @@ ul.gl-input-images > li {
     border-left: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+}
+
+.post-images {
+    margin-top: 8px;
 }
 
 .edit-form {
@@ -959,10 +1006,6 @@ ul.gl-input-images > li {
     width: 100%;
     padding-top: 4px;
     padding-bottom: 4px;
-}
-
-.border-gray:hover {
-    border-bottom: 1px solid #666;
 }
 
 .border-none {
@@ -1562,7 +1605,7 @@ ul.gl-input-images > li {
     }
 
     .post-share-range-list ul {
-        width: 374px;
+        width: 200px;
     }
 
     .gl-s2-post-dropdown {

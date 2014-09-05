@@ -433,3 +433,21 @@ $(function () {
             $(".header-link , .header-profile-icon").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
         });
 });
+
+$(function () {
+    $(".click-show").on("click", function () {
+            $("#PostFormPicture").css("display", "block")
+        }
+    )
+});
+
+//noinspection JSUnresolvedVariable
+$(document).on("click", ".target-show", evTargetShow);
+
+function evTargetShow() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).show();
+    return false;
+}
