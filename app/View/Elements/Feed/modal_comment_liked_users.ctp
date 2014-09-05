@@ -13,7 +13,8 @@
 <div class="modal-dialog">
     <div class="modal-content modalFeed-content">
         <div class="modal-header modalFeed-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <button type="button" class="close font-size_33" data-dismiss="modal" aria-hidden="true"><span
+                    class="close-icon">×</span></button>
             <h4 class="modal-title"><?= __d('gl', "このコメントに%s人が「いいね！」と言っています。", count($liked_users)) ?></h4>
         </div>
         <div class="modal-body modalFeed-body">
