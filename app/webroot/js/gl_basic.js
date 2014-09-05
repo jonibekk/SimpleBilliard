@@ -87,6 +87,8 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
     $(document).on("touchend", "#layer-black", function () {
         console.log('hide');
@@ -236,6 +238,20 @@ function evTargetEnabled() {
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     $("#" + target_id).removeAttr("disabled");
+    return true;
+}
+function evSelectOptionTargetHidden() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'hidden-option-value');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var hidden_option_value = $obj.attr("hidden-option-value");
+    if ($obj.val() == hidden_option_value) {
+        $("#" + target_id).hide();
+    }
+    else {
+        $("#" + target_id).show();
+    }
     return true;
 }
 

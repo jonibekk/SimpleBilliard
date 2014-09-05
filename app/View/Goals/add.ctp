@@ -63,30 +63,36 @@
                                    ]) ?>
                 <?=
                 $this->Form->input('KeyResult.0.desired_value',
-                                   ['label'     => __d('gl', "数値の単位"),
-                                    'before'    => '<label class="col col-sm-3 control-label">' . __d('gl',
-                                                                                                      "どのくらい？") . '</label>',
-                                    'wrapInput' => 'col col-sm-4',
-                                    'type'      => 'select',
-                                    'options'   => $kr_value_unit_list
+                                   ['label'               => __d('gl', "数値の単位"),
+                                    'before'              => '<label class="col col-sm-3 control-label">' . __d('gl',
+                                                                                                                "どのくらい？") . '</label>',
+                                    'wrapInput'           => 'col col-sm-4',
+                                    'type'                => 'select',
+                                    'class'               => 'change-select-target-hidden form-control addteam_input-design',
+                                    'target-id'           => 'KeyResult0ValueInputWrap',
+                                    'hidden-option-value' => KeyResult::UNIT_BINARY,
+                                    'options'             => $kr_value_unit_list
                                    ]) ?>
-                <?=
-                $this->Form->input('KeyResult.0.target_value',
-                                   ['label'                   => __d('gl', "達成時"),
-                                    'before'                  => '<label class="col col-sm-3 control-label"></label>',
-                                    'wrapInput'               => 'col col-sm-4',
-                                    'type'                    => 'number',
-                                    'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
-                                   ]) ?>
-                <?=
-                $this->Form->input('KeyResult.0.start_value',
-                                   ['label'                   => __d('gl', "現在"),
-                                    'before'                  => '<label class="col col-sm-3 control-label"></label>',
-                                    'wrapInput'               => 'col col-sm-4',
-                                    'type'                    => 'number',
-                                    'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
-                                    'data-bv-integer'         => "true",
-                                   ]) ?>
+                <div id="KeyResult0ValueInputWrap">
+
+                    <?=
+                    $this->Form->input('KeyResult.0.target_value',
+                                       ['label'                   => __d('gl', "達成時"),
+                                        'before'                  => '<label class="col col-sm-3 control-label"></label>',
+                                        'wrapInput'               => 'col col-sm-4',
+                                        'type'                    => 'number',
+                                        'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
+                                       ]) ?>
+                    <?=
+                    $this->Form->input('KeyResult.0.start_value',
+                                       ['label'                   => __d('gl', "現在"),
+                                        'before'                  => '<label class="col col-sm-3 control-label"></label>',
+                                        'wrapInput'               => 'col col-sm-4',
+                                        'type'                    => 'number',
+                                        'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
+                                        'data-bv-integer'         => "true",
+                                       ]) ?>
+                </div>
                 <div class="form-group" id="KeyResult0StartDateContainer">
                     <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
                         __d('gl', "開始日") ?></label>
