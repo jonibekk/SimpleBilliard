@@ -93,6 +93,7 @@ footer p {
 .media-url {
     margin-bottom: 3px;
 }
+
 /*Fontの指定*/
 .font-size_11 {
     font-size: 11px;
@@ -282,7 +283,6 @@ footer p {
 .feed-share-range .col {
     padding-left: 0;
 }
-
 
 /*inlineのフォームでスマホでも幅を固定する*/
 .gl-inline-fix {
@@ -872,6 +872,11 @@ ul.gl-input-images > li {
     padding: 5px 11px 10px;
 }
 
+.post-share-range-panel-body {
+    padding: 5px;
+    border-top: 1px dashed #eee;
+}
+
 .post-panel-heading {
     background: #f5f5f5 !important;
     padding-top: 0 !important;
@@ -970,7 +975,7 @@ ul.gl-input-images > li {
 }
 
 .post-share-range-list ul {
-    width: 392px;
+    /*width: 100%;*/
     border-top: none !important;
     border-right: none !important;
     border-bottom: none !important;
@@ -1189,19 +1194,6 @@ ul.gl-input-images > li {
 }
 
 /*/HEADER*/
-.post-share-range-label {
-    width: 23%;
-    float: left;
-}
-
-.post-share-range-list {
-    width: 76%;
-    float: right;
-}
-
-.post-share-range-list ul {
-    width: 100%;
-}
 
 .gl-s2-post-dropdown {
     width: 63% !important;
@@ -1319,6 +1311,7 @@ ul.gl-input-images > li {
     vertical-align: middle;
     text-decoration: none !important;
 }
+
 /*/共有範囲の画像とテキスト*/
 
 /*ハンバーガー*/
@@ -1366,20 +1359,6 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 64%;
-    }
-
-    .post-share-range-label {
-        width: 23%;
-        float: left;
-    }
-
-    .post-share-range-list {
-        width: 75%;
-        float: left;
-    }
-
-    .post-share-range-list ul {
-        width: 100%;
     }
 
     .gl-s2-post-dropdown {
@@ -1467,19 +1446,6 @@ ul.gl-input-images > li {
         padding: 9px 19px 0;
     }
 
-    .post-share-range-label {
-        width: 64px;
-    }
-
-    .post-share-range-list {
-        float: left;
-        width: 396px;
-    }
-
-    .post-share-range-list ul {
-        width: 374px;
-    }
-
     .gl-s2-post-dropdown {
         width: 386px !important;
         margin-right: 4px;
@@ -1551,14 +1517,6 @@ ul.gl-input-images > li {
         width: 100px;
     }
 
-    .post-share-range-label {
-        width: 64px;
-    }
-
-    .post-share-range-list ul {
-        width: 374px;
-    }
-
     .gl-s2-post-dropdown {
         width: 368px !important;
     }
@@ -1602,10 +1560,6 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 103px;
-    }
-
-    .post-share-range-list ul {
-        width: 200px;
     }
 
     .gl-s2-post-dropdown {
@@ -1740,6 +1694,7 @@ ul.gl-input-images > li {
 .addteam_photo-design {
     background: #fff;
 }
+
 .addcircle_photo-design {
     background: #fff;
     border: 1px dashed #ddd;

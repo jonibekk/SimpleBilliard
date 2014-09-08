@@ -65,40 +65,29 @@
                     </ul>
                 </div>
             </div>
+            <div class="panel-body post-share-range-panel-body" id="PostFormShare" style="display: none">
+                <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
+                    <?=
+                    $this->Form->hidden('share',
+                                        ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
+                    <? $this->Form->unlockField('Post.share') ?>
+                </div>
+            </div>
             <div class="panel-body post-panel-body post-panel-footer">
                 <div class="font-size_12" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="PostPhoto1">
-                    <i class="fa fa-camera post-camera-icon pull-left"></i>
+                        <i class="fa fa-camera post-camera-icon pull-left"></i>
                     </a>
 
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
-                        <!--
-                        <label class="col col-sm-2 control-label post-share-range-label">
-                            <a href="#" id="ChangeShareSelect2" target-id="PostShareInputWrap"
-                               class="border-none link-red font-weight_normal">
-                                <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
-                        __d('gl',
-                            '共有範囲') ?>
-                            </a>
-                        </label>
-
-                        <div class="col col-sm-10 post-share-range-list click-height-up blur-height-reset"
-                             after-height="170px" id="PostShareInputWrap">
-                             <?=
-                        $this->Form->hidden('share',
-                                            ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
-                            <? $this->Form->unlockField('Post.share') ?>
-                        </div>
--->
-
-
                         <?=
                         $this->Form->submit(__d('gl', "投稿する"),
                                             ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
+
                         <button type="button" class="btn btn-link post-share-range-button pull-right"
-                                data-dismiss="modal">
-                            <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
+                                id="ChangeShareSelect2" target-id="PostShareInputWrap" show-target-id="PostFormShare">
+                        <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
                             __d('gl',
                                 "共有範囲") ?>
                         </button>
