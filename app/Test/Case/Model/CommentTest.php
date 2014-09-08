@@ -20,7 +20,8 @@ class CommentTest extends CakeTestCase
         'app.user', 'app.notify_setting',
         'app.team',
         'app.comment_like',
-        'app.comment_read'
+        'app.comment_read',
+        'app.goal',
     );
 
     /**
