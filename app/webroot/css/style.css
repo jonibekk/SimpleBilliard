@@ -93,6 +93,7 @@ footer p {
 .media-url {
     margin-bottom: 3px;
 }
+
 /*Fontの指定*/
 .font-size_11 {
     font-size: 11px;
@@ -297,7 +298,6 @@ footer p {
 .feed-share-range .col {
     padding-left: 0;
 }
-
 
 /*inlineのフォームでスマホでも幅を固定する*/
 .gl-inline-fix {
@@ -887,16 +887,36 @@ ul.gl-input-images > li {
     padding: 5px 11px 10px;
 }
 
+.post-share-range-panel-body {
+    padding: 5px;
+    border-top: 1px dashed #eee;
+}
+
 .post-panel-heading {
     background: #f5f5f5 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
+
+}
+
+.post-panel-footer {
+    background: #f5f5f5;
+    border-top: 1px solid #eee;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.post-form-picture {
+    height: 12px;
+    font-size: 12px;
+    display: none;
 }
 
 .post-form {
     border-radius: 0;
     border-top: none;
     border-right: none;
+    border-bottom: none;
     border-left: none;
     box-shadow: none !important;
     padding-top: 2px;
@@ -922,7 +942,6 @@ ul.gl-input-images > li {
 .post-share-range {
     margin: 0 0 0 0;
     padding: 0;
-    border-bottom: 1px solid #ddd;
 }
 
 .post-share-range-label {
@@ -937,18 +956,55 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
-.post-share-range-buttom {
-    margin-top: 12px;
+.post-share-range-button {
+    margin: 6px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #777;
+}
+
+.post-share-range-button:hover,
+.post-share-range-button:target,
+.post-share-range-button:active {
+    color: #777;
+    text-decoration: solid;
+    background: #f9f9f9;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-image: none;
+    box-shadow: none;
+}
+
+.post-camera-icon {
+    padding: 4px;
+    margin: 11px 0;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+}
+
+.post-submit-button {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.post-share-range-list {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .post-share-range-list ul {
-    width: 392px;
     border-top: none !important;
     border-right: none !important;
     border-bottom: none !important;
     border-left: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+}
+
+.post-images {
+    margin-top: 8px;
 }
 
 .edit-form {
@@ -974,10 +1030,6 @@ ul.gl-input-images > li {
     width: 100%;
     padding-top: 4px;
     padding-bottom: 4px;
-}
-
-.border-gray:hover {
-    border-bottom: 1px solid #666;
 }
 
 .border-none {
@@ -1161,19 +1213,6 @@ ul.gl-input-images > li {
 }
 
 /*/HEADER*/
-.post-share-range-label {
-    width: 23%;
-    float: left;
-}
-
-.post-share-range-list {
-    width: 76%;
-    float: right;
-}
-
-.post-share-range-list ul {
-    width: 100%;
-}
 
 .gl-s2-post-dropdown {
     width: 63% !important;
@@ -1291,6 +1330,7 @@ ul.gl-input-images > li {
     vertical-align: middle;
     text-decoration: none !important;
 }
+
 /*/共有範囲の画像とテキスト*/
 
 /*ハンバーガー*/
@@ -1344,20 +1384,6 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 64%;
-    }
-
-    .post-share-range-label {
-        width: 23%;
-        float: left;
-    }
-
-    .post-share-range-list {
-        width: 75%;
-        float: left;
-    }
-
-    .post-share-range-list ul {
-        width: 100%;
     }
 
     .gl-s2-post-dropdown {
@@ -1445,19 +1471,6 @@ ul.gl-input-images > li {
         padding: 9px 19px 0;
     }
 
-    .post-share-range-label {
-        width: 64px;
-    }
-
-    .post-share-range-list {
-        float: left;
-        width: 396px;
-    }
-
-    .post-share-range-list ul {
-        width: 374px;
-    }
-
     .gl-s2-post-dropdown {
         width: 386px !important;
         margin-right: 4px;
@@ -1529,14 +1542,6 @@ ul.gl-input-images > li {
         width: 100px;
     }
 
-    .post-share-range-label {
-        width: 64px;
-    }
-
-    .post-share-range-list ul {
-        width: 374px;
-    }
-
     .gl-s2-post-dropdown {
         width: 368px !important;
     }
@@ -1580,10 +1585,6 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 103px;
-    }
-
-    .post-share-range-list ul {
-        width: 374px;
     }
 
     .gl-s2-post-dropdown {
@@ -1718,6 +1719,7 @@ ul.gl-input-images > li {
 .addteam_photo-design {
     background: #fff;
 }
+
 .addcircle_photo-design {
     background: #fff;
     border: 1px dashed #ddd;
