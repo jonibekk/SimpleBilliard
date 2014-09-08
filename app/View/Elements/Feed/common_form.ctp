@@ -49,7 +49,7 @@
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'    => __d('gl', "何か投稿しよう"),
-                    'class'          => 'form-control click-show blank-disable post-form feed-post-form',
+                    'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form',
                     'target_show_id' => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -87,7 +87,7 @@
 
                         <button type="button" class="btn btn-link post-share-range-button pull-right"
                                 id="ChangeShareSelect2" target-id="PostShareInputWrap" show-target-id="PostFormShare">
-                        <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
+                            <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
                             __d('gl',
                                 "共有範囲") ?>
                         </button>
