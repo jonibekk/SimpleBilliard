@@ -73,7 +73,8 @@ if (isset($type)) {
                                                ['type'         => 'file',
                                                 'label'        => false,
                                                 'div'          => false,
-                                                'class'        => false,
+                                                //TODO ios画像アップロードのデバッグ
+                                                'class' => 'change_photo_input',
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
                                                ]) ?>
