@@ -451,3 +451,17 @@ function evTargetShow() {
     $("#" + target_id).show();
     return false;
 }
+
+//noinspection JSUnresolvedVariable
+$(document).on("click", ".target-show-target-click", evTargetShowTargetClick);
+
+function evTargetShowTargetClick() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'click-target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var click_target_id = $obj.attr("click-target-id");
+    $("#" + target_id).show();
+    $("#" + click_target_id).trigger('click');
+    return false;
+}

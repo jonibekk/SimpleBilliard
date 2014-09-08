@@ -42,29 +42,19 @@
                 'novalidate'    => true,
             ]); ?>
             <div class="panel-body post-panel-body">
-            <?=
+                <?=
                 $this->Form->input('body', [
                     'label'                    => false,
                     'type'                     => 'textarea',
                     'rows'                     => 1,
                     'required'                 => true,
-                    'placeholder' => __d('gl', "何か投稿しよう"),
-                'class' => 'form-control click-show blank-disable post-form feed-post-form',
-                'target_show_id'           => "PostFormFooter",
+                    'placeholder'    => __d('gl', "何か投稿しよう"),
+                    'class'          => 'form-control click-show blank-disable post-form feed-post-form',
+                    'target_show_id' => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-                <!--
-                <div class="post-form-picture" id="PostFormPicture">
-                    <a href="#" class="target-show-this-del link-red" target-id="PostFormImage"><i
-                            class="fa fa-picture-o link-red post-icon" style="width:160px">&nbsp;<?=
-                __d('gl',
-                    "画像を追加する") ?>
-                        </i>
-                    </a>
-                </div>
--->
                 <div class="row form-group gl-no-margin" id="PostFormImage" style="display: none">
                     <ul class="col gl-input-images post-images">
                         <? for ($i = 1; $i <= 5; $i++): ?>
@@ -77,23 +67,27 @@
             </div>
             <div class="panel-body post-panel-body post-panel-footer">
                 <div class="font-size_12" style="display: none" id="PostFormFooter">
-                    <a href="#" class="target-show link-red" target-id="PostFormImage">
-                        <i class="fa fa-camera post-camera-icon pull-left"></i>
+                    <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
+                       click-target-id="PostPhoto1">
+                    <i class="fa fa-camera post-camera-icon pull-left"></i>
                     </a>
+
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
                         <!--
                         <label class="col col-sm-2 control-label post-share-range-label">
                             <a href="#" id="ChangeShareSelect2" target-id="PostShareInputWrap"
                                class="border-none link-red font-weight_normal">
-                                <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?= __d('gl', '共有範囲') ?>
+                                <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
+                        __d('gl',
+                            '共有範囲') ?>
                             </a>
                         </label>
 
                         <div class="col col-sm-10 post-share-range-list click-height-up blur-height-reset"
                              after-height="170px" id="PostShareInputWrap">
                              <?=
-                            $this->Form->hidden('share',
-                                                ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
+                        $this->Form->hidden('share',
+                                            ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
                             <? $this->Form->unlockField('Post.share') ?>
                         </div>
 -->
@@ -104,8 +98,9 @@
                                             ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
                         <button type="button" class="btn btn-link post-share-range-button pull-right"
                                 data-dismiss="modal">
-                            <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?= __d('gl',
-                                                                                                          "共有範囲") ?>
+                            <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
+                            __d('gl',
+                                "共有範囲") ?>
                         </button>
                         <div class="clearfix"></div>
                     </div>
