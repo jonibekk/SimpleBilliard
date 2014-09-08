@@ -989,8 +989,12 @@ ul.gl-input-images > li {
     margin-bottom: 6px;
 }
 
+.post-share-range-list {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .post-share-range-list ul {
-    /*width: 100%;*/
     border-top: none !important;
     border-right: none !important;
     border-bottom: none !important;
