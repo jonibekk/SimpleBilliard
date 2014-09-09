@@ -185,7 +185,7 @@
 
                                 <p class="font-size_11 media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
                                 <? if (isset($site_info['description'])): ?>
-                                    <div class="font-size_12">
+                                    <div class="font-size_12 site-info-txt">
                                         <?= $site_info['description'] ?>
                                     </div>
                                 <? endif; ?>
