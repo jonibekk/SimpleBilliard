@@ -2043,3 +2043,16 @@ Temporary Properties - YOU MUST FIX
 .nailthumb-container img {
     max-width: 100%;
 }
+
+.comment-btn {
+    height: 0;
+}
+
+.submit-btn {
+    margin-top: 4px;
+}
+
+.gl-input-images {
+    margin-top: 4px;
+    display: inline-block;
+}

@@ -289,7 +289,7 @@
                         </ul>
                     </div>
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
-                    <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
+                    <div class="comment-btn" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
                         <a href="#" class="target-show-this-del font-size_12"
                            target-id="CommentFormImage_<?= $post['Post']['id'] ?>"><i
                                 class="fa fa-picture-o"></i>&nbsp;<?=
@@ -299,7 +299,7 @@
 
                         <?=
                         $this->Form->submit(__d('gl', "コメントする"),
-                                            ['class' => 'btn btn-primary pull-right', 'id' => "CommentSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
+                                            ['class' => 'btn btn-primary pull-right submit-btn', 'id' => "CommentSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
                         <div class="clearfix"></div>
                     </div>
                     <?= $this->Form->end() ?>
