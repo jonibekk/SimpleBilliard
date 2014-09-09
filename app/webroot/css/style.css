@@ -29,7 +29,7 @@ footer p {
 
 .no-line {
     text-decoration: none !important;
-    color: #000;
+    color: #231814;
 }
 
 .no-line:link,
@@ -84,6 +84,13 @@ footer p {
     background-color: #f7f7f9;
     border: 1px solid #e1e1e8;
     border-radius: 4px;
+    color: #231814;
+}
+
+.site-info-txt:hover,
+.site-info-txt:target,
+.site-info-txt:active {
+    color: #231814;
 }
 
 .media-heading {
@@ -92,6 +99,10 @@ footer p {
 
 .media-url {
     margin-bottom: 3px;
+}
+
+.media-url:hover {
+    color: #231814;
 }
 
 /*Fontの指定*/
@@ -174,7 +185,7 @@ footer p {
 }
 
 .gl-feed-text a {
-    color: #d1bab8;
+    color: #ddd;
 }
 
 .gl-feed-text a:hover,
