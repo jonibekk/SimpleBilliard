@@ -1344,6 +1344,69 @@ ul.gl-input-images > li {
 .navbar-toggle {
     margin-right: 6px;
 }
+
+/**/
+.page-title {
+    font-size: 20px;
+    margin-bottom: 4px;
+    padding-left: 8px;
+}
+
+.goal-set-heading {
+    font-weight: bold;
+    font-size: 20px;
+    color: #231814;
+}
+
+.panel-default > .goal-set-heading {
+    padding-left: 16px;
+}
+
+.goal-set-body label {
+    font-size: 16px;
+}
+
+.btn-white {
+
+}
+
+.btn-white {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    background-image: none;
+    color: #777;
+}
+
+.btn-help {
+    padding-right: 0;
+}
+
+.btn-white:target,
+.btn-white:hover {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    background-image: none;
+    color: #231814;
+    text-decoration: none;
+}
+
+.display-ib input {
+    display: inline-block;
+}
+
+.label-addiction {
+    color: #c0c0c0;
+    font-size: 12px;
+}
+
+.goal-form-addiction {
+    font-size: 12px;
+}
+
+/*/*/
+
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {

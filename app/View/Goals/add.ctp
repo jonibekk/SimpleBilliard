@@ -16,9 +16,76 @@
 ?>
 <!-- START app/View/Goals/add.ctp -->
 <div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('gl', "ゴールを作成してください") ?></div>
+<!--GoalSet01-->
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="page-title">新しいゴールを作成</div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading goal-set-heading"><?= __d('gl', "1 目的を決める") ?></div>
+        <div class="panel-container">
+            <?=
+            $this->Form->create('Goal', [
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => [
+                        'class' => 'col col-sm-3 control-label'
+                    ],
+                    'wrapInput' => 'col col-sm-7',
+                    'class'     => 'form-control addteam_input-design'
+                ],
+                'class'         => 'form-horizontal',
+                'novalidate'    => true,
+                'type'          => 'file',
+                'id'            => 'AddGoalForm',
+            ]); ?>
+            <div class="panel-body add-team-panel-body goal-set-body">
+                <?=
+                $this->Form->input('goal_category_id', [
+                    'label' => [
+                        'text'  => __d('gl', "カテゴリ"),
+                        'class' => 'col col-sm-3 control-label test'
+                    ],
+                    'type'    => 'select',
+                    'options' => $goal_category_list,
+                ]) ?>
+                <hr>
+                <?=
+                $this->Form->input('purpose',
+                                   ['before'     => '<div class="col col-sm-3 control-label">' .
+                                       '<label class="">' . __d('gl', "目的") . '</label>' .
+                                       '<div class="label-addiction">' . __d('gl', "達成したいことは？") . '</div></div>',
+                                    'label'      => false,
+                                    'placeholder'              => __d('gl', "本気で達成したいことをぼんやりと書く"),
+                                    'rows'                     => 1,
+                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                    'afterInput' => '<span class="help-block goal-form-addiction">' . __d('gl',
+                                                                                                    "例）世界から貧困を減らすこと") . '</span>'
+                                   ]) ?>
+            </div>
+
+            <div class="panel-footer addteam_pannel-footer">
+                <div class="row">
+                    <div class="col-sm-7 col-sm-offset-5 display-ib">
+                        <?=
+                        $this->Html->link(__d('gl', "詳しくはこちら"), "#",
+                                          ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
+                        <?=
+                        $this->Form->submit(__d('gl', "次のステップ"),
+                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                    </div>
+                    <div class="col-sm-3 pull-right">
+                    </div>
+                </div>
+            </div>
+            <?= $this->Form->end(); ?>
+        </div>
+    </div>
+</div>
+<!--GoalSet02-->
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-default">
+        <div class="panel-heading"><?= __d('gl', "2 ゴールを定める") ?></div>
+        <div class="panel-container hidden">
             <?=
             $this->Form->create('Goal', [
                 'inputDefaults' => [
@@ -35,23 +102,6 @@
                 'id'            => 'AddGoalForm',
             ]); ?>
             <div class="panel-body add-team-panel-body">
-                <?=
-                $this->Form->input('goal_category_id', [
-                    'label'   => __d('gl', "カテゴリ"),
-                    'type'    => 'select',
-                    'options' => $goal_category_list,
-                ])?>
-                <hr>
-                <?=
-                $this->Form->input('purpose',
-                                   ['label'                    => __d('gl', "達成したいことは？"),
-                                    'placeholder'              => __d('gl', "本気で達成したいことをぼんやりと書く"),
-                                    'rows'                     => 1,
-                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                    'afterInput'               => '<span class="help-block">' . __d('gl',
-                                                                                                    "例）世界から貧困を減らすこと") . '</span>'
-                                   ]) ?>
-                <hr>
                 <?=
                 $this->Form->input('KeyResult.0.name',
                                    ['label'       => __d('gl', "指標として何をどうする？"),
@@ -136,7 +186,7 @@
                     'required' => false,
                     'style'    => 'width:50px',
                     'options'  => $priority_list,
-                ])?>
+                ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('description',
@@ -144,7 +194,42 @@
                                     'placeholder' => __d('gl', "詳細を書く"),
                                     'rows'        => 1,
                                    ]) ?>
-                <hr>
+            </div>
+            <div class="panel-footer addteam_pannel-footer">
+                <div class="row">
+                    <div class="col-sm-3 col-sm-offset-9">
+                        <?=
+                        $this->Form->submit(__d('gl', "この内容で作成"),
+                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                    </div>
+                </div>
+            </div>
+            <?= $this->Form->end(); ?>
+        </div>
+    </div>
+</div>
+
+<!--GoalSet03-->
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="panel panel-default">
+        <div class="panel-heading"><?= __d('gl', "3 他の情報を追加する") ?></div>
+        <div class="panel-container hidden">
+            <?=
+            $this->Form->create('Goal', [
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => [
+                        'class' => 'col col-sm-3 control-label'
+                    ],
+                    'wrapInput' => 'col col-sm-7',
+                    'class'     => 'form-control addteam_input-design'
+                ],
+                'class'         => 'form-horizontal',
+                'novalidate'    => true,
+                'type'          => 'file',
+                'id'            => 'AddGoalForm',
+            ]); ?>
+            <div class="panel-body add-team-panel-body">
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "ゴール画像") ?></label>
 
@@ -189,10 +274,9 @@
 
                 </div>
             </div>
-
             <div class="panel-footer addteam_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-9 col-sm-offset-3">
+                    <div class="col-sm-3 col-sm-offset-9">
                         <?=
                         $this->Form->submit(__d('gl', "この内容で作成"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
@@ -202,6 +286,7 @@
             <?= $this->Form->end(); ?>
         </div>
     </div>
+</div>
 </div>
 <? $this->append('script') ?>
 <script type="text/javascript">
