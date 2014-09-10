@@ -790,6 +790,65 @@ class User extends AppModel
         return ['results' => $res];
     }
 
+    /**
+     * feedのselect2で使うデフォルトデータリスト(json)
+     *
+     * @return array(json)
+     */
+    function getAllUsersCirclesSelect2()
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $circles = $this->CircleMember->getMyCircle();
+        $circle_res = [];
+        foreach ($circles as $val) {
+            $data['id'] = 'circle_' . $val['Circle']['id'];
+            $data['text'] = $val['Circle']['name'];
+            $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
+            $circle_res[] = $data;
+        }
+
+        $users = $this->getAllMember(false);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['username'] . " ( " . $val['User']['display_username'] . " )";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
+        $team_res = [];
+        $team = $this->TeamMember->Team->findById($this->current_team_id);
+        if (!empty($team)) {
+            $team_res = [
+                [
+                    'id'    => "public",
+                    'text'  => __d('gl', "チーム全体"),
+                    'image' => $Upload->uploadUrl($team, 'Team.photo', ['style' => 'small']),
+                ]
+            ];
+        }
+
+        $res = array_merge($team_res, $circle_res, $user_res);
+
+        return json_encode($res);
+    }
+
+    public function getAllMember($with_me = true)
+    {
+        $uid_list = $this->TeamMember->getAllMemberUserIdList($with_me);
+
+        $options = [
+            'conditions' => [
+                'id' => $uid_list,
+            ],
+            'order' => ['first_name'],
+            'fields'     => $this->profileFields,
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
     function getProfileAndEmail($uid, $lang = null)
     {
         $backup_lang = null;
