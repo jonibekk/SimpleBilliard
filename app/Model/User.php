@@ -813,14 +813,25 @@ class User extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['username'];
+            $data['text'] = $val['User']['username'] . " ( " . $val['User']['display_username'] . " )";
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
-        $res = array_merge($circle_res, $user_res);
+        $team_res = [];
+        $team = $this->TeamMember->Team->findById($this->current_team_id);
+        if (!empty($team)) {
+            $team_res = [
+                [
+                    'id'    => "public",
+                    'text'  => __d('gl', "チーム全体"),
+                    'image' => $Upload->uploadUrl($team, 'Team.photo', ['style' => 'small']),
+                ]
+            ];
+        }
+
+        $res = array_merge($team_res, $circle_res, $user_res);
 
         return json_encode($res);
-
     }
 
     public function getAllMember($with_me = true)

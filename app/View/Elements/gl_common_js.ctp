@@ -107,9 +107,8 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
-        //minimumInputLength: 2,
         placeholder: '<?=__d('gl',"自分のみ")?>',
-        data: "<?=isset($select2_default)?$select2_default:null?>",
+        data: <?=isset($select2_default)?$select2_default:null?>,
         <?if(isset($current_circle)&&!empty($current_circle)):?>
         initSelection: function (element, callback) {
             var data = [
