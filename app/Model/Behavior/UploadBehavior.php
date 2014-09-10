@@ -192,6 +192,14 @@ class UploadBehavior extends ModelBehavior
 
     private function _prepareToWriteFiles(&$model, $field)
     {
+        //ファイル名を変更(ファイル名の後にフィールド名を追加)
+        $file_name = $model->data[$model->name][$field]['name'];
+        $file_name = substr($file_name, 0, strrpos($file_name, '.')) . // filename
+            "_" . $field .
+            substr($file_name, strrpos($file_name, '.') //extension
+            );
+        $model->data[$model->name][$field]['name'] = $file_name;
+
         $this->toWrite[$field] = $model->data[$model->name][$field];
         // make filename URL friendly by using Cake's Inflector
         $this->toWrite[$field]['name'] =
