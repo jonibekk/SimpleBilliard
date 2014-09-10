@@ -842,6 +842,7 @@ class User extends AppModel
             'conditions' => [
                 'id' => $uid_list,
             ],
+            'order' => ['first_name'],
             'fields'     => $this->profileFields,
         ];
         $res = $this->find('all', $options);
