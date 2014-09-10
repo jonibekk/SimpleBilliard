@@ -32,8 +32,8 @@ if (isset($type)) {
         <div
             class="fileinput-preview thumbnail nailthumb-container gl-thumb-container click-target-enabled photo-plus-frame"
             data-trigger="fileinput"
-             target-id="<?= $submit_id ?>"
-             style="width: 50px; height: 50px;">
+            target-id="<?= $submit_id ?>"
+            style="width: 50px; height: 50px;">
             <? $delete_style = null ?>
             <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
                 <? $delete_style = "display:block" ?>
@@ -73,8 +73,6 @@ if (isset($type)) {
                                                ['type'         => 'file',
                                                 'label'        => false,
                                                 'div'          => false,
-                                                //TODO ios画像アップロードのデバッグ
-                                                'class' => 'change_photo_input',
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
                                                ]) ?>
