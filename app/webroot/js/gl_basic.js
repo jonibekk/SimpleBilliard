@@ -29,8 +29,11 @@ $(document).ready(function () {
     });
     //投稿の共有範囲切り替え
     $('#ChangeShareSelect2').click(function () {
+        attrUndefinedCheck(this, 'show-target-id');
         attrUndefinedCheck(this, 'target-id');
+        var show_target_id = $(this).attr('show-target-id');
         var target_id = $(this).attr('target-id');
+        $("#" + show_target_id).show();
         $("#" + target_id).find('ul.select2-choices').click();
         return false;
     });
@@ -81,9 +84,13 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
     //noinspection JSUnresolvedVariable
+    $(document).on("click", ".target-show-target-del", evTargetShowTargetDelete);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
+    //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
     $(document).on("touchend", "#layer-black", function () {
@@ -218,12 +225,36 @@ function evTargetShowThisDelete() {
     $obj.remove();
     return false;
 }
+function evTargetShowTargetDelete() {
+    attrUndefinedCheck(this, 'show-target-id');
+    attrUndefinedCheck(this, 'delete-target-id');
+    var $obj = $(this);
+    var show_target_id = $obj.attr("show-target-id");
+    var delete_target_id = $obj.attr("delete-target-id");
+    $("#" + show_target_id).show();
+    $("#" + delete_target_id).remove();
+    return false;
+}
 
 function evTargetEnabled() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     $("#" + target_id).removeAttr("disabled");
+    return true;
+}
+function evSelectOptionTargetHidden() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'hidden-option-value');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var hidden_option_value = $obj.attr("hidden-option-value");
+    if ($obj.val() == hidden_option_value) {
+        $("#" + target_id).hide();
+    }
+    else {
+        $("#" + target_id).show();
+    }
     return true;
 }
 
@@ -433,3 +464,35 @@ $(function () {
             $(".header-link , .header-profile-icon").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
         });
 });
+
+$(function () {
+    $(".click-show").on("click", function () {
+            $("#PostFormPicture").css("display", "block")
+        }
+    )
+});
+
+//noinspection JSUnresolvedVariable
+$(document).on("click", ".target-show", evTargetShow);
+
+function evTargetShow() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).show();
+    return false;
+}
+
+//noinspection JSUnresolvedVariable
+$(document).on("click", ".target-show-target-click", evTargetShowTargetClick);
+
+function evTargetShowTargetClick() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'click-target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var click_target_id = $obj.attr("click-target-id");
+    $("#" + target_id).show();
+    $("#" + click_target_id).trigger('click');
+    return false;
+}

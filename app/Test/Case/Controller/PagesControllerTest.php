@@ -31,6 +31,7 @@ class PagesControllerTest extends ControllerTestCase
         'app.post_read',
         'app.images_post',
         'app.comment_read',
+        'app.goal',
         'app.group',
         'app.team_member',
         'app.job_category',
