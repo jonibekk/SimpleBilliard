@@ -496,10 +496,3 @@ function evTargetShowTargetClick() {
     $("#" + click_target_id).trigger('click');
     return false;
 }
-
-//TODO ios画像アップロードのデバッグ
-$('.change_photo_input').change(function () {
-    console.log(this.id);
-    var name = $(this)[0].files[0].name;
-    console.log(name);
-});
