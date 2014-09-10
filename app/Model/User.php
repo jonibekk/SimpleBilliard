@@ -804,7 +804,7 @@ class User extends AppModel
         $circle_res = [];
         foreach ($circles as $val) {
             $data['id'] = 'circle_' . $val['Circle']['id'];
-            $data['text'] = $val['Circle']['name'];
+            $data['text'] = mb_strimwidth(trim($val['Circle']['name']), 0, 35, "...");
             $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
             $circle_res[] = $data;
         }
