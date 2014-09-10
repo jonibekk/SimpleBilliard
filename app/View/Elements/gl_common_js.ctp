@@ -107,29 +107,8 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
-        minimumInputLength: 2,
         placeholder: '<?=__d('gl',"自分のみ")?>',
-        ajax: {
-            url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10 // page size
-                };
-            },
-            results: function (data, page) {
-                var team = {
-                    'id': 'public',
-                    'text': "<?=__d('gl',"チーム全体")?>",
-                    'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
-                };
-                data.results.push(team);
-                return { results: data.results };
-            }
-        },
+        data: <?=isset($select2_default)?$select2_default:null?>,
         <?if(isset($current_circle)&&!empty($current_circle)):?>
         initSelection: function (element, callback) {
             var data = [

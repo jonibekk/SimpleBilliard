@@ -65,8 +65,16 @@
                     </ul>
                 </div>
             </div>
-            <div class="panel-body post-share-range-panel-body" id="PostFormShare" style="display: none">
-                <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
+            <?
+            if (isset($this->request->params['circle_id'])) {
+                $display = "block";
+            }
+            else {
+                $display = "none";
+            }
+            ?>
+            <div class="panel-body post-share-range-panel-body" id="PostFormShare" style="display: <?= $display ?>">
+            <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
                     <?=
                     $this->Form->hidden('share',
                                         ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
