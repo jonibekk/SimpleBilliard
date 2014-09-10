@@ -73,6 +73,7 @@ if (isset($type)) {
                                                ['type'         => 'file',
                                                 'label'        => false,
                                                 'div'          => false,
+                                                'class' => false,
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
                                                ]) ?>
