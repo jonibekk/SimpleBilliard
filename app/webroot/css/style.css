@@ -1226,7 +1226,7 @@ ul.gl-input-images > li {
 /*/HEADER*/
 
 .gl-s2-post-dropdown {
-    width: 63% !important;
+    width: 80% !important;
     margin-right: 0;
 }
 
@@ -1345,6 +1345,7 @@ ul.gl-input-images > li {
     margin-right: 6px;
 }
 
+<<<<<<< HEAD
 /**/
 .page-title {
     font-size: 20px;
@@ -1407,12 +1408,15 @@ ul.gl-input-images > li {
 
 /*/*/
 
+=======
+>>>>>>> 498a94016d476ef50850f4e5fe11c843e4c65087
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
     .navbar-toggle {
         margin-right: 15px;
     }
+
     .container {
         width: 97.5%;
     }
@@ -1438,7 +1442,7 @@ ul.gl-input-images > li {
     }
 
     .gl-s2-post-dropdown {
-        width: 42% !important;
+        width: 80% !important;
         margin-right: 0;
     }
 }
@@ -1793,7 +1797,6 @@ ul.gl-input-images > li {
     font-size: 12px;
 }
 
-
 #layer-black {
     display: none;
     position: fixed;
@@ -2023,7 +2026,6 @@ ul.gl-input-images > li {
 }
 
 /*/ select2 3.5.1 */
-
 
 /*=================================
 Temporary Properties - YOU MUST FIX
