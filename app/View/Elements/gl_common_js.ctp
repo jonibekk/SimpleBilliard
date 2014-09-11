@@ -108,7 +108,7 @@ $(document).ready(function () {
     $('#select2PostCircleMember').select2({
         multiple: true,
         placeholder: '<?=__d('gl',"自分のみ")?>',
-        data: <?=isset($select2_default)?$select2_default:null?>,
+        data: <?=isset($select2_default)?$select2_default:"[]"?>,
         <?if(isset($current_circle)&&!empty($current_circle)):?>
         initSelection: function (element, callback) {
             var data = [
