@@ -105,6 +105,12 @@ footer p {
     color: #231814;
 }
 
+/*幅指定*/
+.width100_per {
+    width: 100%;
+}
+
+/*/幅指定*/
 /*Fontの指定*/
 .font-size_11 {
     font-size: 11px;
@@ -228,6 +234,7 @@ footer p {
     color: #b4b8bf;
 
 }
+
 
 .gl-feed-arrow,
 .gl-comment-arrow,
@@ -1353,9 +1360,9 @@ ul.gl-input-images > li {
 }
 
 .goal-set-heading {
-    font-weight: bold;
     font-size: 20px;
     color: #231814;
+    border-bottom: none;
 }
 
 .panel-default > .goal-set-heading {
@@ -1392,9 +1399,10 @@ ul.gl-input-images > li {
     text-decoration: none;
 }
 
-.display-ib input {
+.goal-set-buttons input {
     display: inline-block;
 }
+
 
 .label-addiction {
     color: #c0c0c0;
@@ -1403,6 +1411,19 @@ ul.gl-input-images > li {
 
 .goal-form-addiction {
     font-size: 12px;
+}
+
+.panel-default > .panel-closed-headding {
+    background-color: #fbfbfb;
+    color: #ccc;
+}
+
+.goal-set-input {
+    margin-bottom: 4px;
+}
+
+.goal-set-buttons {
+    margin-left: 30%;
 }
 
 /*/Goal*/
@@ -1442,6 +1463,11 @@ ul.gl-input-images > li {
         width: 80% !important;
         margin-right: 0;
     }
+
+    .goal-set-buttons {
+        margin-left: 40%;
+    }
+
 }
 
 /*Small*/
@@ -1539,6 +1565,19 @@ ul.gl-input-images > li {
     .circle-link {
         width: 94%;
     }
+
+    .goal-set-buttons {
+        margin-left: 46%;
+    }
+
+    .goal-set-input {
+        margin-left: 14px;
+        padding-left: 18px;
+    }
+
+    .line-vertical-sm {
+        border-left: 1px solid #e0e0e0;
+    }
 }
 
 /*Medium*/
@@ -1600,6 +1639,10 @@ ul.gl-input-images > li {
 
     .circle-link {
         width: 91%;
+    }
+
+    .goal-set-buttons {
+        margin-left: 60%;
     }
 
 }
@@ -1698,6 +1741,13 @@ ul.gl-input-images > li {
     border-radius: 0 0 6px 6px;
 }
 
+.goalset_pannel-footer {
+    background: #fbfbfb;
+}
+
+.panel-footer {
+    border-top: none;
+}
 /*MergeLater_inputDesign*/
 .setting_input-design {
     background: #fff;
@@ -2117,4 +2167,8 @@ Temporary Properties - YOU MUST FIX
 .gl-input-images {
     margin-top: 4px;
     display: inline-block;
+}
+
+.required .no-asterisk::after {
+    content: "";
 }

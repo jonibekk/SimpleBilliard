@@ -21,7 +21,8 @@
     <div class="page-title">新しいゴールを作成</div>
 
     <div class="panel panel-default">
-        <div class="panel-heading goal-set-heading"><?= __d('gl', "1 目的を決める") ?></div>
+        <div class="panel-heading goal-set-heading"><?= __d('gl',
+                                                            "<span class='font-weight_bold'>1</span> 目的を決める") ?></div>
         <div class="panel-container">
             <?=
             $this->Form->create('Goal', [
@@ -30,7 +31,7 @@
                     'label'     => [
                         'class' => 'col col-sm-3 control-label'
                     ],
-                    'wrapInput' => 'col col-sm-7',
+                    'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
@@ -48,24 +49,23 @@
                     'type'    => 'select',
                     'options' => $goal_category_list,
                 ]) ?>
-                <hr>
                 <?=
                 $this->Form->input('purpose',
-                                   ['before'     => '<div class="col col-sm-3 control-label">' .
-                                       '<label class="">' . __d('gl', "目的") . '</label>' .
+                                   ['before'      => '<div class="col col-sm-3 control-label">' .
+                                       '<label class="no-asterisk">' . __d('gl', "目的") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl', "達成したいことは？") . '</div></div>',
-                                    'label'      => false,
-                                    'placeholder'              => __d('gl', "本気で達成したいことをぼんやりと書く"),
+                                    'label'       => false,
+                                    'placeholder' => __d('gl', "達成したいことをざっくり書く"),
                                     'rows'                     => 1,
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                    'afterInput' => '<span class="help-block goal-form-addiction">' . __d('gl',
-                                                                                                    "例）世界から貧困を減らすこと") . '</span>'
+                                    'afterInput'  => '<span class="help-block goal-form-addiction">' . __d('gl',
+                                                                                                           "例）世界から貧困を減らすこと") . '</span>'
                                    ]) ?>
             </div>
 
-            <div class="panel-footer addteam_pannel-footer">
+            <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-7 col-sm-offset-5 display-ib">
+                    <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"), "#",
                                           ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
@@ -84,7 +84,8 @@
 <!--GoalSet02-->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <div class="panel-heading"><?= __d('gl', "2 ゴールを定める") ?></div>
+        <div class="panel-heading goal-set-heading panel-closed-headding"><?= __d('gl',
+                                                                                  "<span class='font-weight_bold'>2</span> ゴールを定める") ?></div>
         <div class="panel-container hidden">
             <?=
             $this->Form->create('Goal', [
@@ -93,7 +94,7 @@
                     'label'     => [
                         'class' => 'col col-sm-3 control-label'
                     ],
-                    'wrapInput' => 'col col-sm-7',
+                    'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
@@ -110,45 +111,50 @@
                                     'afterInput'  => '<span class="help-block">' . __d('gl',
                                                                                        "例）極度な貧困率を減少させる") . '</span>'
                                    ]) ?>
-                <?=
-                $this->Form->input('KeyResult.0.value_unit',
-                                   ['label'               => __d('gl', "数値の単位"),
-                                    'before'              => '<label class="col col-sm-3 control-label">' . __d('gl',
-                                                                                                                "どのくらい？") . '</label>',
-                                    'wrapInput'           => 'col col-sm-4',
-                                    'type'                => 'select',
-                                    'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                    'target-id'           => 'KeyResult0ValueInputWrap',
-                                    'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                    'options'             => $kr_value_unit_list
-                                   ]) ?>
-                <div id="KeyResult0ValueInputWrap">
+                <div class="row">
+                    <div class="col col-sm-3">
+                        <label class="control-label width100_per text-right"><?= __d('gl', "どのくらい？") ?></label>
+                    </div>
+                    <div class="col col-sm-7 line-vertical-sm goal-set-input">
 
-                    <?=
-                    $this->Form->input('KeyResult.0.target_value',
-                                       ['label'                   => __d('gl', "達成時"),
-                                        'before'                  => '<label class="col col-sm-3 control-label"></label>',
-                                        'wrapInput'               => 'col col-sm-4',
-                                        'type'                    => 'number',
-                                        'value' => 100,
-                                        'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
-                                       ]) ?>
-                    <?=
-                    $this->Form->input('KeyResult.0.start_value',
-                                       ['label'                   => __d('gl', "現在"),
-                                        'before'                  => '<label class="col col-sm-3 control-label"></label>',
-                                        'wrapInput'               => 'col col-sm-4',
-                                        'type'                    => 'number',
-                                        'value' => 0,
-                                        'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
-                                        'data-bv-integer'         => "true",
-                                       ]) ?>
+                        <?=
+                        $this->Form->input('KeyResult.0.value_unit',
+                                           ['label'               => __d('gl', "数値の単位"),
+                                            'wrapInput'           => 'col col-sm-4',
+                                            'type'                => 'select',
+                                            'class'               => 'change-select-target-hidden form-control addteam_input-design',
+                                            'target-id'           => 'KeyResult0ValueInputWrap',
+                                            'hidden-option-value' => KeyResult::UNIT_BINARY,
+                                            'options'             => $kr_value_unit_list
+                                           ]) ?>
+                        <div id="KeyResult0ValueInputWrap">
+
+                            <?=
+                            $this->Form->input('KeyResult.0.target_value',
+                                               ['label'                   => __d('gl', "達成時"),
+                                                'wrapInput'               => 'col col-sm-4',
+                                                'type'                    => 'number',
+                                                'value'                   => 100,
+                                                'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
+                                               ]) ?>
+                            <?=
+                            $this->Form->input('KeyResult.0.start_value',
+                                               ['label'                   => __d('gl', "現在"),
+                                                'wrapInput'               => 'col col-sm-4',
+                                                'type'                    => 'number',
+                                                'value'                   => 0,
+                                                'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
+                                                'data-bv-integer'         => "true",
+                                               ]) ?>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="form-group" id="KeyResult0StartDateContainer">
                     <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
                         __d('gl', "開始日") ?></label>
 
-                    <div class="col col-sm-7">
+                    <div class="col col-sm-7 line-vertical-sm goal-set-input">
                         <p class="form-control-static"
                            id="KeyResult0StartDateDefault"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
                             &nbsp;&nbsp;<a href="#" class="target-show-target-del"
@@ -168,7 +174,7 @@
                         __d('gl',
                             "いつまでに？") ?></label>
 
-                    <div class="col col-sm-7">
+                    <div class="col col-sm-7 line-vertical-sm goal-set-input">
                         <div class="input-group date">
                             <?=
                             $this->Form->input('KeyResult.0.end_date',
@@ -177,7 +183,6 @@
                         </div>
                     </div>
                 </div>
-                <hr>
                 <?=
                 $this->Form->input('priority', [
                     'label'    => __d('gl', "重要度"),
@@ -187,7 +192,6 @@
                     'style'    => 'width:50px',
                     'options'  => $priority_list,
                 ]) ?>
-                <hr>
                 <?=
                 $this->Form->input('description',
                                    ['label'       => __d('gl', "詳細"),
@@ -195,7 +199,7 @@
                                     'rows'        => 1,
                                    ]) ?>
             </div>
-            <div class="panel-footer addteam_pannel-footer">
+            <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
                     <div class="col-sm-3 col-sm-offset-9">
                         <?=
@@ -212,7 +216,8 @@
 <!--GoalSet03-->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <div class="panel-heading"><?= __d('gl', "3 他の情報を追加する") ?></div>
+        <div class="panel-heading goal-set-heading panel-closed-headding"><?= __d('gl',
+                                                                                  "<span class='font-weight_bold'>3</span> 他の情報を追加する") ?></div>
         <div class="panel-container hidden">
             <?=
             $this->Form->create('Goal', [
@@ -221,7 +226,7 @@
                     'label'     => [
                         'class' => 'col col-sm-3 control-label'
                     ],
-                    'wrapInput' => 'col col-sm-7',
+                    'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
@@ -233,7 +238,7 @@
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label"><?= __d('gl', "ゴール画像") ?></label>
 
-                    <div class="col col-sm-6">
+                    <div class="col col-sm-6 line-vertical-sm goal-set-input">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
@@ -274,7 +279,7 @@
 
                 </div>
             </div>
-            <div class="panel-footer addteam_pannel-footer">
+            <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
                     <div class="col-sm-3 col-sm-offset-9">
                         <?=
