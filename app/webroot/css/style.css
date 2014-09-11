@@ -1345,8 +1345,7 @@ ul.gl-input-images > li {
     margin-right: 6px;
 }
 
-<<<<<<< HEAD
-/**/
+/* Goal */
 .page-title {
     font-size: 20px;
     margin-bottom: 4px;
@@ -1406,10 +1405,8 @@ ul.gl-input-images > li {
     font-size: 12px;
 }
 
-/*/*/
+/*/Goal*/
 
-=======
->>>>>>> 498a94016d476ef50850f4e5fe11c843e4c65087
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {

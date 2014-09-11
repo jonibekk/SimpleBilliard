@@ -74,7 +74,7 @@
             }
             ?>
             <div class="panel-body post-share-range-panel-body" id="PostFormShare" style="display: <?= $display ?>">
-            <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
+                <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
                     <?=
                     $this->Form->hidden('share',
                                         ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
