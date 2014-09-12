@@ -159,7 +159,6 @@ footer p {
 }
 */
 .link-rose-red {
-
     color: #b46d6d;
 }
 
@@ -168,6 +167,10 @@ footer p {
 .link-rose-red:focus {
     color: #b46d6d;
     text-decoration-color: #b46d6d;
+}
+
+.liked {
+    color: #f33;
 }
 
 .font-weight_normal {
