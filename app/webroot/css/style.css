@@ -676,10 +676,6 @@ ul.example-indent {
     height: 100%;
 }
 
-.showmore {
-    word-wrap: break-word;
-}
-
 .gl-feed-text .btn-link {
     color: #ddd;
 }
@@ -690,6 +686,10 @@ ul.example-indent {
 
 .gl-thumb-container {
     margin: 0 0 0 0;
+}
+
+.showmore {
+    word-wrap: break-word;
 }
 
 ul.gl-input-images {
