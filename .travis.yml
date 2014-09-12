@@ -93,6 +93,7 @@ before_deploy:
 
 notifications:
   slack: isao:Mcgs4pORm8368wH6Rwo5a6Rh
+  email: false
 
 deploy:
   - provider: opsworks

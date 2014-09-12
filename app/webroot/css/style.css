@@ -188,9 +188,16 @@ footer p {
     color: #ddd;
 }
 
+.gl-comment-contents a {
+    color: #c5c5c5;
+}
+
 .gl-feed-text a:hover,
 .gl-feed-text a:hover,
-.gl-feed-text a:hover {
+.gl-feed-text a:hover,
+.gl-comment-contents a:hover,
+.gl-comment-contents a:hover,
+.gl-comment-contents a:hover {
     color: #91170a;
 }
 
@@ -669,12 +676,20 @@ ul.example-indent {
     height: 100%;
 }
 
-.showmore {
-    word-wrap: break-word;
+.gl-feed-text .btn-link {
+    color: #ddd;
+}
+
+.gl-comment-text .btn-link {
+    color: #c5c5c5;
 }
 
 .gl-thumb-container {
     margin: 0 0 0 0;
+}
+
+.showmore {
+    word-wrap: break-word;
 }
 
 ul.gl-input-images {
