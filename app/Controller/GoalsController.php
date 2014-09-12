@@ -54,7 +54,7 @@ class GoalsController extends AppController
                 else {
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを目的を保存しました。"));
                     //「ゴールを定める」に進む
-                    $this->redirect([$this->Goal->getLastInsertID(), 'mode' => 2]);
+                    $this->redirect([$this->Goal->id, 'mode' => 2]);
                 }
             }
             else {

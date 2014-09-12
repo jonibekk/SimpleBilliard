@@ -13,6 +13,7 @@
  * @var                        $kr_start_date_format
  * @var                        $kr_end_date_format
  */
+$url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']['id']] : [];
 ?>
 <!-- START app/View/Goals/add.ctp -->
 <div class="row">
@@ -21,7 +22,16 @@
     <div class="page-title"><?= __d('gl', "新しいゴールを作成") ?></div>
     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
         <div class="panel-heading goal-set-heading">
-            <span class='font-weight_bold'>1</span> <?= __d('gl', "目的を決める") ?></div>
+            <span class='font-weight_bold'>1</span> <?= __d('gl', "目的を決める") ?>
+            <?=
+            $this->Html->link(__d('gl', "変更する"), "#",
+                              [
+                                  'class'     => 'btn btn-link btn-white goal-add-edit-button',
+                                  'div'       => false,
+                                  'style'     => 'display:none',
+                                  'target-id' => "AddGoalFormPurposeWrap",
+                              ]) ?>
+        </div>
         <div class="panel-container">
             <?=
             $this->Form->create('Goal', [
@@ -35,6 +45,7 @@
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
+                'url'           => $url,
                 'type'          => 'file',
                 'id'            => 'AddGoalFormPurpose',
             ]); ?>
@@ -82,7 +93,16 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default" id="AddGoalFormKeyResultWrap">
         <div class="panel-heading goal-set-heading panel-closed-headding">
-            <span class='font-weight_bold'>2</span> <?= __d('gl', "ゴールを定める") ?></div>
+            <span class='font-weight_bold'>2</span> <?= __d('gl', "ゴールを定める") ?>
+            <?=
+            $this->Html->link(__d('gl', "変更する"), "#",
+                              [
+                                  'class'     => 'btn btn-link btn-white goal-add-edit-button',
+                                  'div'       => false,
+                                  'style'     => 'display:none',
+                                  'target-id' => "AddGoalFormKeyResultWrap",
+                              ]) ?>
+        </div>
         <div class="panel-container hidden">
             <?=
             $this->Form->create('Goal', [
@@ -95,11 +115,17 @@
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
+                'url' => array_merge($url, ['mode' => 2]),
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id' => 'AddGoalFormKeyResult',
+                'id'  => 'AddGoalFormKeyResult',
             ]); ?>
             <div class="panel-body add-team-panel-body">
+                <?
+                if (isset($this->request->data['KeyResult'][0]['id'])) {
+                    echo $this->Form->hidden('KeyResult.0.id', ['value' => $this->request->data['KeyResult'][0]['id']]);
+                }
+                ?>
                 <?=
                 $this->Form->input('KeyResult.0.name',
                                    ['label'                    => __d('gl', "指標として何をどうする？"),
@@ -218,7 +244,16 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default" id="AddGoalFormOtherWrap">
         <div class="panel-heading goal-set-heading panel-closed-headding">
-            <span class='font-weight_bold'>3</span> <?= __d('gl', "他の情報を追加する") ?></div>
+            <span class='font-weight_bold'>3</span> <?= __d('gl', "他の情報を追加する") ?>
+            <?=
+            $this->Html->link(__d('gl', "変更する"), "#",
+                              [
+                                  'class'     => 'btn btn-link btn-white goal-add-edit-button',
+                                  'div'       => false,
+                                  'style'     => 'display:none',
+                                  'target-id' => "AddGoalFormOtherWrap",
+                              ]) ?>
+        </div>
         <div class="panel-container hidden">
             <?=
             $this->Form->create('Goal', [
@@ -348,11 +383,13 @@
     <?if($this->request->params['named']['mode'] == 2):?>
     disabledAllInput("#AddGoalFormPurpose");
     //noinspection JSJQueryEfficiency
-    $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('hidden');
-    //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
     //noinspection JSJQueryEfficiency
+    $(".goal-add-edit-button", "#AddGoalFormPurposeWrap").show();
+    //noinspection JSJQueryEfficiency
     $(".panel-footer", "#AddGoalFormPurposeWrap").hide();
+    //noinspection JSJQueryEfficiency
+    $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('hidden');
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-headding');
     <?elseif($this->request->params['named']['mode'] == 3):?>
@@ -362,6 +399,8 @@
     $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
     //noinspection JSJQueryEfficiency
     $(".panel-footer", "#AddGoalFormPurposeWrap").hide();
+    //noinspection JSJQueryEfficiency
+    $(".goal-add-edit-button", "#AddGoalFormPurposeWrap").show();
 
     //noinspection JSJQueryEfficiency
     $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('hidden');
@@ -369,6 +408,8 @@
     $(".panel-heading", "#AddGoalFormKeyResultWrap").addClass('panel-closed-headding');
     //noinspection JSJQueryEfficiency
     $(".panel-footer", "#AddGoalFormKeyResultWrap").hide();
+    //noinspection JSJQueryEfficiency
+    $(".goal-add-edit-button", "#AddGoalFormKeyResultWrap").show();
 
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormOtherWrap").removeClass('panel-closed-headding');
@@ -376,6 +417,14 @@
     $(".panel-container", "#AddGoalFormOtherWrap").removeClass('hidden');
     <?endif;?>
     <?endif;?>
+    $(".goal-add-edit-button").click(function () {
+        attrUndefinedCheck(this, 'target-id');
+        var target_id = $(this).attr('target-id');
+        enabledAllInput("#" + target_id);
+        //noinspection JSJQueryEfficiency
+        $(".panel-footer", "#" + target_id).show();
+        return false;
+    });
 </script>
 <? $this->end() ?>
 <!-- END app/View/Goals/add.ctp -->
