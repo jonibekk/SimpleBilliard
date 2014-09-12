@@ -680,8 +680,12 @@ ul.example-indent {
     word-wrap: break-word;
 }
 
-.showmore_trigger .btn-link {
-    color: #ddd
+.gl-feed-text .btn-link {
+    color: #ddd;
+}
+
+.gl-comment-text .btn-link {
+    color: #c5c5c5;
 }
 
 .gl-thumb-container {
