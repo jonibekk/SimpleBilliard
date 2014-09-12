@@ -169,8 +169,9 @@ footer p {
     text-decoration-color: #b46d6d;
 }
 
+
 .liked {
-    color: #f33;
+    color: #e78e99;
 }
 
 .font-weight_normal {
@@ -2077,4 +2078,20 @@ Temporary Properties - YOU MUST FIX
 .gl-input-images {
     margin-top: 4px;
     display: inline-block;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.z-i-100 {
+    z-index: 100;
 }
