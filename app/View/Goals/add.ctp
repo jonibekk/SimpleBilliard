@@ -18,11 +18,10 @@
 <div class="row">
 <!--GoalSet01-->
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="page-title">新しいゴールを作成</div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading goal-set-heading"><?= __d('gl',
-                                                            "<span class='font-weight_bold'>1</span> 目的を決める") ?></div>
+    <div class="page-title"><?= __d('gl', "新しいゴールを作成") ?></div>
+    <div class="panel panel-default" id="AddGoalFormPurposeWrap">
+        <div class="panel-heading goal-set-heading">
+            <span class='font-weight_bold'>1</span> <?= __d('gl', "目的を決める") ?></div>
         <div class="panel-container">
             <?=
             $this->Form->create('Goal', [
@@ -32,19 +31,19 @@
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
-                    'class'     => 'form-control addteam_input-design'
+                    'class' => 'form-control addteam_input-design disabled'
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id'            => 'AddGoalForm',
+                'id'            => 'AddGoalFormPurpose',
             ]); ?>
             <div class="panel-body add-team-panel-body goal-set-body">
                 <?=
                 $this->Form->input('goal_category_id', [
                     'label' => [
                         'text'  => __d('gl', "カテゴリ"),
-                        'class' => 'col col-sm-3 control-label test'
+                        'class' => 'col col-sm-3 control-label'
                     ],
                     'type'    => 'select',
                     'options' => $goal_category_list,
@@ -83,9 +82,9 @@
 </div>
 <!--GoalSet02-->
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-default">
-        <div class="panel-heading goal-set-heading panel-closed-headding"><?= __d('gl',
-                                                                                  "<span class='font-weight_bold'>2</span> ゴールを定める") ?></div>
+    <div class="panel panel-default" id="AddGoalFormKeyResultWrap">
+        <div class="panel-heading goal-set-heading panel-closed-headding">
+            <span class='font-weight_bold'>2</span> <?= __d('gl', "ゴールを定める") ?></div>
         <div class="panel-container hidden">
             <?=
             $this->Form->create('Goal', [
@@ -100,16 +99,17 @@
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id'            => 'AddGoalForm',
+                'id' => 'AddGoalFormKeyResult',
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['label'       => __d('gl', "指標として何をどうする？"),
-                                    'placeholder' => __d('gl', "具体的に何をどうするかを絞り込んで書く"),
-                                    'rows'        => 1,
-                                    'afterInput'  => '<span class="help-block">' . __d('gl',
-                                                                                       "例）極度な貧困率を減少させる") . '</span>'
+                                   ['label'                    => __d('gl', "指標として何をどうする？"),
+                                    'placeholder'              => __d('gl', "具体的に何をどうするかを絞り込んで書く"),
+                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                    'rows'                     => 1,
+                                    'afterInput'               => '<span class="help-block">' . __d('gl',
+                                                                                                    "例）極度な貧困率を減少させる") . '</span>'
                                    ]) ?>
                 <div class="row">
                     <div class="col col-sm-3">
@@ -215,9 +215,9 @@
 
 <!--GoalSet03-->
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-default">
-        <div class="panel-heading goal-set-heading panel-closed-headding"><?= __d('gl',
-                                                                                  "<span class='font-weight_bold'>3</span> 他の情報を追加する") ?></div>
+    <div class="panel panel-default" id="AddGoalFormOtherWrap">
+        <div class="panel-heading goal-set-heading panel-closed-headding">
+            <span class='font-weight_bold'>3</span> <?= __d('gl', "他の情報を追加する") ?></div>
         <div class="panel-container hidden">
             <?=
             $this->Form->create('Goal', [
@@ -232,7 +232,7 @@
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id'            => 'AddGoalForm',
+                'id' => 'AddGoalFormOther',
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <div class="form-group">
@@ -297,7 +297,23 @@
 <script type="text/javascript">
     $(document).ready(function () {
     });
-    $('#AddGoalForm').bootstrapValidator({
+    $('#AddGoalFormPurpose').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        }
+    });
+    $('#AddGoalFormKeyResult').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        }
+    });
+    $('#AddGoalFormOther').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {
             valid: 'fa fa-check',
@@ -326,6 +342,39 @@
         autoclose: true,
         todayHighlight: true
     });
+    //modeによってdisableにする
+    <?if(isset($this->request->params['named']['mode'])):?>
+    <?if($this->request->params['named']['mode'] == 2):?>
+    disabledAllInput("#AddGoalFormPurpose");
+    //noinspection JSJQueryEfficiency
+    $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('hidden');
+    //noinspection JSJQueryEfficiency
+    $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
+    //noinspection JSJQueryEfficiency
+    $(".panel-footer", "#AddGoalFormPurposeWrap").hide();
+    //noinspection JSJQueryEfficiency
+    $(".panel-heading", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-headding');
+    <?elseif($this->request->params['named']['mode'] == 3):?>
+    disabledAllInput("#AddGoalFormPurpose");
+    disabledAllInput("#AddGoalFormKeyResult");
+    //noinspection JSJQueryEfficiency
+    $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
+    //noinspection JSJQueryEfficiency
+    $(".panel-footer", "#AddGoalFormPurposeWrap").hide();
+
+    //noinspection JSJQueryEfficiency
+    $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('hidden');
+    //noinspection JSJQueryEfficiency
+    $(".panel-heading", "#AddGoalFormKeyResultWrap").addClass('panel-closed-headding');
+    //noinspection JSJQueryEfficiency
+    $(".panel-footer", "#AddGoalFormKeyResultWrap").hide();
+
+    //noinspection JSJQueryEfficiency
+    $(".panel-heading", "#AddGoalFormOtherWrap").removeClass('panel-closed-headding');
+    //noinspection JSJQueryEfficiency
+    $(".panel-container", "#AddGoalFormOtherWrap").removeClass('hidden');
+    <?endif;?>
+    <?endif;?>
 </script>
 <? $this->end() ?>
 <!-- END app/View/Goals/add.ctp -->

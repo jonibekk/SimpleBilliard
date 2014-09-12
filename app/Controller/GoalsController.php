@@ -21,10 +21,10 @@ class GoalsController extends AppController
      */
     public function add($id = null)
     {
-        $this->log($this->request->params);
         $this->layout = LAYOUT_ONE_COLUMN;
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
+            $this->request->data['Goal']['id'] = $id;
             try {
                 $this->Goal->isPermitted($id);
 
@@ -34,10 +34,10 @@ class GoalsController extends AppController
             }
         }
 
-        if ($this->request->is('post') && !empty($this->request->data)) {
+        if (($this->request->is('post') || $this->request->is('put')) && !empty($this->request->data)) {
             if ($this->Goal->add($this->request->data)) {
-                if (isset($this->request->params['mode'])) {
-                    switch ($this->request->params['mode']) {
+                if (isset($this->request->params['named']['mode'])) {
+                    switch ($this->request->params['named']['mode']) {
                         case 2:
                             $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                             //「ゴールを定める」に進む
