@@ -673,6 +673,10 @@ ul.example-indent {
     word-wrap: break-word;
 }
 
+.showmore_trigger .btn-link {
+    color: #ddd
+}
+
 .gl-thumb-container {
     margin: 0 0 0 0;
 }
