@@ -72,8 +72,6 @@
                         $this->Form->submit(__d('gl', "次のステップ"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     </div>
-                    <div class="col-sm-3 pull-right">
-                    </div>
                 </div>
             </div>
             <?= $this->Form->end(); ?>
@@ -201,9 +199,12 @@
             </div>
             <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-3 col-sm-offset-9">
+                    <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
-                        $this->Form->submit(__d('gl', "この内容で作成"),
+                        $this->Html->link(__d('gl', "詳しくはこちら"), "#",
+                                          ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
+                        <?=
+                        $this->Form->submit(__d('gl', "次のステップ"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
