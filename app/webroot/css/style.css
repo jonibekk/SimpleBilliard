@@ -676,16 +676,20 @@ ul.example-indent {
     height: 100%;
 }
 
-.showmore {
-    word-wrap: break-word;
+.gl-feed-text .btn-link {
+    color: #ddd;
 }
 
-.showmore_trigger .btn-link {
-    color: #ddd
+.gl-comment-text .btn-link {
+    color: #c5c5c5;
 }
 
 .gl-thumb-container {
     margin: 0 0 0 0;
+}
+
+.showmore {
+    word-wrap: break-word;
 }
 
 ul.gl-input-images {
