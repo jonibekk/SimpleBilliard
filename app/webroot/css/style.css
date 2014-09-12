@@ -201,6 +201,10 @@ footer p {
     color: #91170a;
 }
 
+.gl-comment-contents .comment-add-pic {
+    color: #d9230f;
+}
+
 .link-gray {
     color: #aaa;
 }
