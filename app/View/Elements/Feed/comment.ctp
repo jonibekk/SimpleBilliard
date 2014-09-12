@@ -166,11 +166,11 @@
 
             <div class="gl-comment-info">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font-lightgray"> ･ </span>
-                <a href="#" class="click-like font-lightgray"
+                <a href="#" class="click-like font-lightgray <?= empty($like) ? null : "liked" ?>"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
-                    <?= empty($like) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a><span
+                    <?= __d('gl', "いいね！") ?></a><span
                     class="font-lightgray"> ･ </span>
             <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"

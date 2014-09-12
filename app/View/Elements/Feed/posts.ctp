@@ -202,11 +202,11 @@
         <? endif; ?>
 
         <div class="col col-xxs-12 font-size_12 gl-feed-click">
-            <a href="#" class="click-like font-lightgray"
+            <a href="#" class="click-like font-lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                model_id="<?= $post['Post']['id'] ?>"
                like_type="post">
-                <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
+                <?= __d('gl', "いいね！") ?></a>
             <span class="font-lightgray"> ･ </span>
             <a class="trigger-click font-lightgray"
                href="#"
