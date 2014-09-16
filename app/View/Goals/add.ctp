@@ -128,8 +128,8 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 ?>
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['label'                    => __d('gl', "指標として何をどうする？"),
-                                    'placeholder'              => __d('gl', "具体的に何をどうするかを絞り込んで書く"),
+                                   ['label'       => __d('gl', "ゴール？"),
+                                    'placeholder' => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
                                     'afterInput'               => '<span class="help-block">' . __d('gl',
@@ -137,7 +137,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                    ]) ?>
                 <div class="row">
                     <div class="col col-sm-3">
-                        <label class="control-label width100_per text-right"><?= __d('gl', "どのくらい？") ?></label>
+                        <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
                     </div>
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
 
@@ -176,7 +176,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                 <div class="form-group" id="KeyResult0StartDateContainer">
                     <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
-                        __d('gl', "開始日") ?></label>
+                        __d('gl', "期間") ?></label>
 
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
                         <p class="form-control-static"
@@ -207,21 +207,6 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                         </div>
                     </div>
                 </div>
-                <?=
-                $this->Form->input('priority', [
-                    'label'    => __d('gl', "重要度"),
-                    'type'     => 'select',
-                    'default'  => 3,
-                    'required' => false,
-                    'style'    => 'width:50px',
-                    'options'  => $priority_list,
-                ]) ?>
-                <?=
-                $this->Form->input('description',
-                                   ['label'       => __d('gl', "詳細"),
-                                    'placeholder' => __d('gl', "詳細を書く"),
-                                    'rows'        => 1,
-                                   ]) ?>
             </div>
             <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
@@ -255,6 +240,39 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                               ]) ?>
         </div>
         <div class="panel-container hidden">
+            <?=
+            $this->Form->create('Goal', [
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => [
+                        'class' => 'col col-sm-3 control-label'
+                    ],
+                    'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
+                    'class'     => 'form-control addteam_input-design'
+                ],
+                'class'         => 'form-horizontal',
+                'url'           => array_merge($url, ['mode' => 2]),
+                'novalidate'    => true,
+                'type'          => 'file',
+                'id'            => 'AddGoalFormKeyResult',
+            ]); ?>
+            <div class="panel-body add-team-panel-body">
+                <?=
+                $this->Form->input('priority', [
+                    'label'    => __d('gl', "重要度"),
+                    'type'     => 'select',
+                    'default'  => 3,
+                    'required' => false,
+                    'style'    => 'width:50px',
+                    'options'  => $priority_list,
+                ]) ?>
+                <?=
+                $this->Form->input('description',
+                                   ['label'       => __d('gl', "詳細"),
+                                    'placeholder' => __d('gl', "詳細を書く"),
+                                    'rows'        => 1,
+                                   ]) ?>
+            </div>
             <?=
             $this->Form->create('Goal', [
                 'inputDefaults' => [
