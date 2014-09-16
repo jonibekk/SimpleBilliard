@@ -128,8 +128,8 @@ class NotifyBizComponent extends Component
      */
     private function _setCircleUserJoinOption($circle_id)
     {
-        //宛先は自分以外のサークルメンバー
-        $circle_member_list = $this->Post->User->CircleMember->getMemberList($circle_id, true, false);
+        //宛先は自分以外のサークル管理者
+        $circle_member_list = $this->Post->User->CircleMember->getAdminMemberList($circle_id);
         if (empty($circle_member_list)) {
             return;
         }

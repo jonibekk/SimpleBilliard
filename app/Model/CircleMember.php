@@ -110,6 +110,25 @@ class CircleMember extends AppModel
         return $res;
     }
 
+    public function getAdminMemberList($circle_id, $with_me = false)
+    {
+        $primary_backup = $this->primaryKey;
+        $this->primaryKey = 'user_id';
+        $options = [
+            'conditions' => [
+                'circle_id' => $circle_id,
+                'admin_flg' => true,
+            ],
+            'fields'     => ['user_id']
+        ];
+        if (!$with_me) {
+            $options['conditions']['NOT']['user_id'] = $this->my_uid;
+        }
+        $res = $this->find('list', $options);
+        $this->primaryKey = $primary_backup;
+        return $res;
+    }
+
     public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
     {
         App::uses('UploadHelper', 'View/Helper');
