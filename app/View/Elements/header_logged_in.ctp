@@ -61,6 +61,15 @@
                         <li>
                             <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
                         </li>
+                        <?
+                        //TODO 一時的にチーム管理者はチーム招待リンクを表示
+                        if (isset($my_member_status['TeamMember']) && $my_member_status['TeamMember']['admin_flg']):?>
+                            <li>
+                                <?=
+                                $this->Html->link(__d('gl', "メンバーを招待"),
+                                                  ['controller' => 'teams', 'action' => 'invite']) ?>
+                            </li>
+                        <? endif; ?>
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
                                 __d('gl',
                                     "チュートリアル") ?></a></li>
