@@ -74,7 +74,7 @@
             }
             ?>
             <div class="panel-body post-share-range-panel-body" id="PostFormShare" style="display: <?= $display ?>">
-            <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
+                <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
                     <?=
                     $this->Form->hidden('share',
                                         ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
@@ -85,7 +85,10 @@
                 <div class="font-size_12" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="PostPhoto1">
-                        <i class="fa fa-camera post-camera-icon pull-left"></i>
+                        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="画像をアップロード"><i class="fa fa-camera post-camera-icon"></i>
+                        </button>
                     </a>
 
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
