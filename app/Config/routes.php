@@ -21,6 +21,7 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
 
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display', 'home']);
+Router::connect('/team_id::team_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 /**

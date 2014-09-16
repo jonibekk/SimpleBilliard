@@ -86,6 +86,11 @@ class PagesController extends AppController
         $this->_setLanguage();
         //全ページ許可
         $this->Auth->allow('display');
+        //チームidがあった場合は許可しない
+        if (isset($this->request->params['team_id'])) {
+            $this->Auth->deny('display');
+        }
+
         //切り換え可能な言語をセット
         $this->set('lang_list', $this->_getPageLanguageList());
         parent::beforeFilter();
