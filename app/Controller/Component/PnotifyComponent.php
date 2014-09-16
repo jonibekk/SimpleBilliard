@@ -3,8 +3,10 @@
 /**
  * JqueryプラグインのPnotifyを使ってflashメッセージを表示する
  * Class PnotifyComponent
+ *
+ * @property SessionComponent $Session
  */
-class PnotifyComponent extends Object
+class PnotifyComponent extends Component
 {
 
     public $name = "Pnotify";
@@ -14,10 +16,9 @@ class PnotifyComponent extends Object
      */
     private $Controller;
 
-    /**
-     * @var SessionComponent
-     */
-    private $Session;
+    public $components = [
+        'Session'
+    ];
 
     /**
      * タイプ
@@ -50,27 +51,10 @@ class PnotifyComponent extends Object
         ],
     ];
 
-    function initialize()
-    {
-    }
-
-    function startup(&$controller)
+    public function initialize(Controller $controller)
     {
         $this->Controller = $controller;
-        $this->Session = $this->Controller->Session;
         $this->_setDefaultOption();
-    }
-
-    function beforeRender()
-    {
-    }
-
-    function shutdown()
-    {
-    }
-
-    function beforeRedirect()
-    {
     }
 
     private function _setDefaultOption()
