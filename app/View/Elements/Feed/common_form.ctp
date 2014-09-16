@@ -87,7 +87,7 @@
                        click-target-id="PostPhoto1">
                         <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
                                 data-placement="bottom"
-                                title="画像をアップロード"><i class="fa fa-camera post-camera-icon"></i>
+                                title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
                         </button>
                     </a>
 

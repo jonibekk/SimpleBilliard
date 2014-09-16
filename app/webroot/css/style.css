@@ -1885,6 +1885,7 @@ ul.gl-input-images > li {
 .photo-plus-frame {
     border: 1px #ddd dashed;
     background-color: #fff;
+    cursor: pointer;
 }
 
 .tooltip {
