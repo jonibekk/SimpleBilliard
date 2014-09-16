@@ -21,12 +21,13 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 <div class="col-sm-8 col-sm-offset-2">
     <div class="page-title"><?= __d('gl', "新しいゴールを作成") ?></div>
     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
-        <div class="panel-heading goal-set-heading">
-            <span class='font-weight_bold'>1</span> <?= __d('gl', "目的を決める") ?>
+        <div class="panel-heading goal-set-heading clearfix">
+            <div class="pull-left goal-set-title"><span class='font-weight_bold'>1</span> <?= __d('gl', "目的を決める") ?>
+            </div>
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-white goal-add-edit-button',
+                                  'class' => 'btn btn-link btn-white goal-add-edit-button pull-right',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormPurposeWrap",
@@ -92,12 +93,13 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 <!--GoalSet02-->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default" id="AddGoalFormKeyResultWrap">
-        <div class="panel-heading goal-set-heading panel-closed-headding">
-            <span class='font-weight_bold'>2</span> <?= __d('gl', "ゴールを定める") ?>
+        <div class="panel-heading goal-set-heading clearfix panel-closed-headding">
+            <div class="pull-left goal-set-title"><span class='font-weight_bold'>2</span> <?= __d('gl', "ゴールを定める") ?>
+            </div>
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-white goal-add-edit-button',
+                                  'class' => 'btn btn-link btn-white goal-add-edit-button pull-right',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormKeyResultWrap",
@@ -228,12 +230,13 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 <!--GoalSet03-->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default" id="AddGoalFormOtherWrap">
-        <div class="panel-heading goal-set-heading panel-closed-headding">
-            <span class='font-weight_bold'>3</span> <?= __d('gl', "他の情報を追加する") ?>
+        <div class="panel-heading goal-set-heading clearfix panel-closed-headding">
+            <div class="pull-left goal-set-title"><span class='font-weight_bold'>3</span> <?= __d('gl', "他の情報を追加する") ?>
+            </div>
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-white goal-add-edit-button',
+                                  'class' => 'btn btn-link btn-white goal-add-edit-button pull-right',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormOtherWrap",
