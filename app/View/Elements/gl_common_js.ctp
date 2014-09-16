@@ -397,11 +397,11 @@ function evLike() {
                 //「いいね」した場合は「いいね取り消し」表示に
                 //noinspection JSUnresolvedVariable
                 if (data.created == true) {
-                    $obj.text("<?=__d('gl',"いいね取り消し")?>");
+                    $obj.addClass("liked");
                 }
                 //「いいね取り消し」した場合は「いいね」表示に
                 else {
-                    $obj.text("<?=__d('gl',"いいね！")?>");
+                    $obj.removeClass("liked");
                 }
                 $("#" + like_count_id).text(data.count);
                 //ローダーを削除

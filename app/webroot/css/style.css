@@ -165,7 +165,6 @@ footer p {
 }
 */
 .link-rose-red {
-
     color: #b46d6d;
 }
 
@@ -174,6 +173,11 @@ footer p {
 .link-rose-red:focus {
     color: #b46d6d;
     text-decoration-color: #b46d6d;
+}
+
+
+.liked {
+    color: #e78e99;
 }
 
 .font-weight_normal {
@@ -194,10 +198,21 @@ footer p {
     color: #ddd;
 }
 
+.gl-comment-contents a {
+    color: #c5c5c5;
+}
+
 .gl-feed-text a:hover,
 .gl-feed-text a:hover,
-.gl-feed-text a:hover {
+.gl-feed-text a:hover,
+.gl-comment-contents a:hover,
+.gl-comment-contents a:hover,
+.gl-comment-contents a:hover {
     color: #91170a;
+}
+
+.gl-comment-contents .comment-add-pic {
+    color: #d9230f;
 }
 
 .link-gray {
@@ -234,7 +249,6 @@ footer p {
     color: #b4b8bf;
 
 }
-
 
 .gl-feed-arrow,
 .gl-comment-arrow,
@@ -676,12 +690,20 @@ ul.example-indent {
     height: 100%;
 }
 
-.showmore {
-    word-wrap: break-word;
+.gl-feed-text .btn-link {
+    color: #ddd;
+}
+
+.gl-comment-text .btn-link {
+    color: #c5c5c5;
 }
 
 .gl-thumb-container {
     margin: 0 0 0 0;
+}
+
+.showmore {
+    word-wrap: break-word;
 }
 
 ul.gl-input-images {
@@ -2167,6 +2189,22 @@ Temporary Properties - YOU MUST FIX
 .gl-input-images {
     margin-top: 4px;
     display: inline-block;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.z-i-100 {
+    z-index: 100;
 }
 
 .required .no-asterisk::after {
