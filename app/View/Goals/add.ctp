@@ -111,16 +111,16 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label no-asterisk'
                     ],
                     'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
-                'url' => array_merge($url, ['mode' => 2]),
+                'url'           => array_merge($url, ['mode' => 2]),
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id'  => 'AddGoalFormKeyResult',
+                'id'            => 'AddGoalFormKeyResult',
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <?
@@ -130,7 +130,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 ?>
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['label'       => __d('gl', "ゴール？"),
+                                   ['label'       => __d('gl', "ゴール"),
                                     'placeholder' => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
@@ -145,7 +145,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                         <?=
                         $this->Form->input('KeyResult.0.value_unit',
-                                           ['label'               => __d('gl', "数値の単位"),
+                                           ['label' => __d('gl', "単位"),
                                             'wrapInput'           => 'col col-sm-4',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
@@ -165,7 +165,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                ]) ?>
                             <?=
                             $this->Form->input('KeyResult.0.start_value',
-                                               ['label'                   => __d('gl', "現在"),
+                                               ['label' => __d('gl', "開始時"),
                                                 'wrapInput'               => 'col col-sm-4',
                                                 'type'                    => 'number',
                                                 'value'                   => 0,
@@ -175,37 +175,42 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group" id="KeyResult0StartDateContainer">
-                    <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
-                        __d('gl', "期間") ?></label>
+                <div class="row">
+                    <label class="col col-sm-3 control-label text-right">ラベル</label>
 
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
-                        <p class="form-control-static"
-                           id="KeyResult0StartDateDefault"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
-                            &nbsp;&nbsp;<a href="#" class="target-show-target-del"
-                                           show-target-id="KeyResult0StartDateInputWrap"
-                                           delete-target-id="KeyResult0StartDateDefault"><?= __d('gl', "変更") ?></a></p>
+                        <div class="form-group" id="KeyResult0StartDateContainer">
+                            <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
+                                __d('gl', "開始日") ?></label>
 
-                        <div class="input-group date" style="display: none" id="KeyResult0StartDateInputWrap">
-                            <?=
-                            $this->Form->input('KeyResult.0.start_date',
-                                               ['value' => $kr_start_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
-                            <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                            <p class="form-control-static"
+                               id="KeyResult0StartDateDefault">
+                                    <span class="padding-lr-18px"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
+                                        &nbsp;&nbsp;<a href="#" class="target-show-target-del"
+                                                       show-target-id="KeyResult0StartDateInputWrap"
+                                                       delete-target-id="KeyResult0StartDateDefault"><?= __d('gl',
+                                                                                                             "変更") ?></a></span>
+                            </p>
+
+                            <div class="input-group date padding-lr-5px" style="display: none"
+                                 id="KeyResult0StartDateInputWrap">
+                                <?=
+                                $this->Form->input('KeyResult.0.start_date',
+                                                   ['value' => $kr_start_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                                <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group" id="KeyResult0EndDateContainer">
-                    <label for="KeyResult0EndDate" class="col col-sm-3 control-label"><?=
-                        __d('gl',
-                            "いつまでに？") ?></label>
+                        <div class="form-group" id="KeyResult0EndDateContainer">
+                            <label for="KeyResult0EndDate" class="col col-sm-3 control-label"><?=
+                                __d('gl',
+                                    "期限日") ?></label>
 
-                    <div class="col col-sm-7 line-vertical-sm goal-set-input">
-                        <div class="input-group date">
-                            <?=
-                            $this->Form->input('KeyResult.0.end_date',
-                                               ['value' => $kr_end_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
-                            <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                            <div class="input-group date padding-lr-5px">
+                                <?=
+                                $this->Form->input('KeyResult.0.end_date',
+                                                   ['value' => $kr_end_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                                <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                            </div>
                         </div>
                     </div>
                 </div>

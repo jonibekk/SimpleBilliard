@@ -2213,3 +2213,12 @@ Temporary Properties - YOU MUST FIX
     content: "";
 }
 
+.padding-lr-5px {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.padding-lr-18px {
+    padding-left: 18px;
+    padding-right: 18px;
+}
