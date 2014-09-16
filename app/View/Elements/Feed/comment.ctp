@@ -166,20 +166,20 @@
 
             <div class="gl-comment-info">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font-lightgray"> ･ </span>
-                <a href="#" class="click-like link-rose-red"
+                <a href="#" class="click-like font-lightgray <?= empty($like) ? null : "liked" ?>"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
-                    <?= empty($like) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a><span
+                    <?= __d('gl', "いいね！") ?></a><span
                     class="font-lightgray"> ･ </span>
             <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"
-                               class="modal-ajax-get link-rose-red">
+                               class="modal-ajax-get font-lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
                     class="font-lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
-               class="modal-ajax-get link-rose-red"><i
+               class="modal-ajax-get font-lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
             </span>
             </div>
