@@ -184,6 +184,10 @@ footer p {
     color: #e78e99;
 }
 
+.liked:hover {
+    color: #e78e99;
+}
+
 .font-weight_normal {
     font-weight: normal;
 }
