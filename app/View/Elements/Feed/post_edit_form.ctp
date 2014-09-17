@@ -59,7 +59,7 @@ $this->Form->input('body', [
 
     <?=
     $this->Form->submit(__d('gl', "変更を保存する"),
-                        ['class' => 'btn btn-primary pull-right', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
+                        ['class' => 'btn btn-primary pull-right submit-post-edit', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>

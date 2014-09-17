@@ -1029,7 +1029,7 @@ ul.gl-input-images > li {
 }
 
 .photo-up-btn {
-    margin: 6px 0;
+    margin: 6px 0 0;
     width: 38px;
     height: 38px;
     padding: 0;
@@ -2275,4 +2275,9 @@ Temporary Properties - YOU MUST FIX
 
 .goal-set-mid-label {
     width: 22.5%;
+}
+
+.submit-post-edit,
+.submit-comment-edit {
+    margin-top: 6px;
 }
