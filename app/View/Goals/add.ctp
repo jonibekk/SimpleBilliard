@@ -130,7 +130,11 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 ?>
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['label'       => __d('gl', "ゴール"),
+                                   ['before' => '<div class="col col-sm-3 control-label">' .
+                                       '<label class="no-asterisk">' . __d('gl', "ゴール") . '</label>' .
+                                       '<div class="label-addiction">' . __d('gl',
+                                                                             "なにをどうするか？<br>( ゴールの基準 )") . '</div></div>',
+                                    'label'  => false,
                                     'placeholder' => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
@@ -140,6 +144,8 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 <div class="row">
                     <div class="col col-sm-3">
                         <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
+
+                        <div class="label-addiction pull-right">どのくらい？</div>
                     </div>
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
 
@@ -176,8 +182,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col col-sm-3 control-label text-right">ラベル</label>
-
+                    <label class="col col-sm-3 control-label text-right">期間</label>
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
                         <div class="form-group" id="KeyResult0StartDateContainer">
                             <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
@@ -326,9 +331,9 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                 ''
                                                ]) ?>
                         </span>
+                                <span class="help-block fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>
-                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=
@@ -410,6 +415,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
     disabledAllInput("#AddGoalFormPurpose");
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
+    $(".panel-container", "#AddGoalFormPurposeWrap").addClass('panel-closed-container');
     //noinspection JSJQueryEfficiency
     $(".goal-add-edit-button", "#AddGoalFormPurposeWrap").show();
     //noinspection JSJQueryEfficiency
@@ -418,11 +424,13 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
     $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('hidden');
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-headding');
+    $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-container');
     <?elseif($this->request->params['named']['mode'] == 3):?>
     disabledAllInput("#AddGoalFormPurpose");
     disabledAllInput("#AddGoalFormKeyResult");
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
+    $(".panel-container", "#AddGoalFormPurposeWrap").addClass('panel-closed-container');
     //noinspection JSJQueryEfficiency
     $(".panel-footer", "#AddGoalFormPurposeWrap").hide();
     //noinspection JSJQueryEfficiency
@@ -432,6 +440,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
     $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('hidden');
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormKeyResultWrap").addClass('panel-closed-headding');
+    $(".panel-container", "#AddGoalFormKeyResultWrap").addClass('panel-closed-container');
     //noinspection JSJQueryEfficiency
     $(".panel-footer", "#AddGoalFormKeyResultWrap").hide();
     //noinspection JSJQueryEfficiency
@@ -439,6 +448,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormOtherWrap").removeClass('panel-closed-headding');
+    $(".panel-container", "#AddGoalFormOtherWrap").removeClass('panel-closed-container');
     //noinspection JSJQueryEfficiency
     $(".panel-container", "#AddGoalFormOtherWrap").removeClass('hidden');
     <?endif;?>
