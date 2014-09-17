@@ -2250,8 +2250,6 @@ Temporary Properties - YOU MUST FIX
     z-index: 100;
 }
 
-}
-
 .required .no-asterisk::after {
     content: "";
 }
