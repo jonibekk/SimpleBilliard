@@ -58,6 +58,40 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add', ['method' => 'GET']);
     }
 
+    function testAddWithId()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => 'test'
+        ];
+        $Goals->Goal->save($goal_data);
+        //存在するゴールで自分が作成したもの
+        $this->testAction('/goals/add/' . $Goals->Goal->getLastInsertID(), ['method' => 'GET']);
+    }
+
+    function testAddWithIdNotOwn()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $goal_data = [
+            'user_id' => 2,
+            'team_id' => 1,
+            'purpose' => 'test'
+        ];
+        $Goals->Goal->create();
+        $Goals->Goal->save($goal_data);
+        //存在するゴールで他人が作成したもの
+        $this->testAction('/goals/add/' . $Goals->Goal->getLastInsertID(), ['method' => 'GET']);
+    }
+
+    function testAddWithIdNotExists()
+    {
+        $this->_getGoalsCommonMock();
+        //存在しないゴール
+        $this->testAction('/goals/add/' . 9999999999, ['method' => 'GET']);
+    }
+
     function testAddPost()
     {
         $this->_getGoalsCommonMock();
