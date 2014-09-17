@@ -111,7 +111,9 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED);
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_POST;
-        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
+//        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
+//        $this->notify_option['url_data'] = ['team_id'=>$this->Session->read('current_team_id')];
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home', 'team_id' => $this->Session->read('current_team_id')];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([mb_strimwidth(trim($post['Post']['body']), 0, 40, "...")]) : null;
@@ -126,8 +128,8 @@ class NotifyBizComponent extends Component
      */
     private function _setCircleUserJoinOption($circle_id)
     {
-        //宛先は自分以外のサークルメンバー
-        $circle_member_list = $this->Post->User->CircleMember->getMemberList($circle_id, true, false);
+        //宛先は自分以外のサークル管理者
+        $circle_member_list = $this->Post->User->CircleMember->getAdminMemberList($circle_id);
         if (empty($circle_member_list)) {
             return;
         }

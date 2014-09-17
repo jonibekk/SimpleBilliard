@@ -1024,6 +1024,24 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
+.photo-up-btn {
+    margin: 6px 0;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    background: none;
+}
+
+.photo-up-btn:hover,
+.photo-up-btn:target,
+.photo-up-btn:active,
+.photo-up-btn:focus,
+.photo-up-btn:active:focus {
+    outline: none;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+}
+
 .post-submit-button {
     margin-top: 6px;
     margin-bottom: 6px;
@@ -2002,6 +2020,7 @@ ul.gl-input-images > li {
 .photo-plus-frame {
     border: 1px #ddd dashed;
     background-color: #fff;
+    cursor: pointer;
 }
 
 .tooltip {
@@ -2229,6 +2248,8 @@ Temporary Properties - YOU MUST FIX
 
 .z-i-100 {
     z-index: 100;
+}
+
 }
 
 .required .no-asterisk::after {
