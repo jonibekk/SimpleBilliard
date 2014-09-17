@@ -174,4 +174,39 @@ class Goal extends AppModel
         }
         return $res;
     }
+
+    /**
+     * 権限チェック
+     *
+     * @param $id
+     *
+     * @return bool
+     * @throws RuntimeException
+     */
+    function isPermitted($id)
+    {
+        $this->id = $id;
+        if (!$this->exists()) {
+            throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
+        }
+        if (!$this->isOwner($this->my_uid, $id)) {
+            throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
+        }
+        return true;
+    }
+
+    function getAddData($id)
+    {
+        $options = [
+            'conditions' => [
+                'Goal.id' => $id,
+            ],
+            'contain'    => [
+                'KeyResult'
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }

@@ -1,4 +1,4 @@
-アッd.ct<?
+<?
 /**
  * Created by PhpStorm.
  * User: bigplants

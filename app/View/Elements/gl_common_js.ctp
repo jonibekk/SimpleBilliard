@@ -379,11 +379,6 @@ function evLike() {
         url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>" + "/" + model_id;
     }
 
-    //リンクを非表示
-    $obj.hide();
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    //ローダー表示
-    $obj.after($loader_html);
     $.ajax({
         type: 'GET',
         url: url,
@@ -404,9 +399,6 @@ function evLike() {
                     $obj.removeClass("liked");
                 }
                 $("#" + like_count_id).text(data.count);
-                //ローダーを削除
-                $loader_html.remove();
-                $obj.show();
             }
         },
         error: function () {

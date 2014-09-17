@@ -50,12 +50,16 @@ $this->Form->input('body', [
 
 <div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">
     <a href="#" class="target-show-this-del font-size_12" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
-        <i class="fa fa-picture-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
+        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                data-placement="bottom"
+                title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
+        </button>
+
     </a>
 
     <?=
     $this->Form->submit(__d('gl', "変更を保存する"),
-                        ['class' => 'btn btn-primary pull-right', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
+                        ['class' => 'btn btn-primary pull-right submit-post-edit', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>

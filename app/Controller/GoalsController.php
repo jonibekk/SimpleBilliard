@@ -14,17 +14,60 @@ class GoalsController extends AppController
         parent::beforeFilter();
     }
 
-    public function add()
+    /**
+     * ゴール作成
+     * URLパラメータでmodeを付ける
+     * mode なしは目標を決める,2はゴールを定める,3は他の情報を追加
+     */
+    public function add($id = null)
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        if ($this->request->is('post') && !empty($this->request->data)) {
+        //編集権限を確認。もし権限がある場合はデータをセット
+        if ($id) {
+            $this->request->data['Goal']['id'] = $id;
+            try {
+                $this->Goal->isPermitted($id);
+
+            } catch (RuntimeException $e) {
+                $this->Pnotify->outError($e->getMessage());
+                $this->redirect($this->referer());
+            }
+        }
+
+        if (($this->request->is('post') || $this->request->is('put')) && !empty($this->request->data)) {
             if ($this->Goal->add($this->request->data)) {
-                $this->Pnotify->outSuccess(__d('gl', "ゴールを作成しました。"));
+                if (isset($this->request->params['named']['mode'])) {
+                    switch ($this->request->params['named']['mode']) {
+                        case 2:
+                            $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
+                            //「ゴールを定める」に進む
+                            $this->redirect([$id, 'mode' => 3]);
+                            break;
+                        case 3:
+                            //完了
+                            $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
+                            //TODO 一旦、トップにリダイレクト
+                            $this->redirect("/");
+                            break;
+                    }
+                }
+                else {
+                    $this->Pnotify->outSuccess(__d('gl', "ゴールを目的を保存しました。"));
+                    //「ゴールを定める」に進む
+                    $this->redirect([$this->Goal->id, 'mode' => 2]);
+                }
             }
             else {
-                $this->Pnotify->outError(__d('gl', "ゴールの作成に失敗しました。"));
+                $this->Pnotify->outError(__d('gl', "ゴールの保存に失敗しました。"));
+                $this->redirect($this->referer());
             }
-            $this->redirect("/");
+        }
+        else {
+            //新規作成時以外はデータをセット
+            if ($id) {
+                $this->request->data = $this->Goal->getAddData($id);
+            }
+
         }
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;

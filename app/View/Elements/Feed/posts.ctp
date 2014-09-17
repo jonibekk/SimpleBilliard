@@ -291,10 +291,12 @@
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                     <div class="comment-btn" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
                         <a href="#" class="target-show-this-del font-size_12 comment-add-pic"
-                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>"><i
-                                class="fa fa-picture-o"></i>&nbsp;<?=
-                            __d('gl',
-                                "画像を追加する") ?>
+                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>">
+                            <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
+                            </button>
+
                         </a>
 
                         <?=
