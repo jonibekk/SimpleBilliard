@@ -111,7 +111,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label no-asterisk'
+                        'class' => 'col col-sm-3 control-label no-asterisk goal-set-mid-label'
                     ],
                     'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
                     'class'     => 'form-control addteam_input-design'

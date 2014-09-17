@@ -2249,3 +2249,7 @@ Temporary Properties - YOU MUST FIX
     min-width: 150px;
     width: 16%;
 }
+
+.goal-set-mid-label {
+    width: 22.5%;
+}
