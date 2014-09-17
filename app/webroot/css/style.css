@@ -1401,6 +1401,10 @@ ul.gl-input-images > li {
     vertical-align: middle;
 }
 
+.btn-help {
+    padding-right: 0;
+}
+
 .btn-white {
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -1409,15 +1413,29 @@ ul.gl-input-images > li {
     color: #777;
 }
 
-.btn-help {
-    padding-right: 0;
-}
-
 .btn-white:target,
 .btn-white:hover {
     border: 1px solid #aaa;
     border-radius: 4px;
     background-color: #f0f0f0;
+    background-image: none;
+    color: #231814;
+    text-decoration: none;
+}
+
+.btn-purewhite {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    background-image: none;
+    color: #777;
+}
+
+.btn-purewhite:target,
+.btn-purewhite:hover {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-color: #fff;
     background-image: none;
     color: #231814;
     text-decoration: none;
@@ -2225,4 +2243,9 @@ Temporary Properties - YOU MUST FIX
 .padding-lr-18px {
     padding-left: 18px;
     padding-right: 18px;
+}
+
+.goal-set-date {
+    min-width: 150px;
+    width: 16%;
 }
