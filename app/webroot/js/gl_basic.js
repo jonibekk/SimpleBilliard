@@ -496,3 +496,10 @@ function evTargetShowTargetClick() {
     $("#" + click_target_id).trigger('click');
     return false;
 }
+
+function disabledAllInput(selector) {
+    $(selector).find("input,select,textarea").attr('disabled', 'disabled');
+}
+function enabledAllInput(selector) {
+    $(selector).find('input,select,textarea').removeAttr('disabled');
+}
