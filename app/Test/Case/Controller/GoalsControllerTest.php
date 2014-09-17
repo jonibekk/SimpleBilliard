@@ -113,6 +113,32 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testAddPostMode2()
+    {
+        $Goal = $this->_getGoalsCommonMock();
+        $data = [
+            'Goal' => [
+                'purpose' => 'test',
+            ],
+        ];
+        $Goal->Goal->save($data);
+        $id = $Goal->Goal->getLastInsertID();
+        $this->testAction('/goals/add/' . $id . "/mode:2", ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddPostMode3()
+    {
+        $Goal = $this->_getGoalsCommonMock();
+        $data = [
+            'Goal' => [
+                'purpose' => 'test',
+            ],
+        ];
+        $Goal->Goal->save($data);
+        $id = $Goal->Goal->getLastInsertID();
+        $this->testAction('/goals/add/' . $id . "/mode:3", ['method' => 'POST', 'data' => $data]);
+    }
+
     function testAddPostEmptyKr()
     {
         $this->_getGoalsCommonMock();
