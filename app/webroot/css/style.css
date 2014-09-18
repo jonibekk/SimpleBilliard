@@ -2303,3 +2303,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 /*/ゴール作成ページのタテ線の長さ調整一覧*/
+
+.gl-comment-body .site-info {
+    margin: 5px 0 7px;
+}
