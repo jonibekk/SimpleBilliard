@@ -20,8 +20,7 @@
                 <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'link-gray']) ?>
                 <span> ･ </span>
                 <span class="feed-share-range-circle"><?= $current_circle['Circle']['name'] ?></span>
-                <span class="feed-circle-user-number"><i class="fa fa-user"></i>
-                </span>
+                <span class="feed-circle-user-number"><i class="fa fa-user"></i></span>
             </div>
         </div>
     </div>
