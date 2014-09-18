@@ -149,6 +149,7 @@ class PostsController extends AppController
      */
     public function comment_edit($comment_id)
     {
+        $this->request->allowMethod('post');
         $this->Post->Comment->id = $comment_id;
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
@@ -156,7 +157,6 @@ class PostsController extends AppController
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
-        $this->request->allowMethod('post');
         if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
             $this->request->data['Comment']['site_info'] = null;
             $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);

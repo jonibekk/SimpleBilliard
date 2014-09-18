@@ -4,10 +4,12 @@
  * User: bigplants
  * Date: 7/22/14
  * Time: 11:05 AM
+
  *
- * @var                    $index
+*@var                    $index
  * @var                    $submit_id
  * @var                    $data
+ * @var                    $post_id
  * @var                    $type
  * @var CodeCompletionView $this
  */
@@ -67,17 +69,25 @@ if (isset($type)) {
             </div>
         <? endif; ?>
         <div>
-                        <span class="btn-file">
-                            <?=
-                            $this->Form->input('photo' . $index,
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'class' => false,
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                               ]) ?>
-                        </span>
+            <span class="btn-file">
+                <?
+                $model_id = null;
+                if (isset($data[$model]['id'])) {
+                    $model_id = $data[$model]['id'];
+                }
+                if (isset($post_id)) {
+                    $model_id = $model_id . "_Post_" . $post_id;
+                }
+                echo $this->Form->input('photo' . $index,
+                                        ['type'         => 'file',
+                                         'label'        => false,
+                                         'div'          => false,
+                                         'class'        => false,
+                                         'wrapInput'    => false,
+                                         'errorMessage' => false,
+                                         'id'           => $model . "_" . $model_id . '_Photo_' . $index
+                                        ]) ?>
+            </span>
         </div>
     </div>
 </div>
