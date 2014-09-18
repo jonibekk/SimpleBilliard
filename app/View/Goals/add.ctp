@@ -130,11 +130,11 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 ?>
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['before' => '<div class="col col-sm-3 control-label">' .
+                                   ['before'      => '<div class="col col-sm-3 control-label set-goal">' .
                                        '<label class="no-asterisk">' . __d('gl', "ゴール") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl',
-                                                                             "なにをどうするか？<br>( ゴールの基準 )") . '</div></div>',
-                                    'label'  => false,
+                                                                             "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
+                                    'label'       => false,
                                     'placeholder' => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
@@ -151,7 +151,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                         <?=
                         $this->Form->input('KeyResult.0.value_unit',
-                                           ['label' => __d('gl', "単位"),
+                                           ['label'     => __d('gl', "単位"),
                                             'wrapInput' => 'col col-sm-9',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
@@ -171,7 +171,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                ]) ?>
                             <?=
                             $this->Form->input('KeyResult.0.start_value',
-                                               ['label' => __d('gl', "開始時"),
+                                               ['label'     => __d('gl', "開始時"),
                                                 'wrapInput' => 'col col-sm-9',
                                                 'type'                    => 'number',
                                                 'value'                   => 0,
@@ -183,11 +183,12 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 </div>
                 <div class="row">
                     <label class="col col-sm-3 control-label text-right">期間</label>
+
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
                         <div class="form-group" id="KeyResult0EndDateContainer">
-                            <label for="KeyResult0EndDate" class="col col-sm-3 control-label"><?=
+                            <label for="KeyResult0EndDate" class="col col-sm-3 control-label goal-set-mid-label"><?=
                                 __d('gl',
-                                    "期限日") ?></label>
+                                    "期限") ?></label>
 
                             <div class="input-group date padding-lr-5px goal-set-date">
                                 <?=
@@ -197,8 +198,8 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             </div>
                         </div>
                         <div class="form-group" id="KeyResult0StartDateContainer">
-                            <label for="KeyResult0StartDate" class="col col-sm-3 control-label"><?=
-                                __d('gl', "開始日") ?></label>
+                            <label for="KeyResult0StartDate" class="col col-sm-3 control-label goal-set-mid-label"><?=
+                                __d('gl', "開始") ?></label>
 
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault">
@@ -264,47 +265,38 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',
-                'url'           => array_merge($url, ['mode' => 2]),
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id'            => 'AddGoalFormKeyResult',
+                'id' => 'AddGoalFormOther',
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <?=
+                $this->Form->input('description',
+                                   ['before'      => '<div class="col col-sm-3 control-label set-detail">' .
+                                       '<label>' . __d('gl', "詳細") . '</label>' .
+                                       '<div class="label-addiction">' . __d('gl', "内容を補足しましょう") . '</div></div>',
+                                    'label'       => false,
+                                    'placeholder' => __d('gl', "ゴールの内容を詳しく書く"),
+                                    'rows'        => 1,
+                                   ]) ?>
+                <?=
                 $this->Form->input('priority', [
-                    'label'    => __d('gl', "重要度"),
+                    'before' => '<div class="col col-sm-3 control-label set-importance">' .
+                        '<label>' . __d('gl', "重要度") . '</label>' .
+                        '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>このゴールの重要度") . '</div></div>',
+                    'label'  => false,
                     'type'     => 'select',
                     'default'  => 3,
                     'required' => false,
                     'style'    => 'width:50px',
                     'options'  => $priority_list,
                 ]) ?>
-                <?=
-                $this->Form->input('description',
-                                   ['label'       => __d('gl', "詳細"),
-                                    'placeholder' => __d('gl', "詳細を書く"),
-                                    'rows'        => 1,
-                                   ]) ?>
-            </div>
-            <?=
-            $this->Form->create('Goal', [
-                'inputDefaults' => [
-                    'div'       => 'form-group',
-                    'label'     => [
-                        'class' => 'col col-sm-3 control-label'
-                    ],
-                    'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
-                    'class'     => 'form-control addteam_input-design'
-                ],
-                'class'         => 'form-horizontal',
-                'novalidate'    => true,
-                'type'          => 'file',
-                'id' => 'AddGoalFormOther',
-            ]); ?>
-            <div class="panel-body add-team-panel-body">
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "ゴール画像") ?></label>
+                    <div class="col col-sm-3 control-label">
+                        <label for=""><?= __d('gl', "ゴール画像") ?></label>
 
+                        <div class="label-addiction pull-right">イメージに合った画像を追加しましょう</div>
+                    </div>
                     <div class="col col-sm-6 line-vertical-sm goal-set-input">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
@@ -313,24 +305,24 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
-                        <span class="btn btn-default btn-file">
-                            <span class="fileinput-new">
-                                <?=
-                                __d('gl',
-                                    "画像を選択") ?>
-                            </span>
-                            <span class="fileinput-exists"><?= __d('gl', "画像を再選択") ?></span>
-                            <?=
-                            $this->Form->input('photo',
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'css'          => false,
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                                ''
-                                               ]) ?>
-                        </span>
+                                <span class="btn btn-default btn-file">
+                                    <span class="fileinput-new">
+                                        <?=
+                                        __d('gl',
+                                            "画像を選択") ?>
+                                    </span>
+                                    <span class="fileinput-exists"><?= __d('gl', "画像を再選択") ?></span>
+                                    <?=
+                                    $this->Form->input('photo',
+                                                       ['type'         => 'file',
+                                                        'label'        => false,
+                                                        'div'          => false,
+                                                        'css'          => false,
+                                                        'wrapInput'    => false,
+                                                        'errorMessage' => false,
+                                                        ''
+                                                       ]) ?>
+                                </span>
                                 <span class="help-block fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>

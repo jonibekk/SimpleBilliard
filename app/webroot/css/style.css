@@ -1475,6 +1475,7 @@ ul.gl-input-images > li {
 .label-addiction {
     color: #c0c0c0;
     font-size: 12px;
+    padding-left: 18px;
 }
 
 .goal-form-addiction {
@@ -2013,6 +2014,7 @@ ul.gl-input-images > li {
     color: #dddddd;
     text-align: center;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 .photo-plus-large {
@@ -2023,6 +2025,7 @@ ul.gl-input-images > li {
     color: #dddddd;
     text-align: center;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 .photo-plus-frame {
@@ -2285,3 +2288,18 @@ Temporary Properties - YOU MUST FIX
 .submit-comment-edit {
     margin-top: 6px;
 }
+
+/*ゴール作成ページのタテ線の長さ調整一覧*/
+.set-goal + .line-vertical-sm {
+    height: 72px;
+}
+
+.set-detail + .line-vertical-sm {
+    height: 52px;
+}
+
+.set-importance + .line-vertical-sm {
+    height: 72px;
+}
+
+/*/ゴール作成ページのタテ線の長さ調整一覧*/
