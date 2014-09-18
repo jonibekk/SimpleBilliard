@@ -156,7 +156,7 @@ class PostsController extends AppController
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
-        $this->request->allowMethod('post');
+        $this->request->allowMethod(['post', 'put']);
         if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
             $this->request->data['Comment']['site_info'] = null;
             $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
