@@ -2307,3 +2307,13 @@ Temporary Properties - YOU MUST FIX
 .gl-comment-body .site-info {
     margin: 5px 0 7px;
 }
+
+.humbarger-close {
+    margin: 8px 8px 0 0;
+}
+
+@media (max-width: 767px) {
+    a.header-logo {
+        margin-top: 24px;
+    }
+}

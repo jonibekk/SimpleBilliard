@@ -85,7 +85,9 @@
             </div>
         </div>
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <a class="navmenu-brand" href="#"><?= $title_for_layout ?></a>
+            <button type="button" class="close font-size_33 close-design humbarger-close" data-dismiss=""
+                    aria-hidden="true">
+                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span></button>
             <ul class="nav navbar-nav">
                 <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                         <img src="<?= $this->Html->url('/img/goalous.png') ?>"
