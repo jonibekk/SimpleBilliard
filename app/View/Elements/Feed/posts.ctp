@@ -208,11 +208,6 @@
                like_type="post">
                 <?= __d('gl', "いいね！") ?></a>
             <span class="font-lightgray"> ･ </span>
-            <a class="trigger-click font-lightgray"
-               href="#"
-               target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
-                __d('gl',
-                    "コメントする") ?></a><span class="font-lightgray"> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
                                class="modal-ajax-get font-lightgray">
