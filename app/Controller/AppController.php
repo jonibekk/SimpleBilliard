@@ -92,7 +92,9 @@ class AppController extends Controller
             if (!$this->request->is('ajax')) {
                 $this->_setMyTeam();
                 //リクエストがログイン中のチーム以外なら切り替える
-                $this->_switchTeamBeforeCheck();
+                if ($this->request->is('get')) {
+                    $this->_switchTeamBeforeCheck();
+                }
             }
             $this->_setMyMemberStatus();
         }
