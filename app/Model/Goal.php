@@ -75,11 +75,6 @@ class Goal extends AppModel
                 'rule' => 'notEmpty',
             ],
         ],
-        'valued_flg'   => [
-            'boolean' => [
-                'rule' => ['boolean'],
-            ],
-        ],
         'evaluate_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
@@ -243,7 +238,7 @@ class Goal extends AppModel
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
-            $progress = $this->getProgress($goal);
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
 
         return $res;
@@ -254,10 +249,24 @@ class Goal extends AppModel
         if (empty($goal['KeyResult'])) {
             return 0;
         }
+        //全体の重要度の合計
+        $total_priority = 0;
         foreach ($goal['KeyResult'] as $key_result) {
-
+            $total_priority += $key_result['priority'];
         }
-        return null;
+
+        //完了のプライオリティを計算
+        $completed_total_priority = 0;
+        foreach ($goal['KeyResult'] as $key_result) {
+            if (!empty($key_result['completed'])) {
+                $completed_total_priority += $key_result['priority'];
+            }
+        }
+        if ($total_priority === 0 || $completed_total_priority === 0) {
+            return 0;
+        }
+        $res = round($completed_total_priority / $total_priority, 2) * 100;
+        return $res;
     }
 
 }
