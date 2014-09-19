@@ -75,11 +75,6 @@ class Goal extends AppModel
                 'rule' => 'notEmpty',
             ],
         ],
-        'valued_flg'   => [
-            'boolean' => [
-                'rule' => ['boolean'],
-            ],
-        ],
         'evaluate_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],

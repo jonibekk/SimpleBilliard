@@ -60,9 +60,14 @@ class KeyResult extends AppModel
      * @var array
      */
     public $validate = [
-        'name' => [
+        'name'       => [
             'notEmpty' => [
                 'rule' => 'notEmpty',
+            ],
+        ],
+        'valued_flg' => [
+            'boolean' => [
+                'rule' => ['boolean'],
             ],
         ],
         'special_flg' => [
