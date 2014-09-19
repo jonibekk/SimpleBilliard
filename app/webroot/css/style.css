@@ -179,7 +179,6 @@ footer p {
     text-decoration-color: #b46d6d;
 }
 
-
 .liked {
     color: #e78e99;
 }
@@ -1471,7 +1470,6 @@ ul.gl-input-images > li {
     display: inline-block;
 }
 
-
 .label-addiction {
     color: #c0c0c0;
     font-size: 12px;
@@ -1821,6 +1819,7 @@ ul.gl-input-images > li {
 .panel-footer {
     border-top: none;
 }
+
 /*MergeLater_inputDesign*/
 .setting_input-design {
     background: #fff;
@@ -2306,4 +2305,8 @@ Temporary Properties - YOU MUST FIX
 
 .gl-comment-body .site-info {
     margin: 5px 0 7px;
+}
+
+.my-goal-item {
+    border: 1px solid #dddddd;
 }
