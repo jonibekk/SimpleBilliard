@@ -125,6 +125,9 @@ class Goal extends AppModel
     public $hasMany = [
         'Post',
         'KeyResult',
+        'SpecialKeyResult' => [
+            'className' => 'KeyResult'
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -207,6 +210,54 @@ class Goal extends AppModel
         ];
         $res = $this->find('first', $options);
         return $res;
+    }
+
+    function getMyGoals()
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.user_id' => $this->my_uid,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $progress = $this->getProgress($goal);
+        }
+
+        return $res;
+    }
+
+    function getProgress($goal)
+    {
+        if (empty($goal['KeyResult'])) {
+            return 0;
+        }
+        foreach ($goal['KeyResult'] as $key_result) {
+
+        }
+        return null;
     }
 
 }

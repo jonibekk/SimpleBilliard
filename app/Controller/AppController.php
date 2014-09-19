@@ -29,6 +29,7 @@ App::uses('Controller', 'Controller');
  * @property OgpComponent                $Ogp
  * @property User                        $User
  * @property Post                        $Post
+ * @property Goal                        $Goal
  * @property NotifyBizComponent          $NotifyBiz
  */
 class AppController extends Controller
@@ -69,6 +70,7 @@ class AppController extends Controller
     public $uses = [
         'User',
         'Post',
+        'Goal',
     ];
 
     /**
