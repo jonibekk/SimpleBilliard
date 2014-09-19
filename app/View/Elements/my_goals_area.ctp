@@ -40,6 +40,22 @@
             <? foreach ($my_goals as $goal): ?>
                 <div class="col col-xxs-12 my-goal-item">
                     <div class="col col-xxs-12">
+                        <div class="pull-right">
+                            <div class="dropdown">
+                                <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
+                                    <i class="fa fa-chevron-down gl-feed-arrow"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                                    aria-labelledby="dropdownMenu1">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?=
+                                            __d('gl',
+                                                "編集") ?></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <? if (empty($goal['SpecialKeyResult'])): ?>
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 2]) ?>"><i
                                     class="fa fa-plus-circle"></i><?= __d('gl', 'ゴールを追加する') ?></a>
