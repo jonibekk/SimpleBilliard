@@ -2314,3 +2314,7 @@ Temporary Properties - YOU MUST FIX
 .gl-progress {
     margin-bottom: 0;
 }
+
+.icon-green {
+    color: green;
+}

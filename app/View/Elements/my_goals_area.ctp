@@ -40,11 +40,11 @@
             <? foreach ($my_goals as $goal): ?>
                 <div class="col col-xxs-12 my-goal-item">
                     <div class="col col-xxs-12">
-                        <? if (empty($goal['KeyResult'])): ?>
+                        <? if (empty($goal['SpecialKeyResult'])): ?>
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 2]) ?>"><i
                                     class="fa fa-plus-circle"></i><?= __d('gl', 'ゴールを追加する') ?></a>
                         <? else: ?>
-                            <b><?= h($goal['KeyResult'][0]['name']) ?></b>
+                            <b><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
                         <?endif; ?>
                     </div>
                     <div class="col col-xxs-12">
@@ -57,7 +57,16 @@
                         </div>
                     </div>
                     <div class="col col-xxs-12">
-                    <?= h($goal['Goal']['purpose']) ?>
+                        <div class="pull-right">
+                            <? if (isset($goal['SpecialKeyResult'][0]['valued_flg']) && $goal['SpecialKeyResult'][0]['valued_flg']): ?>
+                                <i class="fa fa-check-circle icon-green"></i><?= __d('gl', "認定") ?>
+                            <? else: ?>
+                                <i class="fa fa-check-circle"></i><?= __d('gl', "未認定") ?>
+                            <?endif; ?>
+                        </div>
+                    </div>
+                    <div class="col col-xxs-12">
+                        <?= h($goal['Goal']['purpose']) ?>
                     </div>
                 </div>
             <? endforeach ?>
