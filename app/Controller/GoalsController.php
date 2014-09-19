@@ -73,8 +73,16 @@ class GoalsController extends AppController
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
-        $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
-        $kr_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
+        if (isset($this->request->data['KeyResult'][0]) && !empty($this->request->data['KeyResult'][0])) {
+            $kr_start_date_format = date('Y/m/d',
+                                         $this->request->data['KeyResult'][0]['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+            $kr_end_date_format = date('Y/m/d',
+                                       $this->request->data['KeyResult'][0]['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        }
+        else {
+            $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
+            $kr_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
+        }
         $this->set(compact('goal_category_list', 'priority_list', 'kr_priority_list', 'kr_value_unit_list',
                            'kr_start_date_format', 'kr_end_date_format'));
     }
