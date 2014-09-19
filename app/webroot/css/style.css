@@ -2310,3 +2310,27 @@ Temporary Properties - YOU MUST FIX
 .my-goal-item {
     border: 1px solid #dddddd;
 }
+
+/*=== ゴールカラム ===*/
+.goals-column-empty-box {
+    border: 1px dashed #aaa;
+    padding: 0;
+    margin: 8px 0;
+}
+
+.goals-column-empty-icon, .goals-column-empty-text {
+    width: 100%;
+    text-align: center;
+}
+
+.goals-column-empty-icon {
+    padding: 12px 0 0;
+}
+
+.goals-column-empty-text {
+    width: 100%;
+    text-align: center;
+    padding: 0 0 12px;
+}
+
+/*/== ゴールカラム ===*/

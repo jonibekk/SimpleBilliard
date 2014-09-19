@@ -32,9 +32,11 @@
             </div>
         </div>
         <? if (empty($my_goals)): ?>
-            <div class="col col-xxs-12">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"><i
-                        class="fa fa-plus-circle"></i><?= __d('gl', 'ゴールを追加する') ?></a>
+            <div class="col col-xxs-12 goals-column-empty-box">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>" class="link-gray">
+                    <div class="goals-column-empty-icon"><i class="fa fa-plus-circle font-size_33"></i></div>
+                    <div class="goals-column-empty-text font-size_14"><?= __d('gl', 'ゴールを追加する') ?></div>
+                </a>
             </div>
         <? else: ?>
             <? foreach ($my_goals as $goal): ?>
