@@ -57,6 +57,13 @@
                         </div>
                     </div>
                     <div class="col col-xxs-12">
+                        <? if (isset($goal['SpecialKeyResult'][0]['end_date']) && !empty($goal['SpecialKeyResult'][0]['end_date'])): ?>
+                            <div class="pull-left">
+                                <?=
+                                __d('gl', "残り%d日",
+                                    ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) ?>
+                            </div>
+                        <? endif; ?>
                         <div class="pull-right">
                             <? if (isset($goal['SpecialKeyResult'][0]['valued_flg']) && $goal['SpecialKeyResult'][0]['valued_flg']): ?>
                                 <i class="fa fa-check-circle icon-green"></i><?= __d('gl', "認定") ?>
