@@ -208,11 +208,6 @@
                like_type="post">
                 <?= __d('gl', "いいね！") ?></a>
             <span class="font-lightgray"> ･ </span>
-            <a class="trigger-click font-lightgray"
-               href="#"
-               target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
-                __d('gl',
-                    "コメントする") ?></a><span class="font-lightgray"> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
                                class="modal-ajax-get font-lightgray">
@@ -283,16 +278,17 @@
                                 <li>
                                     <?=
                                     $this->element('Feed/photo_upload',
-                                                   ['type' => 'comment', 'index' => $i, 'submit_id' => "CommentSubmit_{$post['Post']['id']}"]) ?>
+                                                   ['type' => 'comment', 'index' => $i, 'submit_id' => "CommentSubmit_{$post['Post']['id']}", 'post_id' => $post['Post']['id']]) ?>
                                 </li>
                             <? endfor ?>
                         </ul>
                     </div>
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                     <div class="comment-btn" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
-                        <a href="#" class="target-show-this-del font-size_12 comment-add-pic"
-                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>">
-                            <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                        <a href="#" class="target-show-target-click font-size_12 comment-add-pic"
+                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>"
+                           click-target-id="Comment__Post_<?= $post['Post']['id'] ?>_Photo_1">
+                        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
                                     data-placement="bottom"
                                     title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
                             </button>

@@ -149,6 +149,7 @@ class PostsController extends AppController
      */
     public function comment_edit($comment_id)
     {
+        $this->request->allowMethod('post');
         $this->Post->Comment->id = $comment_id;
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
@@ -156,7 +157,6 @@ class PostsController extends AppController
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
-        $this->request->allowMethod('post');
         if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
             $this->request->data['Comment']['site_info'] = null;
             $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
@@ -331,7 +331,11 @@ class PostsController extends AppController
         $this->_setMyCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
-        $this->set(compact('select2_default'));
+        //サークル指定の場合はメンバーリスト取得
+        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+            $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
+        }
+        $this->set(compact('select2_default', 'circle_members'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
