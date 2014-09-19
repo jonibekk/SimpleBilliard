@@ -48,7 +48,16 @@
                         <?endif; ?>
                     </div>
                     <div class="col col-xxs-12">
-                        <?= h($goal['Goal']['purpose']) ?>
+                        <div class="progress gl-progress">
+                            <div class="progress-bar progress-bar-info" role="progressbar"
+                                 aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
+                                <?= h($goal['Goal']['progress']) ?>%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-xxs-12">
+                    <?= h($goal['Goal']['purpose']) ?>
                     </div>
                 </div>
             <? endforeach ?>

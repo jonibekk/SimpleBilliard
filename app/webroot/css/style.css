@@ -2310,3 +2310,7 @@ Temporary Properties - YOU MUST FIX
 .my-goal-item {
     border: 1px solid #dddddd;
 }
+
+.gl-progress {
+    margin-bottom: 0;
+}
