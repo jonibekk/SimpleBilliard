@@ -2307,3 +2307,8 @@ Temporary Properties - YOU MUST FIX
 .gl-comment-body .site-info {
     margin: 5px 0 7px;
 }
+
+.feed-circle-user-number {
+    margin-left: 4px;
+    font-size: 14px;
+}
