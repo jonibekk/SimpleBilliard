@@ -97,7 +97,7 @@
                     </a>
                 </li>
                 <li><a href="#" class="header-goal develop--forbiddenLink"><i
-                            class="fa fa-bullseye header-link header-icon"></i>&nbsp;
+                            class="fa fa-flag header-link header-icon"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
                     </a></li>
                 <li><a href="#" class="header-team develop--forbiddenLink"><i
