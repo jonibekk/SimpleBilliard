@@ -344,7 +344,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                     <div class="col-sm-3 col-sm-offset-9">
                         <?=
                         $this->Form->submit(__d('gl', "この内容で作成"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
                     </div>
                 </div>
             </div>
