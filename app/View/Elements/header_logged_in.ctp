@@ -85,7 +85,9 @@
             </div>
         </div>
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <a class="navmenu-brand" href="#"><?= $title_for_layout ?></a>
+            <button type="button" class="close font-size_33 close-design humbarger-close" data-toggle="offcanvas"
+                    data-target=".navbar-offcanvas" aria-hidden="true">
+            <span class="close-icon hidden-sm hidden-md hidden-lg">×</span></button>
             <ul class="nav navbar-nav">
                 <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                         <img src="<?= $this->Html->url('/img/goalous.png') ?>"
@@ -95,7 +97,7 @@
                     </a>
                 </li>
                 <li><a href="#" class="header-goal develop--forbiddenLink"><i
-                            class="fa fa-bullseye header-link header-icon"></i>&nbsp;
+                            class="fa fa-flag header-link header-icon"></i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
                     </a></li>
                 <li><a href="#" class="header-team develop--forbiddenLink"><i

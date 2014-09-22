@@ -179,7 +179,6 @@ footer p {
     text-decoration-color: #b46d6d;
 }
 
-
 .liked {
     color: #e78e99;
 }
@@ -1299,6 +1298,7 @@ ul.gl-input-images > li {
 
 .header-icon {
     width: 22px;
+    text-align: center;
 }
 
 .header-profile-icon {
@@ -1470,7 +1470,6 @@ ul.gl-input-images > li {
 .goal-set-buttons input {
     display: inline-block;
 }
-
 
 .label-addiction {
     color: #c0c0c0;
@@ -1821,6 +1820,7 @@ ul.gl-input-images > li {
 .panel-footer {
     border-top: none;
 }
+
 /*MergeLater_inputDesign*/
 .setting_input-design {
     background: #fff;
@@ -2308,7 +2308,18 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0 7px;
 }
 
+.humbarger-close {
+    margin: 8px 8px 0 0;
+}
+
+@media (max-width: 767px) {
+    a.header-logo {
+        margin-top: 24px;
+    }
+}
+
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
+
 }
