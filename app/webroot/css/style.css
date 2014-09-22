@@ -297,7 +297,6 @@ footer p {
 }
 
 
-
 .liked {
     color: #e78e99;
 }
@@ -2379,6 +2378,7 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0 7px;
 }
 
+<<<<<<< HEAD
 /*=== ゴールカラム ===*/
 .goals-column-head {
     border-bottom: 1px solid #F0F0F0;
@@ -2449,11 +2449,22 @@ Temporary Properties - YOU MUST FIX
 
 .icon-green {
     color: green;
+=======
+.humbarger-close {
+    margin: 8px 8px 0 0;
+}
+
+@media (max-width: 767px) {
+    a.header-logo {
+        margin-top: 24px;
+    }
+>>>>>>> remotes/origin/develop
 }
 
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
+<<<<<<< HEAD
 }
 
 .goals-column-function {
@@ -2484,3 +2495,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 /*/== 汎用的なスタイル ===*/
+=======
+
+}
+>>>>>>> remotes/origin/develop
