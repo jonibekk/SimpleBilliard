@@ -145,7 +145,6 @@ footer p {
     color: #ea5e5b;
 }
 
-
 .no-line:link,
 .no-line:active,
 .no-line:hover,
@@ -214,7 +213,6 @@ footer p {
     color: #231814;
 }
 
-
 .navbar {
     margin: 0;
 }
@@ -228,7 +226,6 @@ footer p {
     border-bottom-color: transparent;
     cursor: default;
 }
-
 
 .panel-default > .panel-heading {
     background-color: #fff;
@@ -296,7 +293,6 @@ footer p {
     vertical-align: top;
 }
 
-
 .liked {
     color: #e78e99;
 }
@@ -304,7 +300,6 @@ footer p {
 .liked:hover {
     color: #e78e99;
 }
-
 
 .gl-feed-text a {
     color: #ddd;
@@ -327,12 +322,10 @@ footer p {
     color: #d9230f;
 }
 
-
 .zeroclipboard-is-hover {
     color: #fff !important;
     background: #d9230f !important;
 }
-
 
 .gl-feed-arrow,
 .gl-comment-arrow,
@@ -2378,7 +2371,6 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0 7px;
 }
 
-<<<<<<< HEAD
 /*=== ゴールカラム ===*/
 .goals-column-head {
     border-bottom: 1px solid #F0F0F0;
@@ -2449,7 +2441,8 @@ Temporary Properties - YOU MUST FIX
 
 .icon-green {
     color: green;
-=======
+}
+
 .humbarger-close {
     margin: 8px 8px 0 0;
 }
@@ -2458,13 +2451,11 @@ Temporary Properties - YOU MUST FIX
     a.header-logo {
         margin-top: 24px;
     }
->>>>>>> remotes/origin/develop
 }
 
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
-<<<<<<< HEAD
 }
 
 .goals-column-function {
@@ -2485,6 +2476,7 @@ Temporary Properties - YOU MUST FIX
 .goals-column-progress-bar {
     margin: 6px 0 4px;
 }
+
 /*/== ゴールカラム ===*/
 
 /*=== 汎用的なスタイル ===*/
@@ -2495,7 +2487,3 @@ Temporary Properties - YOU MUST FIX
 }
 
 /*/== 汎用的なスタイル ===*/
-=======
-
-}
->>>>>>> remotes/origin/develop
