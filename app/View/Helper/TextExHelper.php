@@ -2,9 +2,8 @@
 
 /**
  * Textヘルパーを拡張
-
  *
-*@author daikihirakata
+ * @author daikihirakata
  * @property SessionHelper $Session
  * @property TextHelper    $Text
  * @property HtmlHelper    $Html
@@ -28,6 +27,12 @@ class TextExHelper extends AppHelper
     function autoLink($text)
     {
         return nl2br($this->autoLinkUrlsEx(h($text), ['target' => 'blank', 'escape' => false]));
+    }
+
+    function replaceUrl($text, $replacement = "[URL]")
+    {
+        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-_:]+(?:[/?][^\s<]*)?)#ui';
+        return preg_replace($pattern, $replacement, $text);
     }
 
     /**
