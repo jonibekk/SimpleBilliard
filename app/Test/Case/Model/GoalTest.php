@@ -72,9 +72,57 @@ class GoalTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetMyGoals()
     {
+        $this->setDefault();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+        $key_results = [
+            'goal_id'    => $goal_id,
+            'team_id'    => 1,
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->Goal->KeyResult->save($key_results);
+        $this->Goal->getMyGoals();
+    }
 
+    function testGetProgress()
+    {
+        $goal = ['KeyResult' => []];
+        $this->Goal->getProgress($goal);
+
+        $goal = [
+            'KeyResult' => [
+                [
+                    'priority'  => 1,
+                    'completed' => null,
+                ]
+            ]
+        ];
+        $this->Goal->getProgress($goal);
+        $goal = [
+            'KeyResult' => [
+                [
+                    'priority'  => 1,
+                    'completed' => 1,
+                ]
+            ]
+        ];
+        $this->Goal->getProgress($goal);
+
+    }
+
+    function setDefault()
+    {
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+        $this->Goal->Team->my_uid = 1;
+        $this->Goal->Team->current_team_id = 1;
     }
 
 }
