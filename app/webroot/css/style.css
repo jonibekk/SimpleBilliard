@@ -28,6 +28,18 @@ footer p {
     width: 93.75%;
 }
 
+.ml-5px {
+    margin-left: 5px;
+}
+
+.ml-12px {
+    margin-left: 12px;
+}
+
+.ml-16px {
+    margin-left: 16px;
+}
+
 /*行数の指定*/
 /*noinspection CssUnknownProperty*/
 .line-numbers {
@@ -112,6 +124,27 @@ footer p {
     text-decoration: none !important;
     color: #231814;
 }
+
+.link_gray-rougeorange {
+    color: #808080;
+}
+
+.link_gray-rougeorange:hover,
+.link_gray-rougeorange:active,
+.link_gray-rougeorange:focus {
+    color: #ea5e5b;
+}
+
+.link_rougeorange {
+    color: #ea5e5b;
+}
+
+.link_rougeorange:hover,
+.link_rougeorange:active,
+.link_rougeorange:focus {
+    color: #ea5e5b;
+}
+
 
 .no-line:link,
 .no-line:active,
@@ -2348,7 +2381,26 @@ Temporary Properties - YOU MUST FIX
 
 /*=== ゴールカラム ===*/
 .goals-column-head {
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.goals-column-title {
 / / margin : 0 0 4 px;
+}
+
+.goals-column-plus-box {
+    margin: 8px 0 0;
+}
+
+.goals-column-add-box {
+    border: 1px dashed #aaa;
+    padding: 0;
+    margin: 2px 0;
+}
+
+.goals-column-add-icon, .goals-column-add-text {
+    width: 100%;
+    text-align: center;
 }
 
 /*/goals-column-empty*/
@@ -2368,16 +2420,14 @@ Temporary Properties - YOU MUST FIX
 }
 
 .goals-column-empty-text {
-    width: 100%;
-    text-align: center;
     padding: 0 0 12px;
 }
 
 /*/goals-column-empty*/
 
 .my-goals-item {
-    padding: 8px 5px;
-    border: none;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .my-goals-item:first-child {
@@ -2417,6 +2467,13 @@ Temporary Properties - YOU MUST FIX
     margin-left: 2px;
 }
 
+.goals-column-purpose {
+    padding-top: 2px;
+}
+
+.goals-column-progress-bar {
+    margin: 6px 0 4px;
+}
 /*/== ゴールカラム ===*/
 
 /*=== 汎用的なスタイル ===*/
