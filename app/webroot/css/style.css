@@ -2308,6 +2308,15 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0 7px;
 }
 
+.humbarger-close {
+    margin: 8px 8px 0 0;
+}
+
+@media (max-width: 767px) {
+    a.header-logo {
+        margin-top: 24px;
+    }
+}
 
 /*=== ゴールカラム ===*/
 .goals-column-head {
@@ -2364,21 +2373,4 @@ Temporary Properties - YOU MUST FIX
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
-}
-
-.goals-column-function {
-    padding: 0 4px;
-    border: 1px solid #999;
-    border-radius: 4px;
-}
-
-.goals-column-fa-caret-down {
-    margin-left: 2px;
-}
-/*/== ゴールカラム ===*/
-
-/*アイコンを揃える*/
-.line-height_20px {
-    line-height: 20px;
-    vertical-align: middle;
 }
