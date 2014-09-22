@@ -181,4 +181,31 @@ class TeamTest extends CakeTestCase
 
     }
 
+    function testGetTermStartDate()
+    {
+        $this->setDefault();
+        $this->Team->current_term_start_date = strtotime('2014-04-01 00:00:00');
+    }
+
+    function testGetTermEndDate()
+    {
+        $this->setDefault();
+        $this->Team->current_term_end_date = strtotime('2014-09-31 00:00:00');
+    }
+
+    function testSetCurrentTermStartEnd()
+    {
+        $this->setDefault();
+        $this->Team->current_term_start_date = strtotime('2014-04-01 00:00:00');
+        $this->Team->current_term_end_date = strtotime('2014-09-31 00:00:00');
+        $this->Team->setCurrentTermStartEnd();
+    }
+
+    function setDefault()
+    {
+        $this->Team->my_uid = 1;
+        $this->Team->current_team_id = 1;
+
+    }
+
 }
