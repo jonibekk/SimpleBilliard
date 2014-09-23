@@ -181,4 +181,78 @@ class TeamTest extends CakeTestCase
 
     }
 
+    function testGetTermStartDate()
+    {
+        $this->setDefault();
+        $this->Team->current_term_start_date = strtotime('2014-04-01 00:00:00');
+        $this->Team->getTermStartDate();
+    }
+
+    function testGetTermEndDate()
+    {
+        $this->setDefault();
+        $this->Team->current_term_end_date = strtotime('2014-09-31 00:00:00');
+        $this->Team->getTermEndDate();
+    }
+
+    function testSetCurrentTermStartEnd()
+    {
+        $this->setDefault();
+        $this->Team->current_term_start_date = strtotime('2014-04-01 00:00:00');
+        $this->Team->current_term_end_date = strtotime('2014-09-31 00:00:00');
+        $this->Team->setCurrentTermStartEnd();
+
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = null;
+        $team = [
+            'Team' => [
+                'start_term_month' => 4,
+                'border_months'    => 6,
+            ]
+        ];
+        $this->Team->current_team = $team;
+
+        $this->Team->setCurrentTermStartEnd();
+
+        $this->Team->current_term_start_date = strtotime('2014-04-01 00:00:00');
+        $this->Team->current_term_end_date = null;
+        $this->Team->setCurrentTermStartEnd();
+
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = strtotime('2014-09-31 00:00:00');
+        $this->Team->setCurrentTermStartEnd();
+
+        //期間内の場合
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = null;
+        $team = [
+            'Team' => [
+                'start_term_month' => 1,
+                'border_months'    => 12,
+            ]
+        ];
+        $this->Team->current_team = $team;
+        $this->Team->setCurrentTermStartEnd();
+
+        //期間の開始より現在が前の場合
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = null;
+        $team = [
+            'Team' => [
+                'start_term_month' => date('n', strtotime('+1 month')),
+                'border_months'    => 1,
+            ]
+        ];
+        $this->Team->current_team = $team;
+        $this->Team->setCurrentTermStartEnd();
+    }
+
+    function setDefault()
+    {
+        $this->Team->my_uid = 1;
+        $this->Team->me['timezone'] = 9;
+        $this->Team->current_team_id = 1;
+
+    }
+
 }

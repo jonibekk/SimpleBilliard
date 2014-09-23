@@ -117,6 +117,10 @@ class Team extends AppModel
         'Thread',
     ];
 
+    public $current_team = [];
+    public $current_term_start_date = null;
+    public $current_term_end_date = null;
+
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -212,4 +216,76 @@ class Team extends AppModel
         }
         return $res;
     }
+
+    function getTermStartDate()
+    {
+        if ($this->current_term_start_date) {
+            return $this->current_term_start_date;
+        }
+        $this->setCurrentTermStartEnd();
+
+        return $this->current_term_start_date;
+    }
+
+    function getTermEndDate()
+    {
+        if ($this->current_term_end_date) {
+            return $this->current_term_end_date;
+        }
+        $this->setCurrentTermStartEnd();
+
+        return $this->current_term_end_date;
+    }
+
+    function setCurrentTermStartEnd()
+    {
+        //既にセットされている場合は処理しない
+        if ($this->current_term_start_date && $this->current_term_end_date) {
+            return;
+        }
+        if (empty($this->current_team)) {
+            $this->current_team = $this->findById($this->current_team_id);
+            if (empty($this->current_team)) {
+                return;
+            }
+        }
+        $start_term_month = $this->current_team['Team']['start_term_month'];
+        $border_months = $this->current_team['Team']['border_months'];
+        if ($this->current_term_start_date) {
+            $this->current_term_end_date = strtotime("+ {$border_months} month", $this->current_term_start_date);
+            return;
+        }
+        if ($this->current_term_end_date) {
+            $this->current_term_start_date = strtotime("- {$border_months} month", $this->current_term_end_date);
+            return;
+        }
+
+        $start_date = strtotime(date("Y-{$start_term_month}-01", time())) - $this->me['timezone'] * 3600;
+        $end_date = strtotime("+ {$border_months} month", $start_date);
+        //現在が期間内の場合
+        if ($start_date <= time() && $end_date > time()) {
+            $this->current_term_start_date = $start_date;
+            $this->current_term_end_date = $end_date;
+            return null;
+        }
+        //開始日が現在より後の場合
+        if ($start_date > time()) {
+            while ($start_date > time()) {
+                $start_date = strtotime("- {$border_months} month", $start_date);
+            }
+            $this->current_term_start_date = $start_date;
+            $this->current_term_end_date = strtotime("+ {$border_months} month", $start_date);
+            return null;
+        }
+        //終了日が現在より前の場合
+        if ($end_date < time()) {
+            while ($end_date < time()) {
+                $end_date = strtotime("+ {$border_months} month", $end_date);
+            }
+            $this->current_term_end_date = $end_date;
+            $this->current_term_start_date = strtotime("- {$border_months} month", $end_date);
+            return null;
+        }
+    }
+
 }
