@@ -23,91 +23,10 @@ footer p {
     margin-bottom: 0;
 }
 
-/*=== 全体的な設定 ===*/
-.container {
-    width: 93.75%;
-}
-
-/*行数の指定*/
-/*noinspection CssUnknownProperty*/
-.line-numbers {
-    word-wrap: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: box;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -o-box;
-    display: -ms-box;
-    box-orient: vertical;
-    -webkit-box-orient: vertical;
-    -moz-box-orient: vertical;
-    -o-box-orient: vertical;
-    -ms-box-orient: vertical;
-}
-
-.ln_1 {
-    line-clamp: 1;
-    -webkit-line-clamp: 1;
-    -moz-line-clamp: 1;
-    -o-line-clamp: 1;
-    -ms-line-clamp: 1;
-}
-
-.ln_2 {
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
-    -moz-line-clamp: 2;
-    -o-line-clamp: 2;
-    -ms-line-clamp: 2;
-}
-
-/*/行数の指定*/
-
-/*Fontの指定*/
-.font-size_11 {
-    font-size: 11px;
-}
-
-.font-size_12 {
-    font-size: 12px;
-}
-
-.font-size_14 {
-    font-size: 14px;
-}
-
-.font-size_18 {
-    font-size: 18px;
-}
-
-.font-size_33 {
-    font-size: 33px;
-}
-
-.font-weight_bold {
-    font-weight: bold;
-}
-
-.font-lightgray {
-    color: #9197a3;
-}
-
-.font-lightgray:hover {
-    color: #9197a3;
-}
-
-.font-verydark {
+.dropdown-menu li a {
     color: #231814;
 }
 
-.font-weight_normal {
-    font-weight: normal;
-}
-
-/*/Fontの指定*/
-
-/*リンクの設定*/
 .no-line {
     text-decoration: none !important;
     color: #231814;
@@ -119,68 +38,6 @@ footer p {
 .no-line:visited {
     text-decoration: none !important;
 }
-
-.link-rose-red {
-    color: #b46d6d;
-}
-
-.link-rose-red:hover,
-.link-rose-red:active,
-.link-rose-red:focus {
-    color: #b46d6d;
-    text-decoration-color: #b46d6d;
-}
-
-.link-light-red {
-    color: #d1bab8;
-}
-
-.link-light-red:hover,
-.link-light-red:hover,
-.link-light-red:hover {
-    color: #91170a;
-}
-
-.link-gray {
-    color: #aaa;
-}
-
-.link-gray:hover,
-.link-gray:active,
-.link-gray:focus {
-    color: #666;
-}
-
-.link-dark-gray {
-    color: #808080;
-}
-
-.link-dark-gray:hover,
-.link-dark-gray:active,
-.link-dark-gray:focus {
-    color: #505050;
-    text-decoration-color: #505050;
-}
-
-.develop--link-gray a {
-    color: #c1c4c7;
-}
-
-.develop--link-gray a:hover,
-.develop--link-gray a:target,
-.develop--link-gray a:active {
-    color: #b4b8bf;
-
-}
-
-/*/リンクの設定*/
-
-/*==/ 全体的な設定 ===*/
-
-.dropdown-menu li a {
-    color: #231814;
-}
-
 
 .navbar {
     margin: 0;
@@ -196,6 +53,9 @@ footer p {
     cursor: default;
 }
 
+.container {
+    width: 93.75%;
+}
 
 .panel-default > .panel-heading {
     background-color: #fff;
@@ -251,6 +111,26 @@ footer p {
 }
 
 /*/幅指定*/
+/*Fontの指定*/
+.font-size_11 {
+    font-size: 11px;
+}
+
+.font-size_12 {
+    font-size: 12px;
+}
+
+.font-size_14 {
+    font-size: 14px;
+}
+
+.font-size_18 {
+    font-size: 18px;
+}
+
+.font-size_33 {
+    font-size: 33px;
+}
 
 .modal-content > .modal-header > .close-design {
     width: 33px;
@@ -263,7 +143,41 @@ footer p {
     vertical-align: top;
 }
 
+.font-weight_bold {
+    font-weight: bold;
+}
 
+.font-lightgray {
+    color: #9197a3;
+}
+
+.font-lightgray:hover {
+    color: #9197a3;
+}
+
+.font-verydark {
+    color: #231814;
+}
+
+/*/Fontの指定*/
+/*
+.link-red{
+    color: #d9230f;
+}
+.link-red:hover{
+    color: #91170a;
+}
+*/
+.link-rose-red {
+    color: #b46d6d;
+}
+
+.link-rose-red:hover,
+.link-rose-red:active,
+.link-rose-red:focus {
+    color: #b46d6d;
+    text-decoration-color: #b46d6d;
+}
 
 .liked {
     color: #e78e99;
@@ -273,6 +187,19 @@ footer p {
     color: #e78e99;
 }
 
+.font-weight_normal {
+    font-weight: normal;
+}
+
+.link-light-red {
+    color: #d1bab8;
+}
+
+.link-light-red:hover,
+.link-light-red:hover,
+.link-light-red:hover {
+    color: #91170a;
+}
 
 .gl-feed-text a {
     color: #ddd;
@@ -295,12 +222,40 @@ footer p {
     color: #d9230f;
 }
 
+.link-gray {
+    color: #aaa;
+}
+
+.link-gray:hover,
+.link-gray:active,
+.link-gray:focus {
+    color: #666;
+}
+
+.link-dark-gray {
+    color: #808080;
+}
+
+.link-dark-gray:hover,
+.link-dark-gray:active,
+.link-dark-gray:focus {
+    color: #505050;
+    text-decoration-color: #505050;
+}
 
 .zeroclipboard-is-hover {
     color: #fff !important;
     background: #d9230f !important;
 }
 
+.develop--link-gray a {
+    color: #c1c4c7;
+}
+
+.develop--link-gray a:hover {
+    color: #b4b8bf;
+
+}
 
 .gl-feed-arrow,
 .gl-comment-arrow,
@@ -366,6 +321,13 @@ footer p {
 .color-blue {
     color: #2E8DEF;
 }
+
+/*@media (min-width: 768px) {*/
+/*.container {*/
+/*width: 960px;*/
+
+/*}*/
+/*}*/
 
 [class*="col-"] {
     padding-left: 5px;
@@ -2346,6 +2308,16 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0 7px;
 }
 
+.humbarger-close {
+    margin: 8px 8px 0 0;
+}
+
+@media (max-width: 767px) {
+    a.header-logo {
+        margin-top: 24px;
+    }
+}
+
 /*=== ゴールカラム ===*/
 .goals-column-head {
 / / margin : 0 0 4 px;
@@ -2375,17 +2347,14 @@ Temporary Properties - YOU MUST FIX
 
 /*/goals-column-empty*/
 
-.my-goals-item {
-    padding: 8px 5px;
-    border: none;
+.my-goal-item {
+    padding: 6px 5px;
+    border: 1px solid #ddd;
+    border-bottom: none;
 }
 
-.my-goals-item:first-child {
-    border-top: 1px solid #ddd;
-}
-
-.my-goals-item:last-child {
-    border-bottom: 1px solid #ddd;
+.my-goal-item:last-child {
+    border: 1px solid #ddd;
 }
 
 .check-status i {
@@ -2405,25 +2374,3 @@ Temporary Properties - YOU MUST FIX
     margin-left: 4px;
     font-size: 14px;
 }
-
-.goals-column-function {
-    padding: 0 4px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-/ / background : #fafafa;
-}
-
-.goals-column-fa-caret-down {
-    margin-left: 2px;
-}
-
-/*/== ゴールカラム ===*/
-
-/*=== 汎用的なスタイル ===*/
-/*アイコンを揃える*/
-.line-height_20px {
-    line-height: 20px;
-    vertical-align: middle;
-}
-
-/*/== 汎用的なスタイル ===*/
