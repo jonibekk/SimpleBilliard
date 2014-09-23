@@ -12,8 +12,8 @@
 <!-- START app/View/Elements/my_goals_area.ctp -->
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="col col-xxs-12">
-            <span class="font-size_14 goals-column-head"><?= __d('gl', 'あなたのゴール') ?></span>
+        <div class="col col-xxs-12 goals-column-head">
+            <span class="font-size_14 goals-column-title"><?= __d('gl', 'あなたのゴール') ?></span>
 
             <div class="pull-right">
                 <div class="dropdown">
@@ -33,6 +33,14 @@
                 </div>
             </div>
         </div>
+        <? if (empty($my_goals)): ?>
+            <div class="col col-xxs-12 goals-column-empty-box">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>" class="link-gray">
+                    <div class="goals-column-empty-icon"><i class="fa fa-plus-circle font-size_33"></i></div>
+                    <div class="goals-column-empty-text font-size_14"><?= __d('gl', '新しいゴールをつくる') ?></div>
+                </a>
+            </div>
+        <? else: ?>
         <? foreach ($my_goals as $goal): ?>
             <div class="col col-xxs-12 my-goals-item">
                 <div class="col col-xxs-12">
@@ -53,27 +61,32 @@
                     </div>
 
                     <? if (empty($goal['SpecialKeyResult'])): ?>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 2]) ?>"><i
-                                class="fa fa-plus-circle"></i><?= __d('gl', 'ゴールを追加する') ?></a>
+                        <div class="col col-xxs-10 goals-column-add-box">
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 2]) ?>"
+                               class="link_rougeorange">
+                                <div class="goals-column-add-icon"><i class="fa fa-plus-circle"></i></div>
+                                <div class="goals-column-add-text font-size_12"><?= __d('gl', 'ゴールを追加する') ?></div>
+                            </a>
+                        </div>
                     <? else: ?>
                         <b class="line-numbers ln_2"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
                     <?endif; ?>
                 </div>
-                <div class="col col-xxs-12 font-size_12 line-numbers ln_1">
+                <div class="col col-xxs-12 font-size_12 line-numbers ln_1 goals-column-purpose">
                     <?= h($goal['Goal']['purpose']) ?>
                 </div>
                 <div class="col col-xxs-12">
-                    <div class="progress gl-progress">
+                    <div class="progress gl-progress goals-column-progress-bar">
                         <div class="progress-bar progress-bar-info" role="progressbar"
                              aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
                              aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
-                            <?= h($goal['Goal']['progress']) ?>%
+                            <span class="ml-12px"><?= h($goal['Goal']['progress']) ?>%</span>
                         </div>
                     </div>
                 </div>
                 <div class="col col-xxs-12">
                     <? if (isset($goal['SpecialKeyResult'][0]['end_date']) && !empty($goal['SpecialKeyResult'][0]['end_date'])): ?>
-                        <div class="pull-left">
+                        <div class="pull-left font-size_12">
                             <?=
                             __d('gl', "残り%d日",
                                 ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) ?>
@@ -89,13 +102,14 @@
                 </div>
             </div>
         <? endforeach ?>
-        <div class="col col-xxs-12 goals-column-empty-box">
-            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>" class="link-gray">
-                <div class="goals-column-empty-icon"><i class="fa fa-plus-circle font-size_33"></i></div>
-                <div class="goals-column-empty-text font-size_14"><?= __d('gl', '新しいゴールをつくる') ?></div>
-            </a>
-        </div>
+            <div class="col col-xxs-12 goals-column-plus-box">
+                <i class="fa fa-plus-circle">
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
+                       class="link_gray-rougeorange"><?= __d('gl', '新しいゴールをつくる') ?></a>
+                </i>
 
+            </div>
+        <? endif ?>
     </div>
 </div>
 <!-- END app/View/Elements/my_goals_area.ctp -->
