@@ -117,7 +117,7 @@
                                                     'id'        => 'SwitchTeam',
                                                     'label'     => false,
                                                     'div'       => false,
-                                                    'class'     => 'form-control gl-nav-team-select',
+                                                    'class' => 'form-control gl-nav-team-select disable-change-warning',
                                                     'wrapInput' => false,
                                                 ))
                         ?>
@@ -126,7 +126,8 @@
                 <li class="header-search-group">
                     <form class="gl-nav-form-group" role="search">
                         <i class="fa fa-search gl-nav-form-icon"></i>
-                        <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
+                        <input type="text" class="form-control gl-nav-search disable-change-warning develop--search"
+                               placeholder="Search">
                     </form>
                 </li>
                 <li class="circle-list-in-hamburger visible-xxs hidden-xs">
