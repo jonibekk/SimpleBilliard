@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="panel-body post-panel-body post-panel-footer">
-                <div class="font-size_12" style="display: none" id="PostFormFooter">
+                <div class="font_12px" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
                     <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
@@ -98,7 +98,7 @@
 
                         <button type="button" class="btn btn-link post-share-range-button pull-right"
                                 id="ChangeShareSelect2" target-id="PostShareInputWrap" show-target-id="PostFormShare">
-                            <i class="fa fa-plus link-red post-icon font-weight_normal"></i>&nbsp;<?=
+                            <i class="fa fa-plus link-red post-icon font_normal"></i>&nbsp;<?=
                             __d('gl',
                                 "共有範囲") ?>
                         </button>

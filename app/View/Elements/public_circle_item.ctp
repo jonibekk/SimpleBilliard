@@ -40,10 +40,10 @@ if (!isset($form)) {
                 <?endif; ?>
             </div>
         <? endif; ?>
-        <div class="font-size_12 font-weight_bold modalFeedTextPadding">
+        <div class="font_12px font_bold modalFeedTextPadding">
             <?= h($circle['Circle']['name']) ?></div>
 
-        <div class="font-size_12 font-lightgray modalFeedTextPaddingSmall">
+        <div class="font_12px font-lightgray modalFeedTextPaddingSmall">
         <?
             $title = '<ul class="gl-user-list-in-tooltip">';
             foreach ($circle['CircleMember'] as $member) {

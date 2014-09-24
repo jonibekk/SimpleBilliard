@@ -42,20 +42,20 @@
                     <? if ($circle['CircleMember']['admin_flg']): ?>
                         <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', $circle['Circle']['id']]) ?>"
                            class="modal-ajax-get-circle-edit link-gray develop-floatleft"><i
-                                class="fa fa-cog circle-function font-size_14"></i></a>
+                                class="fa fa-cog circle-function font_14px"></i></a>
                     <? endif; ?>
                 </div>
             </div>
         <? endforeach ?>
     <? endif; ?>
     <div class="clearfix develop--circle-seek">
-        <i class="fa fa-eye circle-function circle-seek-icon font-size_14"></i><?=
+        <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i><?=
         $this->Html->link(__d('gl', "公開サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                           ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
     <div class="clearfix develop--circle-make">
-        <i class="fa fa-plus-circle circle-function circle-make-icon font-size_14"></i><a href="#" data-toggle="modal"
+        <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i><a href="#" data-toggle="modal"
                                                                                           data-target="#modal_add_circle"><?=
             __d('gl',
                 "サークルを作成する") ?></a>

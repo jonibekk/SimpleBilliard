@@ -13,7 +13,7 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/comment.ctp -->
-<div class="font-size_12">
+<div class="font_12px">
     <div class="col col-xxs-12 gl-comment-main">
         <?=
         $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
@@ -23,7 +23,7 @@
             <div class="col col-xxs-12 gl-comment-text gl-comment-user">
                 <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
-                        <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
+                        <a href="#" class="link-gray font_11px" data-toggle="dropdown" id="download">
                             <i class="fa fa-chevron-down gl-comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
@@ -148,11 +148,11 @@
                                 </div>
 
                                 <div class="media-body">
-                                    <h4 class="media-heading font-size_18  media-url"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                                    <h4 class="media-heading font_18px  media-url"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
 
-                                    <p class="font-size_11  media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                    <p class="font_11px  media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
                                     <? if (isset($site_info['description'])): ?>
-                                        <div class="font-size_12">
+                                        <div class="font_12px">
                                             <?= $site_info['description'] ?>
                                         </div>
                                     <? endif; ?>

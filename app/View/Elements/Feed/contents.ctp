@@ -18,7 +18,7 @@
 <? if ($current_circle): ?>
     <div class="panel panel-default feed-share-range">
         <div class="panel-body gl-feed">
-            <div class="col col-xxs-12 font-size_12">
+            <div class="col col-xxs-12 font_12px">
                 <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'link-gray']) ?>
                 <span> ･ </span>
                 <span class="feed-share-range-circle"><?= $current_circle['Circle']['name'] ?></span>

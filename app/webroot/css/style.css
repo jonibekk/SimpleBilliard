@@ -28,6 +28,11 @@ footer p {
     width: 93.75%;
 }
 
+[class*="col-"] {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .ml-5px {
     margin-left: 5px;
 }
@@ -77,28 +82,32 @@ footer p {
 /*/行数の指定*/
 
 /*Fontの指定*/
-.font-size_11 {
+.font_11px {
     font-size: 11px;
 }
 
-.font-size_12 {
+.font_12px {
     font-size: 12px;
 }
 
-.font-size_14 {
+.font_14px {
     font-size: 14px;
 }
 
-.font-size_18 {
+.font_18px {
     font-size: 18px;
 }
 
-.font-size_33 {
+.font_33px {
     font-size: 33px;
 }
 
-.font-weight_bold {
+.font_bold {
     font-weight: bold;
+}
+
+.font_normal {
+    font-weight: normal;
 }
 
 .font-lightgray {
@@ -113,17 +122,9 @@ footer p {
     color: #231814;
 }
 
-.font-weight_normal {
-    font-weight: normal;
-}
-
 /*/Fontの指定*/
 
 /*リンクの設定*/
-.no-line {
-    text-decoration: none !important;
-    color: #231814;
-}
 
 .link_gray-rougeorange {
     color: #808080;
@@ -143,13 +144,6 @@ footer p {
 .link_rougeorange:active,
 .link_rougeorange:focus {
     color: #ea5e5b;
-}
-
-.no-line:link,
-.no-line:active,
-.no-line:hover,
-.no-line:visited {
-    text-decoration: none !important;
 }
 
 .link-rose-red {
@@ -203,6 +197,18 @@ footer p {
 .develop--link-gray a:active {
     color: #b4b8bf;
 
+}
+
+.no-line {
+    text-decoration: none !important;
+    color: #231814;
+}
+
+.no-line:link,
+.no-line:active,
+.no-line:hover,
+.no-line:visited {
+    text-decoration: none !important;
 }
 
 /*/リンクの設定*/
@@ -390,11 +396,6 @@ footer p {
 
 .color-blue {
     color: #2E8DEF;
-}
-
-[class*="col-"] {
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 .feed-share-range .col {
@@ -1447,7 +1448,7 @@ ul.gl-input-images > li {
 
 /*/ハンバーガー*/
 
-.navbar-nav .font-size_14 {
+.navbar-nav .font_14px {
     font-size: 14px;
 }
 
