@@ -18,6 +18,9 @@ footer li {
     margin-bottom: 1.5em;
 }
 
+.gl-navbar p {
+    margin-bottom: 0;
+}
 footer p {
     clear: left;
     margin-bottom: 0;
@@ -453,6 +456,10 @@ footer p {
 
 .left-inner-addon {
     position: relative;
+}
+
+.header-link-home {
+    line-height: 9px;
 }
 
 .left-inner-addon input {
@@ -1358,6 +1365,7 @@ ul.gl-input-images > li {
 
 .header-icon {
     width: 22px;
+    height: 20px;
     text-align: center;
 }
 
@@ -1660,13 +1668,20 @@ ul.gl-input-images > li {
         padding-right: 10px;
     }
 
+    .header-logo {
+        margin-left: 5px;
+    }
+
+    .header-icon {
+        width: 36px;
+    }
     .gl-nav-team-select {
-        width: 112px;
-        margin-left: 10px;
+        width: 84px;
+        margin-left: 0;
     }
 
     .gl-nav-search {
-        width: 200px;
+        width: 180px;
     }
 
     .gl-nav-form-icon {
@@ -1728,15 +1743,19 @@ ul.gl-input-images > li {
         padding-right: 4px;
     }
 
+    .gl-nav-search {
+        width: 200px;
+    }
+
     .navbar-nav > li > .header-goal {
         padding-left: 4px;
-        margin-left: 30px;
+        margin-left: 16px;
         padding-right: 4px;
     }
 
     .navbar-nav > li > .header-team {
         padding-left: 4px;
-        margin-left: 30px;
+        margin-left: 16px;
         padding-right: 4px;
     }
 
@@ -1790,11 +1809,11 @@ ul.gl-input-images > li {
     }
 
     .navbar-nav > li > .header-goal {
-        margin-left: 34px;
+        margin-left: 20px;
     }
 
     .navbar-nav > li > .header-team {
-        margin-left: 34px;
+        margin-left: 20px;
     }
 
     .gl-nav-team-select {
