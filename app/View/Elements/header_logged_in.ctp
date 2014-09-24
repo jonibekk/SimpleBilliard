@@ -12,7 +12,7 @@
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
-<div class="navbar navbar-fixed-top navbar-default gl-navbar" style="" id="header">
+<header class="navbar navbar-fixed-top navbar-default gl-navbar" style="" id="header">
     <div class="gl-nav-container header-container">
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
             <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
@@ -144,6 +144,6 @@
 
         <!--/.nav-collapse -->
     </div>
-</div>
+</header>
 
 <!-- END app/View/Elements/header_logged_in.ctp -->

@@ -1,6 +1,15 @@
+/*=== normalize bootstrap ===*/
+[class*="col-"] {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/*==/ normalize bootstrap ===*/
+
+
 body {
     background: #e5e5e5;
-    padding: 52px 0 0;
+    padding: 58px 0 0;
 }
 
 img {
@@ -18,9 +27,6 @@ footer li {
     margin-bottom: 1.5em;
 }
 
-.gl-navbar p {
-    margin-bottom: 0;
-}
 footer p {
     clear: left;
     margin-bottom: 0;
@@ -29,11 +35,6 @@ footer p {
 /*=== 全体的な設定 ===*/
 .container {
     width: 93.75%;
-}
-
-[class*="col-"] {
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 .ml-5px {
@@ -129,44 +130,44 @@ footer p {
 
 /*リンクの設定*/
 
-.link_gray-rougeorange {
+.font_gray-rougeOrange {
     color: #808080;
 }
 
-.link_gray-rougeorange:hover,
-.link_gray-rougeorange:active,
-.link_gray-rougeorange:focus {
+.font_gray-rougeOrange:hover,
+.font_gray-rougeOrange:active,
+.font_gray-rougeOrange:focus {
     color: #ea5e5b;
 }
 
-.link_rougeorange {
+.font_rougeOrange {
     color: #ea5e5b;
 }
 
-.link_rougeorange:hover,
-.link_rougeorange:active,
-.link_rougeorange:focus {
+.font_rougeOrange:hover,
+.font_rougeOrange:active,
+.font_rougeOrange:focus {
     color: #ea5e5b;
 }
 
-.link-rose-red {
+.font_roseRed {
     color: #b46d6d;
 }
 
-.link-rose-red:hover,
-.link-rose-red:active,
-.link-rose-red:focus {
+.font_roseRed:hover,
+.font_roseRed:active,
+.font_roseRed:focus {
     color: #b46d6d;
     text-decoration-color: #b46d6d;
 }
 
-.link-light-red {
+.font_lightRed-darkRed {
     color: #d1bab8;
 }
 
-.link-light-red:hover,
-.link-light-red:hover,
-.link-light-red:hover {
+.font_lightRed-darkRed:hover,
+.font_lightRed-darkRed:hover,
+.font_lightRed-darkRed:hover {
     color: #91170a;
 }
 
@@ -217,6 +218,57 @@ footer p {
 /*/リンクの設定*/
 
 /*==/ 全体的な設定 ===*/
+
+/*=== headerの設定 ===*/
+.gl-navbar p {
+    margin-bottom: 0;
+}
+
+.gl-navbar {
+    max-height: 48px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+}
+
+.gl-nav-form-group input, .gl-nav-form-group select {
+    height: 28px !important;
+    font-size: 12px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    padding-right: 0 !important;
+}
+
+.gl-nav-form-group input {
+    padding-left: 27px;
+}
+
+.gl-nav-form-group {
+    position: relative;
+    padding: 10px 0;
+}
+
+/*noinspection ALL*/
+.gl-nav-form-group i {
+    position: absolute;
+    font-size: 15px !important;
+    padding: 7px 7px;
+    pointer-events: none;
+}
+
+.gl-navbar-icons > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 10px;
+    color: #000000;
+}
+
+.gl-navbar-icons > .dropdown > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 10px;
+    color: #000000;
+}
+
+/*==/ headerの設定 ===*/
 
 .dropdown-menu li a {
     color: #231814;
@@ -440,20 +492,6 @@ footer p {
     }
 }
 
-.gl-navbar-icons > a {
-    float: left;
-    font-size: 20px;
-    padding: 6px 10px;
-    color: #000000;
-}
-
-.gl-navbar-icons > .dropdown > a {
-    float: left;
-    font-size: 20px;
-    padding: 6px 10px;
-    color: #000000;
-}
-
 .left-inner-addon {
     position: relative;
 }
@@ -513,31 +551,6 @@ footer p {
 .navbar-nav > li > a {
     padding-top: 9px;
     padding-bottom: 9px;
-}
-
-.gl-nav-form-group input, .gl-nav-form-group select {
-    height: 28px !important;
-    font-size: 12px !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-    padding-right: 0 !important;
-}
-
-.gl-nav-form-group input {
-    padding-left: 27px;
-}
-
-.gl-nav-form-group {
-    position: relative;
-    padding: 6px 0;
-}
-
-/*noinspection ALL*/
-.gl-nav-form-group i {
-    position: absolute;
-    font-size: 15px !important;
-    padding: 7px 7px;
-    pointer-events: none;
 }
 
 .gl-navbar i {
@@ -1675,6 +1688,7 @@ ul.gl-input-images > li {
     .header-icon {
         width: 36px;
     }
+
     .gl-nav-team-select {
         width: 84px;
         margin-left: 0;
@@ -2007,9 +2021,6 @@ ul.gl-input-images > li {
     background-color: rgba(0, 0, 0, .4);
 }
 
-.gl-navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
-}
 
 .open {
     margin: 0;

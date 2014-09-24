@@ -30,7 +30,7 @@ $this->Form->input('body', [
     'label'          => false,
     'type'           => 'textarea',
     'rows'           => 1,
-    'class' => 'form-control tiny-form-text blank-disable font-size_12 edit-form comment-edit-form',
+    'class' => 'form-control tiny-form-text blank-disable font_12px edit-form comment-edit-form',
     'target_show_id' => "CommentEdit_{$comment['id']}",
     'target-id'      => "CommentEditSubmit_{$comment['id']}",
     'value'          => $comment['body'],
