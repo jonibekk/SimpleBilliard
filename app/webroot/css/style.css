@@ -616,10 +616,6 @@ ul.example-indent {
 
 .gl-feed-text {
     padding: 10px 0 0 0;
-    margin-right: -1px;
-    margin-left: -1px;
-    border-left: 1px solid rgba(0, 0, 0, 0);
-    border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
 .gl-feed-picture {
@@ -2487,3 +2483,28 @@ Temporary Properties - YOU MUST FIX
 }
 
 /*/== 汎用的なスタイル ===*/
+
+.box-align {
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
+}
+
+.has-success .box-align {
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
+}
+
+.box-align:focus,
+.box-align:active {
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+}
+
+.has-success .box-align:focus,
+.has-success .box-align:active {
+    border-color: rgba(0, 0, 0, 0);
+}
