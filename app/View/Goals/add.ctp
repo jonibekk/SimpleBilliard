@@ -206,8 +206,9 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                     <span class="padding-lr-18px"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap"
-                                                       delete-target-id="KeyResult0StartDateDefault"><?= __d('gl',
-                                                                                                             "変更") ?></a></span>
+                                                       delete-target-id="KeyResult0StartDateDefault"><?=
+                                            __d('gl',
+                                                "変更") ?></a></span>
                             </p>
 
                             <div class="input-group date padding-lr-5px goal-set-date" style="display: none"
@@ -343,7 +344,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                     <div class="col-sm-3 col-sm-offset-9">
                         <?=
                         $this->Form->submit(__d('gl', "この内容で作成"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
                     </div>
                 </div>
             </div>
@@ -449,6 +450,11 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
         attrUndefinedCheck(this, 'target-id');
         var target_id = $(this).attr('target-id');
         enabledAllInput("#" + target_id);
+        var $obj = $("#" + target_id);
+        //タイトルをアクティブ表示に変更
+        $obj.find(".panel-heading").removeClass("panel-closed-headding");
+        //formをアクティブ表示に変更
+        $obj.find(".panel-container").removeClass("panel-closed-container");
         //noinspection JSJQueryEfficiency
         $(".panel-footer", "#" + target_id).show();
         return false;

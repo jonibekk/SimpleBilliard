@@ -41,7 +41,7 @@ class GoalsController extends AppController
                         case 2:
                             $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                             //「ゴールを定める」に進む
-                            $this->redirect([$id, 'mode' => 3]);
+                            $this->redirect([$id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
                             break;
                         case 3:
                             //完了
@@ -54,7 +54,7 @@ class GoalsController extends AppController
                 else {
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを目的を保存しました。"));
                     //「ゴールを定める」に進む
-                    $this->redirect([$this->Goal->id, 'mode' => 2]);
+                    $this->redirect([$this->Goal->id, 'mode' => 2, '#' => 'AddGoalFormKeyResultWrap']);
                 }
             }
             else {
