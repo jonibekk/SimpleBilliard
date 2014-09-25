@@ -98,7 +98,7 @@
                                     ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) ?>
                             </div>
                         <? endif; ?>
-                        <div class="pull-right font-size_12 check-status">
+                        <div class="pull-right font_12px check-status">
                             <? if (isset($goal['SpecialKeyResult'][0]['valued_flg']) && $goal['SpecialKeyResult'][0]['valued_flg']): ?>
                                 <i class="fa fa-check-circle icon-green"></i><?= __d('gl', "認定") ?>
                             <? else: ?>
