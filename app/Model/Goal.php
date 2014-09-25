@@ -211,7 +211,7 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getMyGoals()
+    function getGoals($all = false)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -239,6 +239,9 @@ class Goal extends AppModel
                 ]
             ]
         ];
+        if ($all) {
+            unset($options['conditions']['Goal.user_id']);
+        }
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {

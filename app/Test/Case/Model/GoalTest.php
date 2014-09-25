@@ -88,7 +88,7 @@ class GoalTest extends CakeTestCase
             'end_date'   => time(),
         ];
         $this->Goal->KeyResult->save($key_results);
-        $this->Goal->getMyGoals();
+        $this->Goal->getGoals();
     }
 
     function testGetProgress()

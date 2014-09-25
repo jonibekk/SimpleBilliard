@@ -61,7 +61,7 @@ class PagesController extends AppController
                 $this->_setMyCircle();
                 $this->_setFeedMoreReadUrl();
                 $select2_default = $this->User->getAllUsersCirclesSelect2();
-                $my_goals = $this->Goal->getMyGoals();
+                $my_goals = $this->Goal->getGoals();
                 $this->set(compact('select2_default', 'my_goals'));
                 try {
                     $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
