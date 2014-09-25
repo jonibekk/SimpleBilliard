@@ -41,38 +41,13 @@
                 <div class="col col-xxs-12 my-goals-item">
                     <div class="col col-xxs-12">
                         <? if (empty($goal['SpecialKeyResult'])): ?>
-                            <?= __d('gl', "ゴールなし") ?>
+                            <?= __d('gl', "ゴール未設定") ?>
                         <? else: ?>
                             <b class="line-numbers ln_2"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
                         <?endif; ?>
                     </div>
                     <div class="col col-xxs-12 font_12px line-numbers ln_1 goals-column-purpose">
                         <?= h($goal['Goal']['purpose']) ?>
-                    </div>
-                    <div class="col col-xxs-12">
-                        <div class="progress gl-progress goals-column-progress-bar">
-                            <div class="progress-bar progress-bar-info" role="progressbar"
-                                 aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
-                                 aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
-                                <span class="ml-12px"><?= h($goal['Goal']['progress']) ?>%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col col-xxs-12">
-                        <? if (isset($goal['SpecialKeyResult'][0]['end_date']) && !empty($goal['SpecialKeyResult'][0]['end_date'])): ?>
-                            <div class="pull-left font_12px">
-                                <?=
-                                __d('gl', "残り%d日",
-                                    ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) ?>
-                            </div>
-                        <? endif; ?>
-                        <div class="pull-right font_12px check-status">
-                            <? if (isset($goal['SpecialKeyResult'][0]['valued_flg']) && $goal['SpecialKeyResult'][0]['valued_flg']): ?>
-                                <i class="fa fa-check-circle icon-green"></i><?= __d('gl', "認定") ?>
-                            <? else: ?>
-                                <i class="fa fa-check-circle"></i><?= __d('gl', "未認定") ?>
-                            <?endif; ?>
-                        </div>
                     </div>
                     <div class="col col-xxs-12">
                         <?= $goal['User']['display_username'] ?>
