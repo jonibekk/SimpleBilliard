@@ -85,6 +85,18 @@
                                 <?endif; ?>
                             </div>
                         <? endif; ?>
+                        <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id')): ?>
+                            <div class="col col-xxs-12">
+                                <div class="col col-xxs-6">
+                                    <a class="btn btn-white" href="#"><i class="fa fa-heart font_rougeOrange"><span
+                                                style="color: #000000"><?= __d('gl', "フォロー") ?></span></i></a>
+                                </div>
+                                <div class="col col-xxs-6">
+                                    <a class="btn btn-white" href="#"><i class="fa fa-child font_rougeOrange"><span
+                                                style="color: #000000"><?= __d('gl', "コラボる") ?></span></i></a>
+                                </div>
+                            </div>
+                        <? endif; ?>
                     </div>
                 </div>
             <? endforeach ?>
