@@ -20,6 +20,7 @@ img {
     margin-right: auto;
 }
 
+
 footer {
     margin: 2em 0;
 }
@@ -36,6 +37,7 @@ footer p {
 }
 
 /*=== 全体的な設定 ===*/
+
 .container {
     width: 93.75%;
 }
