@@ -141,56 +141,7 @@
                 </div>
             </div>
         </div>
-        <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
-                    data-target=".navbar-offcanvas" aria-hidden="true">
-                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span></button>
-            <ul class="nav navbar-nav">
-                <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
-                        <img src="<?= $this->Html->url('/img/goalous.png') ?>"
-                             class="header-logo"
-                             alt="Goalous2.0">&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
-                    </a>
-                </li>
-                <li><a href="#" class="header-goal develop--forbiddenLink"><i
-                            class="fa fa-flag header-link header-icon"></i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
-                    </a></li>
-                <li><a href="#" class="header-team develop--forbiddenLink"><i
-                            class="fa fa-users header-link header-icon"></i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
-                    </a>
-                </li>
-                <li>
-                    <form class="gl-nav-form-group" role="search">
-                        <?
-                        echo $this->Form->input('current_team',
-                                                array(
-                                                    'type'      => 'select',
-                                                    'options'   => !empty($my_teams) ? $my_teams : [__d('gl',
-                                                                                                        'チームがありません')],
-                                                    'value'     => $this->Session->read('current_team_id'),
-                                                    'id'        => 'SwitchTeam',
-                                                    'label'     => false,
-                                                    'div'       => false,
-                                                    'class'     => 'form-control gl-nav-team-select',
-                                                    'wrapInput' => false,
-                                                ))
-                        ?>
-                    </form>
-                </li>
-                <li class="header-search-group">
-                    <form class="gl-nav-form-group" role="search">
-                        <i class="fa fa-search gl-nav-form-icon"></i>
-                        <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
-                    </form>
-                </li>
-                <li class="circle-list-in-hamburger visible-xxs hidden-xs">
-                    <?= $this->element('circle_list_in_hamburger') ?>
-                </li>
-            </ul>
-        </div>
+
         <!--/.nav-collapse -->
     </div>
 </header>
