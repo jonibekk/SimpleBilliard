@@ -211,7 +211,15 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getGoals($all = false)
+    /**
+     * ゴールのデータ取得
+     *
+     * @param int $mode
+     * $modeは'1'=>自分のゴール、'2'は自分以外のゴール、'3'=>全てのゴール
+     *
+     * @return array
+     */
+    function getGoals($mode = 1)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -236,11 +244,24 @@ class Goal extends AppModel
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
+                ],
+                'User'             => [
+                    'fields' => $this->User->profileFields,
                 ]
             ]
         ];
-        if ($all) {
-            unset($options['conditions']['Goal.user_id']);
+        switch ($mode) {
+            //自分以外のゴール
+            case 2:
+                unset($options['conditions']['Goal.user_id']);
+                $options['conditions']['NOT']['Goal.user_id'] = $this->my_uid;
+                break;
+            case 3:
+                //全てのゴール
+                unset($options['conditions']['Goal.user_id']);
+                break;
+            default:
+                break;
         }
         $res = $this->find('all', $options);
         //進捗を計算

@@ -15,6 +15,17 @@ class GoalsController extends AppController
     }
 
     /**
+     * ゴール一覧画面
+     */
+    public function index()
+    {
+        $this->_setMyCircle();
+        $goals = $this->Goal->getGoals(3);
+        $my_goals = $this->Goal->getGoals();
+        $this->set(compact('goals', 'my_goals'));
+    }
+
+    /**
      * ゴール作成
      * URLパラメータでmodeを付ける
      * mode なしは目標を決める,2はゴールを定める,3は他の情報を追加
