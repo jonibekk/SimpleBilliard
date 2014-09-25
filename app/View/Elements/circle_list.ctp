@@ -41,7 +41,7 @@
                 <div class="circle-function_box clearfix">
                     <? if ($circle['CircleMember']['admin_flg']): ?>
                         <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', $circle['Circle']['id']]) ?>"
-                           class="modal-ajax-get-circle-edit link-gray develop-floatleft"><i
+                           class="modal-ajax-get-circle-edit font_lightGray-gray develop-floatleft"><i
                                 class="fa fa-cog circle-function"></i></a>
                     <? endif; ?>
                 </div>

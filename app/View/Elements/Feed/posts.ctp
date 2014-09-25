@@ -18,7 +18,7 @@
         <div class="col col-xxs-12 gl-feed-user">
             <div class="pull-right">
                 <div class="dropdown">
-                    <a href="#" class="link-gray font_11px" data-toggle="dropdown" id="download">
+                    <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
                         <i class="fa fa-chevron-down gl-feed-arrow"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">

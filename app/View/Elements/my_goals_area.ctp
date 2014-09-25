@@ -17,7 +17,7 @@
 
             <div class="pull-right">
                 <div class="dropdown">
-                    <a href="#" class="link-gray font_11px" data-toggle="dropdown" id="download">
+                    <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
                         <span class="line-height_20px"><?= __d('gl', "全て") ?></span><i
                             class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
                     </a>
@@ -35,7 +35,7 @@
         </div>
         <? if (empty($my_goals)): ?>
             <div class="col col-xxs-12 goals-column-empty-box">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>" class="link-gray">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>" class="font_lightGray-gray">
                     <div class="goals-column-empty-icon"><i class="fa fa-plus-circle font_33px"></i></div>
                     <div class="goals-column-empty-text font_14px"><?= __d('gl', '新しいゴールをつくる') ?></div>
                 </a>
@@ -46,7 +46,7 @@
                     <div class="col col-xxs-12">
                         <div class="pull-right goals-column-function">
                             <div class="dropdown">
-                                <a href="#" class="link-gray font_14px" data-toggle="dropdown" id="download">
+                                <a href="#" class="font_lightGray-gray font_14px" data-toggle="dropdown" id="download">
                                     <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"

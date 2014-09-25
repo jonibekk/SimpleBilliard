@@ -12,19 +12,20 @@
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
-<header class="navbar navbar-fixed-top navbar-default gl-navbar" style="" id="header">
+<header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
     <div class="gl-nav-container header-container">
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
-                    data-target=".navbar-offcanvas" aria-hidden="true">
-                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span></button>
+            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas" data-target=".navbar-offcanvas" aria-hidden="true">
+                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
+            </button>
             <ul class="nav navbar-nav">
                 <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                         <img src="<?= $this->Html->url('/img/goalous.png') ?>"
-                             class="header-logo"
+                             class="header-logo-img"
                              alt="Goalous2.0" width="20px" height="20px">&nbsp;
-                        <p class="font_11px header_icon-text hidden-xs header-link-home header-link"><?= __d('gl',
-                                                                                                             "ホーム") ?></p>
+                        <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link-home header-link">
+                            <?= __d('gl', "ホーム") ?>
+                        </p>
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
@@ -42,7 +43,7 @@
                     </a>
                 </li>
                 <li>
-                    <form class="gl-nav-form-group" role="search">
+                    <form class="nav-form-group" role="search">
                         <?
                         echo $this->Form->input('current_team',
                                                 array(
@@ -53,16 +54,16 @@
                                                     'id'        => 'SwitchTeam',
                                                     'label'     => false,
                                                     'div'       => false,
-                                                    'class'     => 'form-control gl-nav-team-select',
+                                                    'class'     => 'form-control nav-team-select font_12px',
                                                     'wrapInput' => false,
                                                 ))
                         ?>
                     </form>
                 </li>
                 <li class="header-search-group">
-                    <form class="gl-nav-form-group" role="search">
+                    <form class="nav-form-group" role="search">
                         <i class="fa fa-search gl-nav-form-icon"></i>
-                        <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
+                        <input type="text" class="form-control nav-search font_12px develop--search" placeholder="Search">
                     </form>
                 </li>
                 <li class="circle-list-in-hamburger visible-xxs hidden-xs">
@@ -78,7 +79,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div class="pull-right gl-navbar-icons">
+            <div class="pull-right nav-icons">
                 <a href="<?= $this->Html->url('/') ?>" class="header-home header-link">ホーム</a>
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
