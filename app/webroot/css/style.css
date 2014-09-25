@@ -179,17 +179,6 @@ footer p {
     color: #ea5e5b;
 }
 
-.font_roseRed {
-    color: #b46d6d;
-}
-
-.font_roseRed:hover,
-.font_roseRed:active,
-.font_roseRed:focus {
-    color: #b46d6d;
-    text-decoration-color: #b46d6d;
-}
-
 .font_lightRed-darkRed {
     color: #d1bab8;
 }
@@ -204,13 +193,13 @@ footer p {
     color: #505050;
 }
 
-.link-gray {
+.font_lightGray-gray {
     color: #aaa;
 }
 
-.link-gray:hover,
-.link-gray:active,
-.link-gray:focus {
+.font_lightGray-gray:hover,
+.font_lightGray-gray:active,
+.font_lightGray-gray:focus {
     color: #666;
 }
 
@@ -286,16 +275,6 @@ footer p {
 /*/切り替えスイッチ*/
 
 /*==/ モジュール ===*/
-
-
-/*=======================================
-
-             リファクタリング
-
-=======================================*/
-
-
-
 
 /*=== headerの設定 ===*/
 .header-icon_text{

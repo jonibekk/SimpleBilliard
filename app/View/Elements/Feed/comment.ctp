@@ -23,7 +23,7 @@
             <div class="col col-xxs-12 gl-comment-text gl-comment-user">
                 <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
-                        <a href="#" class="link-gray font_11px" data-toggle="dropdown" id="download">
+                        <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
                             <i class="fa fa-chevron-down gl-comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
