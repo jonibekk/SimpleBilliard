@@ -20,8 +20,8 @@ class GoalsController extends AppController
     public function index()
     {
         $this->_setMyCircle();
-        $goals = $this->Goal->getGoals(3);
-        $my_goals = $this->Goal->getGoals();
+        $goals = $this->Goal->getAllGoals();
+        $my_goals = $this->Goal->getMyGoals();
         $this->set(compact('goals', 'my_goals'));
     }
 

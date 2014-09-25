@@ -331,7 +331,7 @@ class PostsController extends AppController
         $this->_setMyCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
-        $my_goals = $this->Goal->getGoals();
+        $my_goals = $this->Goal->getMyGoals();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
             $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);

@@ -212,14 +212,11 @@ class Goal extends AppModel
     }
 
     /**
-     * ゴールのデータ取得
+     * 自分のゴール取得
      *
-     * @param int $mode
-     * $modeは'1'=>自分のゴール、'2'は自分以外のゴール、'3'=>全てのゴール
-     *
-     * @return array
+*@return array
      */
-    function getGoals($mode = 1)
+    function getMyGoals()
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -245,24 +242,64 @@ class Goal extends AppModel
                         'KeyResult.end_date <'    => $end_date,
                     ]
                 ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        return $res;
+    }
+
+    /**
+     * 全てのゴール取得
+     *
+     * @return array
+     */
+    function getAllGoals()
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions'   => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+                    'Leader'       => [
+                        'conditions' => ['Leader.type' => KeyResultUser::TYPE_OWNER],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                    'Collaborator' => [
+                        'conditions' => ['Collaborator.type' => KeyResultUser::TYPE_COLLABORATOR],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
                 'User'             => [
                     'fields' => $this->User->profileFields,
                 ]
             ]
         ];
-        switch ($mode) {
-            //自分以外のゴール
-            case 2:
-                unset($options['conditions']['Goal.user_id']);
-                $options['conditions']['NOT']['Goal.user_id'] = $this->my_uid;
-                break;
-            case 3:
-                //全てのゴール
-                unset($options['conditions']['Goal.user_id']);
-                break;
-            default:
-                break;
-        }
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {

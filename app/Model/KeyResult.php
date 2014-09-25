@@ -95,6 +95,12 @@ class KeyResult extends AppModel
     public $hasMany = [
         'KeyResultUser' => [
             'dependent' => true,
+        ],
+        'Leader'        => [
+            'className' => 'KeyResultUser',
+        ],
+        'Collaborator'  => [
+            'className' => 'KeyResultUser',
         ]
     ];
 
