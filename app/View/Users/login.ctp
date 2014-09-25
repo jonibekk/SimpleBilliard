@@ -23,9 +23,9 @@
                             'class' => 'col col-sm-3 control-label'
                         ],
                         'wrapInput' => 'col col-sm-6',
-                        'class' => 'form-control login_input-design'
+                        'class' => 'form-control login_input-design disable-change-warning'
                     ],
-                    'class' => 'form-horizontal login-form',
+                    'class'         => 'form-horizontal login-form',
                     'novalidate'    => true
                 ]); ?>
                 <?=
@@ -40,8 +40,9 @@
                 ])?>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('gl', "ログイン"),
-                                                ['class' => 'btn btn-primary'/*, 'disabled'=>'disabled'*/]) ?>
+                        <?=
+                        $this->Form->submit(__d('gl', "ログイン"),
+                                            ['class' => 'btn btn-primary' /*, 'disabled'=>'disabled'*/]) ?>
                     </div>
                 </div>
                 <div class="form-group">

@@ -130,3 +130,18 @@ define('MODE_VIEW_TUTORIAL', 1);
 define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
 define('S3_TRIM_PATH', '/upload/');
 
+/**
+ * 共通関数
+ */
+
+/**
+ * 改行を除去
+ *
+ * @param $str
+ *
+ * @return string
+ */
+function del_line_break($str)
+{
+    return str_replace(array("\r\n", "\n", "\r"), '', $str);
+}

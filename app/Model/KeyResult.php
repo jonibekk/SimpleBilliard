@@ -60,12 +60,12 @@ class KeyResult extends AppModel
      * @var array
      */
     public $validate = [
-        'name'       => [
+        'name'        => [
             'notEmpty' => [
                 'rule' => 'notEmpty',
             ],
         ],
-        'valued_flg' => [
+        'valued_flg'  => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -93,7 +93,9 @@ class KeyResult extends AppModel
     ];
 
     public $hasMany = [
-        'KeyResultUser'
+        'KeyResultUser' => [
+            'dependent' => true,
+        ]
     ];
 
     function __construct($id = false, $table = null, $ds = null)
