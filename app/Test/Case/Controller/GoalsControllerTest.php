@@ -164,6 +164,60 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->getEndMonthLocalDateTime(6, 'test');
     }
 
+    /**
+     * testDelete method
+     *
+     * @return void
+     */
+    public function testDeleteFail()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('goals/delete/0', ['method' => 'POST']);
+    }
+
+    public function testDeleteNotOwn()
+    {
+        /**
+         * @var UsersController $Goals
+         */
+        $Goals = $this->_getGoalsCommonMock();
+
+        $user_id = 10;
+        $team_id = 1;
+
+        $goal_data = [
+            'Goal' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'purpose' => 'test'
+            ],
+        ];
+        $goal = $Goals->Goal->save($goal_data);
+        $this->testAction('goals/delete/' . $goal['Goal']['id'], ['method' => 'POST']);
+    }
+
+    public function testDeleteSuccess()
+    {
+        /**
+         * @var UsersController $Goals
+         */
+        $Goals = $this->_getGoalsCommonMock();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $goal_data = [
+            'Goal' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'purpose' => 'test'
+            ],
+        ];
+        $goal = $Goals->Goal->save($goal_data);
+
+        $this->testAction('goals/delete/' . $goal['Goal']['id'], ['method' => 'POST']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**

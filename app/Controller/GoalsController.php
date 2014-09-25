@@ -87,4 +87,27 @@ class GoalsController extends AppController
                            'kr_start_date_format', 'kr_end_date_format'));
     }
 
+    /**
+     * delete method
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    public function delete($id)
+    {
+        try {
+            $this->Goal->isPermitted($id);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->request->allowMethod('post', 'delete');
+        $this->Goal->id = $id;
+        $this->Goal->delete();
+        $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
 }
