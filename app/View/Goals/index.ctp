@@ -46,12 +46,32 @@
                             <b class="line-numbers ln_2"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
                         <?endif; ?>
                     </div>
-                    <div class="col col-xxs-12 font_12px line-numbers ln_1 goals-column-purpose">
-                        <?= h($goal['Goal']['purpose']) ?>
-                    </div>
-                    <div class="col col-xxs-12">
-                        <?= $goal['User']['display_username'] ?>
-                    </div>
+                    <? if (!empty($goal['SpecialKeyResult'])): ?>
+                        <div class="col col-xxs-12">
+                            <? if (!empty($goal['SpecialKeyResult'][0]['Leader'])): ?>
+                                <?=
+                                __d('gl', "リーダー: %s",
+                                    h($goal['SpecialKeyResult'][0]['Leader'][0]['User']['display_username'])) ?>
+                            <? endif; ?>
+                            | <?= __d('gl', "コラボ: ") ?>
+                            <? if (count($goal['SpecialKeyResult'][0]['Collaborator']) == 0): ?>
+                                <?= __d('gl', "0人") ?>
+                            <? else: ?>
+                                <? foreach ($goal['SpecialKeyResult'][0]['Collaborator'] as $key => $collaborator): ?>
+                                    <?= h($collaborator['User']['display_username']) ?>
+                                    <? if (isset($goal['SpecialKeyResult'][0]['Collaborator'][$key + 1])) {
+                                        echo ", ";
+                                    } ?>
+                                    <? if ($key == 1) {
+                                        break;
+                                    } ?>
+                                <? endforeach ?>
+                                <? if (($other_count = count($goal['SpecialKeyResult'][0]['Collaborator']) - 2) > 0): ?>
+                                    <?= __d('gl', "他%s人", $other_count) ?>
+                                <? endif; ?>
+                            <?endif; ?>
+                        </div>
+                    <? endif; ?>
                 </div>
             <? endforeach ?>
         <? endif ?>
