@@ -12,21 +12,8 @@
  * @var $body_title
  * @var $url
  */
-if ($to_user_name) {
-    echo __d('mail', 'こんにちは %sさん、', h($to_user_name));
-}
-else {
-    echo __d('mail', 'こんにちは。');
-
-};
-echo "\n";
-echo "\n";
 echo $body_title;
 echo "\n";
 echo "\n";
-echo __d('mail', '以下のリンクから内容の確認ができます。');
-echo "\n";
 echo $url;
-echo "\n";
-echo "\n";
 echo "\n";

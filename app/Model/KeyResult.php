@@ -93,7 +93,9 @@ class KeyResult extends AppModel
     ];
 
     public $hasMany = [
-        'KeyResultUser'
+        'KeyResultUser' => [
+            'dependent' => true,
+        ]
     ];
 
     function __construct($id = false, $table = null, $ds = null)

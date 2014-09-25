@@ -118,8 +118,12 @@ class Goal extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Post',
-        'KeyResult',
+        'Post'      => [
+            'dependent' => true,
+        ],
+        'KeyResult' => [
+            'dependent' => true,
+        ],
         'SpecialKeyResult' => [
             'className' => 'KeyResult'
         ],
