@@ -81,7 +81,9 @@ class GoalsController extends AppController
         }
         else {
             $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
-            $kr_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
+            //TODO 将来的には期間をまたぐ当日+6ヶ月を期限にするが、現状期間末日にする
+            //$kr_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
+            $kr_end_date_format = date('Y/m/d', strtotime("- 1 day", $this->Goal->Team->getTermEndDate()));
         }
         $this->set(compact('goal_category_list', 'priority_list', 'kr_priority_list', 'kr_value_unit_list',
                            'kr_start_date_format', 'kr_end_date_format'));
