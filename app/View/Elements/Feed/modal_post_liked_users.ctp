@@ -13,9 +13,9 @@
 <div class="modal-dialog">
     <div class="modal-content modalFeed-content">
         <div class="modal-header modalFeed-header">
-            <button type="button" class="close font-size_33 close-design" data-dismiss="modal" aria-hidden="true"><span
+            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title font-size_18 font-weight_bold"><?= __d('gl', "この投稿を%s人が「いいね！」と言っています。",
+            <h4 class="modal-title font_18px font_bold"><?= __d('gl', "この投稿を%s人が「いいね！」と言っています。",
                                                                           count($liked_users)) ?></h4>
         </div>
         <div class="modal-body modalFeed-body">

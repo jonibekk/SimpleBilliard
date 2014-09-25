@@ -14,7 +14,7 @@
 <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close font-size_33 close-design" data-dismiss="modal" aria-hidden="true">
+                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
                 <h4 class="modal-title"><?= __d('gl', "サークルを作成") ?></h4>
             </div>
@@ -50,7 +50,7 @@
                         $this->Form->hidden('members',
                                             ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
                         <? $this->Form->unlockField('Circle.members') ?>
-                        <span class="help-block font-size_11"><?=
+                        <span class="help-block font_11px"><?=
                             __d('gl', "管理者：%s",
                                 $this->Session->read('Auth.User.display_username')) ?></span>
                     </div>
@@ -58,9 +58,9 @@
                 <hr>
                 <?
                 $privacy_option = Circle::$TYPE_PUBLIC;
-                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font-size_11">' . __d('gl',
+                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
                                                                                                           "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
-                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font-size_11">' . __d('gl',
+                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
                                                                                                            "サークル名と参加メンバー、投稿はこのサークルの感化メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
@@ -107,7 +107,7 @@
                                                 ''
                                                ]) ?>
                         </span>
-                                <span class="help-block font-size_11 fileinput-limit_mb"><?= __d('gl',
+                                <span class="help-block font_11px fileinput-limit_mb"><?= __d('gl',
                                                                                                  '10MB以下') ?></span>
                             </div>
                         </div>

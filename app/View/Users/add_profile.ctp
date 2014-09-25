@@ -166,7 +166,7 @@
                         </span>
                             </div>
                         </div>
-                        <span class="help-block font-size_11"><?= __d('gl', '10MB以下') ?></span>
+                        <span class="help-block font_11px"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=

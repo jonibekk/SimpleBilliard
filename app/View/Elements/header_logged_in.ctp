@@ -85,7 +85,7 @@
             </div>
         </div>
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <button type="button" class="close font-size_33 close-design humbarger-close" data-toggle="offcanvas"
+            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas" aria-hidden="true">
                 <span class="close-icon hidden-sm hidden-md hidden-lg">×</span></button>
             <ul class="nav navbar-nav">
