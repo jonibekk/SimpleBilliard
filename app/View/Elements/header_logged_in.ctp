@@ -21,9 +21,9 @@
             <ul class="nav navbar-nav">
                 <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                         <img src="<?= $this->Html->url('/img/goalous.png') ?>"
-                             class="header-logo"
+                             class="header-logo-img"
                              alt="Goalous2.0" width="20px" height="20px">&nbsp;
-                        <p class="font_11px header_icon-text hidden-xs header-link-home header-link"><?= __d('gl',
+                        <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link-home header-link"><?= __d('gl',
                                                                                                              "ホーム") ?></p>
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>

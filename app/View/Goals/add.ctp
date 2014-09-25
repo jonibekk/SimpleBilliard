@@ -324,7 +324,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                         ''
                                                        ]) ?>
                                 </span>
-                                <span class="help-block fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
+                                <span class="help-block fileinput-limit_mb font_11px"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>
 

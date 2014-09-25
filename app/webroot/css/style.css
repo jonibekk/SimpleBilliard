@@ -3,9 +3,12 @@
     padding-left: 0;
     padding-right: 0;
 }
+.navbar-toggle {
+    margin-right: 0;
+    margin-top: 6px;
+}
 
 /*==/ normalize bootstrap ===*/
-
 
 body {
     background: #e5e5e5;
@@ -85,6 +88,20 @@ footer p {
 
 /*/行数の指定*/
 
+/*position*/
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+/*/position*/
+
 /*Fontの指定*/
 .font_11px {
     font-size: 11px;
@@ -128,7 +145,11 @@ footer p {
 
 /*/Fontの指定*/
 
-/*リンクの設定*/
+/*colorの設定*/
+
+.font-dimgray{
+    color: #696969;
+}
 
 .font_gray-rougeOrange {
     color: #808080;
@@ -169,6 +190,10 @@ footer p {
 .font_lightRed-darkRed:hover,
 .font_lightRed-darkRed:hover {
     color: #91170a;
+}
+
+.font_heavyGray{
+    color: #505050;
 }
 
 .link-gray {
@@ -269,6 +294,19 @@ footer p {
 }
 
 /*==/ headerの設定 ===*/
+
+/*=== 汎用的なスタイル ===*/
+/*アイコンを揃える*/
+.line-height_20px {
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+/*/== 汎用的なスタイル ===*/
+
+/*=======================================
+リファクタリング
+=======================================*/
 
 .dropdown-menu li a {
     color: #231814;
@@ -1477,10 +1515,6 @@ ul.gl-input-images > li {
     display: none;
 }
 
-.navbar-toggle {
-    margin-right: 6px;
-}
-
 /* Goal */
 .page-title {
     font-size: 20px;
@@ -1584,9 +1618,6 @@ ul.gl-input-images > li {
 /*メディアクエリで切り替え*/
 /*Extrasmall*/
 @media (min-width: 480px) {
-    .navbar-toggle {
-        margin-right: 15px;
-    }
 
     .container {
         width: 97.5%;
@@ -1681,7 +1712,7 @@ ul.gl-input-images > li {
         padding-right: 10px;
     }
 
-    .header-logo {
+    .header-logo-img {
         margin-left: 5px;
     }
 
@@ -2021,7 +2052,6 @@ ul.gl-input-images > li {
     background-color: rgba(0, 0, 0, .4);
 }
 
-
 .open {
     margin: 0;
     padding: 0;
@@ -2314,9 +2344,6 @@ Temporary Properties - YOU MUST FIX
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.margin-right-8px {
-    margin-right: 8px;
-}
 
 .nailthumb-container img {
     max-width: 100%;
@@ -2335,16 +2362,8 @@ Temporary Properties - YOU MUST FIX
     display: inline-block;
 }
 
-.relative {
-    position: relative;
-}
-
-.absolute {
-    position: absolute;
-}
-
-.fixed {
-    position: fixed;
+.margin-right-8px {
+    margin-right: 8px;
 }
 
 .z-i-100 {
@@ -2506,14 +2525,6 @@ Temporary Properties - YOU MUST FIX
 
 /*/== ゴールカラム ===*/
 
-/*=== 汎用的なスタイル ===*/
-/*アイコンを揃える*/
-.line-height_20px {
-    line-height: 20px;
-    vertical-align: middle;
-}
-
-/*/== 汎用的なスタイル ===*/
 
 .box-align {
     margin-right: -1px;
