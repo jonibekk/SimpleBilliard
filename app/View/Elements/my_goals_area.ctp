@@ -69,7 +69,7 @@
                         <? if (empty($goal['SpecialKeyResult'])): ?>
                             <div class="col col-xxs-10 goals-column-add-box">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 2]) ?>"
-                                   class="link_rougeorange">
+                                   class="font_rougeOrange">
                                     <div class="goals-column-add-icon"><i class="fa fa-plus-circle"></i></div>
                                     <div class="goals-column-add-text font_12px"><?= __d('gl', 'ゴールを追加する') ?></div>
                                 </a>
@@ -111,7 +111,7 @@
             <div class="col col-xxs-12 goals-column-plus-box">
                 <i class="fa fa-plus-circle">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
-                       class="link_gray-rougeorange"><?= __d('gl', '新しいゴールをつくる') ?></a>
+                       class="font_gray-rougeOrange"><?= __d('gl', '新しいゴールをつくる') ?></a>
                 </i>
 
             </div>
