@@ -39,39 +39,53 @@
         <? else: ?>
             <? foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
-                    <div class="col col-xxs-12">
-                        <? if (empty($goal['SpecialKeyResult'])): ?>
-                            <?= __d('gl', "ゴール未設定") ?>
-                        <? else: ?>
-                            <b class="line-numbers ln_2"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
-                        <?endif; ?>
+                    <div class="col col-xxs-2">
+                        <?=
+                        $this->Html->image('ajax-loader.gif',
+                                           [
+                                               'class'         => 'lazy img-rounded',
+                                               'style'         => 'width: 48px; height: 48px;',
+                                               'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
+                                                                                           ['style' => 'medium'])
+                                           ]
+                        )
+                        ?>
                     </div>
-                    <? if (!empty($goal['SpecialKeyResult'])): ?>
+                    <div class="col col-xxs-10">
                         <div class="col col-xxs-12">
-                            <? if (!empty($goal['SpecialKeyResult'][0]['Leader'])): ?>
-                                <?=
-                                __d('gl', "リーダー: %s",
-                                    h($goal['SpecialKeyResult'][0]['Leader'][0]['User']['display_username'])) ?>
-                            <? endif; ?>
-                            | <?= __d('gl', "コラボ: ") ?>
-                            <? if (count($goal['SpecialKeyResult'][0]['Collaborator']) == 0): ?>
-                                <?= __d('gl', "0人") ?>
+                            <? if (empty($goal['SpecialKeyResult'])): ?>
+                                <?= __d('gl', "ゴール未設定") ?>
                             <? else: ?>
-                                <? foreach ($goal['SpecialKeyResult'][0]['Collaborator'] as $key => $collaborator): ?>
-                                    <?= h($collaborator['User']['display_username']) ?>
-                                    <? if (isset($goal['SpecialKeyResult'][0]['Collaborator'][$key + 1])) {
-                                        echo ", ";
-                                    } ?>
-                                    <? if ($key == 1) {
-                                        break;
-                                    } ?>
-                                <? endforeach ?>
-                                <? if (($other_count = count($goal['SpecialKeyResult'][0]['Collaborator']) - 2) > 0): ?>
-                                    <?= __d('gl', "他%s人", $other_count) ?>
-                                <? endif; ?>
+                                <b class="line-numbers ln_2"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
                             <?endif; ?>
                         </div>
-                    <? endif; ?>
+                        <? if (!empty($goal['SpecialKeyResult'])): ?>
+                            <div class="col col-xxs-12">
+                                <? if (!empty($goal['SpecialKeyResult'][0]['Leader'])): ?>
+                                    <?=
+                                    __d('gl', "リーダー: %s",
+                                        h($goal['SpecialKeyResult'][0]['Leader'][0]['User']['display_username'])) ?>
+                                <? endif; ?>
+                                | <?= __d('gl', "コラボ: ") ?>
+                                <? if (count($goal['SpecialKeyResult'][0]['Collaborator']) == 0): ?>
+                                    <?= __d('gl', "0人") ?>
+                                <? else: ?>
+                                    <? foreach ($goal['SpecialKeyResult'][0]['Collaborator'] as $key => $collaborator): ?>
+                                        <?= h($collaborator['User']['display_username']) ?>
+                                        <? if (isset($goal['SpecialKeyResult'][0]['Collaborator'][$key + 1])) {
+                                            echo ", ";
+                                        } ?>
+                                        <? if ($key == 1) {
+                                            break;
+                                        } ?>
+                                    <? endforeach ?>
+                                    <? if (($other_count = count($goal['SpecialKeyResult'][0]['Collaborator']) - 2) > 0): ?>
+                                        <?= __d('gl', "他%s人", $other_count) ?>
+                                    <? endif; ?>
+                                <?endif; ?>
+                            </div>
+                        <? endif; ?>
+                    </div>
                 </div>
             <? endforeach ?>
         <? endif ?>
