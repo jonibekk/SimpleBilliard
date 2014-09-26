@@ -214,7 +214,7 @@ class Goal extends AppModel
     /**
      * 自分のゴール取得
      *
-*@return array
+     * @return array
      */
     function getMyGoals()
     {
@@ -256,16 +256,29 @@ class Goal extends AppModel
     /**
      * 全てのゴール取得
      *
+     * @param int  $limit
+     * @param null $params
+     *
+     * @internal param int $page
      * @return array
      */
-    function getAllGoals()
+    function getAllGoals($limit = 20, $params = null)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
+
+        $page = 1;
+        if (isset($params['named']['page']) || !empty($params['named']['page'])) {
+            $page = $params['named']['page'];
+            unset($params['named']['page']);
+        }
         $options = [
             'conditions' => [
                 'Goal.team_id' => $this->current_team_id,
             ],
+            'order'      => ['Goal.modified desc'],
+            'limit'      => $limit,
+            'page'       => $page,
             'contain'    => [
                 'SpecialKeyResult' => [
                     //KeyResultは期限が今期内

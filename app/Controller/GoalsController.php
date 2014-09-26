@@ -123,4 +123,20 @@ class GoalsController extends AppController
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
     }
+
+    public function ajax_get_more_index_items()
+    {
+        $this->_ajaxPreProcess();
+        $goals = $this->Goal->getAllGoals(20, $this->request->params);
+        $this->set(compact('goals'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Goal/index_items');
+        $html = $response->__toString();
+        $result = array(
+            'html' => $html
+        );
+        return $this->_ajaxGetResponse($result);
+    }
 }
