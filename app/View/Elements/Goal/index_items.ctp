@@ -25,6 +25,8 @@
         </div>
         <div class="col col-xxs-10">
             <div class="col col-xxs-12">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
+                   class="modal-ajax-get pull-right"><?= __d('gl', "詳細を見る") ?></a>
                 <? if (empty($goal['SpecialKeyResult'])): ?>
                     <?= __d('gl', "ゴール未設定") ?>
                 <? else: ?>

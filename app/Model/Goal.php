@@ -254,6 +254,47 @@ class Goal extends AppModel
     }
 
     /**
+     * ゴール単独取得
+     *
+     * @param $id
+     *
+     * @return array
+     */
+    function getGoal($id)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $id,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+            ]
+        ];
+        $res = $this->find('first', $options);
+        $res['Goal']['progress'] = $this->getProgress($res);
+
+        return $res;
+    }
+
+    /**
      * 全てのゴール取得
      *
      * @param int  $limit
