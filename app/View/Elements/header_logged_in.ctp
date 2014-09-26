@@ -23,13 +23,14 @@
                         <img src="<?= $this->Html->url('/img/goalous.png') ?>"
                              class="header-logo"
                              alt="Goalous2.0" width="20px" height="20px">&nbsp;
-                        <p class="font_11px header_icon-text hidden-xs header-link-home header-link"><?= __d('gl',
-                                                                                                             "ホーム") ?></p>
+                        <p class="font_11px header_icon-text hidden-xs header-link-home header-link"><?=
+                            __d('gl',
+                                "ホーム") ?></p>
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
-                <li><a href="#" class="header-goal develop--forbiddenLink">
-                        <i class="fa fa-flag header-link header-icon">
+                <li><a class="header-goal" href="<?= $this->Html->url(['controller' => 'goals']) ?>">
+                    <i class="fa fa-flag header-link header-icon">
                             <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "ゴール") ?></p>
                         </i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
@@ -96,12 +97,10 @@
                         <? endif; ?>
                         <li><a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>"><i
                                     class="fa fa-users header-drop-icons"></i><?= __d('gl', 'チームを作成') ?></a></li>
-                        <!--TODO ゴール作成機能が完成するまでコメントアウト-->
-                        <!--                        <li><a href="-->
-                        <? //= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?><!--"><i-->
-                        <!--                                    class="fa fa-flag header-drop-icons"></i>-->
-                        <? //= __d('gl', 'ゴールを作成') ?><!--</a></li>-->
-                        <!---->
+                        <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"><i
+                                    class="fa fa-flag header-drop-icons"></i>
+                                <?= __d('gl', 'ゴールを作成') ?></a></li>
+
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
