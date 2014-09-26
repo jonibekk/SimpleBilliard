@@ -50,6 +50,19 @@ class GoalsControllerTest extends ControllerTestCase
         'app.key_result_user',
     );
 
+    function testIndex()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => 'test'
+        ];
+        $Goals->Goal->save($goal_data);
+
+        $this->testAction('/goals/index', ['method' => 'GET']);
+    }
+
     function testAdd()
     {
         $Goals = $this->_getGoalsCommonMock();
