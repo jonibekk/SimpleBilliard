@@ -18,6 +18,50 @@
             <h4 class="modal-title"><?= __d('gl', "ゴール概要") ?></h4>
         </div>
         <div class="modal-body modal-circle-body">
+            <div class="col col-xxs-12">
+                <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'x_large']) ?>">
+            </div>
+            <div class="col col-xxs-12">
+                <? if (!empty($goal['SpecialKeyResult'])): ?>
+                    <b><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
+                <? else: ?>
+                    <?= __d('gl', "ゴールなし") ?>
+                <?endif; ?>
+            </div>
+            <div class="col col-xxs-12">
+                <?= $goal['Goal']['purpose'] ?>
+            </div>
+            <div class="col col-xxs-12">
+                <!-- アクション、フォロワー -->
+            </div>
+            <div class="col col-xxs-12">
+                <div><?= __d('gl', "リーダー") ?></div>
+                <? if (isset($goal['SpecialKeyResult'][0]['Leader'][0]['User'])): ?>
+                    <img src="<?=
+                    $this->Upload->uploadUrl($goal['SpecialKeyResult'][0]['Leader'][0]['User'],
+                                             'User.photo', ['style' => 'small']) ?>"
+                         style="width:32px;height: 32px;">
+                    <?= h($goal['SpecialKeyResult'][0]['Leader'][0]['User']['display_username']) ?>
+                <? endif; ?>
+            </div>
+            <div class="col col-xxs-12">
+                <div><?= __d('gl', "コラボレータ") ?></div>
+                <? if (isset($goal['SpecialKeyResult'][0]['Collaborator']) && !empty($goal['SpecialKeyResult'][0]['Collaborator'])): ?>
+                    <? foreach ($goal['SpecialKeyResult'][0]['Collaborator'] as $collabo): ?>
+                        <img src="<?=
+                        $this->Upload->uploadUrl($collabo['User'],
+                                                 'User.photo', ['style' => 'small']) ?>"
+                             style="width:32px;height: 32px;" alt="<?= h($collabo['User']['display_username']) ?>"
+                             title="<?= h($collabo['User']['display_username']) ?>">
+                    <? endforeach ?>
+                <? else: ?>
+                    <?= __d('gl', "なし") ?>
+                <?endif; ?>
+
+
+            </div>
+
+
             <? $this->log($goal) ?>
         </div>
 

@@ -272,11 +272,23 @@ class Goal extends AppModel
             'contain'    => [
                 'SpecialKeyResult' => [
                     //KeyResultは期限が今期内
-                    'conditions' => [
+                    'conditions'   => [
                         'SpecialKeyResult.special_flg'   => true,
                         'SpecialKeyResult.start_date >=' => $start_date,
                         'SpecialKeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+                    'Leader'       => [
+                        'conditions' => ['Leader.type' => KeyResultUser::TYPE_OWNER],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                    'Collaborator' => [
+                        'conditions' => ['Collaborator.type' => KeyResultUser::TYPE_COLLABORATOR],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -286,6 +298,9 @@ class Goal extends AppModel
                         'KeyResult.end_date <'    => $end_date,
                     ]
                 ],
+                'User'             => [
+                    'fields' => $this->User->profileFields,
+                ]
             ]
         ];
         $res = $this->find('first', $options);
