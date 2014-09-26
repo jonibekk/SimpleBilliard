@@ -3,9 +3,18 @@
     padding-left: 0;
     padding-right: 0;
 }
+.navbar-toggle {
+    margin-top: 6px;
+    margin-right: 0;
+}
+.dropdown-menu li a {
+    color: #231814;
+}
+.panel-body {
+    padding: 10px 11px;
+}
 
 /*==/ normalize bootstrap ===*/
-
 
 body {
     background: #e5e5e5;
@@ -16,6 +25,7 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
+
 
 footer {
     margin: 2em 0;
@@ -33,6 +43,7 @@ footer p {
 }
 
 /*=== 全体的な設定 ===*/
+
 .container {
     width: 93.75%;
 }
@@ -85,6 +96,20 @@ footer p {
 
 /*/行数の指定*/
 
+/*position*/
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+/*/position*/
+
 /*Fontの指定*/
 .font_11px {
     font-size: 11px;
@@ -128,7 +153,11 @@ footer p {
 
 /*/Fontの指定*/
 
-/*リンクの設定*/
+/*colorの設定*/
+
+.font-dimgray{
+    color: #696969;
+}
 
 .font_gray-rougeOrange {
     color: #808080;
@@ -150,17 +179,6 @@ footer p {
     color: #ea5e5b;
 }
 
-.font_roseRed {
-    color: #b46d6d;
-}
-
-.font_roseRed:hover,
-.font_roseRed:active,
-.font_roseRed:focus {
-    color: #b46d6d;
-    text-decoration-color: #b46d6d;
-}
-
 .font_lightRed-darkRed {
     color: #d1bab8;
 }
@@ -171,13 +189,17 @@ footer p {
     color: #91170a;
 }
 
-.link-gray {
+.font_heavyGray{
+    color: #505050;
+}
+
+.font_lightGray-gray {
     color: #aaa;
 }
 
-.link-gray:hover,
-.link-gray:active,
-.link-gray:focus {
+.font_lightGray-gray:hover,
+.font_lightGray-gray:active,
+.font_lightGray-gray:focus {
     color: #666;
 }
 
@@ -219,83 +241,107 @@ footer p {
 
 /*==/ 全体的な設定 ===*/
 
+/*==/ モジュール ===*/
+
+/*アイコンを揃える*/
+.line-height_20px {
+    line-height: 20px;
+    vertical-align: middle;
+}
+/*/アイコンを揃える*/
+
+/*切り替えスイッチ*/
+.switch-post, .switch-action, .switch-badge {
+    position: relative;
+}
+
+.switch-arrow {
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 10px solid #fff;
+    position: absolute;
+    left: 10px;
+    bottom: -12px;
+    z-index: 2;
+    visibility: hidden;
+}
+
+.active .switch-arrow {
+    visibility: visible;
+}
+
+/*/切り替えスイッチ*/
+
+/*==/ モジュール ===*/
+
 /*=== headerの設定 ===*/
-.gl-navbar p {
+.header-icon_text{
     margin-bottom: 0;
 }
 
-.gl-navbar {
+.navbar {
+    margin: 0;
     max-height: 48px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
 
-.gl-nav-form-group input, .gl-nav-form-group select {
-    height: 28px !important;
-    font-size: 12px !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-    padding-right: 0 !important;
+.nav-team-select,
+.nav-search {
+    height: 28px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 0;
 }
 
-.gl-nav-form-group input {
+.nav-form-group input {
     padding-left: 27px;
 }
 
-.gl-nav-form-group {
+.nav-form-group {
     position: relative;
     padding: 10px 0;
 }
 
 /*noinspection ALL*/
-.gl-nav-form-group i {
+.nav-form-group i {
     position: absolute;
     font-size: 15px !important;
     padding: 7px 7px;
     pointer-events: none;
 }
 
-.gl-navbar-icons > a {
+.nav-icons > a {
     float: left;
     font-size: 20px;
     padding: 10px 10px;
     color: #000000;
 }
 
-.gl-navbar-icons > .dropdown > a {
+.nav-icons > .dropdown > a {
     float: left;
     font-size: 20px;
     padding: 10px 10px;
     color: #000000;
+}
+
+.nav-icons .header-home {
+    font-size: 12px;
+    line-height: 30px;
+    margin-right: 10px;
+    color: #808080;
 }
 
 /*==/ headerの設定 ===*/
 
-.dropdown-menu li a {
-    color: #231814;
-}
 
-.navbar {
-    margin: 0;
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-    color: #555555;
-    background-color: #fff;
-    border: 1px solid #dddddd;
-    border-bottom-color: transparent;
-    cursor: default;
-}
 
 .panel-default > .panel-heading {
     background-color: #fff;
     padding: 10px 11px;
 }
 
-.panel-body {
-    padding: 10px 11px;
-}
 
 .design-mystatus {
     background: #fff;
@@ -553,7 +599,7 @@ footer p {
     padding-bottom: 9px;
 }
 
-.gl-navbar i {
+.navbar i {
     color: dimgray;
 }
 
@@ -603,14 +649,6 @@ ul.example-indent {
     padding: 10px 11px;
 }
 
-/*
-.gl-feed > div{
-    padding:0;
-}
-.gl-feed > div:not(:first-child) {
-    padding-top: 5px;
-}
-*/
 .feed-share-range {
     background: #e5e5e5;
     border: none;
@@ -928,29 +966,6 @@ ul.gl-input-images > li {
 }
 
 /*/タブで切り替え*/
-/*切り替えスイッチ*/
-.switch-post, .switch-action, .switch-badge {
-    position: relative;
-}
-
-.switch-arrow {
-    width: 0;
-    height: 0;
-    border: 10px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 10px solid #fff;
-    position: absolute;
-    left: 10px;
-    bottom: -12px;
-    z-index: 2;
-    visibility: hidden;
-}
-
-.active .switch-arrow {
-    visibility: visible;
-}
-
-/*/切り替えスイッチ*/
 
 /*メニューなどの▲マーク*/
 .frame-arrow-icon {
@@ -1386,13 +1401,6 @@ ul.gl-input-images > li {
     width: 16px;
 }
 
-.gl-navbar-icons .header-home {
-    font-size: 12px;
-    line-height: 30px;
-    margin-right: 10px;
-    color: #808080;
-}
-
 /*モーダル全体*/
 .modal-body {
     max-height: 324px;
@@ -1458,7 +1466,7 @@ ul.gl-input-images > li {
 /*/キャンセルボタンのデザイン*/
 
 /*ハンバーガー*/
-.gl-nav-team-select, .gl-nav-search {
+.nav-team-select, .nav-search {
     width: 180px;
     margin: auto;
 }
@@ -1475,10 +1483,6 @@ ul.gl-input-images > li {
 
 #gotop-text {
     display: none;
-}
-
-.navbar-toggle {
-    margin-right: 6px;
 }
 
 /* Goal */
@@ -1580,303 +1584,6 @@ ul.gl-input-images > li {
 }
 
 /*/Goal*/
-
-/*メディアクエリで切り替え*/
-/*Extrasmall*/
-@media (min-width: 480px) {
-    .navbar-toggle {
-        margin-right: 15px;
-    }
-
-    .container {
-        width: 97.5%;
-    }
-
-    .gl-nav-container {
-        width: 97.5%;
-    }
-
-    .gl-hamburger {
-        margin-left: 0;
-    }
-
-    .layout-main {
-        padding: 0 0 0 2.5%;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 1px;
-    }
-
-    .circle-name_box {
-        width: 64%;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 80% !important;
-        margin-right: 0;
-    }
-
-    .goal-set-buttons {
-        margin-left: 40%;
-    }
-
-}
-
-/*Small*/
-@media (min-width: 768px) {
-
-    #gotop {
-        position: fixed;
-        bottom: -100px;
-        right: 20px;
-        font-size: 150%;
-        margin: 0;
-    }
-
-    #gotop a {
-        background: #fff;
-        text-decoration: none;
-        color: #ccc;
-        width: 44px;
-        height: 44px;
-        line-height: 44px;
-        padding: 0;
-        text-align: center;
-        display: block;
-        border-radius: 4px;
-        opacity: 0.7;
-        vertical-align: middle;
-    }
-
-    #gotop-text {
-        display: inline-block;
-        position: fixed;
-        bottom: 8px;
-        right: -140px;
-        font-size: 50%;
-        margin: 0;
-    }
-
-    .container {
-        width: 756px;
-    }
-
-    .gl-nav-container {
-        width: 756px;
-    }
-
-    .header-search-group {
-        margin-left: 20px;
-    }
-
-    .navbar-nav > li > .header-logo {
-        padding-left: 4px;
-        padding-right: 10px;
-    }
-
-    .navbar-nav > li > .header-goal,
-    .navbar-nav > li > .header-team {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .header-logo {
-        margin-left: 5px;
-    }
-
-    .header-icon {
-        width: 36px;
-    }
-
-    .gl-nav-team-select {
-        width: 84px;
-        margin-left: 0;
-    }
-
-    .gl-nav-search {
-        width: 180px;
-    }
-
-    .gl-nav-form-icon {
-        margin-left: 0;
-    }
-
-    .circle-name_box {
-        width: 160px;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 19px 0;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 386px !important;
-        margin-right: 4px;
-    }
-
-    .modal-body {
-        max-height: 460px;
-    }
-
-    .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
-        padding: 10px;
-    }
-
-    .circle-link {
-        width: 94%;
-    }
-
-    .goal-set-buttons {
-        margin-left: 46%;
-    }
-
-    .goal-set-input {
-        margin-left: 14px;
-        padding-left: 18px;
-    }
-
-    .line-vertical-sm {
-        border-left: 1px solid #e0e0e0;
-    }
-}
-
-/*Medium*/
-@media (min-width: 992px) {
-    .container {
-        width: 972px;
-    }
-
-    .gl-nav-container {
-        width: 972px;
-    }
-
-    .navbar-nav > li > .header-logo {
-        margin-left: 2px;
-        padding-left: 4px;
-        padding-right: 4px;
-    }
-
-    .gl-nav-search {
-        width: 200px;
-    }
-
-    .navbar-nav > li > .header-goal {
-        padding-left: 4px;
-        margin-left: 16px;
-        padding-right: 4px;
-    }
-
-    .navbar-nav > li > .header-team {
-        padding-left: 4px;
-        margin-left: 16px;
-        padding-right: 4px;
-    }
-
-    .gl-nav-team-select {
-        width: 166px;
-        margin-left: 12px;
-    }
-
-    .header-search-group {
-        margin-left: 98px;
-    }
-
-    .layout-main {
-        padding: 0 10px;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 3px 9px 4px;
-    }
-
-    .layout-goal_padding {
-        padding: 9px 12px;
-    }
-
-    .circle-name_box {
-        width: 100px;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 368px !important;
-    }
-
-    .circle-link {
-        width: 91%;
-    }
-
-    .goal-set-buttons {
-        margin-left: 60%;
-    }
-
-}
-
-/*ExtraMedium*/
-@media (min-width: 1024px) {
-    .container {
-        width: 1008px;
-    }
-
-    .gl-nav-container {
-        width: 1008px;
-    }
-
-    .navbar-nav > li > .header-goal {
-        margin-left: 20px;
-    }
-
-    .navbar-nav > li > .header-team {
-        margin-left: 20px;
-    }
-
-    .gl-nav-team-select {
-        width: 184px;
-        margin-left: 10px;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 5px;
-    }
-
-    .layout-goal_padding {
-        padding: 9px 15px;
-    }
-
-    .circle-name_box {
-        width: 103px;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 386px !important;
-    }
-}
-
-@media (min-width: 1025px) {
-    .header-link {
-        opacity: 0.54;
-    }
-
-    #header .header-icon {
-        color: #505050;
-    }
-
-    .header-profile-icon {
-        opacity: 0.54;
-    }
-
-    #header .header-profile-icon {
-        color: #505050;
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        width: 1008px;
-    }
-}
-
-/*/メディアクエリで切り替え*/
 
 .feed-share-range {
     margin-bottom: 0;
@@ -2021,7 +1728,6 @@ ul.gl-input-images > li {
     background-color: rgba(0, 0, 0, .4);
 }
 
-
 .open {
     margin: 0;
     padding: 0;
@@ -2124,10 +1830,308 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
-.tooltip {
-    position: fixed;
-    z-index: 2000;
+
+
+/*=== メディアクエリで切り替え ===*/
+/*Extrasmall*/
+@media (min-width: 480px) {
+
+    .container {
+        width: 97.5%;
+    }
+
+    .gl-nav-container {
+        width: 97.5%;
+    }
+
+    .gl-hamburger {
+        margin-left: 0;
+    }
+
+    .layout-main {
+        padding: 0 0 0 2.5%;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 1px;
+    }
+
+    .circle-name_box {
+        width: 64%;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 80% !important;
+        margin-right: 0;
+    }
+
+    .goal-set-buttons {
+        margin-left: 40%;
+    }
+
 }
+
+/*Small*/
+@media (min-width: 768px) {
+
+    #gotop {
+        position: fixed;
+        bottom: -100px;
+        right: 20px;
+        font-size: 150%;
+        margin: 0;
+    }
+
+    #gotop a {
+        background: #fff;
+        text-decoration: none;
+        color: #ccc;
+        width: 44px;
+        height: 44px;
+        line-height: 44px;
+        padding: 0;
+        text-align: center;
+        display: block;
+        border-radius: 4px;
+        opacity: 0.7;
+        vertical-align: middle;
+    }
+
+    #gotop-text {
+        display: inline-block;
+        position: fixed;
+        bottom: 8px;
+        right: -140px;
+        font-size: 50%;
+        margin: 0;
+    }
+
+    .container {
+        width: 756px;
+    }
+
+    .gl-nav-container {
+        width: 756px;
+    }
+
+    .header-search-group {
+        margin-left: 20px;
+    }
+
+    .navbar-nav > li > .header-logo {
+        padding-left: 4px;
+        padding-right: 10px;
+    }
+
+    .navbar-nav > li > .header-goal,
+    .navbar-nav > li > .header-team {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .header-logo-img {
+        margin-left: 5px;
+    }
+
+    .header-icon {
+        width: 36px;
+    }
+
+    .nav-team-select {
+        width: 84px;
+        margin-left: 0;
+    }
+
+    .nav-search {
+        width: 180px;
+    }
+
+    .gl-nav-form-icon {
+        margin-left: 0;
+    }
+
+    .circle-name_box {
+        width: 160px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 19px 0;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 386px !important;
+        margin-right: 4px;
+    }
+
+    .modal-body {
+        max-height: 460px;
+    }
+
+    .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
+        padding: 10px;
+    }
+
+    .circle-link {
+        width: 94%;
+    }
+
+    .goal-set-buttons {
+        margin-left: 46%;
+    }
+
+    .goal-set-input {
+        margin-left: 14px;
+        padding-left: 18px;
+    }
+
+    .line-vertical-sm {
+        border-left: 1px solid #e0e0e0;
+    }
+}
+
+/*Medium*/
+@media (min-width: 992px) {
+    .container {
+        width: 972px;
+    }
+
+    .gl-nav-container {
+        width: 972px;
+    }
+
+    .navbar-nav > li > .header-logo {
+        margin-left: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    .nav-search {
+        width: 200px;
+    }
+
+    .navbar-nav > li > .header-goal {
+        padding-left: 4px;
+        margin-left: 16px;
+        padding-right: 4px;
+    }
+
+    .navbar-nav > li > .header-team {
+        padding-left: 4px;
+        margin-left: 16px;
+        padding-right: 4px;
+    }
+
+    .nav-team-select {
+        width: 166px;
+        margin-left: 12px;
+    }
+
+    .header-search-group {
+        margin-left: 98px;
+    }
+
+    .layout-main {
+        padding: 0 10px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 3px 9px 4px;
+    }
+
+    .layout-goal_padding {
+        padding: 9px 12px;
+    }
+
+    .circle-name_box {
+        width: 100px;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 368px !important;
+    }
+
+    .circle-link {
+        width: 91%;
+    }
+
+    .goal-set-buttons {
+        margin-left: 60%;
+    }
+
+}
+
+/*ExtraMedium*/
+@media (min-width: 1024px) {
+    .container {
+        width: 1008px;
+    }
+
+    .gl-nav-container {
+        width: 1008px;
+    }
+
+    .navbar-nav > li > .header-goal {
+        margin-left: 20px;
+    }
+
+    .navbar-nav > li > .header-team {
+        margin-left: 20px;
+    }
+
+    .nav-team-select {
+        width: 184px;
+        margin-left: 10px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 5px;
+    }
+
+    .layout-goal_padding {
+        padding: 9px 15px;
+    }
+
+    .circle-name_box {
+        width: 103px;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 386px !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    .header-link {
+        opacity: 0.54;
+    }
+
+    #header .header-icon {
+        color: #505050;
+    }
+
+    .header-profile-icon {
+        opacity: 0.54;
+    }
+
+    #header .header-profile-icon {
+        color: #505050;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1008px;
+    }
+}
+
+@media (max-width: 767px) {
+    .header-logo {
+        margin-top: 24px;
+    }
+}
+
+/*==/ メディアクエリで切り替え ===*/
+
 
 /* select2 3.5.1 */
 
@@ -2314,9 +2318,6 @@ Temporary Properties - YOU MUST FIX
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.margin-right-8px {
-    margin-right: 8px;
-}
 
 .nailthumb-container img {
     max-width: 100%;
@@ -2335,20 +2336,8 @@ Temporary Properties - YOU MUST FIX
     display: inline-block;
 }
 
-.relative {
-    position: relative;
-}
-
-.absolute {
-    position: absolute;
-}
-
-.fixed {
-    position: fixed;
-}
-
-.z-i-100 {
-    z-index: 100;
+.margin-right-8px {
+    margin-right: 8px;
 }
 
 .required .no-asterisk::after {
@@ -2474,12 +2463,6 @@ Temporary Properties - YOU MUST FIX
     margin: 8px 8px 0 0;
 }
 
-@media (max-width: 767px) {
-    a.header-logo {
-        margin-top: 24px;
-    }
-}
-
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
@@ -2489,7 +2472,6 @@ Temporary Properties - YOU MUST FIX
     padding: 0 4px;
     border: 1px solid #ccc;
     border-radius: 4px;
-/ / background : #fafafa;
 }
 
 .goals-column-fa-caret-down {
@@ -2506,14 +2488,6 @@ Temporary Properties - YOU MUST FIX
 
 /*/== ゴールカラム ===*/
 
-/*=== 汎用的なスタイル ===*/
-/*アイコンを揃える*/
-.line-height_20px {
-    line-height: 20px;
-    vertical-align: middle;
-}
-
-/*/== 汎用的なスタイル ===*/
 
 .box-align {
     margin-right: -1px;
