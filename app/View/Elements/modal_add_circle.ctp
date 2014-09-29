@@ -127,7 +127,7 @@
             <div class="modal-footer addcircle_pannel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <button type="button" class="btn btn-link design-cancel" data-dismiss="modal"><?= __d('gl',
+                        <button type="button" class="btn btn-link design-cancel bd-radius_4px" data-dismiss="modal"><?= __d('gl',
                                                                                                               "キャンセル") ?></button>
                         <?=
                         $this->Form->submit(__d('gl', "サークルを作成"),

@@ -28,11 +28,11 @@
                 <? if (empty($goal['SpecialKeyResult'])): ?>
                     <?= __d('gl', "ゴール未設定") ?>
                 <? else: ?>
-                    <b class="line-numbers ln_2"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
+                    <b class="line-numbers ln_2 font-verydark"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
                 <?endif; ?>
             </div>
             <? if (!empty($goal['SpecialKeyResult'])): ?>
-                <div class="col col-xxs-12">
+                <div class="col col-xxs-12 font-lightgray font_12px">
                     <? if (!empty($goal['SpecialKeyResult'][0]['Leader'])): ?>
                         <?=
                         __d('gl', "リーダー: %s",
@@ -58,14 +58,14 @@
                 </div>
             <? endif; ?>
             <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id')): ?>
-                <div class="col col-xxs-12">
-                    <div class="col col-xxs-6">
-                        <a class="btn btn-white" href="#"><i class="fa fa-heart font_rougeOrange"><span
-                                    style="color: #000000"><?= __d('gl', "フォロー") ?></span></i></a>
+                <div class="col col-xxs-12 mt-5px">
+                    <div class="col col-xxs-4">
+                        <a class="btn btn-purewhite bd-circle_20" href="#"><i class="fa fa-heart font_rougeOrange"><span
+                                    style="color: #000000" class="ml-5px"><?= __d('gl', "フォロー") ?></span></i></a>
                     </div>
-                    <div class="col col-xxs-6">
-                        <a class="btn btn-white" href="#"><i class="fa fa-child font_rougeOrange"><span
-                                    style="color: #000000"><?= __d('gl', "コラボる") ?></span></i></a>
+                    <div class="col col-xxs-4">
+                        <a class="btn btn-purewhite bd-circle_20" href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
+                                    style="color: #000000" class="ml-5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
                     </div>
                 </div>
             <? endif; ?>

@@ -96,7 +96,7 @@
                         $this->Form->submit(__d('gl', "投稿する"),
                                             ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
 
-                        <button type="button" class="btn btn-link post-share-range-button pull-right"
+                        <button type="button" class="btn btn-link post-share-range-button pull-right bd-radius_4px"
                                 id="ChangeShareSelect2" target-id="PostShareInputWrap" show-target-id="PostFormShare">
                             <i class="fa fa-plus link-red post-icon font_normal"></i>&nbsp;<?=
                             __d('gl',
