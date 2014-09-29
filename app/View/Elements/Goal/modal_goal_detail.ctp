@@ -25,7 +25,7 @@
                 <? if (!empty($goal['SpecialKeyResult'])): ?>
                     <b class="font_18px font_verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
                 <? else: ?>
-                    <?= __d('gl', "ゴールなし") ?>
+                    <span class="font_18px"><?= __d('gl', "ゴールが設定されていません") ?></span>
                 <?endif; ?>
             </div>
             <div class="col col-xxs-12 bd-b mb-pb_5px">
