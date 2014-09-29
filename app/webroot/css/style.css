@@ -13,7 +13,6 @@
 .panel-body {
     padding: 10px 11px;
 }
-
 /*==/ normalize bootstrap ===*/
 
 body {
@@ -52,6 +51,11 @@ footer p {
     margin-top: 4px;
 }
 
+.mb_pb-5px{
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
+
 .ml-5px {
     margin-left: 5px;
 }
@@ -63,6 +67,7 @@ footer p {
 .ml-16px {
     margin-left: 16px;
 }
+
 
 /*行数の指定*/
 /*noinspection CssUnknownProperty*/
@@ -254,7 +259,11 @@ footer p {
 }
 /*/アイコンを揃える*/
 
-/* 角丸 */
+/* ボーダー */
+.bd-b{
+    border-bottom: 1px solid #f0f0f0;
+}
+
 .bd-circle{
     border-radius: 50%;
 }
@@ -269,7 +278,7 @@ footer p {
 .bd-radius_4px:target{
     border-radius: 4px;
 }
-/*/ 角丸 */
+/*/  */
 
 /*切り替えスイッチ*/
 .switch-post, .switch-action, .switch-badge {
@@ -1752,6 +1761,10 @@ ul.gl-input-images > li {
 }
 
 /*modalのデザイン*/
+.modal-dialog_300px{
+    width:300px;
+}
+
 .gl-modal-no-margin .modal-body {
     padding: 0;
 }

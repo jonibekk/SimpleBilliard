@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_goal_detail.ctp -->
-<div class="modal-dialog">
+<div class="modal-dialog modal-dialog_300px">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
@@ -23,18 +23,18 @@
             </div>
             <div class="col col-xxs-12">
                 <? if (!empty($goal['SpecialKeyResult'])): ?>
-                    <b><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
+                    <b class="font_18px font-verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
                 <? else: ?>
                     <?= __d('gl', "ゴールなし") ?>
                 <?endif; ?>
             </div>
-            <div class="col col-xxs-12">
+            <div class="col col-xxs-12 bd-b mb_pb-5px">
                 <?= $goal['Goal']['purpose'] ?>
             </div>
             <div class="col col-xxs-12">
                 <!-- アクション、フォロワー -->
             </div>
-            <div class="col col-xxs-12">
+            <div class="col col-xxs-12 bd-b mb_pb-5px">
                 <div><?= __d('gl', "リーダー") ?></div>
                 <? if (isset($goal['SpecialKeyResult'][0]['Leader'][0]['User'])): ?>
                     <img src="<?=
