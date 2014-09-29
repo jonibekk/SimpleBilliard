@@ -15,8 +15,9 @@
 <header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
     <div class="gl-nav-container header-container">
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas" data-target=".navbar-offcanvas" aria-hidden="true">
-                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
+            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
+                    data-target=".navbar-offcanvas" aria-hidden="true">
+            <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
             </button>
             <ul class="nav navbar-nav">
                 <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
@@ -54,7 +55,7 @@
                                                     'id'        => 'SwitchTeam',
                                                     'label'     => false,
                                                     'div'       => false,
-                                                    'class'     => 'form-control nav-team-select font_12px',
+                                                    'class' => 'form-control nav-team-select font_12px disable-change-warning',
                                                     'wrapInput' => false,
                                                 ))
                         ?>
@@ -63,7 +64,9 @@
                 <li class="header-search-group">
                     <form class="nav-form-group" role="search">
                         <i class="fa fa-search gl-nav-form-icon"></i>
-                        <input type="text" class="form-control nav-search font_12px develop--search" placeholder="Search">
+                        <input type="text"
+                               class="form-control nav-search font_12px disable-change-warning develop--search"
+                               placeholder="Search">
                     </form>
                 </li>
                 <li class="circle-list-in-hamburger visible-xxs hidden-xs">
