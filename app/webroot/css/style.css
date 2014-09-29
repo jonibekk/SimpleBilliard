@@ -47,27 +47,26 @@ footer p {
     width: 93.75%;
 }
 
-.mt-5px{
+.mt_5px {
     margin-top: 4px;
 }
 
-.mb_pb-5px{
-    margin-bottom: 5px;
-    padding-bottom: 5px;
-}
-
-.ml-5px {
+.ml_5px {
     margin-left: 5px;
 }
 
-.ml-12px {
+.ml_12px {
     margin-left: 12px;
 }
 
-.ml-16px {
+.ml_16px {
     margin-left: 16px;
 }
 
+.mb-pb_5px {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
 
 /*行数の指定*/
 /*noinspection CssUnknownProperty*/
@@ -148,21 +147,17 @@ footer p {
     font-weight: normal;
 }
 
-.font-lightgray {
+.font_lightgray {
     color: #9197a3;
 }
 
-.font-lightgray:hover {
+.font_lightgray:hover {
     color: #9197a3;
 }
 
-.font-verydark {
+.font_verydark {
     color: #231814;
 }
-
-/*/Fontの指定*/
-
-/*colorの設定*/
 
 .font-dimgray{
     color: #696969;
@@ -246,7 +241,7 @@ footer p {
     text-decoration: none !important;
 }
 
-/*/リンクの設定*/
+/*/fontの設定*/
 
 /*==/ 全体的な設定 ===*/
 

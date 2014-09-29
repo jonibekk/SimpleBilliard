@@ -23,18 +23,18 @@
             </div>
             <div class="col col-xxs-12">
                 <? if (!empty($goal['SpecialKeyResult'])): ?>
-                    <b class="font_18px font-verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
+                    <b class="font_18px font_verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
                 <? else: ?>
                     <?= __d('gl', "ゴールなし") ?>
                 <?endif; ?>
             </div>
-            <div class="col col-xxs-12 bd-b mb_pb-5px">
+            <div class="col col-xxs-12 bd-b mb-pb_5px">
                 <?= $goal['Goal']['purpose'] ?>
             </div>
             <div class="col col-xxs-12">
                 <!-- アクション、フォロワー -->
             </div>
-            <div class="col col-xxs-12 bd-b mb_pb-5px">
+            <div class="col col-xxs-12 bd-b mb-pb_5px">
                 <div><?= __d('gl', "リーダー") ?></div>
                 <? if (isset($goal['SpecialKeyResult'][0]['Leader'][0]['User'])): ?>
                     <img src="<?=
