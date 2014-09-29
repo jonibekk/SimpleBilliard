@@ -49,7 +49,7 @@
                 <?=
                 $this->Form->submit(__d('gl', "変更を保存"),
                                     ['class' => 'btn btn-primary pull-right', 'div' => false /*, 'disabled' => 'disabled'*/]) ?>
-                <button type="button" class="btn btn-link design-cancel margin-right-8px"
+                <button type="button" class="btn btn-link design-cancel margin-right-8px bd-radius_4px"
                         data-dismiss="modal"><?= __d('gl',
                                                                                                       "キャンセル") ?></button>
             <? else: ?>

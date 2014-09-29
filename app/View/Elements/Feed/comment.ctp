@@ -131,7 +131,7 @@
                 <div class="col col-xxs-12">
                     <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
                        class="no-line">
-                        <div class="site-info">
+                        <div class="site-info bd-radius_4px">
                             <div class="media">
                                 <div class="pull-left">
                                     <?=
