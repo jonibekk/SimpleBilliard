@@ -30,7 +30,8 @@
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
-                <li><a class="header-goal" href="<?= $this->Html->url(['controller' => 'goals']) ?>">
+                <li><a class="header-goal"
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                     <i class="fa fa-flag header-link header-icon">
                             <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "ゴール") ?></p>
                         </i>&nbsp;
