@@ -12,6 +12,8 @@
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-2">
+            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
+               class="modal-ajax-get">
             <?=
             $this->Html->image('ajax-loader.gif',
                                [
@@ -21,16 +23,15 @@
                                                                                ['style' => 'medium'])
                                ]
             )
-            ?>
+            ?></a>
         </div>
         <div class="col col-xxs-10">
             <div class="col col-xxs-12">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
-                   class="modal-ajax-get pull-right"><?= __d('gl', "詳細を見る") ?></a>
                 <? if (empty($goal['SpecialKeyResult'])): ?>
                     <?= __d('gl', "ゴール未設定") ?>
                 <? else: ?>
-                    <b class="line-numbers ln_2 font_verydark"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
+                       class="modal-ajax-get"><b class="line-numbers ln_2 font_verydark"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b></a>
                 <?endif; ?>
             </div>
             <? if (!empty($goal['SpecialKeyResult'])): ?>
