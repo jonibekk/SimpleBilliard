@@ -166,4 +166,19 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
+    public function delete_collabo($key_result_user_id)
+    {
+        $this->request->allowMethod('post', 'put');
+        $this->Goal->KeyResult->KeyResultUser->id = $key_result_user_id;
+        if (!$this->Goal->KeyResult->KeyResultUser->exists()) {
+            $this->Pnotify->outError(__('gl', "既にコラボレータから抜けている可能性があります。"));
+        }
+        if (!$this->Goal->KeyResult->KeyResultUser->isOwner($this->Auth->user('id'))) {
+            $this->Pnotify->outError(__('gl', "この操作の権限がありません。"));
+        }
+        $this->Goal->KeyResult->KeyResultUser->delete();
+        $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
+        $this->redirect($this->referer());
+    }
+
 }
