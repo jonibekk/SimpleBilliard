@@ -20,61 +20,61 @@
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
                 <div class="col col-xxs-6">
-                <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128" height="128">
-                    </div>
-                    <div class="col col-xxs-6">
-                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i class="fa fa-heart font_rougeOrange"><span
-                                    style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
-                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
-                                    style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
-                    </div>
+                    <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128"
+                         height="128">
+                </div>
+                <div class="col col-xxs-6">
+                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
+                            class="fa fa-heart font_rougeOrange"><span
+                                style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
+                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
+                            class="fa fa-child font_rougeOrange font_18px"><span
+                                style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
+                </div>
             </div>
-            <div class="col col-xxs-12">
-                <b class="font_18px font_verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
-            </div>
-            <div class="col col-xxs-12 bd-b mb-pb_5px">
-                <?= $goal['Goal']['purpose'] ?>
-            </div>
-            <div class="col col-xxs-12 bd-b mb-pb_5px">
-                <div><?= __d('gl', '程度') ?></div>
-                <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['SpecialKeyResult'][0]['value_unit']]) ?></div>
-                <? if ($goal['SpecialKeyResult'][0]['value_unit'] != KeyResult::UNIT_BINARY): ?>
-                    <div><?= __d('gl', '達成時: %s', $goal['SpecialKeyResult'][0]['target_value']) ?></div>
-                    <div><?= __d('gl', '開始時: %s', $goal['SpecialKeyResult'][0]['start_value']) ?></div>
-                <? endif; ?>
-            </div>
-            <div class="col col-xxs-12">
-                <!-- アクション、フォロワー -->
-            </div>
-            <div class="col col-xxs-12 bd-b mb-pb_5px">
-                <div><?= __d('gl', "リーダー") ?></div>
-                <? if (isset($goal['SpecialKeyResult'][0]['Leader'][0]['User'])): ?>
-                    <img src="<?=
-                    $this->Upload->uploadUrl($goal['SpecialKeyResult'][0]['Leader'][0]['User'],
-                                             'User.photo', ['style' => 'small']) ?>"
-                         style="width:32px;height: 32px;">
-                    <?= h($goal['SpecialKeyResult'][0]['Leader'][0]['User']['display_username']) ?>
-                <? endif; ?>
-            </div>
-            <div class="col col-xxs-12">
-                <div><?= __d('gl', "コラボレータ") ?></div>
-                <? if (isset($goal['SpecialKeyResult'][0]['Collaborator']) && !empty($goal['SpecialKeyResult'][0]['Collaborator'])): ?>
-                    <? foreach ($goal['SpecialKeyResult'][0]['Collaborator'] as $collabo): ?>
+            <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
+                <div class="col col-xxs-12">
+                    <b class="font_18px font_verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
+                </div>
+                <div class="col col-xxs-12 bd-b mb-pb_5px">
+                    <?= $goal['Goal']['purpose'] ?>
+                </div>
+                <div class="col col-xxs-12 bd-b mb-pb_5px">
+                    <div><?= __d('gl', '程度') ?></div>
+                    <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['SpecialKeyResult'][0]['value_unit']]) ?></div>
+                    <? if ($goal['SpecialKeyResult'][0]['value_unit'] != KeyResult::UNIT_BINARY): ?>
+                        <div><?= __d('gl', '達成時: %s', $goal['SpecialKeyResult'][0]['target_value']) ?></div>
+                        <div><?= __d('gl', '開始時: %s', $goal['SpecialKeyResult'][0]['start_value']) ?></div>
+                    <? endif; ?>
+                </div>
+                <div class="col col-xxs-12">
+                    <!-- アクション、フォロワー -->
+                </div>
+                <div class="col col-xxs-12 bd-b mb-pb_5px">
+                    <div><?= __d('gl', "リーダー") ?></div>
+                    <? if (isset($goal['SpecialKeyResult'][0]['Leader'][0]['User'])): ?>
                         <img src="<?=
-                        $this->Upload->uploadUrl($collabo['User'],
+                        $this->Upload->uploadUrl($goal['SpecialKeyResult'][0]['Leader'][0]['User'],
                                                  'User.photo', ['style' => 'small']) ?>"
-                             style="width:32px;height: 32px;" alt="<?= h($collabo['User']['display_username']) ?>"
-                             title="<?= h($collabo['User']['display_username']) ?>">
-                    <? endforeach ?>
-                <? else: ?>
-                    <?= __d('gl', "なし") ?>
-                <?endif; ?>
-
-
-            </div>
-
-
-            <? $this->log($goal) ?>
+                             style="width:32px;height: 32px;">
+                        <?= h($goal['SpecialKeyResult'][0]['Leader'][0]['User']['display_username']) ?>
+                    <? endif; ?>
+                </div>
+                <div class="col col-xxs-12">
+                    <div><?= __d('gl', "コラボレータ") ?></div>
+                    <? if (isset($goal['SpecialKeyResult'][0]['Collaborator']) && !empty($goal['SpecialKeyResult'][0]['Collaborator'])): ?>
+                        <? foreach ($goal['SpecialKeyResult'][0]['Collaborator'] as $collabo): ?>
+                            <img src="<?=
+                            $this->Upload->uploadUrl($collabo['User'],
+                                                     'User.photo', ['style' => 'small']) ?>"
+                                 style="width:32px;height: 32px;" alt="<?= h($collabo['User']['display_username']) ?>"
+                                 title="<?= h($collabo['User']['display_username']) ?>">
+                        <? endforeach ?>
+                    <? else: ?>
+                        <?= __d('gl', "なし") ?>
+                    <?endif; ?>
+                </div>
+            <? endif; ?>
         </div>
 
         <div class="modal-footer">
