@@ -293,6 +293,42 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/edit_collabo', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testDeleteCollaboSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'role'          => 'test',
+            'description'   => 'test',
+            'team_id'       => 1,
+            'user_id'       => 1,
+            'key_result_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->KeyResultUser->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->KeyResultUser->getLastInsertID();
+        $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
+    }
+
+    function testDeleteCollaboFailNotExists()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/delete_collabo/' . 99999, ['method' => 'POST']);
+    }
+
+    function testDeleteCollaboFailNotOwn()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'role'          => 'test',
+            'description'   => 'test',
+            'team_id'       => 1,
+            'user_id'       => 99999,
+            'key_result_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->KeyResultUser->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->KeyResultUser->getLastInsertID();
+        $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**

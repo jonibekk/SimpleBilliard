@@ -311,11 +311,13 @@ class Goal extends AppModel
 
     /**
      * 全てのゴール取得
+
      *
-     * @param int  $limit
+*@param int  $limit
      * @param null $params
+     * @param bool $required_skr
      *
-     * @internal param int $page
+*@internal param int $page
      * @return array
      */
     function getAllGoals($limit = 20, $params = null, $required_skr = true)
