@@ -63,6 +63,7 @@ else {
     echo newrelic_get_browser_timing_footer();
 } ?>
 <?= $this->element('modals') ?>
+<?= $this->fetch('modal') ?>
 <?= $this->element('gl_common_js') ?>
 <?= $this->fetch('script') ?>
 </body>

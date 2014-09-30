@@ -318,7 +318,7 @@ class Goal extends AppModel
      * @internal param int $page
      * @return array
      */
-    function getAllGoals($limit = 20, $params = null)
+    function getAllGoals($limit = 20, $params = null, $required_skr = true)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -370,6 +370,13 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+
+        //skr必須指定の場合はskrが存在しないゴールを除去
+        foreach ($res as $key => $val) {
+            if (isset($val['SpecialKeyResult']) && empty($val['SpecialKeyResult'])) {
+                unset($res[$key]);
+            }
+        }
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
