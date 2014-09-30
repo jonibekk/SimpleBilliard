@@ -3,18 +3,21 @@
     padding-left: 0;
     padding-right: 0;
 }
+
 .navbar-toggle {
     margin-top: 6px;
     margin-right: 0;
 }
+
 .dropdown-menu li a {
     color: #231814;
 }
+
 .panel-body {
     padding: 10px 11px;
 }
-/*==/ normalize bootstrap ===*/
 
+/*==/ normalize bootstrap ===*/
 body {
     background: #e5e5e5;
     padding: 58px 0 0;
@@ -24,7 +27,6 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
-
 
 footer {
     margin: 2em 0;
@@ -42,7 +44,6 @@ footer p {
 }
 
 /*=== 全体的な設定 ===*/
-
 .container {
     width: 93.75%;
 }
@@ -116,6 +117,7 @@ footer p {
 .fixed {
     position: fixed;
 }
+
 /*/position*/
 
 /*Fontの指定*/
@@ -159,7 +161,7 @@ footer p {
     color: #231814;
 }
 
-.font-dimgray{
+.font-dimgray {
     color: #696969;
 }
 
@@ -193,7 +195,7 @@ footer p {
     color: #91170a;
 }
 
-.font_heavyGray{
+.font_heavyGray {
     color: #505050;
 }
 
@@ -252,27 +254,32 @@ footer p {
     line-height: 20px;
     vertical-align: middle;
 }
+
 /*/アイコンを揃える*/
 
 /* ボーダー */
-.bd-b{
+.bd-b {
     border-bottom: 1px solid #f0f0f0;
 }
 
-.bd-circle{
+.bd-circle {
     border-radius: 50%;
 }
-.bd-circle_20{
+
+.bd-circle_20 {
     border-radius: 20% / 50%;
 }
-.bd-radius_4px{
+
+.bd-radius_4px {
     border-radius: 4px;
 }
+
 .bd-radius_4px:hover,
 .bd-radius_4px:active,
-.bd-radius_4px:target{
+.bd-radius_4px:target {
     border-radius: 4px;
 }
+
 /*/  */
 
 /*切り替えスイッチ*/
@@ -302,7 +309,7 @@ footer p {
 /*==/ モジュール ===*/
 
 /*=== headerの設定 ===*/
-.header-icon_text{
+.header-icon_text {
     margin-bottom: 0;
 }
 
@@ -360,13 +367,10 @@ footer p {
 
 /*==/ headerの設定 ===*/
 
-
-
 .panel-default > .panel-heading {
     background-color: #fff;
     padding: 10px 11px;
 }
-
 
 .design-mystatus {
     background: #fff;
@@ -1756,8 +1760,8 @@ ul.gl-input-images > li {
 }
 
 /*modalのデザイン*/
-.modal-dialog_300px{
-    width:300px;
+.modal-dialog_300px {
+    width: 300px;
 }
 
 .gl-modal-no-margin .modal-body {
@@ -1849,8 +1853,6 @@ ul.gl-input-images > li {
     background-color: #fff;
     cursor: pointer;
 }
-
-
 
 /*=== メディアクエリで切り替え ===*/
 /*Extrasmall*/
@@ -2152,7 +2154,6 @@ ul.gl-input-images > li {
 
 /*==/ メディアクエリで切り替え ===*/
 
-
 /* select2 3.5.1 */
 
 .select2-search-field {
@@ -2338,7 +2339,6 @@ Temporary Properties - YOU MUST FIX
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-
 .nailthumb-container img {
     max-width: 100%;
 }
@@ -2506,7 +2506,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 /*/== ゴールカラム ===*/
-
 
 .box-align {
     margin-right: -1px;
