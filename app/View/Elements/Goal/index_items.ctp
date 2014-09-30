@@ -9,7 +9,7 @@
  * @var                    $goals
  */
 ?>
-<!-- START app/View/Goals/index_items.ctp -->
+<!-- START app/View/Elements/Goals/index_items.ctp -->
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-2">
@@ -76,4 +76,4 @@
         </div>
     </div>
 <? endforeach ?>
-<!-- End app/View/Goals/index_items.ctp -->
+<!-- End app/View/Elements/Goals/index_items.ctp -->
