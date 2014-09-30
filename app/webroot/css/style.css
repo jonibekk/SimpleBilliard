@@ -17,6 +17,14 @@
     padding: 10px 11px;
 }
 
+.form-group {
+    margin-bottom: 3px;
+}
+
+.form-horizontal .form-group{
+    margin-right: 0;
+    margin-left: 0;
+}
 /*==/ normalize bootstrap ===*/
 
 /*=== normalize select2 3.5.1 ===*/
@@ -362,6 +370,17 @@ footer p {
 
 /*/fontの設定*/
 
+/*== Modal Settings ==*/
+.modal-label {
+    padding-right: 12px;
+    text-align: right;
+}
+/*=/ Modal Settings ==*/
+
+.form-label{
+    padding-right: 12px;
+}
+
 /*==/ 全体的な設定 ===*/
 
 /*==/ モジュール ===*/
@@ -424,14 +443,6 @@ footer p {
 /*/切り替えスイッチ*/
 
 /*==/ モジュール ===*/
-
-/*=== Modal Settings ===*/
-.modal-label {
-    padding-right: 12px;
-    text-align: right;
-}
-/*==/ Modal Settings ===*/
-
 
 /*=== headerの設定 ===*/
 .header-icon_text {
@@ -617,10 +628,6 @@ footer p {
 .required label:after {
     color: #E00;
     content: " *";
-}
-
-.form-group {
-    margin-bottom: 3px;
 }
 
 .help-block {
