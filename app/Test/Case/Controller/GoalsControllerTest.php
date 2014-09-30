@@ -59,6 +59,21 @@ class GoalsControllerTest extends ControllerTestCase
             'purpose' => 'test'
         ];
         $Goals->Goal->save($goal_data);
+        $key_result_data = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => $Goals->Goal->getLastInsertID(),
+            'name'        => 'test',
+            'special_flg' => true,
+        ];
+        $Goals->Goal->KeyResult->save($key_result_data);
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => 'test'
+        ];
+        $Goals->Goal->create();
+        $Goals->Goal->save($goal_data);
 
         $this->testAction('/goals/index', ['method' => 'GET']);
     }
@@ -299,7 +314,7 @@ class GoalsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Goals->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
