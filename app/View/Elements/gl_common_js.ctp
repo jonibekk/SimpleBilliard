@@ -35,6 +35,18 @@ echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
 $(document).ready(function () {
+    //入力途中での警告表示
+    $("input,select,textarea").change(function () {
+        if (!$(this).hasClass('disable-change-warning')) {
+            $(window).on('beforeunload', function () {
+                return '<?=__d('gl',"入力が途中です。このまま移動しますか？")?>';
+            });
+        }
+    });
+    $("input[type=submit]").click(function () {
+        $(window).off('beforeunload');
+    });
+
     //noinspection JSUnresolvedFunction
     var client = new ZeroClipboard(document.getElementsByClassName('copy_me'));
     //noinspection JSUnusedLocalSymbols
@@ -290,7 +302,7 @@ function evFeedMoreView() {
                 //「もっと読む」リンクを削除
                 $obj.remove();
                 //データが無かった場合はデータ無いよ。を表示
-                $parent.append("<?=__d('gl','これ以上の投稿がありません。')?>");
+                $parent.append("<?=__d('gl','これ以上ありません。')?>");
             }
         },
         error: function () {

@@ -50,6 +50,44 @@ class GoalsControllerTest extends ControllerTestCase
         'app.key_result_user',
     );
 
+    function testIndex()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => 'test'
+        ];
+        $Goals->Goal->save($goal_data);
+
+        $this->testAction('/goals/index', ['method' => 'GET']);
+    }
+
+    function testAjaxGetGoalDetailModal()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => 'test'
+        ];
+        $Goals->Goal->save($goal_data);
+        $goal_id = $Goals->Goal->getLastInsertID();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_goal_detail_modal/' . $goal_id, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMoreIndexItems()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_more_index_items/page:2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAdd()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -162,6 +200,61 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $Goals->getEndMonthLocalDateTime('test');
         $Goals->getEndMonthLocalDateTime(6, 'test');
+        $Goals->getEndMonthLocalDateTime();
+    }
+
+    /**
+     * testDelete method
+     *
+     * @return void
+     */
+    public function testDeleteFail()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('goals/delete/0', ['method' => 'POST']);
+    }
+
+    public function testDeleteNotOwn()
+    {
+        /**
+         * @var UsersController $Goals
+         */
+        $Goals = $this->_getGoalsCommonMock();
+
+        $user_id = 10;
+        $team_id = 1;
+
+        $goal_data = [
+            'Goal' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'purpose' => 'test'
+            ],
+        ];
+        $goal = $Goals->Goal->save($goal_data);
+        $this->testAction('goals/delete/' . $goal['Goal']['id'], ['method' => 'POST']);
+    }
+
+    public function testDeleteSuccess()
+    {
+        /**
+         * @var UsersController $Goals
+         */
+        $Goals = $this->_getGoalsCommonMock();
+
+        $user_id = 1;
+        $team_id = 1;
+
+        $goal_data = [
+            'Goal' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'purpose' => 'test'
+            ],
+        ];
+        $goal = $Goals->Goal->save($goal_data);
+
+        $this->testAction('goals/delete/' . $goal['Goal']['id'], ['method' => 'POST']);
     }
 
     function _getGoalsCommonMock()

@@ -1,6 +1,134 @@
+/*=== normalize bootstrap ===*/
+[class*="col-"] {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.navbar-toggle {
+    margin-top: 6px;
+    margin-right: 0;
+}
+
+.dropdown-menu li a {
+    color: #231814;
+}
+
+.panel-body {
+    padding: 10px 11px;
+}
+
+.form-group {
+    margin-bottom: 3px;
+}
+
+.form-horizontal .form-group{
+    margin-right: 0;
+    margin-left: 0;
+}
+/*==/ normalize bootstrap ===*/
+
+/*=== normalize select2 3.5.1 ===*/
+/* 共通設定 */
+.select2-search-field {
+    background: #fff;
+}
+
+/*/共通設定 */
+/* 共有範囲設定 */
+/*/共有範囲設定 */
+
+.select2-drop {
+    background: #fff;
+}
+
+.select2-results {
+    max-height: 123px;
+}
+
+.select2-results .select2-no-results,
+.select2-results .select2-searching,
+.select2-results .select2-selection-limit {
+    background: #fff;
+    color: #a00;
+    border-top: solid 1px rgba(160, 0, 0, .2);
+    padding-top: 2px;
+}
+
+.select2-results .select2-result-label {
+    height: 21px;
+}
+
+.select2-container-multi .select2-choices {
+    min-height: 24px;
+}
+
+.select2-container-multi .select2-choices .select2-search-choice {
+    height: 18px;
+    margin-top: 0;
+    margin-right: 5px;
+    margin-bottom: 3px;
+    margin-left: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.select2-item-img {
+    display: inline-block;
+    line-height: 1px;
+    vertical-align: baseline;
+}
+
+.select2-item-txt {
+    display: inline-block;
+    font-size: 11px;
+    margin-left: -1px;
+    height: 14px;
+    line-height: 1px;
+    vertical-align: text-bottom;
+    margin-bottom: -3px;
+}
+
+.select2-container-multi .select2-search-choice-close {
+    display: inline-block;
+    line-height: 13px;
+    vertical-align: middle;
+    width: 13px;
+    height: 13px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background-color: #ccc;
+    text-decoration: none;
+    left: auto;
+    right: 4px;
+}
+
+.select2-search-choice-close:hover {
+    background-color: #999;
+    text-decoration: none;
+}
+
+
+.select2-container-multi .select2-choices .select2-search-choice {
+    padding-right: 20px;
+    padding-left: 7px;
+    border-radius: 12px;
+    height: 20px;
+}
+
+.select2-choices li div {
+    line-height: 18px;
+    height: 18px;
+}
+
+.select2-container-multi .select2-choices .select2-search-field input {
+    height: 24px;
+}
+
+/*==/ normalize select2 3.5.1 ===*/
+
 body {
     background: #e5e5e5;
-    padding: 52px 0 0;
+    padding: 58px 0 0;
 }
 
 img {
@@ -23,8 +151,213 @@ footer p {
     margin-bottom: 0;
 }
 
-.dropdown-menu li a {
+/*=== 全体的な設定 ===*/
+.container {
+    width: 93.75%;
+}
+
+.mt_5px {
+    margin-top: 4px;
+}
+
+.mt_16px{
+    margin-top: 16px;
+}
+
+.mr_5px{
+    margin-right: 5px;
+}
+
+.ml_5px {
+    margin-left: 5px;
+}
+
+.ml_12px {
+    margin-left: 12px;
+}
+
+.ml_16px {
+    margin-left: 16px;
+}
+
+.mb-pb_5px {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
+
+.plr_4px{
+    padding-right: 4px;
+    padding-left: 4px;
+}
+.pt_1px{
+    padding-top: 1px;
+}
+.pr_5px{
+    padding-right: 5px;
+}
+.pb_2px{
+    padding-bottom: 2px;
+}
+/*行数の指定*/
+/*noinspection CssUnknownProperty*/
+.line-numbers {
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -o-box;
+    display: -ms-box;
+    box-orient: vertical;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -o-box-orient: vertical;
+    -ms-box-orient: vertical;
+}
+
+.ln_1 {
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+    -moz-line-clamp: 1;
+    -o-line-clamp: 1;
+    -ms-line-clamp: 1;
+}
+
+.ln_2 {
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -moz-line-clamp: 2;
+    -o-line-clamp: 2;
+    -ms-line-clamp: 2;
+}
+
+/*/行数の指定*/
+
+/*position*/
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+/*/position*/
+
+/*Fontの指定*/
+.font_11px {
+    font-size: 11px;
+}
+
+.font_12px {
+    font-size: 12px;
+}
+
+.font_14px {
+    font-size: 14px;
+}
+
+.font_18px {
+    font-size: 18px;
+}
+
+.font_33px {
+    font-size: 33px;
+}
+
+.font_bold {
+    font-weight: bold;
+}
+
+.font_normal {
+    font-weight: normal;
+}
+
+.font_lightgray {
+    color: #9197a3;
+}
+
+.font_lightgray:hover {
+    color: #9197a3;
+}
+
+.font_verydark {
     color: #231814;
+}
+
+.font-dimgray {
+    color: #696969;
+}
+
+.font_gray-rougeOrange {
+    color: #808080;
+}
+
+.font_gray-rougeOrange:hover,
+.font_gray-rougeOrange:active,
+.font_gray-rougeOrange:focus {
+    color: #ea5e5b;
+}
+
+.font_rougeOrange {
+    color: #ea5e5b;
+}
+
+.font_rougeOrange:hover,
+.font_rougeOrange:active,
+.font_rougeOrange:focus {
+    color: #ea5e5b;
+}
+
+.font_lightRed-darkRed {
+    color: #d1bab8;
+}
+
+.font_lightRed-darkRed:hover,
+.font_lightRed-darkRed:hover,
+.font_lightRed-darkRed:hover {
+    color: #91170a;
+}
+
+.font_heavyGray {
+    color: #505050;
+}
+
+.font_lightGray-gray {
+    color: #aaa;
+}
+
+.font_lightGray-gray:hover,
+.font_lightGray-gray:active,
+.font_lightGray-gray:focus {
+    color: #666;
+}
+
+.link-dark-gray {
+    color: #808080;
+}
+
+.link-dark-gray:hover,
+.link-dark-gray:active,
+.link-dark-gray:focus {
+    color: #505050;
+    text-decoration-color: #505050;
+}
+
+.develop--link-gray a {
+    color: #c1c4c7;
+}
+
+.develop--link-gray a:hover,
+.develop--link-gray a:target,
+.develop--link-gray a:active {
+    color: #b4b8bf;
+
 }
 
 .no-line {
@@ -39,30 +372,143 @@ footer p {
     text-decoration: none !important;
 }
 
+/*/fontの設定*/
+
+/*== Modal Settings ==*/
+.modal-label {
+    padding-right: 12px;
+    text-align: right;
+}
+/*=/ Modal Settings ==*/
+
+.form-label{
+    padding-right: 12px;
+}
+
+/*==/ 全体的な設定 ===*/
+
+/*==/ モジュール ===*/
+
+/*アイコンを揃える*/
+.line-height_20px {
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+/*/アイコンを揃える*/
+
+/* ボーダー */
+.bd-b {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.bd-circle {
+    border-radius: 50%;
+}
+
+.bd-circle_20 {
+    border-radius: 20% / 50%;
+}
+
+.bd-radius_4px {
+    border-radius: 4px;
+}
+
+.bd-radius_4px:hover,
+.bd-radius_4px:active,
+.bd-radius_4px:target {
+    border-radius: 4px;
+}
+
+/*/  */
+
+/*切り替えスイッチ*/
+.switch-post, .switch-action, .switch-badge {
+    position: relative;
+}
+
+.switch-arrow {
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 10px solid #fff;
+    position: absolute;
+    left: 10px;
+    bottom: -12px;
+    z-index: 2;
+    visibility: hidden;
+}
+
+.active .switch-arrow {
+    visibility: visible;
+}
+
+/*/切り替えスイッチ*/
+
+/*==/ モジュール ===*/
+
+/*=== headerの設定 ===*/
+.header-icon_text {
+    margin-bottom: 0;
+}
+
 .navbar {
     margin: 0;
+    max-height: 48px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
 
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-    color: #555555;
-    background-color: #fff;
-    border: 1px solid #dddddd;
-    border-bottom-color: transparent;
-    cursor: default;
+.nav-team-select,
+.nav-search {
+    height: 28px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 0;
 }
 
-.container {
-    width: 93.75%;
+.nav-form-group input {
+    padding-left: 27px;
 }
+
+.nav-form-group {
+    position: relative;
+    padding: 10px 0;
+}
+
+/*noinspection ALL*/
+.nav-form-group i {
+    position: absolute;
+    font-size: 15px !important;
+    padding: 7px 7px;
+    pointer-events: none;
+}
+
+.nav-icons > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 10px;
+    color: #000000;
+}
+
+.nav-icons > .dropdown > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 10px;
+    color: #000000;
+}
+
+.nav-icons .header-home {
+    font-size: 12px;
+    line-height: 30px;
+    margin-right: 10px;
+    color: #808080;
+}
+
+/*==/ headerの設定 ===*/
 
 .panel-default > .panel-heading {
     background-color: #fff;
-    padding: 10px 11px;
-}
-
-.panel-body {
     padding: 10px 11px;
 }
 
@@ -83,7 +529,6 @@ footer p {
     padding: 9px;
     background-color: #f7f7f9;
     border: 1px solid #e1e1e8;
-    border-radius: 4px;
     color: #231814;
 }
 
@@ -111,26 +556,6 @@ footer p {
 }
 
 /*/幅指定*/
-/*Fontの指定*/
-.font-size_11 {
-    font-size: 11px;
-}
-
-.font-size_12 {
-    font-size: 12px;
-}
-
-.font-size_14 {
-    font-size: 14px;
-}
-
-.font-size_18 {
-    font-size: 18px;
-}
-
-.font-size_33 {
-    font-size: 33px;
-}
 
 .modal-content > .modal-header > .close-design {
     width: 33px;
@@ -143,62 +568,12 @@ footer p {
     vertical-align: top;
 }
 
-.font-weight_bold {
-    font-weight: bold;
-}
-
-.font-lightgray {
-    color: #9197a3;
-}
-
-.font-lightgray:hover {
-    color: #9197a3;
-}
-
-.font-verydark {
-    color: #231814;
-}
-
-/*/Fontの指定*/
-/*
-.link-red{
-    color: #d9230f;
-}
-.link-red:hover{
-    color: #91170a;
-}
-*/
-.link-rose-red {
-    color: #b46d6d;
-}
-
-.link-rose-red:hover,
-.link-rose-red:active,
-.link-rose-red:focus {
-    color: #b46d6d;
-    text-decoration-color: #b46d6d;
-}
-
 .liked {
     color: #e78e99;
 }
 
 .liked:hover {
     color: #e78e99;
-}
-
-.font-weight_normal {
-    font-weight: normal;
-}
-
-.link-light-red {
-    color: #d1bab8;
-}
-
-.link-light-red:hover,
-.link-light-red:hover,
-.link-light-red:hover {
-    color: #91170a;
 }
 
 .gl-feed-text a {
@@ -222,39 +597,9 @@ footer p {
     color: #d9230f;
 }
 
-.link-gray {
-    color: #aaa;
-}
-
-.link-gray:hover,
-.link-gray:active,
-.link-gray:focus {
-    color: #666;
-}
-
-.link-dark-gray {
-    color: #808080;
-}
-
-.link-dark-gray:hover,
-.link-dark-gray:active,
-.link-dark-gray:focus {
-    color: #505050;
-    text-decoration-color: #505050;
-}
-
 .zeroclipboard-is-hover {
     color: #fff !important;
     background: #d9230f !important;
-}
-
-.develop--link-gray a {
-    color: #c1c4c7;
-}
-
-.develop--link-gray a:hover {
-    color: #b4b8bf;
-
 }
 
 .gl-feed-arrow,
@@ -289,10 +634,6 @@ footer p {
     content: " *";
 }
 
-.form-group {
-    margin-bottom: 3px;
-}
-
 .help-block {
     margin-top: 2px;
     margin-bottom: 5px;
@@ -320,18 +661,6 @@ footer p {
 
 .color-blue {
     color: #2E8DEF;
-}
-
-/*@media (min-width: 768px) {*/
-/*.container {*/
-/*width: 960px;*/
-
-/*}*/
-/*}*/
-
-[class*="col-"] {
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 .feed-share-range .col {
@@ -373,22 +702,12 @@ footer p {
     }
 }
 
-.gl-navbar-icons > a {
-    float: left;
-    font-size: 20px;
-    padding: 6px 10px;
-    color: #000000;
-}
-
-.gl-navbar-icons > .dropdown > a {
-    float: left;
-    font-size: 20px;
-    padding: 6px 10px;
-    color: #000000;
-}
-
 .left-inner-addon {
     position: relative;
+}
+
+.header-link-home {
+    line-height: 9px;
 }
 
 .left-inner-addon input {
@@ -444,32 +763,7 @@ footer p {
     padding-bottom: 9px;
 }
 
-.gl-nav-form-group input, .gl-nav-form-group select {
-    height: 28px !important;
-    font-size: 12px !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-    padding-right: 0 !important;
-}
-
-.gl-nav-form-group input {
-    padding-left: 27px;
-}
-
-.gl-nav-form-group {
-    position: relative;
-    padding: 6px 0;
-}
-
-/*noinspection ALL*/
-.gl-nav-form-group i {
-    position: absolute;
-    font-size: 15px !important;
-    padding: 7px 7px;
-    pointer-events: none;
-}
-
-.gl-navbar i {
+.navbar i {
     color: dimgray;
 }
 
@@ -519,14 +813,6 @@ ul.example-indent {
     padding: 10px 11px;
 }
 
-/*
-.gl-feed > div{
-    padding:0;
-}
-.gl-feed > div:not(:first-child) {
-    padding-top: 5px;
-}
-*/
 .feed-share-range {
     background: #e5e5e5;
     border: none;
@@ -553,10 +839,6 @@ ul.example-indent {
 
 .gl-feed-text {
     padding: 10px 0 0 0;
-    margin-right: -1px;
-    margin-left: -1px;
-    border-left: 1px solid rgba(0, 0, 0, 0);
-    border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
 .gl-feed-picture {
@@ -848,29 +1130,6 @@ ul.gl-input-images > li {
 }
 
 /*/タブで切り替え*/
-/*切り替えスイッチ*/
-.switch-post, .switch-action, .switch-badge {
-    position: relative;
-}
-
-.switch-arrow {
-    width: 0;
-    height: 0;
-    border: 10px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 10px solid #fff;
-    position: absolute;
-    left: 10px;
-    bottom: -12px;
-    z-index: 2;
-    visibility: hidden;
-}
-
-.active .switch-arrow {
-    visibility: visible;
-}
-
-/*/切り替えスイッチ*/
 
 /*メニューなどの▲マーク*/
 .frame-arrow-icon {
@@ -1007,7 +1266,6 @@ ul.gl-input-images > li {
     margin: 6px;
     background: #f9f9f9;
     border: 1px solid #ccc;
-    border-radius: 4px;
     color: #777;
 }
 
@@ -1018,7 +1276,6 @@ ul.gl-input-images > li {
     text-decoration: solid;
     background: #f9f9f9;
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-image: none;
     box-shadow: none;
 }
@@ -1298,18 +1555,12 @@ ul.gl-input-images > li {
 
 .header-icon {
     width: 22px;
+    height: 20px;
     text-align: center;
 }
 
 .header-profile-icon {
     width: 16px;
-}
-
-.gl-navbar-icons .header-home {
-    font-size: 12px;
-    line-height: 30px;
-    margin-right: 10px;
-    color: #808080;
 }
 
 /*モーダル全体*/
@@ -1350,7 +1601,6 @@ ul.gl-input-images > li {
 /*キャンセルボタンのデザイン*/
 .design-cancel {
     border: 1px solid #ccc;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #777;
@@ -1359,7 +1609,6 @@ ul.gl-input-images > li {
 .design-cancel:target,
 .design-cancel:hover {
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #231814;
@@ -1377,7 +1626,7 @@ ul.gl-input-images > li {
 /*/キャンセルボタンのデザイン*/
 
 /*ハンバーガー*/
-.gl-nav-team-select, .gl-nav-search {
+.nav-team-select, .nav-search {
     width: 180px;
     margin: auto;
 }
@@ -1388,16 +1637,12 @@ ul.gl-input-images > li {
 
 /*/ハンバーガー*/
 
-.navbar-nav .font-size_14 {
+.navbar-nav .font_14px {
     font-size: 14px;
 }
 
 #gotop-text {
     display: none;
-}
-
-.navbar-toggle {
-    margin-right: 6px;
 }
 
 /* Goal */
@@ -1433,7 +1678,6 @@ ul.gl-input-images > li {
 
 .btn-white {
     border: 1px solid #ccc;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #777;
@@ -1442,7 +1686,6 @@ ul.gl-input-images > li {
 .btn-white:target,
 .btn-white:hover {
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #231814;
@@ -1451,7 +1694,6 @@ ul.gl-input-images > li {
 
 .btn-purewhite {
     border: 1px solid #ccc;
-    border-radius: 4px;
     background-color: #fff;
     background-image: none;
     color: #777;
@@ -1460,7 +1702,6 @@ ul.gl-input-images > li {
 .btn-purewhite:target,
 .btn-purewhite:hover {
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-color: #fff;
     background-image: none;
     color: #231814;
@@ -1499,291 +1740,6 @@ ul.gl-input-images > li {
 }
 
 /*/Goal*/
-
-/*メディアクエリで切り替え*/
-/*Extrasmall*/
-@media (min-width: 480px) {
-    .navbar-toggle {
-        margin-right: 15px;
-    }
-
-    .container {
-        width: 97.5%;
-    }
-
-    .gl-nav-container {
-        width: 97.5%;
-    }
-
-    .gl-hamburger {
-        margin-left: 0;
-    }
-
-    .layout-main {
-        padding: 0 0 0 2.5%;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 1px;
-    }
-
-    .circle-name_box {
-        width: 64%;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 80% !important;
-        margin-right: 0;
-    }
-
-    .goal-set-buttons {
-        margin-left: 40%;
-    }
-
-}
-
-/*Small*/
-@media (min-width: 768px) {
-
-    #gotop {
-        position: fixed;
-        bottom: -100px;
-        right: 20px;
-        font-size: 150%;
-        margin: 0;
-    }
-
-    #gotop a {
-        background: #fff;
-        text-decoration: none;
-        color: #ccc;
-        width: 44px;
-        height: 44px;
-        line-height: 44px;
-        padding: 0;
-        text-align: center;
-        display: block;
-        border-radius: 4px;
-        opacity: 0.7;
-        vertical-align: middle;
-    }
-
-    #gotop-text {
-        display: inline-block;
-        position: fixed;
-        bottom: 8px;
-        right: -140px;
-        font-size: 50%;
-        margin: 0;
-    }
-
-    .container {
-        width: 756px;
-    }
-
-    .gl-nav-container {
-        width: 756px;
-    }
-
-    .header-search-group {
-        margin-left: 20px;
-    }
-
-    .navbar-nav > li > .header-logo {
-        padding-left: 4px;
-        padding-right: 10px;
-    }
-
-    .navbar-nav > li > .header-goal,
-    .navbar-nav > li > .header-team {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .gl-nav-team-select {
-        width: 112px;
-        margin-left: 10px;
-    }
-
-    .gl-nav-search {
-        width: 200px;
-    }
-
-    .gl-nav-form-icon {
-        margin-left: 0;
-    }
-
-    .circle-name_box {
-        width: 160px;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 19px 0;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 386px !important;
-        margin-right: 4px;
-    }
-
-    .modal-body {
-        max-height: 460px;
-    }
-
-    .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
-        padding: 10px;
-    }
-
-    .circle-link {
-        width: 94%;
-    }
-
-    .goal-set-buttons {
-        margin-left: 46%;
-    }
-
-    .goal-set-input {
-        margin-left: 14px;
-        padding-left: 18px;
-    }
-
-    .line-vertical-sm {
-        border-left: 1px solid #e0e0e0;
-    }
-}
-
-/*Medium*/
-@media (min-width: 992px) {
-    .container {
-        width: 972px;
-    }
-
-    .gl-nav-container {
-        width: 972px;
-    }
-
-    .navbar-nav > li > .header-logo {
-        margin-left: 2px;
-        padding-left: 4px;
-        padding-right: 4px;
-    }
-
-    .navbar-nav > li > .header-goal {
-        padding-left: 4px;
-        margin-left: 30px;
-        padding-right: 4px;
-    }
-
-    .navbar-nav > li > .header-team {
-        padding-left: 4px;
-        margin-left: 30px;
-        padding-right: 4px;
-    }
-
-    .gl-nav-team-select {
-        width: 166px;
-        margin-left: 12px;
-    }
-
-    .header-search-group {
-        margin-left: 98px;
-    }
-
-    .layout-main {
-        padding: 0 10px;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 3px 9px 4px;
-    }
-
-    .layout-goal_padding {
-        padding: 9px 12px;
-    }
-
-    .circle-name_box {
-        width: 100px;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 368px !important;
-    }
-
-    .circle-link {
-        width: 91%;
-    }
-
-    .goal-set-buttons {
-        margin-left: 60%;
-    }
-
-}
-
-/*ExtraMedium*/
-@media (min-width: 1024px) {
-    .container {
-        width: 1008px;
-    }
-
-    .gl-nav-container {
-        width: 1008px;
-    }
-
-    .navbar-nav > li > .header-goal {
-        margin-left: 34px;
-    }
-
-    .navbar-nav > li > .header-team {
-        margin-left: 34px;
-    }
-
-    .gl-nav-team-select {
-        width: 184px;
-        margin-left: 10px;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 5px;
-    }
-
-    .layout-goal_padding {
-        padding: 9px 15px;
-    }
-
-    .circle-name_box {
-        width: 103px;
-    }
-
-    .gl-s2-post-dropdown {
-        width: 386px !important;
-    }
-}
-
-@media (min-width: 1025px) {
-    .header-link {
-        opacity: 0.54;
-    }
-
-    #header .header-icon {
-        color: #505050;
-    }
-
-    .header-profile-icon {
-        opacity: 0.54;
-    }
-
-    #header .header-profile-icon {
-        color: #505050;
-    }
-}
-
-@media (min-width: 1200px) {
-    .container {
-        width: 1008px;
-    }
-}
-
-/*/メディアクエリで切り替え*/
 
 .feed-share-range {
     margin-bottom: 0;
@@ -1928,10 +1884,6 @@ ul.gl-input-images > li {
     background-color: rgba(0, 0, 0, .4);
 }
 
-.gl-navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
-}
-
 .open {
     margin: 0;
     padding: 0;
@@ -1944,6 +1896,10 @@ ul.gl-input-images > li {
 }
 
 /*modalのデザイン*/
+.modal-dialog_300px {
+    width: 300px;
+}
+
 .gl-modal-no-margin .modal-body {
     padding: 0;
 }
@@ -2034,121 +1990,306 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
-.tooltip {
-    position: fixed;
-    z-index: 2000;
+/*=== メディアクエリで切り替え ===*/
+/*Extrasmall*/
+@media (min-width: 480px) {
+
+    .container {
+        width: 97.5%;
+    }
+
+    .gl-nav-container {
+        width: 97.5%;
+    }
+
+    .gl-hamburger {
+        margin-left: 0;
+    }
+
+    .layout-main {
+        padding: 0 0 0 2.5%;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 1px;
+    }
+
+    .circle-name_box {
+        width: 64%;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 80% !important;
+        margin-right: 0;
+    }
+
+    .goal-set-buttons {
+        margin-left: 40%;
+    }
+
 }
 
-/* select2 3.5.1 */
+/*Small*/
+@media (min-width: 768px) {
 
-.select2-search-field {
-    background: #fff;
+    #gotop {
+        position: fixed;
+        bottom: -100px;
+        right: 20px;
+        font-size: 150%;
+        margin: 0;
+    }
+
+    #gotop a {
+        background: #fff;
+        text-decoration: none;
+        color: #ccc;
+        width: 44px;
+        height: 44px;
+        line-height: 44px;
+        padding: 0;
+        text-align: center;
+        display: block;
+        border-radius: 4px;
+        opacity: 0.7;
+        vertical-align: middle;
+    }
+
+    #gotop-text {
+        display: inline-block;
+        position: fixed;
+        bottom: 8px;
+        right: -140px;
+        font-size: 50%;
+        margin: 0;
+    }
+
+    .container {
+        width: 756px;
+    }
+
+    .gl-nav-container {
+        width: 756px;
+    }
+
+    .header-search-group {
+        margin-left: 20px;
+    }
+
+    .navbar-nav > li > .header-logo {
+        padding-left: 4px;
+        padding-right: 10px;
+    }
+
+    .navbar-nav > li > .header-goal,
+    .navbar-nav > li > .header-team {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .header-logo-img {
+        margin-left: 5px;
+    }
+
+    .header-icon {
+        width: 36px;
+    }
+
+    .nav-team-select {
+        width: 84px;
+        margin-left: 0;
+    }
+
+    .nav-search {
+        width: 180px;
+    }
+
+    .gl-nav-form-icon {
+        margin-left: 0;
+    }
+
+    .circle-name_box {
+        width: 160px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 19px 0;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 386px !important;
+        margin-right: 4px;
+    }
+
+    .modal-body {
+        max-height: 460px;
+    }
+
+    .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
+        padding: 10px;
+    }
+
+    .circle-link {
+        width: 94%;
+    }
+
+    .goal-set-buttons {
+        margin-left: 46%;
+    }
+
+    .goal-set-input {
+        margin-left: 14px;
+        padding-left: 18px;
+    }
+
+    .line-vertical-sm {
+        border-left: 1px solid #e0e0e0;
+    }
 }
 
-.select2-drop {
-    background: #fff;
+/*Medium*/
+@media (min-width: 992px) {
+    .container {
+        width: 972px;
+    }
+
+    .gl-nav-container {
+        width: 972px;
+    }
+
+    .navbar-nav > li > .header-logo {
+        margin-left: 2px;
+        padding-left: 2px;
+        padding-right: 3px;
+    }
+
+    .nav-search {
+        width: 200px;
+    }
+
+    .navbar-nav > li > .header-goal {
+        padding-left: 2px;
+        margin-left: 16px;
+        padding-right: 3px;
+    }
+
+    .navbar-nav > li > .header-team {
+        padding-left: 2px;
+        margin-left: 16px;
+        padding-right: 3px;
+    }
+
+    .nav-team-select {
+        width: 166px;
+        margin-left: 12px;
+    }
+
+    .header-search-group {
+        margin-left: 98px;
+    }
+
+    .layout-main {
+        padding: 0 10px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 3px 9px 4px;
+    }
+
+    .layout-goal_padding {
+        padding: 9px 12px;
+    }
+
+    .circle-name_box {
+        width: 100px;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 368px !important;
+    }
+
+    .circle-link {
+        width: 91%;
+    }
+
+    .goal-set-buttons {
+        margin-left: 60%;
+    }
+
 }
 
-.select2-results .select2-no-results,
-.select2-results .select2-searching,
-.select2-results .select2-selection-limit {
-    background: #fff;
-    color: #a00;
-    border-top: solid 1px rgba(160, 0, 0, .2);
-    padding-top: 2px;
+/*ExtraMedium*/
+@media (min-width: 1024px) {
+    .container {
+        width: 1008px;
+    }
+
+    .gl-nav-container {
+        width: 1008px;
+    }
+
+    .navbar-nav > li > .header-goal {
+        margin-left: 20px;
+    }
+
+    .navbar-nav > li > .header-team {
+        margin-left: 20px;
+    }
+
+    .nav-team-select {
+        width: 184px;
+        margin-left: 10px;
+    }
+
+    .layout-sub_padding {
+        padding: 9px 5px;
+    }
+
+    .layout-goal_padding {
+        padding: 9px 15px;
+    }
+
+    .circle-name_box {
+        width: 103px;
+    }
+
+    .gl-s2-post-dropdown {
+        width: 386px !important;
+    }
 }
 
-.select2-results {
-    max-height: 123px;
+@media (min-width: 1025px) {
+    .header-link {
+        opacity: 0.54;
+    }
+
+    #header .header-icon {
+        color: #505050;
+    }
+
+    .header-profile-icon {
+        opacity: 0.54;
+    }
+
+    #header .header-profile-icon {
+        color: #505050;
+    }
 }
 
-.select2-results .select2-result-label {
-    height: 21px;
+@media (min-width: 1200px) {
+    .container {
+        width: 1008px;
+    }
 }
 
-.select2-container-multi .select2-choices .select2-search-choice {
-    height: 18px;
-    margin-top: 0;
-    margin-bottom: 3px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    margin-right: 5px;
-    margin-left: 0;
+@media (max-width: 767px) {
+    .header-logo {
+        margin-top: 24px;
+    }
 }
 
-.select2-container-multi .select2-choices .select2-search-field input {
-    height: 24px;
-}
+/*==/ メディアクエリで切り替え ===*/
 
-.select2-container-multi .select2-choices {
-    min-height: 24px;
-}
-
-/*共有範囲の画像とテキスト*/
-.select2-item-img {
-    display: inline-block;
-    line-height: 1px;
-    vertical-align: baseline;
-}
-
-.select2-item-txt {
-    display: inline-block;
-    font-size: 11px;
-    margin-left: -1px;
-    height: 14px;
-    line-height: 1px;
-    vertical-align: text-bottom;
-    margin-bottom: -3px;
-}
-
-.select2-search-choice-close {
-    display: inline-block;
-    line-height: 13px;
-    vertical-align: middle;
-    text-decoration: none !important;
-    width: 13px;
-    height: 13px;
-    margin-top: -6px;
-}
-
-/*/共有範囲の画像とテキスト*/
-
-.select2-container-multi .select2-search-choice-close {
-    left: auto;
-    right: 4px;
-}
-
-.select2-container-multi .select2-choices .select2-search-choice {
-    padding-right: 20px;
-    padding-left: 7px;
-}
-
-.select2-search-choice-close {
-    border-radius: 50%;
-    background-color: #ccc;
-    text-decoration: none;
-}
-
-.select2-search-choice-close:hover {
-    background-color: #999;
-    text-decoration: none;
-}
-
-.select2-container-multi .select2-choices .select2-search-choice {
-    border-radius: 12px;
-    height: 20px;
-}
-
-.select2-item-img {
-    vertical-align: baseline;
-}
-
-.select2-choices li div {
-    line-height: 18px;
-    height: 18px;
-}
-
-/*/ select2 3.5.1 */
 
 /*=================================
 Temporary Properties - YOU MUST FIX
@@ -2224,10 +2365,6 @@ Temporary Properties - YOU MUST FIX
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.margin-right-8px {
-    margin-right: 8px;
-}
-
 .nailthumb-container img {
     max-width: 100%;
 }
@@ -2245,20 +2382,8 @@ Temporary Properties - YOU MUST FIX
     display: inline-block;
 }
 
-.relative {
-    position: relative;
-}
-
-.absolute {
-    position: absolute;
-}
-
-.fixed {
-    position: fixed;
-}
-
-.z-i-100 {
-    z-index: 100;
+.margin-right-8px {
+    margin-right: 8px;
 }
 
 .required .no-asterisk::after {
@@ -2308,18 +2433,126 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0 7px;
 }
 
-.humbarger-close {
-    margin: 8px 8px 0 0;
+/*=== ゴールカラム ===*/
+.goals-column-head {
+    border-bottom: 1px solid #F0F0F0;
 }
 
-@media (max-width: 767px) {
-    a.header-logo {
-        margin-top: 24px;
-    }
+.goals-column-title {
+/ / margin : 0 0 4 px;
+}
+
+.goals-column-plus-box {
+    margin: 8px 0 0;
+}
+
+.goals-column-add-box {
+    border: 1px dashed #aaa;
+    padding: 0;
+    margin: 2px 0;
+}
+
+.goals-column-add-icon, .goals-column-add-text {
+    width: 100%;
+    text-align: center;
+}
+
+/*/goals-column-empty*/
+.goals-column-empty-box {
+    border: 1px dashed #aaa;
+    padding: 0;
+    margin: 8px 0;
+}
+
+.goals-column-empty-icon, .goals-column-empty-text {
+    width: 100%;
+    text-align: center;
+}
+
+.goals-column-empty-icon {
+    padding: 12px 0 0;
+}
+
+.goals-column-empty-text {
+    padding: 0 0 12px;
+}
+
+/*/goals-column-empty*/
+
+.my-goals-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.my-goals-item:first-child {
+    border-top: 1px solid #ddd;
+}
+
+.my-goals-item:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+.check-status i {
+    margin-right: 2px;
+    text-align: center;
+}
+
+.gl-progress {
+    margin-bottom: 0;
+}
+
+.icon-green {
+    color: green;
+}
+
+.humbarger-close {
+    margin: 8px 8px 0 0;
 }
 
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
+}
 
+.goals-column-function {
+    border: 1px solid #ccc;
+}
+
+.goals-column-fa-caret-down {
+    margin-left: 2px;
+}
+
+.goals-column-purpose {
+    padding-top: 2px;
+}
+
+.goals-column-progress-bar {
+    margin: 6px 0 4px;
+}
+
+/*/== ゴールカラム ===*/
+
+.box-align {
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
+}
+
+.has-success .box-align {
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
+}
+
+.box-align:focus,
+.box-align:active {
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+}
+
+.has-success .box-align:focus,
+.has-success .box-align:active {
+    border-color: rgba(0, 0, 0, 0);
 }

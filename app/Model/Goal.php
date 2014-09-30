@@ -58,7 +58,7 @@ class Goal extends AppModel
                     'x_large'      => '256x256',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image.jpg',
+                'default_url' => 'no-image-goal.jpg',
                 'quality'     => 100,
             ]
         ]
@@ -73,11 +73,6 @@ class Goal extends AppModel
         'purpose' => [
             'notEmpty' => [
                 'rule' => 'notEmpty',
-            ],
-        ],
-        'valued_flg'   => [
-            'boolean' => [
-                'rule' => ['boolean'],
             ],
         ],
         'evaluate_flg' => [
@@ -123,8 +118,15 @@ class Goal extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Post',
-        'KeyResult',
+        'Post'      => [
+            'dependent' => true,
+        ],
+        'KeyResult' => [
+            'dependent' => true,
+        ],
+        'SpecialKeyResult' => [
+            'className' => 'KeyResult'
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -206,6 +208,198 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * 自分のゴール取得
+     *
+     * @return array
+     */
+    function getMyGoals()
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.user_id' => $this->my_uid,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        return $res;
+    }
+
+    /**
+     * ゴール単独取得
+     *
+     * @param $id
+     *
+     * @return array
+     */
+    function getGoal($id)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $id,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions'   => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+                    'Leader'       => [
+                        'conditions' => ['Leader.type' => KeyResultUser::TYPE_OWNER],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                    'Collaborator' => [
+                        'conditions' => ['Collaborator.type' => KeyResultUser::TYPE_COLLABORATOR],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+                'User'             => [
+                    'fields' => $this->User->profileFields,
+                ]
+            ]
+        ];
+        $res = $this->find('first', $options);
+        $res['Goal']['progress'] = $this->getProgress($res);
+
+        return $res;
+    }
+
+    /**
+     * 全てのゴール取得
+     *
+     * @param int  $limit
+     * @param null $params
+     *
+     * @internal param int $page
+     * @return array
+     */
+    function getAllGoals($limit = 20, $params = null)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+
+        $page = 1;
+        if (isset($params['named']['page']) || !empty($params['named']['page'])) {
+            $page = $params['named']['page'];
+            unset($params['named']['page']);
+        }
+        $options = [
+            'conditions' => [
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'order'      => ['Goal.modified desc'],
+            'limit'      => $limit,
+            'page'       => $page,
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions'   => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+                    'Leader'       => [
+                        'conditions' => ['Leader.type' => KeyResultUser::TYPE_OWNER],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                    'Collaborator' => [
+                        'conditions' => ['Collaborator.type' => KeyResultUser::TYPE_COLLABORATOR],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+                'User'             => [
+                    'fields' => $this->User->profileFields,
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        return $res;
+    }
+
+    function getProgress($goal)
+    {
+        if (empty($goal['KeyResult'])) {
+            return 0;
+        }
+        //全体の重要度の合計
+        $total_priority = 0;
+        foreach ($goal['KeyResult'] as $key_result) {
+            $total_priority += $key_result['priority'];
+        }
+
+        //完了のプライオリティを計算
+        $completed_total_priority = 0;
+        foreach ($goal['KeyResult'] as $key_result) {
+            if (!empty($key_result['completed'])) {
+                $completed_total_priority += $key_result['priority'];
+            }
+        }
+        if ($total_priority === 0 || $completed_total_priority === 0) {
+            return 0;
+        }
+        $res = round($completed_total_priority / $total_priority, 2) * 100;
         return $res;
     }
 

@@ -159,13 +159,14 @@
                                                 'label'        => false,
                                                 'div'          => false,
                                                 'css'          => false,
+                                                'style' => 'x_large',
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false
                                                ]) ?>
                         </span>
                             </div>
                         </div>
-                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
+                        <span class="help-block font_11px"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=

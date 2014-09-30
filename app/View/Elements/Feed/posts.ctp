@@ -18,7 +18,7 @@
         <div class="col col-xxs-12 gl-feed-user">
             <div class="pull-right">
                 <div class="dropdown">
-                    <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
+                    <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
                         <i class="fa fa-chevron-down gl-feed-arrow"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
@@ -48,9 +48,9 @@
             <?=
             $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                        ['class' => 'gl-feed-img']) ?>
-            <div class="font-size_14 font-verydark"><?= h($post['User']['display_username']) ?></div>
-            <div class="font-size_11 font-lightgray">
-                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font-lightgray"> ･ </span>
+            <div class="font_14px font_verydark"><?= h($post['User']['display_username']) ?></div>
+            <div class="font_11px font_lightgray">
+                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font_lightgray"> ･ </span>
                 <?
                 //公開の場合
                 if ($post['Post']['public_flg']): ?>
@@ -88,7 +88,7 @@
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
-        <div class="col col-xxs-12 gl-feed-text showmore font-size_14 font-verydark"
+        <div class="col col-xxs-12 gl-feed-text showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
             <?= $this->TextEx->autoLink($post['Post']['body']) ?>
         </div>
@@ -164,7 +164,7 @@
             <div class="col col-xxs-12 gl-feed-site-link">
                 <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
                    class="no-line">
-                    <div class="site-info">
+                    <div class="site-info bd-radius_4px">
                         <div class="media">
                             <div class="pull-left">
                                 <?=
@@ -181,11 +181,11 @@
                             </div>
 
                             <div class="media-body">
-                                <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                                <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
 
-                                <p class="font-size_11 media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                <p class="font_11px media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
                                 <? if (isset($site_info['description'])): ?>
-                                    <div class="font-size_12 site-info-txt">
+                                    <div class="font_12px site-info-txt">
                                         <?= $site_info['description'] ?>
                                     </div>
                                 <? endif; ?>
@@ -201,21 +201,21 @@
             </div>
         <? endif; ?>
 
-        <div class="col col-xxs-12 font-size_12 gl-feed-click">
-            <a href="#" class="click-like font-lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
+        <div class="col col-xxs-12 font_12px gl-feed-click">
+            <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                model_id="<?= $post['Post']['id'] ?>"
                like_type="post">
                 <?= __d('gl', "いいね！") ?></a>
-            <span class="font-lightgray"> ･ </span>
+            <span class="font_lightgray"> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
-                               class="modal-ajax-get font-lightgray">
+                               class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
-                            </a><span class="font-lightgray"> ･ </span>
+                            </a><span class="font_lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"
-               class="modal-ajax-get font-lightgray"><i
+               class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>
@@ -265,7 +265,7 @@
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
-                        'class' => 'form-control tiny-form-text blank-disable font-size_12 comment-post-form',
+                        'class' => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
                         'target_show_id'           => "Comment_{$post['Post']['id']}",
                         'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -285,7 +285,7 @@
                     </div>
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
                     <div class="comment-btn" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
-                        <a href="#" class="target-show-target-click font-size_12 comment-add-pic"
+                        <a href="#" class="target-show-target-click font_12px comment-add-pic"
                            target-id="CommentFormImage_<?= $post['Post']['id'] ?>"
                            click-target-id="Comment__Post_<?= $post['Post']['id'] ?>_Photo_1">
                         <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"

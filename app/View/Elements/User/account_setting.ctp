@@ -23,7 +23,7 @@
         'inputDefaults' => [
             'div'       => 'form-group',
             'label'     => [
-                'class' => 'col col-sm-3 control-label'
+                'class' => 'col col-sm-3 control-label form-label'
             ],
             'wrapInput' => 'col col-sm-6',
             'class' => 'form-control setting_input-design'
@@ -34,7 +34,7 @@
     ]); ?>
     <div class="panel-body user-setting-panel-body">
     <div class="form-group">
-            <label for="PrimaryEmailEmail" class="col col-sm-3 control-label"><?= __d('gl', "メール") ?></label>
+            <label for="PrimaryEmailEmail" class="col col-sm-3 control-label form-label"><?= __d('gl', "メール") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static"><?= h($me['PrimaryEmail']['email']) ?></p>
@@ -99,7 +99,7 @@
         }
         ?>
         <div class="form-group">
-            <label for="UserPassword" class="col col-sm-3 control-label"><?= __d('gl', "パスワード") ?></label>
+            <label for="UserPassword" class="col col-sm-3 control-label form-label"><?= __d('gl', "パスワード") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static">

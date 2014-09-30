@@ -331,11 +331,12 @@ class PostsController extends AppController
         $this->_setMyCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
+        $my_goals = $this->Goal->getMyGoals();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
             $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
         }
-        $this->set(compact('select2_default', 'circle_members'));
+        $this->set(compact('select2_default', 'circle_members', 'my_goals'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {

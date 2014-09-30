@@ -13,7 +13,7 @@
 <div class="modal-dialog">
         <div class="modal-content gl-modal-no-margin">
             <div class="modal-header">
-                <button type="button" class="close font-size_33 close-design" data-dismiss="modal" aria-hidden="true">
+                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
                 <h4 class="modal-title"><?= __d('gl', "チュートリアル") ?></h4>
             </div>

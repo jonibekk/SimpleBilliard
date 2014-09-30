@@ -13,7 +13,7 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/comment.ctp -->
-<div class="font-size_12">
+<div class="font_12px">
     <div class="col col-xxs-12 gl-comment-main">
         <?=
         $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
@@ -23,7 +23,7 @@
             <div class="col col-xxs-12 gl-comment-text gl-comment-user">
                 <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
-                        <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
+                        <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
                             <i class="fa fa-chevron-down gl-comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
@@ -47,13 +47,13 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <div class="gl-comment-name font-verydark"><?= h($user['display_username']) ?></div>
+                <div class="gl-comment-name font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
             <div class="col col-xxs-12 showmore-comment gl-comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
-                <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+                <div class="gl-comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
@@ -131,7 +131,7 @@
                 <div class="col col-xxs-12">
                     <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
                        class="no-line">
-                        <div class="site-info">
+                        <div class="site-info bd-radius_4px">
                             <div class="media">
                                 <div class="pull-left">
                                     <?=
@@ -148,11 +148,11 @@
                                 </div>
 
                                 <div class="media-body">
-                                    <h4 class="media-heading font-size_18  media-url"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                                    <h4 class="media-heading font_18px  media-url"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
 
-                                    <p class="font-size_11  media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                    <p class="font_11px  media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
                                     <? if (isset($site_info['description'])): ?>
-                                        <div class="font-size_12">
+                                        <div class="font_12px">
                                             <?= $site_info['description'] ?>
                                         </div>
                                     <? endif; ?>
@@ -165,21 +165,21 @@
 
 
             <div class="gl-comment-info">
-                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font-lightgray"> ･ </span>
-                <a href="#" class="click-like font-lightgray <?= empty($like) ? null : "liked" ?>"
+                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font_lightgray"> ･ </span>
+                <a href="#" class="click-like font_lightgray <?= empty($like) ? null : "liked" ?>"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
                     <?= __d('gl', "いいね！") ?></a><span
-                    class="font-lightgray"> ･ </span>
+                    class="font_lightgray"> ･ </span>
             <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"
-                               class="modal-ajax-get font-lightgray">
+                               class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
-                    class="font-lightgray"> ･ </span>
+                    class="font_lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
-               class="modal-ajax-get font-lightgray"><i
+               class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
             </span>
             </div>
