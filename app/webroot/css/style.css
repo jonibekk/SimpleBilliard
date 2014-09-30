@@ -2155,8 +2155,8 @@ ul.gl-input-images > li {
 
     .navbar-nav > li > .header-logo {
         margin-left: 2px;
-        padding-left: 4px;
-        padding-right: 4px;
+        padding-left: 2px;
+        padding-right: 3px;
     }
 
     .nav-search {
@@ -2164,15 +2164,15 @@ ul.gl-input-images > li {
     }
 
     .navbar-nav > li > .header-goal {
-        padding-left: 4px;
+        padding-left: 2px;
         margin-left: 16px;
-        padding-right: 4px;
+        padding-right: 3px;
     }
 
     .navbar-nav > li > .header-team {
-        padding-left: 4px;
+        padding-left: 2px;
         margin-left: 16px;
-        padding-right: 4px;
+        padding-right: 3px;
     }
 
     .nav-team-select {
