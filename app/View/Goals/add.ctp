@@ -166,7 +166,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                ['label'                   => __d('gl', "達成時"),
                                                 'wrapInput' => 'col col-sm-9',
                                                 'type'                    => 'number',
-                                                'value'                   => 100,
+                                                'default'   => 100,
                                                 'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
                                                ]) ?>
                             <?=
@@ -174,7 +174,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                ['label'     => __d('gl', "開始時"),
                                                 'wrapInput' => 'col col-sm-9',
                                                 'type'                    => 'number',
-                                                'value'                   => 0,
+                                                'default'   => 0,
                                                 'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
                                                 'data-bv-integer'         => "true",
                                                ]) ?>
