@@ -9,6 +9,7 @@
  * @var                    $goals
  */
 ?>
+<!-- START app/View/Goals/index_items.ctp -->
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-2">
@@ -62,11 +63,11 @@
             <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id')): ?>
                 <div class="col col-xxs-12 mt_5px">
                     <div class="col col-xxs-4">
-                        <a class="btn btn-purewhite bd-circle_20" href="#"><i class="fa fa-heart font_rougeOrange"><span
+                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink" href="#"><i class="fa fa-heart font_rougeOrange"><span
                                     style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
                     </div>
                     <div class="col col-xxs-4">
-                        <a class="btn btn-purewhite bd-circle_20" href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
+                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink" href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
                                     style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
                     </div>
                 </div>
@@ -74,3 +75,4 @@
         </div>
     </div>
 <? endforeach ?>
+<!-- End app/View/Goals/index_items.ctp -->
