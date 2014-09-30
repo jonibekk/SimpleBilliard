@@ -65,9 +65,18 @@
                     </div>
                     <div class="col col-xxs-4">
                         <a class="btn btn-purewhite bd-circle_20" data-toggle="modal"
-                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#"><i
-                                class="fa fa-child font_rougeOrange font_18px"><span
-                                    style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
+                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
+                            <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])): ?>
+                                <span
+                                    style="color: #000000" class="font_rougeOrange ml_5px font_14px"><?= __d('gl',
+                                                                                                             "コラボり中") ?></span>
+                            <? else: ?>
+                                <i
+                                    class="fa fa-child font_rougeOrange font_18px"><span
+                                        style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i>
+                            <?
+                            endif; ?>
+                        </a>
                     </div>
                 </div>
             <? endif; ?>
