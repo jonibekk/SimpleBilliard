@@ -13,7 +13,6 @@
 .panel-body {
     padding: 10px 11px;
 }
-
 /*==/ normalize bootstrap ===*/
 
 body {
@@ -48,20 +47,25 @@ footer p {
     width: 93.75%;
 }
 
-.mt-5px{
+.mt_5px {
     margin-top: 4px;
 }
 
-.ml-5px {
+.ml_5px {
     margin-left: 5px;
 }
 
-.ml-12px {
+.ml_12px {
     margin-left: 12px;
 }
 
-.ml-16px {
+.ml_16px {
     margin-left: 16px;
+}
+
+.mb-pb_5px {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
 }
 
 /*行数の指定*/
@@ -143,21 +147,17 @@ footer p {
     font-weight: normal;
 }
 
-.font-lightgray {
+.font_lightgray {
     color: #9197a3;
 }
 
-.font-lightgray:hover {
+.font_lightgray:hover {
     color: #9197a3;
 }
 
-.font-verydark {
+.font_verydark {
     color: #231814;
 }
-
-/*/Fontの指定*/
-
-/*colorの設定*/
 
 .font-dimgray{
     color: #696969;
@@ -241,7 +241,7 @@ footer p {
     text-decoration: none !important;
 }
 
-/*/リンクの設定*/
+/*/fontの設定*/
 
 /*==/ 全体的な設定 ===*/
 
@@ -254,7 +254,11 @@ footer p {
 }
 /*/アイコンを揃える*/
 
-/* 角丸 */
+/* ボーダー */
+.bd-b{
+    border-bottom: 1px solid #f0f0f0;
+}
+
 .bd-circle{
     border-radius: 50%;
 }
@@ -269,7 +273,7 @@ footer p {
 .bd-radius_4px:target{
     border-radius: 4px;
 }
-/*/ 角丸 */
+/*/  */
 
 /*切り替えスイッチ*/
 .switch-post, .switch-action, .switch-badge {
@@ -1752,6 +1756,10 @@ ul.gl-input-images > li {
 }
 
 /*modalのデザイン*/
+.modal-dialog_300px{
+    width:300px;
+}
+
 .gl-modal-no-margin .modal-body {
     padding: 0;
 }

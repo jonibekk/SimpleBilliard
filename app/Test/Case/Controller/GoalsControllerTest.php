@@ -63,6 +63,22 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/index', ['method' => 'GET']);
     }
 
+    function testAjaxGetGoalDetailModal()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => 'test'
+        ];
+        $Goals->Goal->save($goal_data);
+        $goal_id = $Goals->Goal->getLastInsertID();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_goal_detail_modal/' . $goal_id, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxGetMoreIndexItems()
     {
         $this->_getGoalsCommonMock();

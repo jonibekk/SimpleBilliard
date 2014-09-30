@@ -47,13 +47,13 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <div class="gl-comment-name font-verydark"><?= h($user['display_username']) ?></div>
+                <div class="gl-comment-name font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
             <div class="col col-xxs-12 showmore-comment gl-comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
-                <div class="gl-comment-contents font-verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+                <div class="gl-comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
@@ -165,21 +165,21 @@
 
 
             <div class="gl-comment-info">
-                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font-lightgray"> ･ </span>
-                <a href="#" class="click-like font-lightgray <?= empty($like) ? null : "liked" ?>"
+                <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font_lightgray"> ･ </span>
+                <a href="#" class="click-like font_lightgray <?= empty($like) ? null : "liked" ?>"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
                     <?= __d('gl', "いいね！") ?></a><span
-                    class="font-lightgray"> ･ </span>
+                    class="font_lightgray"> ･ </span>
             <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"
-                               class="modal-ajax-get font-lightgray">
+                               class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
-                    class="font-lightgray"> ･ </span>
+                    class="font_lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
-               class="modal-ajax-get font-lightgray"><i
+               class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
             </span>
             </div>

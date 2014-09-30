@@ -86,7 +86,7 @@
                             <div class="progress-bar progress-bar-info" role="progressbar"
                                  aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
                                  aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
-                                <span class="ml-12px"><?= h($goal['Goal']['progress']) ?>%</span>
+                                <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                             </div>
                         </div>
                     </div>

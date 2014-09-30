@@ -25,14 +25,16 @@
         </div>
         <div class="col col-xxs-10">
             <div class="col col-xxs-12">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
+                   class="modal-ajax-get pull-right"><?= __d('gl', "詳細を見る") ?></a>
                 <? if (empty($goal['SpecialKeyResult'])): ?>
                     <?= __d('gl', "ゴール未設定") ?>
                 <? else: ?>
-                    <b class="line-numbers ln_2 font-verydark"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
+                    <b class="line-numbers ln_2 font_verydark"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
                 <?endif; ?>
             </div>
             <? if (!empty($goal['SpecialKeyResult'])): ?>
-                <div class="col col-xxs-12 font-lightgray font_12px">
+                <div class="col col-xxs-12 font_lightgray font_12px">
                     <? if (!empty($goal['SpecialKeyResult'][0]['Leader'])): ?>
                         <?=
                         __d('gl', "リーダー: %s",
@@ -58,14 +60,14 @@
                 </div>
             <? endif; ?>
             <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id')): ?>
-                <div class="col col-xxs-12 mt-5px">
+                <div class="col col-xxs-12 mt_5px">
                     <div class="col col-xxs-4">
                         <a class="btn btn-purewhite bd-circle_20" href="#"><i class="fa fa-heart font_rougeOrange"><span
-                                    style="color: #000000" class="ml-5px"><?= __d('gl', "フォロー") ?></span></i></a>
+                                    style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
                     </div>
                     <div class="col col-xxs-4">
                         <a class="btn btn-purewhite bd-circle_20" href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
-                                    style="color: #000000" class="ml-5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
+                                    style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
                     </div>
                 </div>
             <? endif; ?>
