@@ -18,10 +18,10 @@
                                               class="switch-post-anchor"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
-                                         class="switch-action-anchor develop--forbiddenLink-"><i
+                                         class="switch-action-anchor develop--forbiddenLink"><i
                         class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab"
-                                        class="switch-badge-anchor develop--forbiddenLink-"><i
+                                        class="switch-badge-anchor develop--forbiddenLink"><i
                         class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a><span class="switch-arrow"></span></li>
         </ul>
     </div>
