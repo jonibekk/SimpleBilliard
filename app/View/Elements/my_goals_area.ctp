@@ -35,7 +35,8 @@
         </div>
         <? if (empty($my_goals)): ?>
             <div class="col col-xxs-12 goals-column-empty-box">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>" class="font_lightGray-gray">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
+                   class="font_lightGray-gray">
                     <div class="goals-column-empty-icon"><i class="fa fa-plus-circle font_33px"></i></div>
                     <div class="goals-column-empty-text font_14px"><?= __d('gl', '新しいゴールをつくる') ?></div>
                 </a>
@@ -44,26 +45,25 @@
             <? foreach ($my_goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
                     <div class="col col-xxs-12">
-                        <div class="pull-right goals-column-function bd-radius_4px">
-                            <div class="dropdown">
-                                <a href="#" class="font_lightGray-gray font_14px" data-toggle="dropdown" id="download">
-                                    <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
-                                    aria-labelledby="dropdownMenu1">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?=
-                                            __d('gl',
-                                                "編集") ?></a>
-                                    </li>
-                                    <li role="presentation">
-                                        <?=
-                                        $this->Form->postLink(__d('gl', "削除"),
-                                                              ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
-                                                              null, __d('gl', "本当にこのゴールを削除しますか？")) ?>
-                                    </li>
-                                </ul>
-                            </div>
+                        <div class="pull-right goals-column-function bd-radius_4px dropdown">
+                            <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px" data-toggle="dropdown"
+                               id="download">
+                                <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                                aria-labelledby="dropdownMenu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?=
+                                        __d('gl',
+                                            "編集") ?></a>
+                                </li>
+                                <li role="presentation">
+                                    <?=
+                                    $this->Form->postLink(__d('gl', "削除"),
+                                                          ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
+                                                          null, __d('gl', "本当にこのゴールを削除しますか？")) ?>
+                                </li>
+                            </ul>
                         </div>
 
                         <? if (empty($goal['SpecialKeyResult'])): ?>
