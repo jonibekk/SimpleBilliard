@@ -20,11 +20,14 @@
 /*==/ normalize bootstrap ===*/
 
 /*=== normalize select2 3.5.1 ===*/
-
-/*【タスク】共有範囲の指定とそれ以外で分けよう*/
+/* 共通設定 */
 .select2-search-field {
     background: #fff;
 }
+
+/*/共通設定 */
+/* 共有範囲設定 */
+/*/共有範囲設定 */
 
 .select2-drop {
     background: #fff;
