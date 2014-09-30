@@ -22,14 +22,18 @@
                 <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'x_large']) ?>">
             </div>
             <div class="col col-xxs-12">
-                <? if (!empty($goal['SpecialKeyResult'])): ?>
-                    <b class="font_18px font_verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
-                <? else: ?>
-                    <span class="font_18px"><?= __d('gl', "ゴールが設定されていません") ?></span>
-                <?endif; ?>
+                <b class="font_18px font_verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
             </div>
             <div class="col col-xxs-12 bd-b mb-pb_5px">
                 <?= $goal['Goal']['purpose'] ?>
+            </div>
+            <div class="col col-xxs-12 bd-b mb-pb_5px">
+                <div><?= __d('gl', '程度') ?></div>
+                <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['SpecialKeyResult'][0]['value_unit']]) ?></div>
+                <? if ($goal['SpecialKeyResult'][0]['value_unit'] != KeyResult::UNIT_BINARY): ?>
+                    <div><?= __d('gl', '達成時: %s', $goal['SpecialKeyResult'][0]['target_value']) ?></div>
+                    <div><?= __d('gl', '開始時: %s', $goal['SpecialKeyResult'][0]['start_value']) ?></div>
+                <? endif; ?>
             </div>
             <div class="col col-xxs-12">
                 <!-- アクション、フォロワー -->
