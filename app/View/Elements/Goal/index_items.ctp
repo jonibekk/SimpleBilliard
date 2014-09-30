@@ -73,8 +73,20 @@
             <? endif; ?>
         </div>
     </div>
-    <? $this->append('modal') ?>
-    <?= $this->element('modal_collabo', ['goal' => $goal]) ?>
-    <? $this->end() ?>
+    <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
+        <? $this->append('modal') ?>
+        <?= $this->element('modal_collabo', ['skr' => $goal['SpecialKeyResult'][0]]) ?>
+        <? $this->end() ?>
+        <? $this->append('script') ?>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#CollaboForm_<?=$goal['SpecialKeyResult'][0]['id']?>').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {}
+                });
+            });
+        </script>
+        <? $this->end() ?>
+    <? endif; ?>
 <? endforeach ?>
 <!-- End app/View/Elements/Goals/index_items.ctp -->

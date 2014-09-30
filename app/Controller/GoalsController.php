@@ -29,6 +29,8 @@ class GoalsController extends AppController
      * ゴール作成
      * URLパラメータでmodeを付ける
      * mode なしは目標を決める,2はゴールを定める,3は他の情報を追加
+     *
+     * @param null $id
      */
     public function add($id = null)
     {
@@ -150,6 +152,18 @@ class GoalsController extends AppController
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
+    }
+
+    public function edit_collabo()
+    {
+        $this->request->allowMethod('post', 'put');
+        if ($this->Goal->KeyResult->KeyResultUser->edit($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
+        }
+        $this->redirect($this->referer());
     }
 
 }

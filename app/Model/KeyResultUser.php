@@ -80,4 +80,20 @@ class KeyResultUser extends AppModel
         return $res;
     }
 
+    function edit($data, $uid = null, $type = self::TYPE_COLLABORATOR)
+    {
+        if (!isset($data['KeyResultUser']) || empty($data['KeyResultUser'])) {
+            return false;
+        }
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        $data['KeyResultUser']['user_id'] = $uid;
+        $data['KeyResultUser']['team_id'] = $this->current_team_id;
+        $data['KeyResultUser']['type'] = $type;
+
+        $res = $this->save($data);
+        return $res;
+    }
+
 }
