@@ -19,7 +19,15 @@
         </div>
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
-                <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'x_large']) ?>">
+                <div class="col col-xxs-6">
+                <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128" height="128">
+                    </div>
+                    <div class="col col-xxs-6">
+                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i class="fa fa-heart font_rougeOrange"><span
+                                    style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
+                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
+                                    style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
+                    </div>
             </div>
             <div class="col col-xxs-12">
                 <? if (!empty($goal['SpecialKeyResult'])): ?>
