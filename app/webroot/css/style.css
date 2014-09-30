@@ -48,6 +48,10 @@ footer p {
     width: 93.75%;
 }
 
+.mt-5px{
+    margin-top: 4px;
+}
+
 .ml-5px {
     margin-left: 5px;
 }
@@ -250,6 +254,23 @@ footer p {
 }
 /*/アイコンを揃える*/
 
+/* 角丸 */
+.bd-circle{
+    border-radius: 50%;
+}
+.bd-circle_20{
+    border-radius: 20% / 50%;
+}
+.bd-radius_4px{
+    border-radius: 4px;
+}
+.bd-radius_4px:hover,
+.bd-radius_4px:active,
+.bd-radius_4px:target{
+    border-radius: 4px;
+}
+/*/ 角丸 */
+
 /*切り替えスイッチ*/
 .switch-post, .switch-action, .switch-badge {
     position: relative;
@@ -360,7 +381,6 @@ footer p {
     padding: 9px;
     background-color: #f7f7f9;
     border: 1px solid #e1e1e8;
-    border-radius: 4px;
     color: #231814;
 }
 
@@ -1102,7 +1122,6 @@ ul.gl-input-images > li {
     margin: 6px;
     background: #f9f9f9;
     border: 1px solid #ccc;
-    border-radius: 4px;
     color: #777;
 }
 
@@ -1113,7 +1132,6 @@ ul.gl-input-images > li {
     text-decoration: solid;
     background: #f9f9f9;
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-image: none;
     box-shadow: none;
 }
@@ -1439,7 +1457,6 @@ ul.gl-input-images > li {
 /*キャンセルボタンのデザイン*/
 .design-cancel {
     border: 1px solid #ccc;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #777;
@@ -1448,7 +1465,6 @@ ul.gl-input-images > li {
 .design-cancel:target,
 .design-cancel:hover {
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #231814;
@@ -1518,7 +1534,6 @@ ul.gl-input-images > li {
 
 .btn-white {
     border: 1px solid #ccc;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #777;
@@ -1527,7 +1542,6 @@ ul.gl-input-images > li {
 .btn-white:target,
 .btn-white:hover {
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-color: #f0f0f0;
     background-image: none;
     color: #231814;
@@ -1536,7 +1550,6 @@ ul.gl-input-images > li {
 
 .btn-purewhite {
     border: 1px solid #ccc;
-    border-radius: 4px;
     background-color: #fff;
     background-image: none;
     color: #777;
@@ -1545,7 +1558,6 @@ ul.gl-input-images > li {
 .btn-purewhite:target,
 .btn-purewhite:hover {
     border: 1px solid #aaa;
-    border-radius: 4px;
     background-color: #fff;
     background-image: none;
     color: #231814;
@@ -2471,7 +2483,6 @@ Temporary Properties - YOU MUST FIX
 .goals-column-function {
     padding: 0 4px;
     border: 1px solid #ccc;
-    border-radius: 4px;
 }
 
 .goals-column-fa-caret-down {

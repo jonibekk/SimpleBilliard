@@ -44,7 +44,7 @@
             <? foreach ($my_goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
                     <div class="col col-xxs-12">
-                        <div class="pull-right goals-column-function">
+                        <div class="pull-right goals-column-function bd-radius_4px">
                             <div class="dropdown">
                                 <a href="#" class="font_lightGray-gray font_14px" data-toggle="dropdown" id="download">
                                     <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>

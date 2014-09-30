@@ -302,7 +302,7 @@ function evFeedMoreView() {
                 //「もっと読む」リンクを削除
                 $obj.remove();
                 //データが無かった場合はデータ無いよ。を表示
-                $parent.append("<?=__d('gl','これ以上の投稿がありません。')?>");
+                $parent.append("<?=__d('gl','これ以上ありません。')?>");
             }
         },
         error: function () {

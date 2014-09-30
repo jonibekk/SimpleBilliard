@@ -211,6 +211,11 @@ class Goal extends AppModel
         return $res;
     }
 
+    /**
+     * 自分のゴール取得
+     *
+     * @return array
+     */
     function getMyGoals()
     {
         $start_date = $this->Team->getTermStartDate();
@@ -236,6 +241,75 @@ class Goal extends AppModel
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
+                ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        return $res;
+    }
+
+    /**
+     * 全てのゴール取得
+     *
+     * @param int  $limit
+     * @param null $params
+     *
+     * @internal param int $page
+     * @return array
+     */
+    function getAllGoals($limit = 20, $params = null)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+
+        $page = 1;
+        if (isset($params['named']['page']) || !empty($params['named']['page'])) {
+            $page = $params['named']['page'];
+            unset($params['named']['page']);
+        }
+        $options = [
+            'conditions' => [
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'order'      => ['Goal.modified desc'],
+            'limit'      => $limit,
+            'page'       => $page,
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions'   => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+                    'Leader'       => [
+                        'conditions' => ['Leader.type' => KeyResultUser::TYPE_OWNER],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                    'Collaborator' => [
+                        'conditions' => ['Collaborator.type' => KeyResultUser::TYPE_COLLABORATOR],
+                        'User'       => [
+                            'fields' => $this->User->profileFields,
+                        ]
+                    ],
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+                'User'             => [
+                    'fields' => $this->User->profileFields,
                 ]
             ]
         ];

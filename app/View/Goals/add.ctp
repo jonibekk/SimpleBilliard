@@ -27,7 +27,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right',
+                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormPurposeWrap",
@@ -79,7 +79,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"), "#",
-                                          ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
+                                          ['class' => 'btn btn-link btn-white bd-radius_4px', 'div' => false]) ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
@@ -99,7 +99,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right',
+                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormKeyResultWrap",
@@ -248,7 +248,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right',
+                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormOtherWrap",
