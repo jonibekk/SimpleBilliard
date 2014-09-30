@@ -69,6 +69,16 @@ footer p {
     padding-bottom: 5px;
 }
 
+.plr_4px{
+    padding-right: 4px;
+    padding-left: 4px;
+}
+.pt_1px{
+    padding-top: 1px;
+}
+.pb_2px{
+    padding-bottom: 2px;
+}
 /*行数の指定*/
 /*noinspection CssUnknownProperty*/
 .line-numbers {
@@ -2489,7 +2499,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 .goals-column-function {
-    padding: 0 4px;
     border: 1px solid #ccc;
 }
 
