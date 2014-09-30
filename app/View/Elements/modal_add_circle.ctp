@@ -24,7 +24,7 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label modal-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
                     'class' => 'form-control modal_input-design'
@@ -43,7 +43,7 @@
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label class="col col-sm-3 control-label"><?= __d('gl', 'メンバー') ?></label>
+                    <label class="col col-sm-3 control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
 
                     <div class="col col-sm-6">
                         <?=
@@ -65,7 +65,7 @@
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'    => 'radio',
-                    'before' => '<label class="col col-sm-3 control-label">' . __d('gl', 'プライバシー') . '</label>',
+                    'before' => '<label class="col col-sm-3 control-label modal-label">' . __d('gl', 'プライバシー') . '</label>',
                     'legend'  => false,
                     'class'   => false,
                     'options' => $privacy_option,
@@ -79,7 +79,7 @@
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "サークル画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">

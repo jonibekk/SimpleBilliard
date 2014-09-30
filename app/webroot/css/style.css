@@ -152,6 +152,10 @@ footer p {
     margin-top: 4px;
 }
 
+.mr_5px{
+    margin-right: 5px;
+}
+
 .ml_5px {
     margin-left: 5px;
 }
@@ -175,6 +179,9 @@ footer p {
 }
 .pt_1px{
     padding-top: 1px;
+}
+.pr_5px{
+    padding-right: 5px;
 }
 .pb_2px{
     padding-bottom: 2px;
@@ -417,6 +424,14 @@ footer p {
 /*/切り替えスイッチ*/
 
 /*==/ モジュール ===*/
+
+/*=== Modal Settings ===*/
+.modal-label {
+    padding-right: 12px;
+    text-align: right;
+}
+/*==/ Modal Settings ===*/
+
 
 /*=== headerの設定 ===*/
 .header-icon_text {

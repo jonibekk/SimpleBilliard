@@ -17,7 +17,7 @@
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
             <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas" aria-hidden="true">
-            <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
+                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
             </button>
             <ul class="nav navbar-nav">
                 <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
@@ -32,7 +32,7 @@
                 </li>
                 <li><a class="header-goal"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
-                    <i class="fa fa-flag header-link header-icon">
+                        <i class="fa fa-flag header-link header-icon">
                             <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "ゴール") ?></p>
                         </i>&nbsp;
                         <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
@@ -56,7 +56,7 @@
                                                     'id'        => 'SwitchTeam',
                                                     'label'     => false,
                                                     'div'       => false,
-                                                    'class' => 'form-control nav-team-select font_12px disable-change-warning',
+                                                    'class'     => 'form-control nav-team-select font_12px disable-change-warning',
                                                     'wrapInput' => false,
                                                 ))
                         ?>
@@ -93,18 +93,26 @@
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
                             <li>
-                                <a href="#" data-toggle="modal" data-target="#modal_add_circle"><i
-                                        class="fa fa-circle-o header-drop-icons"></i><?=
-                                    __d('gl',
-                                        "サークルを作成") ?></a>
+                                <a href="#" data-toggle="modal" data-target="#modal_add_circle">
+                                    <i class="fa fa-circle-o header-drop-icons">
+                                        <span class="font_verydark"><?= __d('gl', "サークルを作成") ?></span>
+                                    </i>
+                                </a>
                             </li>
                         <? endif; ?>
-                        <li><a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>"><i
-                                    class="fa fa-users header-drop-icons"></i><?= __d('gl', 'チームを作成') ?></a></li>
-                        <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"><i
-                                    class="fa fa-flag header-drop-icons"></i>
-                                <?= __d('gl', 'ゴールを作成') ?></a></li>
-
+                        <li>
+                            <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
+                                <i class="fa fa-users header-drop-icons">
+                                    <span class="font_verydark"><?= __d('gl', 'チームを作成') ?></span>
+                                </i>
+                            </a>
+                        </li>
+                        <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                                <i class="fa fa-flag header-drop-icons">
+                                    <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
+                                </i>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
