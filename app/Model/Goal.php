@@ -372,9 +372,11 @@ class Goal extends AppModel
         $res = $this->find('all', $options);
 
         //skr必須指定の場合はskrが存在しないゴールを除去
-        foreach ($res as $key => $val) {
-            if (isset($val['SpecialKeyResult']) && empty($val['SpecialKeyResult'])) {
-                unset($res[$key]);
+        if ($required_skr) {
+            foreach ($res as $key => $val) {
+                if (isset($val['SpecialKeyResult']) && empty($val['SpecialKeyResult'])) {
+                    unset($res[$key]);
+                }
             }
         }
         //進捗を計算
