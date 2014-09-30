@@ -101,6 +101,9 @@ class KeyResult extends AppModel
         ],
         'Collaborator'  => [
             'className' => 'KeyResultUser',
+        ],
+        'MyCollabo'     => [
+            'className' => 'KeyResultUser',
         ]
     ];
 

@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 6/6/14
  * Time: 3:19 PM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $skr
  */
 ?>
@@ -17,7 +16,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('gl', "コラボる") ?></h4>
+                <h4 class="modal-title"><?= empty($skr['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集") ?></h4>
             </div>
             <?=
             $this->Form->create('KeyResultUser', [
@@ -35,6 +34,11 @@
                 'id'            => 'CollaboForm_' . $skr['id'],
             ]); ?>
             <?= $this->Form->hidden('key_result_id', ['value' => $skr['id']]) ?>
+            <?
+            if (isset($skr['MyCollabo'][0]['id'])) {
+                echo $this->Form->hidden('id', ['value' => $skr['MyCollabo'][0]['id']]);
+            }
+            ?>
             <div class="modal-body">
                 <?=
                 $this->Form->input('role',
@@ -42,6 +46,7 @@
                                     'placeholder'              => __d('gl', "例) ○○"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'required' => true,
+                                    'value'    => isset($skr['MyCollabo'][0]['role']) ? $skr['MyCollabo'][0]['role'] : null,
                                    ]) ?>
                 <hr>
                 <?=
@@ -50,6 +55,7 @@
                                     'placeholder'              => __d('gl', "例) ○○"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'required'                 => true,
+                                    'value' => isset($skr['MyCollabo'][0]['description']) ? $skr['MyCollabo'][0]['description'] : null,
                                    ]) ?>
             </div>
             <div class="modal-footer">
@@ -59,7 +65,7 @@
                                 data-dismiss="modal"><?= __d('gl',
                                                              "キャンセル") ?></button>
                         <?=
-                        $this->Form->submit(__d('gl', "コラボる"),
+                        $this->Form->submit(empty($skr['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
                     </div>

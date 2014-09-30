@@ -355,6 +355,17 @@ class Goal extends AppModel
                             'fields' => $this->User->profileFields,
                         ]
                     ],
+                    'MyCollabo'    => [
+                        'conditions' => [
+                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
+                    ],
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
