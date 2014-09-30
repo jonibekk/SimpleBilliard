@@ -19,7 +19,7 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label form-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control addteam_input-design'
@@ -38,7 +38,7 @@
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "チーム画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label form-label"><?= __d('gl', "チーム画像") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -66,9 +66,9 @@
                                                 ''
                                                ]) ?>
                         </span>
+                                <span class="help-block font_11px fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>
-                        <span class="help-block font_11px fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=
@@ -86,7 +86,7 @@
                     'label'      => __d('gl', "プラン"),
                     'type'       => 'select',
                     'options'    => Team::$TYPE,
-                    'afterInput' => '<span class="help-block">' . __d('gl',
+                    'afterInput' => '<span class="help-block font_11px">' . __d('gl',
                                                                       "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。") . '<br>' . __d('gl',
                                                                                                                                 "このプランはチーム作成後にいつでも変更できます。") . '</span>'
                 ])?>

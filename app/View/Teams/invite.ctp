@@ -19,7 +19,7 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label form-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control'
@@ -30,7 +30,7 @@
             ]); ?>
             <div class="panel-body">
                 <div class="form-group">
-                    <label for="TeamName" class="col col-sm-3 control-label"><?= __d('gl', "チーム名") ?></label>
+                    <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __d('gl', "チーム名") ?></label>
 
                     <div class="col col-sm-6">
                         <p class="form-control-static"><?= h($my_teams[$this->Session->read('current_team_id')]) ?></p>
@@ -44,10 +44,10 @@
                     'rows'                     => 3,
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'afterInput'               => '<span class="help-block">'
-                        . '<p>' . __d('gl', "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。") . '</p>'
-                        . '<ul class="example-indent"><li>' . __d('gl', "例%s",
+                        . '<p class="font_11px">' . __d('gl', "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。") . '</p>'
+                        . '<ul class="example-indent font_11px"><li>' . __d('gl', "例%s",
                                                                   1) . ' aaa@example.com,bbb@example.com</li></ul>'
-                        . '<ul class="example-indent"><li>'
+                        . '<ul class="example-indent font_11px"><li>'
                         . '' . __d('gl', "例%s", 2) . ' aaa@example.com</br>'
                         . 'aaa@example.com</br>'
                         . '</li></ul>'
@@ -59,7 +59,7 @@
                     'label'      => __d('gl', "コメント(オプション)"),
                     'type'       => 'text',
                     'rows'       => 3,
-                    'afterInput' => '<span class="help-block">' . __d('gl', "コメント(任意)はメールの本文に追加されます。") . '</span>'
+                    'afterInput' => '<span class="help-block font_11px">' . __d('gl', "コメント(任意)はメールの本文に追加されます。") . '</span>'
                 ])?>
             </div>
             <div class="panel-footer">
