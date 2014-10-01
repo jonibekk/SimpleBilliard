@@ -159,6 +159,8 @@ footer p {
 /*=== 全体的な設定 ===*/
 .container {
     width: 93.75%;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .mt_5px {
@@ -171,6 +173,10 @@ footer p {
 
 .mr_5px{
     margin-right: 5px;
+}
+
+.ml_2px{
+    margin-left: 2px;
 }
 
 .ml_5px {
@@ -464,6 +470,7 @@ footer p {
 
 /*/切り替えスイッチ*/
 
+
 /*==/ モジュール ===*/
 
 /*=== headerの設定 ===*/
@@ -524,6 +531,14 @@ footer p {
 }
 
 /*==/ headerの設定 ===*/
+
+/*早めに整理する*/
+.btn-followCollabo{
+    padding: 8px;
+}
+
+/*/早めに整理する*/
+
 
 .panel-default > .panel-heading {
     background-color: #fff;
