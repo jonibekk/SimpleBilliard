@@ -241,51 +241,67 @@ class Team extends AppModel
     {
         //既にセットされている場合は処理しない
         if ($this->current_term_start_date && $this->current_term_end_date) {
-            return;
+            return null;
         }
         if (empty($this->current_team)) {
             $this->current_team = $this->findById($this->current_team_id);
             if (empty($this->current_team)) {
-                return;
+                return null;
             }
         }
+
         $start_term_month = $this->current_team['Team']['start_term_month'];
+
         $border_months = $this->current_team['Team']['border_months'];
+
+        $now = time();
+        return $this->setCurrentTermStartEndFromParam($start_term_month, $border_months, $now);
+    }
+
+    function setCurrentTermStartEndFromParam($start_term_month, $border_months, $target_date = null)
+    {
         if ($this->current_term_start_date) {
-            $this->current_term_end_date = strtotime("+ {$border_months} month", $this->current_term_start_date);
+            $start_date = date("Y-m-1", $this->current_term_start_date + $this->me['timezone'] * 3600);
+            $this->current_term_end_date = strtotime($start_date . "+ {$border_months} month") - $this->me['timezone'] * 3600;
             return;
         }
         if ($this->current_term_end_date) {
-            $this->current_term_start_date = strtotime("- {$border_months} month", $this->current_term_end_date);
+            $end_date = date("Y-m-1", $this->current_term_end_date + $this->me['timezone'] * 3600);
+            $this->current_term_start_date = strtotime($end_date . "- {$border_months} month") - $this->me['timezone'] * 3600;
             return;
         }
 
-        $start_date = strtotime(date("Y-{$start_term_month}-01", time())) - $this->me['timezone'] * 3600;
-        $end_date = strtotime("+ {$border_months} month", $start_date);
+        $start_date = strtotime(date("Y-{$start_term_month}-1")) - $this->me['timezone'] * 3600;
+        $start_date_tmp = date("Y-m-1", $start_date + $this->me['timezone'] * 3600);
+        $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
+
         //現在が期間内の場合
-        if ($start_date <= time() && $end_date > time()) {
+        if ($start_date <= $target_date && $end_date > $target_date) {
             $this->current_term_start_date = $start_date;
             $this->current_term_end_date = $end_date;
             return null;
         }
         //開始日が現在より後の場合
-        if ($start_date > time()) {
-            while ($start_date > time()) {
-                $start_date = strtotime("- {$border_months} month", $start_date);
+        if ($start_date > $target_date) {
+            while ($start_date > $target_date) {
+                $start_date_tmp = date("Y-m-1", $start_date + $this->me['timezone'] * 3600);
+                $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $this->me['timezone'] * 3600;
             }
             $this->current_term_start_date = $start_date;
-            $this->current_term_end_date = strtotime("+ {$border_months} month", $start_date);
+            $start_date_tmp = date("Y-m-1", $this->current_term_start_date + $this->me['timezone'] * 3600);
+            $this->current_term_end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
             return null;
         }
         //終了日が現在より前の場合
-        if ($end_date < time()) {
-            while ($end_date < time()) {
-                $end_date = strtotime("+ {$border_months} month", $end_date);
+        if ($end_date < $target_date) {
+            while ($end_date < $target_date) {
+                $end_date_tmp = date("Y-m-1", $end_date + $this->me['timezone'] * 3600);
+                $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
             }
             $this->current_term_end_date = $end_date;
-            $this->current_term_start_date = strtotime("- {$border_months} month", $end_date);
+            $end_date_tmp = date("Y-m-1", $this->current_term_end_date + $this->me['timezone'] * 3600);
+            $this->current_term_start_date = strtotime($end_date_tmp . "- {$border_months} month") - $this->me['timezone'] * 3600;
             return null;
         }
     }
-
 }

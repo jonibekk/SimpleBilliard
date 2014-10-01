@@ -247,6 +247,29 @@ class TeamTest extends CakeTestCase
         $this->Team->setCurrentTermStartEnd();
     }
 
+    function testSetCurrentTermStartEndFromParam()
+    {
+        $this->setDefault();
+        $time_offset = $this->Team->me['timezone'] * 60 * 60;
+
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = null;
+        $this->Team->setCurrentTermStartEndFromParam(1, 6, strtotime('2014/1/1') - $time_offset);
+        $this->assertEquals('2014/01/01 00:00:00',
+                            date('Y/m/d H:i:s', $this->Team->current_term_start_date + $time_offset));
+        $this->assertEquals('2014/07/01 00:00:00',
+                            date('Y/m/d H:i:s', $this->Team->current_term_end_date + $time_offset));
+
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = null;
+        $this->Team->setCurrentTermStartEndFromParam(2, 6, strtotime('2014/2/1') - $time_offset);
+        $this->assertEquals('2014/02/01 00:00:00',
+                            date('Y/m/d H:i:s', $this->Team->current_term_start_date + $time_offset));
+        $this->assertEquals('2014/08/01 00:00:00',
+                            date('Y/m/d H:i:s', $this->Team->current_term_end_date + $time_offset));
+
+    }
+
     function setDefault()
     {
         $this->Team->my_uid = 1;
