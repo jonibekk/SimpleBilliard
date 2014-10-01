@@ -152,7 +152,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                         <?=
                         $this->Form->input('KeyResult.0.value_unit',
                                            ['label'     => __d('gl', "単位"),
-                                            'wrapInput' => 'col col-sm-9',
+                                            'wrapInput' => 'col col-sm-9 pl_5px',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
                                             'target-id'           => 'KeyResult0ValueInputWrap',
@@ -164,7 +164,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             <?=
                             $this->Form->input('KeyResult.0.target_value',
                                                ['label'                   => __d('gl', "達成時"),
-                                                'wrapInput' => 'col col-sm-9',
+                                                'wrapInput' => 'col col-sm-9 pl_5px',
                                                 'type'                    => 'number',
                                                 'default'   => 100,
                                                 'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
@@ -172,7 +172,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             <?=
                             $this->Form->input('KeyResult.0.start_value',
                                                ['label'     => __d('gl', "開始時"),
-                                                'wrapInput' => 'col col-sm-9',
+                                                'wrapInput' => 'col col-sm-9 pl_5px',
                                                 'type'                    => 'number',
                                                 'default'   => 0,
                                                 'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
@@ -190,7 +190,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                 __d('gl',
                                     "期限") ?></label>
 
-                            <div class="input-group date padding-lr-5px goal-set-date">
+                            <div class="input-group date pl_5px goal-set-date">
                                 <?=
                                 $this->Form->input('KeyResult.0.end_date',
                                                    ['value' => $kr_end_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
@@ -203,7 +203,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault">
-                                    <span class="padding-lr-18px"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
+                                    <span class="plr_18px"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap"
                                                        delete-target-id="KeyResult0StartDateDefault"><?=
@@ -211,7 +211,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                 "変更") ?></a></span>
                             </p>
 
-                            <div class="input-group date padding-lr-5px goal-set-date" style="display: none"
+                            <div class="input-group date plr_5px goal-set-date" style="display: none"
                                  id="KeyResult0StartDateInputWrap">
                                 <?=
                                 $this->Form->input('KeyResult.0.start_date',
