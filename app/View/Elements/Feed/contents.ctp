@@ -19,7 +19,7 @@
     <div class="panel panel-default feed-share-range">
         <div class="panel-body gl-feed">
             <div class="col col-xxs-12 font_12px">
-                <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'link-gray']) ?>
+                <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
                 <span> ･ </span>
                 <span class="feed-share-range-circle"><?= $current_circle['Circle']['name'] ?></span>
                 <span class="feed-circle-user-number">
