@@ -260,6 +260,10 @@ class Team extends AppModel
 
     function setCurrentTermStartEndFromParam($start_term_month, $border_months, $target_date = null)
     {
+        if (!$target_date) {
+            $target_date = time();
+        }
+
         if ($this->current_term_start_date) {
             $start_date = date("Y-m-1", $this->current_term_start_date + $this->me['timezone'] * 3600);
             $this->current_term_end_date = strtotime($start_date . "+ {$border_months} month") - $this->me['timezone'] * 3600;
@@ -271,7 +275,8 @@ class Team extends AppModel
             return;
         }
 
-        $start_date = strtotime(date("Y-{$start_term_month}-1")) - $this->me['timezone'] * 3600;
+        $start_date = strtotime(date("Y-{$start_term_month}-1",
+                                     $target_date + $this->me['timezone'] * 3600)) - $this->me['timezone'] * 3600;
         $start_date_tmp = date("Y-m-1", $start_date + $this->me['timezone'] * 3600);
         $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
 
