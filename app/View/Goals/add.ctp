@@ -303,6 +303,12 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
                                  style="width: 96px; height: 96px;">
+                                <?
+                                if (isset($this->request->data['Goal']['photo_file_name']) && !empty($this->request->data['Goal']['photo_file_name'])) {
+                                    echo $this->Upload->uploadImage($this->request->data, 'Goal.photo',
+                                                                    ['style' => 'x_large']);
+                                }
+                                ?>
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
