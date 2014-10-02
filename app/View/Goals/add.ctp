@@ -220,7 +220,9 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault">
-                                    <span class="padding-lr-18px"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
+                                    <span
+                                        class="padding-lr-18px"><?= $kr_start_date_format ?><?= !isset($this->request->data['KeyResult'][0]) ? __d('gl',
+                                                                                                                                                   "（本日）") : null ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap"
                                                        delete-target-id="KeyResult0StartDateDefault"><?=
