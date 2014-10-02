@@ -29,6 +29,8 @@ class GoalsController extends AppController
      * ゴール作成
      * URLパラメータでmodeを付ける
      * mode なしは目標を決める,2はゴールを定める,3は他の情報を追加
+     *
+     * @param null $id
      */
     public function add($id = null)
     {
@@ -94,7 +96,8 @@ class GoalsController extends AppController
             $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
             //TODO 将来的には期間をまたぐ当日+6ヶ月を期限にするが、現状期間末日にする
             //$kr_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
-            $kr_end_date_format = date('Y/m/d', strtotime("- 1 day", $this->Goal->Team->getTermEndDate()));
+            $kr_end_date_format = date('Y/m/d', strtotime("- 1 day",
+                                                          $this->Goal->Team->getTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
         }
         $this->set(compact('goal_category_list', 'priority_list', 'kr_priority_list', 'kr_value_unit_list',
                            'kr_start_date_format', 'kr_end_date_format'));
