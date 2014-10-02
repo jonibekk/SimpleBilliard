@@ -71,7 +71,7 @@
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 2]) ?>"
                                    class="font_rougeOrange">
                                     <div class="goals-column-add-icon"><i class="fa fa-plus-circle"></i></div>
-                                    <div class="goals-column-add-text font_12px"><?= __d('gl', 'ゴールを追加する') ?></div>
+                                    <div class="goals-column-add-text font_12px"><?= __d('gl', '基準を追加する') ?></div>
                                 </a>
                             </div>
                         <? else: ?>
