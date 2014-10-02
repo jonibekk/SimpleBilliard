@@ -156,33 +156,40 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
                                             'target-id'           => 'KeyResult0ValueInputWrap',
+                                            'required'  => true,
                                             'hidden-option-value' => KeyResult::UNIT_BINARY,
                                             'options'             => $kr_value_unit_list
                                            ]) ?>
-                        <div id="KeyResult0ValueInputWrap">
+                        <div id="KeyResult0ValueInputWrap"
+                             style="<?= isset($this->request->data['KeyResult'][0]['value_unit'])
+                             && $this->request->data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
 
                             <?=
                             $this->Form->input('KeyResult.0.target_value',
-                                               ['label'                   => __d('gl', "達成時"),
-                                                'wrapInput' => 'col col-sm-9',
-                                                'type'                    => 'number',
-                                                'default'   => 100,
-                                                'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
+                                               ['label'                    => __d('gl', "達成時"),
+                                                'wrapInput'                => 'col col-sm-9',
+                                                'type'                     => 'number',
+                                                'default'                  => 100,
+                                                'required'                 => true,
+                                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                                'data-bv-integer-message'  => __d('validate', "数字のみで入力してください。"),
                                                ]) ?>
                             <?=
                             $this->Form->input('KeyResult.0.start_value',
-                                               ['label'     => __d('gl', "開始時"),
-                                                'wrapInput' => 'col col-sm-9',
-                                                'type'                    => 'number',
-                                                'default'   => 0,
-                                                'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
-                                                'data-bv-integer'         => "true",
+                                               ['label'                    => __d('gl', "開始時"),
+                                                'wrapInput'                => 'col col-sm-9',
+                                                'type'                     => 'number',
+                                                'default'                  => 0,
+                                                'required'                 => true,
+                                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                                'data-bv-integer-message'  => __d('validate', "数字のみで入力してください。"),
+                                                'data-bv-integer'          => "true",
                                                ]) ?>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col col-sm-3 control-label text-right">期間</label>
+                    <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
                         <div class="form-group" id="KeyResult0EndDateContainer">
@@ -193,7 +200,16 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             <div class="input-group date padding-lr-5px goal-set-date">
                                 <?=
                                 $this->Form->input('KeyResult.0.end_date',
-                                                   ['value' => $kr_end_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                                                   [
+                                                       'value'                    => $kr_end_date_format,
+                                                       'label'                    => false,
+                                                       'div'                      => false,
+                                                       'class'                    => "form-control",
+                                                       'required'                 => true,
+                                                       "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                                       'type'                     => 'text',
+                                                       'wrapInput'                => null
+                                                   ]) ?>
                                 <span class="input-group-addon"><i class="fa fa-th"></i></span>
                             </div>
                         </div>
@@ -215,7 +231,16 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                  id="KeyResult0StartDateInputWrap">
                                 <?=
                                 $this->Form->input('KeyResult.0.start_date',
-                                                   ['value' => $kr_start_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                                                   [
+                                                       'value'                    => $kr_start_date_format,
+                                                       'label'                    => false,
+                                                       'div'                      => false,
+                                                       'class'                    => "form-control",
+                                                       //                                                       'required'                 => true,
+                                                       "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                                       'type'                     => 'text',
+                                                       'wrapInput'                => null
+                                                   ]) ?>
                                 <span class="input-group-addon"><i class="fa fa-th"></i></span>
                             </div>
                         </div>
@@ -228,9 +253,16 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"), "#",
                                           ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
+                        <?if (isset($this->request->data['KeyResult'][0])) {
+                            $disabled = null;
+                        }
+                        else {
+                            $disabled = 'disabled';
+                        }
+                        ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false, $disabled => $disabled]) ?>
                     </div>
                 </div>
             </div>
