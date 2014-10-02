@@ -2376,6 +2376,10 @@ Temporary Properties - YOU MUST FIX
     background: green;
 }
 
+.ribbon-hotfix {
+    background: red;
+}
+
 .ribbon-local {
     background: blue;
 }
