@@ -202,6 +202,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                 $this->Form->input('KeyResult.0.end_date',
                                                    [
                                                        'value'                    => $kr_end_date_format,
+                                                       'default' => $kr_end_date_format,
                                                        'label'                    => false,
                                                        'div'                      => false,
                                                        'class'                    => "form-control",
@@ -236,7 +237,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                        'label'                    => false,
                                                        'div'                      => false,
                                                        'class'                    => "form-control",
-                                                       //                                                       'required'                 => true,
+                                                       'required' => true,
                                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                                        'type'                     => 'text',
                                                        'wrapInput'                => null
