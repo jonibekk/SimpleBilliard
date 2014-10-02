@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 7/4/14
  * Time: 10:33 AM
-
  *
-*@var CodeCompletionView    $this
+ * @var CodeCompletionView    $this
  * @var                       $posts
  * @var                       $current_circle
  * @var                       $circle_members
@@ -19,7 +18,7 @@
     <div class="panel panel-default feed-share-range">
         <div class="panel-body gl-feed">
             <div class="col col-xxs-12 font_12px">
-                <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'link-gray']) ?>
+                <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
                 <span> ･ </span>
                 <span class="feed-share-range-circle"><?= $current_circle['Circle']['name'] ?></span>
                 <span class="feed-circle-user-number">
