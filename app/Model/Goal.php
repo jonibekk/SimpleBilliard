@@ -220,9 +220,9 @@ class Goal extends AppModel
     }
 
     /**
-     * 自分のゴール取得
+     * 自分が作成したゴール取得
      *
-     * @return array
+*@return array
      */
     function getMyGoals()
     {
@@ -240,7 +240,52 @@ class Goal extends AppModel
                         'SpecialKeyResult.special_flg'   => true,
                         'SpecialKeyResult.start_date >=' => $start_date,
                         'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
                     ]
+                ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        return $res;
+    }
+
+    /**
+     * 自分がこらぼったゴール取得
+     *
+     * @return array
+     */
+    function getMyCollaboGoals()
+    {
+        $goal_ids = $this->KeyResult->getCollaboGoalList($this->my_uid);
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $goal_ids,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内

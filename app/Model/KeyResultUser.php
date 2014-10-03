@@ -96,4 +96,20 @@ class KeyResultUser extends AppModel
         return $res;
     }
 
+    function getCollaboKeyResultList($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'user_id' => $user_id,
+                'team_id' => $this->current_team_id,
+                'type'    => KeyResultUser::TYPE_COLLABORATOR,
+            ],
+            'fields'     => [
+                'key_result_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

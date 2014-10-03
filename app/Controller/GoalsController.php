@@ -22,8 +22,9 @@ class GoalsController extends AppController
         $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals();
         $my_goals = $this->Goal->getMyGoals();
+        $collabo_goals = $this->Goal->getMyCollaboGoals();
         $current_global_menu = "goal";
-        $this->set(compact('goals', 'my_goals', 'current_global_menu'));
+        $this->set(compact('goals', 'my_goals', 'collabo_goals', 'current_global_menu'));
     }
 
     /**

@@ -113,4 +113,19 @@ class KeyResult extends AppModel
         $this->_setUnitName();
     }
 
+    function getCollaboGoalList($user_id)
+    {
+        $key_result_ids = $this->KeyResultUser->getCollaboKeyResultList($user_id);
+        $options = [
+            'conditions' => [
+                'id' => $key_result_ids,
+            ],
+            'fields'     => [
+                'goal_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }
