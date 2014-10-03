@@ -161,29 +161,35 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                             'options'             => $kr_value_unit_list
                                            ]) ?>
                         <div id="KeyResult0ValueInputWrap"
-                             style="<?= isset($this->request->data['KeyResult'][0]['value_unit'])
+                             style="<?=
+                             isset($this->request->data['KeyResult'][0]['value_unit'])
                              && $this->request->data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
 
                             <?=
                             $this->Form->input('KeyResult.0.target_value',
-                                               ['label'                    => __d('gl', "達成時"),
-                                                'wrapInput'                => 'col col-sm-9 pl_5px',
-                                                'type'                     => 'number',
-                                                'default'                  => 100,
-                                                'required'                 => true,
-                                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                                'data-bv-integer-message'  => __d('validate', "数字のみで入力してください。"),
+                                               ['label'                        => __d('gl', "達成時"),
+                                                'wrapInput'                    => 'col col-sm-9 pl_5px',
+                                                'type'                         => 'number',
+                                                'step'                         => '0.1',
+                                                'default'                      => 100,
+                                                'required'                     => true,
+                                                'maxlength'                    => 14,
+                                                'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                ]) ?>
                             <?=
                             $this->Form->input('KeyResult.0.start_value',
-                                               ['label'                    => __d('gl', "開始時"),
-                                                'wrapInput'                => 'col col-sm-9 pl_5px',
-                                                'type'                     => 'number',
-                                                'default'                  => 0,
-                                                'required'                 => true,
-                                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                                'data-bv-integer-message'  => __d('validate', "数字のみで入力してください。"),
-                                                'data-bv-integer'          => "true",
+                                               ['label'                        => __d('gl', "開始時"),
+                                                'wrapInput'                    => 'col col-sm-9 pl_5px',
+                                                'type'                         => 'number',
+                                                'step'                         => '0.1',
+                                                'default'                      => 0,
+                                                'required'                     => true,
+                                                'maxlength'                    => 14,
+                                                'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                ]) ?>
                         </div>
                     </div>
@@ -221,8 +227,10 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault">
                                     <span
-                                        class="plr_18px"><?= $kr_start_date_format ?><?= !isset($this->request->data['KeyResult'][0]) ? __d('gl',
-                                                                                                                                            "（本日）") : null ?>
+                                        class="plr_18px"><?=
+                                        $kr_start_date_format ?><?=
+                                        !isset($this->request->data['KeyResult'][0]) ? __d('gl',
+                                                                                           "（本日）") : null ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap"
                                                        delete-target-id="KeyResult0StartDateDefault"><?=
