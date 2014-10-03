@@ -479,10 +479,10 @@ footer p {
 /*==/ モジュール ===*/
 
 /*=== headerの設定 ===*/
-.header-icon_text {
-    margin-bottom: 0;
-}
 
+.header_icon-text{
+    margin: 0;
+}
 .navbar {
     margin: 0;
     max-height: 48px;
@@ -2113,15 +2113,17 @@ ul.gl-input-images > li {
         margin-left: 20px;
     }
 
+    .nav>li>a{
+        padding: 9px 0 0;
+    }
+
     .navbar-nav > li > .header-logo {
-        padding-left: 4px;
-        padding-right: 10px;
+        padding-left: 10px;
     }
 
     .navbar-nav > li > .header-goal,
     .navbar-nav > li > .header-team {
         padding-left: 10px;
-        padding-right: 10px;
     }
 
     .header-logo-img {
@@ -2130,6 +2132,21 @@ ul.gl-input-images > li {
 
     .header-icon {
         width: 36px;
+    }
+
+    .header_l-icons{
+        width: 56px;
+        height: 48px;
+    }
+
+    .header_l-icons:hover{
+        border-bottom: 4px solid #ae2f2f;
+        margin-bottom: -4px;
+    }
+
+    .activeColumn{
+        border-bottom: 4px solid #ae2f2f;
+        margin-bottom: -4px;
     }
 
     .nav-team-select {
@@ -2194,26 +2211,29 @@ ul.gl-input-images > li {
         width: 972px;
     }
 
-    .navbar-nav > li > .header-logo {
-        margin-left: 2px;
-        padding-left: 2px;
-        padding-right: 3px;
-    }
-
     .nav-search {
         width: 200px;
     }
 
-    .navbar-nav > li > .header-goal {
-        padding-left: 2px;
-        margin-left: 16px;
-        padding-right: 3px;
+    .navbar-nav > li > .header-logo {
+        padding-left: 10px;
     }
 
+    .navbar-nav > li > .header-goal,
     .navbar-nav > li > .header-team {
-        padding-left: 2px;
-        margin-left: 16px;
-        padding-right: 3px;
+        padding-left: 10px;
+    }
+
+    .header-logo-img {
+        margin-left: 5px;
+    }
+
+    .header-icon {
+        width: 36px;
+    }
+
+    .header_l-icons{
+        width: 54px;
     }
 
     .nav-team-select {
@@ -2265,14 +2285,6 @@ ul.gl-input-images > li {
         width: 1008px;
     }
 
-    .navbar-nav > li > .header-goal {
-        margin-left: 20px;
-    }
-
-    .navbar-nav > li > .header-team {
-        margin-left: 20px;
-    }
-
     .nav-team-select {
         width: 184px;
         margin-left: 10px;
@@ -2288,6 +2300,10 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 103px;
+    }
+
+    .header_l-icons{
+        width: 56px;
     }
 
     .gl-s2-post-dropdown {
