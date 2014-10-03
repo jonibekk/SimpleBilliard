@@ -4,11 +4,13 @@
  * User: bigplants
  * Date: 5/28/14
  * Time: 5:04 PM
+
  *
- * @var       $title_for_layout string
+*@var       $title_for_layout string
  * @var       $this             CodeCompletionView
  * @var       $nav_disable
  * @var array $my_teams
+ * @var       $current_global_menu
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
@@ -20,17 +22,19 @@
                 <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
             </button>
             <ul class="nav navbar-nav">
-                <li><a class="header-logo header_l-icons" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
+                <li><a class="header-logo header_l-icons <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
+                       href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                         <img src="<?= $this->Html->url('/img/goalous.png') ?>"
                              class="header-logo-img"
                              alt="Goalous2.0" width="20px" height="20px">
+
                         <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link-home header-link">
                             <?= __d('gl', "ホーム") ?>
                         </p>
                         <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
-                <li><a class="header-goal header_l-icons"
+                <li><a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                         <i class="fa fa-flag header-link header-icon">
                             <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "ゴール") ?></p>
