@@ -43,8 +43,8 @@
                     <div><?= __d('gl', '程度') ?></div>
                     <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['SpecialKeyResult'][0]['value_unit']]) ?></div>
                     <? if ($goal['SpecialKeyResult'][0]['value_unit'] != KeyResult::UNIT_BINARY): ?>
-                        <div><?= __d('gl', '達成時: %s', $goal['SpecialKeyResult'][0]['target_value']) ?></div>
-                        <div><?= __d('gl', '開始時: %s', $goal['SpecialKeyResult'][0]['start_value']) ?></div>
+                        <div><?= __d('gl', '達成時: %s', (double)$goal['SpecialKeyResult'][0]['target_value']) ?></div>
+                        <div><?= __d('gl', '開始時: %s', (double)$goal['SpecialKeyResult'][0]['start_value']) ?></div>
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12">

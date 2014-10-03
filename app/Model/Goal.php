@@ -208,6 +208,14 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
+        //基準の数値を変換
+        if (!empty($res['KeyResult'])) {
+            foreach ($res['KeyResult'] as $k => $k_val) {
+                $res['KeyResult'][$k]['start_value'] = (double)$k_val['start_value'];
+                $res['KeyResult'][$k]['current_value'] = (double)$k_val['current_value'];
+                $res['KeyResult'][$k]['target_value'] = (double)$k_val['target_value'];
+            }
+        }
         return $res;
     }
 
