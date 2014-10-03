@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 8/7/14
  * Time: 11:36 AM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $my_goals
  * @var                    $collabo_goals
  */
@@ -15,7 +14,8 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="col col-xxs-12 goals-column-head">
-            <span class="font_14px goals-column-title"><?= __d('gl', 'あなたのゴール') ?></span>
+            <span class="font_14px goals-column-title"><?= __d('gl', 'あなたのゴール') ?>
+                (<?= count($my_goals) + count($collabo_goals) ?>)</span>
 
             <div class="pull-right">
                 <div class="dropdown">
@@ -36,6 +36,10 @@
             </div>
         </div>
         <div id="LeaderGoals">
+            <div class="col col-xxs-12">
+                <?= __d('gl', 'リーダー') ?>(<?= count($my_goals) ?>)
+            </div>
+
             <? if (empty($my_goals)): ?>
                 <div class="col col-xxs-12 goals-column-empty-box">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
@@ -56,6 +60,10 @@
             <? endif ?>
         </div>
         <div id="CollaboGoals">
+            <div class="col col-xxs-12">
+                <?= __d('gl', 'コラボレータ') ?>(<?= count($collabo_goals) ?>)
+
+            </div>
             <?= $this->element('Goal/my_goal_area_items', ['goals' => $collabo_goals, 'type' => 'collabo']) ?>
         </div>
         <div id="FollowGoals">
