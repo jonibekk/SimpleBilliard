@@ -27,7 +27,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormPurposeWrap",
@@ -42,7 +42,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
-                    'class' => 'form-control addteam_input-design disabled'
+                    'class'     => 'form-control addteam_input-design disabled'
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
@@ -53,7 +53,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <div class="panel-body add-team-panel-body goal-set-body">
                 <?=
                 $this->Form->input('goal_category_id', [
-                    'label' => [
+                    'label'   => [
                         'text'  => __d('gl', "カテゴリ"),
                         'class' => 'col col-sm-3 control-label'
                     ],
@@ -62,15 +62,15 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 ]) ?>
                 <?=
                 $this->Form->input('purpose',
-                                   ['before'      => '<div class="col col-sm-3 control-label">' .
+                                   ['before'                   => '<div class="col col-sm-3 control-label">' .
                                        '<label class="no-asterisk">' . __d('gl', "目的") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl', "達成したいことは？") . '</div></div>',
-                                    'label'       => false,
-                                    'placeholder' => __d('gl', "達成したいことをざっくり書く"),
+                                    'label'                    => false,
+                                    'placeholder'              => __d('gl', "達成したいことをざっくり書く"),
                                     'rows'                     => 1,
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                    'afterInput'  => '<span class="help-block goal-form-addiction">' . __d('gl',
-                                                                                                           "例）世界から貧困を減らすこと") . '</span>'
+                                    'afterInput'               => '<span class="help-block goal-form-addiction">' . __d('gl',
+                                                                                                                        "例）世界から貧困を減らすこと") . '</span>'
                                    ]) ?>
             </div>
 
@@ -99,7 +99,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormKeyResultWrap",
@@ -130,12 +130,12 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 ?>
                 <?=
                 $this->Form->input('KeyResult.0.name',
-                                   ['before'      => '<div class="col col-sm-3 control-label set-goal">' .
+                                   ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
                                        '<label class="no-asterisk">' . __d('gl', "ゴール") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl',
                                                                              "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
-                                    'label'       => false,
-                                    'placeholder' => __d('gl', "具体的に絞り込んで書く"),
+                                    'label'                    => false,
+                                    'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
                                     'afterInput'               => '<span class="help-block">' . __d('gl',
@@ -151,38 +151,51 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                         <?=
                         $this->Form->input('KeyResult.0.value_unit',
-                                           ['label'     => __d('gl', "単位"),
-                                            'wrapInput' => 'col col-sm-9',
+                                           ['label'               => __d('gl', "単位"),
+                                            'wrapInput'           => 'col col-sm-9 pl_5px',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
                                             'target-id'           => 'KeyResult0ValueInputWrap',
+                                            'required'            => true,
                                             'hidden-option-value' => KeyResult::UNIT_BINARY,
                                             'options'             => $kr_value_unit_list
                                            ]) ?>
-                        <div id="KeyResult0ValueInputWrap">
+                        <div id="KeyResult0ValueInputWrap"
+                             style="<?=
+                             isset($this->request->data['KeyResult'][0]['value_unit'])
+                             && $this->request->data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
 
                             <?=
                             $this->Form->input('KeyResult.0.target_value',
-                                               ['label'                   => __d('gl', "達成時"),
-                                                'wrapInput' => 'col col-sm-9',
-                                                'type'                    => 'number',
-                                                'value'                   => 100,
-                                                'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
+                                               ['label'                        => __d('gl', "達成時"),
+                                                'wrapInput'                    => 'col col-sm-9 pl_5px',
+                                                'type'                         => 'number',
+                                                'step'                         => '0.1',
+                                                'default'                      => 100,
+                                                'required'                     => true,
+                                                'maxlength'                    => 14,
+                                                'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                ]) ?>
                             <?=
                             $this->Form->input('KeyResult.0.start_value',
-                                               ['label'     => __d('gl', "開始時"),
-                                                'wrapInput' => 'col col-sm-9',
-                                                'type'                    => 'number',
-                                                'value'                   => 0,
-                                                'data-bv-integer-message' => __d('validate', "数字のみで入力してください。"),
-                                                'data-bv-integer'         => "true",
+                                               ['label'                        => __d('gl', "開始時"),
+                                                'wrapInput'                    => 'col col-sm-9 pl_5px',
+                                                'type'                         => 'number',
+                                                'step'                         => '0.1',
+                                                'default'                      => 0,
+                                                'required'                     => true,
+                                                'maxlength'                    => 14,
+                                                'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                ]) ?>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col col-sm-3 control-label text-right">期間</label>
+                    <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
                         <div class="form-group" id="KeyResult0EndDateContainer">
@@ -190,10 +203,20 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                 __d('gl',
                                     "期限") ?></label>
 
-                            <div class="input-group date padding-lr-5px goal-set-date">
+                            <div class="input-group date pl_5px goal-set-date">
                                 <?=
                                 $this->Form->input('KeyResult.0.end_date',
-                                                   ['value' => $kr_end_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                                                   [
+                                                       'value'                    => $kr_end_date_format,
+                                                       'default'                  => $kr_end_date_format,
+                                                       'label'                    => false,
+                                                       'div'                      => false,
+                                                       'class'                    => "form-control",
+                                                       'required'                 => true,
+                                                       "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                                       'type'                     => 'text',
+                                                       'wrapInput'                => null
+                                                   ]) ?>
                                 <span class="input-group-addon"><i class="fa fa-th"></i></span>
                             </div>
                         </div>
@@ -203,7 +226,11 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault">
-                                    <span class="padding-lr-18px"><?= $kr_start_date_format ?><?= __d('gl', "（本日）") ?>
+                                    <span
+                                        class="plr_18px"><?=
+                                        $kr_start_date_format ?><?=
+                                        !isset($this->request->data['KeyResult'][0]) ? __d('gl',
+                                                                                           "（本日）") : null ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap"
                                                        delete-target-id="KeyResult0StartDateDefault"><?=
@@ -211,11 +238,20 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                 "変更") ?></a></span>
                             </p>
 
-                            <div class="input-group date padding-lr-5px goal-set-date" style="display: none"
+                            <div class="input-group date plr_5px goal-set-date" style="display: none"
                                  id="KeyResult0StartDateInputWrap">
                                 <?=
                                 $this->Form->input('KeyResult.0.start_date',
-                                                   ['value' => $kr_start_date_format, 'label' => false, 'div' => false, 'class' => "form-control", 'type' => 'text', 'wrapInput' => null]) ?>
+                                                   [
+                                                       'value'                    => $kr_start_date_format,
+                                                       'label'                    => false,
+                                                       'div'                      => false,
+                                                       'class'                    => "form-control",
+                                                       'required'                 => true,
+                                                       "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                                       'type'                     => 'text',
+                                                       'wrapInput'                => null
+                                                   ]) ?>
                                 <span class="input-group-addon"><i class="fa fa-th"></i></span>
                             </div>
                         </div>
@@ -228,9 +264,16 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"), "#",
                                           ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
+                        <?if (isset($this->request->data['KeyResult'][0])) {
+                            $disabled = null;
+                        }
+                        else {
+                            $disabled = 'disabled';
+                        }
+                        ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false, $disabled => $disabled]) ?>
                     </div>
                 </div>
             </div>
@@ -248,7 +291,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class' => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormOtherWrap",
@@ -268,7 +311,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
                 'type'          => 'file',
-                'id' => 'AddGoalFormOther',
+                'id'            => 'AddGoalFormOther',
             ]); ?>
             <div class="panel-body add-team-panel-body">
                 <?=
@@ -282,10 +325,10 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                    ]) ?>
                 <?=
                 $this->Form->input('priority', [
-                    'before' => '<div class="col col-sm-3 control-label set-importance">' .
+                    'before'   => '<div class="col col-sm-3 control-label set-importance">' .
                         '<label>' . __d('gl', "重要度") . '</label>' .
                         '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>このゴールの重要度") . '</div></div>',
-                    'label'  => false,
+                    'label'    => false,
                     'type'     => 'select',
                     'default'  => 3,
                     'required' => false,
@@ -303,6 +346,12 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
                                  style="width: 96px; height: 96px;">
+                                <?
+                                if (isset($this->request->data['Goal']['photo_file_name']) && !empty($this->request->data['Goal']['photo_file_name'])) {
+                                    echo $this->Upload->uploadImage($this->request->data, 'Goal.photo',
+                                                                    ['style' => 'x_large']);
+                                }
+                                ?>
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>

@@ -12,7 +12,7 @@
 <!-- START app/View/Elements/Goals/index_items.ctp -->
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
-        <div class="col col-xxs-2">
+        <div class="col col-xxs-3 col-xs-2">
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
                class="modal-ajax-get">
                 <?=
@@ -26,7 +26,7 @@
                 )
                 ?></a>
         </div>
-        <div class="col col-xxs-10">
+        <div class="col col-xxs-9 col-xs-10 pl_5px">
             <div class="col col-xxs-12">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
                    class="modal-ajax-get"><b

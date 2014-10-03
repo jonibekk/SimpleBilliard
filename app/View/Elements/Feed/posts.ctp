@@ -25,6 +25,8 @@
                         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                             <li><a href="#" class="target-toggle-click"
                                    target-id="PostEditForm_<?= $post['Post']['id'] ?>"
+                                   opend-text="<?= __d('gl', "編集をやめる") ?>"
+                                   closed-text="<?= __d('gl', "投稿を編集") ?>"
                                    click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
                                    hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
                                     ><?= __d('gl', "投稿を編集") ?></a>
@@ -170,7 +172,7 @@
                                 <?=
                                 $this->Html->image('ajax-loader.gif',
                                                    [
-                                                       'class' => 'lazy media-object',
+                                                       'class'         => 'lazy media-object',
                                                        'data-original' => $this->Upload->uploadUrl($post,
                                                                                                    "Post.site_photo",
                                                                                                    ['style' => 'small']),
@@ -265,7 +267,7 @@
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
-                        'class' => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
+                        'class'                    => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
                         'target_show_id'           => "Comment_{$post['Post']['id']}",
                         'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -288,7 +290,7 @@
                         <a href="#" class="target-show-target-click font_12px comment-add-pic"
                            target-id="CommentFormImage_<?= $post['Post']['id'] ?>"
                            click-target-id="Comment__Post_<?= $post['Post']['id'] ?>_Photo_1">
-                        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                            <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
                                     data-placement="bottom"
                                     title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
                             </button>

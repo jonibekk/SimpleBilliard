@@ -21,7 +21,7 @@
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
-                    'class' => 'col col-sm-3 control-label'
+                    'class' => 'col col-sm-3 control-label form-label'
                 ],
                 'wrapInput' => 'col col-xxs-5 col-sm-3 gl-notify-setting-switch',
                 'class'     => 'form-control setting_input-design'
@@ -36,8 +36,8 @@
         $this->Form->hidden('NotifySetting.id',
                             ['value' => isset($this->request->data['NotifySetting']['id']) ? $this->request->data['NotifySetting']['id'] : null]) ?>
         <div class="panel-body notify-setting-panel-body">
-        <div class="form-group">
-                <label class="col col-sm-3 col-xxs-12 control-label"><?= __d('gl', '自分の投稿への反応') ?></label>
+            <div class="form-group">
+                <label class="col col-sm-3 col-xxs-12 control-label form-label"><?= __d('gl', '自分の投稿への反応') ?></label>
                 <?
                 //TODO 現状、アプリ内通知は必須の為、コメントアウト
                 //                echo $this->Form->input("NotifySetting.feed_app_flg",
@@ -65,7 +65,7 @@
                 ?>
             </div>
             <div class="form-group">
-                <label class="col col-sm-3 col-xxs-12 control-label"><?= __d('gl', 'サークルの更新') ?></label>
+                <label class="col col-sm-3 col-xxs-12 control-label form-label"><?= __d('gl', 'サークルの更新') ?></label>
                 <?
                 //TODO 現状、アプリ内通知は必須の為、コメントアウト
                 //                echo $this->Form->input("NotifySetting.circle_app_flg",

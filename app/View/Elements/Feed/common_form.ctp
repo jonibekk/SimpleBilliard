@@ -18,10 +18,10 @@
                                               class="switch-post-anchor"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
-                                         class="switch-action-anchor develop--forbiddenLink-"><i
+                                         class="switch-action-anchor develop--forbiddenLink"><i
                         class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab"
-                                        class="switch-badge-anchor develop--forbiddenLink-"><i
+                                        class="switch-badge-anchor develop--forbiddenLink"><i
                         class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a><span class="switch-arrow"></span></li>
         </ul>
     </div>
@@ -48,9 +48,9 @@
                     'type'                     => 'textarea',
                     'rows'                     => 1,
                     'required'                 => true,
-                    'placeholder'    => __d('gl', "何か投稿しよう"),
-                    'class' => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
-                    'target_show_id' => "PostFormFooter",
+                    'placeholder'              => __d('gl', "何か投稿しよう"),
+                    'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
+                    'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
@@ -85,7 +85,7 @@
                 <div class="font_12px" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
-                    <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
                         </button>

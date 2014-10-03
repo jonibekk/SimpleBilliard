@@ -29,6 +29,8 @@
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
                                    target-id="CommentEditForm_<?= $comment['id'] ?>"
+                                   opend-text="<?= __d('gl', "編集をやめる") ?>"
+                                   closed-text="<?= __d('gl', "コメントを編集") ?>"
                                    click-target-id="CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="CommentTextBody_<?= $comment['id'] ?>"
 
