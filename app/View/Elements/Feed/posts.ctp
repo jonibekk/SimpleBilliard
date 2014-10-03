@@ -25,6 +25,8 @@
                         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                             <li><a href="#" class="target-toggle-click"
                                    target-id="PostEditForm_<?= $post['Post']['id'] ?>"
+                                   opend-text="<?= __d('gl', "編集をやめる") ?>"
+                                   closed-text="<?= __d('gl', "投稿を編集") ?>"
                                    click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
                                    hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
                                     ><?= __d('gl', "投稿を編集") ?></a>

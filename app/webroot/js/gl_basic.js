@@ -210,6 +210,19 @@ function evTargetToggleClick() {
     if ($obj.attr("hidden-target-id")) {
         $('#' + $obj.attr("hidden-target-id")).hide();
     }
+    //開いている時と閉じてる時のテキストの指定があった場合は置き換える
+    if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
+        //開いてるとき
+        if ($("#" + target_id).is(':visible')) {
+            //閉じてる表示
+            $obj.text($obj.attr("closed-text"));
+        }
+        //閉じてるとき
+        else {
+            //開いてる表示
+            $obj.text($obj.attr("opend-text"));
+        }
+    }
     $("#" + target_id).toggle();
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).trigger('click');
