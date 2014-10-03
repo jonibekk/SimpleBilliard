@@ -94,8 +94,8 @@
                     <div class="col col-xxs-12">
                         <? if (isset($goal['SpecialKeyResult'][0]['end_date']) && !empty($goal['SpecialKeyResult'][0]['end_date'])): ?>
                             <div class="pull-left font_12px">
-                                <? if (($limit_day = ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) <= 0): ?>
-                                    <?= __d('gl', "期限切れ") ?>
+                                <? if (($limit_day = ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) < 0): ?>
+                                    <?= __d('gl', "%d日経過", $limit_day * -1) ?>
                                 <? else: ?>
                                     <?= __d('gl', "残り%d日", $limit_day) ?>
                                 <?endif; ?>
