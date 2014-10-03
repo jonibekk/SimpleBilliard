@@ -46,7 +46,8 @@
                 <div class="col col-xxs-12 my-goals-item">
                     <div class="col col-xxs-12">
                         <div class="pull-right goals-column-function bd-radius_4px dropdown">
-                            <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px" data-toggle="dropdown"
+                            <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                               data-toggle="dropdown"
                                id="download">
                                 <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
                             </a>
@@ -93,9 +94,11 @@
                     <div class="col col-xxs-12">
                         <? if (isset($goal['SpecialKeyResult'][0]['end_date']) && !empty($goal['SpecialKeyResult'][0]['end_date'])): ?>
                             <div class="pull-left font_12px">
-                                <?=
-                                __d('gl', "残り%d日",
-                                    ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) ?>
+                                <? if (($limit_day = ($goal['SpecialKeyResult'][0]['end_date'] - time()) / (60 * 60 * 24)) <= 0): ?>
+                                    <?= __d('gl', "期限切れ") ?>
+                                <? else: ?>
+                                    <?= __d('gl', "残り%d日", $limit_day) ?>
+                                <?endif; ?>
                             </div>
                         <? endif; ?>
                         <div class="pull-right font_12px check-status">
