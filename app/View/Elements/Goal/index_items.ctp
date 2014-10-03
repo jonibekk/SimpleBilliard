@@ -15,16 +15,16 @@
         <div class="col col-xxs-3 col-xs-2">
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
                class="modal-ajax-get">
-            <?=
-            $this->Html->image('ajax-loader.gif',
-                               [
-                                   'class'         => 'lazy img-rounded',
-                                   'style'         => 'width: 48px; height:48px;',
-                                   'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
-                                                                               ['style' => 'medium'])
-                               ]
-            )
-            ?></a>
+                <?=
+                $this->Html->image('ajax-loader.gif',
+                                   [
+                                       'class'         => 'lazy img-rounded',
+                                       'style'         => 'width: 48px; height:48px;',
+                                       'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
+                                                                                   ['style' => 'medium'])
+                                   ]
+                )
+                ?></a>
         </div>
         <div class="col col-xxs-9 col-xs-10 pl_5px">
             <div class="col col-xxs-12">
@@ -32,7 +32,8 @@
                     <?= __d('gl', "ゴール未設定") ?>
                 <? else: ?>
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
-                       class="modal-ajax-get"><b class="line-numbers ln_2 font_verydark"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b></a>
+                       class="modal-ajax-get"><b
+                            class="line-numbers ln_2 font_verydark"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b></a>
                 <?endif; ?>
             </div>
             <? if (!empty($goal['SpecialKeyResult'])): ?>
@@ -65,9 +66,11 @@
         <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id')): ?>
             <div class="col col-xxs-12 mt_5px">
                 <div class="col col-xxs-9 col-xxs-offset-3 col-xs-10 col-xs-offset-2">
-                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink btn-followCollabo" href="#"><i class="fa fa-heart font_rougeOrange"><span
+                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink btn-followCollabo" href="#"><i
+                            class="fa fa-heart font_rougeOrange"><span
                                 style="color: #000000" class="ml_2px"><?= __d('gl', "フォロー") ?></span></i></a>
-                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink ml_5px btn-followCollabo" href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
+                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink ml_5px btn-followCollabo"
+                       href="#"><i class="fa fa-child font_rougeOrange font_18px"><span
                                 style="color: #000000" class="ml_2px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
                 </div>
             </div>

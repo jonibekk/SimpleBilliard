@@ -21,15 +21,16 @@
     margin-bottom: 3px;
 }
 
-.form-horizontal .form-group{
+.form-horizontal .form-group {
     margin-right: 0;
     margin-left: 0;
 }
 
-.row{
+.row {
     margin-left: 0;
     margin-right: 0;
 }
+
 /*==/ normalize bootstrap ===*/
 
 /*=== normalize select2 3.5.1 ===*/
@@ -112,7 +113,6 @@
     text-decoration: none;
 }
 
-
 .select2-container-multi .select2-choices .select2-search-choice {
     padding-right: 20px;
     padding-left: 7px;
@@ -167,15 +167,15 @@ footer p {
     margin-top: 4px;
 }
 
-.mt_16px{
+.mt_16px {
     margin-top: 16px;
 }
 
-.mr_5px{
+.mr_5px {
     margin-right: 5px;
 }
 
-.ml_2px{
+.ml_2px {
     margin-left: 2px;
 }
 
@@ -196,10 +196,11 @@ footer p {
     padding-bottom: 5px;
 }
 
-.plr_4px{
+.plr_4px {
     padding-right: 4px;
     padding-left: 4px;
 }
+
 .plr_5px {
     padding-left: 5px;
     padding-right: 5px;
@@ -210,18 +211,22 @@ footer p {
     padding-right: 18px;
 }
 
-.pt_1px{
+.pt_1px {
     padding-top: 1px;
 }
-.pr_5px{
+
+.pr_5px {
     padding-right: 5px;
 }
-.pb_2px{
+
+.pb_2px {
     padding-bottom: 2px;
 }
-.pl_5px{
+
+.pl_5px {
     padding-left: 5px;
 }
+
 /*行数の指定*/
 /*noinspection CssUnknownProperty*/
 .line-numbers {
@@ -403,9 +408,10 @@ footer p {
     padding-right: 12px;
     text-align: right;
 }
+
 /*=/ Modal Settings ==*/
 
-.form-label{
+.form-label {
     padding-right: 12px;
 }
 
@@ -470,7 +476,6 @@ footer p {
 
 /*/切り替えスイッチ*/
 
-
 /*==/ モジュール ===*/
 
 /*=== headerの設定 ===*/
@@ -533,12 +538,11 @@ footer p {
 /*==/ headerの設定 ===*/
 
 /*早めに整理する*/
-.btn-followCollabo{
+.btn-followCollabo {
     padding: 8px;
 }
 
 /*/早めに整理する*/
-
 
 .panel-default > .panel-heading {
     background-color: #fff;
@@ -2339,7 +2343,6 @@ ul.gl-input-images > li {
 
 /*==/ メディアクエリで切り替え ===*/
 
-
 /*=================================
 Temporary Properties - YOU MUST FIX
 ==================================*/
@@ -2444,7 +2447,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .goal-set-date {
-    min-width: 150px;
+    min-width: 190px;
     width: 16%;
 }
 
