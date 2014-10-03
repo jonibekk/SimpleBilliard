@@ -340,6 +340,13 @@ class PostsController extends AppController
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
+            //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
+            //サークルページに居て当該サークルから抜けた場合の対応
+            $params = $this->request->params;
+            unset($params['_Token']);
+            if ($this->referer(null, true) == Router::url($params)) {
+                $this->redirect('/');
+            }
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
