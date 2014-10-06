@@ -4,10 +4,12 @@
  * User: bigplants
  * Date: 8/7/14
  * Time: 11:36 AM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $my_goals
  * @var                    $collabo_goals
+ * @var                    $follow_goals
  */
 ?>
 <!-- START app/View/Elements/my_goals_area.ctp -->
@@ -65,6 +67,40 @@
 
             </div>
             <?= $this->element('Goal/my_goal_area_items', ['goals' => $collabo_goals, 'type' => 'collabo']) ?>
+        </div>
+        <div id="FollowGoals">
+
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col col-xxs-12 goals-column-head">
+            <span class="font_14px goals-column-title"><?= __d('gl', 'フォロー中のゴール') ?>
+                (<?= count($follow_goals) ?>)</span>
+
+            <div class="pull-right">
+                <div class="dropdown">
+                    <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
+                        <span class="line-height_20px"><?= __d('gl', "全て") ?></span><i
+                            class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                        aria-labelledby="dropdownMenu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?=
+                                __d('gl',
+                                    "完了しているゴール") ?></a>
+                        </li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?= __d('gl', "今期のゴール") ?></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="FollowGoals">
+            <?= $this->element('Goal/my_goal_area_items', ['goals' => $follow_goals, 'type' => 'follow']) ?>
         </div>
         <div id="FollowGoals">
 
