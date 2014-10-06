@@ -406,6 +406,10 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
 
+        $res = $this->sortModified($res);
+        $res = $this->sortEndDate($res);
+        $res = $this->sortPriority($res);
+
         return $res;
     }
 
