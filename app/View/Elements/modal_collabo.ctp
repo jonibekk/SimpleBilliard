@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/modal_collabo.ctp -->
-<div class="modal fade" tabindex="-1" id="ModalCollabo_<?= $skr['id'] ?>">
+<div class="modal fade" tabindex="-1" id="ModalCollabo_<?= $skr['id'] ?>" style="z-index: 1080">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

@@ -222,7 +222,7 @@ class Goal extends AppModel
     /**
      * 自分が作成したゴール取得
      *
-*@return array
+     * @return array
      */
     function getMyGoals()
     {
@@ -341,6 +341,17 @@ class Goal extends AppModel
                         'User'       => [
                             'fields' => $this->User->profileFields,
                         ]
+                    ],
+                    'MyCollabo' => [
+                        'conditions' => [
+                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
                     ],
                 ],
                 'KeyResult'        => [
