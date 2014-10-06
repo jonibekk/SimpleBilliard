@@ -4,9 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * KeyResult Model
  *
- * @property Team          $Team
- * @property Goal          $Goal
- * @property KeyResultUser $KeyResultUser
+ * @property Team              $Team
+ * @property Goal              $Goal
+ * @property Follower          $Follower
+ * @property KeyResultUser     $KeyResultUser
  */
 class KeyResult extends AppModel
 {
@@ -104,7 +105,11 @@ class KeyResult extends AppModel
         ],
         'MyCollabo'     => [
             'className' => 'KeyResultUser',
-        ]
+        ],
+        'Follower',
+        'MyFollow'      => [
+            'className' => 'Follower',
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)

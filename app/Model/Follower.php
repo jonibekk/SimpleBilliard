@@ -4,9 +4,9 @@ App::uses('AppModel', 'Model');
 /**
  * Follower Model
  *
- * @property Team $Team
- * @property Goal $Goal
- * @property User $User
+ * @property Team      $Team
+ * @property KeyResult $KeyResult
+ * @property User      $User
  */
 class Follower extends AppModel
 {
@@ -23,6 +23,7 @@ class Follower extends AppModel
             ],
         ],
     ];
+
     /**
      * belongsTo associations
      *
@@ -30,7 +31,7 @@ class Follower extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'Goal',
+        'KeyResult',
         'User',
     ];
 }
