@@ -60,4 +60,19 @@ class Follower extends AppModel
         return true;
     }
 
+    function getFollowList($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'user_id' => $user_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'key_result_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

@@ -23,8 +23,9 @@ class GoalsController extends AppController
         $goals = $this->Goal->getAllGoals();
         $my_goals = $this->Goal->getMyGoals();
         $collabo_goals = $this->Goal->getMyCollaboGoals();
+        $follow_goals = $this->Goal->getMyFollowedGoals();
         $current_global_menu = "goal";
-        $this->set(compact('goals', 'my_goals', 'collabo_goals', 'current_global_menu'));
+        $this->set(compact('goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu'));
     }
 
     /**

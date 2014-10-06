@@ -133,6 +133,21 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    function getFollowGoalList($user_id)
+    {
+        $key_result_ids = $this->Follower->getFollowList($user_id);
+        $options = [
+            'conditions' => [
+                'id' => $key_result_ids,
+            ],
+            'fields'     => [
+                'goal_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     /**
      * キーリザルトが現在のチームで有効かどうか
      *
