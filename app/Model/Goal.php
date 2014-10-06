@@ -127,6 +127,7 @@ class Goal extends AppModel
         'SpecialKeyResult' => [
             'className' => 'KeyResult'
         ],
+        'Follower',
     ];
 
     function __construct($id = false, $table = null, $ds = null)
