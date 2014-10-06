@@ -259,7 +259,91 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
 
+        /**
+         * ソート
+         * ソートは優先順位が低いものから処理する
+         */
+        //・第４優先ソート【進捗更新日】
+        //　進捗更新日が近→遠。
+        //　つまり、「進捗更新日」をデータ登録すること。
+        //　目的作成や基準作成時は、0%としての更新があったとする。
+
+        //・第３優先ソート【期限】
+        //　期限が近→遠
+        $res = $this->sortEndDate($res);
+
+        //・第２優先ソート【重要度】
+        //　重要度が高→低
+        $res = $this->sortPriority($res);
+
+        //・第１優先ソート【基準ある/なし】
+        //　基準登録がなし→ある
+        $res = $this->sortExistsSpecialKeyResult($res);
+
         return $res;
+    }
+
+    /**
+     * 期限が近→遠　で並べ替え
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortEndDate($goals, $direction = SORT_ASC)
+    {
+        $end_date_list = array();
+        foreach ($goals as $key => $goal) {
+            if (isset($goal['SpecialKeyResult'][0]['end_date'])) {
+                $end_date_list[$key] = $goal['SpecialKeyResult'][0]['end_date'];
+            }
+            else {
+                //基準なしは下に
+                $end_date_list[$key] = 99999999999999999;
+            }
+        }
+        array_multisort($end_date_list, $direction, SORT_NUMERIC, $goals);
+        return $goals;
+    }
+
+    /**
+     * 重要度が高→低 で並べ替え
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortPriority($goals, $direction = SORT_DESC)
+    {
+        $priority_list = array();
+        foreach ($goals as $key => $goal) {
+            $priority_list[$key] = $goal['Goal']['priority'];
+        }
+        array_multisort($priority_list, $direction, SORT_NUMERIC, $goals);
+        return $goals;
+    }
+
+    /**
+     * 基準登録がなし→ある で並べ替え
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortExistsSpecialKeyResult($goals, $direction = SORT_ASC)
+    {
+        $exists_fkr = array();
+        foreach ($goals as $key => $goal) {
+            $exists_fkr[$key] = 0;
+            if (!empty($goal['SpecialKeyResult'])) {
+                $exists_fkr[$key] = 1;
+            }
+        }
+        array_multisort($exists_fkr, $direction, SORT_NUMERIC, $goals);
+        return $goals;
     }
 
     /**
@@ -342,7 +426,7 @@ class Goal extends AppModel
                             'fields' => $this->User->profileFields,
                         ]
                     ],
-                    'MyCollabo' => [
+                    'MyCollabo'    => [
                         'conditions' => [
                             'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
                             'MyCollabo.user_id' => $this->my_uid,
