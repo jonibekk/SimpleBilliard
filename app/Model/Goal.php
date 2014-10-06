@@ -70,7 +70,7 @@ class Goal extends AppModel
      * @var array
      */
     public $validate = [
-        'purpose' => [
+        'purpose'      => [
             'notEmpty' => [
                 'rule' => 'notEmpty',
             ],
@@ -118,10 +118,10 @@ class Goal extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Post'      => [
+        'Post'             => [
             'dependent' => true,
         ],
-        'KeyResult' => [
+        'KeyResult'        => [
             'dependent' => true,
         ],
         'SpecialKeyResult' => [
@@ -220,7 +220,7 @@ class Goal extends AppModel
     }
 
     /**
-     * 自分のゴール取得
+     * 自分が作成したゴール取得
      *
      * @return array
      */
@@ -240,7 +240,52 @@ class Goal extends AppModel
                         'SpecialKeyResult.special_flg'   => true,
                         'SpecialKeyResult.start_date >=' => $start_date,
                         'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
                     ]
+                ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        return $res;
+    }
+
+    /**
+     * 自分がこらぼったゴール取得
+     *
+     * @return array
+     */
+    function getMyCollaboGoals()
+    {
+        $goal_ids = $this->KeyResult->getCollaboGoalList($this->my_uid);
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $goal_ids,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -297,6 +342,17 @@ class Goal extends AppModel
                             'fields' => $this->User->profileFields,
                         ]
                     ],
+                    'MyCollabo' => [
+                        'conditions' => [
+                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
+                    ],
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -322,11 +378,12 @@ class Goal extends AppModel
      *
      * @param int  $limit
      * @param null $params
+     * @param bool $required_skr
      *
      * @internal param int $page
      * @return array
      */
-    function getAllGoals($limit = 20, $params = null)
+    function getAllGoals($limit = 20, $params = null, $required_skr = true)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -363,6 +420,17 @@ class Goal extends AppModel
                             'fields' => $this->User->profileFields,
                         ]
                     ],
+                    'MyCollabo'    => [
+                        'conditions' => [
+                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
+                    ],
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -378,6 +446,15 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+
+        //skr必須指定の場合はskrが存在しないゴールを除去
+        if ($required_skr) {
+            foreach ($res as $key => $val) {
+                if (isset($val['SpecialKeyResult']) && empty($val['SpecialKeyResult'])) {
+                    unset($res[$key]);
+                }
+            }
+        }
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);

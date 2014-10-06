@@ -22,8 +22,9 @@ class GoalsController extends AppController
         $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals();
         $my_goals = $this->Goal->getMyGoals();
+        $collabo_goals = $this->Goal->getMyCollaboGoals();
         $current_global_menu = "goal";
-        $this->set(compact('goals', 'my_goals', 'current_global_menu'));
+        $this->set(compact('goals', 'my_goals', 'collabo_goals', 'current_global_menu'));
     }
 
     /**
@@ -154,6 +155,33 @@ class GoalsController extends AppController
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
+    }
+
+    public function edit_collabo()
+    {
+        $this->request->allowMethod('post', 'put');
+        if ($this->Goal->KeyResult->KeyResultUser->edit($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
+        }
+        $this->redirect($this->referer());
+    }
+
+    public function delete_collabo($key_result_user_id)
+    {
+        $this->request->allowMethod('post', 'put');
+        $this->Goal->KeyResult->KeyResultUser->id = $key_result_user_id;
+        if (!$this->Goal->KeyResult->KeyResultUser->exists()) {
+            $this->Pnotify->outError(__('gl', "既にコラボレータから抜けている可能性があります。"));
+        }
+        if (!$this->Goal->KeyResult->KeyResultUser->isOwner($this->Auth->user('id'))) {
+            $this->Pnotify->outError(__('gl', "この操作の権限がありません。"));
+        }
+        $this->Goal->KeyResult->KeyResultUser->delete();
+        $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
+        $this->redirect($this->referer());
     }
 
 }

@@ -36,7 +36,7 @@
         $this->Form->hidden('NotifySetting.id',
                             ['value' => isset($this->request->data['NotifySetting']['id']) ? $this->request->data['NotifySetting']['id'] : null]) ?>
         <div class="panel-body notify-setting-panel-body">
-        <div class="form-group">
+            <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label form-label"><?= __d('gl', '自分の投稿への反応') ?></label>
                 <?
                 //TODO 現状、アプリ内通知は必須の為、コメントアウト

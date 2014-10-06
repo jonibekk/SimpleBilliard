@@ -46,21 +46,22 @@
                     'afterInput'               => '<span class="help-block">'
                         . '<p class="font_11px">' . __d('gl', "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。") . '</p>'
                         . '<ul class="example-indent font_11px"><li>' . __d('gl', "例%s",
-                                                                  1) . ' aaa@example.com,bbb@example.com</li></ul>'
+                                                                            1) . ' aaa@example.com,bbb@example.com</li></ul>'
                         . '<ul class="example-indent font_11px"><li>'
                         . '' . __d('gl', "例%s", 2) . ' aaa@example.com</br>'
                         . 'aaa@example.com</br>'
                         . '</li></ul>'
                         . '</span>'
-                ])?>
+                ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('comment', [
                     'label'      => __d('gl', "コメント(オプション)"),
                     'type'       => 'text',
                     'rows'       => 3,
-                    'afterInput' => '<span class="help-block font_11px">' . __d('gl', "コメント(任意)はメールの本文に追加されます。") . '</span>'
-                ])?>
+                    'afterInput' => '<span class="help-block font_11px">' . __d('gl',
+                                                                                "コメント(任意)はメールの本文に追加されます。") . '</span>'
+                ]) ?>
             </div>
             <div class="panel-footer">
                 <div class="row">

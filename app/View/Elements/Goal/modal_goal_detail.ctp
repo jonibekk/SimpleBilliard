@@ -23,14 +23,27 @@
                     <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128"
                          height="128">
                 </div>
-                <div class="col col-xxs-6">
-                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
-                            class="fa fa-heart font_rougeOrange"><span
-                                style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
-                    <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
-                            class="fa fa-child font_rougeOrange font_18px"><span
-                                style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i></a>
-                </div>
+                <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
+                    <div class="col col-xxs-6">
+                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
+                                class="fa fa-heart font_rougeOrange"><span
+                                    style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
+
+                        <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px" data-toggle="modal"
+                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
+                            <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])): ?>
+                                <span
+                                    style="color: #000000" class="font_rougeOrange ml_5px font_14px"><?= __d('gl',
+                                                                                                             "コラボり中") ?></span>
+                            <? else: ?>
+                                <i
+                                    class="fa fa-child font_rougeOrange font_18px"><span
+                                        style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i>
+                            <?
+                            endif; ?>
+                        </a>
+                    </div>
+                <? endif; ?>
             </div>
             <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
                 <div class="col col-xxs-12">

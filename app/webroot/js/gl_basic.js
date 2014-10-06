@@ -106,7 +106,7 @@ $(document).ready(function () {
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
-            $.get(url,function (data) {
+            $.get(url, function (data) {
                 $modal_elm.append(data);
             }).success(function () {
                 $('body').addClass('modal-open');
@@ -121,7 +121,7 @@ $(document).ready(function () {
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
-            $.get(url,function (data) {
+            $.get(url, function (data) {
                 $modal_elm.append(data);
             }).success(function () {
                 $('body').addClass('modal-open');
@@ -136,7 +136,7 @@ $(document).ready(function () {
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
-            $.get(url,function (data) {
+            $.get(url, function (data) {
                 $modal_elm.append(data);
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
