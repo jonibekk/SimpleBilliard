@@ -16,6 +16,7 @@ class PagesControllerTest extends ControllerTestCase
      */
     public $fixtures = array(
         'app.local_name',
+        'app.follower',
         'app.cake_session',
         'app.user', 'app.notify_setting',
         'app.image',
@@ -188,7 +189,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())
@@ -278,7 +279,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())
@@ -366,7 +367,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())
@@ -430,7 +431,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())

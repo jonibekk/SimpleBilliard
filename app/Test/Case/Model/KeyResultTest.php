@@ -17,6 +17,7 @@ class KeyResultTest extends CakeTestCase
     public $fixtures = array(
         'app.key_result',
         'app.key_result_user',
+        'app.follower',
         'app.team',
         'app.badge',
         'app.user',

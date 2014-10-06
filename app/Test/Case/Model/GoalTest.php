@@ -17,6 +17,7 @@ class GoalTest extends CakeTestCase
     public $fixtures = array(
         'app.goal',
         'app.key_result',
+        'app.follower',
         'app.user',
         'app.team',
         'app.badge',
