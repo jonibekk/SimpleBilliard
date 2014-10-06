@@ -23,7 +23,7 @@
                     <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128"
                          height="128">
                 </div>
-                <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
+                <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
                     <div class="col col-xxs-6">
                         <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
                                 class="fa fa-heart font_rougeOrange"><span
