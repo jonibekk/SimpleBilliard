@@ -48,9 +48,9 @@
                     'type'                     => 'textarea',
                     'rows'                     => 1,
                     'required'                 => true,
-                    'placeholder'    => __d('gl', "何か投稿しよう"),
-                    'class' => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
-                    'target_show_id' => "PostFormFooter",
+                    'placeholder'              => __d('gl', "何か投稿しよう"),
+                    'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
+                    'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
@@ -85,7 +85,7 @@
                 <div class="font_12px" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
-                    <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
                         </button>

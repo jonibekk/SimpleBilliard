@@ -20,13 +20,13 @@
                         'class' => 'col col-sm-3 control-label form-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class' => 'form-control register_input-design'
+                    'class'     => 'form-control register_input-design'
                 ],
                 'class'         => 'form-horizontal validate',
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body register-panel-body">
-            <?
+                <?
                 //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __d('gl', "姓(ローマ字)"),
@@ -61,7 +61,7 @@
                         </div>
                     </div>
                     <?=
-                    $this->Form->hidden('Email.0.email', ['value' => $email])?>
+                    $this->Form->hidden('Email.0.email', ['value' => $email]) ?>
                 <? else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
@@ -69,7 +69,7 @@
                         'placeholder'                  => __d('gl', "hiroshi@example.com"),
                         'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
                         "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                    ])?>
+                    ]) ?>
                 <? endif; ?>
 
                 <?=
@@ -78,7 +78,7 @@
                     'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
                     'class'     => false,
                     'default'   => true,
-                ])?>
+                ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('password', [
@@ -86,13 +86,13 @@
                     'placeholder'              => __d('gl', '8文字以上'),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
-                ])?>
+                ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
                     'label'                    => __d('gl', "パスワードを再入力"),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
-                ])?>
+                ]) ?>
                 <hr>
                 <?
                 $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',

@@ -480,9 +480,10 @@ footer p {
 
 /*=== headerの設定 ===*/
 
-.header_icon-text{
+.header_icon-text {
     margin: 0;
 }
+
 .navbar {
     margin: 0;
     max-height: 48px;
@@ -2113,7 +2114,7 @@ ul.gl-input-images > li {
         margin-left: 20px;
     }
 
-    .nav>li>a{
+    .nav > li > a {
         padding: 9px 0 0;
     }
 
@@ -2134,17 +2135,17 @@ ul.gl-input-images > li {
         width: 36px;
     }
 
-    .header_l-icons{
+    .header_l-icons {
         width: 56px;
         height: 48px;
     }
 
-    .header_l-icons:hover{
+    .header_l-icons:hover {
         border-bottom: 4px solid #ae2f2f;
         margin-bottom: -4px;
     }
 
-    .activeColumn{
+    .activeColumn {
         border-bottom: 4px solid #ae2f2f;
         margin-bottom: -4px;
     }
@@ -2232,7 +2233,7 @@ ul.gl-input-images > li {
         width: 36px;
     }
 
-    .header_l-icons{
+    .header_l-icons {
         width: 54px;
     }
 
@@ -2302,7 +2303,7 @@ ul.gl-input-images > li {
         width: 103px;
     }
 
-    .header_l-icons{
+    .header_l-icons {
         width: 56px;
     }
 
