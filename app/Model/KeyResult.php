@@ -133,4 +133,28 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    /**
+     * キーリザルトが現在のチームで有効かどうか
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    function isBelongCurrentTeam($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $id,
+                'team_id' => $this->current_team_id
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
+    }
+
 }

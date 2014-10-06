@@ -460,6 +460,14 @@ class Goal extends AppModel
                             'MyCollabo.description',
                         ],
                     ],
+                    'MyFollow' => [
+                        'conditions' => [
+                            'MyFollow.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyFollow.id',
+                        ],
+                    ],
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -536,6 +544,14 @@ class Goal extends AppModel
                             'MyCollabo.id',
                             'MyCollabo.role',
                             'MyCollabo.description',
+                        ],
+                    ],
+                    'MyFollow'     => [
+                        'conditions' => [
+                            'MyFollow.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyFollow.id',
                         ],
                     ],
                 ],

@@ -25,9 +25,16 @@
                 </div>
                 <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
                     <div class="col col-xxs-6">
-                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
-                                class="fa fa-heart font_rougeOrange"><span
-                                    style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
+                        <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])): ?>
+                            <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px"
+                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_follow', $goal['SpecialKeyResult'][0]['id']]) ?>">
+                                <i class="fa fa-heart font_rougeOrange"><span
+                                        style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
+                        <? else: ?>
+                            <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px"
+                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'delete_follow', $goal['SpecialKeyResult'][0]['id']]) ?>">
+                                <span style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー中") ?></span></a>
+                        <?endif; ?>
 
                         <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px" data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
