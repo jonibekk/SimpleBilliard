@@ -267,6 +267,7 @@ class Goal extends AppModel
         //　進捗更新日が近→遠。
         //　つまり、「進捗更新日」をデータ登録すること。
         //　目的作成や基準作成時は、0%としての更新があったとする。
+        $res = $this->sortModified($res);
 
         //・第３優先ソート【期限】
         //　期限が近→遠
@@ -304,6 +305,24 @@ class Goal extends AppModel
             }
         }
         array_multisort($end_date_list, $direction, SORT_NUMERIC, $goals);
+        return $goals;
+    }
+
+    /**
+     * 進捗更新日で並べ替え 近→遠
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortModified($goals, $direction = SORT_DESC)
+    {
+        $modify_list = array();
+        foreach ($goals as $key => $goal) {
+            $modify_list[$key] = $goal['Goal']['modified'];
+        }
+        array_multisort($modify_list, $direction, SORT_NUMERIC, $goals);
         return $goals;
     }
 
