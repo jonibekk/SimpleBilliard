@@ -85,8 +85,7 @@
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
-                                 data-trigger="fileinput"
-                                 style="width: 96px; height: 96px; line-height:96px;">
+                                 data-trigger="fileinput" style="width: 96px; height: 96px; line-height:96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
