@@ -330,6 +330,66 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
     }
 
+    function testAddFollowSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+            'user_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $this->testAction('/goals/add_follow/' . $key_result_user_id, ['method' => 'GET']);
+    }
+
+    function testAddFollowFailExist()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+            'user_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $data = [
+            'team_id'       => 1,
+            'user_id'       => 1,
+            'key_result_id' => $key_result_user_id,
+        ];
+        $Goals->Goal->KeyResult->Follower->save($data);
+        $this->testAction('/goals/add_follow/' . $key_result_user_id, ['method' => 'GET']);
+    }
+
+    function testAddFollowFailNotExistKeyResult()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/add_follow/' . 999999999999999999, ['method' => 'GET']);
+    }
+
+    function testDeleteFollowSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+            'user_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $this->testAction('/goals/add_follow/' . $key_result_user_id, ['method' => 'GET']);
+    }
+
+    function testDeleteFollowFailNotExistKeyResult()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/delete_follow/' . 999999999999999999, ['method' => 'GET']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**
@@ -389,6 +449,10 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->KeyResult->KeyResultUser->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->KeyResult->KeyResultUser->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->KeyResult->Follower->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->KeyResult->Follower->current_team_id = '1';
         return $Goals;
     }
 }
