@@ -221,15 +221,7 @@ class Circle extends AppModel
             ],
             'order'      => ['Circle.modified desc'],
             'contain'    => [
-                'CircleMember' => [
-                    'fields' => [
-                        'CircleMember.id'
-                    ],
-                    'User'   => [
-                        'fields' => $this->CircleMember->User->profileFields
-                    ]
-                ],
-                'CircleAdmin'  => [
+                'CircleAdmin' => [
                     'conditions' => [
                         'CircleAdmin.user_id'   => $this->my_uid,
                         'CircleAdmin.admin_flg' => true
