@@ -260,14 +260,33 @@ function evFollowGoal() {
         dataType: 'json',
         success: function (data) {
             if (data.error) {
-                alert(data.msg);
+                new PNotify({
+                    type: 'error',
+                    text: data.msg
+                });
             }
             else {
-                alert(data.msg);
+                new PNotify({
+                    type: 'success',
+                    text: data.msg
+                });
+            }
+            if (data.add) {
+                $obj.children('span').text("<?=__d('gl',"フォロー中")?>");
+                $obj.children('i').hide();
+                $obj.addClass('followed');
+            }
+            else {
+                $obj.children('span').text("<?=__d('gl',"フォロー")?>");
+                $obj.children('i').show();
+                $obj.removeClass('followed');
             }
         },
         error: function () {
-            alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
+            new PNotify({
+                type: 'error',
+                text: "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>"
+            });
         }
     });
     return false;

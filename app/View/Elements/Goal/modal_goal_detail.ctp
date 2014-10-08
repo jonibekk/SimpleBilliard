@@ -25,29 +25,38 @@
                 </div>
                 <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
                     <div class="col col-xxs-6">
-                        <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])): ?>
-                            <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_follow', $goal['SpecialKeyResult'][0]['id']]) ?>">
-                                <i class="fa fa-heart font_rougeOrange"><span
-                                        style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
-                        <? else: ?>
-                            <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'delete_follow', $goal['SpecialKeyResult'][0]['id']]) ?>">
-                                <span style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー中") ?></span></a>
-                        <?endif; ?>
+                        <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])) {
+                            $follow_class = null;
+                            $follow_style = null;
+                            $follow_text = __d('gl', "フォロー");
+                        }
+                        else {
+                            $follow_class = 'followed';
+                            $follow_style = 'display:none;';
+                            $follow_text = __d('gl', "フォロー中");
+                        }?>
+                        <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px toggle-follow <?= $follow_class ?>"
+                           href="#"
+                           kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
+                            <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
+                            <span style="color: #000000" class="ml_5px"><?= $follow_text ?></span>
+                        </a>
 
-                        <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px" data-toggle="modal"
+                        <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])) {
+                            $collabo_class = 'collaborated';
+                            $collabo_style = 'display:none;';
+                            $collabo_text = __d('gl', "コラボり中");
+                        }
+                        else {
+                            $collabo_class = null;
+                            $collabo_style = null;
+                            $collabo_text = __d('gl', "コラボる");
+                        }?>
+                        <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px <?= $collabo_class ?>"
+                           data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
-                            <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])): ?>
-                                <span
-                                    style="color: #000000" class="font_rougeOrange ml_5px font_14px"><?= __d('gl',
-                                                                                                             "コラボり中") ?></span>
-                            <? else: ?>
-                                <i
-                                    class="fa fa-child font_rougeOrange font_18px"><span
-                                        style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i>
-                            <?
-                            endif; ?>
+                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
+                            <span style="color: #000000" class="ml_5px font_14px"><?= $collabo_text ?></span>
                         </a>
                     </div>
                 <? endif; ?>
