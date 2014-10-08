@@ -278,10 +278,9 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
         $data = [
             'KeyResultUser' => [
-                [
-                    'role'        => 'test',
-                    'description' => 'test',
-                ]
+                'role'          => 'test',
+                'description'   => 'test',
+                'key_result_id' => 1,
             ]
         ];
         $this->testAction('/goals/edit_collabo', ['method' => 'POST', 'data' => $data]);
