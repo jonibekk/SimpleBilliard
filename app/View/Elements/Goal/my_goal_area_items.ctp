@@ -12,7 +12,7 @@
 ?>
 <!-- START app/View/Elements/Goals/my_goal_area_items.ctp -->
 <? foreach ($goals as $goal): ?>
-    <div class="col col-xxs-12 my-goals-item bd-radius_4px shadow-default mt_5px">
+    <div class="col col-xxs-12 my-goals-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
             <? if ($type == 'leader'): ?>
                 <div class="pull-right goals-column-function bd-radius_4px dropdown">

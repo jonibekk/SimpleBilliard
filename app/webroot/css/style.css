@@ -178,6 +178,10 @@ footer p {
     margin-top: 4px;
 }
 
+.mt_8px{
+    margin-top: 8px;
+}
+
 .mt_16px {
     margin-top: 16px;
 }
@@ -2085,7 +2089,7 @@ ul.gl-input-images > li {
 }
 
 .goals-column-plus-box {
-    margin: 8px 0 0;
+    margin: 4px 0 0;
 }
 
 .goals-column-add-box {
@@ -2122,7 +2126,7 @@ ul.gl-input-images > li {
 /*/goals-column-empty*/
 
 .my-goals-item {
-    padding: 8px 5px;
+    padding: 6px 8px;
     border-bottom: 1px solid #f0f0f0;
     background: #fff;
 }
