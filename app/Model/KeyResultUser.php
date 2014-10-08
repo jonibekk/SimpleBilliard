@@ -93,6 +93,7 @@ class KeyResultUser extends AppModel
         $data['KeyResultUser']['type'] = $type;
 
         $res = $this->save($data);
+        $this->KeyResult->Follower->deleteFollower($data['KeyResultUser']['key_result_id']);
         return $res;
     }
 
