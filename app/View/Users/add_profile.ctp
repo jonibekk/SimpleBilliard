@@ -16,7 +16,7 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label mr_5px'
                     ],
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control'
@@ -83,7 +83,7 @@
                 $this->Form->input('gender_type',
                                    [
                                        'type'    => 'radio',
-                                       'before' => '<label class="col col-sm-3 control-label profile-radio-label">'
+                                       'before' => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
                                            . __d('gl', '性別') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
@@ -136,7 +136,7 @@
                 ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label mr_5px"><?= __d('gl', "プロフィール画像") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -166,7 +166,7 @@
                         </span>
                             </div>
                         </div>
-                        <span class="help-block font_11px"><?= __d('gl', '10MB以下') ?></span>
+                        <span class="help-block font_11px fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=

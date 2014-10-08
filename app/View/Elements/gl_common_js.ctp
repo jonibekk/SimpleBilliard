@@ -114,7 +114,8 @@ $(document).ready(function () {
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2Member"
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
@@ -149,7 +150,8 @@ $(document).ready(function () {
         dropdownCssClass: 'gl-s2-post-dropdown',
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2PostCircleMember"
     });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
@@ -212,7 +214,8 @@ function bindSelect2Members($this) {
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2Member"
     });
 }
 /**

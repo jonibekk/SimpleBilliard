@@ -129,6 +129,17 @@
     height: 24px;
 }
 
+/* リファクター後 */
+
+.select2PostCircleMember .select2-choices .select2-search-choice{
+    margin-top: 1px;
+}
+
+.select2Member .select2-choices .select2-search-choice{
+    margin-top:3px;
+    margin-left: 3px;
+}
+
 /*==/ normalize select2 3.5.1 ===*/
 
 body {
