@@ -444,17 +444,25 @@ class Post extends AppModel
             }
         }
 
-        //１件のサークル名を取得
+        //１件のサークル名をランダムで取得
         foreach ($res as $key => $val) {
-            if (isset($val['PostShareCircle'][0]['circle_id'])) {
-                $circle_name = $this->PostShareCircle->Circle->getName($val['PostShareCircle'][0]['circle_id']);
+            if (!empty($val['PostShareCircle'])) {
+                $user_list = [];
+                foreach ($val['PostShareCircle'] as $circle) {
+                    $user_list[] = $circle['circle_id'];
+                }
+                $circle_name = $this->PostShareCircle->Circle->getNameRandom($user_list);
                 $res[$key]['share_circle_name'] = $circle_name;
             }
         }
-        //１件のユーザ名を取得
+        //１件のユーザ名をランダムで取得
         foreach ($res as $key => $val) {
-            if (isset($val['PostShareUser'][0]['user_id'])) {
-                $user_name = $this->User->getName($val['PostShareUser'][0]['user_id']);
+            if (!empty($val['PostShareUser'])) {
+                $user_list = [];
+                foreach ($val['PostShareUser'] as $user) {
+                    $user_list[] = $user['user_id'];
+                }
+                $user_name = $this->User->getNameRandom($user_list);
                 $res[$key]['share_user_name'] = $user_name;
             }
         }

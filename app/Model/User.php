@@ -882,13 +882,14 @@ class User extends AppModel
         return $res;
     }
 
-    function getName($uid)
+    function getNameRandom($uid)
     {
         $options = [
             'conditions' => [
                 'id' => $uid,
             ],
             'fields'     => $this->profileFields,
+            'order' => 'rand()',
         ];
         $res = $this->find('first', $options);
         if (isset($res['User']['display_username'])) {

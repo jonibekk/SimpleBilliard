@@ -269,16 +269,17 @@ class Circle extends AppModel
         return $res;
     }
 
-    function getName($id)
+    function getNameRandom($ids)
     {
         $options = [
             'conditions' => [
-                'id'      => $id,
+                'id' => $ids,
                 'team_id' => $this->current_team_id
             ],
             'fields'     => [
                 'name'
-            ]
+            ],
+            'order'      => 'rand()',
         ];
         $res = $this->find('first', $options);
         if (isset($res['Circle']['name'])) {
