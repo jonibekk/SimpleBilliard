@@ -274,12 +274,14 @@ function evFollowGoal() {
             if (data.add) {
                 $obj.children('span').text("<?=__d('gl',"フォロー中")?>");
                 $obj.children('i').hide();
-                $obj.addClass('followed');
+                $obj.removeClass('follow-off');
+                $obj.addClass('follow-on');
             }
             else {
                 $obj.children('span').text("<?=__d('gl',"フォロー")?>");
                 $obj.children('i').show();
-                $obj.removeClass('followed');
+                $obj.removeClass('follow-on');
+                $obj.addClass('follow-off');
             }
         },
         error: function () {

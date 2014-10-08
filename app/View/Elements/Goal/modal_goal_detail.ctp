@@ -26,12 +26,12 @@
                 <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
                     <div class="col col-xxs-6">
                         <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])) {
-                            $follow_class = null;
+                            $follow_class = 'follow-off';
                             $follow_style = null;
                             $follow_text = __d('gl', "フォロー");
                         }
                         else {
-                            $follow_class = 'followed';
+                            $follow_class = 'follow-on';
                             $follow_style = 'display:none;';
                             $follow_text = __d('gl', "フォロー中");
                         }?>
@@ -43,12 +43,12 @@
                         </a>
 
                         <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])) {
-                            $collabo_class = 'collaborated';
+                            $collabo_class = 'collabo-on';
                             $collabo_style = 'display:none;';
                             $collabo_text = __d('gl', "コラボり中");
                         }
                         else {
-                            $collabo_class = null;
+                            $collabo_class = 'collabo-off';
                             $collabo_style = null;
                             $collabo_text = __d('gl', "コラボる");
                         }?>
