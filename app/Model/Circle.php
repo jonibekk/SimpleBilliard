@@ -268,4 +268,23 @@ class Circle extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+    function getName($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $id,
+                'team_id' => $this->current_team_id
+            ],
+            'fields'     => [
+                'name'
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['Circle']['name'])) {
+            return $res['Circle']['name'];
+        }
+        return null;
+    }
+
 }

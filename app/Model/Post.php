@@ -3,9 +3,8 @@ App::uses('AppModel', 'Model');
 
 /**
  * Post Model
-
  *
-*@property User               $User
+ * @property User               $User
  * @property Team               $Team
  * @property CommentMention     $CommentMention
  * @property Comment            $Comment
@@ -414,10 +413,16 @@ class Post extends AppModel
                     ],
                 ],
                 'PostShareCircle' => [
-                    'fields' => ["PostShareCircle.id"]
+                    'fields' => [
+                        "PostShareCircle.id",
+                        "PostShareCircle.circle_id",
+                    ]
                 ],
                 'PostShareUser'   => [
-                    'fields' => ["PostShareUser.id"]
+                    'fields' => [
+                        "PostShareUser.id",
+                        "PostShareUser.user_id",
+                    ]
                 ],
             ],
         ];
@@ -433,6 +438,22 @@ class Post extends AppModel
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
         }
+
+        //１件のサークル名を取得
+        foreach ($res as $key => $val) {
+            if (isset($val['PostShareCircle'][0]['circle_id'])) {
+                $circle_name = $this->PostShareCircle->Circle->getName($val['PostShareCircle'][0]['circle_id']);
+                $res[$key]['share_circle_name'] = $circle_name;
+            }
+        }
+        //１件のユーザ名を取得
+        foreach ($res as $key => $val) {
+            if (isset($val['PostShareUser'][0]['user_id'])) {
+                $user_name = $this->User->getName($val['PostShareUser'][0]['user_id']);
+                $res[$key]['share_user_name'] = $user_name;
+            }
+        }
+
         return $res;
     }
 

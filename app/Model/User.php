@@ -881,4 +881,19 @@ class User extends AppModel
         }
         return $res;
     }
+
+    function getName($uid)
+    {
+        $options = [
+            'conditions' => [
+                'id' => $uid,
+            ],
+            'fields'     => $this->profileFields,
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['User']['display_username'])) {
+            return $res['User']['display_username'];
+        }
+        return null;
+    }
 }
