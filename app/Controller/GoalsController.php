@@ -185,6 +185,52 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
+    /**
+     * フォロー、アンフォローの切り換え
+     *
+     * @param $key_result_id
+     *
+     * @return CakeResponse
+     */
+    public function ajax_toggle_follow($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+
+        $return = [
+            'error' => false,
+            'msg'   => null,
+            'add'   => true,
+        ];
+
+        //存在チェック
+        if (!$this->Goal->KeyResult->isBelongCurrentTeam($key_result_id)) {
+            $return['error'] = true;
+            $return['msg'] = __d('gl', "存在しないゴールです。");
+            return $this->_ajaxGetResponse($return);
+        }
+
+        //既にフォローしているかどうかのチェック
+        if ($this->Goal->KeyResult->Follower->isExists($key_result_id)) {
+            $return['add'] = false;
+        }
+
+        if ($return['add']) {
+            if ($this->Goal->KeyResult->Follower->addFollower($key_result_id)) {
+                $return['msg'] = __d('gl', "フォローしました。");
+            }
+            else {
+                $return['error'] = true;
+                $return['msg'] = __d('gl', "フォローに失敗しました。");
+            }
+        }
+        else {
+            $this->Goal->KeyResult->Follower->deleteFollower($key_result_id);
+            $return['msg'] = __d('gl', "フォロー解除しました。");
+        }
+
+        return $this->_ajaxGetResponse($return);
+    }
+
     public function add_follow($key_result_id)
     {
         if (!$this->Goal->KeyResult->isBelongCurrentTeam($key_result_id)) {

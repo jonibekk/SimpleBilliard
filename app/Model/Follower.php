@@ -75,4 +75,20 @@ class Follower extends AppModel
         return $res;
     }
 
+    function isExists($key_result_id)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'       => $this->my_uid,
+                'key_result_id' => $key_result_id,
+                'team_id'       => $this->current_team_id,
+            ],
+            'fields'     => [
+                'id'
+            ],
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }
