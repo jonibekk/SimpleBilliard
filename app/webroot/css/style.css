@@ -463,6 +463,14 @@ footer p {
     border-radius: 4px;
 }
 
+.shadow-default{
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -o-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
 /*/  */
 
 /*切り替えスイッチ*/
@@ -2114,8 +2122,9 @@ ul.gl-input-images > li {
 /*/goals-column-empty*/
 
 .my-goals-item {
-    padding: 8px 0;
+    padding: 8px 5px;
     border-bottom: 1px solid #f0f0f0;
+    background: #fff;
 }
 
 .my-goals-item:first-child {
