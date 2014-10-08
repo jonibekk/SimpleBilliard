@@ -60,13 +60,13 @@
                 <div class="col col-xxs-12 mt_5px">
                     <div class="col col-xxs-4">
                         <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])): ?>
-                            <a class="btn btn-purewhite bd-circle_20"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_follow', $goal['SpecialKeyResult'][0]['id']]) ?>"><i
+                            <a class="btn btn-purewhite bd-circle_20 toggle-follow" href="#"
+                               kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>"><i
                                     class="fa fa-heart font_rougeOrange"><span
                                         style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
                         <? else: ?>
-                            <a class="btn btn-purewhite bd-circle_20"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'delete_follow', $goal['SpecialKeyResult'][0]['id']]) ?>">
+                            <a class="btn btn-purewhite bd-circle_20 toggle-follow" href="#"
+                               kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
                                 <span style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー中") ?></span></a>
                         <?endif; ?>
                     </div>

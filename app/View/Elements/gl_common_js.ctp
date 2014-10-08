@@ -248,6 +248,30 @@ function bindSelect2Members($this) {
     $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
 })(jQuery);
 
+function evFollowGoal() {
+    attrUndefinedCheck(this, 'kr-id');
+    var $obj = $(this);
+    var kr_id = $obj.attr('kr-id');
+    var url = "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>";
+    $.ajax({
+        type: 'GET',
+        url: url + '/' + kr_id,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+            }
+            else {
+                alert(data.msg);
+            }
+        },
+        error: function () {
+            alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
+        }
+    });
+    return false;
+}
 function evFeedMoreView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');

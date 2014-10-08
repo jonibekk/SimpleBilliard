@@ -231,29 +231,4 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
-    public function add_follow($key_result_id)
-    {
-        if (!$this->Goal->KeyResult->isBelongCurrentTeam($key_result_id)) {
-            $this->Pnotify->outError(__d('gl', "存在しないゴールです。"));
-        }
-        if ($this->Goal->KeyResult->Follower->addFollower($key_result_id)) {
-            $this->Pnotify->outSuccess(__d('gl', "フォローしました。"));
-        }
-        else {
-            $this->Pnotify->outError(__d('gl', "既にフォローしています。"));
-        }
-        $this->redirect($this->referer());
-    }
-
-    public function delete_follow($key_result_id)
-    {
-        if (!$this->Goal->KeyResult->isBelongCurrentTeam($key_result_id)) {
-            $this->Pnotify->outError(__d('gl', "存在しないゴールです。"));
-            $this->redirect($this->referer());
-        }
-        $this->Goal->KeyResult->Follower->deleteFollower($key_result_id);
-        $this->Pnotify->outSuccess(__d('gl', "フォロー解除しました。"));
-        $this->redirect($this->referer());
-    }
-
 }
