@@ -25,6 +25,10 @@ class Post extends AppModel
     const TYPE_ACTION = 2;
     const TYPE_BADGE = 3;
 
+    const SHARE_ALL = 1;
+    const SHARE_PEOPLE = 2;
+    const SHARE_CIRCLE = 3;
+
     public $orgParams = [
         'circle_id' => null,
         'post_id'   => null,
@@ -451,6 +455,18 @@ class Post extends AppModel
             if (isset($val['PostShareUser'][0]['user_id'])) {
                 $user_name = $this->User->getName($val['PostShareUser'][0]['user_id']);
                 $res[$key]['share_user_name'] = $user_name;
+            }
+        }
+        //シェアモードの特定および、メッセージ
+        foreach ($res as $key => $val) {
+            if ($val['Post']['public_flg']) {
+                $res[$key]['share_mode'] = self::SHARE_ALL;
+            }
+            elseif (!empty($val['PostShareCircle'])) {
+                $res[$key]['share_mode'] = self::SHARE_CIRCLE;
+            }
+            else {
+                $res[$key]['share_mode'] = self::SHARE_PEOPLE;
             }
         }
 
