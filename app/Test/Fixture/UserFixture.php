@@ -61,9 +61,9 @@ class UserFixture extends CakeTestFixture
     public $records = array(
         array(
             'id'               => '1',
-            'first_name'        => 'Lorem ipsum dolor sit amet',
-            'last_name'         => 'Lorem ipsum dolor sit amet',
-            'middle_name'       => 'Lorem ipsum dolor sit amet',
+            'first_name'       => 'first',
+            'last_name'        => 'last',
+            'middle_name'      => '',
             'gender_type'       => 1,
             'birth_day'         => '2014-05-22',
             'hide_year_flg'     => 1,

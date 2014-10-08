@@ -460,11 +460,11 @@ class Post extends AppModel
     {
         foreach ($data as $key => $val) {
             if (!empty($val['PostShareCircle'])) {
-                $user_list = [];
+                $circle_list = [];
                 foreach ($val['PostShareCircle'] as $circle) {
-                    $user_list[] = $circle['circle_id'];
+                    $circle_list[] = $circle['circle_id'];
                 }
-                $circle_name = $this->PostShareCircle->Circle->getNameRandom($user_list);
+                $circle_name = $this->PostShareCircle->Circle->getNameRandom($circle_list);
                 $data[$key]['share_circle_name'] = $circle_name;
             }
         }
