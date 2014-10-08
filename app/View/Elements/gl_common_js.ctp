@@ -266,22 +266,18 @@ function evFollowGoal() {
                 });
             }
             else {
-                new PNotify({
-                    type: 'success',
-                    text: data.msg
-                });
-            }
-            if (data.add) {
-                $obj.children('span').text("<?=__d('gl',"フォロー中")?>");
-                $obj.children('i').hide();
-                $obj.removeClass('follow-off');
-                $obj.addClass('follow-on');
-            }
-            else {
-                $obj.children('span').text("<?=__d('gl',"フォロー")?>");
-                $obj.children('i').show();
-                $obj.removeClass('follow-on');
-                $obj.addClass('follow-off');
+                if (data.add) {
+                    $obj.children('span').text("<?=__d('gl',"フォロー中")?>");
+                    $obj.children('i').hide();
+                    $obj.removeClass('follow-off');
+                    $obj.addClass('follow-on');
+                }
+                else {
+                    $obj.children('span').text("<?=__d('gl',"フォロー")?>");
+                    $obj.children('i').show();
+                    $obj.removeClass('follow-on');
+                    $obj.addClass('follow-off');
+                }
             }
         },
         error: function () {
