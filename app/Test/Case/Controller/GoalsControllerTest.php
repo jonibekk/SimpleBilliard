@@ -330,6 +330,81 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
     }
 
+    function testAddFollowSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+            'user_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->getLastInsertID();
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_toggle_follow/' . $key_result_user_id, ['method' => 'POST']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAddFollowFailExist()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+            'user_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $data = [
+            'team_id'       => 1,
+            'user_id'       => 1,
+            'key_result_id' => $key_result_user_id,
+        ];
+        $Goals->Goal->KeyResult->Follower->save($data);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_toggle_follow/' . $key_result_user_id, ['method' => 'POST']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAddFollowFailNotExistKeyResult()
+    {
+        $this->_getGoalsCommonMock();
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_toggle_follow/' . 999999999999999999, ['method' => 'POST']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testDeleteFollowSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+            'user_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->getLastInsertID();
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_toggle_follow/' . $key_result_user_id, ['method' => 'POST']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testDeleteFollowFailNotExistKeyResult()
+    {
+        $this->_getGoalsCommonMock();
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_toggle_follow/' . 999999999999999999, ['method' => 'POST']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**
