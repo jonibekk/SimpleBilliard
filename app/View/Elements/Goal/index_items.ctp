@@ -81,18 +81,19 @@
                         $follow_disabled = null;
                     }?>
                     <div class="col col-xxs-4">
-                        <a class="btn btn-purewhite bd-circle_20 toggle-follow <?= $follow_class ?>" <?= $follow_disabled ?>
+                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow <?= $follow_class ?>" <?= $follow_disabled ?>
                         ="<?= $follow_disabled ?>" href="#"
                         kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
                         <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
-                        <span style="color: #000000" class="ml_5px"><?= $follow_text ?></span>
+                        <span class="ml_5px"><?= $follow_text ?></span>
                         </a>
                     </div>
                     <div class="col col-xxs-4">
-                        <a class="btn btn-purewhite bd-circle_20 <?= $collabo_class ?>" data-toggle="modal"
+                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white <?= $collabo_class ?>"
+                           data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
                             <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
-                            <span style="color: #000000" class="ml_5px font_14px"><?= $collabo_text ?></span>
+                            <span class="ml_5px font_14px"><?= $collabo_text ?></span>
                         </a>
                     </div>
                 </div>

@@ -47,17 +47,17 @@
                             $collabo_text = __d('gl', "コラボる");
                             $follow_disabled = null;
                         }?>
-                        <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px toggle-follow <?= $follow_class ?>"
+                        <a class="btn btn_pureWhite bd-circle_20 pull-right mt_16px toggle-follow font_verydark-white <?= $follow_class ?>"
                            href="#" <?= $follow_disabled ?>="<?= $follow_disabled ?>"
                         kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
                         <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
-                        <span style="color: #000000" class="ml_5px"><?= $follow_text ?></span>
+                        <span class="ml_5px"><?= $follow_text ?></span>
                         </a>
-                        <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px <?= $collabo_class ?>"
+                        <a class="btn btn_pureWhite bd-circle_20 pull-right mt_16px font_verydark-white <?= $collabo_class ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
                             <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
-                            <span style="color: #000000" class="ml_5px font_14px"><?= $collabo_text ?></span>
+                            <span class="ml_5px font_14px"><?= $collabo_text ?></span>
                         </a>
                     </div>
                 <? endif; ?>

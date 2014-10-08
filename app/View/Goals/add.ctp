@@ -27,7 +27,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormPurposeWrap",
@@ -99,7 +99,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormKeyResultWrap",
@@ -291,7 +291,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormOtherWrap",
