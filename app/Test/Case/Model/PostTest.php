@@ -296,4 +296,68 @@ class PostTest extends CakeTestCase
         $this->assertEquals($excepted, $res);
     }
 
+    function testGetShareMessages()
+    {
+        $data = [
+            [
+                'share_mode' => 1,
+            ],
+            [
+                'share_mode' => 3,
+            ],
+            [
+                'share_mode'      => 2,
+                'share_user_name' => 'test_user',
+                'PostShareUser'   => [1],
+            ],
+            [
+                'share_mode'      => 2,
+                'share_user_name' => 'test_user',
+                'PostShareUser'   => [1, 2],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [],
+                'PostShareCircle'   => [1],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [],
+                'PostShareCircle'   => [1, 2],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1],
+                'PostShareCircle'   => [1],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1],
+                'PostShareCircle'   => [1, 2],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1, 2],
+                'PostShareCircle'   => [1],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1, 2],
+                'PostShareCircle'   => [1, 2],
+            ],
+        ];
+        $this->Post->getShareMessages($data);
+    }
 }
