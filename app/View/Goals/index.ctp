@@ -9,7 +9,7 @@
 <!-- START app/View/Goals/index.ctp -->
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="col col-xxs-12 goals-column-head">
+        <div class="col col-xxs-12 goals-feed-head">
             <span class="font_14px goals-column-title"><?= __d('gl', 'みんなのゴール') ?></span>
 
             <div class="pull-right">

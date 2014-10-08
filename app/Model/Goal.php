@@ -70,7 +70,7 @@ class Goal extends AppModel
      * @var array
      */
     public $validate = [
-        'purpose' => [
+        'purpose'      => [
             'notEmpty' => [
                 'rule' => 'notEmpty',
             ],
@@ -118,10 +118,10 @@ class Goal extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Post'      => [
+        'Post'             => [
             'dependent' => true,
         ],
-        'KeyResult' => [
+        'KeyResult'        => [
             'dependent' => true,
         ],
         'SpecialKeyResult' => [
@@ -220,7 +220,7 @@ class Goal extends AppModel
     }
 
     /**
-     * 自分のゴール取得
+     * 自分が作成したゴール取得
      *
      * @return array
      */
@@ -240,7 +240,8 @@ class Goal extends AppModel
                         'SpecialKeyResult.special_flg'   => true,
                         'SpecialKeyResult.start_date >=' => $start_date,
                         'SpecialKeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -257,6 +258,157 @@ class Goal extends AppModel
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
+
+        /**
+         * ソート
+         * ソートは優先順位が低いものから処理する
+         */
+        //・第４優先ソート【進捗更新日】
+        //　進捗更新日が近→遠。
+        //　つまり、「進捗更新日」をデータ登録すること。
+        //　目的作成や基準作成時は、0%としての更新があったとする。
+        $res = $this->sortModified($res);
+
+        //・第３優先ソート【期限】
+        //　期限が近→遠
+        $res = $this->sortEndDate($res);
+
+        //・第２優先ソート【重要度】
+        //　重要度が高→低
+        $res = $this->sortPriority($res);
+
+        //・第１優先ソート【基準ある/なし】
+        //　基準登録がなし→ある
+        $res = $this->sortExistsSpecialKeyResult($res);
+
+        return $res;
+    }
+
+    /**
+     * 期限が近→遠　で並べ替え
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortEndDate($goals, $direction = SORT_ASC)
+    {
+        $end_date_list = array();
+        foreach ($goals as $key => $goal) {
+            if (isset($goal['SpecialKeyResult'][0]['end_date'])) {
+                $end_date_list[$key] = $goal['SpecialKeyResult'][0]['end_date'];
+            }
+            else {
+                //基準なしは下に
+                $end_date_list[$key] = 99999999999999999;
+            }
+        }
+        array_multisort($end_date_list, $direction, SORT_NUMERIC, $goals);
+        return $goals;
+    }
+
+    /**
+     * 進捗更新日で並べ替え 近→遠
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortModified($goals, $direction = SORT_DESC)
+    {
+        $modify_list = array();
+        foreach ($goals as $key => $goal) {
+            $modify_list[$key] = $goal['Goal']['modified'];
+        }
+        array_multisort($modify_list, $direction, SORT_NUMERIC, $goals);
+        return $goals;
+    }
+
+    /**
+     * 重要度が高→低 で並べ替え
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortPriority($goals, $direction = SORT_DESC)
+    {
+        $priority_list = array();
+        foreach ($goals as $key => $goal) {
+            $priority_list[$key] = $goal['Goal']['priority'];
+        }
+        array_multisort($priority_list, $direction, SORT_NUMERIC, $goals);
+        return $goals;
+    }
+
+    /**
+     * 基準登録がなし→ある で並べ替え
+     *
+     * @param     $goals
+     * @param int $direction
+     *
+     * @return bool
+     */
+    function sortExistsSpecialKeyResult($goals, $direction = SORT_ASC)
+    {
+        $exists_fkr = array();
+        foreach ($goals as $key => $goal) {
+            $exists_fkr[$key] = 0;
+            if (!empty($goal['SpecialKeyResult'])) {
+                $exists_fkr[$key] = 1;
+            }
+        }
+        array_multisort($exists_fkr, $direction, SORT_NUMERIC, $goals);
+        return $goals;
+    }
+
+    /**
+     * 自分がこらぼったゴール取得
+     *
+     * @return array
+     */
+    function getMyCollaboGoals()
+    {
+        $goal_ids = $this->KeyResult->getCollaboGoalList($this->my_uid);
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $goal_ids,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'SpecialKeyResult' => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'SpecialKeyResult.special_flg'   => true,
+                        'SpecialKeyResult.start_date >=' => $start_date,
+                        'SpecialKeyResult.end_date <'    => $end_date,
+                    ],
+
+                ],
+                'KeyResult'        => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.special_flg'   => true,
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        $res = $this->sortModified($res);
+        $res = $this->sortEndDate($res);
+        $res = $this->sortPriority($res);
 
         return $res;
     }
@@ -297,6 +449,17 @@ class Goal extends AppModel
                             'fields' => $this->User->profileFields,
                         ]
                     ],
+                    'MyCollabo'    => [
+                        'conditions' => [
+                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
+                    ],
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -322,11 +485,12 @@ class Goal extends AppModel
      *
      * @param int  $limit
      * @param null $params
+     * @param bool $required_skr
      *
      * @internal param int $page
      * @return array
      */
-    function getAllGoals($limit = 20, $params = null)
+    function getAllGoals($limit = 20, $params = null, $required_skr = true)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -363,6 +527,17 @@ class Goal extends AppModel
                             'fields' => $this->User->profileFields,
                         ]
                     ],
+                    'MyCollabo'    => [
+                        'conditions' => [
+                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
+                    ],
                 ],
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
@@ -378,6 +553,15 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+
+        //skr必須指定の場合はskrが存在しないゴールを除去
+        if ($required_skr) {
+            foreach ($res as $key => $val) {
+                if (isset($val['SpecialKeyResult']) && empty($val['SpecialKeyResult'])) {
+                    unset($res[$key]);
+                }
+            }
+        }
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);

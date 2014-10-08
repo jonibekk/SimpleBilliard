@@ -26,12 +26,12 @@
                     'class' => 'col col-sm-3 modal-label pr_12px'
                 ],
                 'wrapInput' => 'col col-sm-6',
-                'class' => 'form-control modal_input-design'
+                'class'     => 'form-control modal_input-design'
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
             'type'          => 'file',
-            'id' => 'EditCircleForm',
+            'id'            => 'EditCircleForm',
         ]); ?>
         <?= $this->Form->hidden('id') ?>
         <div class="modal-body modal-circle-body">
@@ -59,13 +59,14 @@
             <?
             $privacy_option = Circle::$TYPE_PUBLIC;
             $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
-                                                                                         "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+                                                                                                   "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
             $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
-                                                                                          "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+                                                                                                    "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
             ?>
             <?php echo $this->Form->input('public_flg', array(
                 'type'    => 'radio',
-                'before'  => '<label class="col col-md-3 control-label modal-label">' . __d('gl', 'プライバシー') . '</label>',
+                'before'  => '<label class="col col-md-3 control-label modal-label">' . __d('gl',
+                                                                                            'プライバシー') . '</label>',
                 'legend'  => false,
                 'class'   => false,
                 'options' => $privacy_option,
@@ -75,7 +76,7 @@
             $this->Form->input('description',
                                ['label'       => __d('gl', "サークルの説明"),
                                 'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
-                                'rows' => 1,
+                                'rows'        => 1,
                                ]) ?>
             <hr>
             <div class="form-group">

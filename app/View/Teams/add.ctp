@@ -87,9 +87,9 @@
                     'type'       => 'select',
                     'options'    => Team::$TYPE,
                     'afterInput' => '<span class="help-block font_11px">' . __d('gl',
-                                                                      "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。") . '<br>' . __d('gl',
-                                                                                                                                "このプランはチーム作成後にいつでも変更できます。") . '</span>'
-                ])?>
+                                                                                "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。") . '<br>' . __d('gl',
+                                                                                                                                          "このプランはチーム作成後にいつでも変更できます。") . '</span>'
+                ]) ?>
             </div>
 
             <div class="panel-footer addteam_pannel-footer">

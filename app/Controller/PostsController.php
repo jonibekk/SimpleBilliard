@@ -332,14 +332,22 @@ class PostsController extends AppController
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $my_goals = $this->Goal->getMyGoals();
+        $collabo_goals = $this->Goal->getMyCollaboGoals();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
             $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
         }
-        $this->set(compact('select2_default', 'circle_members', 'my_goals'));
+        $this->set(compact('select2_default', 'circle_members', 'my_goals', 'collabo_goals'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
+            //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
+            //サークルページに居て当該サークルから抜けた場合の対応
+            $params = $this->request->params;
+            unset($params['_Token']);
+            if ($this->referer(null, true) == Router::url($params)) {
+                $this->redirect('/');
+            }
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }

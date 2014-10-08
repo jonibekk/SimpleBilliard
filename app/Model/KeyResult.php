@@ -101,6 +101,9 @@ class KeyResult extends AppModel
         ],
         'Collaborator'  => [
             'className' => 'KeyResultUser',
+        ],
+        'MyCollabo'     => [
+            'className' => 'KeyResultUser',
         ]
     ];
 
@@ -108,6 +111,21 @@ class KeyResult extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
+    }
+
+    function getCollaboGoalList($user_id)
+    {
+        $key_result_ids = $this->KeyResultUser->getCollaboKeyResultList($user_id);
+        $options = [
+            'conditions' => [
+                'id' => $key_result_ids,
+            ],
+            'fields'     => [
+                'goal_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
     }
 
 }

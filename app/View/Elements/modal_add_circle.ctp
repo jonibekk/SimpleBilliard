@@ -11,7 +11,7 @@
 ?>
 <!-- START app/View/Elements/modal_add_circle.ctp -->
 <div class="modal fade" tabindex="-1" id="modal_add_circle">
-<div class="modal-dialog">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
@@ -27,7 +27,7 @@
                         'class' => 'col col-sm-3 control-label modal-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class' => 'form-control modal_input-design'
+                    'class'     => 'form-control modal_input-design'
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
@@ -59,13 +59,14 @@
                 <?
                 $privacy_option = Circle::$TYPE_PUBLIC;
                 $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
-                                                                                                          "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+                                                                                                       "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
                 $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
-                                                                                                           "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+                                                                                                        "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'    => 'radio',
-                    'before' => '<label class="col col-sm-3 control-label modal-label">' . __d('gl', 'プライバシー') . '</label>',
+                    'before'  => '<label class="col col-sm-3 control-label modal-label">' . __d('gl',
+                                                                                                'プライバシー') . '</label>',
                     'legend'  => false,
                     'class'   => false,
                     'options' => $privacy_option,
@@ -84,8 +85,7 @@
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
-                                 data-trigger="fileinput"
-                                 style="width: 96px; height: 96px; line-height:96px;">
+                                 data-trigger="fileinput" style="width: 96px; height: 96px; line-height:96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
@@ -108,7 +108,7 @@
                                                ]) ?>
                         </span>
                                 <span class="help-block font_11px fileinput-limit_mb"><?= __d('gl',
-                                                                                                 '10MB以下') ?></span>
+                                                                                              '10MB以下') ?></span>
                             </div>
                         </div>
 
@@ -127,8 +127,9 @@
             <div class="modal-footer addcircle_pannel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <button type="button" class="btn btn-link design-cancel bd-radius_4px" data-dismiss="modal"><?= __d('gl',
-                                                                                                              "キャンセル") ?></button>
+                        <button type="button" class="btn btn-link design-cancel bd-radius_4px"
+                                data-dismiss="modal"><?= __d('gl',
+                                                             "キャンセル") ?></button>
                         <?=
                         $this->Form->submit(__d('gl', "サークルを作成"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>

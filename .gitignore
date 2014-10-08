@@ -25,4 +25,5 @@ junit.xml
 /.idea/vagrant.xml
 /.idea/inspectionProfiles
 !/.idea/inspectionProfiles/Project_Default.xml
+/.idea/dataSources.local.xml
 

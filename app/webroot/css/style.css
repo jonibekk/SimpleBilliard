@@ -129,6 +129,17 @@
     height: 24px;
 }
 
+/* リファクター後 */
+
+.select2PostCircleMember .select2-choices .select2-search-choice{
+    margin-top: 1px;
+}
+
+.select2Member .select2-choices .select2-search-choice{
+    margin-top:3px;
+    margin-left: 3px;
+}
+
 /*==/ normalize select2 3.5.1 ===*/
 
 body {
@@ -167,10 +178,16 @@ footer p {
     margin-top: 4px;
 }
 
+.mt_8px{
+    margin-top: 8px;
+}
+
 .mt_16px {
     margin-top: 16px;
 }
-
+.mt_32px{
+    margin-top: 32px;
+}
 .mr_5px {
     margin-right: 5px;
 }
@@ -450,6 +467,14 @@ footer p {
     border-radius: 4px;
 }
 
+.shadow-default{
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -o-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
 /*/  */
 
 /*切り替えスイッチ*/
@@ -480,9 +505,10 @@ footer p {
 
 /*=== headerの設定 ===*/
 
-.header_icon-text{
+.header_icon-text {
     margin: 0;
 }
+
 .navbar {
     margin: 0;
     max-height: 48px;
@@ -2027,6 +2053,132 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
+
+/*ゴール作成ページのタテ線の長さ調整一覧*/
+.set-goal + .line-vertical-sm {
+    height: 72px;
+}
+
+.set-detail + .line-vertical-sm {
+    height: 52px;
+}
+
+.set-importance + .line-vertical-sm {
+    height: 72px;
+}
+
+/*/ゴール作成ページのタテ線の長さ調整一覧*/
+
+.gl-comment-body .site-info {
+    margin: 5px 0 7px;
+}
+
+/*========== ゴールフィード ==========*/
+.goals-feed-head {
+    border-bottom: 1px solid #F0F0F0;
+}
+
+/*========== ゴールカラム ==========*/
+
+.goals-column-head {
+    border-bottom: 1px solid #808080;
+}
+
+.goals-column-title {
+/ / margin : 0 0 4 px;
+}
+
+.goals-column-plus-box {
+    margin: 4px 0 0;
+}
+
+.goals-column-add-box {
+    border: 1px dashed #aaa;
+    padding: 0;
+    margin: 2px 0;
+}
+
+.goals-column-add-icon, .goals-column-add-text {
+    width: 100%;
+    text-align: center;
+}
+
+/*/goals-column-empty*/
+.goals-column-empty-box {
+    border: 1px dashed #aaa;
+    padding: 0;
+    margin: 8px 0;
+}
+
+.goals-column-empty-icon, .goals-column-empty-text {
+    width: 100%;
+    text-align: center;
+}
+
+.goals-column-empty-icon {
+    padding: 12px 0 0;
+}
+
+.goals-column-empty-text {
+    padding: 0 0 12px;
+}
+
+/*/goals-column-empty*/
+
+.my-goals-item {
+    padding: 6px 8px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fff;
+}
+
+.my-goals-item:first-child {
+    border-top: 1px solid #ddd;
+}
+
+.my-goals-item:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+.check-status i {
+    margin-right: 2px;
+    text-align: center;
+}
+
+.gl-progress {
+    margin-bottom: 0;
+}
+
+.icon-green {
+    color: green;
+}
+
+.humbarger-close {
+    margin: 8px 8px 0 0;
+}
+
+.feed-circle-user-number {
+    margin-left: 4px;
+    font-size: 14px;
+}
+
+.goals-column-function {
+    border: 1px solid #ccc;
+}
+
+.goals-column-fa-caret-down {
+    margin-left: 2px;
+}
+
+.goals-column-purpose {
+    padding-top: 2px;
+}
+
+.goals-column-progress-bar {
+    margin: 6px 0 4px;
+}
+
+/*/========= ゴールカラム ==========*/
+
 /*=== メディアクエリで切り替え ===*/
 /*Extrasmall*/
 @media (min-width: 480px) {
@@ -2113,7 +2265,7 @@ ul.gl-input-images > li {
         margin-left: 20px;
     }
 
-    .nav>li>a{
+    .nav > li > a {
         padding: 9px 0 0;
     }
 
@@ -2134,17 +2286,17 @@ ul.gl-input-images > li {
         width: 36px;
     }
 
-    .header_l-icons{
+    .header_l-icons {
         width: 56px;
         height: 48px;
     }
 
-    .header_l-icons:hover{
+    .header_l-icons:hover {
         border-bottom: 4px solid #ae2f2f;
         margin-bottom: -4px;
     }
 
-    .activeColumn{
+    .activeColumn {
         border-bottom: 4px solid #ae2f2f;
         margin-bottom: -4px;
     }
@@ -2232,7 +2384,7 @@ ul.gl-input-images > li {
         width: 36px;
     }
 
-    .header_l-icons{
+    .header_l-icons {
         width: 54px;
     }
 
@@ -2302,7 +2454,7 @@ ul.gl-input-images > li {
         width: 103px;
     }
 
-    .header_l-icons{
+    .header_l-icons {
         width: 56px;
     }
 
@@ -2459,124 +2611,6 @@ Temporary Properties - YOU MUST FIX
 .submit-comment-edit {
     margin-top: 6px;
 }
-
-/*ゴール作成ページのタテ線の長さ調整一覧*/
-.set-goal + .line-vertical-sm {
-    height: 72px;
-}
-
-.set-detail + .line-vertical-sm {
-    height: 52px;
-}
-
-.set-importance + .line-vertical-sm {
-    height: 72px;
-}
-
-/*/ゴール作成ページのタテ線の長さ調整一覧*/
-
-.gl-comment-body .site-info {
-    margin: 5px 0 7px;
-}
-
-/*=== ゴールカラム ===*/
-.goals-column-head {
-    border-bottom: 1px solid #F0F0F0;
-}
-
-.goals-column-title {
-/ / margin : 0 0 4 px;
-}
-
-.goals-column-plus-box {
-    margin: 8px 0 0;
-}
-
-.goals-column-add-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 2px 0;
-}
-
-.goals-column-add-icon, .goals-column-add-text {
-    width: 100%;
-    text-align: center;
-}
-
-/*/goals-column-empty*/
-.goals-column-empty-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 8px 0;
-}
-
-.goals-column-empty-icon, .goals-column-empty-text {
-    width: 100%;
-    text-align: center;
-}
-
-.goals-column-empty-icon {
-    padding: 12px 0 0;
-}
-
-.goals-column-empty-text {
-    padding: 0 0 12px;
-}
-
-/*/goals-column-empty*/
-
-.my-goals-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.my-goals-item:first-child {
-    border-top: 1px solid #ddd;
-}
-
-.my-goals-item:last-child {
-    border-bottom: 1px solid #ddd;
-}
-
-.check-status i {
-    margin-right: 2px;
-    text-align: center;
-}
-
-.gl-progress {
-    margin-bottom: 0;
-}
-
-.icon-green {
-    color: green;
-}
-
-.humbarger-close {
-    margin: 8px 8px 0 0;
-}
-
-.feed-circle-user-number {
-    margin-left: 4px;
-    font-size: 14px;
-}
-
-.goals-column-function {
-    border: 1px solid #ccc;
-}
-
-.goals-column-fa-caret-down {
-    margin-left: 2px;
-}
-
-.goals-column-purpose {
-    padding-top: 2px;
-}
-
-.goals-column-progress-bar {
-    margin: 6px 0 4px;
-}
-
-/*/== ゴールカラム ===*/
 
 .box-align {
     margin-right: -1px;

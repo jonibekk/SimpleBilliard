@@ -107,14 +107,15 @@ $(document).ready(function () {
                 };
             },
             results: function (data, page) {
-                return { results: data.results };
+                return {results: data.results};
             }
         },
         formatSelection: format,
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2Member"
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
@@ -149,7 +150,8 @@ $(document).ready(function () {
         dropdownCssClass: 'gl-s2-post-dropdown',
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2PostCircleMember"
     });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
@@ -159,9 +161,13 @@ $(document).ready(function () {
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
-            $.get(url,function (data) {
+            $.get(url, function (data) {
                 $modal_elm.append(data);
-                $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small", onText: "<?=__d('gl',"参加")?>", offText: "<?=__d('gl',"不参加")?>"});
+                $modal_elm.find(".bt-switch").bootstrapSwitch({
+                    size: "small",
+                    onText: "<?=__d('gl',"参加")?>",
+                    offText: "<?=__d('gl',"不参加")?>"
+                });
             }).success(function () {
                 $('body').addClass('modal-open');
             });
@@ -191,7 +197,7 @@ function bindSelect2Members($this) {
                 };
             },
             results: function (data, page) {
-                return { results: data.results };
+                return {results: data.results};
             }
         },
         initSelection: function (element, callback) {
@@ -208,7 +214,8 @@ function bindSelect2Members($this) {
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2Member"
     });
 }
 /**
@@ -287,7 +294,11 @@ function evFeedMoreView() {
                 imageLazyOn();
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
                 });
 
                 $('.gl-custom-radio-check').customRadioCheck();
@@ -349,7 +360,11 @@ function evCommentAllView() {
                 imageLazyOn();
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
                 });
 
                 $('.gl-custom-radio-check').customRadioCheck();
@@ -473,7 +488,8 @@ echo $this->Session->flash('pnotify');
     <p class="ribbon ribbon-staging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Staging</p>
 <? elseif (ENV_NAME == "hotfix"): ?>
     <p class="ribbon ribbon-hotfix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hotfix</p>
-<? elseif (ENV_NAME == "local"): ?>
+<?
+elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local</p>
 <?endif; ?>
 <!-- END app/View/Elements/gl_common_js.ctp -->

@@ -114,7 +114,160 @@ class GoalTest extends CakeTestCase
             ]
         ];
         $this->Goal->getProgress($goal);
+    }
 
+    function testSortModified()
+    {
+        $goals = [
+            [
+                'Goal' => [
+                    'id'       => 1,
+                    'modified' => 1
+                ]
+            ],
+            [
+                'Goal' => [
+                    'id'       => 2,
+                    'modified' => 5
+                ]
+            ],
+        ];
+        $res = $this->Goal->sortModified($goals);
+        $expected = [
+            [
+                'Goal' => [
+                    'id'       => 2,
+                    'modified' => 5
+                ]
+            ],
+            [
+                'Goal' => [
+                    'id'       => 1,
+                    'modified' => 1
+                ]
+            ]
+        ];
+        $this->assertEquals($expected, $res);
+    }
+
+    function testSortPriority()
+    {
+        $goals = [
+            [
+                'Goal' => [
+                    'id'       => 1,
+                    'priority' => 1
+                ]
+            ],
+            [
+                'Goal' => [
+                    'id'       => 2,
+                    'priority' => 5
+                ]
+            ],
+        ];
+        $res = $this->Goal->sortPriority($goals);
+        $expected = [
+            [
+                'Goal' => [
+                    'id'       => 2,
+                    'priority' => 5
+                ]
+            ],
+            [
+                'Goal' => [
+                    'id'       => 1,
+                    'priority' => 1
+                ]
+            ],
+        ];
+        $this->assertEquals($expected, $res);
+    }
+
+    function testSortExistsSpecialKeyResult()
+    {
+        $goals = [
+            [
+                'Goal'             => [
+                    'id' => 1,
+                ],
+                'SpecialKeyResult' => [
+                    'id' => 1,
+                ]
+            ],
+            [
+                'Goal'             => [
+                    'id' => 2,
+                ],
+                'SpecialKeyResult' => [
+                ]
+            ],
+        ];
+        $res = $this->Goal->sortExistsSpecialKeyResult($goals);
+        $expected = [
+            [
+                'Goal'             => [
+                    'id' => 2,
+                ],
+                'SpecialKeyResult' => [
+                ]
+            ],
+            [
+                'Goal'             => [
+                    'id' => 1,
+                ],
+                'SpecialKeyResult' => [
+                    'id' => 1,
+                ]
+            ],
+        ];
+        $this->assertEquals($expected, $res);
+    }
+
+    function testSortEndDate()
+    {
+        $goals = [
+            [
+                'Goal'             => [
+                    'id' => 1,
+                ],
+                'SpecialKeyResult' => [
+
+                ]
+            ],
+            [
+                'Goal'             => [
+                    'id' => 2,
+                ],
+                'SpecialKeyResult' => [
+                    [
+                        'end_date' => 1
+                    ]
+                ]
+            ],
+        ];
+        $res = $this->Goal->sortEndDate($goals);
+        $expected = [
+            [
+                'Goal'             => [
+                    'id' => 2,
+                ],
+                'SpecialKeyResult' => [
+                    [
+                        'end_date' => 1
+                    ]
+                ]
+            ],
+            [
+                'Goal'             => [
+                    'id' => 1,
+                ],
+                'SpecialKeyResult' => [
+
+                ]
+            ],
+        ];
+        $this->assertEquals($expected, $res);
     }
 
     function setDefault()

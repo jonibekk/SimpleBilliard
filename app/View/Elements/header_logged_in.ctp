@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 5/28/14
  * Time: 5:04 PM
-
  *
-*@var       $title_for_layout string
+ * @var       $title_for_layout string
  * @var       $this             CodeCompletionView
  * @var       $nav_disable
  * @var array $my_teams

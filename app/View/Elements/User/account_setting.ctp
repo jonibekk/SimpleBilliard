@@ -26,14 +26,14 @@
                 'class' => 'col col-sm-3 control-label form-label'
             ],
             'wrapInput' => 'col col-sm-6',
-            'class' => 'form-control setting_input-design'
+            'class'     => 'form-control setting_input-design'
         ],
         'class'         => 'form-horizontal',
         'novalidate'    => true,
         'id'            => 'UserAccountForm',
     ]); ?>
     <div class="panel-body user-setting-panel-body">
-    <div class="form-group">
+        <div class="form-group">
             <label for="PrimaryEmailEmail" class="col col-sm-3 control-label form-label"><?= __d('gl', "メール") ?></label>
 
             <div class="col col-sm-6">
@@ -71,14 +71,14 @@
             'wrapInput' => 'col col-sm-9 col-sm-offset-3',
             'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
             'class'     => false,
-        ])?>
+        ]) ?>
         <hr>
         <?=
         $this->Form->input('language', [
             'label'   => __d('gl', "言語"),
             'type'    => 'select',
             'options' => $language_list,
-        ])?>
+        ]) ?>
         <hr>
         <?=
         $this->Form->input('timezone', [
@@ -111,7 +111,7 @@
         </div>
     </div>
     <div class="panel-footer setting_pannel-footer">
-    <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+        <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
         <div class="clearfix"></div>
     </div>
     <?= $this->Form->end(); ?>

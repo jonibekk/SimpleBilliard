@@ -94,7 +94,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default" id="AddGoalFormKeyResultWrap">
         <div class="panel-heading goal-set-heading clearfix panel-closed-headding">
-            <div class="pull-left goal-set-title"><span class='font_bold'>2</span> <?= __d('gl', "ゴールを定める") ?>
+            <div class="pull-left goal-set-title"><span class='font_bold'>2</span> <?= __d('gl', "基準を定める") ?>
             </div>
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
@@ -131,7 +131,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 <?=
                 $this->Form->input('KeyResult.0.name',
                                    ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
-                                       '<label class="no-asterisk">' . __d('gl', "ゴール") . '</label>' .
+                                       '<label class="no-asterisk">' . __d('gl', "ゴール名") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl',
                                                                              "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
                                     'label'                    => false,
