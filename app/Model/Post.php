@@ -3,9 +3,8 @@ App::uses('AppModel', 'Model');
 
 /**
  * Post Model
-
  *
-*@property User               $User
+ * @property User               $User
  * @property Team               $Team
  * @property CommentMention     $CommentMention
  * @property Comment            $Comment
@@ -25,6 +24,11 @@ class Post extends AppModel
     const TYPE_NORMAL = 1;
     const TYPE_ACTION = 2;
     const TYPE_BADGE = 3;
+
+    const SHARE_ALL = 1;
+    const SHARE_PEOPLE = 2;
+    const SHARE_ONLY_ME = 3;
+    const SHARE_CIRCLE = 4;
 
     public $orgParams = [
         'circle_id' => null,
@@ -414,10 +418,16 @@ class Post extends AppModel
                     ],
                 ],
                 'PostShareCircle' => [
-                    'fields' => ["PostShareCircle.id"]
+                    'fields' => [
+                        "PostShareCircle.id",
+                        "PostShareCircle.circle_id",
+                    ]
                 ],
                 'PostShareUser'   => [
-                    'fields' => ["PostShareUser.id"]
+                    'fields' => [
+                        "PostShareUser.id",
+                        "PostShareUser.user_id",
+                    ]
                 ],
             ],
         ];
@@ -433,7 +443,144 @@ class Post extends AppModel
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
         }
+
+        //１件のサークル名をランダムで取得
+        $res = $this->getRandomShareCircleNames($res);
+        //１件のユーザ名をランダムで取得
+        $res = $this->getRandomShareUserNames($res);
+        //シェアモードの特定
+        $res = $this->getShareMode($res);
+        //シェアメッセージの特定
+        $res = $this->getShareMessages($res);
+
         return $res;
+    }
+
+    function getRandomShareCircleNames($data)
+    {
+        foreach ($data as $key => $val) {
+            if (!empty($val['PostShareCircle'])) {
+                $circle_list = [];
+                foreach ($val['PostShareCircle'] as $circle) {
+                    $circle_list[] = $circle['circle_id'];
+                }
+                $circle_name = $this->PostShareCircle->Circle->getNameRandom($circle_list);
+                $data[$key]['share_circle_name'] = $circle_name;
+            }
+        }
+        return $data;
+    }
+
+    function getRandomShareUserNames($data)
+    {
+        foreach ($data as $key => $val) {
+            if (!empty($val['PostShareUser'])) {
+                $user_list = [];
+                foreach ($val['PostShareUser'] as $user) {
+                    $user_list[] = $user['user_id'];
+                }
+                $user_name = $this->User->getNameRandom($user_list);
+                $data[$key]['share_user_name'] = $user_name;
+            }
+        }
+        return $data;
+    }
+
+    function getShareMode($data)
+    {
+        foreach ($data as $key => $val) {
+            if ($val['Post']['public_flg']) {
+                $data[$key]['share_mode'] = self::SHARE_ALL;
+            }
+            elseif (!empty($val['PostShareCircle'])) {
+                $data[$key]['share_mode'] = self::SHARE_CIRCLE;
+            }
+            else {
+                if (!empty($val['PostShareUser'])) {
+                    $data[$key]['share_mode'] = self::SHARE_PEOPLE;
+                }
+                else {
+                    $data[$key]['share_mode'] = self::SHARE_ONLY_ME;
+                }
+            }
+        }
+        return $data;
+    }
+
+    function getShareMessages($data)
+    {
+        foreach ($data as $key => $val) {
+            $data[$key]['share_text'] = null;
+            switch ($val['share_mode']) {
+                case self::SHARE_ALL:
+                    $data[$key]['share_text'] = __d('gl', "チーム全体に共有");
+                    break;
+                case self::SHARE_PEOPLE:
+                    if (count($val['PostShareUser']) == 1) {
+                        $data[$key]['share_text'] = __d('gl', "%sに共有",
+                                                        $data[$key]['share_user_name']);
+                    }
+                    else {
+                        $data[$key]['share_text'] = __d('gl', '%1$sと他%2$s人に共有',
+                                                        $data[$key]['share_user_name'],
+                                                        count($val['PostShareUser']) - 1);
+                    }
+                    break;
+                case self::SHARE_ONLY_ME:
+                    //自分だけ
+                    $data[$key]['share_text'] = __d('gl', "自分のみ");
+                    break;
+                case self::SHARE_CIRCLE:
+                    //共有ユーザがいない場合
+                    if (count($val['PostShareUser']) == 0) {
+                        if (count($val['PostShareCircle']) == 1) {
+                            $data[$key]['share_text'] = __d('gl', "%sに共有",
+                                                            $data[$key]['share_circle_name']);
+                        }
+                        else {
+                            $data[$key]['share_text'] = __d('gl', '%1$s他%2$sサークルに共有',
+                                                            $data[$key]['share_circle_name'],
+                                                            count($val['PostShareCircle']) - 1);
+                        }
+                    }
+                    //共有ユーザが１人いる場合
+                    elseif (count($val['PostShareUser']) == 1) {
+                        if (count($val['PostShareCircle']) == 1) {
+                            $data[$key]['share_text'] = __d('gl', '%1$sと%2$sに共有',
+                                                            $data[$key]['share_circle_name'],
+                                                            $data[$key]['share_user_name']);
+                        }
+                        else {
+                            $data[$key]['share_text'] = __d('gl', '%1$sと%2$s他%3$sサークルに共有',
+                                                            $data[$key]['share_user_name'],
+                                                            $data[$key]['share_circle_name'],
+                                                            count($val['PostShareCircle']) - 1);
+                        }
+
+                    }
+                    //共有ユーザが２人以上いる場合
+                    else {
+                        if (count($val['PostShareCircle']) == 1) {
+                            $data[$key]['share_text'] = __d('gl', '%1$s,%2$sと他%3$s人に共有',
+                                                            $data[$key]['share_circle_name'],
+                                                            $data[$key]['share_user_name'],
+                                                            count($val['PostShareUser']) - 1);
+                        }
+                        else {
+                            $data[$key]['share_text'] = __d('gl', '%1$sと他%2$s人,%3$s他%4$sサークルに共有',
+                                                            $data[$key]['share_user_name'],
+                                                            count($val['PostShareUser']) - 1,
+                                                            $data[$key]['share_circle_name'],
+                                                            count($val['PostShareCircle']) - 1);
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $data;
     }
 
     function postEdit($data)

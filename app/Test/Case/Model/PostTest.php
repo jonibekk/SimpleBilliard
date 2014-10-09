@@ -154,4 +154,210 @@ class PostTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
+    function testGetRandomShareCircleNames()
+    {
+        $this->Post->PostShareCircle->Circle->current_team_id = 1;
+        $data = [
+            [
+                'PostShareCircle' => [
+                    ['circle_id' => 1]
+                ]
+            ]
+        ];
+        $res = $this->Post->getRandomShareCircleNames($data);
+        $excepted = [
+            [
+                'PostShareCircle'   => [
+                    ['circle_id' => 1]
+                ],
+                'share_circle_name' => 'test'
+            ]
+        ];
+        $this->assertEquals($excepted, $res);
+        $data = [
+            [
+                'PostShareCircle' => [
+                    ['circle_id' => 99999999]
+                ]
+            ]
+        ];
+        $res = $this->Post->getRandomShareCircleNames($data);
+        $excepted = [
+            [
+                'PostShareCircle'   => [
+                    ['circle_id' => 99999999]
+                ],
+                'share_circle_name' => null
+            ]
+        ];
+        $this->assertEquals($excepted, $res);
+    }
+
+    function testGetRandomShareUserNames()
+    {
+        $data = [
+            [
+                'PostShareUser' => [
+                    ['user_id' => 1]
+                ]
+            ]
+        ];
+        $res = $this->Post->getRandomShareUserNames($data);
+        $excepted = [
+            [
+                'PostShareUser'   => [
+                    ['user_id' => 1]
+                ],
+                'share_user_name' => 'first last'
+            ]
+        ];
+        $this->assertEquals($excepted, $res);
+
+        $data = [
+            [
+                'PostShareUser' => [
+                    ['user_id' => 9999999999999]
+                ]
+            ]
+        ];
+        $res = $this->Post->getRandomShareUserNames($data);
+        $excepted = [
+            [
+                'PostShareUser'   => [
+                    ['user_id' => 9999999999999]
+                ],
+                'share_user_name' => null
+            ]
+        ];
+        $this->assertEquals($excepted, $res);
+    }
+
+    function testGetShareMode()
+    {
+        $data = [
+            [
+                'Post' => [
+                    'public_flg' => true
+                ]
+            ],
+            [
+                'Post'            => [
+                    'public_flg' => false
+                ],
+                'PostShareCircle' => [1]
+            ],
+            [
+                'Post'            => [
+                    'public_flg' => false
+                ],
+                'PostShareCircle' => [],
+                'PostShareUser'   => [1]
+            ],
+            [
+                'Post'            => [
+                    'public_flg' => false
+                ],
+                'PostShareCircle' => [],
+                'PostShareUser'   => []
+            ],
+        ];
+        $res = $this->Post->getShareMode($data);
+        $excepted = [
+            [
+                'Post'       => [
+                    'public_flg' => true
+                ],
+                'share_mode' => 1,
+            ],
+            [
+                'Post'            => [
+                    'public_flg' => false
+                ],
+                'PostShareCircle' => [1],
+                'share_mode'      => 4,
+            ],
+            [
+                'Post'            => [
+                    'public_flg' => false
+                ],
+                'PostShareCircle' => [],
+                'PostShareUser'   => [1],
+                'share_mode'      => 2,
+            ],
+            [
+                'Post'            => [
+                    'public_flg' => false
+                ],
+                'PostShareCircle' => [],
+                'PostShareUser'   => [],
+                'share_mode'      => 3,
+            ],
+        ];
+        $this->assertEquals($excepted, $res);
+    }
+
+    function testGetShareMessages()
+    {
+        $data = [
+            [
+                'share_mode' => 1,
+            ],
+            [
+                'share_mode' => 3,
+            ],
+            [
+                'share_mode'      => 2,
+                'share_user_name' => 'test_user',
+                'PostShareUser'   => [1],
+            ],
+            [
+                'share_mode'      => 2,
+                'share_user_name' => 'test_user',
+                'PostShareUser'   => [1, 2],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [],
+                'PostShareCircle'   => [1],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [],
+                'PostShareCircle'   => [1, 2],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1],
+                'PostShareCircle'   => [1],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1],
+                'PostShareCircle'   => [1, 2],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1, 2],
+                'PostShareCircle'   => [1],
+            ],
+            [
+                'share_mode'        => 4,
+                'share_user_name'   => 'test_user',
+                'share_circle_name' => 'test_circle',
+                'PostShareUser'     => [1, 2],
+                'PostShareCircle'   => [1, 2],
+            ],
+        ];
+        $this->Post->getShareMessages($data);
+    }
 }
