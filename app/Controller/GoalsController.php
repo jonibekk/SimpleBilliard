@@ -158,6 +158,20 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_collabo_change_modal($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+        $skr = $this->Goal->KeyResult->getCollaboModalItem($key_result_id);
+        $this->set(compact('skr'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_collabo');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function edit_collabo()
     {
         $this->request->allowMethod('post', 'put');

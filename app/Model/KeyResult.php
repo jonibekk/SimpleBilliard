@@ -187,4 +187,29 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    function getCollaboModalItem($id)
+    {
+        $options = [
+            'conditions' => [
+                'KeyResult.id'      => $id,
+                'KeyResult.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'MyCollabo' => [
+                    'conditions' => [
+                        'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                        'MyCollabo.user_id' => $this->my_uid,
+                    ],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.role',
+                        'MyCollabo.description',
+                    ],
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }

@@ -130,6 +130,25 @@ $(document).ready(function () {
             });
         }
     });
+    $(document).on("click", '.modal-ajax-get-collabo', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+            }).success(function () {
+                $modal_elm.bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {}
+                });
+                $('body').addClass('modal-open');
+            });
+        }
+    });
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
