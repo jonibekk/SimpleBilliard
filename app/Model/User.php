@@ -886,10 +886,10 @@ class User extends AppModel
     {
         $options = [
             'conditions' => [
-                'id' => $uid,
+                'User.id' => $uid,
             ],
             'fields'     => $this->profileFields,
-            'order' => 'rand()',
+            'order'      => 'rand()',
         ];
         $res = $this->find('first', $options);
         if (isset($res['User']['display_username'])) {

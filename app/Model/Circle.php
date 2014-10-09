@@ -273,11 +273,11 @@ class Circle extends AppModel
     {
         $options = [
             'conditions' => [
-                'id' => $ids,
-                'team_id' => $this->current_team_id
+                'Circle.id'      => $ids,
+                'Circle.team_id' => $this->current_team_id
             ],
             'fields'     => [
-                'name'
+                'Circle.name'
             ],
             'order'      => 'rand()',
         ];
