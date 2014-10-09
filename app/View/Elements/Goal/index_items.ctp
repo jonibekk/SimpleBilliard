@@ -90,9 +90,10 @@
                         </a>
                     </div>
                     <div class="col col-xxs-4">
-                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white <?= $collabo_class ?>"
+                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white modal-ajax-get-collabo <?= $collabo_class ?>"
                            data-toggle="modal"
-                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
+                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>"
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['SpecialKeyResult'][0]['id']]) ?>">
                             <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
                             <span class="ml_5px font_14px"><?= $collabo_text ?></span>
                         </a>
@@ -101,20 +102,5 @@
             <? endif; ?>
         </div>
     </div>
-    <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
-        <? $this->append('modal') ?>
-        <?= $this->element('modal_collabo', ['skr' => $goal['SpecialKeyResult'][0]]) ?>
-        <? $this->end() ?>
-        <? $this->append('script') ?>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#CollaboForm_<?=$goal['SpecialKeyResult'][0]['id']?>').bootstrapValidator({
-                    live: 'enabled',
-                    feedbackIcons: {}
-                });
-            });
-        </script>
-        <? $this->end() ?>
-    <? endif; ?>
 <? endforeach ?>
 <!-- End app/View/Elements/Goals/index_items.ctp -->

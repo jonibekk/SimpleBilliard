@@ -172,4 +172,44 @@ class KeyResult extends AppModel
         return false;
     }
 
+    function getGoalIdsExistsSkr($start_date, $end_date)
+    {
+        $options = [
+            'conditions' => [
+                'KeyResult.start_date >=' => $start_date,
+                'KeyResult.end_date <'    => $end_date,
+                'KeyResult.special_flg'   => true,
+                'KeyResult.team_id'       => $this->current_team_id,
+            ],
+            'fields'     => ['KeyResult.goal_id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getCollaboModalItem($id)
+    {
+        $options = [
+            'conditions' => [
+                'KeyResult.id'      => $id,
+                'KeyResult.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'MyCollabo' => [
+                    'conditions' => [
+                        'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                        'MyCollabo.user_id' => $this->my_uid,
+                    ],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.role',
+                        'MyCollabo.description',
+                    ],
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }

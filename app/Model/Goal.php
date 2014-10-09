@@ -526,8 +526,10 @@ class Goal extends AppModel
             $page = $params['named']['page'];
             unset($params['named']['page']);
         }
+        $goal_ids = $this->KeyResult->getGoalIdsExistsSkr($start_date, $end_date);
         $options = [
             'conditions' => [
+                'Goal.id' => $goal_ids,
                 'Goal.team_id' => $this->current_team_id,
             ],
             'order'      => ['Goal.modified desc'],
