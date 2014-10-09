@@ -172,4 +172,19 @@ class KeyResult extends AppModel
         return false;
     }
 
+    function getGoalIdsExistsSkr($start_date, $end_date)
+    {
+        $options = [
+            'conditions' => [
+                'KeyResult.start_date >=' => $start_date,
+                'KeyResult.end_date <'    => $end_date,
+                'KeyResult.special_flg'   => true,
+                'KeyResult.team_id'       => $this->current_team_id,
+            ],
+            'fields'     => ['KeyResult.goal_id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }
