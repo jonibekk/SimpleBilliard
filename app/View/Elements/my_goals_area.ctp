@@ -13,8 +13,8 @@
 ?>
 <!-- START app/View/Elements/my_goals_area.ctp -->
 <div class="col col-xxs-12 goals-column-head">
-    <i class="fa fa-flag font_18px mt_5px goals-column-title"><span class="pl_5px"><?= __d('gl', 'あなたのゴール') ?>
-            (<?= count($my_goals) + count($collabo_goals) ?>)</span></i>
+    <span class="font_18px mt_5px goals-column-title"><?= __d('gl', 'あなたのゴール') ?>
+            (<?= count($my_goals) + count($collabo_goals) ?>)</span>
 
     <div class="pull-right">
         <div class="dropdown">
@@ -65,8 +65,8 @@
 </div>
 <div id="FollowGoals">
     <div class="col col-xxs-12 goals-column-head mt_32px">
-        <i class="fa fa-heart-o font_18px goals-column-title"><span class="pl_5px"><?= __d('gl', 'フォロー中のゴール') ?>
-                (<?= count($follow_goals) ?>)</span></i>
+        <span class="font_18px goals-column-title"><?= __d('gl', 'フォロー中のゴール') ?>
+                (<?= count($follow_goals) ?>)</span>
         <div class="pull-right">
             <div class="dropdown">
                 <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
