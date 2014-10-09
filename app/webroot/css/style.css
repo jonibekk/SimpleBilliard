@@ -213,6 +213,10 @@ footer p {
     padding-bottom: 5px;
 }
 
+.mb_32px{
+    margin-bottom: 32px;
+}
+
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
