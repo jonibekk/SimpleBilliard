@@ -47,7 +47,9 @@
                     </a>
                 </div>
             <? else: ?>
-                <b class="line-numbers ln_2"><?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
+                <b class="line-numbers ln_2">
+                    <i class="fa fa-flag"></i>
+                    <?= h($goal['SpecialKeyResult'][0]['name']) ?></b>
             <?endif; ?>
         </div>
         <div class="col col-xxs-12 font_12px line-numbers ln_1 goals-column-purpose">
