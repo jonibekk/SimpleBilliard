@@ -93,6 +93,8 @@ $(document).ready(function () {
     $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("touchend", "#layer-black", function () {
         console.log('hide');
         $('.navbar-offcanvas').offcanvas('hide');

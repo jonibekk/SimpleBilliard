@@ -373,6 +373,29 @@ class Goal extends AppModel
     function getMyCollaboGoals()
     {
         $goal_ids = $this->KeyResult->getCollaboGoalList($this->my_uid);
+
+        $res = $this->getByGoalId($goal_ids);
+        $res = $this->sortModified($res);
+        $res = $this->sortEndDate($res);
+        $res = $this->sortPriority($res);
+
+        return $res;
+    }
+
+    function getMyFollowedGoals()
+    {
+        $goal_ids = $this->KeyResult->getFollowGoalList($this->my_uid);
+
+        $res = $this->getByGoalId($goal_ids);
+        $res = $this->sortModified($res);
+        $res = $this->sortEndDate($res);
+        $res = $this->sortPriority($res);
+
+        return $res;
+    }
+
+    function getByGoalId($goal_ids)
+    {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
         $options = [
@@ -405,11 +428,6 @@ class Goal extends AppModel
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
-
-        $res = $this->sortModified($res);
-        $res = $this->sortEndDate($res);
-        $res = $this->sortPriority($res);
-
         return $res;
     }
 
@@ -458,6 +476,14 @@ class Goal extends AppModel
                             'MyCollabo.id',
                             'MyCollabo.role',
                             'MyCollabo.description',
+                        ],
+                    ],
+                    'MyFollow' => [
+                        'conditions' => [
+                            'MyFollow.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyFollow.id',
                         ],
                     ],
                 ],
@@ -536,6 +562,14 @@ class Goal extends AppModel
                             'MyCollabo.id',
                             'MyCollabo.role',
                             'MyCollabo.description',
+                        ],
+                    ],
+                    'MyFollow'     => [
+                        'conditions' => [
+                            'MyFollow.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyFollow.id',
                         ],
                     ],
                 ],

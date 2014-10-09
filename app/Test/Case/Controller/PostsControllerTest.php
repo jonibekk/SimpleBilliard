@@ -16,6 +16,7 @@ class PostsControllerTest extends ControllerTestCase
      */
     public $fixtures = array(
         'app.goal',
+        'app.follower',
         'app.cake_session',
         'app.post',
         'app.user', 'app.notify_setting',
@@ -960,7 +961,7 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedFieldInspection */
         /** @noinspection PhpUndefinedMethodInspection */
         //$Posts->NotifyBiz->expects($this->any())->method('sendNotify')->will($this->returnValue(true));

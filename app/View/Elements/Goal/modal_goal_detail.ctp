@@ -25,22 +25,40 @@
                 </div>
                 <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
                     <div class="col col-xxs-6">
-                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink pull-right mt_16px" href="#"><i
-                                class="fa fa-heart font_rougeOrange"><span
-                                    style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
-
-                        <a class="btn btn-purewhite bd-circle_20 pull-right mt_16px" data-toggle="modal"
+                        <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])) {
+                            $follow_class = 'follow-off';
+                            $follow_style = null;
+                            $follow_text = __d('gl', "フォロー");
+                        }
+                        else {
+                            $follow_class = 'follow-on';
+                            $follow_style = 'display:none;';
+                            $follow_text = __d('gl', "フォロー中");
+                        }?>
+                        <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])) {
+                            $collabo_class = 'collabo-on';
+                            $collabo_style = 'display:none;';
+                            $collabo_text = __d('gl', "コラボり中");
+                            $follow_disabled = "disabled";
+                        }
+                        else {
+                            $collabo_class = 'collabo-off';
+                            $collabo_style = null;
+                            $collabo_text = __d('gl', "コラボる");
+                            $follow_disabled = null;
+                        }?>
+                        <a class="btn btn_pureWhite bd-circle_20 pull-right mt_16px toggle-follow font_verydark-white <?= $follow_class ?>"
+                           href="#" <?= $follow_disabled ?>="<?= $follow_disabled ?>"
+                        data-class="toggle-follow"
+                        kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
+                        <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
+                        <span class="ml_5px"><?= $follow_text ?></span>
+                        </a>
+                        <a class="btn btn_pureWhite bd-circle_20 pull-right mt_16px font_verydark-white <?= $collabo_class ?>"
+                           data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
-                            <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])): ?>
-                                <span
-                                    style="color: #000000" class="font_rougeOrange ml_5px font_14px"><?= __d('gl',
-                                                                                                             "コラボり中") ?></span>
-                            <? else: ?>
-                                <i
-                                    class="fa fa-child font_rougeOrange font_18px"><span
-                                        style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i>
-                            <?
-                            endif; ?>
+                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
+                            <span class="ml_5px font_14px"><?= $collabo_text ?></span>
                         </a>
                     </div>
                 <? endif; ?>

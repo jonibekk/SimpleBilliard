@@ -213,6 +213,10 @@ footer p {
     padding-bottom: 5px;
 }
 
+.mb_32px{
+    margin-bottom: 32px;
+}
+
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
@@ -339,6 +343,16 @@ footer p {
 .font-dimgray {
     color: #696969;
 }
+
+.font_verydark-white{
+    color: #231814;
+}
+.font_verydark-white:hover,
+.font_verydark-white:active,
+.font_verydark-white:target{
+    color: #fff;
+}
+
 
 .font_gray-rougeOrange {
     color: #808080;
@@ -1755,21 +1769,36 @@ ul.gl-input-images > li {
     text-decoration: none;
 }
 
-.btn-purewhite {
+.btn_pureWhite,
+.btn_pureWhite-rougeOrange{
     border: 1px solid #ccc;
     background-color: #fff;
     background-image: none;
-    color: #777;
 }
 
-.btn-purewhite:target,
-.btn-purewhite:hover {
+.btn_pureWhite:target,
+.btn_pureWhite:hover {
     border: 1px solid #aaa;
     background-color: #fff;
     background-image: none;
     color: #231814;
     text-decoration: none;
 }
+
+.btn_pureWhite-rougeOrange:target,
+.btn_pureWhite-rougeOrange:hover{
+    border: 1px solid #aaa;
+    background-color: #fff;
+    background-image: none;
+    color: #231814;
+    text-decoration: none;
+}
+
+.follow-on,.follow-on:hover,.collabo-on,.collabo-on:hover{
+    color: #fff;
+    background-color: #ea5e5b;
+}
+
 
 .goal-set-buttons input {
     display: inline-block;
