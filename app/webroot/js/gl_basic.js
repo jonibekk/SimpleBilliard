@@ -93,6 +93,8 @@ $(document).ready(function () {
     $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("touchend", "#layer-black", function () {
         console.log('hide');
         $('.navbar-offcanvas').offcanvas('hide');
@@ -123,6 +125,26 @@ $(document).ready(function () {
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    });
+    $(document).on("click", '.modal-ajax-get-collabo', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.modal();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                $modal_elm.find('textarea').autosize();
+                $modal_elm.find('#CollaboEditForm').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {}
+                });
             }).success(function () {
                 $('body').addClass('modal-open');
             });

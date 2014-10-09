@@ -27,7 +27,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormPurposeWrap",
@@ -70,7 +70,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                     'rows'                     => 1,
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'afterInput'               => '<span class="help-block goal-form-addiction">' . __d('gl',
-                                                                                                                        "例）世界から貧困を減らすこと") . '</span>'
+                                                                                                                        "例）新しい価値を人々に提供する") . '</span>'
                                    ]) ?>
             </div>
 
@@ -99,7 +99,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormKeyResultWrap",
@@ -138,8 +138,8 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                     'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
-                                    'afterInput'               => '<span class="help-block">' . __d('gl',
-                                                                                                    "例）極度な貧困率を減少させる") . '</span>'
+                                    'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
+                                                                                                    "例）サービスAの国内市場シェアを増加させる") . '</span>'
                                    ]) ?>
                 <div class="row">
                     <div class="col col-sm-3">
@@ -291,7 +291,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn-purewhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormOtherWrap",

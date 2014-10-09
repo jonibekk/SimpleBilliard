@@ -23,8 +23,9 @@ class GoalsController extends AppController
         $goals = $this->Goal->getAllGoals();
         $my_goals = $this->Goal->getMyGoals();
         $collabo_goals = $this->Goal->getMyCollaboGoals();
+        $follow_goals = $this->Goal->getMyFollowedGoals();
         $current_global_menu = "goal";
-        $this->set(compact('goals', 'my_goals', 'collabo_goals', 'current_global_menu'));
+        $this->set(compact('goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu'));
     }
 
     /**
@@ -157,6 +158,20 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_collabo_change_modal($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+        $skr = $this->Goal->KeyResult->getCollaboModalItem($key_result_id);
+        $this->set(compact('skr'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_collabo');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function edit_collabo()
     {
         $this->request->allowMethod('post', 'put');
@@ -182,6 +197,52 @@ class GoalsController extends AppController
         $this->Goal->KeyResult->KeyResultUser->delete();
         $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
         $this->redirect($this->referer());
+    }
+
+    /**
+     * フォロー、アンフォローの切り換え
+     *
+     * @param $key_result_id
+     *
+     * @return CakeResponse
+     */
+    public function ajax_toggle_follow($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+
+        $return = [
+            'error' => false,
+            'msg'   => null,
+            'add'   => true,
+        ];
+
+        //存在チェック
+        if (!$this->Goal->KeyResult->isBelongCurrentTeam($key_result_id)) {
+            $return['error'] = true;
+            $return['msg'] = __d('gl', "存在しないゴールです。");
+            return $this->_ajaxGetResponse($return);
+        }
+
+        //既にフォローしているかどうかのチェック
+        if ($this->Goal->KeyResult->Follower->isExists($key_result_id)) {
+            $return['add'] = false;
+        }
+
+        if ($return['add']) {
+            if ($this->Goal->KeyResult->Follower->addFollower($key_result_id)) {
+                $return['msg'] = __d('gl', "フォローしました。");
+            }
+            else {
+                $return['error'] = true;
+                $return['msg'] = __d('gl', "フォローに失敗しました。");
+            }
+        }
+        else {
+            $this->Goal->KeyResult->Follower->deleteFollower($key_result_id);
+            $return['msg'] = __d('gl', "フォロー解除しました。");
+        }
+
+        return $this->_ajaxGetResponse($return);
     }
 
 }

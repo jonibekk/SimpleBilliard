@@ -4,9 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * KeyResult Model
  *
- * @property Team          $Team
- * @property Goal          $Goal
- * @property KeyResultUser $KeyResultUser
+ * @property Team              $Team
+ * @property Goal              $Goal
+ * @property Follower          $Follower
+ * @property KeyResultUser     $KeyResultUser
  */
 class KeyResult extends AppModel
 {
@@ -104,7 +105,11 @@ class KeyResult extends AppModel
         ],
         'MyCollabo'     => [
             'className' => 'KeyResultUser',
-        ]
+        ],
+        'Follower',
+        'MyFollow'      => [
+            'className' => 'Follower',
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -125,6 +130,85 @@ class KeyResult extends AppModel
             ],
         ];
         $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getFollowGoalList($user_id)
+    {
+        $key_result_ids = $this->Follower->getFollowList($user_id);
+        $options = [
+            'conditions' => [
+                'id' => $key_result_ids,
+            ],
+            'fields'     => [
+                'goal_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
+     * キーリザルトが現在のチームで有効かどうか
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    function isBelongCurrentTeam($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $id,
+                'team_id' => $this->current_team_id
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
+    }
+
+    function getGoalIdsExistsSkr($start_date, $end_date)
+    {
+        $options = [
+            'conditions' => [
+                'KeyResult.start_date >=' => $start_date,
+                'KeyResult.end_date <'    => $end_date,
+                'KeyResult.special_flg'   => true,
+                'KeyResult.team_id'       => $this->current_team_id,
+            ],
+            'fields'     => ['KeyResult.goal_id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getCollaboModalItem($id)
+    {
+        $options = [
+            'conditions' => [
+                'KeyResult.id'      => $id,
+                'KeyResult.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'MyCollabo' => [
+                    'conditions' => [
+                        'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                        'MyCollabo.user_id' => $this->my_uid,
+                    ],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.role',
+                        'MyCollabo.description',
+                    ],
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
         return $res;
     }
 

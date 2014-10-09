@@ -56,46 +56,51 @@
                     <? endif; ?>
                 <?endif; ?>
             </div>
-            <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id')): ?>
+            <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['SpecialKeyResult'][0])): ?>
                 <div class="col col-xxs-12 mt_5px">
+                    <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])) {
+                        $follow_class = 'follow-off';
+                        $follow_style = null;
+                        $follow_text = __d('gl', "フォロー");
+                    }
+                    else {
+                        $follow_class = 'follow-on';
+                        $follow_style = 'display:none;';
+                        $follow_text = __d('gl', "フォロー中");
+                    }?>
+                    <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])) {
+                        $collabo_class = 'collabo-on';
+                        $collabo_style = 'display:none;';
+                        $collabo_text = __d('gl', "コラボり中");
+                        $follow_disabled = "disabled";
+                    }
+                    else {
+                        $collabo_class = 'collabo-off';
+                        $collabo_style = null;
+                        $collabo_text = __d('gl', "コラボる");
+                        $follow_disabled = null;
+                    }?>
                     <div class="col col-xxs-4">
-                        <a class="btn btn-purewhite bd-circle_20 develop--forbiddenLink" href="#"><i
-                                class="fa fa-heart font_rougeOrange"><span
-                                    style="color: #000000" class="ml_5px"><?= __d('gl', "フォロー") ?></span></i></a>
+                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow <?= $follow_class ?>" <?= $follow_disabled ?>
+                        ="<?= $follow_disabled ?>" href="#"
+                        data-class="toggle-follow"
+                        kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
+                        <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
+                        <span class="ml_5px"><?= $follow_text ?></span>
+                        </a>
                     </div>
                     <div class="col col-xxs-4">
-                        <a class="btn btn-purewhite bd-circle_20" data-toggle="modal"
-                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>" href="#">
-                            <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])): ?>
-                                <span
-                                    style="color: #000000" class="font_rougeOrange ml_5px font_14px"><?= __d('gl',
-                                                                                                             "コラボり中") ?></span>
-                            <? else: ?>
-                                <i
-                                    class="fa fa-child font_rougeOrange font_18px"><span
-                                        style="color: #000000" class="ml_5px font_14px"><?= __d('gl', "コラボる") ?></span></i>
-                            <?
-                            endif; ?>
+                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white modal-ajax-get-collabo <?= $collabo_class ?>"
+                           data-toggle="modal"
+                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>"
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['SpecialKeyResult'][0]['id']]) ?>">
+                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
+                            <span class="ml_5px font_14px"><?= $collabo_text ?></span>
                         </a>
                     </div>
                 </div>
             <? endif; ?>
         </div>
     </div>
-    <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
-        <? $this->append('modal') ?>
-        <?= $this->element('modal_collabo', ['skr' => $goal['SpecialKeyResult'][0]]) ?>
-        <? $this->end() ?>
-        <? $this->append('script') ?>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#CollaboForm_<?=$goal['SpecialKeyResult'][0]['id']?>').bootstrapValidator({
-                    live: 'enabled',
-                    feedbackIcons: {}
-                });
-            });
-        </script>
-        <? $this->end() ?>
-    <? endif; ?>
 <? endforeach ?>
 <!-- End app/View/Elements/Goals/index_items.ctp -->

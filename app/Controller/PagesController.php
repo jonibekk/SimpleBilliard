@@ -63,8 +63,10 @@ class PagesController extends AppController
                 $select2_default = $this->User->getAllUsersCirclesSelect2();
                 $my_goals = $this->Goal->getMyGoals();
                 $collabo_goals = $this->Goal->getMyCollaboGoals();
+                $follow_goals = $this->Goal->getMyFollowedGoals();
                 $current_global_menu = "home";
-                $this->set(compact('select2_default', 'my_goals', 'collabo_goals', 'current_global_menu'));
+                $this->set(compact('select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
+                                   'current_global_menu'));
                 try {
                     $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
                 } catch (RuntimeException $e) {

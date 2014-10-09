@@ -55,32 +55,25 @@
                 <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font_lightgray"> ･ </span>
                 <?
                 //公開の場合
-                if ($post['Post']['public_flg']): ?>
-                    <i class="fa fa-group"></i>&nbsp;<?= __d('gl', "チーム全体に共有") ?>
+                if ($post['share_mode'] == Post::SHARE_ALL): ?>
+                    <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
                 <?
                 //自分のみ
-                elseif (empty($post['PostShareUser']) && empty($post['PostShareCircle'])): ?>
-                    <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "自分のみ") ?>
+                elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
+                    <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
+                <?
+                //共有ユーザ
+                elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
+                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                       class="modal-ajax-get-share-circles-users link-dark-gray">
+                        <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
+                    </a>
                 <?
                 //共有サークル、共有ユーザ
-                elseif (!empty($post['PostShareUser']) && !empty($post['PostShareCircle'])): ?>
+                elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
                        class="modal-ajax-get-share-circles-users link-dark-gray">
-                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークル他に共有") ?>
-                    </a>
-                <?
-                //共有サークルのみ
-                elseif (!empty($post['PostShareCircle'])): ?>
-                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                       class="modal-ajax-get-share-circles-users link-dark-gray">
-                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークルに共有") ?>
-                    </a>
-                <?
-                //共有ユーザのみ
-                elseif (!empty($post['PostShareUser'])): ?>
-                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                       class="modal-ajax-get-share-circles-users link-dark-gray">
-                        <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "メンバーに共有") ?>
+                        <i class="fa fa-circle-o"></i>&nbsp;<?= $post['share_text'] ?>
                     </a>
                 <? endif; ?>
             </div>
