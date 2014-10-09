@@ -44,19 +44,7 @@ if (!isset($form)) {
             <?= h($circle['Circle']['name']) ?></div>
 
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-        <?
-            $title = '<ul class="gl-user-list-in-tooltip">';
-            foreach ($circle['CircleMember'] as $member) {
-                $img = $this->Upload->uploadImage($member, 'User.photo', ['style' => 'small'],
-                                                  ['width' => '16px', 'height' => '16px']);
-                $username = $member['User']['display_username'];
-                $title .= "<li>{$img}&nbsp;{$username}</li>";
-            }
-            $title .= "</ul>";
-            ?>
-            <a href="#" data-triger="click" data-toggle="tooltip" data-placement="bottom" data-html="true"
-               data-original-title='<?= $title ?>'>
-                <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?></a>
+            <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
         </div>
     </div>
 </div>

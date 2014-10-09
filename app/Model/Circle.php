@@ -223,11 +223,9 @@ class Circle extends AppModel
             'contain'    => [
                 'CircleMember' => [
                     'fields' => [
-                        'CircleMember.id'
+                        'CircleMember.id',
+                        'CircleMember.user_id'
                     ],
-                    'User'   => [
-                        'fields' => $this->CircleMember->User->profileFields
-                    ]
                 ],
                 'CircleAdmin'  => [
                     'conditions' => [
