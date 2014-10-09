@@ -30,7 +30,7 @@
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
-            'id'            => 'CollaboForm_' . $skr['KeyResult']['id'],
+            'id' => 'CollaboEditForm',
         ]); ?>
         <?= $this->Form->hidden('key_result_id', ['value' => $skr['KeyResult']['id']]) ?>
         <?
@@ -45,6 +45,7 @@
                                 'placeholder'              => __d('gl', "例) ○○"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                 'required'                 => true,
+                                'rows' => 1,
                                 'value'                    => isset($skr['MyCollabo'][0]['role']) ? $skr['MyCollabo'][0]['role'] : null,
                                ]) ?>
             <hr>
@@ -54,6 +55,7 @@
                                 'placeholder'              => __d('gl', "例) ○○"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                 'required'                 => true,
+                                'rows' => 1,
                                 'value'                    => isset($skr['MyCollabo'][0]['description']) ? $skr['MyCollabo'][0]['description'] : null,
                                ]) ?>
         </div>
@@ -65,7 +67,7 @@
                                                          "キャンセル") ?></button>
                     <?=
                     $this->Form->submit(empty($skr['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集"),
-                                        ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                        ['class' => 'btn btn-primary', 'div' => false,]) ?>
                     <?= $this->Form->end(); ?>
                     <? if (!empty($skr['MyCollabo'])): ?>
                         <?=

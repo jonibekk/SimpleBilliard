@@ -140,11 +140,12 @@ $(document).ready(function () {
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
-            }).success(function () {
-                $modal_elm.bootstrapValidator({
+                $modal_elm.find('textarea').autosize();
+                $modal_elm.find('#CollaboEditForm').bootstrapValidator({
                     live: 'enabled',
                     feedbackIcons: {}
                 });
+            }).success(function () {
                 $('body').addClass('modal-open');
             });
         }
