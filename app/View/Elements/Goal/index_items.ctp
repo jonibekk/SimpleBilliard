@@ -83,6 +83,7 @@
                     <div class="col col-xxs-4">
                         <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow <?= $follow_class ?>" <?= $follow_disabled ?>
                         ="<?= $follow_disabled ?>" href="#"
+                        data-class="toggle-follow"
                         kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
                         <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
                         <span class="ml_5px"><?= $follow_text ?></span>

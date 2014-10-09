@@ -49,6 +49,7 @@
                         }?>
                         <a class="btn btn_pureWhite bd-circle_20 pull-right mt_16px toggle-follow font_verydark-white <?= $follow_class ?>"
                            href="#" <?= $follow_disabled ?>="<?= $follow_disabled ?>"
+                        data-class="toggle-follow"
                         kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
                         <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
                         <span class="ml_5px"><?= $follow_text ?></span>

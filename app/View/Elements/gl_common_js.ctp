@@ -253,8 +253,10 @@ function bindSelect2Members($this) {
 
 function evFollowGoal() {
     attrUndefinedCheck(this, 'kr-id');
+    attrUndefinedCheck(this, 'data-class');
     var $obj = $(this);
     var kr_id = $obj.attr('kr-id');
+    var data_class = $obj.attr('data-class');
     var url = "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>";
     $.ajax({
         type: 'GET',
@@ -270,16 +272,20 @@ function evFollowGoal() {
             }
             else {
                 if (data.add) {
-                    $obj.children('span').text("<?=__d('gl',"フォロー中")?>");
-                    $obj.children('i').hide();
-                    $obj.removeClass('follow-off');
-                    $obj.addClass('follow-on');
+                    $("." + data_class + "[kr-id=" + kr_id + "]").each(function () {
+                        $(this).children('span').text("<?=__d('gl',"フォロー中")?>");
+                        $(this).children('i').hide();
+                        $(this).removeClass('follow-off');
+                        $(this).addClass('follow-on');
+                    });
                 }
                 else {
-                    $obj.children('span').text("<?=__d('gl',"フォロー")?>");
-                    $obj.children('i').show();
-                    $obj.removeClass('follow-on');
-                    $obj.addClass('follow-off');
+                    $("." + data_class + "[kr-id=" + kr_id + "]").each(function () {
+                        $(this).children('span').text("<?=__d('gl',"フォロー")?>");
+                        $(this).children('i').show();
+                        $(this).removeClass('follow-on');
+                        $(this).addClass('follow-off');
+                    });
                 }
             }
         },
