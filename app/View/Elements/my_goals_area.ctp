@@ -13,12 +13,12 @@
 ?>
 <!-- START app/View/Elements/my_goals_area.ctp -->
 <div class="col col-xxs-12 goals-column-head">
-    <i class="fa fa-flag font_18px mt_5px goals-column-title"><span class="pl_5px"><?= __d('gl', 'あなたのゴール') ?>
-            (<?= count($my_goals) + count($collabo_goals) ?>)</span></i>
+    <span class="font_18px mt_5px font_gargoyleGray goals-column-title"><?= __d('gl', 'あなたのゴール') ?>
+        (<?= count($my_goals) + count($collabo_goals) ?>)</span>
 
     <div class="pull-right">
         <div class="dropdown">
-            <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
+            <a href="#" class="font_gargoyleGray-gray font_11px" data-toggle="dropdown" id="download">
                 <span class="line-height_20px"><?= __d('gl', "全て") ?></span><i
                     class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
             </a>
@@ -35,7 +35,7 @@
     </div>
 </div>
 <div id="LeaderGoals">
-    <div class="col col-xxs-12 mt_16px">
+    <div class="col col-xxs-12 mt_16px font_gargoyleGray">
         <i class="fa fa-sun-o"><?= __d('gl', 'リーダー') ?>(<?= count($my_goals) ?>)</i>
     </div>
 
@@ -50,26 +50,27 @@
     <? else: ?>
         <?= $this->element('Goal/my_goal_area_items', ['goals' => $my_goals, 'type' => 'leader']) ?>
         <div class="col col-xxs-12 goals-column-plus-box">
-            <i class="fa fa-plus-circle">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
-                   class="font_gray-rougeOrange"><?= __d('gl', '新しいゴールをつくる') ?></a>
-            </i>
+            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
+               class="font_gargoyleGray-gray pull-right"> <i class="fa fa-plus-circle">
+                    <?= __d('gl', '新しいゴールをつくる') ?>            </i>
+            </a>
         </div>
     <? endif ?>
 </div>
 <div id="CollaboGoals">
-    <div class="col col-xxs-12 mt_16px">
+    <div class="col col-xxs-12 mt_16px font_gargoyleGray">
         <i class="fa fa-child"><?= __d('gl', 'コラボレータ') ?>(<?= count($collabo_goals) ?>)</i>
     </div>
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $collabo_goals, 'type' => 'collabo']) ?>
 </div>
 <div id="FollowGoals">
     <div class="col col-xxs-12 goals-column-head mt_32px">
-        <i class="fa fa-heart-o font_18px goals-column-title"><span class="pl_5px"><?= __d('gl', 'フォロー中のゴール') ?>
-                (<?= count($follow_goals) ?>)</span></i>
+        <span class="font_18px font_gargoyleGray goals-column-title"><?= __d('gl', 'フォロー中のゴール') ?>
+            (<?= count($follow_goals) ?>)</span>
+
         <div class="pull-right">
             <div class="dropdown">
-                <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
+                <a href="#" class="font_gargoyleGray-gray font_11px" data-toggle="dropdown" id="download">
                     <span class="line-height_20px"><?= __d('gl', "全て") ?></span><i
                         class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
                 </a>
