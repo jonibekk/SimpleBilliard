@@ -50,7 +50,7 @@
     <? else: ?>
         <?= $this->element('Goal/my_goal_area_items', ['goals' => $my_goals, 'type' => 'leader']) ?>
         <div class="col col-xxs-12 goals-column-plus-box">
-            <i class="fa fa-plus-circle">
+            <i class="fa fa-plus-circle pull-right">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
                    class="font_gray-rougeOrange"><?= __d('gl', '新しいゴールをつくる') ?></a>
             </i>
