@@ -1794,7 +1794,7 @@ ul.gl-input-images > li {
     text-decoration: none;
 }
 
-.follow-on,.follow-on:hover{
+.follow-on,.follow-on:hover,.collabo-on,.collabo-on:hover{
     color: #fff;
     background-color: #ea5e5b;
 }
