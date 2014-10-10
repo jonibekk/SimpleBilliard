@@ -23,6 +23,12 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
+                        <? if (isset($goal['SpecialKeyResult'][0]['id']) && !empty($goal['SpecialKeyResult'][0]['id'])): ?>
+                            <li role="presentation">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>">
+                                    <?= __d('gl', "主な成果を追加") ?></a>
+                            </li>
+                        <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                                                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?=
                                 __d('gl',
