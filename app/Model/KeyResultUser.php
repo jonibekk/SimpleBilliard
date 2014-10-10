@@ -113,4 +113,22 @@ class KeyResultUser extends AppModel
         return $res;
     }
 
+    function isCollaborated($key_result_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        $options = [
+            'conditions' => [
+                'KeyResultUser.key_result_id' => $key_result_id,
+                'KeyResultUser.user_id'       => $uid,
+            ],
+        ];
+        $res = $this->find('first', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
+    }
+
 }

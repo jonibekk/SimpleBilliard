@@ -42,7 +42,7 @@ class GoalsController extends AppController
         if ($id) {
             $this->request->data['Goal']['id'] = $id;
             try {
-                $this->Goal->isPermitted($id);
+                $this->Goal->isPermittedAdmin($id);
 
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
@@ -116,7 +116,7 @@ class GoalsController extends AppController
     public function delete($id)
     {
         try {
-            $this->Goal->isPermitted($id);
+            $this->Goal->isPermittedAdmin($id);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
@@ -151,6 +151,28 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $this->set(compact('goal'));
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_goal_detail');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_add_key_result_modal($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+        $key_result = null;
+        try {
+            $this->Goal->isPermittedCollabo($key_result_id);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            if (empty($key_result)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $goal_id = $key_result['KeyResult']['goal_id'];
+        $this->set(compact('goal_id'));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_goal_detail');
         $html = $response->__toString();

@@ -178,20 +178,41 @@ class Goal extends AppModel
     }
 
     /**
-     * 権限チェック
+     * オーナー権限チェック
      *
-     * @param $id
+*@param $id
+
      *
-     * @return bool
+*@return bool
      * @throws RuntimeException
      */
-    function isPermitted($id)
+    function isPermittedAdmin($id)
     {
         $this->id = $id;
         if (!$this->exists()) {
             throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
         }
         if (!$this->isOwner($this->my_uid, $id)) {
+            throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
+        }
+        return true;
+    }
+
+    /**
+     * コラボレータ権限チェック
+     *
+     * @param $key_result_id
+     *
+     * @return bool
+     */
+    function isPermittedCollabo($key_result_id)
+    {
+        $this->KeyResult->id = $key_result_id;
+        if (!$this->KeyResult->exists()) {
+            throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
+        }
+
+        if (!$this->KeyResult->KeyResultUser->isCollaborated($key_result_id)) {
             throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
         }
         return true;
@@ -478,7 +499,7 @@ class Goal extends AppModel
                             'MyCollabo.description',
                         ],
                     ],
-                    'MyFollow' => [
+                    'MyFollow'     => [
                         'conditions' => [
                             'MyFollow.user_id' => $this->my_uid,
                         ],
