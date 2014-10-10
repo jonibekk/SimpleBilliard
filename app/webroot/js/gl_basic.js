@@ -133,19 +133,22 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-collabo', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.modal();
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $(this).find('textarea').each(function () {
+                $(this).autosize();
+            });
+        });
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
-                $modal_elm.find('textarea').autosize();
                 $modal_elm.find('#CollaboEditForm').bootstrapValidator({
                     live: 'enabled',
                     feedbackIcons: {}
                 });
-            }).success(function () {
+                $modal_elm.modal();
                 $('body').addClass('modal-open');
             });
         }
@@ -153,7 +156,11 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.modal();
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $(this).find('textarea').each(function () {
+                $(this).autosize();
+            });
+        });
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
@@ -162,7 +169,6 @@ $(document).ready(function () {
                 $modal_elm.append(data);
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
-                $modal_elm.find('textarea').autosize();
                 //アップロード画像選択時にトリムして表示
                 $modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
                     $(this).children('.nailthumb-container').nailthumb({
@@ -210,7 +216,12 @@ $(document).ready(function () {
     });
 
 });
-
+$(function () {
+    $('textarea').bind('load', function () {
+        var h = $('textarea').css('height');
+        console.log(h);
+    });
+});
 function imageLazyOn() {
     $("img.lazy").lazy({
         bind: "event",
