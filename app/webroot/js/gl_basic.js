@@ -245,6 +245,7 @@ function evTargetToggleClick() {
             $obj.text($obj.attr("opend-text"));
         }
     }
+    //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).trigger('click');
@@ -473,6 +474,15 @@ $(function () {
     );
 });
 
+$(function () {
+    $(".hoverPic").hover(
+        function () {
+            $("img",this).stop().attr("src", $("img",this).attr("src").replace("_off", "_on"));
+        },
+        function () {
+            $("img",this).stop().attr("src", $("img",this).attr("src").replace("_on", "_off"));
+        });
+});
 
 $(function () {
     $(".header-link").hover(
@@ -482,6 +492,7 @@ $(function () {
             $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
         });
 });
+
 $(function () {
     $(".header-user-profile").hover(
         function () {
@@ -494,9 +505,9 @@ $(function () {
 $(function () {
     $("#header").hover(
         function () {
-            $(".header-link , .header-profile-icon").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
+            $(".header-link , .header-profile-icon,.header-logo-img").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
         }, function () {
-            $(".header-link , .header-profile-icon").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
+            $(".header-link , .header-profile-icon,.header-logo-img").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
         });
 });
 
