@@ -169,6 +169,20 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <?=
+                $this->Form->input('priority', [
+                    'before'   => '<div class="col col-sm-3 control-label set-importance">' .
+                        '<label>' . __d('gl', "重要度") . '</label>' .
+                        '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>この基準の重要度") . '</div></div>',
+                    'label'    => false,
+                    'type'     => 'select',
+                    'default'  => 1,
+                    'required' => false,
+                    'style'    => 'width:50px',
+                    'options'  => $priority_list,
+                ]) ?>
+            </div>
         </div>
         <div class="modal-footer">
             <?=
