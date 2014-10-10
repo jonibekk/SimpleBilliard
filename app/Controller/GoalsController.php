@@ -172,9 +172,35 @@ class GoalsController extends AppController
             return $this->_ajaxGetResponse(null);
         }
         $goal_id = $key_result['KeyResult']['goal_id'];
-        $this->set(compact('goal_id'));
+        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
+        $priority_list = $this->Goal->priority_list;
+        $kr_priority_list = $this->Goal->KeyResult->priority_list;
+        $kr_value_unit_list = KeyResult::$UNIT;
+
+        $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
+
+        //期限は現在+2週間にする
+        //もしそれがゴールの期限を超える場合はゴールの期限にする
+        $end_date = strtotime('+2 weeks', time());
+        if ($end_date > $key_result['KeyResult']['end_date']) {
+            $end_date = $key_result['KeyResult']['end_date'];
+        }
+        $kr_end_date_format = date('Y/m/d', $end_date + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_date = $key_result['KeyResult']['end_date'];
+
+        $this->set(compact(
+                       'goal_id',
+                       'key_result_id',
+                       'goal_category_list',
+                       'priority_list',
+                       'kr_priority_list',
+                       'kr_value_unit_list',
+                       'kr_start_date_format',
+                       'kr_end_date_format',
+                       'limit_date'
+                   ));
         //htmlレンダリング結果
-        $response = $this->render('Goal/modal_goal_detail');
+        $response = $this->render('Goal/modal_add_key_result');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
