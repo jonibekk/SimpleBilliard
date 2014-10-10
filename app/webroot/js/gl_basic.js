@@ -486,7 +486,8 @@ $(function () {
 $(function(){
     $(".header-logo").hover(
         function(){
-            $(".header-logo-img").stop().attr("src",$(this).attr("src").replace("goalous_gray.png","goalous.png"));},function(){
+            $(".header-logo-img").stop().attr("src",$(this).attr("src").replace("goalous_gray.png","goalous.png"));},
+        function(){
             $(".header-logo-img").stop().attr("src",$(this).attr("src").replace("goalous.png","goalous_gray.png"));
     });
 });
