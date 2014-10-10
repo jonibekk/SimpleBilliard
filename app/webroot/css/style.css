@@ -2509,7 +2509,7 @@ ul.gl-input-images > li {
 }
 
 @media (min-width: 1025px) {
-    .header-link {
+    .header-link, .header-logo-img{
         opacity: 0.54;
     }
 

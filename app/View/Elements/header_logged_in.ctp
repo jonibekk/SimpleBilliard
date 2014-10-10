@@ -23,7 +23,7 @@
             <ul class="nav navbar-nav">
                 <li><a class="header-logo header_l-icons <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                        href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
-                        <img src="<?= $this->Html->url('/img/goalous.png') ?>"
+                        <img src="<?= $this->Html->url('/img/goalous_gray.png') ?>"
                              class="header-logo-img"
                              alt="Goalous2.0" width="20px" height="20px">
 
