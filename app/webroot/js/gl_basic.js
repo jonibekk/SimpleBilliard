@@ -474,6 +474,15 @@ $(function () {
     );
 });
 
+$(function () {
+    $(".hoverPic").hover(
+        function () {
+            $("img",this).stop().attr("src", $("img",this).attr("src").replace("_off", "_on"));
+        },
+        function () {
+            $("img",this).stop().attr("src", $("img",this).attr("src").replace("_on", "_off"));
+        });
+});
 
 $(function () {
     $(".header-link").hover(
@@ -482,14 +491,6 @@ $(function () {
         }, function () {
             $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
         });
-});
-$(function(){
-    $(".header-logo").hover(
-        function(){
-            $(".header-logo-img").stop().attr("src", $(".header-logo-img").attr("src").replace("goalous_gray.png","goalous.png"));},
-        function(){
-            $(".header-logo-img").stop().attr("src", $(".header-logo-img").attr("src").replace("goalous.png","goalous_gray.png"));
-    });
 });
 
 $(function () {
