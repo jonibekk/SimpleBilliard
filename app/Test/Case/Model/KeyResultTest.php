@@ -15,6 +15,7 @@ class KeyResultTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.cake_session',
         'app.key_result',
         'app.key_result_user',
         'app.follower',
@@ -91,7 +92,6 @@ class KeyResultTest extends CakeTestCase
                 'name'       => 'test',
             ]
         ];
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
         $res = $this->KeyResult->add($data, 1);
         $this->assertTrue($res);
 
@@ -104,8 +104,7 @@ class KeyResultTest extends CakeTestCase
             ]
         ];
         try {
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
-            $res = $this->KeyResult->add($data, 1);
+            $this->KeyResult->add($data, 1);
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e));
