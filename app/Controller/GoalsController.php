@@ -245,9 +245,6 @@ class GoalsController extends AppController
             $this->Goal->isPermittedCollabo($key_result_id);
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             $this->Goal->KeyResult->add($this->request->data, $key_result['KeyResult']['goal_id']);
-            if (empty($key_result)) {
-                throw new RuntimeException();
-            }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());

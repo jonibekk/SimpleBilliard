@@ -52,11 +52,12 @@ class KeyResultFixture extends CakeTestFixture
      */
     public $records = [
         [
-            'id'      => '1',
-            'team_id' => '1',
-            'goal_id' => '1',
-            'user_id' => '1',
-            'name'    => 'Lorem ipsum dolor sit amet',
+            'id'          => '1',
+            'team_id'     => '1',
+            'goal_id'     => '1',
+            'user_id'     => '1',
+            'name'        => 'Lorem ipsum dolor sit amet',
+            'special_flg' => true,
         ],
     ];
 
