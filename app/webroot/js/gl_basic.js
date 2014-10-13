@@ -215,6 +215,7 @@ function getModalFormFromUrl(e) {
             language: "ja",
             autoclose: true,
             todayHighlight: true
+            //endDate:"2015/11/30"
         });
     });
     var url = $(this).attr('href');

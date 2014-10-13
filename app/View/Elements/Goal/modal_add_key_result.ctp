@@ -4,8 +4,9 @@
  * User: bigplants
  * Date: 6/6/14
  * Time: 3:19 PM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $goal_id
  * @var                    $key_result_id
  * @var                    $goal_category_list
@@ -14,7 +15,8 @@
  * @var                    $kr_value_unit_list
  * @var                    $kr_start_date_format
  * @var                    $kr_end_date_format
- * @var                    $limit_date
+ * @var                    $limit_end_date
+ * @var                    $limit_start_date
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_add_key_result.ctp -->
@@ -114,7 +116,9 @@
                                 __d('gl',
                                     "期限") ?></label>
 
-                            <div class="input-group date pl_5px goal-set-date">
+                            <div class="input-group date pl_5px goal-set-date"
+                                 data-date-end-date="<?= $limit_end_date ?>"
+                                 data-date-start-date="<?= $limit_start_date ?>">
                                 <?=
                                 $this->Form->input('KeyResult.end_date',
                                                    [
@@ -150,6 +154,8 @@
                             </p>
 
                             <div class="input-group date plr_5px goal-set-date" style="display: none"
+                                 data-date-end-date="<?= $limit_end_date ?>"
+                                 data-date-start-date="<?= $limit_start_date ?>"
                                  id="KeyResult0StartDateInputWrap">
                                 <?=
                                 $this->Form->input('KeyResult.start_date',

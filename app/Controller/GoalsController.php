@@ -186,7 +186,10 @@ class GoalsController extends AppController
             $end_date = $key_result['KeyResult']['end_date'];
         }
         $kr_end_date_format = date('Y/m/d', $end_date + ($this->Auth->user('timezone') * 60 * 60));
-        $limit_date = $key_result['KeyResult']['end_date'];
+        $limit_end_date = date('Y/m/d',
+                               $key_result['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_start_date = date('Y/m/d',
+                                 $key_result['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
 
         $this->set(compact(
                        'goal_id',
@@ -197,7 +200,8 @@ class GoalsController extends AppController
                        'kr_value_unit_list',
                        'kr_start_date_format',
                        'kr_end_date_format',
-                       'limit_date'
+                       'limit_end_date',
+                       'limit_start_date'
                    ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
