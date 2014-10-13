@@ -209,6 +209,13 @@ function getModalFormFromUrl(e) {
         $(this).find('textarea').each(function () {
             $(this).autosize();
         });
+        $(this).find('.input-group.date').datepicker({
+            format: "yyyy/mm/dd",
+            todayBtn: 'linked',
+            language: "ja",
+            autoclose: true,
+            todayHighlight: true
+        });
     });
     var url = $(this).attr('href');
     if (url.indexOf('#') == 0) {

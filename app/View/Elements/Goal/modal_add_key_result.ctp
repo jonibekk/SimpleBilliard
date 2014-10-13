@@ -126,7 +126,7 @@
                                                        'required'                 => true,
                                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                                        'type'                     => 'text',
-                                                       'wrapInput'                => null
+                                                       'wrapInput' => null,
                                                    ]) ?>
                                 <span class="input-group-addon"><i class="fa fa-th"></i></span>
                             </div>
