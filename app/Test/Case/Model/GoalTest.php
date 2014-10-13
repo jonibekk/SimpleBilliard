@@ -17,6 +17,7 @@ class GoalTest extends CakeTestCase
     public $fixtures = array(
         'app.goal',
         'app.key_result',
+        'app.key_result_user',
         'app.follower',
         'app.user',
         'app.team',
@@ -271,12 +272,51 @@ class GoalTest extends CakeTestCase
         $this->assertEquals($expected, $res);
     }
 
+    function testIsPermittedCollaboFail()
+    {
+        $this->setDefault();
+        try {
+            $this->Goal->isPermittedCollabo(99999);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+        unset($e);
+
+        $data = ['KeyResult' =>
+                     [
+                         'goal_id'     => 99,
+                         'team_id'     => 1,
+                         'user_id'     => 999,
+                         'name'        => 'test',
+                         'value_unit'  => 0,
+                         'start_value' => 1
+                     ]
+        ];
+        $this->Goal->KeyResult->save($data);
+        try {
+            $this->Goal->isPermittedCollabo($this->Goal->KeyResult->getLastInsertID());
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testIsPermittedCollaboSuccess()
+    {
+        $this->setDefault();
+        $res = $this->Goal->isPermittedCollabo(1);
+        $this->assertTrue($res);
+    }
+
     function setDefault()
     {
         $this->Goal->my_uid = 1;
         $this->Goal->current_team_id = 1;
         $this->Goal->Team->my_uid = 1;
         $this->Goal->Team->current_team_id = 1;
+        $this->Goal->KeyResult->my_uid = 1;
+        $this->Goal->KeyResult->current_team_id = 1;
+        $this->Goal->KeyResult->KeyResultUser->my_uid = 1;
+        $this->Goal->KeyResult->KeyResultUser->current_team_id = 1;
     }
 
 }
