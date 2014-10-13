@@ -71,12 +71,12 @@
                                             'wrapInput'           => 'col col-sm-9 pl_5px',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                            'target-id'           => 'KeyResult0ValueInputWrap',
+                                            'target-id' => 'KeyResult0ValueInputWrap_' . $key_result_id,
                                             'required'            => true,
                                             'hidden-option-value' => KeyResult::UNIT_BINARY,
                                             'options'             => $kr_value_unit_list
                                            ]) ?>
-                        <div id="KeyResult0ValueInputWrap" style="">
+                        <div id="KeyResult0ValueInputWrap_<?= $key_result_id ?>" style="">
                             <?=
                             $this->Form->input('KeyResult.target_value',
                                                ['label'                        => __d('gl', "達成時"),
