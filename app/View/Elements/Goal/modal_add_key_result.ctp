@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 6/6/14
  * Time: 3:19 PM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $goal_id
  * @var                    $key_result_id
  * @var                    $goal_category_list
@@ -140,23 +139,21 @@
                                 __d('gl', "開始") ?></label>
 
                             <p class="form-control-static"
-                               id="KeyResult0StartDateDefault">
+                               id="KeyResult0StartDateDefault_<?= $key_result_id ?>">
                                     <span
-                                        class="plr_18px"><?=
-                                        $kr_start_date_format ?><?=
-                                        !isset($this->request->data['KeyResult'][0]) ? __d('gl',
-                                                                                           "（本日）") : null ?>
+                                        class="plr_18px"><?= $kr_start_date_format ?>
+                                        <?= __d('gl', "（本日）") ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
-                                                       show-target-id="KeyResult0StartDateInputWrap"
-                                                       delete-target-id="KeyResult0StartDateDefault"><?=
-                                            __d('gl',
-                                                "変更") ?></a></span>
+                                                       show-target-id="KeyResult0StartDateInputWrap_<?= $key_result_id ?>"
+                                                       delete-target-id="KeyResult0StartDateDefault_<?= $key_result_id ?>">
+                                            <?= __d('gl', "変更") ?></a>
+                                    </span>
                             </p>
 
                             <div class="input-group date plr_5px goal-set-date" style="display: none"
                                  data-date-end-date="<?= $limit_end_date ?>"
                                  data-date-start-date="<?= $limit_start_date ?>"
-                                 id="KeyResult0StartDateInputWrap">
+                                 id="KeyResult0StartDateInputWrap_<?= $key_result_id ?>">
                                 <?=
                                 $this->Form->input('KeyResult.start_date',
                                                    [
