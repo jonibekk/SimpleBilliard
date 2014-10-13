@@ -12,6 +12,7 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->Security->unlockedActions = array('add_key_result');
     }
 
     /**
@@ -224,7 +225,7 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function edit_collabo()
+    public function edit_collabo($key_result_id)
     {
         $this->request->allowMethod('post', 'put');
         if ($this->Goal->KeyResult->KeyResultUser->edit($this->request->data)) {
@@ -233,6 +234,26 @@ class GoalsController extends AppController
         else {
             $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
         }
+        $this->redirect($this->referer());
+    }
+
+    public function add_key_result($key_result_id)
+    {
+        $this->request->allowMethod('post');
+        $key_result = null;
+        try {
+            $this->Goal->isPermittedCollabo($key_result_id);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $this->Goal->KeyResult->add($this->request->data, $key_result['KeyResult']['goal_id']);
+            if (empty($key_result)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__d('gl', "基準を追加しました。"));
         $this->redirect($this->referer());
     }
 

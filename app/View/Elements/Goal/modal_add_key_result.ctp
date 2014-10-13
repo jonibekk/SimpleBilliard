@@ -39,7 +39,6 @@
             'class'         => 'form-horizontal',
             'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $key_result_id],
             'novalidate'    => true,
-            'type'          => 'file',
             'id'            => 'AddGoalFormKeyResult',
         ]); ?>
         <div class="modal-body modal-circle-body">
