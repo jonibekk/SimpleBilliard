@@ -248,11 +248,10 @@ class KeyResult extends AppModel
         }
 
         $this->create();
-        if ($this->save($data)) {
-            return true;
+        if (!$this->save($data)) {
+            throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
         }
-
-        throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
+        return true;
     }
 
 }
