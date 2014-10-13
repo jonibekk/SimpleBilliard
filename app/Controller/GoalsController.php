@@ -225,7 +225,7 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function edit_collabo($key_result_id)
+    public function edit_collabo()
     {
         $this->request->allowMethod('post', 'put');
         if ($this->Goal->KeyResult->KeyResultUser->edit($this->request->data)) {
