@@ -2,26 +2,45 @@
 .nav-icons > a {
     float: left;
     font-size: 20px;
-    padding: 10px 4px;
+    padding: 10px 2px;
     color: #000000;
 }
 
 .nav-icons > .dropdown > a {
     float: left;
     font-size: 20px;
-    padding: 10px 4px;
+    padding: 10px 2px;
     color: #000000;
+}
+
+.nav-icons > .dropdown > a.me-menu-image {
+    padding: 6px 2px;
+    color: #000000;
+    line-height: 30px;
 }
 
 .nav-icons > .header-function > a {
     float: right;
     font-size: 20px;
-    padding: 2px 6px;
-    margin: 7px 0;
+    padding: 0 4px;
+    margin: 9px 0;
     color: #000000;
     border: 1px solid #ccc;
 }
 
+.header-user-profile {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.nav-icons > .header-function > a:hover {
+    border: 1px solid #ae2f2f;
+}
+
+.header-function-link{
+}
+.header-function-link:hover{
+}
 /*=== リファクタリング予定 ===*/
 
 /*=== normalize bootstrap ===*/
@@ -217,6 +236,9 @@ footer p {
 .mr_5px {
     margin-right: 5px;
 }
+.mr_12px{
+    margin-right: 12px;
+}
 
 .ml_2px {
     margin-left: 2px;
@@ -260,6 +282,11 @@ footer p {
 .plr_18px {
     padding-left: 18px;
     padding-right: 18px;
+}
+
+.ptb_5px{
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .ptb_10px{
@@ -509,6 +536,10 @@ footer p {
 /* ボーダー */
 .bd-b {
     border-bottom: 1px solid #f0f0f0;
+}
+
+.bd-r{
+    border-right: 1px solid #ccc;
 }
 
 .bd-circle {
@@ -1633,11 +1664,6 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
-.header-user-profile {
-    padding-right: 0 !important;
-    padding-left: 10px !important;
-}
-
 .header-drop-icons {
     padding-right: 4px;
     width: 18px;
@@ -1664,13 +1690,14 @@ ul.gl-input-images > li {
 }
 
 .header-icon {
-    width: 22px;
+    width: 36px;
     height: 20px;
     text-align: center;
 }
 
 .header-profile-icon {
     width: 16px;
+    line-height: 36px;
 }
 
 /*モーダル全体*/
@@ -2372,7 +2399,7 @@ ul.gl-input-images > li {
     }
 
     .nav-search {
-        width: 180px;
+        width: 160px;
     }
 
     .gl-nav-form-icon {
@@ -2529,7 +2556,7 @@ ul.gl-input-images > li {
 }
 
 @media (min-width: 1025px) {
-    .header-link, .header-logo-img{
+    .header-link, .header-logo-img, .header-function-link{
         opacity: 0.54;
     }
 

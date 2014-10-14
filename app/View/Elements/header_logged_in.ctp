@@ -89,12 +89,14 @@
             </button>
             <div class="pull-right nav-icons">
                 <div class="dropdown gl-navbar-nav-fix">
-                    <a href="#" class="dropdown-toggle me-menu-image no-line header-user-profile" data-toggle="dropdown"
+                    <a href="#" class="dropdown-toggle me-menu-image no-line header-user-profile pull-right" data-toggle="dropdown"
                        id="download">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
                                                    ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
-                        <i class="fa fa-caret-down header-profile-icon"></i></a>
+                        <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
+                        <span class="font_11px hidden-xxs header-home header-link pr_5px mr_5px ptb_5px bd-r">User Name</span>
+                    </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li>
                             <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
@@ -155,10 +157,10 @@
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o header-link header-icon"></i></a>
 
                 <div class="pull-right header-function dropdown">
-                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px"
+                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
+                        <i class="fa fa-cog header-function-icon"></i><i class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">

@@ -492,6 +492,14 @@ $(function () {
             $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
         });
 });
+$(function () {
+    $(".header-function-link").hover(
+        function () {
+            $(".header-function-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
+        }, function () {
+            $(".header-function-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
+        });
+});
 
 $(function () {
     $(".header-user-profile").hover(
@@ -505,9 +513,9 @@ $(function () {
 $(function () {
     $("#header").hover(
         function () {
-            $(".header-link , .header-profile-icon,.header-logo-img").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
+            $(".header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
         }, function () {
-            $(".header-link , .header-profile-icon,.header-logo-img").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
+            $(".header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
         });
 });
 
