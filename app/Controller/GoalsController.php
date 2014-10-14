@@ -260,10 +260,10 @@ class GoalsController extends AppController
         $key_result = null;
         try {
             if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
-                throw new RuntimeException();
+                throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             if (!$this->Goal->KeyResult->saveEdit($this->request->data)) {
-                throw new RuntimeException();
+                throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -272,6 +272,25 @@ class GoalsController extends AppController
 
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         $this->redirect($this->referer());
+    }
+
+    public function delete_key_result($key_result_id)
+    {
+        $this->request->allowMethod('post', 'delete');
+        try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->Goal->KeyResult->id = $key_result_id;
+        $this->Goal->KeyResult->delete();
+        $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     public function delete_collabo($key_result_user_id)
