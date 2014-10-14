@@ -101,10 +101,15 @@
                     <?endif; ?>
                 </div>
             <? endif; ?>
-            <div class="pull-right font_12px check-status">
-                <?= __d('gl', "出したい成果をみる") ?><i class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
+            <div class="pull-right font_12px">
+                <a href="#" class="link-dark-gray toggle-ajax-get"
+                   target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
+                   ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']]) ?>">
+                    <?= __d('gl', "出したい成果をみる") ?><i class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
+                </a>
             </div>
         </div>
+        <div class="con col-xxs-12" style="display: none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
     </div>
 <? endforeach ?>
 <!-- End app/View/Elements/Goals/my_goal_area_items.ctp -->
