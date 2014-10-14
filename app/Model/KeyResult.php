@@ -217,6 +217,7 @@ class KeyResult extends AppModel
      * @param      $goal_id
      * @param null $uid
      *
+     * @return bool
      * @throws Exception
      */
     function add($data, $goal_id, $uid = null)
@@ -252,6 +253,22 @@ class KeyResult extends AppModel
             throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
         }
         return true;
+    }
+
+    function getKeyResults($goal_id, $with_skr = false)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'     => $goal_id,
+                'team_id'     => $this->current_team_id,
+                'special_flg' => false,
+            ],
+        ];
+        if ($with_skr) {
+            unset($options['conditions']['special_flg']);
+        }
+        $res = $this->find('all', $options);
+        return $res;
     }
 
 }

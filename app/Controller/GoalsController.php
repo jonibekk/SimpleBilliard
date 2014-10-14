@@ -315,4 +315,18 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
+    function ajax_get_key_results($goal_id)
+    {
+        $this->_ajaxPreProcess();
+
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id);
+        $this->set(compact('key_results'));
+        $response = $this->render('Goal/key_result_items');
+        $html = $response->__toString();
+        $result = array(
+            'html' => $html
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
 }

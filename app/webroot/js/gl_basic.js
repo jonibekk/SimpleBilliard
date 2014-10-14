@@ -96,9 +96,10 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("touchend", "#layer-black", function () {
-        console.log('hide');
         $('.navbar-offcanvas').offcanvas('hide');
     });
+    //evToggleAjaxGet
+    $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -198,7 +199,6 @@ $(document).ready(function () {
 $(function () {
     $('textarea').bind('load', function () {
         var h = $('textarea').css('height');
-        console.log(h);
     });
 });
 
@@ -244,6 +244,32 @@ function imageLazyOn() {
         effect: "fadeIn",
         removeAttribute: false
     });
+}
+function evToggleAjaxGet() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var ajax_url = $obj.attr("ajax-url");
+
+    if (!$('#' + target_id).hasClass('data-exists')) {
+        $.get(ajax_url, function (data) {
+            $('#' + target_id).append(data.html);
+        });
+    }
+    $obj.find('i').each(function () {
+        if ($(this).hasClass('fa-caret-down')) {
+            $(this).removeClass('fa-caret-down');
+            $(this).addClass('fa-caret-up');
+        }
+        else if ($(this).hasClass('fa-caret-up')) {
+            $(this).removeClass('fa-caret-up');
+            $(this).addClass('fa-caret-down');
+        }
+    });
+    $('#' + target_id).addClass('data-exists');
+    $('#' + target_id).toggle();
+    return false;
 }
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
