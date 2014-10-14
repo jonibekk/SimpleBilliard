@@ -37,10 +37,11 @@
                 'class'     => 'form-control addteam_input-design'
             ],
             'class'         => 'form-horizontal',
-            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $key_result_id],
+            'url' => ['controller' => 'goals', 'action' => 'edit_key_result', $key_result_id],
             'novalidate'    => true,
             'id'            => 'AddGoalFormKeyResult',
         ]); ?>
+        <?= $this->Form->hidden('KeyResult.id', ['value' => $key_result_id]) ?>
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
                 <?=

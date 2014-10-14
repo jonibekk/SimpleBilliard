@@ -12,7 +12,7 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = array('add_key_result');
+        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result'];
     }
 
     /**
@@ -164,7 +164,7 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         $key_result = null;
         try {
-            $this->Goal->isPermittedCollabo($key_result_id);
+            $this->Goal->isPermittedCollaboFromSkr($key_result_id);
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             if (empty($key_result)) {
                 throw new RuntimeException();
@@ -242,7 +242,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post');
         $key_result = null;
         try {
-            $this->Goal->isPermittedCollabo($key_result_id);
+            $this->Goal->isPermittedCollaboFromSkr($key_result_id);
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             $this->Goal->KeyResult->add($this->request->data, $key_result['KeyResult']['goal_id']);
         } catch (RuntimeException $e) {
@@ -251,6 +251,26 @@ class GoalsController extends AppController
         }
 
         $this->Pnotify->outSuccess(__d('gl', "基準を追加しました。"));
+        $this->redirect($this->referer());
+    }
+
+    public function edit_key_result($key_result_id)
+    {
+        $this->request->allowMethod('post', 'put');
+        $key_result = null;
+        try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException();
+            }
+            if (!$this->Goal->KeyResult->saveEdit($this->request->data)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         $this->redirect($this->referer());
     }
 
@@ -334,6 +354,9 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         $skr = null;
         try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException();
+            }
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             if (empty($key_result)) {
                 throw new RuntimeException();
@@ -346,7 +369,7 @@ class GoalsController extends AppController
             if (empty($skr)) {
                 throw new RuntimeException();
             }
-            $this->Goal->isPermittedCollabo($skr['KeyResult']['id']);
+            $this->Goal->isPermittedCollaboFromSkr($skr['KeyResult']['id']);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }

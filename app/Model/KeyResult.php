@@ -288,4 +288,54 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    /**
+     * キーリザルト変更権限
+     * リーダーもしくは作成者ならtrueを返す
+     *
+     * @param $key_result_id
+     *
+     * @return bool
+     */
+    function isPermitted($key_result_id)
+    {
+        if (!$this->isOwner($this->my_uid, $key_result_id)) {
+            $res = $this->findById($key_result_id);
+            if (!$this->Goal->isOwner($this->my_uid, $res['KeyResult']['goal_id'])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function saveEdit($data)
+    {
+        if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
+            return false;
+        }
+        //on/offの場合は現在値0,目標値1をセット
+        if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
+            $data['KeyResult']['start_value'] = 0;
+            $data['KeyResult']['current_value'] = 0;
+            $data['KeyResult']['target_value'] = 1;
+        }
+        //時間をunixtimeに変換
+        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+        $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
+                                                   strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
+                                                            $data['KeyResult']['target_value'],
+                                                            $data['KeyResult']['current_value']);
+        $this->create();
+        return $this->save($data);
+    }
+
+    function getProgress($start_val, $target_val, $current_val)
+    {
+        $progress = round(($current_val - $start_val) / ($target_val - $start_val), 2) * 100;
+        if ($progress < 0) {
+            return 0;
+        }
+        return $progress;
+    }
+
 }
