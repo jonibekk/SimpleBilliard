@@ -24,7 +24,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "基準を追加") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "出したい成果を追加する") ?></h4>
         </div>
         <?=
         $this->Form->create('KeyResult', [
@@ -46,15 +46,15 @@
                 <?=
                 $this->Form->input('KeyResult.name',
                                    ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
-                                       '<label class="no-asterisk">' . __d('gl', "ゴール名") . '</label>' .
+                                       '<label class="no-asterisk">' . __d('gl', "出したい成果") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl',
-                                                                             "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
+                                                                             "進捗の指標として『なに』をどうするか？") . '</div></div>',
                                     'label'                    => false,
                                     'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
                                     'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
-                                                                                                              "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                                                                                                              "例）Webサイトを完成させる") . '</span>'
                                    ]) ?>
                 <div class="row">
                     <div class="col col-sm-3">
