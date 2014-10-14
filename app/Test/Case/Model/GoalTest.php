@@ -300,6 +300,12 @@ class GoalTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
+    function testGetAddData()
+    {
+        $this->setDefault();
+        $this->Goal->getAddData(1);
+    }
+
     function testIsPermittedCollaboSuccess()
     {
         $this->setDefault();
