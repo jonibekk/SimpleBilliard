@@ -102,11 +102,7 @@
                 </div>
             <? endif; ?>
             <div class="pull-right font_12px check-status">
-                <? if (isset($goal['SpecialKeyResult'][0]['valued_flg']) && $goal['SpecialKeyResult'][0]['valued_flg']): ?>
-                    <i class="fa fa-check-circle icon-green"></i><?= __d('gl', "認定") ?>
-                <? else: ?>
-                    <i class="fa fa-check-circle"></i><?= __d('gl', "未認定") ?>
-                <?endif; ?>
+                <?= __d('gl', "出したい成果をみる") ?><i class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
             </div>
         </div>
     </div>
