@@ -101,17 +101,8 @@ class GoalTest extends CakeTestCase
         $goal = [
             'KeyResult' => [
                 [
-                    'priority'  => 1,
-                    'completed' => null,
-                ]
-            ]
-        ];
-        $this->Goal->getProgress($goal);
-        $goal = [
-            'KeyResult' => [
-                [
-                    'priority'  => 1,
-                    'completed' => 1,
+                    'priority' => 1,
+                    'progress' => 0,
                 ]
             ]
         ];
