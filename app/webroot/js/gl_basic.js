@@ -269,6 +269,7 @@ function evToggleAjaxGet() {
     });
     $('#' + target_id).addClass('data-exists');
     $('#' + target_id).toggle();
+    return false;
 }
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
