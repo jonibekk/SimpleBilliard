@@ -27,13 +27,13 @@
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
-                                    <i class="fa fa-key"><?= __d('gl', "主な成果を追加") ?></i>
+                                    <i class="fa fa-key"><span class="ml_2px"><?= __d('gl', "主な成果を追加") ?></span></i>
                                 </a>
                             </li>
                         <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                                                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>">
-                                <i class="fa fa-edit"><?= __d('gl', "編集") ?>
+                                <i class="fa fa-edit"><span class="ml_2px"><?= __d('gl', "編集") ?></span>
                                 </i>
                             </a>
                         </li>
