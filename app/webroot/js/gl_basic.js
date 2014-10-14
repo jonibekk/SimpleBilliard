@@ -130,29 +130,8 @@ $(document).ready(function () {
             });
         }
     });
-    $(document).on("click", '.modal-ajax-get-collabo', function (e) {
-        e.preventDefault();
-        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.on('shown.bs.modal', function (e) {
-            $(this).find('textarea').each(function () {
-                $(this).autosize();
-            });
-        });
-        var url = $(this).attr('href');
-        if (url.indexOf('#') == 0) {
-            $(url).modal('open');
-        } else {
-            $.get(url, function (data) {
-                $modal_elm.append(data);
-                $modal_elm.find('#CollaboEditForm').bootstrapValidator({
-                    live: 'enabled',
-                    feedbackIcons: {}
-                });
-                $modal_elm.modal();
-                $('body').addClass('modal-open');
-            });
-        }
-    });
+    $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+    $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -222,6 +201,39 @@ $(function () {
         console.log(h);
     });
 });
+
+function getModalFormFromUrl(e) {
+    e.preventDefault();
+    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).find('textarea').each(function () {
+            $(this).autosize();
+        });
+        $(this).find('.input-group.date').datepicker({
+            format: "yyyy/mm/dd",
+            todayBtn: 'linked',
+            language: "ja",
+            autoclose: true,
+            todayHighlight: true
+            //endDate:"2015/11/30"
+        });
+    });
+    var url = $(this).attr('href');
+    if (url.indexOf('#') == 0) {
+        $(url).modal('open');
+    } else {
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.find('form').bootstrapValidator({
+                live: 'enabled',
+                feedbackIcons: {}
+            });
+            $modal_elm.modal();
+            $('body').addClass('modal-open');
+        });
+    }
+}
+
 function imageLazyOn() {
     $("img.lazy").lazy({
         bind: "event",
@@ -488,10 +500,10 @@ $(function () {
 $(function () {
     $(".hoverPic").hover(
         function () {
-            $("img",this).stop().attr("src", $("img",this).attr("src").replace("_off", "_on"));
+            $("img", this).stop().attr("src", $("img", this).attr("src").replace("_off", "_on"));
         },
         function () {
-            $("img",this).stop().attr("src", $("img",this).attr("src").replace("_on", "_off"));
+            $("img", this).stop().attr("src", $("img", this).attr("src").replace("_on", "_off"));
         });
 });
 
