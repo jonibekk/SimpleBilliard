@@ -1,3 +1,48 @@
+/*=== リファクタリング予定 ===*/
+.nav-icons > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 2px;
+    color: #000000;
+}
+
+.nav-icons > .dropdown > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 2px;
+    color: #000000;
+}
+
+.nav-icons > .dropdown > a.me-menu-image {
+    padding: 6px 2px;
+    color: #000000;
+    line-height: 30px;
+}
+
+.nav-icons > .header-function > a {
+    float: right;
+    font-size: 20px;
+    padding: 0 4px;
+    margin: 9px 0;
+    color: #000000;
+    border: 1px solid #ccc;
+}
+
+.header-user-profile {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.nav-icons > .header-function > a:hover {
+    border: 1px solid #ae2f2f;
+}
+
+.header-function-link{
+}
+.header-function-link:hover{
+}
+/*=== リファクタリング予定 ===*/
+
 /*=== normalize bootstrap ===*/
 [class*="col-"] {
     padding-left: 0;
@@ -189,9 +234,11 @@ footer p {
 .mt_32px {
     margin-top: 32px;
 }
-
 .mr_5px {
     margin-right: 5px;
+}
+.mr_12px{
+    margin-right: 12px;
 }
 
 .ml_2px {
@@ -219,6 +266,10 @@ footer p {
     margin-bottom: 32px;
 }
 
+.p_10px{
+    padding:10px;
+}
+
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
@@ -232,6 +283,16 @@ footer p {
 .plr_18px {
     padding-left: 18px;
     padding-right: 18px;
+}
+
+.ptb_5px{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.ptb_10px{
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .pt_1px {
@@ -479,6 +540,10 @@ footer p {
     border-bottom: 1px solid #f0f0f0;
 }
 
+.bd-r{
+    border-right: 1px solid #ccc;
+}
+
 .bd-circle {
     border-radius: 50%;
 }
@@ -570,24 +635,9 @@ footer p {
     pointer-events: none;
 }
 
-.nav-icons > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 10px;
-    color: #000000;
-}
-
-.nav-icons > .dropdown > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 10px;
-    color: #000000;
-}
-
 .nav-icons .header-home {
     font-size: 12px;
     line-height: 30px;
-    margin-right: 10px;
     color: #808080;
 }
 
@@ -1616,11 +1666,6 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
-.header-user-profile {
-    padding-right: 0 !important;
-    padding-left: 10px !important;
-}
-
 .header-drop-icons {
     padding-right: 4px;
     width: 18px;
@@ -1647,7 +1692,7 @@ ul.gl-input-images > li {
 }
 
 .header-icon {
-    width: 22px;
+    width: 36px;
     height: 20px;
     text-align: center;
 }
@@ -2353,7 +2398,7 @@ ul.gl-input-images > li {
     }
 
     .nav-search {
-        width: 180px;
+        width: 160px;
     }
 
     .gl-nav-form-icon {
@@ -2510,7 +2555,7 @@ ul.gl-input-images > li {
 }
 
 @media (min-width: 1025px) {
-    .header-link, .header-logo-img {
+    .header-link, .header-logo-img, .header-function-link{
         opacity: 0.54;
     }
 
