@@ -26,19 +26,21 @@
                         <? if (isset($goal['SpecialKeyResult'][0]['id']) && !empty($goal['SpecialKeyResult'][0]['id'])): ?>
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
-                                   class="modal-ajax-get-add-key-result"
-                                    >
-                                    <?= __d('gl', "主な成果を追加") ?></a>
+                                   class="modal-ajax-get-add-key-result">
+                                    <i class="fa fa-key"><?= __d('gl', "主な成果を追加") ?></i>
+                                </a>
                             </li>
                         <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?=
-                                __d('gl',
-                                    "編集") ?></a>
+                                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>">
+                                <i class="fa fa-edit"><?= __d('gl', "編集") ?>
+                                </i>
+                            </a>
                         </li>
                         <li role="presentation">
+                            <!--<i class="fa fa-trash"></i>-->
                             <?=
-                            $this->Form->postLink(__d('gl', "削除"),
+                            $this->Form->postLink(__d ('gl', "削除"),
                                                   ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
                                                   null, __d('gl', "本当にこのゴールを削除しますか？")) ?>
                         </li>
