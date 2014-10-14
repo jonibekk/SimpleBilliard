@@ -110,6 +110,12 @@ class KeyResultTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
+    function testGetKeyResults()
+    {
+        $this->setDefault();
+        $this->KeyResult->getKeyResults(1, true);
+    }
+
     function setDefault()
     {
         $this->KeyResult->my_uid = 1;
