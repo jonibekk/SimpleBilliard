@@ -1,3 +1,29 @@
+/*=== リファクタリング予定 ===*/
+.nav-icons > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 4px;
+    color: #000000;
+}
+
+.nav-icons > .dropdown > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 4px;
+    color: #000000;
+}
+
+.nav-icons > .header-function > a {
+    float: right;
+    font-size: 20px;
+    padding: 2px 6px;
+    margin: 7px 0;
+    color: #000000;
+    border: 1px solid #ccc;
+}
+
+/*=== リファクタリング予定 ===*/
+
 /*=== normalize bootstrap ===*/
 [class*="col-"] {
     padding-left: 0;
@@ -217,6 +243,10 @@ footer p {
     margin-bottom: 32px;
 }
 
+.p_10px{
+    padding:10px;
+}
+
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
@@ -230,6 +260,11 @@ footer p {
 .plr_18px {
     padding-left: 18px;
     padding-right: 18px;
+}
+
+.ptb_10px{
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .pt_1px {
@@ -567,24 +602,9 @@ footer p {
     pointer-events: none;
 }
 
-.nav-icons > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 10px;
-    color: #000000;
-}
-
-.nav-icons > .dropdown > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 10px;
-    color: #000000;
-}
-
 .nav-icons .header-home {
     font-size: 12px;
     line-height: 30px;
-    margin-right: 10px;
     color: #808080;
 }
 
