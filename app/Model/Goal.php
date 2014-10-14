@@ -199,11 +199,11 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
-     *
-     * @param $skr_id
 
      *
-*@return bool
+*@param $skr_id
+     *
+     * @return bool
      */
     function isPermittedCollaboFromSkr($skr_id)
     {
@@ -267,7 +267,6 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
@@ -437,10 +436,15 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
                 ],
             ]
         ];
@@ -514,7 +518,13 @@ class Goal extends AppModel
                         'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
                 ],
                 'User'             => [
                     'fields' => $this->User->profileFields,
@@ -599,10 +609,15 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
                 ],
                 'User'             => [
                     'fields' => $this->User->profileFields,
