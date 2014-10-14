@@ -41,6 +41,9 @@
 }
 .header-function-link:hover{
 }
+.form-group .text-align_left{
+    text-align: left;
+}
 /*=== リファクタリング予定 ===*/
 
 /*=== normalize bootstrap ===*/
@@ -311,6 +314,9 @@ footer p {
     padding-left: 5px;
 }
 
+.pl_12px{
+    padding-left: 12px;
+}
 /*行数の指定*/
 /*noinspection CssUnknownProperty*/
 .line-numbers {
@@ -2690,7 +2696,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .goal-set-date {
-    min-width: 190px;
+    min-width: 140px;
     width: 16%;
 }
 
