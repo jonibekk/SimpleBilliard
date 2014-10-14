@@ -176,12 +176,12 @@
 
 /* リファクター後 */
 
-.select2PostCircleMember .select2-choices .select2-search-choice{
+.select2PostCircleMember .select2-choices .select2-search-choice {
     margin-top: 1px;
 }
 
-.select2Member .select2-choices .select2-search-choice{
-    margin-top:3px;
+.select2Member .select2-choices .select2-search-choice {
+    margin-top: 3px;
     margin-left: 3px;
 }
 
@@ -223,14 +223,15 @@ footer p {
     margin-top: 4px;
 }
 
-.mt_8px{
+.mt_8px {
     margin-top: 8px;
 }
 
 .mt_16px {
     margin-top: 16px;
 }
-.mt_32px{
+
+.mt_32px {
     margin-top: 32px;
 }
 .mr_5px {
@@ -261,7 +262,7 @@ footer p {
     padding-bottom: 5px;
 }
 
-.mb_32px{
+.mb_32px {
     margin-bottom: 32px;
 }
 
@@ -406,26 +407,27 @@ footer p {
     color: #696969;
 }
 
-.font_verydark-white{
+.font_verydark-white {
     color: #231814;
 }
+
 .font_verydark-white:hover,
 .font_verydark-white:active,
-.font_verydark-white:target{
+.font_verydark-white:target {
     color: #fff;
 }
 
-.font_gray{
+.font_gray {
     color: #808080;
 }
 
-.font_gargoyleGray, .font_gargoyleGray-gray{
+.font_gargoyleGray, .font_gargoyleGray-gray {
     color: #4c4c4c;
 }
 
 .font_gargoyleGray-gray:hover,
 .font_gargoyleGray-gray:active,
-.font_gargoyleGray-gray:target{
+.font_gargoyleGray-gray:target {
     color: #808080;
 }
 
@@ -560,12 +562,12 @@ footer p {
     border-radius: 4px;
 }
 
-.shadow-default{
-    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -o-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+.shadow-default {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -o-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 /*/  */
@@ -1697,7 +1699,6 @@ ul.gl-input-images > li {
 
 .header-profile-icon {
     width: 16px;
-    line-height: 36px;
 }
 
 /*モーダル全体*/
@@ -1830,7 +1831,7 @@ ul.gl-input-images > li {
 }
 
 .btn_pureWhite,
-.btn_pureWhite-rougeOrange{
+.btn_pureWhite-rougeOrange {
     border: 1px solid #ccc;
     background-color: #fff;
     background-image: none;
@@ -1846,7 +1847,7 @@ ul.gl-input-images > li {
 }
 
 .btn_pureWhite-rougeOrange:target,
-.btn_pureWhite-rougeOrange:hover{
+.btn_pureWhite-rougeOrange:hover {
     border: 1px solid #aaa;
     background-color: #fff;
     background-image: none;
@@ -1854,11 +1855,10 @@ ul.gl-input-images > li {
     text-decoration: none;
 }
 
-.follow-on,.follow-on:hover,.collabo-on,.collabo-on:hover{
+.follow-on, .follow-on:hover, .collabo-on, .collabo-on:hover {
     color: #fff;
     background-color: #ea5e5b;
 }
-
 
 .goal-set-buttons input {
     display: inline-block;
@@ -2142,7 +2142,6 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
-
 /*ゴール作成ページのタテ線の長さ調整一覧*/
 .set-goal + .line-vertical-sm {
     height: 72px;
@@ -2214,7 +2213,7 @@ ul.gl-input-images > li {
 
 /*/goals-column-empty*/
 
-.my-goals-column-item{
+.my-goals-column-item {
     background: #f5f5f5;
 }
 
@@ -2727,4 +2726,8 @@ Temporary Properties - YOU MUST FIX
 .has-success .box-align:focus,
 .has-success .box-align:active {
     border-color: rgba(0, 0, 0, 0);
+}
+
+.datepicker {
+    z-index: 1151 !important;
 }

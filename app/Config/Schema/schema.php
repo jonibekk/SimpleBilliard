@@ -379,6 +379,7 @@ class AppSchema extends CakeSchema
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'キーリザルトID'),
         'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'goal_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ゴールID(belongsToでGoalモデルに関連)'),
+        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '作成者ID(belongsToでUserモデルに関連)'),
         'name'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '名前', 'charset' => 'utf8'),
         'description'     => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '説明', 'charset' => 'utf8'),
         'start_date'      => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '開始日(unixtime)'),
@@ -401,7 +402,8 @@ class AppSchema extends CakeSchema
             'team_id'  => array('column' => 'team_id', 'unique' => 0),
             'del_flg'  => array('column' => 'del_flg', 'unique' => 0),
             'goal_id'  => array('column' => 'goal_id', 'unique' => 0),
-            'modified' => array('column' => 'modified', 'unique' => 0)
+            'modified' => array('column' => 'modified', 'unique' => 0),
+            'user_id'  => array('column' => 'user_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );

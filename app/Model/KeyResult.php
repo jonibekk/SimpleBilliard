@@ -212,4 +212,46 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    /**
+     * @param      $data
+     * @param      $goal_id
+     * @param null $uid
+     *
+     * @throws Exception
+     */
+    function add($data, $goal_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
+            throw new RuntimeException(__d('gl', "基準のデータがありません。"));
+        }
+        $data['KeyResult']['goal_id'] = $goal_id;
+        $data['KeyResult']['user_id'] = $uid;
+        $data['KeyResult']['team_id'] = $this->current_team_id;
+
+        if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
+            $data['KeyResult']['start_value'] = 0;
+            $data['KeyResult']['target_value'] = 1;
+        }
+        $data['KeyResult']['current_value'] = $data['KeyResult']['start_value'];
+
+        //時間をunixtimeに変換
+        if (!empty($data['KeyResult']['start_date'])) {
+            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+        }
+        //期限を+1day-1secする
+        if (!empty($data['KeyResult']['end_date'])) {
+            $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
+                                                       strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+        }
+
+        $this->create();
+        if (!$this->save($data)) {
+            throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
+        }
+        return true;
+    }
+
 }

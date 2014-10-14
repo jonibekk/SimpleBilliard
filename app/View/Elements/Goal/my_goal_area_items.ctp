@@ -23,6 +23,14 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
+                        <? if (isset($goal['SpecialKeyResult'][0]['id']) && !empty($goal['SpecialKeyResult'][0]['id'])): ?>
+                            <li role="presentation">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
+                                   class="modal-ajax-get-add-key-result"
+                                    >
+                                    <?= __d('gl', "主な成果を追加") ?></a>
+                            </li>
+                        <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                                                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?=
                                 __d('gl',
@@ -34,6 +42,25 @@
                                                   ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
                                                   null, __d('gl', "本当にこのゴールを削除しますか？")) ?>
                         </li>
+                    </ul>
+                </div>
+            <? elseif ($type == 'collabo'): ?>
+                <div class="pull-right goals-column-function bd-radius_4px dropdown">
+                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                       data-toggle="dropdown"
+                       id="download">
+                        <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                        aria-labelledby="dropdownMenu1">
+                        <? if (isset($goal['SpecialKeyResult'][0]['id']) && !empty($goal['SpecialKeyResult'][0]['id'])): ?>
+                            <li role="presentation">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
+                                   class="modal-ajax-get-add-key-result"
+                                    >
+                                    <?= __d('gl', "主な成果を追加") ?></a>
+                            </li>
+                        <? endif; ?>
                     </ul>
                 </div>
             <? endif; ?>
