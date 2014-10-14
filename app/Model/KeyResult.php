@@ -271,4 +271,21 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    function getSkr($goal_id)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+
+        $options = [
+            'conditions' => [
+                'goal_id'       => $goal_id,
+                'special_flg'   => true,
+                'start_date >=' => $start_date,
+                'end_date <'    => $end_date
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }

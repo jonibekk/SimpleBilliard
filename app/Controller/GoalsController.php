@@ -329,4 +329,61 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_edit_key_result_modal($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+        $skr = null;
+        try {
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            if (empty($key_result)) {
+                throw new RuntimeException();
+            }
+            $key_result['KeyResult']['start_value'] = (double)$key_result['KeyResult']['start_value'];
+            $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
+            $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
+
+            $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
+            if (empty($skr)) {
+                throw new RuntimeException();
+            }
+            $this->Goal->isPermittedCollabo($skr['KeyResult']['id']);
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $goal_id = $key_result['KeyResult']['goal_id'];
+        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
+        $priority_list = $this->Goal->priority_list;
+        $kr_priority_list = $this->Goal->KeyResult->priority_list;
+        $kr_value_unit_list = KeyResult::$UNIT;
+
+        $kr_start_date_format = date('Y/m/d',
+                                     $key_result['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+
+        $kr_end_date_format = date('Y/m/d',
+                                   $key_result['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_end_date = date('Y/m/d',
+                               $skr['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_start_date = date('Y/m/d',
+                                 $skr['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $this->set(compact(
+                       'goal_id',
+                       'key_result_id',
+                       'goal_category_list',
+                       'priority_list',
+                       'kr_priority_list',
+                       'kr_value_unit_list',
+                       'kr_start_date_format',
+                       'kr_end_date_format',
+                       'limit_end_date',
+                       'limit_start_date'
+                   ));
+        $this->request->data = $key_result;
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_edit_key_result');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
 }

@@ -10,7 +10,7 @@
  * @var                    $type
  */
 ?>
-<!-- START app/View/Elements/Goals/my_goal_area_items.ctp -->
+<!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
@@ -112,4 +112,4 @@
         <div class="con col-xxs-12" style="display: none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
     </div>
 <? endforeach ?>
-<!-- End app/View/Elements/Goals/my_goal_area_items.ctp -->
+<!-- End app/View/Elements/Goal/my_goal_area_items.ctp -->
