@@ -188,11 +188,13 @@
                                               ['target' => '_blank']) ?></li>
                     </ul>
                 </div>
-
             </div>
         </div>
-
         <!--/.nav-collapse -->
+    </div>
+    <div class="col col-xxs-12 visible-xs visible-sm sp-feed-alt ptb_10px">
+        <div class="col col-xxs-6 text-align_c">ニュースフィード</div>
+        <div class="col col-xxs-6 text-align_c">関連ゴール</div>
     </div>
 </header>
 
