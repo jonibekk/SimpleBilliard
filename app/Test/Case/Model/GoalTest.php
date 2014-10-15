@@ -93,6 +93,29 @@ class GoalTest extends CakeTestCase
         $this->Goal->getMyGoals();
     }
 
+    function testGetAllGoals()
+    {
+        $this->setDefault();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => "test",
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+        $key_results = [
+            'goal_id'     => $goal_id,
+            'team_id'     => 1,
+            'user_id'     => 1,
+            'special_flg' => true,
+            'start_date'  => time(),
+            'end_date'    => time(),
+        ];
+        $this->Goal->KeyResult->create();
+        $this->Goal->KeyResult->save($key_results);
+        $this->Goal->getAllGoals();
+    }
+
     function testGetProgress()
     {
         $goal = ['KeyResult' => []];
@@ -101,17 +124,8 @@ class GoalTest extends CakeTestCase
         $goal = [
             'KeyResult' => [
                 [
-                    'priority'  => 1,
-                    'completed' => null,
-                ]
-            ]
-        ];
-        $this->Goal->getProgress($goal);
-        $goal = [
-            'KeyResult' => [
-                [
-                    'priority'  => 1,
-                    'completed' => 1,
+                    'priority' => 1,
+                    'progress' => 0,
                 ]
             ]
         ];
@@ -276,7 +290,7 @@ class GoalTest extends CakeTestCase
     {
         $this->setDefault();
         try {
-            $this->Goal->isPermittedCollabo(99999);
+            $this->Goal->isPermittedCollaboFromSkr(99999);
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e));
@@ -294,7 +308,7 @@ class GoalTest extends CakeTestCase
         ];
         $this->Goal->KeyResult->save($data);
         try {
-            $this->Goal->isPermittedCollabo($this->Goal->KeyResult->getLastInsertID());
+            $this->Goal->isPermittedCollaboFromSkr($this->Goal->KeyResult->getLastInsertID());
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e));
@@ -309,7 +323,7 @@ class GoalTest extends CakeTestCase
     function testIsPermittedCollaboSuccess()
     {
         $this->setDefault();
-        $res = $this->Goal->isPermittedCollabo(1);
+        $res = $this->Goal->isPermittedCollaboFromSkr(1);
         $this->assertTrue($res);
     }
 

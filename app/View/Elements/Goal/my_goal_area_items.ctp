@@ -10,7 +10,7 @@
  * @var                    $type
  */
 ?>
-<!-- START app/View/Elements/Goals/my_goal_area_items.ctp -->
+<!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
@@ -39,9 +39,10 @@
                         </li>
                         <li role="presentation">
                             <?=
-                            $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">'.__d ('gl', "削除").'</span></i>',
+                            $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' . __d('gl',
+                                                                                                       "削除") . '</span></i>',
                                                   ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
-                                                  ['escape'=>false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
+                                                  ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
                         </li>
                     </ul>
                 </div>
@@ -58,8 +59,8 @@
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
                                    class="modal-ajax-get-add-key-result"
-                                    >
-                                    <?= __d('gl', "主な成果を追加") ?></a>
+                                    ><i class="fa fa-plus-circle"><span class="ml_2px">
+                                    <?= __d('gl', "主な成果を追加") ?></span></i></a>
                             </li>
                         <? endif; ?>
                     </ul>
@@ -113,4 +114,4 @@
         <div class="con col-xxs-12" style="display: none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
     </div>
 <? endforeach ?>
-<!-- End app/View/Elements/Goals/my_goal_area_items.ctp -->
+<!-- End app/View/Elements/Goal/my_goal_area_items.ctp -->
