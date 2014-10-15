@@ -113,7 +113,88 @@ class KeyResultTest extends CakeTestCase
     function testGetKeyResults()
     {
         $this->setDefault();
-        $this->KeyResult->getKeyResults(1, true);
+        $res = $this->KeyResult->getKeyResults(1, true);
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetSkr()
+    {
+        $this->setDefault();
+        $skr = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 1,
+            'special_flg' => true,
+            'start_date'  => time(),
+            'end_date'    => time(),
+        ];
+        $this->KeyResult->save($skr);
+        $res = $this->KeyResult->GetSkr(1);
+        $this->assertNotEmpty($res);
+    }
+
+    function testIsPermitted()
+    {
+        $this->setDefault();
+        $kr = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => 1,
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->KeyResult->save($kr);
+        $kr_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($kr_id);
+        $this->assertTrue($res);
+
+        $goal = [
+            'user_id' => 2,
+            'team_id' => 1,
+            'purpose' => 'test',
+        ];
+        $this->KeyResult->Goal->create();
+        $this->KeyResult->Goal->save($goal);
+        $kr = [
+            'user_id'    => 2,
+            'team_id'    => 1,
+            'goal_id'    => $this->KeyResult->Goal->getLastInsertID(),
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->KeyResult->create();
+        $this->KeyResult->save($kr);
+        $res = $this->KeyResult->isPermitted($this->KeyResult->getLastInsertID());
+
+        $this->assertFalse($res);
+    }
+
+    function testGetProgress()
+    {
+        $this->assertEquals(0, $this->KeyResult->getProgress(0, 100, 0));
+        $this->assertEquals(50, $this->KeyResult->getProgress(0, 100, 50));
+        $this->assertEquals(50, $this->KeyResult->getProgress(100, 150, 125));
+        $this->assertEquals(0, $this->KeyResult->getProgress(100, 150, 75));
+    }
+
+    function testSaveEdit()
+    {
+        $this->setDefault();
+
+        $this->assertFalse($this->KeyResult->saveEdit([]));
+
+        $data = [
+            'KeyResult' => [
+                'user_id'    => 1,
+                'team_id'    => 1,
+                'goal_id'    => 1,
+                'value_unit' => KeyResult::UNIT_BINARY,
+                'start_date' => time(),
+                'end_date'   => time(),
+            ]
+        ];
+        $res = $this->KeyResult->saveEdit($data);
+        $this->assertNotEmpty($res);
     }
 
     function setDefault()
