@@ -89,7 +89,7 @@
             </button>
             <div class="pull-right nav-icons">
                 <div class="dropdown gl-navbar-nav-fix">
-                    <a href="#" class="dropdown-toggle me-menu-image no-line header-user-profile pull-right" data-toggle="dropdown"
+                    <a href="#" class="dropdown-toggle me-menu-image font_verydark no-line header-user-profile pull-right" data-toggle="dropdown"
                        id="download">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
@@ -188,11 +188,13 @@
                                               ['target' => '_blank']) ?></li>
                     </ul>
                 </div>
-
             </div>
         </div>
-
         <!--/.nav-collapse -->
+    </div>
+    <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt ptb_10px">
+        <div class="col col-xxs-6 text-align_r"><a class="font_lightGray-veryDark no-line plr_18px sp-feed-link sp-feed-active">ニュースフィード</a></div>
+        <div class="col col-xxs-6"><a class="font_lightGray-veryDark no-line plr_18px sp-feed-link">関連ゴール</a></div>
     </div>
 </header>
 

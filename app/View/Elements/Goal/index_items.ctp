@@ -81,12 +81,14 @@
                         $follow_disabled = null;
                     }?>
                     <div class="col col-xxs-6 col-xs-4 mr_5px">
-                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow sm-btn <?= $follow_class ?>" <?= $follow_disabled ?>
-                        ="<?= $follow_disabled ?>" href="#"
+                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow sm-btn <?= $follow_class ?>"
+                        href="#"
                         data-class="toggle-follow"
-                        kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
-                            <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
-                            <span class="ml_5px"><?= $follow_text ?></span>
+                        kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>"
+                        <?= $follow_disabled ?>
+                        >
+                        <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
+                        <span class="ml_5px"><?= $follow_text ?></span>
                         </a>
                     </div>
                     <div class="col col-xxs-5 col-xs-4">

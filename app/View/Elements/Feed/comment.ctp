@@ -132,7 +132,7 @@
                 <? $site_info = json_decode($comment['site_info'], true) ?>
                 <div class="col col-xxs-12">
                     <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
-                       class="no-line">
+                       class="no-line font_verydark">
                         <div class="site-info bd-radius_4px">
                             <div class="media">
                                 <div class="pull-left">
