@@ -451,6 +451,58 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testEditKeyResult()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+
+        $data = [];
+        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+        $data = [
+            'KeyResult' => [
+                'id'         => 1,
+                'value_unit' => 2,
+                'start_date' => time(),
+                'end_date'   => time()
+            ]
+        ];
+        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+
+        $Goals->Goal->KeyResult->id = 1;
+        $Goals->Goal->KeyResult->saveField('user_id', 2);
+        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testDeleteKeyResultSuccess()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/delete_key_result/' . 1, ['method' => 'POST']);
+    }
+
+    function testDeleteKeyResultFail()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $Goals->Goal->KeyResult->id = 1;
+        $Goals->Goal->KeyResult->saveField('user_id', 2);
+        $this->testAction('/goals/delete_key_result/' . 1, ['method' => 'POST']);
+    }
+
+    function testAjaxGetEditKeyResultModal()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $skr = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 1,
+            'special_flg' => true,
+            'start_date'  => time(),
+            'end_date'    => time(),
+        ];
+        $Goals->Goal->KeyResult->save($skr);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**

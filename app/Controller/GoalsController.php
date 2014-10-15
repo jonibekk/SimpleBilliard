@@ -269,7 +269,6 @@ class GoalsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
-
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         $this->redirect($this->referer());
     }
@@ -373,6 +372,7 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         $skr = null;
         try {
+
             if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
                 throw new RuntimeException();
             }
@@ -424,7 +424,6 @@ class GoalsController extends AppController
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_edit_key_result');
         $html = $response->__toString();
-
         return $this->_ajaxGetResponse($html);
     }
 
