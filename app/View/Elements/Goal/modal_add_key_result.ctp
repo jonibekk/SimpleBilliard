@@ -114,7 +114,7 @@
                 <div class="row">
                     <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
-                    <div class="col col-sm-7 line-vertical-sm goal-set-input">
+                    <div class="col col-sm-8 line-vertical-sm goal-set-input">
                         <div class="form-group col col-sm-6" id="KeyResult0EndDateContainer">
                             <label for="KeyResult0EndDate" class="col col-sm-12 control-label text-align_left"><?=
                                 __d('gl',
@@ -136,7 +136,7 @@
                                                        'type'                     => 'text',
                                                        'wrapInput' => null,
                                                    ]) ?>
-                                <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                                <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                             </div>
                         </div>
                         <div class="form-group col col-sm-6" id="KeyResult0StartDateContainer">
@@ -146,9 +146,9 @@
                             <p class="form-control-static col col-sm-12"
                                id="KeyResult0StartDateDefault_<?= $key_result_id ?>">
                                     <span
-                                        class="plr_18px"><?= $kr_start_date_format ?>
+                                        class="pull-left"><?= $kr_start_date_format ?>
                                         <?= __d('gl', "（本日）") ?>
-                                        &nbsp;&nbsp;<a href="#" class="target-show-target-del"
+                                        &nbsp;&nbsp;<a href="#" class="target-show-target-del pull-right"
                                                        show-target-id="KeyResult0StartDateInputWrap_<?= $key_result_id ?>"
                                                        delete-target-id="KeyResult0StartDateDefault_<?= $key_result_id ?>">
                                             <?= __d('gl', "変更") ?></a>
