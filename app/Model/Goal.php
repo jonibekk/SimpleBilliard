@@ -199,10 +199,11 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
+
      *
-     * @param $skr_id
+*@param $skr_id
      *
-*@return bool
+     * @return bool
      */
     function isPermittedCollaboFromSkr($skr_id)
     {
@@ -624,7 +625,6 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
-
         //skr必須指定の場合はskrが存在しないゴールを除去
         if ($required_skr) {
             foreach ($res as $key => $val) {
