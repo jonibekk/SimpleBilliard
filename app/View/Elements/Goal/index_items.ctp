@@ -85,8 +85,8 @@
                         ="<?= $follow_disabled ?>" href="#"
                         data-class="toggle-follow"
                         kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
-                        <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
-                        <span class="ml_5px"><?= $follow_text ?></span>
+                            <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
+                            <span class="ml_5px"><?= $follow_text ?></span>
                         </a>
                     </div>
                     <div class="col col-xxs-5 col-xs-4">

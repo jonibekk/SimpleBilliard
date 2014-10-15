@@ -27,22 +27,21 @@
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
-                                    <i class="fa fa-key"><span class="ml_2px"><?= __d('gl', "主な成果を追加") ?></span></i>
+                                    <i class="fa fa-plus-circle"><span class="ml_2px"><?= __d('gl', "主な成果を追加") ?></span></i>
                                 </a>
                             </li>
                         <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                                                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>">
-                                <i class="fa fa-edit"><span class="ml_2px"><?= __d('gl', "編集") ?></span>
+                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "編集") ?></span>
                                 </i>
                             </a>
                         </li>
                         <li role="presentation">
-                            <!--<i class="fa fa-trash"></i>-->
                             <?=
-                            $this->Form->postLink(__d ('gl', "削除"),
+                            $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">'.__d ('gl', "削除").'</span></i>',
                                                   ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
-                                                  null, __d('gl', "本当にこのゴールを削除しますか？")) ?>
+                                                  ['escape'=>false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
                         </li>
                     </ul>
                 </div>
