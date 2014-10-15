@@ -25,13 +25,14 @@
                     <li role="presentation">
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', $kr['KeyResult']['id']]) ?>"
                            class="modal-ajax-get-add-key-result">
-                            <?= __d('gl', "成果を更新") ?></a>
+                            <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "成果を更新") ?></span></i></a>
                     </li>
                     <li role="presentation">
                         <?=
-                        $this->Form->postLink(__d('gl', "削除"),
+                        $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' .
+                                              __d('gl', "削除") . '</span></i>',
                                               ['controller' => 'goals', 'action' => 'delete_key_result', $kr['KeyResult']['id']],
-                                              null, __d('gl', "本当にこの成果を削除しますか？")) ?>
+                                              ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
                     </li>
                 </ul>
             </div>
