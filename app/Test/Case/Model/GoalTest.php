@@ -93,6 +93,28 @@ class GoalTest extends CakeTestCase
         $this->Goal->getMyGoals();
     }
 
+    function testGetAllGoals()
+    {
+        $this->setDefault();
+        $goal_data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'purpose' => "test",
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+        $key_results = [
+            'goal_id'    => $goal_id,
+            'team_id'    => 1,
+            'user_id'    => 1,
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->Goal->KeyResult->create();
+        $this->Goal->KeyResult->save($key_results);
+        $this->Goal->getAllGoals();
+    }
+
     function testGetProgress()
     {
         $goal = ['KeyResult' => []];
