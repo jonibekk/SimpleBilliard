@@ -300,7 +300,9 @@ class KeyResult extends AppModel
     {
         if (!$this->isOwner($this->my_uid, $key_result_id)) {
             $res = $this->findById($key_result_id);
-            if (!$this->Goal->isOwner($this->my_uid, $res['KeyResult']['goal_id'])) {
+            if (!isset($res['KeyResult']['goal_id'])
+                || !$this->Goal->isOwner($this->my_uid, $res['KeyResult']['goal_id'])
+            ) {
                 return false;
             }
         }

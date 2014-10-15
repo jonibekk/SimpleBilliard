@@ -486,7 +486,7 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/delete_key_result/' . 1, ['method' => 'POST']);
     }
 
-    function testAjaxGetEditKeyResultModal()
+    function testAjaxGetEditKeyResultModalSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
         $skr = [
@@ -504,6 +504,22 @@ class GoalsControllerTest extends ControllerTestCase
             'key_result_id' => $Goals->Goal->KeyResult->getLastInsertID(),
         ];
         $Goals->Goal->KeyResult->KeyResultUser->save($kr_user);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditKeyResultModalFail1()
+    {
+        $this->_getGoalsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 9999999, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditKeyResultModalFail2()
+    {
+        $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 1, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
