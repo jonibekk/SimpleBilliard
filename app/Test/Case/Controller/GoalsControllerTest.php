@@ -497,7 +497,13 @@ class GoalsControllerTest extends ControllerTestCase
             'start_date'  => time(),
             'end_date'    => time(),
         ];
+        $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($skr);
+        $kr_user = [
+            'user_id'       => 1,
+            'key_result_id' => $Goals->Goal->KeyResult->getLastInsertID(),
+        ];
+        $Goals->Goal->KeyResult->KeyResultUser->save($kr_user);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 1, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -546,6 +552,14 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        $Goals->Goal->Team->my_uid = 1;
+        $Goals->Goal->Team->current_team_id = 1;
+        $Goals->Goal->Team->current_team = [
+            'Team' => [
+                'start_term_month' => 4,
+                'border_months'    => 6
+            ]
+        ];
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

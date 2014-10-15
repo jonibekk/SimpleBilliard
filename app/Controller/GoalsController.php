@@ -372,23 +372,25 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         $skr = null;
         try {
-
             if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
                 throw new RuntimeException();
             }
+            $this->log('success1');
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             if (empty($key_result)) {
                 throw new RuntimeException();
             }
+            $this->log('success2');
             $key_result['KeyResult']['start_value'] = (double)$key_result['KeyResult']['start_value'];
             $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
             $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
-
             $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
             if (empty($skr)) {
                 throw new RuntimeException();
             }
+            $this->log('success3');
             $this->Goal->isPermittedCollaboFromSkr($skr['KeyResult']['id']);
+            $this->log('success4');
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
@@ -419,6 +421,7 @@ class GoalsController extends AppController
                        'limit_end_date',
                        'limit_start_date'
                    ));
+        $this->log('success_all');
         $this->request->data = $key_result;
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
