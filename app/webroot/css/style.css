@@ -47,6 +47,10 @@
     text-align: left;
 }
 
+.sm-btn{
+    padding: 8px;
+}
+
 /*=== リファクタリング予定 ===*/
 
 /*=== normalize bootstrap ===*/
