@@ -29,21 +29,6 @@ else {
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
             <img src="/img/develop--submenu.jpg" class="develop--goals-column" alt="ちゃんと消しますよ？">
-            <!--
-                        <div class="well layout-sub_padding design-mystatus">
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-                        </div>
-            -->
             <?= $this->element('circle_list') ?>
 
         </div>
@@ -51,7 +36,7 @@ else {
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
-        <div class="col-md-4 visible-md visible-lg layout-goal">
+        <div class="col-md-4 visible-md visible-lg col-sm-8 col-xs-8 col-xxs-12 layout-goal" role="goal_area">
             <?= $this->element('my_goals_area') ?>
         </div>
     </div>
