@@ -12,6 +12,7 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result'];
     }
 
     /**
@@ -42,7 +43,7 @@ class GoalsController extends AppController
         if ($id) {
             $this->request->data['Goal']['id'] = $id;
             try {
-                $this->Goal->isPermitted($id);
+                $this->Goal->isPermittedAdmin($id);
 
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
@@ -116,7 +117,7 @@ class GoalsController extends AppController
     public function delete($id)
     {
         try {
-            $this->Goal->isPermitted($id);
+            $this->Goal->isPermittedAdmin($id);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
@@ -158,6 +159,58 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_add_key_result_modal($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+        $key_result = null;
+        try {
+            $this->Goal->isPermittedCollaboFromSkr($key_result_id);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            if (empty($key_result)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $goal_id = $key_result['KeyResult']['goal_id'];
+        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
+        $priority_list = $this->Goal->priority_list;
+        $kr_priority_list = $this->Goal->KeyResult->priority_list;
+        $kr_value_unit_list = KeyResult::$UNIT;
+
+        $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
+
+        //期限は現在+2週間にする
+        //もしそれがゴールの期限を超える場合はゴールの期限にする
+        $end_date = strtotime('+2 weeks', time());
+        if ($end_date > $key_result['KeyResult']['end_date']) {
+            $end_date = $key_result['KeyResult']['end_date'];
+        }
+        $kr_end_date_format = date('Y/m/d', $end_date + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_end_date = date('Y/m/d',
+                               $key_result['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_start_date = date('Y/m/d',
+                                 $key_result['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+
+        $this->set(compact(
+                       'goal_id',
+                       'key_result_id',
+                       'goal_category_list',
+                       'priority_list',
+                       'kr_priority_list',
+                       'kr_value_unit_list',
+                       'kr_start_date_format',
+                       'kr_end_date_format',
+                       'limit_end_date',
+                       'limit_start_date'
+                   ));
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_add_key_result');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_collabo_change_modal($key_result_id)
     {
         $this->_ajaxPreProcess();
@@ -182,6 +235,61 @@ class GoalsController extends AppController
             $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
         }
         $this->redirect($this->referer());
+    }
+
+    public function add_key_result($key_result_id)
+    {
+        $this->request->allowMethod('post');
+        $key_result = null;
+        try {
+            $this->Goal->isPermittedCollaboFromSkr($key_result_id);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $this->Goal->KeyResult->add($this->request->data, $key_result['KeyResult']['goal_id']);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+
+        $this->Pnotify->outSuccess(__d('gl', "基準を追加しました。"));
+        $this->redirect($this->referer());
+    }
+
+    public function edit_key_result($key_result_id)
+    {
+        $this->request->allowMethod('post', 'put');
+        $key_result = null;
+        try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+            if (!$this->Goal->KeyResult->saveEdit($this->request->data)) {
+                throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
+        $this->redirect($this->referer());
+    }
+
+    public function delete_key_result($key_result_id)
+    {
+        $this->request->allowMethod('post', 'delete');
+        try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->Goal->KeyResult->id = $key_result_id;
+        $this->Goal->KeyResult->delete();
+        $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     public function delete_collabo($key_result_user_id)
@@ -243,6 +351,75 @@ class GoalsController extends AppController
         }
 
         return $this->_ajaxGetResponse($return);
+    }
+
+    function ajax_get_key_results($goal_id)
+    {
+        $this->_ajaxPreProcess();
+
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id);
+        $this->set(compact('key_results'));
+        $response = $this->render('Goal/key_result_items');
+        $html = $response->__toString();
+        $result = array(
+            'html' => $html
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_get_edit_key_result_modal($key_result_id)
+    {
+        $this->_ajaxPreProcess();
+        $skr = null;
+        try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException();
+            }
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $key_result['KeyResult']['start_value'] = (double)$key_result['KeyResult']['start_value'];
+            $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
+            $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
+            $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
+            if (empty($skr)) {
+                throw new RuntimeException();
+            }
+            $this->Goal->isPermittedCollaboFromSkr($skr['KeyResult']['id']);
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $goal_id = $key_result['KeyResult']['goal_id'];
+        $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
+        $priority_list = $this->Goal->priority_list;
+        $kr_priority_list = $this->Goal->KeyResult->priority_list;
+        $kr_value_unit_list = KeyResult::$UNIT;
+
+        $kr_start_date_format = date('Y/m/d',
+                                     $key_result['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+
+        $kr_end_date_format = date('Y/m/d',
+                                   $key_result['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_end_date = date('Y/m/d',
+                               $skr['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $limit_start_date = date('Y/m/d',
+                                 $skr['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $this->set(compact(
+                       'goal_id',
+                       'key_result_id',
+                       'goal_category_list',
+                       'priority_list',
+                       'kr_priority_list',
+                       'kr_value_unit_list',
+                       'kr_start_date_format',
+                       'kr_end_date_format',
+                       'limit_end_date',
+                       'limit_start_date'
+                   ));
+        $this->request->data = $key_result;
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_edit_key_result');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
     }
 
 }

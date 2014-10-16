@@ -67,7 +67,7 @@
                                                          "キャンセル") ?></button>
                     <?=
                     $this->Form->submit(empty($skr['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集"),
-                                        ['class' => 'btn btn-primary', 'div' => false,]) ?>
+                                        ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
                     <? if (!empty($skr['MyCollabo'])): ?>
                         <?=

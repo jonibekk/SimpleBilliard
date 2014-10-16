@@ -74,9 +74,22 @@ class FollowerTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testAddFollow()
     {
+        $this->setDefault();
+        $data = [
+            'user_id'       => 1,
+            'team_id'       => 1,
+            'key_result_id' => 100
+        ];
+        $this->Follower->save($data);
+        $this->assertFalse($this->Follower->addFollower(100));
+    }
 
+    function setDefault()
+    {
+        $this->Follower->my_uid = 1;
+        $this->Follower->current_team_id = 1;
     }
 
 }

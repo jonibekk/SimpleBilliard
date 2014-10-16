@@ -10,7 +10,7 @@
  * @var                    $type
  */
 ?>
-<!-- START app/View/Elements/Goals/my_goal_area_items.ctp -->
+<!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
@@ -23,17 +23,46 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
+                        <? if (isset($goal['SpecialKeyResult'][0]['id']) && !empty($goal['SpecialKeyResult'][0]['id'])): ?>
+                            <li role="presentation">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
+                                   class="modal-ajax-get-add-key-result">
+                                    <i class="fa fa-plus-circle"><span class="ml_2px"><?= __d('gl', "主な成果を追加") ?></span></i>
+                                </a>
+                            </li>
+                        <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?=
-                                __d('gl',
-                                    "編集") ?></a>
+                                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>">
+                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "編集") ?></span>
+                                </i>
+                            </a>
                         </li>
                         <li role="presentation">
                             <?=
-                            $this->Form->postLink(__d('gl', "削除"),
+                            $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' . __d('gl',
+                                                                                                       "削除") . '</span></i>',
                                                   ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
-                                                  null, __d('gl', "本当にこのゴールを削除しますか？")) ?>
+                                                  ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
                         </li>
+                    </ul>
+                </div>
+            <? elseif ($type == 'collabo'): ?>
+                <div class="pull-right goals-column-function bd-radius_4px dropdown">
+                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                       data-toggle="dropdown"
+                       id="download">
+                        <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                        aria-labelledby="dropdownMenu1">
+                        <? if (isset($goal['SpecialKeyResult'][0]['id']) && !empty($goal['SpecialKeyResult'][0]['id'])): ?>
+                            <li role="presentation">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
+                                   class="modal-ajax-get-add-key-result"
+                                    ><i class="fa fa-plus-circle"><span class="ml_2px">
+                                    <?= __d('gl', "主な成果を追加") ?></span></i></a>
+                            </li>
+                        <? endif; ?>
                     </ul>
                 </div>
             <? endif; ?>
@@ -74,14 +103,15 @@
                     <?endif; ?>
                 </div>
             <? endif; ?>
-            <div class="pull-right font_12px check-status">
-                <? if (isset($goal['SpecialKeyResult'][0]['valued_flg']) && $goal['SpecialKeyResult'][0]['valued_flg']): ?>
-                    <i class="fa fa-check-circle icon-green"></i><?= __d('gl', "認定") ?>
-                <? else: ?>
-                    <i class="fa fa-check-circle"></i><?= __d('gl', "未認定") ?>
-                <?endif; ?>
+            <div class="pull-right font_12px">
+                <a href="#" class="link-dark-gray toggle-ajax-get"
+                   target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
+                   ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']]) ?>">
+                    <?= __d('gl', "出したい成果をみる") ?><i class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
+                </a>
             </div>
         </div>
+        <div class="con col-xxs-12" style="display: none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
     </div>
 <? endforeach ?>
-<!-- End app/View/Elements/Goals/my_goal_area_items.ctp -->
+<!-- End app/View/Elements/Goal/my_goal_area_items.ctp -->

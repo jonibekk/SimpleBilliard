@@ -178,20 +178,41 @@ class Goal extends AppModel
     }
 
     /**
-     * 権限チェック
+     * オーナー権限チェック
      *
      * @param $id
      *
      * @return bool
      * @throws RuntimeException
      */
-    function isPermitted($id)
+    function isPermittedAdmin($id)
     {
         $this->id = $id;
         if (!$this->exists()) {
             throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
         }
         if (!$this->isOwner($this->my_uid, $id)) {
+            throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
+        }
+        return true;
+    }
+
+    /**
+     * コラボレータ権限チェック
+
+     *
+*@param $skr_id
+     *
+     * @return bool
+     */
+    function isPermittedCollaboFromSkr($skr_id)
+    {
+        $this->KeyResult->id = $skr_id;
+        if (!$this->KeyResult->exists()) {
+            throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
+        }
+
+        if (!$this->KeyResult->KeyResultUser->isCollaborated($skr_id)) {
             throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
         }
         return true;
@@ -246,7 +267,6 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
@@ -416,10 +436,15 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
                 ],
             ]
         ];
@@ -478,7 +503,7 @@ class Goal extends AppModel
                             'MyCollabo.description',
                         ],
                     ],
-                    'MyFollow' => [
+                    'MyFollow'     => [
                         'conditions' => [
                             'MyFollow.user_id' => $this->my_uid,
                         ],
@@ -493,7 +518,13 @@ class Goal extends AppModel
                         'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
                 ],
                 'User'             => [
                     'fields' => $this->User->profileFields,
@@ -578,10 +609,15 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
-                    ]
+                    ],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
                 ],
                 'User'             => [
                     'fields' => $this->User->profileFields,
@@ -589,7 +625,6 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
-
         //skr必須指定の場合はskrが存在しないゴールを除去
         if ($required_skr) {
             foreach ($res as $key => $val) {
@@ -611,23 +646,13 @@ class Goal extends AppModel
         if (empty($goal['KeyResult'])) {
             return 0;
         }
-        //全体の重要度の合計
-        $total_priority = 0;
+        $target_progress_total = 0;
+        $current_progress_total = 0;
         foreach ($goal['KeyResult'] as $key_result) {
-            $total_priority += $key_result['priority'];
+            $target_progress_total += $key_result['priority'] * 100;
+            $current_progress_total += $key_result['priority'] * $key_result['progress'];
         }
-
-        //完了のプライオリティを計算
-        $completed_total_priority = 0;
-        foreach ($goal['KeyResult'] as $key_result) {
-            if (!empty($key_result['completed'])) {
-                $completed_total_priority += $key_result['priority'];
-            }
-        }
-        if ($total_priority === 0 || $completed_total_priority === 0) {
-            return 0;
-        }
-        $res = round($completed_total_priority / $total_priority, 2) * 100;
+        $res = round($current_progress_total / $target_progress_total, 2) * 100;
         return $res;
     }
 

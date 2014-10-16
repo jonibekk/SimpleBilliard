@@ -80,17 +80,19 @@
                         $collabo_text = __d('gl', "コラボる");
                         $follow_disabled = null;
                     }?>
-                    <div class="col col-xxs-4">
-                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow <?= $follow_class ?>" <?= $follow_disabled ?>
-                        ="<?= $follow_disabled ?>" href="#"
+                    <div class="col col-xxs-6 col-xs-4 mr_5px">
+                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow sm-btn <?= $follow_class ?>"
+                        href="#"
                         data-class="toggle-follow"
-                        kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
+                        kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>"
+                        <?= $follow_disabled ?>
+                        >
                         <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
                         <span class="ml_5px"><?= $follow_text ?></span>
                         </a>
                     </div>
-                    <div class="col col-xxs-4">
-                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white modal-ajax-get-collabo <?= $collabo_class ?>"
+                    <div class="col col-xxs-5 col-xs-4">
+                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white modal-ajax-get-collabo sm-btn <?= $collabo_class ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['SpecialKeyResult'][0]['id']]) ?>">

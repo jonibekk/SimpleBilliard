@@ -212,4 +212,132 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    /**
+     * @param      $data
+     * @param      $goal_id
+     * @param null $uid
+     *
+     * @return bool
+     * @throws Exception
+     */
+    function add($data, $goal_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
+            throw new RuntimeException(__d('gl', "基準のデータがありません。"));
+        }
+        $data['KeyResult']['goal_id'] = $goal_id;
+        $data['KeyResult']['user_id'] = $uid;
+        $data['KeyResult']['team_id'] = $this->current_team_id;
+
+        if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
+            $data['KeyResult']['start_value'] = 0;
+            $data['KeyResult']['target_value'] = 1;
+        }
+        $data['KeyResult']['current_value'] = $data['KeyResult']['start_value'];
+
+        //時間をunixtimeに変換
+        if (!empty($data['KeyResult']['start_date'])) {
+            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+        }
+        //期限を+1day-1secする
+        if (!empty($data['KeyResult']['end_date'])) {
+            $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
+                                                       strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+        }
+
+        $this->create();
+        if (!$this->save($data)) {
+            throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
+        }
+        return true;
+    }
+
+    function getKeyResults($goal_id, $with_skr = false)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'     => $goal_id,
+                'team_id'     => $this->current_team_id,
+                'special_flg' => false,
+            ],
+        ];
+        if ($with_skr) {
+            unset($options['conditions']['special_flg']);
+        }
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    function getSkr($goal_id)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+
+        $options = [
+            'conditions' => [
+                'goal_id'       => $goal_id,
+                'special_flg'   => true,
+                'start_date >=' => $start_date,
+                'end_date <'    => $end_date
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * キーリザルト変更権限
+     * リーダーもしくは作成者ならtrueを返す
+     *
+     * @param $key_result_id
+     *
+     * @return bool
+     */
+    function isPermitted($key_result_id)
+    {
+        if (!$this->isOwner($this->my_uid, $key_result_id)) {
+            $res = $this->findById($key_result_id);
+            if (!isset($res['KeyResult']['goal_id'])
+                || !$this->Goal->isOwner($this->my_uid, $res['KeyResult']['goal_id'])
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function saveEdit($data)
+    {
+        if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
+            return false;
+        }
+        //on/offの場合は現在値0,目標値1をセット
+        if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
+            $data['KeyResult']['start_value'] = 0;
+            $data['KeyResult']['current_value'] = 0;
+            $data['KeyResult']['target_value'] = 1;
+        }
+        //時間をunixtimeに変換
+        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+        $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
+                                                   strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
+                                                            $data['KeyResult']['target_value'],
+                                                            $data['KeyResult']['current_value']);
+        $this->create();
+        return $this->save($data);
+    }
+
+    function getProgress($start_val, $target_val, $current_val)
+    {
+        $progress = round(($current_val - $start_val) / ($target_val - $start_val), 2) * 100;
+        if ($progress < 0) {
+            return 0;
+        }
+        return $progress;
+    }
+
 }

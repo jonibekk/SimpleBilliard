@@ -1,3 +1,66 @@
+/*=== リファクタリング予定 ===*/
+.nav-icons > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 2px;
+    color: #000000;
+}
+
+.nav-icons > .dropdown > a {
+    float: left;
+    font-size: 20px;
+    padding: 10px 2px;
+    color: #000000;
+}
+
+.nav-icons > .dropdown > a.me-menu-image {
+    padding: 6px 2px;
+    color: #000000;
+    line-height: 30px;
+}
+
+.nav-icons > .header-function > a {
+    float: right;
+    font-size: 20px;
+    padding: 0 4px;
+    margin: 9px 0;
+    color: #000000;
+    border: 1px solid #ccc;
+}
+
+.header-user-profile {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.nav-icons > .header-function > a:hover {
+    border: 1px solid #ae2f2f;
+}
+
+.header-function-link {
+}
+
+.header-function-link:hover {
+}
+
+.form-group .text-align_left {
+    text-align: left;
+}
+
+.text-align_c {
+    text-align: center;
+}
+
+.text-align_r {
+    text-align: right;
+}
+
+.sm-btn {
+    padding: 8px;
+}
+
+/*=== リファクタリング予定 ===*/
+
 /*=== normalize bootstrap ===*/
 [class*="col-"] {
     padding-left: 0;
@@ -131,12 +194,12 @@
 
 /* リファクター後 */
 
-.select2PostCircleMember .select2-choices .select2-search-choice{
+.select2PostCircleMember .select2-choices .select2-search-choice {
     margin-top: 1px;
 }
 
-.select2Member .select2-choices .select2-search-choice{
-    margin-top:3px;
+.select2Member .select2-choices .select2-search-choice {
+    margin-top: 3px;
     margin-left: 3px;
 }
 
@@ -144,7 +207,7 @@
 
 body {
     background: #e5e5e5;
-    padding: 58px 0 0;
+    padding: 100px 0 0;
 }
 
 img {
@@ -167,6 +230,10 @@ footer p {
     margin-bottom: 0;
 }
 
+.navbar {
+    border: none;
+}
+
 /*=== 全体的な設定 ===*/
 .container {
     width: 93.75%;
@@ -178,18 +245,24 @@ footer p {
     margin-top: 4px;
 }
 
-.mt_8px{
+.mt_8px {
     margin-top: 8px;
 }
 
 .mt_16px {
     margin-top: 16px;
 }
-.mt_32px{
+
+.mt_32px {
     margin-top: 32px;
 }
+
 .mr_5px {
     margin-right: 5px;
+}
+
+.mr_12px {
+    margin-right: 12px;
 }
 
 .ml_2px {
@@ -213,8 +286,12 @@ footer p {
     padding-bottom: 5px;
 }
 
-.mb_32px{
+.mb_32px {
     margin-bottom: 32px;
+}
+
+.p_10px {
+    padding: 10px;
 }
 
 .plr_4px {
@@ -232,6 +309,16 @@ footer p {
     padding-right: 18px;
 }
 
+.ptb_5px {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.ptb_10px {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .pt_1px {
     padding-top: 1px;
 }
@@ -240,12 +327,24 @@ footer p {
     padding-right: 5px;
 }
 
+.pr_16px {
+    padding-right: 16px;
+}
+
 .pb_2px {
     padding-bottom: 2px;
 }
 
 .pl_5px {
     padding-left: 5px;
+}
+
+.pl_12px {
+    padding-left: 12px;
+}
+
+.pl_16px {
+    padding-left: 16px;
 }
 
 /*行数の指定*/
@@ -344,26 +443,27 @@ footer p {
     color: #696969;
 }
 
-.font_verydark-white{
+.font_verydark-white {
     color: #231814;
 }
+
 .font_verydark-white:hover,
 .font_verydark-white:active,
-.font_verydark-white:target{
+.font_verydark-white:target {
     color: #fff;
 }
 
-.font_gray{
+.font_gray {
     color: #808080;
 }
 
-.font_gargoyleGray, .font_gargoyleGray-gray{
+.font_gargoyleGray, .font_gargoyleGray-gray {
     color: #4c4c4c;
 }
 
 .font_gargoyleGray-gray:hover,
 .font_gargoyleGray-gray:active,
-.font_gargoyleGray-gray:target{
+.font_gargoyleGray-gray:target {
     color: #808080;
 }
 
@@ -411,6 +511,16 @@ footer p {
     color: #666;
 }
 
+.font_lightGray-veryDark {
+    color: #aaa;
+}
+
+.font_lightGray-veryDark:hover,
+.font_lightGray-veryDark:active,
+.font_lightGray-veryDark:focus {
+    color: #231814;
+}
+
 .link-dark-gray {
     color: #808080;
 }
@@ -435,7 +545,6 @@ footer p {
 
 .no-line {
     text-decoration: none !important;
-    color: #231814;
 }
 
 .no-line:link,
@@ -476,6 +585,10 @@ footer p {
     border-bottom: 1px solid #f0f0f0;
 }
 
+.bd-r {
+    border-right: 1px solid #ccc;
+}
+
 .bd-circle {
     border-radius: 50%;
 }
@@ -494,12 +607,22 @@ footer p {
     border-radius: 4px;
 }
 
-.shadow-default{
-    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -o-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-    -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+.bd-r-radius_4px {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.form-group .input-group .bd-r-radius_4px {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.shadow-default {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -o-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 /*/  */
@@ -538,7 +661,7 @@ footer p {
 
 .navbar {
     margin: 0;
-    max-height: 48px;
+    max-height: 100px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
 
@@ -567,24 +690,9 @@ footer p {
     pointer-events: none;
 }
 
-.nav-icons > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 10px;
-    color: #000000;
-}
-
-.nav-icons > .dropdown > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 10px;
-    color: #000000;
-}
-
 .nav-icons .header-home {
     font-size: 12px;
     line-height: 30px;
-    margin-right: 10px;
     color: #808080;
 }
 
@@ -1613,11 +1721,6 @@ ul.gl-input-images > li {
     padding-left: 0;
 }
 
-.header-user-profile {
-    padding-right: 0 !important;
-    padding-left: 10px !important;
-}
-
 .header-drop-icons {
     padding-right: 4px;
     width: 18px;
@@ -1644,13 +1747,14 @@ ul.gl-input-images > li {
 }
 
 .header-icon {
-    width: 22px;
+    width: 36px;
     height: 20px;
     text-align: center;
 }
 
 .header-profile-icon {
     width: 16px;
+    line-height: 36px;
 }
 
 /*モーダル全体*/
@@ -1783,7 +1887,7 @@ ul.gl-input-images > li {
 }
 
 .btn_pureWhite,
-.btn_pureWhite-rougeOrange{
+.btn_pureWhite-rougeOrange {
     border: 1px solid #ccc;
     background-color: #fff;
     background-image: none;
@@ -1799,7 +1903,7 @@ ul.gl-input-images > li {
 }
 
 .btn_pureWhite-rougeOrange:target,
-.btn_pureWhite-rougeOrange:hover{
+.btn_pureWhite-rougeOrange:hover {
     border: 1px solid #aaa;
     background-color: #fff;
     background-image: none;
@@ -1807,11 +1911,10 @@ ul.gl-input-images > li {
     text-decoration: none;
 }
 
-.follow-on,.follow-on:hover,.collabo-on,.collabo-on:hover{
+.follow-on, .follow-on:hover, .collabo-on, .collabo-on:hover {
     color: #fff;
     background-color: #ea5e5b;
 }
-
 
 .goal-set-buttons input {
     display: inline-block;
@@ -2095,7 +2198,6 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
-
 /*ゴール作成ページのタテ線の長さ調整一覧*/
 .set-goal + .line-vertical-sm {
     height: 72px;
@@ -2167,7 +2269,7 @@ ul.gl-input-images > li {
 
 /*/goals-column-empty*/
 
-.my-goals-column-item{
+.my-goals-column-item {
     background: #f5f5f5;
 }
 
@@ -2224,6 +2326,26 @@ ul.gl-input-images > li {
 
 /*/========= ゴールカラム ==========*/
 
+/*=== spFeedAlt ===*/
+
+.sp-feed-alt {
+    background: #f5f5f5;
+}
+
+.sp-feed-active {
+    color: #231814;
+    padding-bottom: 8px;
+    border-bottom: 4px solid #6d8fce;
+}
+
+/* スマホだからホバーいらなくね？
+.sp-feed-link:hover {
+    border-bottom: 4px solid #ae2f2f;
+}
+*/
+
+/*==/ spFeedAlt ===*/
+
 /*=== メディアクエリで切り替え ===*/
 /*Extrasmall*/
 @media (min-width: 480px) {
@@ -2244,8 +2366,8 @@ ul.gl-input-images > li {
         padding: 0 0 0 2.5%;
     }
 
-    .layout-sub_padding {
-        padding: 9px 1px;
+    .layout-goal {
+        padding: 0 0 0 2.5%;
     }
 
     .circle-name_box {
@@ -2333,12 +2455,11 @@ ul.gl-input-images > li {
 
     .header_l-icons {
         width: 56px;
-        height: 48px;
+        height: 50px;
     }
 
     .header_l-icons:hover {
         border-bottom: 4px solid #ae2f2f;
-        margin-bottom: -4px;
     }
 
     .activeColumn {
@@ -2352,7 +2473,7 @@ ul.gl-input-images > li {
     }
 
     .nav-search {
-        width: 180px;
+        width: 160px;
     }
 
     .gl-nav-form-icon {
@@ -2361,10 +2482,6 @@ ul.gl-input-images > li {
 
     .circle-name_box {
         width: 160px;
-    }
-
-    .layout-sub_padding {
-        padding: 9px 19px 0;
     }
 
     .gl-s2-post-dropdown {
@@ -2400,6 +2517,10 @@ ul.gl-input-images > li {
 
 /*Medium*/
 @media (min-width: 992px) {
+    body {
+        padding: 60px 0 0;
+    }
+
     .container {
         width: 972px;
     }
@@ -2446,12 +2567,8 @@ ul.gl-input-images > li {
         padding: 0 10px;
     }
 
-    .layout-sub_padding {
-        padding: 9px 3px 9px 4px;
-    }
-
-    .layout-goal_padding {
-        padding: 9px 12px;
+    .layout-goal {
+        padding: 0 0;
     }
 
     .circle-name_box {
@@ -2487,14 +2604,6 @@ ul.gl-input-images > li {
         margin-left: 10px;
     }
 
-    .layout-sub_padding {
-        padding: 9px 5px;
-    }
-
-    .layout-goal_padding {
-        padding: 9px 15px;
-    }
-
     .circle-name_box {
         width: 103px;
     }
@@ -2509,7 +2618,7 @@ ul.gl-input-images > li {
 }
 
 @media (min-width: 1025px) {
-    .header-link {
+    .header-link, .header-logo-img, .header-function-link {
         opacity: 0.54;
     }
 
@@ -2644,7 +2753,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .goal-set-date {
-    min-width: 190px;
+    min-width: 140px;
     width: 16%;
 }
 
@@ -2680,4 +2789,8 @@ Temporary Properties - YOU MUST FIX
 .has-success .box-align:focus,
 .has-success .box-align:active {
     border-color: rgba(0, 0, 0, 0);
+}
+
+.datepicker {
+    z-index: 1151 !important;
 }

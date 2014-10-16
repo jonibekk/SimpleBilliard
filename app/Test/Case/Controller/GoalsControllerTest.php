@@ -413,6 +413,118 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAddKeyResultFail()
+    {
+        $this->_getGoalsCommonMock();
+        $data = ['KeyResult' => []];
+        $this->testAction('/goals/add_key_result/999999999', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddKeyResultSuccess()
+    {
+        $this->_getGoalsCommonMock();
+        $data = ['KeyResult' =>
+                     [
+                         'name'        => 'test',
+                         'value_unit'  => 0,
+                         'start_value' => 1
+                     ]
+        ];
+        $this->testAction('/goals/add_key_result/1', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAjaxGetAddKeyResultModal()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_add_key_result_modal/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetKeyResults()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_key_results/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testEditKeyResult()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+
+        $data = [];
+        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+        $data = [
+            'KeyResult' => [
+                'id'         => 1,
+                'value_unit' => 2,
+                'start_date' => time(),
+                'end_date'   => time()
+            ]
+        ];
+        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+
+        $Goals->Goal->KeyResult->id = 1;
+        $Goals->Goal->KeyResult->saveField('user_id', 2);
+        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testDeleteKeyResultSuccess()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/delete_key_result/' . 1, ['method' => 'POST']);
+    }
+
+    function testDeleteKeyResultFail()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $Goals->Goal->KeyResult->id = 1;
+        $Goals->Goal->KeyResult->saveField('user_id', 2);
+        $this->testAction('/goals/delete_key_result/' . 1, ['method' => 'POST']);
+    }
+
+    function testAjaxGetEditKeyResultModalSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $skr = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 1,
+            'special_flg' => true,
+            'start_date'  => time(),
+            'end_date'    => time(),
+        ];
+        $Goals->Goal->KeyResult->create();
+        $Goals->Goal->KeyResult->save($skr);
+        $kr_user = [
+            'user_id'       => 1,
+            'key_result_id' => $Goals->Goal->KeyResult->getLastInsertID(),
+        ];
+        $Goals->Goal->KeyResult->KeyResultUser->save($kr_user);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditKeyResultModalFail1()
+    {
+        $this->_getGoalsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 9999999, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditKeyResultModalFail2()
+    {
+        $this->_getGoalsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**
@@ -456,6 +568,14 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        $Goals->Goal->Team->my_uid = 1;
+        $Goals->Goal->Team->current_team_id = 1;
+        $Goals->Goal->Team->current_team = [
+            'Team' => [
+                'start_term_month' => 4,
+                'border_months'    => 6
+            ]
+        ];
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
