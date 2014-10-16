@@ -7,6 +7,31 @@ $(document).ready(function () {
             $(this).parent().parent().nextAll(".help-block" + ".text-danger").remove();
         }
     });
+    //ヘッダーサブメニューでのフィード、ゴール切り換え処理
+    $('#SubHeaderMenu a').click(function () {
+        //既に選択中の場合は何もしない
+        if ($(this).hasClass('sp-feed-active')) {
+            return;
+        }
+
+        if ($(this).attr('id') == 'SubHeaderMenuFeed') {
+            $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
+            $(this).addClass('sp-feed-active');
+            //表示切り換え
+            $('[role="goal_area"]').addClass('visible-md visible-lg');
+            $('[role="main"]').removeClass('visible-md visible-lg');
+        }
+        else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
+            $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
+            $(this).addClass('sp-feed-active');
+            //表示切り換え
+            $('[role="main"]').addClass('visible-md visible-lg');
+            $('[role="goal_area"]').removeClass('visible-md visible-lg');
+        }
+        else {
+            return;
+        }
+    });
     //アップロード画像選択時にトリムして表示
     $('.fileinput').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});

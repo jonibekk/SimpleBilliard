@@ -89,13 +89,16 @@
             </button>
             <div class="pull-right nav-icons">
                 <div class="dropdown gl-navbar-nav-fix">
-                    <a href="#" class="dropdown-toggle me-menu-image font_verydark no-line header-user-profile pull-right" data-toggle="dropdown"
+                    <a href="#"
+                       class="dropdown-toggle me-menu-image font_verydark no-line header-user-profile pull-right"
+                       data-toggle="dropdown"
                        id="download">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
                                                    ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
                         <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
-                        <span class="font_11px hidden-xxs header-home header-link pr_5px mr_5px ptb_5px bd-r">User Name</span>
+                        <span
+                            class="font_11px hidden-xxs header-home header-link pr_5px mr_5px ptb_5px bd-r">User Name</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li>
@@ -157,10 +160,12 @@
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o header-link header-icon"></i></a>
 
                 <div class="pull-right header-function dropdown">
-                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
+                    <a href="#"
+                       class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog header-function-icon"></i><i class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
+                        <i class="fa fa-cog header-function-icon"></i><i
+                            class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
@@ -192,9 +197,17 @@
         </div>
         <!--/.nav-collapse -->
     </div>
-    <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt ptb_10px">
-        <div class="col col-xxs-6 text-align_r"><a class="font_lightGray-veryDark no-line plr_18px sp-feed-link sp-feed-active">ニュースフィード</a></div>
-        <div class="col col-xxs-6"><a class="font_lightGray-veryDark no-line plr_18px sp-feed-link">関連ゴール</a></div>
+    <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt ptb_10px" id="SubHeaderMenu">
+        <div class="col col-xxs-6 text-align_r">
+            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link sp-feed-active" id="SubHeaderMenuFeed">
+                <?= __d('gl', "ニュースフィード") ?>
+            </a>
+        </div>
+        <div class="col col-xxs-6">
+            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link" id="SubHeaderMenuGoal">
+                <?= __d('gl', "関連ゴール") ?>
+            </a>
+        </div>
     </div>
 </header>
 
