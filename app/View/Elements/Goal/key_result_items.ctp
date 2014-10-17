@@ -28,6 +28,15 @@
                             <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "成果を更新") ?></span></i></a>
                     </li>
                     <li role="presentation">
+                        <? if ($kr['KeyResult']['completed']): ?>
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'incomplete', $kr['KeyResult']['id']]) ?>">
+                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "未完了にする") ?></span></i></a>
+                        <? else: ?>
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']]) ?>">
+                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "完了にする") ?></span></i></a>
+                        <?endif; ?>
+                    </li>
+                    <li role="presentation">
                         <?=
                         $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' .
                                               __d('gl', "削除") . '</span></i>',

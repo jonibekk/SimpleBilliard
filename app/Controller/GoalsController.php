@@ -257,7 +257,6 @@ class GoalsController extends AppController
     public function edit_key_result($key_result_id)
     {
         $this->request->allowMethod('post', 'put');
-        $key_result = null;
         try {
             if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
@@ -270,6 +269,36 @@ class GoalsController extends AppController
             $this->redirect($this->referer());
         }
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
+        $this->redirect($this->referer());
+    }
+
+    public function complete($key_result_id)
+    {
+        try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+            $this->Goal->KeyResult->complete($key_result_id);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', "成果を完了にしました。"));
+        $this->redirect($this->referer());
+    }
+
+    public function incomplete($key_result_id)
+    {
+        try {
+            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+            $this->Goal->KeyResult->incomplete($key_result_id);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
         $this->redirect($this->referer());
     }
 
