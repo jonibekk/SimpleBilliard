@@ -101,28 +101,10 @@
                             class="font_11px hidden-xxs header-home header-link pr_5px mr_5px ptb_5px bd-r">User Name</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
-                        <li>
-                            <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
-                        </li>
-                        <?
-                        //TODO 一時的にチーム管理者はチーム招待リンクを表示
-                        if (isset($my_member_status['TeamMember']) && $my_member_status['TeamMember']['admin_flg']):?>
-                            <li>
-                                <?=
-                                $this->Html->link(__d('gl', "メンバーを招待"),
-                                                  ['controller' => 'teams', 'action' => 'invite']) ?>
-                            </li>
-                        <? endif; ?>
-                        <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
-                                __d('gl',
-                                    "チュートリアル") ?></a></li>
-                        <li><?=
-                            $this->Html->link(__d('gl', "ログアウト"),
-                                              ['controller' => 'users', 'action' => 'logout']) ?></li>
-                        <li class="divider"></li>
-                        <li><?=
-                            $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
-                                              ['target' => '_blank']) ?></li>
+                        <li class="text-align_c"><?= __d('gl', "準備中") ?></li>
+
+                        <!--
+-->
                     </ul>
                 </div>
                 <a href="<?= $this->Html->url('/') ?>" class="header-home header-link">ホーム</a>
