@@ -980,12 +980,12 @@ footer p {
     }
 }
 
-.gl-sidebar-setting {
+.sidebar-setting {
     position: fixed;
-    top: 50px;
+    top: 90px;
 }
 
-.gl-sidebar-setting .nav > .active > a, .gl-sidebar-setting .nav > .active:hover > a, .gl-sidebar-setting .nav > .active:focus > a {
+.sidebar-setting .nav > .active > a, .sidebar-setting .nav > .active:hover > a, .sidebar-setting .nav > .active:focus > a {
     padding-left: 18px;
     font-weight: 700;
     color: #563d7c;
@@ -1720,7 +1720,6 @@ ul.gl-input-images > li {
 
 /*HEADER*/
 .gl-nav-container {
-    color: #fff;
     width: 93.75%;
     margin: auto;
 }
@@ -2355,11 +2354,9 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
-/* スマホだからホバーいらなくね？
 .sp-feed-link:hover {
-    border-bottom: 4px solid #ae2f2f;
+    border-bottom: 4px solid #6d8fce;
 }
-*/
 
 /*==/ spFeedAlt ===*/
 
@@ -2632,6 +2629,9 @@ ul.gl-input-images > li {
 
     .gl-s2-post-dropdown {
         width: 386px !important;
+    }
+    .sidebar-setting {
+        top: 50px;
     }
 }
 

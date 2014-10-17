@@ -21,7 +21,7 @@
 <div id="container" class="container">
     <div class="row">
         <div class="col-xs-3 hidden-xxs">
-            <div class="gl-sidebar-setting" role="complementary">
+            <div class="sidebar-setting" role="complementary">
                 <ul class="nav">
                     <?= $this->fetch('sidebar') ?>
                 </ul>
@@ -43,7 +43,7 @@
 <?= $this->fetch('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('body').scrollspy({ target: '.gl-sidebar-setting' });
+        $('body').scrollspy({ target: '.sidebar-setting' });
     });
 </script>
 </body>
