@@ -174,14 +174,13 @@
                                 )
                                 ?>
                             </div>
-
                             <div class="media-body">
-                                <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                                <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? h($site_info['title']) : null ?></h4>
 
-                                <p class="font_11px media-url"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                <p class="font_11px media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
                                 <? if (isset($site_info['description'])): ?>
                                     <div class="font_12px site-info-txt">
-                                        <?= $site_info['description'] ?>
+                                        <?= h($site_info['description']) ?>
                                     </div>
                                 <? endif; ?>
                             </div>
