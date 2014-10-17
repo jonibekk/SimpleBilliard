@@ -133,6 +133,12 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
+                            <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                                    <i class="fa fa-flag header-drop-icons">
+                                        <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
+                                    </i>
+                                </a>
+                            </li>
                             <li>
                                 <a href="#" data-toggle="modal" data-target="#modal_add_circle">
                                     <i class="fa fa-circle-o header-drop-icons">
@@ -145,12 +151,6 @@
                             <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                                 <i class="fa fa-users header-drop-icons">
                                     <span class="font_verydark"><?= __d('gl', 'チームを作成') ?></span>
-                                </i>
-                            </a>
-                        </li>
-                        <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
-                                <i class="fa fa-flag header-drop-icons">
-                                    <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
                                 </i>
                             </a>
                         </li>
