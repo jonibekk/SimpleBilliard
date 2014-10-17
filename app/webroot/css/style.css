@@ -1717,6 +1717,11 @@ ul.gl-input-images > li {
     margin: auto;
 }
 
+.header-logo-img{
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
 .header-circle {
     padding-left: 0;
 }
@@ -2447,6 +2452,7 @@ ul.gl-input-images > li {
 
     .header-logo-img {
         margin-left: 5px;
+        margin-right: 0;
     }
 
     .header-icon {
