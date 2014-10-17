@@ -2355,11 +2355,9 @@ ul.gl-input-images > li {
     cursor: pointer;
 }
 
-/* スマホだからホバーいらなくね？
 .sp-feed-link:hover {
-    border-bottom: 4px solid #ae2f2f;
+    border-bottom: 4px solid #6d8fce;
 }
-*/
 
 /*==/ spFeedAlt ===*/
 
