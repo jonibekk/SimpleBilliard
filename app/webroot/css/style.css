@@ -323,6 +323,10 @@ footer p {
     padding-top: 1px;
 }
 
+.pt_12px{
+    padding-top: 12px;
+}
+
 .pr_5px {
     padding-right: 5px;
 }
@@ -552,6 +556,10 @@ footer p {
 .no-line:hover,
 .no-line:visited {
     text-decoration: none !important;
+}
+
+.height_40px{
+    height: 40px;
 }
 
 /*/fontの設定*/
@@ -1780,7 +1788,7 @@ ul.gl-input-images > li {
     padding-bottom: 10px;
 }
 
-.fileinput-limit_mb {
+.disp_ib {
     display: inline-block;
 }
 
@@ -2341,6 +2349,10 @@ ul.gl-input-images > li {
     color: #231814;
     padding-bottom: 8px;
     border-bottom: 4px solid #6d8fce;
+}
+
+.sp-feed-link{
+    cursor: pointer;
 }
 
 /* スマホだからホバーいらなくね？

@@ -175,7 +175,7 @@
                                                 ''
                                                ]) ?>
                         </span>
-                            <span class="help-block fileinput-limit_mb font_11px"><?= __d('gl', '10MB以下') ?></span>
+                            <span class="help-block disp_ib font_11px"><?= __d('gl', '10MB以下') ?></span>
                         </div>
                     </div>
 
