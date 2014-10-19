@@ -208,7 +208,7 @@
                 'required'                 => true,
                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                 'style'                    => 'width:50px',
-                'options'                  => $priority_list,
+                'options' => $kr_priority_list,
             ]) ?>
         </div>
     </div>

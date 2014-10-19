@@ -33,6 +33,7 @@ class Goal extends AppModel
     }
 
     public $priority_list = [
+        0 => 0,
         1 => 1,
         2 => 2,
         3 => 3,
@@ -174,7 +175,7 @@ class Goal extends AppModel
                 $kr['goal_id'] = $data['Goal']['id'];
                 $kr['name'] = __d('gl', "タイトルを入れてください");
                 $kr['special_flg'] = false;
-                $kr['priority'] = 1;
+                $kr['priority'] = 0;
                 $this->KeyResult->create();
                 $this->KeyResult->save($kr);
             }
@@ -210,10 +211,11 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
+
      *
-     * @param $skr_id
+*@param $skr_id
      *
-*@return bool
+     * @return bool
      */
     function isPermittedCollaboFromSkr($skr_id)
     {
