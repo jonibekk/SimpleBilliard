@@ -5,6 +5,7 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var $title_for_layout string
  * @var $this             View
+ * @var $avail_sub_menu
  */
 ?>
 <!-- START app/View/Layouts/default.ctp -->
@@ -12,7 +13,7 @@
 <!--suppress ALL -->
 <html lang="en">
 <?= $this->element('head') ?>
-<body>
+<body class="<?= (isset($avail_sub_menu) && $avail_sub_menu ? 'avail-sub-menu' : null) ?>">
 <? if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
