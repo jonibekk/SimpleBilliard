@@ -29,11 +29,15 @@
                     </li>
                     <li role="presentation">
                         <? if ($kr['KeyResult']['completed']): ?>
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'incomplete', $kr['KeyResult']['id']]) ?>">
-                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "未完了にする") ?></span></i></a>
+                            <?= $this->Form->postLink('<i class="fa fa-pencil"><span class="ml_2px">' .
+                                                      __d('gl', "未完了にする") . '</span></i>',
+                                                      ['controller' => 'goals', 'action' => 'incomplete', $kr['KeyResult']['id']],
+                                                      ['escape' => false]) ?>
                         <? else: ?>
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']]) ?>">
-                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "完了にする") ?></span></i></a>
+                            <?= $this->Form->postLink('<i class="fa fa-pencil"><span class="ml_2px">' .
+                                                      __d('gl', "完了にする") . '</span></i>',
+                                                      ['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']],
+                                                      ['escape' => false]) ?>
                         <?endif; ?>
                     </li>
                     <li role="presentation">

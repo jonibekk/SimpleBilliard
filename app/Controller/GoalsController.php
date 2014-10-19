@@ -274,6 +274,7 @@ class GoalsController extends AppController
 
     public function complete($key_result_id)
     {
+        $this->request->allowMethod('post');
         try {
             if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
@@ -289,6 +290,7 @@ class GoalsController extends AppController
 
     public function incomplete($key_result_id)
     {
+        $this->request->allowMethod('post');
         try {
             if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
