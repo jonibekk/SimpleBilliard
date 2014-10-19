@@ -41,6 +41,7 @@ class KeyResult extends AppModel
     }
 
     public $priority_list = [
+        0 => 0,
         1 => 1,
         2 => 2,
         3 => 3,
