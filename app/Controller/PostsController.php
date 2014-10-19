@@ -339,6 +339,7 @@ class PostsController extends AppController
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
             $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
         }
+        $this->set('avail_sub_menu', true);
         $this->set(compact('select2_default', 'circle_members', 'my_goals', 'collabo_goals', 'follow_goals'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
