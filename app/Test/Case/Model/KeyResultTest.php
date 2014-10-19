@@ -197,6 +197,26 @@ class KeyResultTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
+    function testComplete()
+    {
+        $this->setDefault();
+        try {
+            $this->KeyResult->complete(999999);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testIncomplete()
+    {
+        $this->setDefault();
+        try {
+            $this->KeyResult->incomplete(999999);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
     function setDefault()
     {
         $this->KeyResult->my_uid = 1;

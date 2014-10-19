@@ -525,6 +525,30 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testCompleteSuccess()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/complete/1', ['method' => 'POST']);
+    }
+
+    function testIncompleteSuccess()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/incomplete/1', ['method' => 'POST']);
+    }
+
+    function testCompleteFail()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/complete/9999999', ['method' => 'POST']);
+    }
+
+    function testIncompleteFail()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/incomplete/9999999999', ['method' => 'POST']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**
