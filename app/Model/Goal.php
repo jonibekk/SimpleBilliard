@@ -210,10 +210,11 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
+
      *
-     * @param $skr_id
+*@param $skr_id
      *
-*@return bool
+     * @return bool
      */
     function isPermittedCollaboFromSkr($skr_id)
     {
@@ -277,6 +278,7 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
+                        'KeyResult.special_flg' => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
@@ -446,6 +448,7 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
+                        'KeyResult.special_flg' => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ],
