@@ -207,6 +207,10 @@
 
 body {
     background: #e5e5e5;
+    padding: 60px 0 0;
+}
+
+.avail-sub-menu {
     padding: 100px 0 0;
 }
 
@@ -323,7 +327,7 @@ footer p {
     padding-top: 1px;
 }
 
-.pt_12px{
+.pt_12px {
     padding-top: 12px;
 }
 
@@ -558,7 +562,7 @@ footer p {
     text-decoration: none !important;
 }
 
-.height_40px{
+.height_40px {
     height: 40px;
 }
 
@@ -1724,7 +1728,7 @@ ul.gl-input-images > li {
     margin: auto;
 }
 
-.header-logo-img{
+.header-logo-img {
     margin-left: 8px;
     margin-right: 8px;
 }
@@ -2350,7 +2354,7 @@ ul.gl-input-images > li {
     border-bottom: 4px solid #6d8fce;
 }
 
-.sp-feed-link{
+.sp-feed-link {
     cursor: pointer;
 }
 
@@ -2363,7 +2367,6 @@ ul.gl-input-images > li {
 /*=== メディアクエリで切り替え ===*/
 /*Extrasmall*/
 @media (min-width: 480px) {
-
     .container {
         width: 97.5%;
     }
@@ -2401,7 +2404,6 @@ ul.gl-input-images > li {
 
 /*Small*/
 @media (min-width: 768px) {
-
     #gotop {
         position: fixed;
         bottom: -100px;
@@ -2536,6 +2538,10 @@ ul.gl-input-images > li {
         padding: 60px 0 0;
     }
 
+    .avail-sub-menu {
+        padding: 60px 0 0;
+    }
+
     .container {
         width: 972px;
     }
@@ -2630,6 +2636,7 @@ ul.gl-input-images > li {
     .gl-s2-post-dropdown {
         width: 386px !important;
     }
+
     .sidebar-setting {
         top: 50px;
     }
