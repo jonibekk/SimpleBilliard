@@ -171,9 +171,19 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goal = $this->_getGoalsCommonMock();
         $data = [
-            'Goal' => [
+            'Goal'      => [
                 'purpose' => 'test',
             ],
+            'KeyResult' => [
+                [
+                    'name'         => 'test',
+                    'target_value' => 1,
+                    'start_value'  => 0,
+                    'value_unit'   => 2,
+                    'start_date'   => '2014/07/07',
+                    'end_date'     => '2014/10/07',
+                ]
+            ]
         ];
         $Goal->Goal->save($data);
         $id = $Goal->Goal->getLastInsertID();

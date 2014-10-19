@@ -168,7 +168,18 @@ class Goal extends AppModel
                 $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
                                                               strtotime($data['KeyResult'][0]['end_date'])) - ($this->me['timezone'] * 60 * 60);
             }
+            //新規の場合はデフォルトKRを追加
+            if (!isset($data['KeyResult'][0]['id']) && isset($data['Goal']['id'])) {
+                $kr = $data['KeyResult'][0];
+                $kr['goal_id'] = $data['Goal']['id'];
+                $kr['name'] = __d('gl', "タイトルを入れてください");
+                $kr['special_flg'] = false;
+                $kr['priority'] = 1;
+                $this->KeyResult->create();
+                $this->KeyResult->save($kr);
+            }
         }
+        $this->create();
         $res = $this->saveAll($data);
         //SKRユーザの保存
         if ($this->KeyResult->getLastInsertID()) {
@@ -199,11 +210,10 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
-
      *
-*@param $skr_id
+     * @param $skr_id
      *
-     * @return bool
+*@return bool
      */
     function isPermittedCollaboFromSkr($skr_id)
     {
