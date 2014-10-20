@@ -94,6 +94,10 @@
     margin-right: 0;
 }
 
+.has-feedback .form-control{
+    padding-right: 0;
+}
+
 /*==/ normalize bootstrap ===*/
 
 /*=== normalize select2 3.5.1 ===*/
@@ -283,6 +287,11 @@ footer p {
 
 .ml_16px {
     margin-left: 16px;
+}
+
+.mlr_5px{
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .mb-pb_5px {
