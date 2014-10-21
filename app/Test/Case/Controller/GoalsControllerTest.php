@@ -443,12 +443,21 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add_key_result/1', ['method' => 'POST', 'data' => $data]);
     }
 
-    function testAjaxGetAddKeyResultModal()
+    function testAjaxGetAddKeyResultModalSuccess()
     {
         $this->_getGoalsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_add_key_result_modal/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetAddKeyResultModalFail()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_add_key_result_modal/' . 99999, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -467,19 +476,12 @@ class GoalsControllerTest extends ControllerTestCase
 
         $data = [];
         $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
-        $data = [
-            'KeyResult' => [
-                'id'         => 1,
-                'value_unit' => 2,
-                'start_date' => time(),
-                'end_date'   => time()
-            ]
-        ];
-        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+        $kr_id = $this->_getNewKr($Goals);
+        $this->testAction('/goals/edit_key_result/' . $kr_id, ['method' => 'PUT', 'data' => $data]);
 
-        $Goals->Goal->KeyResult->id = 1;
+        $Goals->Goal->KeyResult->id = $kr_id;
         $Goals->Goal->KeyResult->saveField('user_id', 2);
-        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+        $this->testAction('/goals/edit_key_result/' . $kr_id, ['method' => 'PUT', 'data' => $data]);
     }
 
     function testDeleteKeyResultSuccess()
