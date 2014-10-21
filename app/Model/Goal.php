@@ -214,10 +214,11 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
+
      *
-     * @param $skr_id
+*@param $skr_id
      *
-*@return bool
+     * @return bool
      */
     function isPermittedCollaboFromSkr($skr_id)
     {

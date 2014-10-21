@@ -166,9 +166,6 @@ class GoalsController extends AppController
         try {
             $this->Goal->isPermittedCollaboFromSkr($key_result_id);
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
-            if (empty($key_result)) {
-                throw new RuntimeException();
-            }
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
@@ -446,9 +443,6 @@ class GoalsController extends AppController
             $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
             $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
             $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
-            if (empty($skr)) {
-                throw new RuntimeException();
-            }
             $this->Goal->isPermittedCollaboFromSkr($skr['KeyResult']['id']);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
@@ -498,9 +492,6 @@ class GoalsController extends AppController
             }
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
-            if (empty($skr)) {
-                throw new RuntimeException();
-            }
             $this->Goal->isPermittedCollaboFromSkr($skr['KeyResult']['id']);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
