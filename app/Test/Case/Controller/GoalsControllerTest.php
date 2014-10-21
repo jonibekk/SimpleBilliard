@@ -539,10 +539,13 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $kr = [
-            'user_id' => 1,
-            'team_id' => 1,
-            'goal_id' => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => 1,
+            'start_date' => time(),
+            'end_date'   => time(),
         ];
+        $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
         $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
         $this->testAction('/goals/complete/' . $kr_id . "/1", ['method' => 'POST']);
@@ -553,10 +556,13 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
         $Goals = $this->_getGoalsCommonMock();
         $kr = [
-            'user_id' => 1,
-            'team_id' => 1,
-            'goal_id' => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => 1,
+            'start_date' => time(),
+            'end_date'   => time(),
         ];
+        $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
         $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
         $this->testAction('/goals/incomplete/' . $kr_id, ['method' => 'POST']);
@@ -592,6 +598,7 @@ class GoalsControllerTest extends ControllerTestCase
             'start_date' => time(),
             'end_date'   => time(),
         ];
+        $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
         $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
