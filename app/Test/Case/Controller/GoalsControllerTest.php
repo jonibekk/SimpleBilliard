@@ -499,23 +499,9 @@ class GoalsControllerTest extends ControllerTestCase
     function testAjaxGetEditKeyResultModalSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $skr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 1,
-            'special_flg' => true,
-            'start_date'  => time(),
-            'end_date'    => time(),
-        ];
-        $Goals->Goal->KeyResult->create();
-        $Goals->Goal->KeyResult->save($skr);
-        $kr_user = [
-            'user_id'       => 1,
-            'key_result_id' => $Goals->Goal->KeyResult->getLastInsertID(),
-        ];
-        $Goals->Goal->KeyResult->KeyResultUser->save($kr_user);
+        $kr_id = $this->_getNewKr($Goals);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . 1, ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . $kr_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -538,16 +524,7 @@ class GoalsControllerTest extends ControllerTestCase
     function testCompleteSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $kr = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'goal_id'    => 1,
-            'start_date' => time(),
-            'end_date'   => time(),
-        ];
-        $Goals->Goal->KeyResult->create();
-        $Goals->Goal->KeyResult->save($kr);
-        $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $kr_id = $this->_getNewKr($Goals);
         $this->testAction('/goals/complete/' . $kr_id . "/1", ['method' => 'POST']);
     }
 
@@ -555,16 +532,7 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $this->_getGoalsCommonMock();
         $Goals = $this->_getGoalsCommonMock();
-        $kr = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'goal_id'    => 1,
-            'start_date' => time(),
-            'end_date'   => time(),
-        ];
-        $Goals->Goal->KeyResult->create();
-        $Goals->Goal->KeyResult->save($kr);
-        $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $kr_id = $this->_getNewKr($Goals);
         $this->testAction('/goals/incomplete/' . $kr_id, ['method' => 'POST']);
     }
 
@@ -591,19 +559,48 @@ class GoalsControllerTest extends ControllerTestCase
     function testAjaxGetLastKrConfirmSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
+        $kr_id = $this->_getNewKr($Goals);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_last_kr_confirm/' . $kr_id, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    /**
+     * @param $Goals
+     */
+    function _getNewKr($Goals)
+    {
+        $skr = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 1,
+            'name'        => 'test',
+            'special_flg' => true,
+            'start_date'  => time(),
+            'end_date'    => time(),
+        ];
+        $Goals->Goal->KeyResult->create();
+        $Goals->Goal->KeyResult->save($skr);
+        $skr_id = $Goals->Goal->KeyResult->getLastInsertID();
         $kr = [
             'user_id'    => 1,
             'team_id'    => 1,
             'goal_id'    => 1,
+            'name'       => 'test',
             'start_date' => time(),
             'end_date'   => time(),
         ];
         $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
         $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_last_kr_confirm/' . $kr_id, ['method' => 'GET']);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+        $kr_user = [
+            'user_id'       => 1,
+            'team_id'       => 1,
+            'key_result_id' => $skr_id,
+        ];
+        $Goals->Goal->KeyResult->KeyResultUser->create();
+        $Goals->Goal->KeyResult->KeyResultUser->save($kr_user);
+        return $kr_id;
     }
 
     function _getGoalsCommonMock()
