@@ -13,8 +13,8 @@
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
         <div class="col col-xxs-12 bd-t ptb_5px">
-            <i class="fa fa-check-circle col col-xxs-2 font_40px tap-btn"></i>
-            <div class="col col-xxs-9"><span class="line-numbers ln_1 tap-btn-text"><?= h($kr['KeyResult']['name']) ?></span>
+            <i class=" fa fa-check-circle font_40px pull-left mr_5px tap-btn text-align_c check-on"></i>
+            <div class="pull-left mw_75per"><span class="line-numbers ln_1 tap-btn-text font_verydark fin-kr"><?= h($kr['KeyResult']['name']) ?></span>
                 <i class="fa fa-check-circle"><span class="ml_2px">5</span></i>
             </div>
             <div class="pull-right dropdown">

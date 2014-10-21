@@ -395,6 +395,10 @@ footer p {
     -ms-line-clamp: 2;
 }
 
+.mw_75per{
+    max-width: 75%;
+}
+
 /*/行数の指定*/
 
 /*position*/
@@ -598,6 +602,24 @@ footer p {
 }
 
 /*/fontの設定*/
+
+/*KR*/
+.check-on{
+    color: #00c952;
+}
+
+.check-off{
+    color: #fff;
+}
+
+.check-fin{
+    visibility: hidden;
+}
+
+.fin-kr{
+    color: #808080;
+}
+/*/KR*/
 
 /*== Modal Settings ==*/
 .modal-label {
