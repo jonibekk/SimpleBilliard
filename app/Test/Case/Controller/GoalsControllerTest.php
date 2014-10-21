@@ -480,7 +480,8 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
 
         $data = [];
-        $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
+        $kr_id = $this->_getNewKr($Goals);
+        $this->testAction('/goals/edit_key_result/' . $kr_id, ['method' => 'PUT', 'data' => $data]);
         $kr_id = $this->_getNewKr($Goals);
         $data = [
             'KeyResult' => [
