@@ -291,23 +291,21 @@ class KeyResult extends AppModel
 
     /**
      * キーリザルト変更権限
-     * リーダーもしくは作成者ならtrueを返す
+     * コラボレータならtrueを返す
      *
-     * @param $key_result_id
+*@param $key_result_id
+
      *
-     * @return bool
+*@return bool
      */
     function isPermitted($key_result_id)
     {
-        if (!$this->isOwner($this->my_uid, $key_result_id)) {
-            $res = $this->findById($key_result_id);
-            if (!isset($res['KeyResult']['goal_id'])
-                || !$this->Goal->isOwner($this->my_uid, $res['KeyResult']['goal_id'])
-            ) {
-                return false;
-            }
+        $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+        $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
+        if (empty($skr)) {
+            throw new RuntimeException(__d('gl', "ゴールが存在しません。"));
         }
-        return true;
+        return $this->Goal->KeyResult->KeyResultUser->isCollaborated($skr['KeyResult']['id']);
     }
 
     function saveEdit($data)
