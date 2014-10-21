@@ -282,12 +282,7 @@ class GoalsController extends AppController
             if ($with_goal) {
                 $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
                 $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
-                if (empty($skr)) {
-                    throw new RuntimeException(__d('gl', "ゴールが存在しません。"));
-                }
-                else {
-                    $this->Goal->KeyResult->complete($skr['KeyResult']['id']);
-                }
+                $this->Goal->KeyResult->complete($skr['KeyResult']['id']);
                 $this->Pnotify->outSuccess(__d('gl', "ゴールを完了にしました。"));
             }
             else {
@@ -313,12 +308,7 @@ class GoalsController extends AppController
             $this->Goal->KeyResult->incomplete($key_result_id);
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
-            if (empty($skr)) {
-                throw new RuntimeException(__d('gl', "ゴールが存在しません。"));
-            }
-            else {
-                $this->Goal->KeyResult->incomplete($skr['KeyResult']['id']);
-            }
+            $this->Goal->KeyResult->incomplete($skr['KeyResult']['id']);
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
             $this->Pnotify->outError($e->getMessage());
