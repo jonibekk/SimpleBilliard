@@ -574,6 +574,31 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/incomplete/9999999999', ['method' => 'POST']);
     }
 
+    function testAjaxGetLastKrConfirmFail()
+    {
+        $this->_getGoalsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_last_kr_confirm/' . 999999, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetLastKrConfirmSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $kr = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => 1,
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $Goals->Goal->KeyResult->save($kr);
+        $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_last_kr_confirm/' . $kr_id, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function _getGoalsCommonMock()
     {
         /**
