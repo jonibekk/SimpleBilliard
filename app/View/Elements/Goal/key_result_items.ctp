@@ -12,8 +12,11 @@
 <!-- START app/View/Elements/Goals/key_result_items.ctp -->
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
-        <div class="col col-xxs-12">
-            <?= h($kr['KeyResult']['name']) ?>
+        <div class="col col-xxs-12 bd-t ptb_5px">
+            <i class="fa fa-check-circle col col-xxs-2 font_40px tap-btn"></i>
+            <div class="col col-xxs-9"><span class="line-numbers ln_1 tap-btn-text"><?= h($kr['KeyResult']['name']) ?></span>
+                <i class="fa fa-check-circle"><span class="ml_2px">5</span></i>
+            </div>
             <div class="pull-right dropdown">
                 <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
                    data-toggle="dropdown"

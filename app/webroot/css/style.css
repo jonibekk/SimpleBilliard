@@ -424,6 +424,14 @@ footer p {
 
 /*/ text-align */
 
+.tap-btn{
+    font-size: 40px;
+    line-height: 40px;
+}
+.tap-btn-text{
+    line-height: 20px;
+    vertical-align: top;
+}
 
 /*Fontの指定*/
 .font_11px {
@@ -444,6 +452,10 @@ footer p {
 
 .font_33px {
     font-size: 33px;
+}
+
+.font_40px{
+    font-size: 40px;
 }
 
 .font_bold {
@@ -612,6 +624,11 @@ footer p {
 /*/アイコンを揃える*/
 
 /* ボーダー */
+.bd-t {
+    border-top: 1px solid #ccc;
+}
+
+
 .bd-b {
     border-bottom: 1px solid #f0f0f0;
 }
