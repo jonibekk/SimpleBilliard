@@ -477,6 +477,14 @@ class GoalsControllerTest extends ControllerTestCase
         $data = [];
         $this->testAction('/goals/edit_key_result/' . 1, ['method' => 'PUT', 'data' => $data]);
         $kr_id = $this->_getNewKr($Goals);
+        $data = [
+            'KeyResult' => [
+                'id'         => $kr_id,
+                'value_unit' => 2,
+                'start_date' => time(),
+                'end_date'   => time()
+            ]
+        ];
         $this->testAction('/goals/edit_key_result/' . $kr_id, ['method' => 'PUT', 'data' => $data]);
 
         $Goals->Goal->KeyResult->id = $kr_id;
