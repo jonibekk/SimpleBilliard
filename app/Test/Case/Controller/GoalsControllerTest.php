@@ -465,8 +465,13 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $kr_id = $this->_getNewKr($Goals);
+        $kr = [
+            'id'        => $kr_id,
+            'completed' => time(),
+        ];
+        $Goals->Goal->KeyResult->save($kr);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_key_results/' . $kr_id, ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_key_results/' . 1, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
