@@ -119,13 +119,16 @@ class Goal extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Post'             => [
+        'Post'                => [
             'dependent' => true,
         ],
-        'KeyResult'        => [
+        'KeyResult'           => [
             'dependent' => true,
         ],
-        'SpecialKeyResult' => [
+        'SpecialKeyResult'    => [
+            'className' => 'KeyResult'
+        ],
+        'IncompleteKeyResult' => [
             'className' => 'KeyResult'
         ],
     ];
@@ -211,11 +214,10 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
-
      *
-*@param $skr_id
+     * @param $skr_id
      *
-     * @return bool
+*@return bool
      */
     function isPermittedCollaboFromSkr($skr_id)
     {
