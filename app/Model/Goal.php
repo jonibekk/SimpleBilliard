@@ -214,9 +214,8 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
-
      *
-*@param $skr_id
+     * @param $skr_id
      *
      * @return bool
      */
@@ -282,7 +281,7 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg' => false,
+                        'KeyResult.special_flg'   => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
@@ -452,7 +451,7 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg' => false,
+                        'KeyResult.special_flg'   => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ],
@@ -577,7 +576,7 @@ class Goal extends AppModel
         $goal_ids = $this->KeyResult->getGoalIdsExistsSkr($start_date, $end_date);
         $options = [
             'conditions' => [
-                'Goal.id' => $goal_ids,
+                'Goal.id'      => $goal_ids,
                 'Goal.team_id' => $this->current_team_id,
             ],
             'order'      => ['Goal.modified desc'],

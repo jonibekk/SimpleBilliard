@@ -537,14 +537,29 @@ class GoalsControllerTest extends ControllerTestCase
 
     function testCompleteSuccess()
     {
-        $this->_getGoalsCommonMock();
-        $this->testAction('/goals/complete/1', ['method' => 'POST']);
+        $Goals = $this->_getGoalsCommonMock();
+        $kr = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($kr);
+        $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $this->testAction('/goals/complete/' . $kr_id . "/1", ['method' => 'POST']);
     }
 
     function testIncompleteSuccess()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/incomplete/1', ['method' => 'POST']);
+        $Goals = $this->_getGoalsCommonMock();
+        $kr = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => 1,
+        ];
+        $Goals->Goal->KeyResult->save($kr);
+        $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $this->testAction('/goals/incomplete/' . $kr_id, ['method' => 'POST']);
     }
 
     function testCompleteFail()
