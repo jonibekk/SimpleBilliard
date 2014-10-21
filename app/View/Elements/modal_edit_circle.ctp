@@ -65,7 +65,7 @@
             ?>
             <?php echo $this->Form->input('public_flg', array(
                 'type'    => 'radio',
-                'before'  => '<label class="col col-md-3 control-label modal-label">' . __d('gl',
+                'before'  => '<label class="col col-sm-3 control-label modal-label">' . __d('gl',
                                                                                             'プライバシー') . '</label>',
                 'legend'  => false,
                 'class'   => false,
