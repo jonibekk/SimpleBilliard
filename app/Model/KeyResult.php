@@ -95,19 +95,6 @@ class KeyResult extends AppModel
     ];
 
     public $hasMany = [
-        'Collaborator' => [
-            'dependent' => true,
-        ],
-        'Leader'       => [
-            'className' => 'Collaborator',
-        ],
-        'MyCollabo'    => [
-            'className' => 'Collaborator',
-        ],
-        'Follower',
-        'MyFollow'     => [
-            'className' => 'Follower',
-        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)

@@ -131,6 +131,19 @@ class Goal extends AppModel
         'IncompleteKeyResult' => [
             'className' => 'KeyResult'
         ],
+        'Collaborator'        => [
+            'dependent' => true,
+        ],
+        'Leader'              => [
+            'className' => 'Collaborator',
+        ],
+        'MyCollabo'           => [
+            'className' => 'Collaborator',
+        ],
+        'Follower',
+        'MyFollow'            => [
+            'className' => 'Follower',
+        ],
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -523,7 +536,7 @@ class Goal extends AppModel
                     ],
                     'MyCollabo'    => [
                         'conditions' => [
-                            'MyCollabo.type' => Collaborator::TYPE_COLLABORATOR,
+                            'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
                             'MyCollabo.user_id' => $this->my_uid,
                         ],
                         'fields'     => [
@@ -617,7 +630,7 @@ class Goal extends AppModel
                     ],
                     'MyCollabo'    => [
                         'conditions' => [
-                            'MyCollabo.type' => Collaborator::TYPE_COLLABORATOR,
+                            'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
                             'MyCollabo.user_id' => $this->my_uid,
                         ],
                         'fields'     => [

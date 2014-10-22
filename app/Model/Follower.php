@@ -31,7 +31,7 @@ class Follower extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'KeyResult',
+        'Goal',
         'User',
     ];
 
