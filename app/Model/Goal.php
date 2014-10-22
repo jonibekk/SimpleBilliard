@@ -206,7 +206,7 @@ class Goal extends AppModel
         $res = $this->saveAll($data);
         //SKRユーザの保存
         if ($this->KeyResult->getLastInsertID()) {
-            $this->KeyResult->Collaborator->add($this->KeyResult->getLastInsertID(), null, Collaborator::TYPE_OWNER);
+            $this->Collaborator->add($this->KeyResult->getLastInsertID(), null, Collaborator::TYPE_OWNER);
         }
         return $res;
     }
@@ -245,7 +245,7 @@ class Goal extends AppModel
             throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
         }
 
-        if (!$this->KeyResult->Collaborator->isCollaborated($skr_id)) {
+        if (!$this->Collaborator->isCollaborated($skr_id)) {
             throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
         }
         return true;
