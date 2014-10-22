@@ -17,7 +17,7 @@ class KeyResultTest extends CakeTestCase
     public $fixtures = array(
         'app.cake_session',
         'app.key_result',
-        'app.key_result_user',
+        'app.collaborator',
         'app.follower',
         'app.team',
         'app.badge',
@@ -152,8 +152,8 @@ class KeyResultTest extends CakeTestCase
             'user_id'       => 1,
             'team_id'       => 1,
         ];
-        $this->KeyResult->KeyResultUser->create();
-        $this->KeyResult->KeyResultUser->save($kr_user);
+        $this->KeyResult->Collaborator->create();
+        $this->KeyResult->Collaborator->save($kr_user);
         $kr = [
             'user_id'     => 1,
             'team_id'     => 1,
@@ -240,8 +240,8 @@ class KeyResultTest extends CakeTestCase
         $this->KeyResult->current_team_id = 1;
         $this->KeyResult->Team->my_uid = 1;
         $this->KeyResult->Team->current_team_id = 1;
-        $this->KeyResult->KeyResultUser->my_uid = 1;
-        $this->KeyResult->KeyResultUser->current_team_id = 1;
+        $this->KeyResult->Collaborator->my_uid = 1;
+        $this->KeyResult->Collaborator->current_team_id = 1;
     }
 
 }

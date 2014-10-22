@@ -1,6 +1,6 @@
 <?php
 
-class AddDescriptionOnKeyResultUsers0930 extends CakeMigration
+class AddDescriptionOnCollaborators0930 extends CakeMigration
 {
 
     /**

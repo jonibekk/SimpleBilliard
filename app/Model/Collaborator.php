@@ -2,13 +2,13 @@
 App::uses('AppModel', 'Model');
 
 /**
- * KeyResultUser Model
+ * Collaborator Model
  *
  * @property Team      $Team
  * @property KeyResult $KeyResult
  * @property User      $User
  */
-class KeyResultUser extends AppModel
+class Collaborator extends AppModel
 {
     /**
      * タイプ
@@ -82,18 +82,18 @@ class KeyResultUser extends AppModel
 
     function edit($data, $uid = null, $type = self::TYPE_COLLABORATOR)
     {
-        if (!isset($data['KeyResultUser']) || empty($data['KeyResultUser'])) {
+        if (!isset($data['Collaborator']) || empty($data['Collaborator'])) {
             return false;
         }
         if (!$uid) {
             $uid = $this->my_uid;
         }
-        $data['KeyResultUser']['user_id'] = $uid;
-        $data['KeyResultUser']['team_id'] = $this->current_team_id;
-        $data['KeyResultUser']['type'] = $type;
+        $data['Collaborator']['user_id'] = $uid;
+        $data['Collaborator']['team_id'] = $this->current_team_id;
+        $data['Collaborator']['type'] = $type;
 
         $res = $this->save($data);
-        $this->KeyResult->Follower->deleteFollower($data['KeyResultUser']['key_result_id']);
+        $this->KeyResult->Follower->deleteFollower($data['Collaborator']['key_result_id']);
         return $res;
     }
 
@@ -103,7 +103,7 @@ class KeyResultUser extends AppModel
             'conditions' => [
                 'user_id' => $user_id,
                 'team_id' => $this->current_team_id,
-                'type'    => KeyResultUser::TYPE_COLLABORATOR,
+                'type'    => Collaborator::TYPE_COLLABORATOR,
             ],
             'fields'     => [
                 'key_result_id'
@@ -120,8 +120,8 @@ class KeyResultUser extends AppModel
         }
         $options = [
             'conditions' => [
-                'KeyResultUser.key_result_id' => $key_result_id,
-                'KeyResultUser.user_id'       => $uid,
+                'Collaborator.key_result_id' => $key_result_id,
+                'Collaborator.user_id'       => $uid,
             ],
         ];
         $res = $this->find('first', $options);

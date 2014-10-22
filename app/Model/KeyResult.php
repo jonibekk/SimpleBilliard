@@ -3,11 +3,12 @@ App::uses('AppModel', 'Model');
 
 /**
  * KeyResult Model
+
  *
- * @property Team              $Team
+*@property Team              $Team
  * @property Goal              $Goal
  * @property Follower          $Follower
- * @property KeyResultUser     $KeyResultUser
+ * @property Collaborator      $Collaborator
  */
 class KeyResult extends AppModel
 {
@@ -95,20 +96,20 @@ class KeyResult extends AppModel
     ];
 
     public $hasMany = [
-        'KeyResultUser' => [
+        'Collaborator' => [
             'dependent' => true,
         ],
-        'Leader'        => [
-            'className' => 'KeyResultUser',
+        'Leader'       => [
+            'className' => 'Collaborator',
         ],
-        'Collaborator'  => [
-            'className' => 'KeyResultUser',
+        'Collaborator' => [
+            'className' => 'Collaborator',
         ],
-        'MyCollabo'     => [
-            'className' => 'KeyResultUser',
+        'MyCollabo'    => [
+            'className' => 'Collaborator',
         ],
         'Follower',
-        'MyFollow'      => [
+        'MyFollow'     => [
             'className' => 'Follower',
         ],
     ];
@@ -121,7 +122,7 @@ class KeyResult extends AppModel
 
     function getCollaboGoalList($user_id)
     {
-        $key_result_ids = $this->KeyResultUser->getCollaboKeyResultList($user_id);
+        $key_result_ids = $this->Collaborator->getCollaboKeyResultList($user_id);
         $options = [
             'conditions' => [
                 'id' => $key_result_ids,
@@ -198,7 +199,7 @@ class KeyResult extends AppModel
             'contain'    => [
                 'MyCollabo' => [
                     'conditions' => [
-                        'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                        'MyCollabo.type' => Collaborator::TYPE_COLLABORATOR,
                         'MyCollabo.user_id' => $this->my_uid,
                     ],
                     'fields'     => [
@@ -307,7 +308,7 @@ class KeyResult extends AppModel
         if (empty($skr)) {
             return false;
         }
-        return $this->Goal->KeyResult->KeyResultUser->isCollaborated($skr['KeyResult']['id']);
+        return $this->Goal->KeyResult->Collaborator->isCollaborated($skr['KeyResult']['id']);
     }
 
     function saveEdit($data)

@@ -18,7 +18,7 @@
             <h4 class="modal-title"><?= empty($skr['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集") ?></h4>
         </div>
         <?=
-        $this->Form->create('KeyResultUser', [
+        $this->Form->create('Collaborator', [
             'url'           => ['controller' => 'goals', 'action' => 'edit_collabo'],
             'inputDefaults' => [
                 'div'       => 'form-group',

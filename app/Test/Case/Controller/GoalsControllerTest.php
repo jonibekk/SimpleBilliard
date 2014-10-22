@@ -48,7 +48,7 @@ class GoalsControllerTest extends ControllerTestCase
         'app.local_name',
         'app.goal_category',
         'app.key_result',
-        'app.key_result_user',
+        'app.collaborator',
     );
 
     function testIndex()
@@ -287,7 +287,7 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $this->_getGoalsCommonMock();
         $data = [
-            'KeyResultUser' => [
+            'Collaborator' => [
                 'role'          => 'test',
                 'description'   => 'test',
                 'key_result_id' => 1,
@@ -313,8 +313,8 @@ class GoalsControllerTest extends ControllerTestCase
             'user_id'       => 1,
             'key_result_id' => 1,
         ];
-        $Goals->Goal->KeyResult->KeyResultUser->save($data);
-        $key_result_user_id = $Goals->Goal->KeyResult->KeyResultUser->getLastInsertID();
+        $Goals->Goal->KeyResult->Collaborator->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->Collaborator->getLastInsertID();
         $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
     }
 
@@ -334,8 +334,8 @@ class GoalsControllerTest extends ControllerTestCase
             'user_id'       => 99999,
             'key_result_id' => 1,
         ];
-        $Goals->Goal->KeyResult->KeyResultUser->save($data);
-        $key_result_user_id = $Goals->Goal->KeyResult->KeyResultUser->getLastInsertID();
+        $Goals->Goal->KeyResult->Collaborator->save($data);
+        $key_result_user_id = $Goals->Goal->KeyResult->Collaborator->getLastInsertID();
         $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
     }
 
@@ -621,8 +621,8 @@ class GoalsControllerTest extends ControllerTestCase
             'team_id'       => 1,
             'key_result_id' => $skr_id,
         ];
-        $Goals->Goal->KeyResult->KeyResultUser->create();
-        $Goals->Goal->KeyResult->KeyResultUser->save($kr_user);
+        $Goals->Goal->KeyResult->Collaborator->create();
+        $Goals->Goal->KeyResult->Collaborator->save($kr_user);
         return $kr_id;
     }
 
@@ -690,9 +690,9 @@ class GoalsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->KeyResult->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->KeyResult->KeyResultUser->my_uid = '1';
+        $Goals->Goal->KeyResult->Collaborator->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->KeyResult->KeyResultUser->current_team_id = '1';
+        $Goals->Goal->KeyResult->Collaborator->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->KeyResult->Follower->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

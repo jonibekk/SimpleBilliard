@@ -1,6 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('KeyResultUser', 'Model');
+App::uses('Collaborator', 'Model');
 App::uses('KeyResult', 'Model');
 
 /**
@@ -191,7 +191,7 @@ class Goal extends AppModel
         $res = $this->saveAll($data);
         //SKRユーザの保存
         if ($this->KeyResult->getLastInsertID()) {
-            $this->KeyResult->KeyResultUser->add($this->KeyResult->getLastInsertID(), null, KeyResultUser::TYPE_OWNER);
+            $this->KeyResult->Collaborator->add($this->KeyResult->getLastInsertID(), null, Collaborator::TYPE_OWNER);
         }
         return $res;
     }
@@ -230,7 +230,7 @@ class Goal extends AppModel
             throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
         }
 
-        if (!$this->KeyResult->KeyResultUser->isCollaborated($skr_id)) {
+        if (!$this->KeyResult->Collaborator->isCollaborated($skr_id)) {
             throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
         }
         return true;
@@ -510,20 +510,20 @@ class Goal extends AppModel
                         'SpecialKeyResult.end_date <'    => $end_date,
                     ],
                     'Leader'       => [
-                        'conditions' => ['Leader.type' => KeyResultUser::TYPE_OWNER],
+                        'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                         'User'       => [
                             'fields' => $this->User->profileFields,
                         ]
                     ],
                     'Collaborator' => [
-                        'conditions' => ['Collaborator.type' => KeyResultUser::TYPE_COLLABORATOR],
+                        'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
                         'User'       => [
                             'fields' => $this->User->profileFields,
                         ]
                     ],
                     'MyCollabo'    => [
                         'conditions' => [
-                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.type' => Collaborator::TYPE_COLLABORATOR,
                             'MyCollabo.user_id' => $this->my_uid,
                         ],
                         'fields'     => [
@@ -604,20 +604,20 @@ class Goal extends AppModel
                         'SpecialKeyResult.end_date <'    => $end_date,
                     ],
                     'Leader'       => [
-                        'conditions' => ['Leader.type' => KeyResultUser::TYPE_OWNER],
+                        'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                         'User'       => [
                             'fields' => $this->User->profileFields,
                         ]
                     ],
                     'Collaborator' => [
-                        'conditions' => ['Collaborator.type' => KeyResultUser::TYPE_COLLABORATOR],
+                        'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
                         'User'       => [
                             'fields' => $this->User->profileFields,
                         ]
                     ],
                     'MyCollabo'    => [
                         'conditions' => [
-                            'MyCollabo.type'    => KeyResultUser::TYPE_COLLABORATOR,
+                            'MyCollabo.type' => Collaborator::TYPE_COLLABORATOR,
                             'MyCollabo.user_id' => $this->my_uid,
                         ],
                         'fields'     => [
