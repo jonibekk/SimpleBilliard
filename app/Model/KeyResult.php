@@ -3,9 +3,8 @@ App::uses('AppModel', 'Model');
 
 /**
  * KeyResult Model
-
  *
-*@property Team              $Team
+ * @property Team              $Team
  * @property Goal              $Goal
  * @property Follower          $Follower
  * @property Collaborator      $Collaborator
@@ -102,9 +101,6 @@ class KeyResult extends AppModel
         'Leader'       => [
             'className' => 'Collaborator',
         ],
-        'Collaborator' => [
-            'className' => 'Collaborator',
-        ],
         'MyCollabo'    => [
             'className' => 'Collaborator',
         ],
@@ -199,7 +195,7 @@ class KeyResult extends AppModel
             'contain'    => [
                 'MyCollabo' => [
                     'conditions' => [
-                        'MyCollabo.type' => Collaborator::TYPE_COLLABORATOR,
+                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
                         'MyCollabo.user_id' => $this->my_uid,
                     ],
                     'fields'     => [

@@ -1,6 +1,6 @@
 <?php
 
-class AddCollaborators0902 extends CakeMigration
+class AddKeyResultUsers0902 extends CakeMigration
 {
 
     /**
