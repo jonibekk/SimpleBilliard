@@ -359,8 +359,8 @@ class GoalTest extends CakeTestCase
             'team_id'       => 1,
             'key_result_id' => $skr_id,
         ];
-        $this->Goal->KeyResult->Collaborator->create();
-        $this->Goal->KeyResult->Collaborator->save($kr_user);
+        $this->Goal->Collaborator->create();
+        $this->Goal->Collaborator->save($kr_user);
         return $kr_id;
     }
 
@@ -372,8 +372,8 @@ class GoalTest extends CakeTestCase
         $this->Goal->Team->current_team_id = 1;
         $this->Goal->KeyResult->my_uid = 1;
         $this->Goal->KeyResult->current_team_id = 1;
-        $this->Goal->KeyResult->Collaborator->my_uid = 1;
-        $this->Goal->KeyResult->Collaborator->current_team_id = 1;
+        $this->Goal->Collaborator->my_uid = 1;
+        $this->Goal->Collaborator->current_team_id = 1;
     }
 
 }

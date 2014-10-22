@@ -313,8 +313,8 @@ class GoalsControllerTest extends ControllerTestCase
             'user_id'       => 1,
             'key_result_id' => 1,
         ];
-        $Goals->Goal->KeyResult->Collaborator->save($data);
-        $key_result_user_id = $Goals->Goal->KeyResult->Collaborator->getLastInsertID();
+        $Goals->Goal->Collaborator->save($data);
+        $key_result_user_id = $Goals->Goal->Collaborator->getLastInsertID();
         $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
     }
 
@@ -334,8 +334,8 @@ class GoalsControllerTest extends ControllerTestCase
             'user_id'       => 99999,
             'key_result_id' => 1,
         ];
-        $Goals->Goal->KeyResult->Collaborator->save($data);
-        $key_result_user_id = $Goals->Goal->KeyResult->Collaborator->getLastInsertID();
+        $Goals->Goal->Collaborator->save($data);
+        $key_result_user_id = $Goals->Goal->Collaborator->getLastInsertID();
         $this->testAction('/goals/delete_collabo/' . $key_result_user_id, ['method' => 'POST']);
     }
 
@@ -621,8 +621,8 @@ class GoalsControllerTest extends ControllerTestCase
             'team_id'       => 1,
             'key_result_id' => $skr_id,
         ];
-        $Goals->Goal->KeyResult->Collaborator->create();
-        $Goals->Goal->KeyResult->Collaborator->save($kr_user);
+        $Goals->Goal->Collaborator->create();
+        $Goals->Goal->Collaborator->save($kr_user);
         return $kr_id;
     }
 
@@ -690,9 +690,9 @@ class GoalsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->KeyResult->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->KeyResult->Collaborator->my_uid = '1';
+        $Goals->Goal->Collaborator->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->KeyResult->Collaborator->current_team_id = '1';
+        $Goals->Goal->Collaborator->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->KeyResult->Follower->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

@@ -226,7 +226,7 @@ class GoalsController extends AppController
     public function edit_collabo()
     {
         $this->request->allowMethod('post', 'put');
-        if ($this->Goal->KeyResult->Collaborator->edit($this->request->data)) {
+        if ($this->Goal->Collaborator->edit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
         }
         else {
@@ -351,14 +351,14 @@ class GoalsController extends AppController
     public function delete_collabo($key_result_user_id)
     {
         $this->request->allowMethod('post', 'put');
-        $this->Goal->KeyResult->Collaborator->id = $key_result_user_id;
-        if (!$this->Goal->KeyResult->Collaborator->exists()) {
+        $this->Goal->Collaborator->id = $key_result_user_id;
+        if (!$this->Goal->Collaborator->exists()) {
             $this->Pnotify->outError(__('gl', "既にコラボレータから抜けている可能性があります。"));
         }
-        if (!$this->Goal->KeyResult->Collaborator->isOwner($this->Auth->user('id'))) {
+        if (!$this->Goal->Collaborator->isOwner($this->Auth->user('id'))) {
             $this->Pnotify->outError(__('gl', "この操作の権限がありません。"));
         }
-        $this->Goal->KeyResult->Collaborator->delete();
+        $this->Goal->Collaborator->delete();
         $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
         $this->redirect($this->referer());
     }

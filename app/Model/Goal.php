@@ -11,6 +11,8 @@ App::uses('KeyResult', 'Model');
  * @property GoalCategory      $GoalCategory
  * @property Post              $Post
  * @property KeyResult         $KeyResult
+ * @property Collaborator      $Collaborator
+ * @property Follower          $Follower
  */
 class Goal extends AppModel
 {

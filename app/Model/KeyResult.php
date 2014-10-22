@@ -6,8 +6,6 @@ App::uses('AppModel', 'Model');
  *
  * @property Team              $Team
  * @property Goal              $Goal
- * @property Follower          $Follower
- * @property Collaborator      $Collaborator
  */
 class KeyResult extends AppModel
 {
@@ -291,7 +289,7 @@ class KeyResult extends AppModel
         if (empty($skr)) {
             return false;
         }
-        return $this->Goal->KeyResult->Collaborator->isCollaborated($skr['KeyResult']['id']);
+        return $this->Goal->Collaborator->isCollaborated($skr['KeyResult']['id']);
     }
 
     function saveEdit($data)
