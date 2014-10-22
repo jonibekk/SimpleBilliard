@@ -176,6 +176,10 @@ class Goal extends AppModel
                 $kr['name'] = __d('gl', "タイトルを入れてください");
                 $kr['special_flg'] = false;
                 $kr['priority'] = 0;
+                $kr['current_value'] = 0;
+                $kr['start_value'] = 0;
+                $kr['target_value'] = 100;
+                $kr['value_unit'] = KeyResult::UNIT_PERCENT;
                 $this->KeyResult->create();
                 $this->KeyResult->save($kr);
             }
@@ -211,9 +215,8 @@ class Goal extends AppModel
 
     /**
      * コラボレータ権限チェック
-
      *
-*@param $skr_id
+     * @param $skr_id
      *
      * @return bool
      */
@@ -232,12 +235,21 @@ class Goal extends AppModel
 
     function getAddData($id)
     {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.id' => $id,
             ],
             'contain'    => [
-                'KeyResult'
+                'KeyResult' => [
+                    'conditions' => [
+                        'KeyResult.start_date >' => $start_date,
+                        'KeyResult.end_date <'   => $end_date,
+                        'KeyResult.team_id'      => $this->current_team_id,
+                        'KeyResult.special_flg'  => true,
+                    ]
+                ]
             ]
         ];
         $res = $this->find('first', $options);
@@ -279,7 +291,7 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg' => false,
+                        'KeyResult.special_flg'   => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
@@ -449,7 +461,7 @@ class Goal extends AppModel
                 'KeyResult'        => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg' => false,
+                        'KeyResult.special_flg'   => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ],
@@ -574,7 +586,7 @@ class Goal extends AppModel
         $goal_ids = $this->KeyResult->getGoalIdsExistsSkr($start_date, $end_date);
         $options = [
             'conditions' => [
-                'Goal.id' => $goal_ids,
+                'Goal.id'      => $goal_ids,
                 'Goal.team_id' => $this->current_team_id,
             ],
             'order'      => ['Goal.modified desc'],
@@ -657,16 +669,20 @@ class Goal extends AppModel
 
     function getProgress($goal)
     {
+        $res = 0;
         if (empty($goal['KeyResult'])) {
-            return 0;
+            return $res;
         }
+
         $target_progress_total = 0;
         $current_progress_total = 0;
         foreach ($goal['KeyResult'] as $key_result) {
             $target_progress_total += $key_result['priority'] * 100;
             $current_progress_total += $key_result['priority'] * $key_result['progress'];
         }
-        $res = round($current_progress_total / $target_progress_total, 2) * 100;
+        if ($target_progress_total != 0) {
+            $res = round($current_progress_total / $target_progress_total, 2) * 100;
+        }
         return $res;
     }
 
