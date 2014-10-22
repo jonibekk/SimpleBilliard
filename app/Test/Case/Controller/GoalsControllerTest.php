@@ -288,9 +288,9 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
         $data = [
             'Collaborator' => [
-                'role'          => 'test',
-                'description'   => 'test',
-                'key_result_id' => 1,
+                'role'        => 'test',
+                'description' => 'test',
+                'goal_id'     => 1,
             ]
         ];
         $this->testAction('/goals/edit_collabo', ['method' => 'POST', 'data' => $data]);
@@ -307,11 +307,11 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $data = [
-            'role'          => 'test',
-            'description'   => 'test',
-            'team_id'       => 1,
-            'user_id'       => 1,
-            'key_result_id' => 1,
+            'role'        => 'test',
+            'description' => 'test',
+            'team_id'     => 1,
+            'user_id'     => 1,
+            'goal_id'     => 1,
         ];
         $Goals->Goal->Collaborator->save($data);
         $key_result_user_id = $Goals->Goal->Collaborator->getLastInsertID();
@@ -328,11 +328,11 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $data = [
-            'role'          => 'test',
-            'description'   => 'test',
-            'team_id'       => 1,
-            'user_id'       => 99999,
-            'key_result_id' => 1,
+            'role'        => 'test',
+            'description' => 'test',
+            'team_id'     => 1,
+            'user_id'     => 99999,
+            'goal_id'     => 1,
         ];
         $Goals->Goal->Collaborator->save($data);
         $key_result_user_id = $Goals->Goal->Collaborator->getLastInsertID();
@@ -368,9 +368,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->KeyResult->save($data);
         $key_result_user_id = $Goals->Goal->KeyResult->getLastInsertID();
         $data = [
-            'team_id'       => 1,
-            'user_id'       => 1,
-            'key_result_id' => $key_result_user_id,
+            'team_id' => 1,
+            'user_id' => 1,
+            'goal_id' => $key_result_user_id,
         ];
         $Goals->Goal->Follower->save($data);
         /** @noinspection PhpUndefinedFieldInspection */
@@ -617,9 +617,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->KeyResult->save($kr);
         $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
         $kr_user = [
-            'user_id'       => 1,
-            'team_id'       => 1,
-            'key_result_id' => $skr_id,
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => $skr_id,
         ];
         $Goals->Goal->Collaborator->create();
         $Goals->Goal->Collaborator->save($kr_user);

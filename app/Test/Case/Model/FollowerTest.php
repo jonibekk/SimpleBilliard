@@ -78,9 +78,9 @@ class FollowerTest extends CakeTestCase
     {
         $this->setDefault();
         $data = [
-            'user_id'       => 1,
-            'team_id'       => 1,
-            'key_result_id' => 100
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => 100
         ];
         $this->Follower->save($data);
         $this->assertFalse($this->Follower->addFollower(100));

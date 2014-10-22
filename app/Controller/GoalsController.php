@@ -159,13 +159,13 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_add_key_result_modal($key_result_id, $current_key_result_id = null)
+    public function ajax_get_add_key_result_modal($goal_id, $current_goal_id = null)
     {
         $this->_ajaxPreProcess();
         $key_result = null;
         try {
-            $this->Goal->isPermittedCollaboFromSkr($key_result_id);
-            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $this->Goal->isPermittedCollaboFromSkr($goal_id);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
@@ -191,7 +191,7 @@ class GoalsController extends AppController
 
         $this->set(compact(
                        'goal_id',
-                       'key_result_id',
+                       'goal_id',
                        'goal_category_list',
                        'priority_list',
                        'kr_priority_list',
@@ -200,7 +200,7 @@ class GoalsController extends AppController
                        'kr_end_date_format',
                        'limit_end_date',
                        'limit_start_date',
-                       'current_key_result_id'
+                       'current_goal_id'
                    ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
@@ -209,10 +209,10 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_collabo_change_modal($key_result_id)
+    public function ajax_get_collabo_change_modal($goal_id)
     {
         $this->_ajaxPreProcess();
-        $skr = $this->Goal->KeyResult->getCollaboModalItem($key_result_id);
+        $skr = $this->Goal->KeyResult->getCollaboModalItem($goal_id);
         $this->set(compact('skr'));
 
         //エレメントの出力を変数に格納する
@@ -235,17 +235,17 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function add_key_result($key_result_id, $current_key_result = null)
+    public function add_key_result($goal_id, $current_key_result = null)
     {
         $this->request->allowMethod('post');
         $key_result = null;
         try {
             $this->Goal->begin();
-            $this->Goal->isPermittedCollaboFromSkr($key_result_id);
-            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $this->Goal->isPermittedCollaboFromSkr($goal_id);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
             $this->Goal->KeyResult->add($this->request->data, $key_result['KeyResult']['goal_id']);
             if ($current_key_result) {
-                if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
                     throw new RuntimeException(__d('gl', "権限がありません。"));
                 }
                 $this->Goal->KeyResult->complete($current_key_result);
@@ -261,11 +261,11 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function edit_key_result($key_result_id)
+    public function edit_key_result($goal_id)
     {
         $this->request->allowMethod('post', 'put');
         try {
-            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             if (!$this->Goal->KeyResult->saveEdit($this->request->data)) {
@@ -279,18 +279,18 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function complete($key_result_id, $with_goal = null)
+    public function complete($goal_id, $with_goal = null)
     {
         $this->request->allowMethod('post');
         try {
             $this->Goal->begin();
-            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
-            $this->Goal->KeyResult->complete($key_result_id);
+            $this->Goal->KeyResult->complete($goal_id);
             //ゴールも一緒に完了にする場合
             if ($with_goal) {
-                $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+                $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
                 $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
                 $this->Goal->KeyResult->complete($skr['KeyResult']['id']);
                 $this->Pnotify->outSuccess(__d('gl', "ゴールを完了にしました。"));
@@ -307,16 +307,16 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function incomplete($key_result_id)
+    public function incomplete($goal_id)
     {
         $this->request->allowMethod('post');
         try {
             $this->Goal->begin();
-            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
-            $this->Goal->KeyResult->incomplete($key_result_id);
-            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $this->Goal->KeyResult->incomplete($goal_id);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
             $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
             $this->Goal->KeyResult->incomplete($skr['KeyResult']['id']);
         } catch (RuntimeException $e) {
@@ -329,18 +329,18 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function delete_key_result($key_result_id)
+    public function delete_key_result($goal_id)
     {
         $this->request->allowMethod('post', 'delete');
         try {
-            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
-        $this->Goal->KeyResult->id = $key_result_id;
+        $this->Goal->KeyResult->id = $goal_id;
         $this->Goal->KeyResult->delete();
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -366,11 +366,11 @@ class GoalsController extends AppController
     /**
      * フォロー、アンフォローの切り換え
      *
-     * @param $key_result_id
+     * @param $goal_id
      *
      * @return CakeResponse
      */
-    public function ajax_toggle_follow($key_result_id)
+    public function ajax_toggle_follow($goal_id)
     {
         $this->_ajaxPreProcess();
 
@@ -381,19 +381,19 @@ class GoalsController extends AppController
         ];
 
         //存在チェック
-        if (!$this->Goal->KeyResult->isBelongCurrentTeam($key_result_id)) {
+        if (!$this->Goal->KeyResult->isBelongCurrentTeam($goal_id)) {
             $return['error'] = true;
             $return['msg'] = __d('gl', "存在しないゴールです。");
             return $this->_ajaxGetResponse($return);
         }
 
         //既にフォローしているかどうかのチェック
-        if ($this->Goal->Follower->isExists($key_result_id)) {
+        if ($this->Goal->Follower->isExists($goal_id)) {
             $return['add'] = false;
         }
 
         if ($return['add']) {
-            if ($this->Goal->Follower->addFollower($key_result_id)) {
+            if ($this->Goal->Follower->addFollower($goal_id)) {
                 $return['msg'] = __d('gl', "フォローしました。");
             }
             else {
@@ -402,7 +402,7 @@ class GoalsController extends AppController
             }
         }
         else {
-            $this->Goal->Follower->deleteFollower($key_result_id);
+            $this->Goal->Follower->deleteFollower($goal_id);
             $return['msg'] = __d('gl', "フォロー解除しました。");
         }
 
@@ -430,15 +430,15 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_edit_key_result_modal($key_result_id)
+    public function ajax_get_edit_key_result_modal($goal_id)
     {
         $this->_ajaxPreProcess();
         $skr = null;
         try {
-            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
                 throw new RuntimeException();
             }
-            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
             $key_result['KeyResult']['start_value'] = (double)$key_result['KeyResult']['start_value'];
             $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
             $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
@@ -464,7 +464,7 @@ class GoalsController extends AppController
                                  $skr['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
         $this->set(compact(
                        'goal_id',
-                       'key_result_id',
+                       'goal_id',
                        'goal_category_list',
                        'priority_list',
                        'kr_priority_list',
@@ -482,15 +482,15 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_last_kr_confirm($key_result_id)
+    public function ajax_get_last_kr_confirm($goal_id)
     {
         $this->_ajaxPreProcess();
         $skr = null;
         try {
-            if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
                 throw new RuntimeException();
             }
-            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
             $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
             $skr['KeyResult']['start_value'] = (double)$skr['KeyResult']['start_value'];
             $skr['KeyResult']['current_value'] = (double)$skr['KeyResult']['current_value'];
@@ -501,7 +501,7 @@ class GoalsController extends AppController
         }
         $this->set(compact(
                        'skr',
-                       'key_result_id'
+                       'goal_id'
                    ));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果

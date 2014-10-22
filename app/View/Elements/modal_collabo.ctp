@@ -30,9 +30,9 @@
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
-            'id' => 'CollaboEditForm',
+            'id'            => 'CollaboEditForm',
         ]); ?>
-        <?= $this->Form->hidden('key_result_id', ['value' => $skr['KeyResult']['id']]) ?>
+        <?= $this->Form->hidden('goal_id', ['value' => $skr['KeyResult']['id']]) ?>
         <?
         if (isset($skr['MyCollabo'][0]['id'])) {
             echo $this->Form->hidden('id', ['value' => $skr['MyCollabo'][0]['id']]);
@@ -45,7 +45,7 @@
                                 'placeholder'              => __d('gl', "例) ○○"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                 'required'                 => true,
-                                'rows' => 1,
+                                'rows'                     => 1,
                                 'value'                    => isset($skr['MyCollabo'][0]['role']) ? $skr['MyCollabo'][0]['role'] : null,
                                ]) ?>
             <hr>
@@ -55,7 +55,7 @@
                                 'placeholder'              => __d('gl', "例) ○○"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                 'required'                 => true,
-                                'rows' => 1,
+                                'rows'                     => 1,
                                 'value'                    => isset($skr['MyCollabo'][0]['description']) ? $skr['MyCollabo'][0]['description'] : null,
                                ]) ?>
         </div>

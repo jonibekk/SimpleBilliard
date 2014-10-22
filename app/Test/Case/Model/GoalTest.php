@@ -355,9 +355,9 @@ class GoalTest extends CakeTestCase
         $this->Goal->KeyResult->save($kr);
         $kr_id = $this->Goal->KeyResult->getLastInsertID();
         $kr_user = [
-            'user_id'       => 1,
-            'team_id'       => 1,
-            'key_result_id' => $skr_id,
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => $skr_id,
         ];
         $this->Goal->Collaborator->create();
         $this->Goal->Collaborator->save($kr_user);

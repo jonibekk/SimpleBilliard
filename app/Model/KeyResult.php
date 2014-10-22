@@ -103,10 +103,10 @@ class KeyResult extends AppModel
 
     function getCollaboGoalList($user_id)
     {
-        $key_result_ids = $this->Goal->Collaborator->getCollaboKeyResultList($user_id);
+        $goal_ids = $this->Goal->Collaborator->getCollaboKeyResultList($user_id);
         $options = [
             'conditions' => [
-                'id' => $key_result_ids,
+                'id' => $goal_ids,
             ],
             'fields'     => [
                 'goal_id'
@@ -118,10 +118,10 @@ class KeyResult extends AppModel
 
     function getFollowGoalList($user_id)
     {
-        $key_result_ids = $this->Goal->Follower->getFollowList($user_id);
+        $goal_ids = $this->Goal->Follower->getFollowList($user_id);
         $options = [
             'conditions' => [
-                'id' => $key_result_ids,
+                'id' => $goal_ids,
             ],
             'fields'     => [
                 'goal_id'
@@ -275,13 +275,13 @@ class KeyResult extends AppModel
      * キーリザルト変更権限
      * コラボレータならtrueを返す
      *
-     * @param $key_result_id
+     * @param $goal_id
      *
      * @return bool
      */
-    function isPermitted($key_result_id)
+    function isPermitted($goal_id)
     {
-        $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
+        $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
         if (empty($key_result)) {
             return false;
         }

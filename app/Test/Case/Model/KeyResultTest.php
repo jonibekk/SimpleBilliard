@@ -148,9 +148,9 @@ class KeyResultTest extends CakeTestCase
         $this->KeyResult->save($skr);
         $skr_id = $this->KeyResult->getLastInsertID();
         $kr_user = [
-            'key_result_id' => $skr_id,
-            'user_id'       => 1,
-            'team_id'       => 1,
+            'goal_id' => $skr_id,
+            'user_id' => 1,
+            'team_id' => 1,
         ];
         $this->KeyResult->Goal->Collaborator->create();
         $this->KeyResult->Goal->Collaborator->save($kr_user);
