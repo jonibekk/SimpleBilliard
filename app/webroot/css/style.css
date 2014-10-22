@@ -47,14 +47,6 @@
     text-align: left;
 }
 
-.text-align_c {
-    text-align: center;
-}
-
-.text-align_r {
-    text-align: right;
-}
-
 .sm-btn {
     padding: 8px;
 }
@@ -419,6 +411,19 @@ footer p {
 }
 
 /*/position*/
+
+/* text-align */
+
+.text-align_c {
+    text-align: center;
+}
+
+.text-align_r {
+    text-align: right;
+}
+
+/*/ text-align */
+
 
 /*Fontの指定*/
 .font_11px {
@@ -2446,7 +2451,7 @@ ul.gl-input-images > li {
         position: fixed;
         bottom: 8px;
         right: -140px;
-        font-size: 50%;
+        font-size: 10px;
         margin: 0;
     }
 
