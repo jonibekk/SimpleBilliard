@@ -317,7 +317,9 @@ class GoalTest extends CakeTestCase
     function testGetAddData()
     {
         $this->setDefault();
-        $this->Goal->getAddData(1);
+        $kr_id = $this->_getNewKr();
+        $kr = $this->Goal->KeyResult->findById($kr_id);
+        $this->Goal->getAddData($kr['KeyResult']['id']);
     }
 
     function testIsPermittedCollaboSuccess()
@@ -325,6 +327,41 @@ class GoalTest extends CakeTestCase
         $this->setDefault();
         $res = $this->Goal->isPermittedCollaboFromSkr(1);
         $this->assertTrue($res);
+    }
+
+    function _getNewKr()
+    {
+        $skr = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 1,
+            'name'        => 'test',
+            'special_flg' => true,
+            'start_date'  => time(),
+            'end_date'    => time(),
+        ];
+        $this->Goal->KeyResult->create();
+        $this->Goal->KeyResult->save($skr);
+        $skr_id = $this->Goal->KeyResult->getLastInsertID();
+        $kr = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => 1,
+            'name'       => 'test',
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->Goal->KeyResult->create();
+        $this->Goal->KeyResult->save($kr);
+        $kr_id = $this->Goal->KeyResult->getLastInsertID();
+        $kr_user = [
+            'user_id'       => 1,
+            'team_id'       => 1,
+            'key_result_id' => $skr_id,
+        ];
+        $this->Goal->KeyResult->KeyResultUser->create();
+        $this->Goal->KeyResult->KeyResultUser->save($kr_user);
+        return $kr_id;
     }
 
     function setDefault()
