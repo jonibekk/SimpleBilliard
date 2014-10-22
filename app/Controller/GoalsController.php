@@ -482,6 +482,9 @@ class GoalsController extends AppController
             }
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
+            $skr['KeyResult']['start_value'] = (double)$skr['KeyResult']['start_value'];
+            $skr['KeyResult']['current_value'] = (double)$skr['KeyResult']['current_value'];
+            $skr['KeyResult']['target_value'] = (double)$skr['KeyResult']['target_value'];
             $this->Goal->isPermittedCollaboFromSkr($skr['KeyResult']['id']);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);

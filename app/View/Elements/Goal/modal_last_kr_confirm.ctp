@@ -20,7 +20,11 @@
         </div>
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
-                <?= h($skr['KeyResult']['name']) ?>
+                <?= __d('gl', "ゴール名") ?>:<?= h($skr['KeyResult']['name']) ?><br>
+                <?= __d('gl', "単位") ?>:<?= KeyResult::$UNIT[$skr['KeyResult']['value_unit']] ?><br>
+                <?= __d('gl', "現在値") ?>:<?= $skr['KeyResult']['current_value'] ?><br>
+                <?= __d('gl', "開始時") ?>:<?= $skr['KeyResult']['start_value'] ?><br>
+                <?= __d('gl', "達成時") ?>:<?= $skr['KeyResult']['target_value'] ?><br>
             </div>
         </div>
         <div class="modal-footer">
