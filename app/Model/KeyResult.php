@@ -179,6 +179,7 @@ class KeyResult extends AppModel
             'conditions' => [
                 'KeyResult.start_date >=' => $start_date,
                 'KeyResult.end_date <'    => $end_date,
+                'KeyResult.special_flg'   => true,
                 'KeyResult.team_id'       => $this->current_team_id,
             ],
             'fields'     => ['KeyResult.goal_id']
