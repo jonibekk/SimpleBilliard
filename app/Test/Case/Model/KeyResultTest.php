@@ -136,37 +136,54 @@ class KeyResultTest extends CakeTestCase
     function testIsPermitted()
     {
         $this->setDefault();
-        $kr = [
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'goal_id'    => 1,
-            'start_date' => time(),
-            'end_date'   => time(),
+        $skr = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 1,
+            'special_flg' => 1,
+            'start_date'  => time(),
+            'end_date'    => time(),
         ];
-        $this->KeyResult->save($kr);
-        $kr_id = $this->KeyResult->getLastInsertID();
-        $res = $this->KeyResult->isPermitted($kr_id);
-        $this->assertTrue($res);
-
-        $goal = [
-            'user_id' => 2,
-            'team_id' => 1,
-            'purpose' => 'test',
+        $this->KeyResult->create();
+        $this->KeyResult->save($skr);
+        $skr_id = $this->KeyResult->getLastInsertID();
+        $kr_user = [
+            'key_result_id' => $skr_id,
+            'user_id'       => 1,
+            'team_id'       => 1,
         ];
-        $this->KeyResult->Goal->create();
-        $this->KeyResult->Goal->save($goal);
+        $this->KeyResult->KeyResultUser->create();
+        $this->KeyResult->KeyResultUser->save($kr_user);
         $kr = [
-            'user_id'    => 2,
-            'team_id'    => 1,
-            'goal_id'    => $this->KeyResult->Goal->getLastInsertID(),
-            'start_date' => time(),
-            'end_date'   => time(),
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 1,
+            'special_flg' => false,
+            'start_date'  => time(),
+            'end_date'    => time(),
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
-        $res = $this->KeyResult->isPermitted($this->KeyResult->getLastInsertID());
+        $kr_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($kr_id);
+        $this->assertTrue($res, "コラボしている");
 
-        $this->assertFalse($res);
+        $res = $this->KeyResult->isPermitted(9999999);
+        $this->assertFalse($res, "存在しないKR");
+
+        $kr = [
+            'user_id'     => 1,
+            'team_id'     => 1,
+            'goal_id'     => 9999999,
+            'special_flg' => false,
+            'start_date'  => time(),
+            'end_date'    => time(),
+        ];
+        $this->KeyResult->create();
+        $this->KeyResult->save($kr);
+        $kr_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($kr_id);
+        $this->assertFalse($res, "存在しないSKR");
     }
 
     function testGetProgress()

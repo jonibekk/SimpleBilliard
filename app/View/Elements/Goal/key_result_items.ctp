@@ -4,12 +4,14 @@
  * User: bigplants
  * Date: 9/26/14
  * Time: 11:14 AM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $key_results
+ * @var                    $incomplete_kr_count
  */
 ?>
-<!-- START app/View/Elements/Goals/key_result_items.ctp -->
+<!-- START app/View/Elements/Goal/key_result_items.ctp -->
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
         <div class="col col-xxs-12">
@@ -34,11 +36,20 @@
                                                       ['controller' => 'goals', 'action' => 'incomplete', $kr['KeyResult']['id']],
                                                       ['escape' => false]) ?>
                         <? else: ?>
-                            <?= $this->Form->postLink('<i class="fa fa-pencil"><span class="ml_2px">' .
-                                                      __d('gl', "完了にする") . '</span></i>',
-                                                      ['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']],
-                                                      ['escape' => false]) ?>
-                        <?endif; ?>
+                            <?
+                            //最後のKRの場合
+                            if ($incomplete_kr_count === 1):?>
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', $kr['KeyResult']['id']]) ?>"
+                                   class="modal-ajax-get">
+                                    <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "完了にする") ?></span></i>
+                                </a>
+                            <? else: ?>
+                                <?= $this->Form->postLink('<i class="fa fa-pencil"><span class="ml_2px">' .
+                                                          __d('gl', "完了にする") . '</span></i>',
+                                                          ['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']],
+                                                          ['escape' => false]) ?>
+                            <? endif; ?>
+                        <? endif; ?>
                     </li>
                     <li role="presentation">
                         <?=
@@ -57,4 +68,4 @@
         <?= __d('gl', "成果はまだありません。") ?>
     </div>
 <?endif; ?>
-<!-- End app/View/Elements/Goals/key_result_items.ctp -->
+<!-- End app/View/Elements/Goal/key_result_items.ctp -->
