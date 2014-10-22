@@ -5,7 +5,7 @@ App::uses('AppModel', 'Model');
  * Collaborator Model
  *
  * @property Team      $Team
- * @property KeyResult $KeyResult
+ * @property Goal      $Goal
  * @property User      $User
  */
 class Collaborator extends AppModel
@@ -93,7 +93,7 @@ class Collaborator extends AppModel
         $data['Collaborator']['type'] = $type;
 
         $res = $this->save($data);
-        $this->KeyResult->Follower->deleteFollower($data['Collaborator']['key_result_id']);
+        $this->Goal->Follower->deleteFollower($data['Collaborator']['key_result_id']);
         return $res;
     }
 

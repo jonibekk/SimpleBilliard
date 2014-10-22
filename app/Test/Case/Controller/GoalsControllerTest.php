@@ -372,7 +372,7 @@ class GoalsControllerTest extends ControllerTestCase
             'user_id'       => 1,
             'key_result_id' => $key_result_user_id,
         ];
-        $Goals->Goal->KeyResult->Follower->save($data);
+        $Goals->Goal->Follower->save($data);
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_toggle_follow/' . $key_result_user_id, ['method' => 'POST']);
@@ -694,9 +694,9 @@ class GoalsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Collaborator->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->KeyResult->Follower->my_uid = '1';
+        $Goals->Goal->Follower->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->KeyResult->Follower->current_team_id = '1';
+        $Goals->Goal->Follower->current_team_id = '1';
         return $Goals;
     }
 }

@@ -103,7 +103,7 @@ class KeyResult extends AppModel
 
     function getCollaboGoalList($user_id)
     {
-        $key_result_ids = $this->Collaborator->getCollaboKeyResultList($user_id);
+        $key_result_ids = $this->Goal->Collaborator->getCollaboKeyResultList($user_id);
         $options = [
             'conditions' => [
                 'id' => $key_result_ids,
@@ -118,7 +118,7 @@ class KeyResult extends AppModel
 
     function getFollowGoalList($user_id)
     {
-        $key_result_ids = $this->Follower->getFollowList($user_id);
+        $key_result_ids = $this->Goal->Follower->getFollowList($user_id);
         $options = [
             'conditions' => [
                 'id' => $key_result_ids,

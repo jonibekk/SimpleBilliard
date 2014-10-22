@@ -388,12 +388,12 @@ class GoalsController extends AppController
         }
 
         //既にフォローしているかどうかのチェック
-        if ($this->Goal->KeyResult->Follower->isExists($key_result_id)) {
+        if ($this->Goal->Follower->isExists($key_result_id)) {
             $return['add'] = false;
         }
 
         if ($return['add']) {
-            if ($this->Goal->KeyResult->Follower->addFollower($key_result_id)) {
+            if ($this->Goal->Follower->addFollower($key_result_id)) {
                 $return['msg'] = __d('gl', "フォローしました。");
             }
             else {
@@ -402,7 +402,7 @@ class GoalsController extends AppController
             }
         }
         else {
-            $this->Goal->KeyResult->Follower->deleteFollower($key_result_id);
+            $this->Goal->Follower->deleteFollower($key_result_id);
             $return['msg'] = __d('gl', "フォロー解除しました。");
         }
 
