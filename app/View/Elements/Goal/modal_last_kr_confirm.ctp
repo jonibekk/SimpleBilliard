@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $skr['KeyResult']['id']]) ?>"
+            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $skr['KeyResult']['id'], $key_result_id]) ?>"
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __d('gl',
                                                                                                   "出したい成果を追加") ?></a>
             <?= $this->Form->postLink(__d('gl', "ゴール達成"),

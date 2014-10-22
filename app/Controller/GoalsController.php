@@ -159,7 +159,7 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_add_key_result_modal($key_result_id)
+    public function ajax_get_add_key_result_modal($key_result_id, $current_key_result_id = null)
     {
         $this->_ajaxPreProcess();
         $key_result = null;
@@ -199,7 +199,8 @@ class GoalsController extends AppController
                        'kr_start_date_format',
                        'kr_end_date_format',
                        'limit_end_date',
-                       'limit_start_date'
+                       'limit_start_date',
+                       'current_key_result_id'
                    ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
@@ -234,19 +235,28 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function add_key_result($key_result_id)
+    public function add_key_result($key_result_id, $current_key_result = null)
     {
         $this->request->allowMethod('post');
         $key_result = null;
         try {
+            $this->Goal->begin();
             $this->Goal->isPermittedCollaboFromSkr($key_result_id);
             $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $key_result_id]]);
             $this->Goal->KeyResult->add($this->request->data, $key_result['KeyResult']['goal_id']);
+            if ($current_key_result) {
+                if (!$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                    throw new RuntimeException(__d('gl', "権限がありません。"));
+                }
+                $this->Goal->KeyResult->complete($current_key_result);
+            }
         } catch (RuntimeException $e) {
+            $this->Goal->rollback();
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
 
+        $this->Goal->commit();
         $this->Pnotify->outSuccess(__d('gl', "基準を追加しました。"));
         $this->redirect($this->referer());
     }

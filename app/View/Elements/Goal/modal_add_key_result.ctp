@@ -16,6 +16,7 @@
  * @var                    $kr_end_date_format
  * @var                    $limit_end_date
  * @var                    $limit_start_date
+ * @var                    $current_key_result_id
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_add_key_result.ctp -->
@@ -37,7 +38,7 @@
                 'class'     => 'form-control addteam_input-design'
             ],
             'class'         => 'form-horizontal',
-            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $key_result_id],
+            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $key_result_id, $current_key_result_id],
             'novalidate'    => true,
             'id'            => 'AddGoalFormKeyResult',
         ]); ?>
@@ -134,7 +135,7 @@
                                                        'required'                 => true,
                                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                                        'type'                     => 'text',
-                                                       'wrapInput' => null,
+                                                       'wrapInput'                => null,
                                                    ]) ?>
                                 <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                             </div>
@@ -188,7 +189,7 @@
                     'default'  => 1,
                     'required' => false,
                     'style'    => 'width:50px',
-                    'options' => $kr_priority_list,
+                    'options'  => $kr_priority_list,
                 ]) ?>
             </div>
         </div>
