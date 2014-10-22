@@ -27,7 +27,7 @@
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
-                                    <i class="fa fa-plus-circle"><span class="ml_2px"><?= __d('gl', "主な成果を追加") ?></span></i>
+                                    <i class="fa fa-plus-circle"><span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span></i>
                                 </a>
                             </li>
                         <? endif; ?>
@@ -60,7 +60,7 @@
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['SpecialKeyResult'][0]['id']]) ?>"
                                    class="modal-ajax-get-add-key-result"
                                     ><i class="fa fa-plus-circle"><span class="ml_2px">
-                                    <?= __d('gl', "主な成果を追加") ?></span></i></a>
+                                    <?= __d('gl', "出したい成果を追加") ?></span></i></a>
                             </li>
                         <? endif; ?>
                     </ul>
