@@ -204,74 +204,30 @@ class GoalTest extends CakeTestCase
     {
         $goals = [
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 1,
                 ],
-                'SpecialKeyResult' => [
-
-                ]
             ],
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 2,
                 ],
-                'SpecialKeyResult' => [
-                    [
-                        'end_date' => 1
-                    ]
-                ]
             ],
         ];
         $res = $this->Goal->sortEndDate($goals);
         $expected = [
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 2,
                 ],
-                'SpecialKeyResult' => [
-                    [
-                        'end_date' => 1
-                    ]
-                ]
             ],
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 1,
                 ],
-                'SpecialKeyResult' => [
-
-                ]
             ],
         ];
         $this->assertEquals($expected, $res);
-    }
-
-    function testIsPermittedCollaboFail()
-    {
-        $this->setDefault();
-        try {
-            $this->Goal->isPermittedCollaboFromSkr(99999);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
-        unset($e);
-
-        $data = ['KeyResult' =>
-                     [
-                         'goal_id'     => 99,
-                         'team_id'     => 1,
-                         'user_id'     => 999,
-                         'name'        => 'test',
-                         'value_unit'  => 0,
-                         'start_value' => 1
-                     ]
-        ];
-        $this->Goal->KeyResult->save($data);
-        try {
-            $this->Goal->isPermittedCollaboFromSkr($this->Goal->KeyResult->getLastInsertID());
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
     }
 
     function testGetAddData()
@@ -280,13 +236,6 @@ class GoalTest extends CakeTestCase
         $goal_id = $this->_getNewKr();
         $kr = $this->Goal->KeyResult->findById($goal_id);
         $this->Goal->getAddData($kr['KeyResult']['id']);
-    }
-
-    function testIsPermittedCollaboSuccess()
-    {
-        $this->setDefault();
-        $res = $this->Goal->isPermittedCollaboFromSkr(1);
-        $this->assertTrue($res);
     }
 
     function _getNewKr()

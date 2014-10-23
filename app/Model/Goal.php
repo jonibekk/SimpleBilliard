@@ -227,26 +227,6 @@ class Goal extends AppModel
         return true;
     }
 
-    /**
-     * コラボレータ権限チェック
-     *
-     * @param $goal_id
-     *
-     * @return bool
-     */
-    function isPermittedCollaboFromSkr($goal_id)
-    {
-        $this->KeyResult->id = $goal_id;
-        if (!$this->KeyResult->exists()) {
-            throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
-        }
-
-        if (!$this->Collaborator->isCollaborated($goal_id)) {
-            throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
-        }
-        return true;
-    }
-
     function getAddData($id)
     {
         $start_date = $this->Team->getTermStartDate();

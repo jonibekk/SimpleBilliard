@@ -70,13 +70,13 @@ class Collaborator extends AppModel
         if (!$uid) {
             $uid = $this->my_uid;
         }
-        $skr_user = [
+        $collaborator = [
             'team_id' => $this->current_team_id,
             'user_id' => $uid,
             'type'    => $type,
             'goal_id' => $goal_id,
         ];
-        $res = $this->save($skr_user);
+        $res = $this->save($collaborator);
         return $res;
     }
 
