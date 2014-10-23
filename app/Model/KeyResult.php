@@ -60,22 +60,17 @@ class KeyResult extends AppModel
      * @var array
      */
     public $validate = [
-        'name'        => [
+        'name'       => [
             'notEmpty' => [
                 'rule' => 'notEmpty',
             ],
         ],
-        'valued_flg'  => [
+        'valued_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'special_flg' => [
-            'boolean' => [
-                'rule' => ['boolean'],
-            ],
-        ],
-        'del_flg'     => [
+        'del_flg'    => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -107,7 +102,6 @@ class KeyResult extends AppModel
             'conditions' => [
                 'KeyResult.start_date >=' => $start_date,
                 'KeyResult.end_date <'    => $end_date,
-                'KeyResult.special_flg'   => true,
                 'KeyResult.team_id'       => $this->current_team_id,
             ],
             'fields'     => ['KeyResult.goal_id']
@@ -163,9 +157,8 @@ class KeyResult extends AppModel
     {
         $options = [
             'conditions' => [
-                'goal_id'     => $goal_id,
-                'team_id'     => $this->current_team_id,
-                'special_flg' => false,
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
             ],
         ];
         if ($with_skr) {
@@ -183,7 +176,6 @@ class KeyResult extends AppModel
         $options = [
             'conditions' => [
                 'goal_id'       => $goal_id,
-                'special_flg'   => true,
                 'start_date >=' => $start_date,
                 'end_date <'    => $end_date
             ]

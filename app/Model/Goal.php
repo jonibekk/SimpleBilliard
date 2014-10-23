@@ -261,7 +261,6 @@ class Goal extends AppModel
                         'KeyResult.start_date >' => $start_date,
                         'KeyResult.end_date <'   => $end_date,
                         'KeyResult.team_id'      => $this->current_team_id,
-                        'KeyResult.special_flg'  => true,
                     ]
                 ],
                 'Purpose',
@@ -523,7 +522,6 @@ class Goal extends AppModel
                 'KeyResult'    => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.special_flg'   => true,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ],
