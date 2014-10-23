@@ -13,6 +13,7 @@ App::uses('KeyResult', 'Model');
  * @property KeyResult         $KeyResult
  * @property Collaborator      $Collaborator
  * @property Follower          $Follower
+ * @property Purpose           $Purpose
  */
 class Goal extends AppModel
 {
@@ -164,52 +165,45 @@ class Goal extends AppModel
         }
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
-        //KeyResultの処理
-        //KeyResultの名前が存在しない場合はKeyResultを保存しない。
-        if (!isset($data['KeyResult'][0]['name']) || empty($data['KeyResult'][0]['name'])) {
-            unset($data['KeyResult']);
+        //SKRをセット
+        //on/offの場合は現在値0,目標値1をセット
+        if (isset($data['Goal']['value_unit']) && isset($data['Goal']['start_value'])) {
+            if ($data['Goal']['value_unit'] == KeyResult::UNIT_BINARY) {
+                $data['Goal']['start_value'] = 0;
+                $data['Goal']['target_value'] = 1;
+            }
+            $data['Goal']['current_value'] = $data['Goal']['start_value'];
         }
-        else {
-            //SKRをセット
-            $data['KeyResult'][0]['team_id'] = $this->current_team_id;
-            $data['KeyResult'][0]['user_id'] = $this->my_uid;
-            $data['KeyResult'][0]['special_flg'] = true;
-            //on/offの場合は現在値0,目標値1をセット
-            if ($data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY) {
-                $data['KeyResult'][0]['start_value'] = 0;
-                $data['KeyResult'][0]['target_value'] = 1;
-            }
-            $data['KeyResult'][0]['current_value'] = $data['KeyResult'][0]['start_value'];
 
-            //時間をunixtimeに変換
-            if (!empty($data['KeyResult'][0]['start_date'])) {
-                $data['KeyResult'][0]['start_date'] = strtotime($data['KeyResult'][0]['start_date']) - ($this->me['timezone'] * 60 * 60);
-            }
-            //期限を+1day-1secする
-            if (!empty($data['KeyResult'][0]['end_date'])) {
-                $data['KeyResult'][0]['end_date'] = strtotime('+1 day -1 sec',
-                                                              strtotime($data['KeyResult'][0]['end_date'])) - ($this->me['timezone'] * 60 * 60);
-            }
-            //新規の場合はデフォルトKRを追加
-            if (!isset($data['KeyResult'][0]['id']) && isset($data['Goal']['id'])) {
-                $kr = $data['KeyResult'][0];
-                $kr['goal_id'] = $data['Goal']['id'];
-                $kr['name'] = __d('gl', "タイトルを入れてください");
-                $kr['special_flg'] = false;
-                $kr['priority'] = 0;
-                $kr['current_value'] = 0;
-                $kr['start_value'] = 0;
-                $kr['target_value'] = 100;
-                $kr['value_unit'] = KeyResult::UNIT_PERCENT;
-                $this->KeyResult->create();
-                $this->KeyResult->save($kr);
-            }
+        //時間をunixtimeに変換
+        if (!empty($data['Goal']['start_date'])) {
+            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - ($this->me['timezone'] * 60 * 60);
+        }
+        //期限を+1day-1secする
+        if (!empty($data['Goal']['end_date'])) {
+            $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
+                                                  strtotime($data['Goal']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+        }
+        //新規の場合はデフォルトKRを追加
+        if (!isset($data['Goal']['id'])) {
+            $kr['name'] = __d('gl', "タイトルを入れてください");
+            $kr['priority'] = 0;
+            $kr['current_value'] = 0;
+            $kr['start_value'] = 0;
+            $kr['target_value'] = 100;
+            $kr['value_unit'] = KeyResult::UNIT_PERCENT;
+            $kr['start_date'] = $data['Goal']['start_date'];
+            $kr['end_date'] = $data['Goal']['end_date'];
+            $kr['team_id'] = $this->current_team_id;
+            $kr['user_id'] = $this->my_uid;
+            $data['KeyResult'][0] = $kr;
         }
         $this->create();
+        $this->log($data);
         $res = $this->saveAll($data);
         //SKRユーザの保存
-        if ($this->KeyResult->getLastInsertID()) {
-            $this->Collaborator->add($this->KeyResult->getLastInsertID(), null, Collaborator::TYPE_OWNER);
+        if ($this->getLastInsertID()) {
+            $this->Collaborator->add($this->getLastInsertID(), null, Collaborator::TYPE_OWNER);
         }
         return $res;
     }
@@ -270,11 +264,17 @@ class Goal extends AppModel
                         'KeyResult.team_id'      => $this->current_team_id,
                         'KeyResult.special_flg'  => true,
                     ]
-                ]
+                ],
+                'Purpose',
             ]
         ];
         $res = $this->find('first', $options);
         //基準の数値を変換
+        $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
+        $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
+        $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
+
+        //KRの数値を変換
         if (!empty($res['KeyResult'])) {
             foreach ($res['KeyResult'] as $k => $k_val) {
                 $res['KeyResult'][$k]['start_value'] = (double)$k_val['start_value'];

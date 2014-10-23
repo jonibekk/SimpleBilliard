@@ -54,4 +54,14 @@ class Purpose extends AppModel
         'Goal',
     ];
 
+    function add($data)
+    {
+        if (!isset($data['Purpose']) || empty($data['Purpose'])) {
+            return false;
+        }
+        $data['Purpose']['team_id'] = $this->current_team_id;
+        $data['Purpose']['user_id'] = $this->my_uid;
+        return $this->save($data);
+    }
+
 }

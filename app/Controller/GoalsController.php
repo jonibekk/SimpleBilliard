@@ -38,6 +38,7 @@ class GoalsController extends AppController
      */
     public function add($id = null)
     {
+        $purpose_id = isset($this->request->params['named']['purpose_id']) ? $this->request->params['named']['purpose_id'] : null;
         $this->layout = LAYOUT_ONE_COLUMN;
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
@@ -52,13 +53,13 @@ class GoalsController extends AppController
         }
 
         if (($this->request->is('post') || $this->request->is('put')) && !empty($this->request->data)) {
-            if ($this->Goal->add($this->request->data)) {
-                if (isset($this->request->params['named']['mode'])) {
+            if (isset($this->request->params['named']['mode'])) {
+                if ($this->Goal->add($this->request->data)) {
                     switch ($this->request->params['named']['mode']) {
                         case 2:
                             $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                             //「ゴールを定める」に進む
-                            $this->redirect([$id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
+                            $this->redirect([$this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
                             break;
                         case 3:
                             //完了
@@ -69,14 +70,20 @@ class GoalsController extends AppController
                     }
                 }
                 else {
-                    $this->Pnotify->outSuccess(__d('gl', "ゴールを目的を保存しました。"));
-                    //「ゴールを定める」に進む
-                    $this->redirect([$this->Goal->id, 'mode' => 2, '#' => 'AddGoalFormKeyResultWrap']);
+                    $this->Pnotify->outError(__d('gl', "ゴールの保存に失敗しました。"));
+                    $this->redirect($this->referer());
                 }
             }
             else {
-                $this->Pnotify->outError(__d('gl', "ゴールの保存に失敗しました。"));
-                $this->redirect($this->referer());
+                if ($this->Goal->Purpose->add($this->request->data)) {
+                    $this->Pnotify->outSuccess(__d('gl', "ゴールの目的を保存しました。"));
+                    //「ゴールを定める」に進む
+                    $this->redirect(['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap']);
+                }
+                else {
+                    $this->Pnotify->outError(__d('gl', "ゴールの目的の保存に失敗しました。"));
+                    $this->redirect($this->referer());
+                }
             }
         }
         else {
@@ -84,17 +91,26 @@ class GoalsController extends AppController
             if ($id) {
                 $this->request->data = $this->Goal->getAddData($id);
             }
-
+            elseif ($purpose_id) {
+                //目的ID指定の場合はpurposeをセット
+                if ($this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
+                    $this->request->data = $this->Goal->Purpose->findById($purpose_id);
+                }
+                else {
+                    $this->Pnotify->outError(__d('gl', "権限がありません。"));
+                    $this->redirect($this->referer());
+                }
+            }
         }
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
-        if (isset($this->request->data['KeyResult'][0]) && !empty($this->request->data['KeyResult'][0])) {
+        if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
             $kr_start_date_format = date('Y/m/d',
-                                         $this->request->data['KeyResult'][0]['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+                                         $this->request->data['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
             $kr_end_date_format = date('Y/m/d',
-                                       $this->request->data['KeyResult'][0]['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+                                       $this->request->data['Goal']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
         }
         else {
             $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
