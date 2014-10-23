@@ -78,7 +78,9 @@ class GoalsController extends AppController
                 if ($this->Goal->Purpose->add($this->request->data)) {
                     $this->Pnotify->outSuccess(__d('gl', "ゴールの目的を保存しました。"));
                     //「ゴールを定める」に進む
-                    $this->redirect(['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap']);
+                    $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
+                    $url = $id ? array_merge([$id], $url) : $url;
+                    $this->redirect($url);
                 }
                 else {
                     $this->Pnotify->outError(__d('gl', "ゴールの目的の保存に失敗しました。"));
