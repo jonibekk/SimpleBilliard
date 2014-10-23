@@ -144,6 +144,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     'label'                    => false,
                                     'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                    'required'                 => true,
                                     'rows'                     => 1,
                                     'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
                                                                                                               "例）サービスAの国内市場シェアを増加させる") . '</span>'
