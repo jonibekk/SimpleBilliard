@@ -113,6 +113,7 @@ class Goal extends AppModel
         'User',
         'Team',
         'GoalCategory',
+        'Purpose',
     ];
 
     /**
@@ -142,7 +143,9 @@ class Goal extends AppModel
         'MyCollabo'           => [
             'className' => 'Collaborator',
         ],
-        'Follower',
+        'Follower'            => [
+            'dependent' => true,
+        ],
         'MyFollow'            => [
             'className' => 'Follower',
         ],
