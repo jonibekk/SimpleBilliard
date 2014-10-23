@@ -314,22 +314,22 @@ class KeyResult extends AppModel
         return $this->save($data);
     }
 
-    function complete($goal_id)
+    function complete($kr_id)
     {
-        $current_kr = $this->findById($goal_id);
+        $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
             throw new RuntimeException(__d('gl', "成果が存在しません。"));
         }
-        $this->id = $goal_id;
+        $this->id = $kr_id;
         $this->saveField('current_value', $current_kr['KeyResult']['target_value']);
         $this->saveField('progress', 100);
         $this->saveField('completed', time());
         return true;
     }
 
-    function incomplete($goal_id)
+    function incomplete($kr_id)
     {
-        $current_kr = $this->findById($goal_id);
+        $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
             throw new RuntimeException(__d('gl', "成果が存在しません。"));
         }

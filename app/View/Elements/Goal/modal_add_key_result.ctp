@@ -16,7 +16,7 @@
  * @var                    $kr_end_date_format
  * @var                    $limit_end_date
  * @var                    $limit_start_date
- * @var                    $current_goal_id
+ * @var                    $current_kr_id
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_add_key_result.ctp -->
@@ -38,7 +38,7 @@
                 'class'     => 'form-control addteam_input-design'
             ],
             'class'         => 'form-horizontal',
-            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $goal_id, $current_goal_id],
+            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $goal_id, $current_kr_id],
             'novalidate'    => true,
             'id'            => 'AddGoalFormKeyResult',
         ]); ?>

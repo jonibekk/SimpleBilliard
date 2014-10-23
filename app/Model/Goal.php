@@ -671,4 +671,30 @@ class Goal extends AppModel
         return $res;
     }
 
+    function complete($goal_id)
+    {
+        $goal = $this->findById($goal_id);
+        if (empty($goal)) {
+            throw new RuntimeException(__d('gl', "ゴールが存在しません。"));
+        }
+        $this->id = $goal_id;
+        $this->saveField('current_value', $goal['Goal']['target_value']);
+        $this->saveField('progress', 100);
+        $this->saveField('completed', time());
+        return true;
+    }
+
+    function incomplete($goal_id)
+    {
+        $goal = $this->findById($goal_id);
+        if (empty($goal)) {
+            throw new RuntimeException(__d('gl', "ゴールが存在しません。"));
+        }
+        $goal['Goal']['completed'] = null;
+        unset($goal['Goal']['modified']);
+        $this->create();
+        $this->save($goal);
+        return true;
+    }
+
 }
