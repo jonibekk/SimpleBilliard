@@ -28,12 +28,12 @@
                         <li role="presentation">
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', $kr['KeyResult']['id']]) ?>"
                                class="modal-ajax-get-add-key-result">
-                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "成果を更新") ?></span></i></a>
+                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "出したい成果を編集する") ?></span></i></a>
                         </li>
                         <li role="presentation">
                             <? if ($kr['KeyResult']['completed']): ?>
-                                <?= $this->Form->postLink('<i class="fa fa-pencil"><span class="ml_2px">' .
-                                                          __d('gl', "未完了にする") . '</span></i>',
+                                <?= $this->Form->postLink('<i class="fa fa-reply"><span class="ml_2px">' .
+                                                          __d('gl', "出したい成果を未完了にする") . '</span></i>',
                                                           ['controller' => 'goals', 'action' => 'incomplete', $kr['KeyResult']['id']],
                                                           ['escape' => false]) ?>
                             <? else: ?>
@@ -42,12 +42,12 @@
                                 if ($incomplete_kr_count === 1):?>
                                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', $kr['KeyResult']['id']]) ?>"
                                        class="modal-ajax-get">
-                                        <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl',
-                                                                                             "完了にする") ?></span></i>
+                                        <i class="fa fa-check"><span class="ml_2px"><?= __d('gl',
+                                                                                            "出したい成果を完了にする") ?></span></i>
                                     </a>
                                 <? else: ?>
-                                    <?= $this->Form->postLink('<i class="fa fa-pencil"><span class="ml_2px">' .
-                                                              __d('gl', "完了にする") . '</span></i>',
+                                    <?= $this->Form->postLink('<i class="fa fa-check"><span class="ml_2px">' .
+                                                              __d('gl', "出したい成果を完了にする") . '</span></i>',
                                                               ['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']],
                                                               ['escape' => false]) ?>
                                 <? endif; ?>
@@ -56,7 +56,7 @@
                         <li role="presentation">
                             <?=
                             $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' .
-                                                  __d('gl', "削除") . '</span></i>',
+                                                  __d('gl', "出したい成果を削除する") . '</span></i>',
                                                   ['controller' => 'goals', 'action' => 'delete_key_result', $kr['KeyResult']['id']],
                                                   ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
                         </li>
