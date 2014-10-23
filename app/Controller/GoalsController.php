@@ -48,7 +48,7 @@ class GoalsController extends AppController
 
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
-                $this->redirect($this->referer());
+                return $this->redirect($this->referer());
             }
         }
 

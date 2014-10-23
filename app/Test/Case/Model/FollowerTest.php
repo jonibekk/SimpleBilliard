@@ -27,7 +27,7 @@ class FollowerTest extends CakeTestCase
         'app.goal',
         'app.goal_category',
         'app.key_result',
-        'app.collaborator',
+        'app.collabo_id',
         'app.post_share_user',
         'app.post_share_circle',
         'app.circle',

@@ -18,7 +18,7 @@ class GoalTest extends CakeTestCase
         'app.purpose',
         'app.goal',
         'app.key_result',
-        'app.collaborator',
+        'app.collabo_id',
         'app.follower',
         'app.user',
         'app.team',

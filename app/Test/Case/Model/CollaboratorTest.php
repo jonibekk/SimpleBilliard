@@ -15,7 +15,7 @@ class CollaboratorTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.collaborator',
+        'app.collabo_id',
         'app.team',
         'app.badge',
         'app.user',

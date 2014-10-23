@@ -532,8 +532,9 @@ class Goal extends AppModel
             ],
         ];
         $res = $this->find('first', $options);
-        $res['Goal']['progress'] = $this->getProgress($res);
-
+        if (!empty($res)) {
+            $res['Goal']['progress'] = $this->getProgress($res);
+        }
         return $res;
     }
 
