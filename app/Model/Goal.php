@@ -114,7 +114,10 @@ class Goal extends AppModel
         'User',
         'Team',
         'GoalCategory',
-        'Purpose',
+        'Purpose' => [
+            "counterCache" => true,
+            'counterScope' => ['Purpose.del_flg' => false]
+        ],
     ];
 
     /**
@@ -128,9 +131,6 @@ class Goal extends AppModel
         ],
         'KeyResult'           => [
             'dependent' => true,
-        ],
-        'SpecialKeyResult'    => [
-            'className' => 'KeyResult'
         ],
         'IncompleteKeyResult' => [
             'className' => 'KeyResult'
@@ -199,7 +199,6 @@ class Goal extends AppModel
             $data['KeyResult'][0] = $kr;
         }
         $this->create();
-        $this->log($data);
         $res = $this->saveAll($data);
         //SKRユーザの保存
         if ($this->getLastInsertID()) {
@@ -296,23 +295,16 @@ class Goal extends AppModel
         $end_date = $this->Team->getTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.user_id' => $this->my_uid,
-                'Goal.team_id' => $this->current_team_id,
+                'Goal.user_id'       => $this->my_uid,
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
             ],
             'contain'    => [
-                'SpecialKeyResult' => [
+                'Purpose',
+                'KeyResult' => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'SpecialKeyResult.special_flg'   => true,
-                        'SpecialKeyResult.start_date >=' => $start_date,
-                        'SpecialKeyResult.end_date <'    => $end_date,
-                    ],
-
-                ],
-                'KeyResult'        => [
-                    //KeyResultは期限が今期内
-                    'conditions' => [
-                        'KeyResult.special_flg'   => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ]
@@ -343,9 +335,13 @@ class Goal extends AppModel
         //　重要度が高→低
         $res = $this->sortPriority($res);
 
-        //・第１優先ソート【基準ある/なし】
-        //　基準登録がなし→ある
-        $res = $this->sortExistsSpecialKeyResult($res);
+        //目的一覧を取得
+        if (!empty($purposes = $this->Purpose->getPurposesNoGoal())) {
+            foreach ($purposes as $key => $val) {
+                $purposes[$key]['Goal'] = [];
+            }
+            $res = array_merge($purposes, $res);
+        }
 
         return $res;
     }
@@ -362,8 +358,8 @@ class Goal extends AppModel
     {
         $end_date_list = array();
         foreach ($goals as $key => $goal) {
-            if (isset($goal['SpecialKeyResult'][0]['end_date'])) {
-                $end_date_list[$key] = $goal['SpecialKeyResult'][0]['end_date'];
+            if (isset($goal['Goal']['end_date'])) {
+                $end_date_list[$key] = $goal['Goal']['end_date'];
             }
             else {
                 //基準なしは下に
@@ -411,27 +407,6 @@ class Goal extends AppModel
     }
 
     /**
-     * 基準登録がなし→ある で並べ替え
-     *
-     * @param     $goals
-     * @param int $direction
-     *
-     * @return bool
-     */
-    function sortExistsSpecialKeyResult($goals, $direction = SORT_ASC)
-    {
-        $exists_fkr = array();
-        foreach ($goals as $key => $goal) {
-            $exists_fkr[$key] = 0;
-            if (!empty($goal['SpecialKeyResult'])) {
-                $exists_fkr[$key] = 1;
-            }
-        }
-        array_multisort($exists_fkr, $direction, SORT_NUMERIC, $goals);
-        return $goals;
-    }
-
-    /**
      * 自分がこらぼったゴール取得
      *
      * @return array
@@ -466,23 +441,16 @@ class Goal extends AppModel
         $end_date = $this->Team->getTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.id'      => $goal_ids,
-                'Goal.team_id' => $this->current_team_id,
+                'Goal.id'            => $goal_ids,
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
             ],
             'contain'    => [
-                'SpecialKeyResult' => [
+                'Purpose',
+                'KeyResult' => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'SpecialKeyResult.special_flg'   => true,
-                        'SpecialKeyResult.start_date >=' => $start_date,
-                        'SpecialKeyResult.end_date <'    => $end_date,
-                    ],
-
-                ],
-                'KeyResult'        => [
-                    //KeyResultは期限が今期内
-                    'conditions' => [
-                        'KeyResult.special_flg'   => false,
                         'KeyResult.start_date >=' => $start_date,
                         'KeyResult.end_date <'    => $end_date,
                     ],
@@ -516,50 +484,45 @@ class Goal extends AppModel
         $end_date = $this->Team->getTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.id'      => $id,
-                'Goal.team_id' => $this->current_team_id,
+                'Goal.id'            => $id,
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
             ],
             'contain'    => [
-                'SpecialKeyResult' => [
-                    //KeyResultは期限が今期内
-                    'conditions'   => [
-                        'SpecialKeyResult.special_flg'   => true,
-                        'SpecialKeyResult.start_date >=' => $start_date,
-                        'SpecialKeyResult.end_date <'    => $end_date,
+                'Purpose',
+                'Leader'       => [
+                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'User'       => [
+                        'fields' => $this->User->profileFields,
+                    ]
+                ],
+                'Collaborator' => [
+                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
+                    'User'       => [
+                        'fields' => $this->User->profileFields,
+                    ]
+                ],
+                'MyCollabo'    => [
+                    'conditions' => [
+                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                        'MyCollabo.user_id' => $this->my_uid,
                     ],
-                    'Leader'       => [
-                        'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                        'User'       => [
-                            'fields' => $this->User->profileFields,
-                        ]
-                    ],
-                    'Collaborator' => [
-                        'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
-                        'User'       => [
-                            'fields' => $this->User->profileFields,
-                        ]
-                    ],
-                    'MyCollabo'    => [
-                        'conditions' => [
-                            'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
-                            'MyCollabo.user_id' => $this->my_uid,
-                        ],
-                        'fields'     => [
-                            'MyCollabo.id',
-                            'MyCollabo.role',
-                            'MyCollabo.description',
-                        ],
-                    ],
-                    'MyFollow'     => [
-                        'conditions' => [
-                            'MyFollow.user_id' => $this->my_uid,
-                        ],
-                        'fields'     => [
-                            'MyFollow.id',
-                        ],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.role',
+                        'MyCollabo.description',
                     ],
                 ],
-                'KeyResult'        => [
+                'MyFollow'     => [
+                    'conditions' => [
+                        'MyFollow.user_id' => $this->my_uid,
+                    ],
+                    'fields'     => [
+                        'MyFollow.id',
+                    ],
+                ],
+                'KeyResult'    => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.special_flg'   => true,
@@ -573,7 +536,7 @@ class Goal extends AppModel
                         'KeyResult.completed',
                     ],
                 ],
-                'User'             => [
+                'User'         => [
                     'fields' => $this->User->profileFields,
                 ]
             ]
@@ -589,12 +552,12 @@ class Goal extends AppModel
      *
      * @param int  $limit
      * @param null $params
-     * @param bool $required_skr
      *
+     * @internal param bool $required_skr
      * @internal param int $page
      * @return array
      */
-    function getAllGoals($limit = 20, $params = null, $required_skr = true)
+    function getAllGoals($limit = 20, $params = null)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -607,53 +570,48 @@ class Goal extends AppModel
         $goal_ids = $this->KeyResult->getGoalIdsExistsSkr($start_date, $end_date);
         $options = [
             'conditions' => [
-                'Goal.id'      => $goal_ids,
-                'Goal.team_id' => $this->current_team_id,
+                'Goal.id'            => $goal_ids,
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
             ],
             'order'      => ['Goal.modified desc'],
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
-                'SpecialKeyResult' => [
-                    //KeyResultは期限が今期内
-                    'conditions'   => [
-                        'SpecialKeyResult.special_flg'   => true,
-                        'SpecialKeyResult.start_date >=' => $start_date,
-                        'SpecialKeyResult.end_date <'    => $end_date,
+                'Purpose',
+                'Leader'       => [
+                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'User'       => [
+                        'fields' => $this->User->profileFields,
+                    ]
+                ],
+                'Collaborator' => [
+                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
+                    'User'       => [
+                        'fields' => $this->User->profileFields,
+                    ]
+                ],
+                'MyCollabo'    => [
+                    'conditions' => [
+                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                        'MyCollabo.user_id' => $this->my_uid,
                     ],
-                    'Leader'       => [
-                        'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
-                        'User'       => [
-                            'fields' => $this->User->profileFields,
-                        ]
-                    ],
-                    'Collaborator' => [
-                        'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
-                        'User'       => [
-                            'fields' => $this->User->profileFields,
-                        ]
-                    ],
-                    'MyCollabo'    => [
-                        'conditions' => [
-                            'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
-                            'MyCollabo.user_id' => $this->my_uid,
-                        ],
-                        'fields'     => [
-                            'MyCollabo.id',
-                            'MyCollabo.role',
-                            'MyCollabo.description',
-                        ],
-                    ],
-                    'MyFollow'     => [
-                        'conditions' => [
-                            'MyFollow.user_id' => $this->my_uid,
-                        ],
-                        'fields'     => [
-                            'MyFollow.id',
-                        ],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.role',
+                        'MyCollabo.description',
                     ],
                 ],
-                'KeyResult'        => [
+                'MyFollow'     => [
+                    'conditions' => [
+                        'MyFollow.user_id' => $this->my_uid,
+                    ],
+                    'fields'     => [
+                        'MyFollow.id',
+                    ],
+                ],
+                'KeyResult'    => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.start_date >=' => $start_date,
@@ -666,20 +624,12 @@ class Goal extends AppModel
                         'KeyResult.completed',
                     ],
                 ],
-                'User'             => [
+                'User'         => [
                     'fields' => $this->User->profileFields,
                 ]
             ]
         ];
         $res = $this->find('all', $options);
-        //skr必須指定の場合はskrが存在しないゴールを除去
-        if ($required_skr) {
-            foreach ($res as $key => $val) {
-                if (isset($val['SpecialKeyResult']) && empty($val['SpecialKeyResult'])) {
-                    unset($res[$key]);
-                }
-            }
-        }
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);

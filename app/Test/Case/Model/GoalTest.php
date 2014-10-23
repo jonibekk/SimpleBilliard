@@ -200,46 +200,6 @@ class GoalTest extends CakeTestCase
         $this->assertEquals($expected, $res);
     }
 
-    function testSortExistsSpecialKeyResult()
-    {
-        $goals = [
-            [
-                'Goal'             => [
-                    'id' => 1,
-                ],
-                'SpecialKeyResult' => [
-                    'id' => 1,
-                ]
-            ],
-            [
-                'Goal'             => [
-                    'id' => 2,
-                ],
-                'SpecialKeyResult' => [
-                ]
-            ],
-        ];
-        $res = $this->Goal->sortExistsSpecialKeyResult($goals);
-        $expected = [
-            [
-                'Goal'             => [
-                    'id' => 2,
-                ],
-                'SpecialKeyResult' => [
-                ]
-            ],
-            [
-                'Goal'             => [
-                    'id' => 1,
-                ],
-                'SpecialKeyResult' => [
-                    'id' => 1,
-                ]
-            ],
-        ];
-        $this->assertEquals($expected, $res);
-    }
-
     function testSortEndDate()
     {
         $goals = [

@@ -64,4 +64,19 @@ class Purpose extends AppModel
         return $this->save($data);
     }
 
+    function getPurposesNoGoal($uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        $options = [
+            'conditions' => [
+                'team_id'    => $this->current_team_id,
+                'user_id'    => $uid,
+                'goal_count' => 0,
+            ]
+        ];
+        return $this->find('all', $options);
+    }
+
 }

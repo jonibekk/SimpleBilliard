@@ -62,6 +62,7 @@ class PagesController extends AppController
                 $this->_setFeedMoreReadUrl();
                 $select2_default = $this->User->getAllUsersCirclesSelect2();
                 $my_goals = $this->Goal->getMyGoals();
+                $this->log($my_goals);
                 $collabo_goals = $this->Goal->getMyCollaboGoals();
                 $follow_goals = $this->Goal->getMyFollowedGoals();
                 $current_global_menu = "home";
