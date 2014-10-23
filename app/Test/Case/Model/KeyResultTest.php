@@ -15,6 +15,7 @@ class KeyResultTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.cake_session',
         'app.key_result',
         'app.collaborator',
@@ -120,53 +121,51 @@ class KeyResultTest extends CakeTestCase
     function testIsPermitted()
     {
         $this->setDefault();
-        $skr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 1,
-            'special_flg' => 1,
-            'start_date'  => time(),
-            'end_date'    => time(),
+        $goal = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'name'       => 'test',
+            'start_date' => time(),
+            'end_date'   => time(),
         ];
-        $this->KeyResult->create();
-        $this->KeyResult->save($skr);
-        $goal_id = $this->KeyResult->getLastInsertID();
-        $kr_user = [
+        $this->KeyResult->Goal->create();
+        $this->KeyResult->Goal->save($goal);
+        $goal_id = $this->KeyResult->Goal->getLastInsertID();
+        $collabo = [
             'goal_id' => $goal_id,
             'user_id' => 1,
             'team_id' => 1,
         ];
         $this->KeyResult->Goal->Collaborator->create();
-        $this->KeyResult->Goal->Collaborator->save($kr_user);
+        $this->KeyResult->Goal->Collaborator->save($collabo);
         $kr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 1,
-            'special_flg' => false,
-            'start_date'  => time(),
-            'end_date'    => time(),
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'name'       => 'test',
+            'goal_id'    => $goal_id,
+            'start_date' => time(),
+            'end_date'   => time(),
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
-        $goal_id = $this->KeyResult->getLastInsertID();
-        $res = $this->KeyResult->isPermitted($goal_id);
+        $kr_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($kr_id);
         $this->assertTrue($res, "コラボしている");
 
         $res = $this->KeyResult->isPermitted(9999999);
         $this->assertFalse($res, "存在しないKR");
 
         $kr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 9999999,
-            'special_flg' => false,
-            'start_date'  => time(),
-            'end_date'    => time(),
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => 9999999,
+            'start_date' => time(),
+            'end_date'   => time(),
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
-        $goal_id = $this->KeyResult->getLastInsertID();
-        $res = $this->KeyResult->isPermitted($goal_id);
+        $kr_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($kr_id);
         $this->assertFalse($res, "存在しないSKR");
     }
 
@@ -222,6 +221,8 @@ class KeyResultTest extends CakeTestCase
     {
         $this->KeyResult->my_uid = 1;
         $this->KeyResult->current_team_id = 1;
+        $this->KeyResult->Goal->my_uid = 1;
+        $this->KeyResult->Goal->current_team_id = 1;
         $this->KeyResult->Team->my_uid = 1;
         $this->KeyResult->Team->current_team_id = 1;
         $this->KeyResult->Goal->Collaborator->my_uid = 1;

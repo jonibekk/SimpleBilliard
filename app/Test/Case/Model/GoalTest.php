@@ -211,7 +211,8 @@ class GoalTest extends CakeTestCase
             ],
             [
                 'Goal' => [
-                    'id' => 2,
+                    'id'       => 2,
+                    'end_date' => 1,
                 ],
             ],
         ];
@@ -219,7 +220,8 @@ class GoalTest extends CakeTestCase
         $expected = [
             [
                 'Goal' => [
-                    'id' => 2,
+                    'id'       => 2,
+                    'end_date' => 1,
                 ],
             ],
             [
@@ -234,43 +236,39 @@ class GoalTest extends CakeTestCase
     function testGetAddData()
     {
         $this->setDefault();
-        $goal_id = $this->_getNewKr();
-        $kr = $this->Goal->KeyResult->findById($goal_id);
-        $this->Goal->getAddData($kr['KeyResult']['id']);
+        $goal_id = $this->_getNewGoal();
+        $this->Goal->getAddData($goal_id);
     }
 
-    function _getNewKr()
+    function _getNewGoal()
     {
-        $skr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 1,
-            'name'        => 'test',
-            'special_flg' => true,
-            'start_date'  => time(),
-            'end_date'    => time(),
+        $goal = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'name'       => 'test',
+            'start_date' => time(),
+            'end_date'   => time(),
         ];
-        $this->Goal->KeyResult->create();
-        $this->Goal->KeyResult->save($skr);
-        $goal_id = $this->Goal->KeyResult->getLastInsertID();
+        $this->Goal->create();
+        $this->Goal->save($goal);
+        $goal_id = $this->Goal->getLastInsertID();
         $kr = [
             'user_id'    => 1,
             'team_id'    => 1,
-            'goal_id'    => 1,
+            'goal_id'    => $goal_id,
             'name'       => 'test',
             'start_date' => time(),
             'end_date'   => time(),
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($kr);
-        $goal_id = $this->Goal->KeyResult->getLastInsertID();
-        $kr_user = [
+        $collabo = [
             'user_id' => 1,
             'team_id' => 1,
             'goal_id' => $goal_id,
         ];
         $this->Goal->Collaborator->create();
-        $this->Goal->Collaborator->save($kr_user);
+        $this->Goal->Collaborator->save($collabo);
         return $goal_id;
     }
 
