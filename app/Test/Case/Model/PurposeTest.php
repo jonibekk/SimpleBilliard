@@ -25,7 +25,7 @@ class PurposeTest extends CakeTestCase
         'app.goal',
         'app.goal_category',
         'app.key_result',
-        'app.collabo_id',
+        'app.collaborator',
         'app.follower',
         'app.post_share_user',
         'app.post_share_circle',
