@@ -10,8 +10,8 @@
  * @var                        $goal_category_list
  * @var                        $priority_list
  * @var                        $kr_value_unit_list
- * @var                        $kr_start_date_format
- * @var                        $kr_end_date_format
+ * @var                        $goal_start_date_format
+ * @var                        $goal_end_date_format
  */
 $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']['id']] : [];
 
@@ -214,8 +214,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 <?=
                                 $this->Form->input('end_date',
                                                    [
-                                                       'value'                    => $kr_end_date_format,
-                                                       'default'                  => $kr_end_date_format,
+                                                       'value'                    => $goal_end_date_format,
+                                                       'default'                  => $goal_end_date_format,
                                                        'label'                    => false,
                                                        'div'                      => false,
                                                        'class'                    => "form-control",
@@ -235,7 +235,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                id="KeyResult0StartDateDefault">
                                     <span
                                         class="plr_18px"><?=
-                                        $kr_start_date_format ?><?=
+                                        $goal_start_date_format ?><?=
                                         !isset($this->request->data['KeyResult'][0]) ? __d('gl',
                                                                                            "（本日）") : null ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
@@ -250,7 +250,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 <?=
                                 $this->Form->input('start_date',
                                                    [
-                                                       'value'                    => $kr_start_date_format,
+                                                       'value'                    => $goal_start_date_format,
                                                        'label'                    => false,
                                                        'div'                      => false,
                                                        'class'                    => "form-control",
