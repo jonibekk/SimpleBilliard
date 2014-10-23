@@ -317,8 +317,8 @@ class GoalTest extends CakeTestCase
     function testGetAddData()
     {
         $this->setDefault();
-        $kr_id = $this->_getNewKr();
-        $kr = $this->Goal->KeyResult->findById($kr_id);
+        $goal_id = $this->_getNewKr();
+        $kr = $this->Goal->KeyResult->findById($goal_id);
         $this->Goal->getAddData($kr['KeyResult']['id']);
     }
 
@@ -342,7 +342,7 @@ class GoalTest extends CakeTestCase
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($skr);
-        $skr_id = $this->Goal->KeyResult->getLastInsertID();
+        $goal_id = $this->Goal->KeyResult->getLastInsertID();
         $kr = [
             'user_id'    => 1,
             'team_id'    => 1,
@@ -353,15 +353,15 @@ class GoalTest extends CakeTestCase
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($kr);
-        $kr_id = $this->Goal->KeyResult->getLastInsertID();
+        $goal_id = $this->Goal->KeyResult->getLastInsertID();
         $kr_user = [
             'user_id' => 1,
             'team_id' => 1,
-            'goal_id' => $skr_id,
+            'goal_id' => $goal_id,
         ];
         $this->Goal->Collaborator->create();
         $this->Goal->Collaborator->save($kr_user);
-        return $kr_id;
+        return $goal_id;
     }
 
     function setDefault()

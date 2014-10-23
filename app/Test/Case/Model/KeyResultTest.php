@@ -146,9 +146,9 @@ class KeyResultTest extends CakeTestCase
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($skr);
-        $skr_id = $this->KeyResult->getLastInsertID();
+        $goal_id = $this->KeyResult->getLastInsertID();
         $kr_user = [
-            'goal_id' => $skr_id,
+            'goal_id' => $goal_id,
             'user_id' => 1,
             'team_id' => 1,
         ];
@@ -164,8 +164,8 @@ class KeyResultTest extends CakeTestCase
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
-        $kr_id = $this->KeyResult->getLastInsertID();
-        $res = $this->KeyResult->isPermitted($kr_id);
+        $goal_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($goal_id);
         $this->assertTrue($res, "コラボしている");
 
         $res = $this->KeyResult->isPermitted(9999999);
@@ -181,8 +181,8 @@ class KeyResultTest extends CakeTestCase
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
-        $kr_id = $this->KeyResult->getLastInsertID();
-        $res = $this->KeyResult->isPermitted($kr_id);
+        $goal_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($goal_id);
         $this->assertFalse($res, "存在しないSKR");
     }
 

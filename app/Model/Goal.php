@@ -237,18 +237,18 @@ class Goal extends AppModel
     /**
      * コラボレータ権限チェック
      *
-     * @param $skr_id
+     * @param $goal_id
      *
      * @return bool
      */
-    function isPermittedCollaboFromSkr($skr_id)
+    function isPermittedCollaboFromSkr($goal_id)
     {
-        $this->KeyResult->id = $skr_id;
+        $this->KeyResult->id = $goal_id;
         if (!$this->KeyResult->exists()) {
             throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
         }
 
-        if (!$this->Collaborator->isCollaborated($skr_id)) {
+        if (!$this->Collaborator->isCollaborated($goal_id)) {
             throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
         }
         return true;

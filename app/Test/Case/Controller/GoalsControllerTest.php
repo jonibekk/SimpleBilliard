@@ -464,9 +464,9 @@ class GoalsControllerTest extends ControllerTestCase
     function testAjaxGetKeyResults()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $kr_id = $this->_getNewKr($Goals);
+        $goal_id = $this->_getNewKr($Goals);
         $kr = [
-            'id'        => $kr_id,
+            'id'        => $goal_id,
             'completed' => time(),
         ];
         $Goals->Goal->KeyResult->save($kr);
@@ -480,22 +480,22 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
 
         $data = [];
-        $kr_id = $this->_getNewKr($Goals);
-        $this->testAction('/goals/edit_key_result/' . $kr_id, ['method' => 'PUT', 'data' => $data]);
-        $kr_id = $this->_getNewKr($Goals);
+        $goal_id = $this->_getNewKr($Goals);
+        $this->testAction('/goals/edit_key_result/' . $goal_id, ['method' => 'PUT', 'data' => $data]);
+        $goal_id = $this->_getNewKr($Goals);
         $data = [
             'KeyResult' => [
-                'id'         => $kr_id,
+                'id'         => $goal_id,
                 'value_unit' => 2,
                 'start_date' => time(),
                 'end_date'   => time()
             ]
         ];
-        $this->testAction('/goals/edit_key_result/' . $kr_id, ['method' => 'PUT', 'data' => $data]);
+        $this->testAction('/goals/edit_key_result/' . $goal_id, ['method' => 'PUT', 'data' => $data]);
 
-        $Goals->Goal->KeyResult->id = $kr_id;
+        $Goals->Goal->KeyResult->id = $goal_id;
         $Goals->Goal->KeyResult->saveField('user_id', 2);
-        $this->testAction('/goals/edit_key_result/' . $kr_id, ['method' => 'PUT', 'data' => $data]);
+        $this->testAction('/goals/edit_key_result/' . $goal_id, ['method' => 'PUT', 'data' => $data]);
     }
 
     function testDeleteKeyResultSuccess()
@@ -515,9 +515,9 @@ class GoalsControllerTest extends ControllerTestCase
     function testAjaxGetEditKeyResultModalSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $kr_id = $this->_getNewKr($Goals);
+        $goal_id = $this->_getNewKr($Goals);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . $kr_id, ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_edit_key_result_modal/' . $goal_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -540,23 +540,23 @@ class GoalsControllerTest extends ControllerTestCase
     function testCompleteSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $kr_id = $this->_getNewKr($Goals);
-        $this->testAction('/goals/complete/' . $kr_id, ['method' => 'POST']);
+        $goal_id = $this->_getNewKr($Goals);
+        $this->testAction('/goals/complete/' . $goal_id, ['method' => 'POST']);
     }
 
     function testCompleteSuccessWithGoal()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $kr_id = $this->_getNewKr($Goals);
-        $this->testAction('/goals/complete/' . $kr_id . "/1", ['method' => 'POST']);
+        $goal_id = $this->_getNewKr($Goals);
+        $this->testAction('/goals/complete/' . $goal_id . "/1", ['method' => 'POST']);
     }
 
     function testIncompleteSuccess()
     {
         $this->_getGoalsCommonMock();
         $Goals = $this->_getGoalsCommonMock();
-        $kr_id = $this->_getNewKr($Goals);
-        $this->testAction('/goals/incomplete/' . $kr_id, ['method' => 'POST']);
+        $goal_id = $this->_getNewKr($Goals);
+        $this->testAction('/goals/incomplete/' . $goal_id, ['method' => 'POST']);
     }
 
     function testCompleteFail()
@@ -582,9 +582,9 @@ class GoalsControllerTest extends ControllerTestCase
     function testAjaxGetLastKrConfirmSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $kr_id = $this->_getNewKr($Goals);
+        $goal_id = $this->_getNewKr($Goals);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_last_kr_confirm/' . $kr_id, ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_last_kr_confirm/' . $goal_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -604,7 +604,7 @@ class GoalsControllerTest extends ControllerTestCase
         ];
         $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($skr);
-        $skr_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $goal_id = $Goals->Goal->KeyResult->getLastInsertID();
         $kr = [
             'user_id'    => 1,
             'team_id'    => 1,
@@ -615,15 +615,15 @@ class GoalsControllerTest extends ControllerTestCase
         ];
         $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
-        $kr_id = $Goals->Goal->KeyResult->getLastInsertID();
+        $goal_id = $Goals->Goal->KeyResult->getLastInsertID();
         $kr_user = [
             'user_id' => 1,
             'team_id' => 1,
-            'goal_id' => $skr_id,
+            'goal_id' => $goal_id,
         ];
         $Goals->Goal->Collaborator->create();
         $Goals->Goal->Collaborator->save($kr_user);
-        return $kr_id;
+        return $goal_id;
     }
 
     function _getGoalsCommonMock()

@@ -65,7 +65,7 @@ class Collaborator extends AppModel
         $this->_setTypeName();
     }
 
-    function add($kr_id, $uid = null, $type = self::TYPE_COLLABORATOR)
+    function add($goal_id, $uid = null, $type = self::TYPE_COLLABORATOR)
     {
         if (!$uid) {
             $uid = $this->my_uid;
@@ -74,7 +74,7 @@ class Collaborator extends AppModel
             'team_id' => $this->current_team_id,
             'user_id' => $uid,
             'type'    => $type,
-            'goal_id' => $kr_id,
+            'goal_id' => $goal_id,
         ];
         $res = $this->save($skr_user);
         return $res;
