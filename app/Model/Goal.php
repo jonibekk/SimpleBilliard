@@ -392,7 +392,7 @@ class Goal extends AppModel
      */
     function getMyCollaboGoals()
     {
-        $goal_ids = $this->Collaborator->getCollaboKeyResultList($this->my_uid);
+        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid);
         $res = $this->getByGoalId($goal_ids);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
@@ -697,7 +697,7 @@ class Goal extends AppModel
     }
 
     /**
-     * キーリザルトが現在のチームで有効かどうか
+     * ゴールが現在のチームで有効かどうか
      *
      * @param $id
      *

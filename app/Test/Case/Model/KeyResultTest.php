@@ -117,22 +117,6 @@ class KeyResultTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
-    function testGetSkr()
-    {
-        $this->setDefault();
-        $skr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 1,
-            'special_flg' => true,
-            'start_date'  => time(),
-            'end_date'    => time(),
-        ];
-        $this->KeyResult->save($skr);
-        $res = $this->KeyResult->GetSkr(1);
-        $this->assertNotEmpty($res);
-    }
-
     function testIsPermitted()
     {
         $this->setDefault();

@@ -91,20 +91,6 @@ class KeyResult extends AppModel
         $this->_setUnitName();
     }
 
-    function getGoalIdsExistsSkr($start_date, $end_date)
-    {
-        $options = [
-            'conditions' => [
-                'KeyResult.start_date >=' => $start_date,
-                'KeyResult.end_date <'    => $end_date,
-                'KeyResult.team_id'       => $this->current_team_id,
-            ],
-            'fields'     => ['KeyResult.goal_id']
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
     /**
      * @param      $data
      * @param      $goal_id
@@ -160,22 +146,6 @@ class KeyResult extends AppModel
             unset($options['conditions']['special_flg']);
         }
         $res = $this->find('all', $options);
-        return $res;
-    }
-
-    function getSkr($goal_id)
-    {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
-
-        $options = [
-            'conditions' => [
-                'goal_id'       => $goal_id,
-                'start_date >=' => $start_date,
-                'end_date <'    => $end_date
-            ]
-        ];
-        $res = $this->find('first', $options);
         return $res;
     }
 
