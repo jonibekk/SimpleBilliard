@@ -15,6 +15,7 @@ class GoalsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.goal',
         'app.follower',
         'app.user',
