@@ -547,6 +547,20 @@ class Goal extends AppModel
         return $res;
     }
 
+    function getGoalMinimum($id)
+    {
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $id,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+        ];
+        $res = $this->find('first', $options);
+        $res['Goal']['progress'] = $this->getProgress($res);
+
+        return $res;
+    }
+
     /**
      * 全てのゴール取得
      *

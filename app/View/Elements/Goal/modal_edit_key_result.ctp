@@ -7,7 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $goal_id
- * @var                    $goal_id
+ * @var                    $kr_id
  * @var                    $goal_category_list
  * @var                    $priority_list
  * @var                    $kr_priority_list
@@ -37,11 +37,11 @@
             'class'     => 'form-control addteam_input-design'
         ],
         'class'         => 'form-horizontal',
-        'url'           => ['controller' => 'goals', 'action' => 'edit_key_result', $goal_id],
+        'url'           => ['controller' => 'goals', 'action' => 'edit_key_result', $kr_id],
         'novalidate'    => true,
         'id'            => 'AddGoalFormKeyResult',
     ]); ?>
-    <?= $this->Form->hidden('KeyResult.id', ['value' => $goal_id]) ?>
+    <?= $this->Form->hidden('KeyResult.id', ['value' => $kr_id]) ?>
     <div class="modal-body modal-circle-body">
         <div class="col col-xxs-12">
             <?=
@@ -91,13 +91,14 @@
                                             'wrapInput'           => 'col col-sm-12',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                            'target-id'           => 'KeyResult0ValueInputWrap_' . $goal_id,
+                                            'target-id'           => 'KeyResult0ValueInputWrap_' . $kr_id,
                                             'required'            => true,
                                             'hidden-option-value' => KeyResult::UNIT_BINARY,
                                             'options'             => $kr_value_unit_list
                                            ]) ?>
                     </div>
-                    <div id="KeyResult0ValueInputWrap_<?= $goal_id ?>" style="">
+                    <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
+                         style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
                         <div class="col col-sm-4  pl_12px">
                             <?=
                             $this->Form->input('KeyResult.target_value',
@@ -164,12 +165,12 @@
                             __d('gl', "開始") ?></label>
 
                         <p class="form-control-static col col-sm-12"
-                           id="KeyResult0StartDateDefault_<?= $goal_id ?>">
+                           id="KeyResult0StartDateDefault_<?= $kr_id ?>">
                                     <span
                                         class="pull-left"><?= $kr_start_date_format ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
-                                                       show-target-id="KeyResult0StartDateInputWrap_<?= $goal_id ?>"
-                                                       delete-target-id="KeyResult0StartDateDefault_<?= $goal_id ?>">
+                                                       show-target-id="KeyResult0StartDateInputWrap_<?= $kr_id ?>"
+                                                       delete-target-id="KeyResult0StartDateDefault_<?= $kr_id ?>">
                                             <?= __d('gl', "変更") ?></a>
                                     </span>
                         </p>
@@ -177,7 +178,7 @@
                         <div class="input-group date plr_5px goal-set-date" style="display: none"
                              data-date-end-date="<?= $limit_end_date ?>"
                              data-date-start-date="<?= $limit_start_date ?>"
-                             id="KeyResult0StartDateInputWrap_<?= $goal_id ?>">
+                             id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">
                             <?=
                             $this->Form->input('KeyResult.start_date',
                                                [

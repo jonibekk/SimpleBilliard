@@ -275,21 +275,21 @@ class KeyResult extends AppModel
      * キーリザルト変更権限
      * コラボレータならtrueを返す
      *
-     * @param $goal_id
+     * @param $kr_id
      *
      * @return bool
      */
-    function isPermitted($goal_id)
+    function isPermitted($kr_id)
     {
-        $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
+        $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
         if (empty($key_result)) {
             return false;
         }
-        $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
-        if (empty($skr)) {
+        $goal = $this->Goal->getGoalMinimum($key_result['KeyResult']['goal_id']);
+        if (empty($goal)) {
             return false;
         }
-        return $this->Goal->Collaborator->isCollaborated($skr['KeyResult']['id']);
+        return $this->Goal->Collaborator->isCollaborated($goal['Goal']['id']);
     }
 
     function saveEdit($data)

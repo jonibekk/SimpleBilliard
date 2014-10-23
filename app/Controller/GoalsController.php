@@ -279,11 +279,11 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function edit_key_result($goal_id)
+    public function edit_key_result($kr_id)
     {
         $this->request->allowMethod('post', 'put');
         try {
-            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             if (!$this->Goal->KeyResult->saveEdit($this->request->data)) {
@@ -448,24 +448,23 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_edit_key_result_modal($goal_id)
+    public function ajax_get_edit_key_result_modal($kr_id)
     {
         $this->_ajaxPreProcess();
-        $skr = null;
         try {
-            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
                 throw new RuntimeException();
             }
-            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $goal_id]]);
+            $key_result = $this->Goal->KeyResult->find('first', ['conditions' => ['id' => $kr_id]]);
             $key_result['KeyResult']['start_value'] = (double)$key_result['KeyResult']['start_value'];
             $key_result['KeyResult']['current_value'] = (double)$key_result['KeyResult']['current_value'];
             $key_result['KeyResult']['target_value'] = (double)$key_result['KeyResult']['target_value'];
-            $skr = $this->Goal->KeyResult->getSkr($key_result['KeyResult']['goal_id']);
-            $this->Goal->isPermittedCollaboFromSkr($skr['KeyResult']['id']);
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
         $goal_id = $key_result['KeyResult']['goal_id'];
+        $kr_id = $key_result['KeyResult']['id'];
+        $goal = $this->Goal->getGoalMinimum($goal_id);
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
@@ -477,12 +476,12 @@ class GoalsController extends AppController
         $kr_end_date_format = date('Y/m/d',
                                    $key_result['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
         $limit_end_date = date('Y/m/d',
-                               $skr['KeyResult']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+                               $goal['Goal']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
         $limit_start_date = date('Y/m/d',
-                                 $skr['KeyResult']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+                                 $goal['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
         $this->set(compact(
                        'goal_id',
-                       'goal_id',
+                       'kr_id',
                        'goal_category_list',
                        'priority_list',
                        'kr_priority_list',
