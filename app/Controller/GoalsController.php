@@ -229,8 +229,8 @@ class GoalsController extends AppController
     public function ajax_get_collabo_change_modal($goal_id)
     {
         $this->_ajaxPreProcess();
-        $skr = $this->Goal->KeyResult->getCollaboModalItem($goal_id);
-        $this->set(compact('skr'));
+        $goal = $this->Goal->getCollaboModalItem($goal_id);
+        $this->set(compact('goal'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -399,7 +399,7 @@ class GoalsController extends AppController
         ];
 
         //存在チェック
-        if (!$this->Goal->KeyResult->isBelongCurrentTeam($goal_id)) {
+        if (!$this->Goal->isBelongCurrentTeam($goal_id)) {
             $return['error'] = true;
             $return['msg'] = __d('gl', "存在しないゴールです。");
             return $this->_ajaxGetResponse($return);
@@ -427,7 +427,7 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
-    function ajax_get_key_results($goal_id)
+    function ajax_get_key_results($goal_id, $kr_can_edit = false)
     {
         $this->_ajaxPreProcess();
 
@@ -439,7 +439,7 @@ class GoalsController extends AppController
             }
         }
 
-        $this->set(compact('key_results', 'incomplete_kr_count'));
+        $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit'));
         $response = $this->render('Goal/key_result_items');
         $html = $response->__toString();
         $result = array(

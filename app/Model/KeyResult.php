@@ -101,60 +101,6 @@ class KeyResult extends AppModel
         $this->_setUnitName();
     }
 
-    function getCollaboGoalList($user_id)
-    {
-        $goal_ids = $this->Goal->Collaborator->getCollaboKeyResultList($user_id);
-        $options = [
-            'conditions' => [
-                'id' => $goal_ids,
-            ],
-            'fields'     => [
-                'goal_id'
-            ],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
-    function getFollowGoalList($user_id)
-    {
-        $goal_ids = $this->Goal->Follower->getFollowList($user_id);
-        $options = [
-            'conditions' => [
-                'id' => $goal_ids,
-            ],
-            'fields'     => [
-                'goal_id'
-            ],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
-    /**
-     * キーリザルトが現在のチームで有効かどうか
-     *
-     * @param $id
-     *
-     * @return bool
-     */
-    function isBelongCurrentTeam($id)
-    {
-        $options = [
-            'conditions' => [
-                'id'      => $id,
-                'team_id' => $this->current_team_id
-            ],
-            'fields'     => [
-                'id'
-            ]
-        ];
-        if ($this->find('first', $options)) {
-            return true;
-        }
-        return false;
-    }
-
     function getGoalIdsExistsSkr($start_date, $end_date)
     {
         $options = [
@@ -167,31 +113,6 @@ class KeyResult extends AppModel
             'fields'     => ['KeyResult.goal_id']
         ];
         $res = $this->find('list', $options);
-        return $res;
-    }
-
-    function getCollaboModalItem($id)
-    {
-        $options = [
-            'conditions' => [
-                'KeyResult.id'      => $id,
-                'KeyResult.team_id' => $this->current_team_id,
-            ],
-            'contain'    => [
-                'MyCollabo' => [
-                    'conditions' => [
-                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
-                        'MyCollabo.user_id' => $this->my_uid,
-                    ],
-                    'fields'     => [
-                        'MyCollabo.id',
-                        'MyCollabo.role',
-                        'MyCollabo.description',
-                    ],
-                ],
-            ],
-        ];
-        $res = $this->find('first', $options);
         return $res;
     }
 

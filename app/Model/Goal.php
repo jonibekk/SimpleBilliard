@@ -413,8 +413,7 @@ class Goal extends AppModel
      */
     function getMyCollaboGoals()
     {
-        $goal_ids = $this->KeyResult->getCollaboGoalList($this->my_uid);
-
+        $goal_ids = $this->Collaborator->getCollaboKeyResultList($this->my_uid);
         $res = $this->getByGoalId($goal_ids);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
@@ -425,8 +424,7 @@ class Goal extends AppModel
 
     function getMyFollowedGoals()
     {
-        $goal_ids = $this->KeyResult->getFollowGoalList($this->my_uid);
-
+        $goal_ids = $this->Follower->getFollowList($this->my_uid);
         $res = $this->getByGoalId($goal_ids);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
@@ -581,10 +579,8 @@ class Goal extends AppModel
             $page = $params['named']['page'];
             unset($params['named']['page']);
         }
-        $goal_ids = $this->KeyResult->getGoalIdsExistsSkr($start_date, $end_date);
         $options = [
             'conditions' => [
-                'Goal.id'            => $goal_ids,
                 'Goal.team_id'       => $this->current_team_id,
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
@@ -695,6 +691,55 @@ class Goal extends AppModel
         $this->create();
         $this->save($goal);
         return true;
+    }
+
+    function getCollaboModalItem($id)
+    {
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $id,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'MyCollabo' => [
+                    'conditions' => [
+                        'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                        'MyCollabo.user_id' => $this->my_uid,
+                    ],
+                    'fields'     => [
+                        'MyCollabo.id',
+                        'MyCollabo.role',
+                        'MyCollabo.description',
+                    ],
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * キーリザルトが現在のチームで有効かどうか
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    function isBelongCurrentTeam($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $id,
+                'team_id' => $this->current_team_id
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
     }
 
 }

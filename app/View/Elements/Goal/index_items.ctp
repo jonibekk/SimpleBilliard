@@ -9,7 +9,7 @@
  * @var                    $goals
  */
 ?>
-<!-- START app/View/Elements/Goals/index_items.ctp -->
+<!-- START app/View/Elements/Goal/index_items.ctp -->
 <? foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-3 col-xs-2">
@@ -33,32 +33,32 @@
                         class="line-numbers ln_2 font_verydark"><?= h($goal['Goal']['name']) ?></b></a>
             </div>
             <div class="col col-xxs-12 font_lightgray font_12px">
-                <? if (!empty($goal['Goal']['Leader'])): ?>
+                <? if (!empty($goal['Leader'])): ?>
                     <?=
                     __d('gl', "リーダー: %s",
-                        h($goal['Goal']['Leader'][0]['User']['display_username'])) ?>
+                        h($goal['Leader'][0]['User']['display_username'])) ?>
                 <? endif; ?>
                 | <?= __d('gl', "コラボ: ") ?>
-                <? if (count($goal['Goal']['Collaborator']) == 0): ?>
+                <? if (count($goal['Collaborator']) == 0): ?>
                     <?= __d('gl', "0人") ?>
                 <? else: ?>
-                    <? foreach ($goal['Goal']['Collaborator'] as $key => $collaborator): ?>
+                    <? foreach ($goal['Collaborator'] as $key => $collaborator): ?>
                         <?= h($collaborator['User']['display_username']) ?>
-                        <? if (isset($goal['Goal']['Collaborator'][$key + 1])) {
+                        <? if (isset($goal['Collaborator'][$key + 1])) {
                             echo ", ";
                         } ?>
                         <? if ($key == 1) {
                             break;
                         } ?>
                     <? endforeach ?>
-                    <? if (($other_count = count($goal['Goal']['Collaborator']) - 2) > 0): ?>
+                    <? if (($other_count = count($goal['Collaborator']) - 2) > 0): ?>
                         <?= __d('gl', "他%s人", $other_count) ?>
                     <? endif; ?>
                 <?endif; ?>
             </div>
             <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                 <div class="col col-xxs-12 mt_5px">
-                    <? if (empty($goal['Goal']['MyFollow'])) {
+                    <? if (empty($goal['MyFollow'])) {
                         $follow_class = 'follow-off';
                         $follow_style = null;
                         $follow_text = __d('gl', "フォロー");
@@ -68,7 +68,7 @@
                         $follow_style = 'display:none;';
                         $follow_text = __d('gl', "フォロー中");
                     }?>
-                    <? if (isset($goal['Goal']['MyCollabo']) && !empty($goal['Goal']['MyCollabo'])) {
+                    <? if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
                         $collabo_class = 'collabo-on';
                         $collabo_style = 'display:none;';
                         $collabo_text = __d('gl', "コラボり中");
@@ -84,7 +84,7 @@
                         <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow sm-btn <?= $follow_class ?>"
                            href="#"
                            data-class="toggle-follow"
-                           kr-id="<?= $goal['Goal']['id'] ?>"
+                           goal-id="<?= $goal['Goal']['id'] ?>"
                             <?= $follow_disabled ?>
                             >
                             <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
@@ -105,4 +105,4 @@
         </div>
     </div>
 <? endforeach ?>
-<!-- End app/View/Elements/Goals/index_items.ctp -->
+<!-- End app/View/Elements/Goal/index_items.ctp -->
