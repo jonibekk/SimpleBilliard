@@ -27,9 +27,9 @@ class CollaboratorFixture extends CakeTestFixture
         'indexes'         => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id' => array('column' => 'team_id', 'unique' => 0),
-            'goal_id' => array('column' => 'goal_id', 'unique' => 0),
             'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'del_flg' => array('column' => 'del_flg', 'unique' => 0)
+            'del_flg' => array('column' => 'del_flg', 'unique' => 0),
+            'goal_id' => array('column' => 'goal_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
