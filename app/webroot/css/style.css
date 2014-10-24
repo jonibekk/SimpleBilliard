@@ -395,6 +395,10 @@ footer p {
     -ms-line-clamp: 2;
 }
 
+.mw_75per{
+    max-width: 75%;
+}
+
 /*/行数の指定*/
 
 /*position*/
@@ -424,6 +428,14 @@ footer p {
 
 /*/ text-align */
 
+.tap-btn{
+    font-size: 40px;
+    line-height: 40px;
+}
+.tap-btn-text{
+    line-height: 20px;
+    vertical-align: top;
+}
 
 /*Fontの指定*/
 .font_11px {
@@ -444,6 +456,10 @@ footer p {
 
 .font_33px {
     font-size: 33px;
+}
+
+.font_40px{
+    font-size: 40px;
 }
 
 .font_bold {
@@ -587,6 +603,24 @@ footer p {
 
 /*/fontの設定*/
 
+/*KR*/
+.check-on{
+    color: #00c952;
+}
+
+.check-off{
+    color: #fff;
+}
+
+.check-fin{
+    visibility: hidden;
+}
+
+.fin-kr{
+    color: #808080;
+}
+/*/KR*/
+
 /*== Modal Settings ==*/
 .modal-label {
     padding-right: 12px;
@@ -612,6 +646,11 @@ footer p {
 /*/アイコンを揃える*/
 
 /* ボーダー */
+.bd-t {
+    border-top: 1px solid #ccc;
+}
+
+
 .bd-b {
     border-bottom: 1px solid #f0f0f0;
 }
@@ -784,6 +823,9 @@ footer p {
     width: 100%;
 }
 
+.w_90per{
+    width: 90%;
+}
 /*/幅指定*/
 
 .modal-content > .modal-header > .close-design {
@@ -1979,7 +2021,7 @@ ul.gl-input-images > li {
 }
 
 .goal-set-buttons {
-    margin-left: 30%;
+    margin-left: 10%;
 }
 
 /*/Goal*/

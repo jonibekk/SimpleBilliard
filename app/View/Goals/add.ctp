@@ -294,7 +294,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default" id="AddGoalFormOtherWrap">
         <div class="panel-heading goal-set-heading clearfix panel-closed-headding">
-            <div class="pull-left goal-set-title"><span class='font_bold'>3</span> <?= __d('gl', "他の情報を追加する") ?>
+            <div class="pull-left goal-set-title"><span class='font_bold'>3</span> <?= __d('gl', "情報を追加する") ?>
             </div>
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
