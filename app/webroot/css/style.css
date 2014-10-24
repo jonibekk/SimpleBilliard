@@ -291,6 +291,10 @@ footer p {
     padding-bottom: 5px;
 }
 
+.mb_12px{
+    margin-bottom: 12px;
+}
+
 .mb_32px {
     margin-bottom: 32px;
 }
@@ -417,6 +421,9 @@ footer p {
 /*/position*/
 
 /* text-align */
+.text-align_l{
+    text-align: left;
+}
 
 .text-align_c {
     text-align: center;
@@ -537,6 +544,14 @@ footer p {
 .font_lightRed-darkRed:hover,
 .font_lightRed-darkRed:hover,
 .font_lightRed-darkRed:hover {
+    color: #91170a;
+}
+
+.font_rouge{
+    color: #eb3228;
+}
+
+.font_darkRed{
     color: #91170a;
 }
 
