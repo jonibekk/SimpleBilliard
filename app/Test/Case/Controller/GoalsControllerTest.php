@@ -55,6 +55,7 @@ class GoalsControllerTest extends ControllerTestCase
     public $goal_id = null;
     public $kr_id = null;
     public $collabo_id = null;
+    public $purpose_id = null;
 
     function testIndex()
     {
@@ -273,6 +274,40 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('goals/delete/' . $this->goal_id, ['method' => 'POST']);
     }
 
+    /**
+     * testDeletePurpose method
+     *
+     * @return void
+     */
+    public function testDeletePurposeFail()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('goals/delete_purpose/0', ['method' => 'POST']);
+    }
+
+    public function testDeletePurposeNotOwn()
+    {
+        /**
+         * @var UsersController $Goals
+         */
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $Goals->Goal->Purpose->id = $this->purpose_id;
+        $Goals->Goal->Purpose->saveField('user_id', 99999);
+        $this->testAction('goals/delete_purpose/' . $this->purpose_id, ['method' => 'POST']);
+    }
+
+    public function testDeletePurposeSuccess()
+    {
+        /**
+         * @var UsersController $Goals
+         */
+        $Goals = $this->_getGoalsCommonMock();
+
+        $this->_setDefault($Goals);
+        $this->testAction('goals/delete_purpose/' . $this->purpose_id, ['method' => 'POST']);
+    }
+
     function testEditCollaboSuccess()
     {
         $this->_getGoalsCommonMock();
@@ -426,9 +461,9 @@ class GoalsControllerTest extends ControllerTestCase
     function testAjaxGetKeyResults()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $goal_id = $this->_setDefault($Goals);
+        $this->_setDefault($Goals);
         $kr = [
-            'id'        => $goal_id,
+            'id'        => $this->goal_id,
             'completed' => time(),
         ];
         $Goals->Goal->KeyResult->save($kr);
@@ -509,7 +544,6 @@ class GoalsControllerTest extends ControllerTestCase
 
     function testIncompleteSuccess()
     {
-        $this->_getGoalsCommonMock();
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $this->testAction('/goals/incomplete/' . $this->kr_id, ['method' => 'POST']);
@@ -549,9 +583,18 @@ class GoalsControllerTest extends ControllerTestCase
      */
     function _setDefault($Goals)
     {
+        $purpose = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'name'    => 'test',
+        ];
+        $Goals->Goal->Purpose->create();
+        $Goals->Goal->Purpose->save($purpose);
+        $this->purpose_id = $Goals->Goal->Purpose->getLastInsertID();
         $goal = [
             'user_id'    => 1,
             'team_id'    => 1,
+            'purpose_id' => $this->purpose_id,
             'name'       => 'test',
             'start_date' => time(),
             'end_date'   => time(),
@@ -579,6 +622,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->Collaborator->create();
         $Goals->Goal->Collaborator->save($collaborator);
         $this->collabo_id = $Goals->Goal->Collaborator->getLastInsertID();
+        return;
     }
 
     function _getGoalsCommonMock()
