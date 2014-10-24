@@ -175,7 +175,7 @@
                                     </span>
                         </p>
 
-                        <div class="input-group date plr_5px goal-set-date" style="display: none"
+                        <div class="col col-sm-12 input-group date plr_5px goal-set-date" style="display: none"
                              data-date-end-date="<?= $limit_end_date ?>"
                              data-date-start-date="<?= $limit_start_date ?>"
                              id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">
@@ -191,7 +191,7 @@
                                                    'type'                     => 'text',
                                                    'wrapInput'                => null
                                                ]) ?>
-                            <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                            <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                         </div>
                     </div>
                 </div>

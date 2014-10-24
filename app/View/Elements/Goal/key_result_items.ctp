@@ -14,8 +14,9 @@
 <!-- START app/View/Elements/Goal/key_result_items.ctp -->
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
-        <div class="col col-xxs-12">
+        <div class="col col-xxs-12 w_90per line-numbers ln_1">
             <?= h($kr['KeyResult']['name']) ?>
+        </div>
             <? if ($kr_can_edit): ?>
                 <div class="pull-right dropdown">
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
@@ -63,7 +64,6 @@
                     </ul>
                 </div>
             <? endif; ?>
-        </div>
     <? endforeach ?>
 <? else: ?>
     <div class="col col-xxs-12">
