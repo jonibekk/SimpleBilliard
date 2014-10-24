@@ -186,7 +186,7 @@ class Goal extends AppModel
         }
         //新規の場合はデフォルトKRを追加
         if (!isset($data['Goal']['id'])) {
-            $kr['name'] = __d('gl', "タイトルを入れてください");
+            $kr['name'] = __d('gl', "出したい成果の名前を入れてください");
             $kr['priority'] = 0;
             $kr['current_value'] = 0;
             $kr['start_value'] = 0;
