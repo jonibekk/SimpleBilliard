@@ -20,10 +20,10 @@ class KeyResult extends AppModel
 
     static public $UNIT = [
         self::UNIT_PERCENT => "",
-        self::UNIT_NUMBER  => "",
-        self::UNIT_BINARY  => "",
         self::UNIT_YEN     => "",
         self::UNIT_DOLLAR  => "",
+        self::UNIT_NUMBER  => "",
+        self::UNIT_BINARY  => "",
     ];
 
     /**
