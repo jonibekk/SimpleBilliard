@@ -12,7 +12,6 @@
 ?>
 <!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
 <? foreach ($goals as $goal): ?>
-    <? $this->log($goal) ?>
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
             <? if ($type == 'leader'): ?>
