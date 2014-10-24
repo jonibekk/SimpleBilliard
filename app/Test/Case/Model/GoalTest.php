@@ -171,30 +171,38 @@ class GoalTest extends CakeTestCase
     {
         $goals = [
             [
-                'Goal' => [
-                    'id'       => 1,
-                    'priority' => 1
+                'Goal'      => [
+                    'id' => 1,
+                ],
+                'MyCollabo' => [
+                    ['priority' => 1]
                 ]
             ],
             [
-                'Goal' => [
-                    'id'       => 2,
-                    'priority' => 5
+                'Goal'      => [
+                    'id' => 2,
+                ],
+                'MyCollabo' => [
+                    ['priority' => 5]
                 ]
             ],
         ];
         $res = $this->Goal->sortPriority($goals);
         $expected = [
             [
-                'Goal' => [
-                    'id'       => 2,
-                    'priority' => 5
+                'Goal'      => [
+                    'id' => 2,
+                ],
+                'MyCollabo' => [
+                    ['priority' => 5]
                 ]
             ],
             [
-                'Goal' => [
-                    'id'       => 1,
-                    'priority' => 1
+                'Goal'      => [
+                    'id' => 1,
+                ],
+                'MyCollabo' => [
+                    ['priority' => 1]
                 ]
             ],
         ];

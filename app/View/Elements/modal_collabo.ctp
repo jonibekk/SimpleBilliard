@@ -7,6 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $goal
+ * @var                    $priority_list
  */
 ?>
 <!-- START app/View/Elements/modal_collabo.ctp -->
@@ -58,6 +59,18 @@
                                 'rows'                     => 1,
                                 'value'                    => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
                                ]) ?>
+            <hr>
+            <?=
+            $this->Form->input('priority',
+                               ['label'                    => __d('gl', "重要度"),
+                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                'required'                 => true,
+                                'type'                     => 'select',
+                                'default'                  => 3,
+                                'options'                  => $priority_list,
+                                'value'                    => isset($goal['MyCollabo'][0]['priority']) ? $goal['MyCollabo'][0]['priority'] : null,
+                               ]) ?>
+
         </div>
         <div class="modal-footer">
             <div class="row">

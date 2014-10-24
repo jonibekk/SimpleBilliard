@@ -331,8 +331,14 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     'placeholder' => __d('gl', "ゴールの内容を詳しく書く"),
                                     'rows'        => 1,
                                    ]) ?>
+                <?
+                if (isset($this->request->data['Collaborator'][0]['id'])) {
+                    echo $this->Form->hidden('Collaborator.0.id',
+                                             ['value' => $this->request->data['Collaborator'][0]['id']]);
+                }
+                ?>
                 <?=
-                $this->Form->input('priority', [
+                $this->Form->input('Collaborator.0.priority', [
                     'before'   => '<div class="col col-sm-3 control-label set-importance">' .
                         '<label>' . __d('gl', "重要度") . '</label>' .
                         '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>このゴールの重要度") . '</div></div>',

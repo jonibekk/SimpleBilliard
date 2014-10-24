@@ -198,12 +198,17 @@ class Goal extends AppModel
             $kr['user_id'] = $this->my_uid;
             $data['KeyResult'][0] = $kr;
         }
+        if (isset($data['Collaborator'][0]) && !empty($data['Collaborator'][0])) {
+            $data['Collaborator'][0]['user_id'] = $this->my_uid;
+            $data['Collaborator'][0]['team_id'] = $this->current_team_id;
+            $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
+        }
         $this->create();
         $res = $this->saveAll($data);
-        //SKRユーザの保存
-        if ($this->getLastInsertID()) {
-            $this->Collaborator->add($this->getLastInsertID(), null, Collaborator::TYPE_OWNER);
-        }
+//        //SKRユーザの保存
+//        if ($this->getLastInsertID()) {
+//            $this->Collaborator->add($this->getLastInsertID(), null, Collaborator::TYPE_OWNER);
+//        }
         return $res;
     }
 
@@ -236,7 +241,7 @@ class Goal extends AppModel
                 'Goal.id' => $id,
             ],
             'contain'    => [
-                'KeyResult' => [
+                'KeyResult'    => [
                     'conditions' => [
                         'KeyResult.start_date >' => $start_date,
                         'KeyResult.end_date <'   => $end_date,
@@ -244,6 +249,11 @@ class Goal extends AppModel
                     ]
                 ],
                 'Purpose',
+                'Collaborator' => [
+                    'conditions' => [
+                        'Collaborator.user_id' => $this->my_uid
+                    ]
+                ],
             ]
         ];
         $res = $this->find('first', $options);
@@ -280,7 +290,11 @@ class Goal extends AppModel
                 'Goal.end_date <'    => $end_date,
             ],
             'contain'    => [
-                'Purpose',
+                'MyCollabo' => [
+                    'conditions' => [
+                        'MyCollabo.user_id' => $this->my_uid
+                    ]
+                ],
                 'KeyResult' => [
                     //KeyResultは期限が今期内
                     'conditions' => [
@@ -288,6 +302,7 @@ class Goal extends AppModel
                         'KeyResult.end_date <'    => $end_date,
                     ]
                 ],
+                'Purpose',
             ]
         ];
         $res = $this->find('all', $options);
@@ -319,6 +334,7 @@ class Goal extends AppModel
             foreach ($purposes as $key => $val) {
                 $purposes[$key]['Goal'] = [];
             }
+            /** @noinspection PhpParamsInspection */
             $res = array_merge($purposes, $res);
         }
 
@@ -379,7 +395,7 @@ class Goal extends AppModel
     {
         $priority_list = array();
         foreach ($goals as $key => $goal) {
-            $priority_list[$key] = $goal['Goal']['priority'];
+            $priority_list[$key] = $goal['MyCollabo'][0]['priority'];
         }
         array_multisort($priority_list, $direction, SORT_NUMERIC, $goals);
         return $goals;
@@ -407,7 +423,6 @@ class Goal extends AppModel
         $res = $this->getByGoalId($goal_ids);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
-        $res = $this->sortPriority($res);
 
         return $res;
     }
@@ -437,6 +452,11 @@ class Goal extends AppModel
                         'KeyResult.priority',
                         'KeyResult.completed',
                     ],
+                ],
+                'MyCollabo' => [
+                    'conditions' => [
+                        'MyCollabo.user_id' => $this->my_uid
+                    ]
                 ],
             ]
         ];
@@ -689,6 +709,7 @@ class Goal extends AppModel
                         'MyCollabo.id',
                         'MyCollabo.role',
                         'MyCollabo.description',
+                        'MyCollabo.priority',
                     ],
                 ],
             ],

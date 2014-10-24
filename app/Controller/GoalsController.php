@@ -35,6 +35,8 @@ class GoalsController extends AppController
      * mode なしは目標を決める,2はゴールを定める,3は情報を追加
      *
      * @param null $id
+     *
+     * @return \CakeResponse
      */
     public function add($id = null)
     {
@@ -258,7 +260,8 @@ class GoalsController extends AppController
     {
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getCollaboModalItem($goal_id);
-        $this->set(compact('goal'));
+        $priority_list = $this->Goal->priority_list;
+        $this->set(compact('goal', 'priority_list'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
