@@ -161,7 +161,9 @@ class GoalsController extends AppController
     public function delete_purpose($purpose_id)
     {
         try {
-            $this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
+            if ($this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
