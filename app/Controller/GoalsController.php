@@ -32,7 +32,7 @@ class GoalsController extends AppController
     /**
      * ゴール作成
      * URLパラメータでmodeを付ける
-     * mode なしは目標を決める,2はゴールを定める,3は他の情報を追加
+     * mode なしは目標を決める,2はゴールを定める,3は情報を追加
      *
      * @param null $id
      */
