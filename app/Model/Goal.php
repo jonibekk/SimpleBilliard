@@ -35,6 +35,17 @@ class Goal extends AppModel
         self::$STATUS[self::STATUS_COMPLETE] = __d('gl', "完了");
     }
 
+    /**
+     * 重要度の名前をセット
+     */
+    private function _setPriorityName()
+    {
+        $this->priority_list[0] = __d('gl', "0 (認定対象外)");
+        $this->priority_list[1] = __d('gl', "1 (とても低い)");
+        $this->priority_list[3] = __d('gl', "3 (デフォルト)");
+        $this->priority_list[5] = __d('gl', "5 (とても高い)");
+    }
+
     public $priority_list = [
         0 => 0,
         1 => 1,
@@ -43,7 +54,6 @@ class Goal extends AppModel
         4 => 4,
         5 => 5,
     ];
-
     /**
      * Display field
      *
@@ -156,6 +166,7 @@ class Goal extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setStatusName();
+        $this->_setPriorityName();
     }
 
     function add($data)
@@ -165,7 +176,6 @@ class Goal extends AppModel
         }
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
-        //SKRをセット
         //on/offの場合は現在値0,目標値1をセット
         if (isset($data['Goal']['value_unit']) && isset($data['Goal']['start_value'])) {
             if ($data['Goal']['value_unit'] == KeyResult::UNIT_BINARY) {
@@ -198,17 +208,12 @@ class Goal extends AppModel
             $kr['user_id'] = $this->my_uid;
             $data['KeyResult'][0] = $kr;
         }
-        if (isset($data['Collaborator'][0]) && !empty($data['Collaborator'][0])) {
-            $data['Collaborator'][0]['user_id'] = $this->my_uid;
-            $data['Collaborator'][0]['team_id'] = $this->current_team_id;
-            $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
-        }
+        //コラボレータをタイプ　リーダーで保存
+        $data['Collaborator'][0]['user_id'] = $this->my_uid;
+        $data['Collaborator'][0]['team_id'] = $this->current_team_id;
+        $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         $this->create();
         $res = $this->saveAll($data);
-//        //SKRユーザの保存
-//        if ($this->getLastInsertID()) {
-//            $this->Collaborator->add($this->getLastInsertID(), null, Collaborator::TYPE_OWNER);
-//        }
         return $res;
     }
 

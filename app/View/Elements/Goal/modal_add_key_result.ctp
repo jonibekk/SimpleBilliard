@@ -188,7 +188,7 @@
                     'type'     => 'select',
                     'default'  => 1,
                     'required' => false,
-                    'style'    => 'width:50px',
+                    'style'    => 'width:170px',
                     'options'  => $kr_priority_list,
                 ]) ?>
             </div>

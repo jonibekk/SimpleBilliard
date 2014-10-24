@@ -38,6 +38,17 @@ class KeyResult extends AppModel
         self::$UNIT[self::UNIT_BINARY] = __d('gl', 'なし');
     }
 
+    /**
+     * 重要度の名前をセット
+     */
+    private function _setPriorityName()
+    {
+        $this->priority_list[0] = __d('gl', "0 (進捗に影響しない)");
+        $this->priority_list[1] = __d('gl', "1 (とても低い)");
+        $this->priority_list[3] = __d('gl', "3 (デフォルト)");
+        $this->priority_list[5] = __d('gl', "5 (とても高い)");
+    }
+
     public $priority_list = [
         0 => 0,
         1 => 1,
@@ -89,6 +100,7 @@ class KeyResult extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setUnitName();
+        $this->_setPriorityName();
     }
 
     /**
