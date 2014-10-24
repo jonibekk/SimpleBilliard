@@ -10,10 +10,13 @@
  * @var                        $goal_category_list
  * @var                        $priority_list
  * @var                        $kr_value_unit_list
- * @var                        $kr_start_date_format
- * @var                        $kr_end_date_format
+ * @var                        $goal_start_date_format
+ * @var                        $goal_end_date_format
  */
 $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']['id']] : [];
+
+$url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
+                                                                          ['purpose_id' => $this->request->params['named']['purpose_id']]) : $url;
 ?>
 <!-- START app/View/Goals/add.ctp -->
 <div class="row">
@@ -50,18 +53,14 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 'type'          => 'file',
                 'id'            => 'AddGoalFormPurpose',
             ]); ?>
+            <?
+            if (isset($this->request->data['Purpose']['id'])) {
+                echo $this->Form->hidden('Purpose.id', ['value' => $this->request->data['Purpose']['id']]);
+            }
+            ?>
             <div class="panel-body add-team-panel-body goal-set-body">
                 <?=
-                $this->Form->input('goal_category_id', [
-                    'label'   => [
-                        'text'  => __d('gl', "カテゴリ"),
-                        'class' => 'col col-sm-3 control-label'
-                    ],
-                    'type'    => 'select',
-                    'options' => $goal_category_list,
-                ]) ?>
-                <?=
-                $this->Form->input('purpose',
+                $this->Form->input('Purpose.name',
                                    ['before'                   => '<div class="col col-sm-3 control-label">' .
                                        '<label class="no-asterisk">' . __d('gl', "目的") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl', "達成したいことは？") . '</div></div>',
@@ -122,14 +121,22 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                 'type'          => 'file',
                 'id'            => 'AddGoalFormKeyResult',
             ]); ?>
+            <?if (isset($this->request->params['named']['purpose_id'])) {
+                echo $this->Form->hidden('purpose_id', ['value' => $this->request->params['named']['purpose_id']]);
+            }
+            ?>
             <div class="panel-body add-team-panel-body">
-                <?
-                if (isset($this->request->data['KeyResult'][0]['id'])) {
-                    echo $this->Form->hidden('KeyResult.0.id', ['value' => $this->request->data['KeyResult'][0]['id']]);
-                }
-                ?>
                 <?=
-                $this->Form->input('KeyResult.0.name',
+                $this->Form->input('goal_category_id', [
+                    'label'   => [
+                        'text'  => __d('gl', "カテゴリ"),
+                        'class' => 'col col-sm-3 control-label'
+                    ],
+                    'type'    => 'select',
+                    'options' => $goal_category_list,
+                ]) ?>
+                <?=
+                $this->Form->input('name',
                                    ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
                                        '<label class="no-asterisk">' . __d('gl', "ゴール名") . '</label>' .
                                        '<div class="label-addiction">' . __d('gl',
@@ -137,9 +144,10 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                     'label'                    => false,
                                     'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                    'required'                 => true,
                                     'rows'                     => 1,
                                     'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
-                                                                                                    "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                                                                                                              "例）サービスAの国内市場シェアを増加させる") . '</span>'
                                    ]) ?>
                 <div class="row">
                     <div class="col col-sm-3">
@@ -150,7 +158,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
 
                         <?=
-                        $this->Form->input('KeyResult.0.value_unit',
+                        $this->Form->input('value_unit',
                                            ['label'               => __d('gl', "単位"),
                                             'wrapInput'           => 'col col-sm-9 pl_5px',
                                             'type'                => 'select',
@@ -166,7 +174,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                              && $this->request->data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
 
                             <?=
-                            $this->Form->input('KeyResult.0.target_value',
+                            $this->Form->input('target_value',
                                                ['label'                        => __d('gl', "達成時"),
                                                 'wrapInput'                    => 'col col-sm-9 pl_5px',
                                                 'type'                         => 'number',
@@ -179,7 +187,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                                 'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                ]) ?>
                             <?=
-                            $this->Form->input('KeyResult.0.start_value',
+                            $this->Form->input('start_value',
                                                ['label'                        => __d('gl', "開始時"),
                                                 'wrapInput'                    => 'col col-sm-9 pl_5px',
                                                 'type'                         => 'number',
@@ -205,10 +213,10 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
 
                             <div class="input-group date pl_5px goal-set-date">
                                 <?=
-                                $this->Form->input('KeyResult.0.end_date',
+                                $this->Form->input('end_date',
                                                    [
-                                                       'value'                    => $kr_end_date_format,
-                                                       'default'                  => $kr_end_date_format,
+                                                       'value'                    => $goal_end_date_format,
+                                                       'default'                  => $goal_end_date_format,
                                                        'label'                    => false,
                                                        'div'                      => false,
                                                        'class'                    => "form-control",
@@ -228,7 +236,7 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                                id="KeyResult0StartDateDefault">
                                     <span
                                         class="plr_18px"><?=
-                                        $kr_start_date_format ?><?=
+                                        $goal_start_date_format ?><?=
                                         !isset($this->request->data['KeyResult'][0]) ? __d('gl',
                                                                                            "（本日）") : null ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
@@ -241,9 +249,9 @@ $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']
                             <div class="input-group date plr_5px goal-set-date" style="display: none"
                                  id="KeyResult0StartDateInputWrap">
                                 <?=
-                                $this->Form->input('KeyResult.0.start_date',
+                                $this->Form->input('start_date',
                                                    [
-                                                       'value'                    => $kr_start_date_format,
+                                                       'value'                    => $goal_start_date_format,
                                                        'label'                    => false,
                                                        'div'                      => false,
                                                        'class'                    => "form-control",

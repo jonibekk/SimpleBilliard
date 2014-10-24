@@ -6,7 +6,7 @@
  * Time: 3:19 PM
  *
  * @var CodeCompletionView $this
- * @var                    $skr
+ * @var                    $goal
  */
 ?>
 <!-- START app/View/Elements/modal_collabo.ctp -->
@@ -15,10 +15,10 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= empty($skr['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集") ?></h4>
+            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集") ?></h4>
         </div>
         <?=
-        $this->Form->create('KeyResultUser', [
+        $this->Form->create('Collaborator', [
             'url'           => ['controller' => 'goals', 'action' => 'edit_collabo'],
             'inputDefaults' => [
                 'div'       => 'form-group',
@@ -30,12 +30,12 @@
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
-            'id' => 'CollaboEditForm',
+            'id'            => 'CollaboEditForm',
         ]); ?>
-        <?= $this->Form->hidden('key_result_id', ['value' => $skr['KeyResult']['id']]) ?>
+        <?= $this->Form->hidden('goal_id', ['value' => $goal['Goal']['id']]) ?>
         <?
-        if (isset($skr['MyCollabo'][0]['id'])) {
-            echo $this->Form->hidden('id', ['value' => $skr['MyCollabo'][0]['id']]);
+        if (isset($goal['MyCollabo'][0]['id'])) {
+            echo $this->Form->hidden('id', ['value' => $goal['MyCollabo'][0]['id']]);
         }
         ?>
         <div class="modal-body">
@@ -45,8 +45,8 @@
                                 'placeholder'              => __d('gl', "例) ○○"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                 'required'                 => true,
-                                'rows' => 1,
-                                'value'                    => isset($skr['MyCollabo'][0]['role']) ? $skr['MyCollabo'][0]['role'] : null,
+                                'rows'                     => 1,
+                                'value'                    => isset($goal['MyCollabo'][0]['role']) ? $goal['MyCollabo'][0]['role'] : null,
                                ]) ?>
             <hr>
             <?=
@@ -55,8 +55,8 @@
                                 'placeholder'              => __d('gl', "例) ○○"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                 'required'                 => true,
-                                'rows' => 1,
-                                'value'                    => isset($skr['MyCollabo'][0]['description']) ? $skr['MyCollabo'][0]['description'] : null,
+                                'rows'                     => 1,
+                                'value'                    => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
                                ]) ?>
         </div>
         <div class="modal-footer">
@@ -66,13 +66,13 @@
                             data-dismiss="modal"><?= __d('gl',
                                                          "キャンセル") ?></button>
                     <?=
-                    $this->Form->submit(empty($skr['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集"),
+                    $this->Form->submit(empty($goal['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集"),
                                         ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
-                    <? if (!empty($skr['MyCollabo'])): ?>
+                    <? if (!empty($goal['MyCollabo'])): ?>
                         <?=
                         $this->Form->postLink(__d('gl', "コラボ抜ける"),
-                                              ['controller' => 'goals', 'action' => 'delete_collabo', $skr['MyCollabo'][0]['id']],
+                                              ['controller' => 'goals', 'action' => 'delete_collabo', $goal['MyCollabo'][0]['id']],
                                               ['class' => 'pull-left btn btn-link'],
                                               __d('gl', "本当にコラボレータから抜けますか？")) ?>
                     <? endif; ?>
