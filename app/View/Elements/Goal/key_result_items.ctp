@@ -72,7 +72,6 @@
                     </ul>
                 </div>
             <? endif; ?>
-        </div>
     <? endforeach ?>
 <? else: ?>
     <div class="col col-xxs-12">
