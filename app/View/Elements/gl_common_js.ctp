@@ -252,10 +252,10 @@ function bindSelect2Members($this) {
 })(jQuery);
 
 function evFollowGoal() {
-    attrUndefinedCheck(this, 'kr-id');
+    attrUndefinedCheck(this, 'goal-id');
     attrUndefinedCheck(this, 'data-class');
     var $obj = $(this);
-    var kr_id = $obj.attr('kr-id');
+    var kr_id = $obj.attr('goal-id');
     var data_class = $obj.attr('data-class');
     var url = "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>";
     $.ajax({
@@ -272,7 +272,7 @@ function evFollowGoal() {
             }
             else {
                 if (data.add) {
-                    $("." + data_class + "[kr-id=" + kr_id + "]").each(function () {
+                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
                         $(this).children('span').text("<?=__d('gl',"フォロー中")?>");
                         $(this).children('i').hide();
                         $(this).removeClass('follow-off');
@@ -280,7 +280,7 @@ function evFollowGoal() {
                     });
                 }
                 else {
-                    $("." + data_class + "[kr-id=" + kr_id + "]").each(function () {
+                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
                         $(this).children('span').text("<?=__d('gl',"フォロー")?>");
                         $(this).children('i').show();
                         $(this).removeClass('follow-on');

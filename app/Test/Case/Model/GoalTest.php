@@ -15,9 +15,10 @@ class GoalTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.goal',
         'app.key_result',
-        'app.key_result_user',
+        'app.collaborator',
         'app.follower',
         'app.user',
         'app.team',
@@ -200,168 +201,75 @@ class GoalTest extends CakeTestCase
         $this->assertEquals($expected, $res);
     }
 
-    function testSortExistsSpecialKeyResult()
-    {
-        $goals = [
-            [
-                'Goal'             => [
-                    'id' => 1,
-                ],
-                'SpecialKeyResult' => [
-                    'id' => 1,
-                ]
-            ],
-            [
-                'Goal'             => [
-                    'id' => 2,
-                ],
-                'SpecialKeyResult' => [
-                ]
-            ],
-        ];
-        $res = $this->Goal->sortExistsSpecialKeyResult($goals);
-        $expected = [
-            [
-                'Goal'             => [
-                    'id' => 2,
-                ],
-                'SpecialKeyResult' => [
-                ]
-            ],
-            [
-                'Goal'             => [
-                    'id' => 1,
-                ],
-                'SpecialKeyResult' => [
-                    'id' => 1,
-                ]
-            ],
-        ];
-        $this->assertEquals($expected, $res);
-    }
-
     function testSortEndDate()
     {
         $goals = [
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 1,
                 ],
-                'SpecialKeyResult' => [
-
-                ]
             ],
             [
-                'Goal'             => [
-                    'id' => 2,
+                'Goal' => [
+                    'id'       => 2,
+                    'end_date' => 1,
                 ],
-                'SpecialKeyResult' => [
-                    [
-                        'end_date' => 1
-                    ]
-                ]
             ],
         ];
         $res = $this->Goal->sortEndDate($goals);
         $expected = [
             [
-                'Goal'             => [
-                    'id' => 2,
+                'Goal' => [
+                    'id'       => 2,
+                    'end_date' => 1,
                 ],
-                'SpecialKeyResult' => [
-                    [
-                        'end_date' => 1
-                    ]
-                ]
             ],
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 1,
                 ],
-                'SpecialKeyResult' => [
-
-                ]
             ],
         ];
         $this->assertEquals($expected, $res);
     }
 
-    function testIsPermittedCollaboFail()
-    {
-        $this->setDefault();
-        try {
-            $this->Goal->isPermittedCollaboFromSkr(99999);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
-        unset($e);
-
-        $data = ['KeyResult' =>
-                     [
-                         'goal_id'     => 99,
-                         'team_id'     => 1,
-                         'user_id'     => 999,
-                         'name'        => 'test',
-                         'value_unit'  => 0,
-                         'start_value' => 1
-                     ]
-        ];
-        $this->Goal->KeyResult->save($data);
-        try {
-            $this->Goal->isPermittedCollaboFromSkr($this->Goal->KeyResult->getLastInsertID());
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
-    }
-
     function testGetAddData()
     {
         $this->setDefault();
-        $kr_id = $this->_getNewKr();
-        $kr = $this->Goal->KeyResult->findById($kr_id);
-        $this->Goal->getAddData($kr['KeyResult']['id']);
+        $goal_id = $this->_getNewGoal();
+        $this->Goal->getAddData($goal_id);
     }
 
-    function testIsPermittedCollaboSuccess()
+    function _getNewGoal()
     {
-        $this->setDefault();
-        $res = $this->Goal->isPermittedCollaboFromSkr(1);
-        $this->assertTrue($res);
-    }
-
-    function _getNewKr()
-    {
-        $skr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 1,
-            'name'        => 'test',
-            'special_flg' => true,
-            'start_date'  => time(),
-            'end_date'    => time(),
+        $goal = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'name'       => 'test',
+            'start_date' => time(),
+            'end_date'   => time(),
         ];
-        $this->Goal->KeyResult->create();
-        $this->Goal->KeyResult->save($skr);
-        $skr_id = $this->Goal->KeyResult->getLastInsertID();
+        $this->Goal->create();
+        $this->Goal->save($goal);
+        $goal_id = $this->Goal->getLastInsertID();
         $kr = [
             'user_id'    => 1,
             'team_id'    => 1,
-            'goal_id'    => 1,
+            'goal_id'    => $goal_id,
             'name'       => 'test',
             'start_date' => time(),
             'end_date'   => time(),
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($kr);
-        $kr_id = $this->Goal->KeyResult->getLastInsertID();
-        $kr_user = [
-            'user_id'       => 1,
-            'team_id'       => 1,
-            'key_result_id' => $skr_id,
+        $collabo = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => $goal_id,
         ];
-        $this->Goal->KeyResult->KeyResultUser->create();
-        $this->Goal->KeyResult->KeyResultUser->save($kr_user);
-        return $kr_id;
+        $this->Goal->Collaborator->create();
+        $this->Goal->Collaborator->save($collabo);
+        return $goal_id;
     }
 
     function setDefault()
@@ -372,8 +280,8 @@ class GoalTest extends CakeTestCase
         $this->Goal->Team->current_team_id = 1;
         $this->Goal->KeyResult->my_uid = 1;
         $this->Goal->KeyResult->current_team_id = 1;
-        $this->Goal->KeyResult->KeyResultUser->my_uid = 1;
-        $this->Goal->KeyResult->KeyResultUser->current_team_id = 1;
+        $this->Goal->Collaborator->my_uid = 1;
+        $this->Goal->Collaborator->current_team_id = 1;
     }
 
 }

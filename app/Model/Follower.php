@@ -31,16 +31,16 @@ class Follower extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'KeyResult',
+        'Goal',
         'User',
     ];
 
-    function addFollower($key_result_id)
+    function addFollower($goal_id)
     {
         $data = [
-            'key_result_id' => $key_result_id,
-            'user_id'       => $this->my_uid,
-            'team_id'       => $this->current_team_id,
+            'goal_id' => $goal_id,
+            'user_id' => $this->my_uid,
+            'team_id' => $this->current_team_id,
         ];
         //既にフォロー済みの場合は処理しない
         if ($this->find('first', ['conditions' => $data])) {
@@ -49,12 +49,12 @@ class Follower extends AppModel
         return $this->save($data);
     }
 
-    function deleteFollower($key_result_id)
+    function deleteFollower($goal_id)
     {
         $conditions = [
-            'Follower.key_result_id' => $key_result_id,
-            'Follower.user_id'       => $this->my_uid,
-            'Follower.team_id'       => $this->current_team_id,
+            'Follower.goal_id' => $goal_id,
+            'Follower.user_id' => $this->my_uid,
+            'Follower.team_id' => $this->current_team_id,
         ];
         $this->deleteAll($conditions);
         return true;
@@ -68,20 +68,20 @@ class Follower extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'key_result_id'
+                'goal_id'
             ],
         ];
         $res = $this->find('list', $options);
         return $res;
     }
 
-    function isExists($key_result_id)
+    function isExists($goal_id)
     {
         $options = [
             'conditions' => [
-                'user_id'       => $this->my_uid,
-                'key_result_id' => $key_result_id,
-                'team_id'       => $this->current_team_id,
+                'user_id' => $this->my_uid,
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
             ],
             'fields'     => [
                 'id'
