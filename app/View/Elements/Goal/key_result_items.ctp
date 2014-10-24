@@ -19,7 +19,7 @@
                 <i class=" fa fa-check-circle font_40px pull-left mr_5px tap-btn text-align_c check-off"></i>
             </a>
 
-            <div class="pull-left mw_75per">
+            <div class="pull-left">
                     <span class="line-numbers ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
                 <i class="fa fa-check-circle"><span class="ml_2px">5</span></i>
