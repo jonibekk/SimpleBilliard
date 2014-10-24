@@ -823,6 +823,9 @@ footer p {
     width: 100%;
 }
 
+.w_90per{
+    width: 90%;
+}
 /*/幅指定*/
 
 .modal-content > .modal-header > .close-design {

@@ -14,7 +14,7 @@
 <!-- START app/View/Elements/Goal/key_result_items.ctp -->
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
-        <div class="col col-xxs-12 bd-t ptb_5px">
+        <div class="col col-xxs-12 w_90per line-numbers ln_1 bd-t ptb_5px">
             <a href="#" class="develop--forbiddenLink">
                 <i class=" fa fa-check-circle font_40px pull-left mr_5px tap-btn text-align_c check-off"></i>
             </a>
@@ -23,6 +23,7 @@
                     <span class="line-numbers ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
                 <i class="fa fa-check-circle"><span class="ml_2px">5</span></i>
+            </div>
             </div>
             <? if ($kr_can_edit): ?>
                 <div class="pull-right dropdown">
