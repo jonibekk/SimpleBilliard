@@ -195,7 +195,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('gl', "基準を追加"),
+            $this->Form->submit(__d('gl', "出したい成果を追加"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
