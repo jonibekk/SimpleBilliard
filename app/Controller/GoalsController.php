@@ -48,6 +48,7 @@ class GoalsController extends AppController
 
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect($this->referer());
             }
         }
@@ -123,6 +124,7 @@ class GoalsController extends AppController
         }
         $this->set(compact('goal_category_list', 'priority_list', 'kr_priority_list', 'kr_value_unit_list',
                            'goal_start_date_format', 'goal_end_date_format'));
+        return $this->render();
     }
 
     /**
@@ -143,6 +145,30 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Goal->id = $id;
         $this->Goal->delete();
+        $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * delete method
+     *
+     * @param $purpose_id
+     *
+     * @return void
+     */
+    public function delete_purpose($purpose_id)
+    {
+        try {
+            $this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        $this->request->allowMethod('post', 'delete');
+        $this->Goal->Purpose->id = $purpose_id;
+        $this->Goal->Purpose->delete();
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */

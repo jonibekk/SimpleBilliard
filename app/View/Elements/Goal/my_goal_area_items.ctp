@@ -12,6 +12,7 @@
 ?>
 <!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
 <? foreach ($goals as $goal): ?>
+    <? $this->log($goal) ?>
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
             <? if ($type == 'leader'): ?>
@@ -23,26 +24,35 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
-                        <? if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
+                        <?
+                        //目的のみの場合とそうでない場合でurlが違う
+                        $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
+                        $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
+                        if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
+                            $edit_url = ['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3];
+                            $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
+                        }
+                        ?>
+                        <? if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
-                                    <i class="fa fa-plus-circle"><span class="ml_2px"><?= __d('gl',
-                                                                                              "出したい成果を追加") ?></span></i>
+                                    <i class="fa fa-plus-circle"><span class="ml_2px">
+                                            <?= __d('gl', "出したい成果を追加") ?></span></i>
                                 </a>
                             </li>
                         <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>">
+                                                   href="<?= $this->Html->url($edit_url) ?>">
                                 <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
                                 </i>
                             </a>
                         </li>
                         <li role="presentation">
                             <?=
-                            $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' . __d('gl',
-                                                                                                       "ゴールを削除") . '</span></i>',
-                                                  ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']],
+                            $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' .
+                                                  __d('gl', "ゴールを削除") . '</span></i>',
+                                                  $del_url,
                                                   ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
                         </li>
                     </ul>
