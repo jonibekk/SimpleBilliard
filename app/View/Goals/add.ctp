@@ -346,7 +346,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'     => 'select',
                     'default'  => 3,
                     'required' => false,
-                    'style'    => 'width:50px',
+                    'style'    => 'width:130px',
                     'options'  => $priority_list,
                 ]) ?>
                 <div class="form-group">
