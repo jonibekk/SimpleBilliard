@@ -176,7 +176,6 @@ class Goal extends AppModel
         }
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
-        //SKRをセット
         //on/offの場合は現在値0,目標値1をセット
         if (isset($data['Goal']['value_unit']) && isset($data['Goal']['start_value'])) {
             if ($data['Goal']['value_unit'] == KeyResult::UNIT_BINARY) {
@@ -209,17 +208,12 @@ class Goal extends AppModel
             $kr['user_id'] = $this->my_uid;
             $data['KeyResult'][0] = $kr;
         }
-        if (isset($data['Collaborator'][0]) && !empty($data['Collaborator'][0])) {
-            $data['Collaborator'][0]['user_id'] = $this->my_uid;
-            $data['Collaborator'][0]['team_id'] = $this->current_team_id;
-            $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
-        }
+        //コラボレータをタイプ　リーダーで保存
+        $data['Collaborator'][0]['user_id'] = $this->my_uid;
+        $data['Collaborator'][0]['team_id'] = $this->current_team_id;
+        $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         $this->create();
         $res = $this->saveAll($data);
-//        //SKRユーザの保存
-//        if ($this->getLastInsertID()) {
-//            $this->Collaborator->add($this->getLastInsertID(), null, Collaborator::TYPE_OWNER);
-//        }
         return $res;
     }
 

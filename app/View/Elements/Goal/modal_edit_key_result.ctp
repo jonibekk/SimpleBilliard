@@ -210,7 +210,7 @@ $this->Form->create('KeyResult', [
             'default'                  => 1,
             'required'                 => true,
             "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-            'style'                    => 'width:130px',
+            'style'                    => 'width:170px',
             'options'                  => $kr_priority_list,
         ]) ?>
     </div>

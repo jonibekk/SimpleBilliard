@@ -43,7 +43,7 @@ class KeyResult extends AppModel
      */
     private function _setPriorityName()
     {
-        $this->priority_list[0] = __d('gl', "0 (認定対象外)");
+        $this->priority_list[0] = __d('gl', "0 (進捗に影響しない)");
         $this->priority_list[1] = __d('gl', "1 (とても低い)");
         $this->priority_list[3] = __d('gl', "3 (デフォルト)");
         $this->priority_list[5] = __d('gl', "5 (とても高い)");
