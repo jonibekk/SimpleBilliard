@@ -32,10 +32,10 @@ class KeyResult extends AppModel
     private function _setUnitName()
     {
         self::$UNIT[self::UNIT_PERCENT] = __d('gl', "%");
-        self::$UNIT[self::UNIT_NUMBER] = __d('gl', "数値");
-        self::$UNIT[self::UNIT_BINARY] = __d('gl', 'ON/OFF');
         self::$UNIT[self::UNIT_YEN] = __d('gl', '¥');
         self::$UNIT[self::UNIT_DOLLAR] = __d('gl', '$');
+        self::$UNIT[self::UNIT_NUMBER] = __d('gl', "その他の単位");
+        self::$UNIT[self::UNIT_BINARY] = __d('gl', 'なし');
     }
 
     public $priority_list = [
