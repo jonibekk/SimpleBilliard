@@ -185,9 +185,10 @@ class KeyResult extends AppModel
         $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
         $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
                                                    strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
-        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
-                                                            $data['KeyResult']['target_value'],
-                                                            $data['KeyResult']['current_value']);
+//TODO 現在値を使わないため、この計算は行わない
+//        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
+//                                                            $data['KeyResult']['target_value'],
+//                                                            $data['KeyResult']['current_value']);
         $this->create();
         return $this->save($data);
     }
