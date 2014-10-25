@@ -22,7 +22,7 @@
             <div class="pull-left">
                     <span class="line-numbers ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
-                <i class="fa fa-check-circle"><span class="ml_2px">5</span></i>
+                <i class="fa fa-check-circle"><span class="ml_2px">0</span></i>
             </div>
             </div>
             <? if ($kr_can_edit): ?>
