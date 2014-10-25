@@ -123,7 +123,9 @@
                     ?>
                     <a href="#" class="link-dark-gray toggle-ajax-get"
                        target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
-                       ajax-url="<?= $this->Html->url($url) ?>">
+                       ajax-url="<?= $this->Html->url($url) ?>"
+                       id="KRsOpen_<?= $goal['Goal']['id'] ?>"
+                        >
                         <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
                         <i class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
                     </a>

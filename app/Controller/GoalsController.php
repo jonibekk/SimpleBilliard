@@ -306,30 +306,39 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
-        $this->Pnotify->outSuccess(__d('gl', "基準を追加しました。"));
+        $this->_flashOpenKrs($goal_id);
+        $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
         $this->redirect($this->referer());
     }
 
+    /**
+     * @param $kr_id
+     */
     public function edit_key_result($kr_id)
     {
         $this->request->allowMethod('post', 'put');
+        $kr = null;
         try {
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
-            if (!$this->Goal->KeyResult->saveEdit($this->request->data)) {
+            if (!$kr = $this->Goal->KeyResult->saveEdit($this->request->data)) {
                 throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
         }
+        $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
-        $this->redirect($this->referer());
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     public function complete($kr_id, $with_goal = null)
     {
+        $key_result = null;
         $this->request->allowMethod('post');
         try {
             $this->Goal->begin();
@@ -337,9 +346,9 @@ class GoalsController extends AppController
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             $this->Goal->KeyResult->complete($kr_id);
+            $key_result = $this->Goal->KeyResult->findById($kr_id);
             //ゴールも一緒に完了にする場合
             if ($with_goal) {
-                $key_result = $this->Goal->KeyResult->findById($kr_id);
                 $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
                 $this->Goal->complete($goal['Goal']['id']);
                 $this->Pnotify->outSuccess(__d('gl', "ゴールを完了にしました。"));
@@ -350,10 +359,13 @@ class GoalsController extends AppController
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
             $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
         }
         $this->Goal->commit();
-        $this->redirect($this->referer());
+        $this->_flashOpenKrs($key_result['KeyResult']['goal_id']);
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     public function incomplete($kr_id)
@@ -371,26 +383,32 @@ class GoalsController extends AppController
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
             $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
         }
         $this->Goal->commit();
+        $this->_flashOpenKrs($key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
-        $this->redirect($this->referer());
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
-    public function delete_key_result($goal_id)
+    public function delete_key_result($kr_id)
     {
         $this->request->allowMethod('post', 'delete');
         try {
-            if (!$this->Goal->KeyResult->isPermitted($goal_id)) {
+            if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
         }
-        $this->Goal->KeyResult->id = $goal_id;
+        $this->Goal->KeyResult->id = $kr_id;
+        $kr = $this->Goal->KeyResult->read();
         $this->Goal->KeyResult->delete();
+        $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -555,5 +573,10 @@ class GoalsController extends AppController
         $response = $this->render('Goal/modal_last_kr_confirm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    private function _flashOpenKrs($goal_id)
+    {
+        $this->Session->setFlash(null, "flash_open_krs", ['goal_id' => $goal_id], 'open_krs');
     }
 }
