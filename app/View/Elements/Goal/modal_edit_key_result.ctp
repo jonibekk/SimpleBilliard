@@ -42,6 +42,7 @@ $this->Form->create('KeyResult', [
     'id'            => 'AddGoalFormKeyResult',
 ]); ?>
 <?= $this->Form->hidden('KeyResult.id', ['value' => $kr_id]) ?>
+<?= $this->Form->hidden('KeyResult.goal_id', ['value' => $this->request->data['KeyResult']['goal_id']]) ?>
 <div class="modal-body modal-circle-body">
     <div class="col col-xxs-12">
         <?=

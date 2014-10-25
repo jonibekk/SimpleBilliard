@@ -306,7 +306,7 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
-        $this->Session->setFlash('open_krs', null, ['goal_id' => $goal_id]);
+        $this->_flashOpenKrs($goal_id);
         $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
         $this->redirect($this->referer());
     }
@@ -330,7 +330,8 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Session->setFlash('open_krs', null, ['goal_id' => $kr['KeyResult']['goal_id']]);
+        $this->log($kr);
+        $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -363,7 +364,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Goal->commit();
-        $this->Session->setFlash('open_krs', null, ['goal_id' => $key_result['KeyResult']['goal_id']]);
+        $this->_flashOpenKrs($key_result['KeyResult']['goal_id']);
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
     }
@@ -387,7 +388,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Goal->commit();
-        $this->Session->setFlash('open_krs', null, ['goal_id' => $key_result['KeyResult']['goal_id']]);
+        $this->_flashOpenKrs($key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -408,7 +409,7 @@ class GoalsController extends AppController
         $this->Goal->KeyResult->id = $kr_id;
         $kr = $this->Goal->KeyResult->read();
         $this->Goal->KeyResult->delete();
-        $this->Session->setFlash('open_krs', null, ['goal_id' => $kr['KeyResult']['goal_id']]);
+        $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -573,5 +574,10 @@ class GoalsController extends AppController
         $response = $this->render('Goal/modal_last_kr_confirm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    private function _flashOpenKrs($goal_id)
+    {
+        $this->Session->setFlash(null, "flash_open_krs", ['goal_id' => $goal_id], 'open_krs');
     }
 }

@@ -527,6 +527,7 @@ $("#modal_tutorial").modal('show');
 <?endif;?>
 <?endif;?>
 </script>
+<?= $this->Session->flash('open_krs') ?>
 <?
 echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
