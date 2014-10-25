@@ -330,7 +330,6 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->log($kr);
         $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
