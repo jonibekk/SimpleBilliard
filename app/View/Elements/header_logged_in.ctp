@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 5/28/14
  * Time: 5:04 PM
-
  *
-*@var       $title_for_layout string
+ * @var       $title_for_layout string
  * @var       $this             CodeCompletionView
  * @var       $nav_disable
  * @var array $my_teams
@@ -100,7 +99,7 @@
                                                    ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
                         <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
                         <span
-                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r">User Name</span>
+                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.first_name') ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li class="text-align_c"><?= __d('gl', "準備中") ?></li>
@@ -109,7 +108,7 @@
 -->
                     </ul>
                 </div>
-                <a href="<?= $this->Html->url('/') ?>" class="header-home header-link">ホーム</a>
+                <a href="<?= $this->Html->url('/') ?>" class="header-home header-link"><?= __d('gl', "ホーム") ?></a>
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
                     <a href="#" data-toggle="dropdown" id="download">
@@ -198,5 +197,4 @@
         </div>
     <? endif; ?>
 </header>
-
 <!-- END app/View/Elements/header_logged_in.ctp -->
