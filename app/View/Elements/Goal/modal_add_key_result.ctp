@@ -186,7 +186,7 @@
                         '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>この基準の重要度") . '</div></div>',
                     'label'    => false,
                     'type'     => 'select',
-                    'default'  => 1,
+                    'default'  => 3,
                     'required' => false,
                     'style'    => 'width:170px',
                     'options'  => $kr_priority_list,
