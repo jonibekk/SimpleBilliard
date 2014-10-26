@@ -15,9 +15,10 @@ class KeyResultTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.cake_session',
         'app.key_result',
-        'app.key_result_user',
+        'app.collaborator',
         'app.follower',
         'app.team',
         'app.badge',
@@ -117,56 +118,55 @@ class KeyResultTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
-    function testGetSkr()
-    {
-        $this->setDefault();
-        $skr = [
-            'user_id'     => 1,
-            'team_id'     => 1,
-            'goal_id'     => 1,
-            'special_flg' => true,
-            'start_date'  => time(),
-            'end_date'    => time(),
-        ];
-        $this->KeyResult->save($skr);
-        $res = $this->KeyResult->GetSkr(1);
-        $this->assertNotEmpty($res);
-    }
-
     function testIsPermitted()
     {
         $this->setDefault();
-        $kr = [
+        $goal = [
             'user_id'    => 1,
             'team_id'    => 1,
-            'goal_id'    => 1,
+            'name'       => 'test',
             'start_date' => time(),
             'end_date'   => time(),
         ];
-        $this->KeyResult->save($kr);
-        $kr_id = $this->KeyResult->getLastInsertID();
-        $res = $this->KeyResult->isPermitted($kr_id);
-        $this->assertTrue($res);
-
-        $goal = [
-            'user_id' => 2,
-            'team_id' => 1,
-            'purpose' => 'test',
-        ];
         $this->KeyResult->Goal->create();
         $this->KeyResult->Goal->save($goal);
+        $goal_id = $this->KeyResult->Goal->getLastInsertID();
+        $collabo = [
+            'goal_id' => $goal_id,
+            'user_id' => 1,
+            'team_id' => 1,
+        ];
+        $this->KeyResult->Goal->Collaborator->create();
+        $this->KeyResult->Goal->Collaborator->save($collabo);
         $kr = [
-            'user_id'    => 2,
+            'user_id'    => 1,
             'team_id'    => 1,
-            'goal_id'    => $this->KeyResult->Goal->getLastInsertID(),
+            'name'       => 'test',
+            'goal_id'    => $goal_id,
             'start_date' => time(),
             'end_date'   => time(),
         ];
         $this->KeyResult->create();
         $this->KeyResult->save($kr);
-        $res = $this->KeyResult->isPermitted($this->KeyResult->getLastInsertID());
+        $kr_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($kr_id);
+        $this->assertTrue($res, "コラボしている");
 
-        $this->assertFalse($res);
+        $res = $this->KeyResult->isPermitted(9999999);
+        $this->assertFalse($res, "存在しないKR");
+
+        $kr = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => 9999999,
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->KeyResult->create();
+        $this->KeyResult->save($kr);
+        $kr_id = $this->KeyResult->getLastInsertID();
+        $res = $this->KeyResult->isPermitted($kr_id);
+        $this->assertFalse($res, "存在しないSKR");
     }
 
     function testGetProgress()
@@ -197,14 +197,36 @@ class KeyResultTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
+    function testComplete()
+    {
+        $this->setDefault();
+        try {
+            $this->KeyResult->complete(999999);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testIncomplete()
+    {
+        $this->setDefault();
+        try {
+            $this->KeyResult->incomplete(999999);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
     function setDefault()
     {
         $this->KeyResult->my_uid = 1;
         $this->KeyResult->current_team_id = 1;
+        $this->KeyResult->Goal->my_uid = 1;
+        $this->KeyResult->Goal->current_team_id = 1;
         $this->KeyResult->Team->my_uid = 1;
         $this->KeyResult->Team->current_team_id = 1;
-        $this->KeyResult->KeyResultUser->my_uid = 1;
-        $this->KeyResult->KeyResultUser->current_team_id = 1;
+        $this->KeyResult->Goal->Collaborator->my_uid = 1;
+        $this->KeyResult->Goal->Collaborator->current_team_id = 1;
     }
 
 }

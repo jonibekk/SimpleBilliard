@@ -28,12 +28,10 @@ class KeyResultFixture extends CakeTestFixture
         'progress'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '進捗%'),
         'priority'        => array('type' => 'integer', 'null' => false, 'default' => '3', 'unsigned' => false, 'comment' => '重要度(1〜5)'),
         'completed'       => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '完了日'),
-        'special_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '特別フラグ'),
-        'valued_flg'      => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '価値フラグ'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ゴールカテゴリを削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ゴールカテゴリを追加した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ゴールカテゴリを更新した日付時刻'),
+        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY'  => array('column' => 'id', 'unique' => 1),
             'team_id'  => array('column' => 'team_id', 'unique' => 0),
@@ -52,12 +50,11 @@ class KeyResultFixture extends CakeTestFixture
      */
     public $records = [
         [
-            'id'          => '1',
-            'team_id'     => '1',
-            'goal_id'     => '1',
-            'user_id'     => '1',
-            'name'        => 'Lorem ipsum dolor sit amet',
-            'special_flg' => true,
+            'id'      => '1',
+            'team_id' => '1',
+            'goal_id' => '1',
+            'user_id' => '1',
+            'name'    => 'Lorem ipsum dolor sit amet',
         ],
     ];
 

@@ -2,13 +2,13 @@
 App::uses('AppModel', 'Model');
 
 /**
- * KeyResultUser Model
+ * Collaborator Model
  *
  * @property Team      $Team
- * @property KeyResult $KeyResult
+ * @property Goal      $Goal
  * @property User      $User
  */
-class KeyResultUser extends AppModel
+class Collaborator extends AppModel
 {
     /**
      * タイプ
@@ -55,7 +55,7 @@ class KeyResultUser extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'KeyResult',
+        'Goal',
         'User',
     ];
 
@@ -65,63 +65,63 @@ class KeyResultUser extends AppModel
         $this->_setTypeName();
     }
 
-    function add($kr_id, $uid = null, $type = self::TYPE_COLLABORATOR)
+    function add($goal_id, $uid = null, $type = self::TYPE_COLLABORATOR)
     {
         if (!$uid) {
             $uid = $this->my_uid;
         }
-        $skr_user = [
-            'team_id'       => $this->current_team_id,
-            'user_id'       => $uid,
-            'type'          => $type,
-            'key_result_id' => $kr_id,
+        $collaborator = [
+            'team_id' => $this->current_team_id,
+            'user_id' => $uid,
+            'type'    => $type,
+            'goal_id' => $goal_id,
         ];
-        $res = $this->save($skr_user);
+        $res = $this->save($collaborator);
         return $res;
     }
 
     function edit($data, $uid = null, $type = self::TYPE_COLLABORATOR)
     {
-        if (!isset($data['KeyResultUser']) || empty($data['KeyResultUser'])) {
+        if (!isset($data['Collaborator']) || empty($data['Collaborator'])) {
             return false;
         }
         if (!$uid) {
             $uid = $this->my_uid;
         }
-        $data['KeyResultUser']['user_id'] = $uid;
-        $data['KeyResultUser']['team_id'] = $this->current_team_id;
-        $data['KeyResultUser']['type'] = $type;
+        $data['Collaborator']['user_id'] = $uid;
+        $data['Collaborator']['team_id'] = $this->current_team_id;
+        $data['Collaborator']['type'] = $type;
 
         $res = $this->save($data);
-        $this->KeyResult->Follower->deleteFollower($data['KeyResultUser']['key_result_id']);
+        $this->Goal->Follower->deleteFollower($data['Collaborator']['goal_id']);
         return $res;
     }
 
-    function getCollaboKeyResultList($user_id)
+    function getCollaboGoalList($user_id)
     {
         $options = [
             'conditions' => [
                 'user_id' => $user_id,
                 'team_id' => $this->current_team_id,
-                'type'    => KeyResultUser::TYPE_COLLABORATOR,
+                'type'    => Collaborator::TYPE_COLLABORATOR,
             ],
             'fields'     => [
-                'key_result_id'
+                'goal_id'
             ],
         ];
         $res = $this->find('list', $options);
         return $res;
     }
 
-    function isCollaborated($key_result_id, $uid = null)
+    function isCollaborated($goal_id, $uid = null)
     {
         if (!$uid) {
             $uid = $this->my_uid;
         }
         $options = [
             'conditions' => [
-                'KeyResultUser.key_result_id' => $key_result_id,
-                'KeyResultUser.user_id'       => $uid,
+                'Collaborator.goal_id' => $goal_id,
+                'Collaborator.user_id' => $uid,
             ],
         ];
         $res = $this->find('first', $options);

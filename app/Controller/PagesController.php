@@ -67,6 +67,7 @@ class PagesController extends AppController
                 $current_global_menu = "home";
                 $this->set(compact('select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
                                    'current_global_menu'));
+                $this->set('avail_sub_menu', true);
                 try {
                     $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
                 } catch (RuntimeException $e) {

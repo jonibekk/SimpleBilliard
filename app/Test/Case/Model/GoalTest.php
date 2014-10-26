@@ -15,9 +15,10 @@ class GoalTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.goal',
         'app.key_result',
-        'app.key_result_user',
+        'app.collaborator',
         'app.follower',
         'app.user',
         'app.team',
@@ -170,70 +171,38 @@ class GoalTest extends CakeTestCase
     {
         $goals = [
             [
-                'Goal' => [
-                    'id'       => 1,
-                    'priority' => 1
+                'Goal'      => [
+                    'id' => 1,
+                ],
+                'MyCollabo' => [
+                    ['priority' => 1]
                 ]
             ],
             [
-                'Goal' => [
-                    'id'       => 2,
-                    'priority' => 5
+                'Goal'      => [
+                    'id' => 2,
+                ],
+                'MyCollabo' => [
+                    ['priority' => 5]
                 ]
             ],
         ];
         $res = $this->Goal->sortPriority($goals);
         $expected = [
             [
-                'Goal' => [
-                    'id'       => 2,
-                    'priority' => 5
-                ]
-            ],
-            [
-                'Goal' => [
-                    'id'       => 1,
-                    'priority' => 1
-                ]
-            ],
-        ];
-        $this->assertEquals($expected, $res);
-    }
-
-    function testSortExistsSpecialKeyResult()
-    {
-        $goals = [
-            [
-                'Goal'             => [
-                    'id' => 1,
-                ],
-                'SpecialKeyResult' => [
-                    'id' => 1,
-                ]
-            ],
-            [
-                'Goal'             => [
+                'Goal'      => [
                     'id' => 2,
                 ],
-                'SpecialKeyResult' => [
-                ]
-            ],
-        ];
-        $res = $this->Goal->sortExistsSpecialKeyResult($goals);
-        $expected = [
-            [
-                'Goal'             => [
-                    'id' => 2,
-                ],
-                'SpecialKeyResult' => [
+                'MyCollabo' => [
+                    ['priority' => 5]
                 ]
             ],
             [
-                'Goal'             => [
+                'Goal'      => [
                     'id' => 1,
                 ],
-                'SpecialKeyResult' => [
-                    'id' => 1,
+                'MyCollabo' => [
+                    ['priority' => 1]
                 ]
             ],
         ];
@@ -244,87 +213,71 @@ class GoalTest extends CakeTestCase
     {
         $goals = [
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 1,
                 ],
-                'SpecialKeyResult' => [
-
-                ]
             ],
             [
-                'Goal'             => [
-                    'id' => 2,
+                'Goal' => [
+                    'id'       => 2,
+                    'end_date' => 1,
                 ],
-                'SpecialKeyResult' => [
-                    [
-                        'end_date' => 1
-                    ]
-                ]
             ],
         ];
         $res = $this->Goal->sortEndDate($goals);
         $expected = [
             [
-                'Goal'             => [
-                    'id' => 2,
+                'Goal' => [
+                    'id'       => 2,
+                    'end_date' => 1,
                 ],
-                'SpecialKeyResult' => [
-                    [
-                        'end_date' => 1
-                    ]
-                ]
             ],
             [
-                'Goal'             => [
+                'Goal' => [
                     'id' => 1,
                 ],
-                'SpecialKeyResult' => [
-
-                ]
             ],
         ];
         $this->assertEquals($expected, $res);
     }
 
-    function testIsPermittedCollaboFail()
-    {
-        $this->setDefault();
-        try {
-            $this->Goal->isPermittedCollaboFromSkr(99999);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
-        unset($e);
-
-        $data = ['KeyResult' =>
-                     [
-                         'goal_id'     => 99,
-                         'team_id'     => 1,
-                         'user_id'     => 999,
-                         'name'        => 'test',
-                         'value_unit'  => 0,
-                         'start_value' => 1
-                     ]
-        ];
-        $this->Goal->KeyResult->save($data);
-        try {
-            $this->Goal->isPermittedCollaboFromSkr($this->Goal->KeyResult->getLastInsertID());
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
-    }
-
     function testGetAddData()
     {
         $this->setDefault();
-        $this->Goal->getAddData(1);
+        $goal_id = $this->_getNewGoal();
+        $this->Goal->getAddData($goal_id);
     }
 
-    function testIsPermittedCollaboSuccess()
+    function _getNewGoal()
     {
-        $this->setDefault();
-        $res = $this->Goal->isPermittedCollaboFromSkr(1);
-        $this->assertTrue($res);
+        $goal = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'name'       => 'test',
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->Goal->create();
+        $this->Goal->save($goal);
+        $goal_id = $this->Goal->getLastInsertID();
+        $kr = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'goal_id'    => $goal_id,
+            'name'       => 'test',
+            'start_date' => time(),
+            'end_date'   => time(),
+        ];
+        $this->Goal->KeyResult->create();
+        $this->Goal->KeyResult->save($kr);
+        $collabo = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => $goal_id,
+        ];
+        $this->Goal->Collaborator->create();
+        $this->Goal->Collaborator->save($collabo);
+        return $goal_id;
     }
 
     function setDefault()
@@ -335,8 +288,8 @@ class GoalTest extends CakeTestCase
         $this->Goal->Team->current_team_id = 1;
         $this->Goal->KeyResult->my_uid = 1;
         $this->Goal->KeyResult->current_team_id = 1;
-        $this->Goal->KeyResult->KeyResultUser->my_uid = 1;
-        $this->Goal->KeyResult->KeyResultUser->current_team_id = 1;
+        $this->Goal->Collaborator->my_uid = 1;
+        $this->Goal->Collaborator->current_team_id = 1;
     }
 
 }

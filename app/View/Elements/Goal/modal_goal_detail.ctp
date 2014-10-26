@@ -23,9 +23,9 @@
                     <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128"
                          height="128">
                 </div>
-                <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
+                <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                     <div class="col col-xxs-6">
-                        <? if (empty($goal['SpecialKeyResult'][0]['MyFollow'])) {
+                        <? if (empty($goal['MyFollow'])) {
                             $follow_class = 'follow-off';
                             $follow_style = null;
                             $follow_text = __d('gl', "フォロー");
@@ -35,7 +35,7 @@
                             $follow_style = 'display:none;';
                             $follow_text = __d('gl', "フォロー中");
                         }?>
-                        <? if (isset($goal['SpecialKeyResult'][0]['MyCollabo']) && !empty($goal['SpecialKeyResult'][0]['MyCollabo'])) {
+                        <? if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
                             $collabo_class = 'collabo-on';
                             $collabo_style = 'display:none;';
                             $collabo_text = __d('gl', "コラボり中");
@@ -50,33 +50,33 @@
                         <a class="btn btn_pureWhite bd-circle_20 pull-right mt_16px toggle-follow font_verydark-white <?= $follow_class ?>"
                            href="#" <?= $follow_disabled ?>="<?= $follow_disabled ?>"
                         data-class="toggle-follow"
-                        kr-id="<?= $goal['SpecialKeyResult'][0]['id'] ?>">
+                        goal-id="<?= $goal['Goal']['id'] ?>">
                         <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
                         <span class="ml_5px"><?= $follow_text ?></span>
                         </a>
                         <a class="btn btn_pureWhite bd-circle_20 pull-right mt_16px font_verydark-white modal-ajax-get-collabo <?= $collabo_class ?>"
                            data-toggle="modal"
-                           data-target="#ModalCollabo_<?= $goal['SpecialKeyResult'][0]['id'] ?>"
-                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['SpecialKeyResult'][0]['id']]) ?>">
+                           data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
                             <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
                             <span class="ml_5px font_14px"><?= $collabo_text ?></span>
                         </a>
                     </div>
                 <? endif; ?>
             </div>
-            <? if (isset($goal['SpecialKeyResult'][0]) && !empty($goal['SpecialKeyResult'][0])): ?>
+            <? if (isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                 <div class="col col-xxs-12">
-                    <b class="font_18px font_verydark"><?= $goal['SpecialKeyResult'][0]['name'] ?></b>
+                    <b class="font_18px font_verydark"><?= $goal['Goal']['name'] ?></b>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <?= $goal['Goal']['purpose'] ?>
+                    <?= $goal['Purpose']['name'] ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><?= __d('gl', '程度') ?></div>
-                    <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['SpecialKeyResult'][0]['value_unit']]) ?></div>
-                    <? if ($goal['SpecialKeyResult'][0]['value_unit'] != KeyResult::UNIT_BINARY): ?>
-                        <div><?= __d('gl', '達成時: %s', (double)$goal['SpecialKeyResult'][0]['target_value']) ?></div>
-                        <div><?= __d('gl', '開始時: %s', (double)$goal['SpecialKeyResult'][0]['start_value']) ?></div>
+                    <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
+                    <? if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
+                        <div><?= __d('gl', '達成時: %s', (double)$goal['Goal']['target_value']) ?></div>
+                        <div><?= __d('gl', '開始時: %s', (double)$goal['Goal']['start_value']) ?></div>
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12">
@@ -84,18 +84,18 @@
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><?= __d('gl', "リーダー") ?></div>
-                    <? if (isset($goal['SpecialKeyResult'][0]['Leader'][0]['User'])): ?>
+                    <? if (isset($goal['Leader'][0]['User'])): ?>
                         <img src="<?=
-                        $this->Upload->uploadUrl($goal['SpecialKeyResult'][0]['Leader'][0]['User'],
+                        $this->Upload->uploadUrl($goal['Leader'][0]['User'],
                                                  'User.photo', ['style' => 'small']) ?>"
                              style="width:32px;height: 32px;">
-                        <?= h($goal['SpecialKeyResult'][0]['Leader'][0]['User']['display_username']) ?>
+                        <?= h($goal['Leader'][0]['User']['display_username']) ?>
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12">
                     <div><?= __d('gl', "コラボレータ") ?></div>
-                    <? if (isset($goal['SpecialKeyResult'][0]['Collaborator']) && !empty($goal['SpecialKeyResult'][0]['Collaborator'])): ?>
-                        <? foreach ($goal['SpecialKeyResult'][0]['Collaborator'] as $collabo): ?>
+                    <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
+                        <? foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
                             $this->Upload->uploadUrl($collabo['User'],
                                                      'User.photo', ['style' => 'small']) ?>"

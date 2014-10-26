@@ -7,7 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $goal_id
- * @var                    $key_result_id
+ * @var                    $goal_id
  * @var                    $goal_category_list
  * @var                    $priority_list
  * @var                    $kr_priority_list
@@ -16,6 +16,7 @@
  * @var                    $kr_end_date_format
  * @var                    $limit_end_date
  * @var                    $limit_start_date
+ * @var                    $current_kr_id
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_add_key_result.ctp -->
@@ -37,7 +38,7 @@
                 'class'     => 'form-control addteam_input-design'
             ],
             'class'         => 'form-horizontal',
-            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $key_result_id],
+            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $goal_id, $current_kr_id],
             'novalidate'    => true,
             'id'            => 'AddGoalFormKeyResult',
         ]); ?>
@@ -63,50 +64,50 @@
                         <div class="label-addiction pull-right"><?= __d('gl', "どのくらい？") ?></div>
                     </div>
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
-                    <div class="col col-sm-3">
+                        <div class="col col-sm-3">
 
-                        <?=
-                        $this->Form->input('KeyResult.value_unit',
-                                           ['label'               => __d('gl', "単位"),
-                                            'wrapInput'           => 'col col-sm-12',
-                                            'type'                => 'select',
-                                            'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                            'target-id' => 'KeyResult0ValueInputWrap_' . $key_result_id,
-                                            'required'            => true,
-                                            'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                            'options'             => $kr_value_unit_list
-                                           ]) ?>
-                    </div>
-                        <div id="KeyResult0ValueInputWrap_<?= $key_result_id ?>" style="">
-                            <div class="col col-sm-4  pl_12px">
                             <?=
-                            $this->Form->input('KeyResult.target_value',
-                                               ['label'                        => __d('gl', "達成時"),
-                                                'wrapInput'                    => 'col col-sm-12',
-                                                'type'                         => 'number',
-                                                'step'                         => '0.1',
-                                                'default'                      => 100,
-                                                'required'                     => true,
-                                                'maxlength'                    => 14,
-                                                'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
-                                                "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                                                'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
+                            $this->Form->input('KeyResult.value_unit',
+                                               ['label'               => __d('gl', "単位"),
+                                                'wrapInput'           => 'col col-sm-12',
+                                                'type'                => 'select',
+                                                'class'               => 'change-select-target-hidden form-control addteam_input-design',
+                                                'target-id'           => 'KeyResult0ValueInputWrap_' . $goal_id,
+                                                'required'            => true,
+                                                'hidden-option-value' => KeyResult::UNIT_BINARY,
+                                                'options'             => $kr_value_unit_list
                                                ]) ?>
+                        </div>
+                        <div id="KeyResult0ValueInputWrap_<?= $goal_id ?>" style="">
+                            <div class="col col-sm-4  pl_12px">
+                                <?=
+                                $this->Form->input('KeyResult.target_value',
+                                                   ['label'                        => __d('gl', "達成時"),
+                                                    'wrapInput'                    => 'col col-sm-12',
+                                                    'type'                         => 'number',
+                                                    'step'                         => '0.1',
+                                                    'default'                      => 100,
+                                                    'required'                     => true,
+                                                    'maxlength'                    => 14,
+                                                    'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                    'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
+                                                   ]) ?>
                             </div>
                             <div class="col col-sm-4 pl_12px">
-                            <?=
-                            $this->Form->input('KeyResult.start_value',
-                                               ['label'                        => __d('gl', "開始時"),
-                                                'wrapInput'                    => 'col col-sm-12',
-                                                'type'                         => 'number',
-                                                'step'                         => '0.1',
-                                                'default'                      => 0,
-                                                'required'                     => true,
-                                                'maxlength'                    => 14,
-                                                'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
-                                                "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                                                'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
-                                               ]) ?>
+                                <?=
+                                $this->Form->input('KeyResult.start_value',
+                                                   ['label'                        => __d('gl', "開始時"),
+                                                    'wrapInput'                    => 'col col-sm-12',
+                                                    'type'                         => 'number',
+                                                    'step'                         => '0.1',
+                                                    'default'                      => 0,
+                                                    'required'                     => true,
+                                                    'maxlength'                    => 14,
+                                                    'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                    'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
+                                                   ]) ?>
                             </div>
                         </div>
                     </div>
@@ -134,7 +135,7 @@
                                                        'required'                 => true,
                                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                                        'type'                     => 'text',
-                                                       'wrapInput' => null,
+                                                       'wrapInput'                => null,
                                                    ]) ?>
                                 <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                             </div>
@@ -144,13 +145,13 @@
                                 __d('gl', "開始") ?></label>
 
                             <p class="form-control-static col col-sm-12"
-                               id="KeyResult0StartDateDefault_<?= $key_result_id ?>">
+                               id="KeyResult0StartDateDefault_<?= $goal_id ?>">
                                     <span
                                         class="pull-left"><?= $kr_start_date_format ?>
                                         <?= __d('gl', "（本日）") ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del pull-right"
-                                                       show-target-id="KeyResult0StartDateInputWrap_<?= $key_result_id ?>"
-                                                       delete-target-id="KeyResult0StartDateDefault_<?= $key_result_id ?>">
+                                                       show-target-id="KeyResult0StartDateInputWrap_<?= $goal_id ?>"
+                                                       delete-target-id="KeyResult0StartDateDefault_<?= $goal_id ?>">
                                             <?= __d('gl', "変更") ?></a>
                                     </span>
                             </p>
@@ -158,7 +159,7 @@
                             <div class="input-group date plr_5px goal-set-date" style="display: none"
                                  data-date-end-date="<?= $limit_end_date ?>"
                                  data-date-start-date="<?= $limit_start_date ?>"
-                                 id="KeyResult0StartDateInputWrap_<?= $key_result_id ?>">
+                                 id="KeyResult0StartDateInputWrap_<?= $goal_id ?>">
                                 <?=
                                 $this->Form->input('KeyResult.start_date',
                                                    [
@@ -185,16 +186,16 @@
                         '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>この基準の重要度") . '</div></div>',
                     'label'    => false,
                     'type'     => 'select',
-                    'default'  => 1,
+                    'default'  => 3,
                     'required' => false,
-                    'style'    => 'width:50px',
-                    'options'  => $priority_list,
+                    'style'    => 'width:170px',
+                    'options'  => $kr_priority_list,
                 ]) ?>
             </div>
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('gl', "基準を追加"),
+            $this->Form->submit(__d('gl', "出したい成果を追加"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

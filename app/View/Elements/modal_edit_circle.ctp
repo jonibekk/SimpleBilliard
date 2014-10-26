@@ -65,7 +65,7 @@
             ?>
             <?php echo $this->Form->input('public_flg', array(
                 'type'    => 'radio',
-                'before'  => '<label class="col col-md-3 control-label modal-label">' . __d('gl',
+                'before'  => '<label class="col col-sm-3 control-label modal-label">' . __d('gl',
                                                                                             'プライバシー') . '</label>',
                 'legend'  => false,
                 'class'   => false,
@@ -110,7 +110,7 @@
                                                 ''
                                                ]) ?>
                         </span>
-                            <span class="help-block font_11px fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
+                            <span class="help-block font_11px disp_ib"><?= __d('gl', '10MB以下') ?></span>
                         </div>
                     </div>
 

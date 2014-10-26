@@ -10,6 +10,7 @@
  * @var       $nav_disable
  * @var array $my_teams
  * @var       $current_global_menu
+ * @var       $avail_sub_menu
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
@@ -95,37 +96,19 @@
                        id="download">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                                   ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
+                                                   ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
                         <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
                         <span
-                            class="font_11px hidden-xxs header-home header-link pr_5px mr_5px ptb_5px bd-r">User Name</span>
+                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.first_name') ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
-                        <li>
-                            <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
-                        </li>
-                        <?
-                        //TODO 一時的にチーム管理者はチーム招待リンクを表示
-                        if (isset($my_member_status['TeamMember']) && $my_member_status['TeamMember']['admin_flg']):?>
-                            <li>
-                                <?=
-                                $this->Html->link(__d('gl', "メンバーを招待"),
-                                                  ['controller' => 'teams', 'action' => 'invite']) ?>
-                            </li>
-                        <? endif; ?>
-                        <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
-                                __d('gl',
-                                    "チュートリアル") ?></a></li>
-                        <li><?=
-                            $this->Html->link(__d('gl', "ログアウト"),
-                                              ['controller' => 'users', 'action' => 'logout']) ?></li>
-                        <li class="divider"></li>
-                        <li><?=
-                            $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
-                                              ['target' => '_blank']) ?></li>
+                        <li class="text-align_c"><?= __d('gl', "準備中") ?></li>
+
+                        <!--
+-->
                     </ul>
                 </div>
-                <a href="<?= $this->Html->url('/') ?>" class="header-home header-link">ホーム</a>
+                <a href="<?= $this->Html->url('/') ?>" class="header-home header-link"><?= __d('gl', "ホーム") ?></a>
 
                 <div class="dropdown gl-navbar-nav-fix header-circle">
                     <a href="#" data-toggle="dropdown" id="download">
@@ -133,6 +116,12 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
                         <? if ($this->Session->read('current_team_id')): ?>
+                            <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                                    <i class="fa fa-flag header-drop-icons">
+                                        <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
+                                    </i>
+                                </a>
+                            </li>
                             <li>
                                 <a href="#" data-toggle="modal" data-target="#modal_add_circle">
                                     <i class="fa fa-circle-o header-drop-icons">
@@ -145,12 +134,6 @@
                             <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                                 <i class="fa fa-users header-drop-icons">
                                     <span class="font_verydark"><?= __d('gl', 'チームを作成') ?></span>
-                                </i>
-                            </a>
-                        </li>
-                        <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
-                                <i class="fa fa-flag header-drop-icons">
-                                    <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
                                 </i>
                             </a>
                         </li>
@@ -197,18 +180,21 @@
         </div>
         <!--/.nav-collapse -->
     </div>
-    <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt ptb_10px" id="SubHeaderMenu">
-        <div class="col col-xxs-6 text-align_r">
-            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link sp-feed-active" id="SubHeaderMenuFeed">
-                <?= __d('gl', "ニュースフィード") ?>
-            </a>
+    <? if ($avail_sub_menu): ?>
+        <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt height_40px" id="SubHeaderMenu">
+            <div class="col col-xxs-6 text-align_r">
+                <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link disp_ib pt_12px height_40px sp-feed-active"
+                   id="SubHeaderMenuFeed">
+                    <?= __d('gl', "ニュースフィード") ?>
+                </a>
+            </div>
+            <div class="col col-xxs-6">
+                <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link disp_ib pt_12px height_40px"
+                   id="SubHeaderMenuGoal">
+                    <?= __d('gl', "関連ゴール") ?>
+                </a>
+            </div>
         </div>
-        <div class="col col-xxs-6">
-            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link" id="SubHeaderMenuGoal">
-                <?= __d('gl', "関連ゴール") ?>
-            </a>
-        </div>
-    </div>
+    <? endif; ?>
 </header>
-
 <!-- END app/View/Elements/header_logged_in.ctp -->

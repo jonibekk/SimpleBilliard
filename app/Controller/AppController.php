@@ -101,6 +101,7 @@ class AppController extends Controller
             $this->_setMyMemberStatus();
         }
         $this->set('current_global_menu', null);
+        $this->set('avail_sub_menu', false);
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }

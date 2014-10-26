@@ -1,12 +1,12 @@
 <?php
-App::uses('Follower', 'Model');
+App::uses('Purpose', 'Model');
 
 /**
- * Follower Test Case
+ * Purpose Test Case
  *
- * @property Follower $Follower
+ * @property Purpose $Purpose
  */
-class FollowerTest extends CakeTestCase
+class PurposeTest extends CakeTestCase
 {
 
     /**
@@ -15,12 +15,10 @@ class FollowerTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.follower',
+        'app.purpose',
+        'app.user',
         'app.team',
         'app.badge',
-        'app.user',
-        'app.email',
-        'app.notify_setting',
         'app.comment_like',
         'app.comment',
         'app.post',
@@ -28,6 +26,7 @@ class FollowerTest extends CakeTestCase
         'app.goal_category',
         'app.key_result',
         'app.collaborator',
+        'app.follower',
         'app.post_share_user',
         'app.post_share_circle',
         'app.circle',
@@ -38,17 +37,19 @@ class FollowerTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
+        'app.group',
+        'app.team_member',
+        'app.job_category',
+        'app.invite',
         'app.notification',
         'app.notify_to_user',
         'app.notify_from_user',
-        'app.oauth_token',
-        'app.team_member',
-        'app.group',
-        'app.job_category',
-        'app.local_name',
-        'app.invite',
         'app.thread',
-        'app.message'
+        'app.message',
+        'app.email',
+        'app.notify_setting',
+        'app.oauth_token',
+        'app.local_name'
     );
 
     /**
@@ -59,7 +60,7 @@ class FollowerTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Follower = ClassRegistry::init('Follower');
+        $this->Purpose = ClassRegistry::init('Purpose');
     }
 
     /**
@@ -69,27 +70,14 @@ class FollowerTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->Follower);
+        unset($this->Purpose);
 
         parent::tearDown();
     }
 
-    function testAddFollow()
+    function testDummy()
     {
-        $this->setDefault();
-        $data = [
-            'user_id' => 1,
-            'team_id' => 1,
-            'goal_id' => 100
-        ];
-        $this->Follower->save($data);
-        $this->assertFalse($this->Follower->addFollower(100));
-    }
 
-    function setDefault()
-    {
-        $this->Follower->my_uid = 1;
-        $this->Follower->current_team_id = 1;
     }
 
 }

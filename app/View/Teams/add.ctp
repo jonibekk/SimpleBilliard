@@ -66,7 +66,7 @@
                                                 ''
                                                ]) ?>
                         </span>
-                                <span class="help-block font_11px fileinput-limit_mb"><?= __d('gl', '10MB以下') ?></span>
+                                <span class="help-block font_11px disp_ib"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>
 
