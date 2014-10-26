@@ -189,6 +189,17 @@
                 </div>
 
             </div>
+            <hr>
+            <?=
+            $this->Form->input('comment', [
+                'label' => __d('gl', "自己紹介"),
+                'value' => (isset($this->request->data['User']['comment']) && !empty($this->request->data['User']['comment']))
+                    ? $this->request->data['User']['comment']
+                    : __d('gl',
+                          "【現在までにどのような業務に携わっていたか？】\n\n【自分の得意分野(エンジニアであれば言語、ツール等)】\n\n【今後やってみたい事】\n\n【思い描いている将来のキャリアパス】\n")
+            ]);
+            ?>
+
         </div>
         <div class="panel-footer setting_pannel-footer">
             <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
