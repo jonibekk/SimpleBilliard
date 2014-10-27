@@ -271,7 +271,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"), "#",
-                                          ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
+                                          ['class' => 'btn btn-link btn-white bd-radius_4px', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
                             $disabled = null;
                         }
