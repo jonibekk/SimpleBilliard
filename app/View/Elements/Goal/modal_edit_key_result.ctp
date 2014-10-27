@@ -45,12 +45,13 @@ $this->Form->create('KeyResult', [
 <?= $this->Form->hidden('KeyResult.goal_id', ['value' => $this->request->data['KeyResult']['goal_id']]) ?>
 <div class="modal-body modal-circle-body">
     <div class="col col-xxs-12">
+        <div class="row bd-b">
         <?=
         $this->Form->input('KeyResult.name',
                            ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
                                '<label class="no-asterisk">' . __d('gl', "成果名") . '</label>' .
                                '<div class="label-addiction">' . __d('gl',
-                                                                     "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
+                                                                     "達成の指標として『なに』をどうするか？") . '</div></div>',
                             'label'                    => false,
                             'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
                             "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
@@ -58,6 +59,7 @@ $this->Form->create('KeyResult', [
                             'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
                                                                                                       "例）サービスAの国内市場シェアを増加させる") . '</span>'
                            ]) ?>
+            </div>
         <div class="row">
             <?
             //TODO 一旦、使わないのでコメントアウト
@@ -79,8 +81,7 @@ $this->Form->create('KeyResult', [
             //                                        ])
             ?>
         </div>
-
-        <div class="row">
+        <div class="row bd-b">
             <div class="col col-sm-3">
                 <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
 
@@ -135,7 +136,7 @@ $this->Form->create('KeyResult', [
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row bd-b">
             <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
             <div class="col col-sm-7 line-vertical-sm goal-set-input">
