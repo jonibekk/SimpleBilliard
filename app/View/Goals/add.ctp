@@ -434,6 +434,30 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             valid: 'fa fa-check',
             invalid: 'fa fa-times',
             validating: 'fa fa-refresh'
+        },
+        fields: {
+            "data[Goal][start_date]": {
+                validators: {
+                    callback: {
+                        message: '<?=__d('gl',"開始日が期限を過ぎています。")?>',
+                        callback: function (value, validator) {
+                            var m = new moment(value, 'YYYY/MM/DD', true);
+                            return m.isBefore($('[name="data[Goal][end_date]"]').val());
+                        }
+                    }
+                }
+            },
+            "data[Goal][end_date]": {
+                validators: {
+                    callback: {
+                        message: '<?=__d('gl',"期限が開始日以前になっています。")?>',
+                        callback: function (value, validator) {
+                            var m = new moment(value, 'YYYY/MM/DD', true);
+                            return m.isAfter($('[name="data[Goal][start_date]"]').val());
+                        }
+                    }
+                }
+            }
         }
     });
     $('#AddGoalFormOther').bootstrapValidator({
@@ -456,7 +480,11 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         language: "ja",
         autoclose: true,
         todayHighlight: true
-    });
+    })
+        .on('hide', function (e) {
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
+        });
     //noinspection JSJQueryEfficiency
     $('#KeyResult0EndDateContainer .input-group.date').datepicker({
         format: "yyyy/mm/dd",
@@ -464,7 +492,11 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         language: "ja",
         autoclose: true,
         todayHighlight: true
-    });
+    })
+        .on('hide', function (e) {
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
+        });
     //modeによってdisableにする
     <?if(isset($this->request->params['named']['mode'])):?>
     <?if($this->request->params['named']['mode'] == 2):?>
