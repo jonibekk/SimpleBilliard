@@ -314,7 +314,11 @@ footer p {
     padding-bottom: 5px;
 }
 
-.mb_12px {
+.mb_8px{
+    margin-bottom: 8px;
+}
+
+.mb_12px{
     margin-bottom: 12px;
 }
 
@@ -400,7 +404,17 @@ footer p {
     padding-left: 16px;
 }
 
+.m_pic{
+    width: 280px;
+    margin: 4px 0 4px 10px;
+}
 /*行数の指定*/
+
+.modal-mini{
+    width: 300px;
+    margin: auto;
+}
+
 /*noinspection CssUnknownProperty*/
 .line-numbers {
     word-wrap: break-word;
@@ -2068,7 +2082,6 @@ ul.gl-input-images > li {
 .label-addiction {
     color: #c0c0c0;
     font-size: 12px;
-    padding-left: 18px;
 }
 
 .goal-form-addiction {
@@ -2567,6 +2580,22 @@ ul.gl-input-images > li {
 
     .container {
         width: 756px;
+    }
+
+    .sm-text-right{
+        text-align: right;
+    }
+
+    .sm-pull-right {
+        float: right !important;
+    }
+
+    .sm-pl_12px{
+        padding-left: 12px;
+    }
+
+    .label-addiction {
+        padding-left: 18px;
     }
 
     .gl-nav-container {

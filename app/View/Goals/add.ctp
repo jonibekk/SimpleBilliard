@@ -77,8 +77,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="row">
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
-                        $this->Html->link(__d('gl', "詳しくはこちら"), "#",
-                                          ['class' => 'btn btn-link btn-white bd-radius_4px', 'div' => false]) ?>
+                        $this->Html->link(__d('gl', "詳しくはこちら"),
+                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step1'],
+                                          ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
@@ -270,8 +271,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="row">
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
-                        $this->Html->link(__d('gl', "詳しくはこちら"), "#",
-                                          ['class' => 'btn btn-link btn-white bd-radius_4px', 'div' => false]) ?>
+                        $this->Html->link(__d('gl', "詳しくはこちら"),
+                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step2'],
+                                          ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
                             $disabled = null;
                         }
