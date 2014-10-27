@@ -26,8 +26,8 @@
             </div>
             </div>
             <? if ($kr_can_edit): ?>
-                <div class="pull-right dropdown">
-                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                <div class="pull-right dropdown mt_16px">
+                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_2px pb_2px"
                        data-toggle="dropdown"
                        id="download">
                         <i class="fa fa-cog"></i>
