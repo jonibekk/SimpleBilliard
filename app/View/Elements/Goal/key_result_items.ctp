@@ -18,7 +18,7 @@
         <div class="bd-t h_50px">
             <div class="col col-xxs-12 w_90per line-numbers ln_1 ptb_5px">
                 <a href="#" class="develop--forbiddenLink">
-                    <i class=" fa fa-check-circle font_40px pull-left mr_5px tap-btn text-align_c check-fin"></i>
+                    <i class=" fa fa-check-circle font_40px pull-left mr_5px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
                 </a>
 
                 <div class="pull-left">
