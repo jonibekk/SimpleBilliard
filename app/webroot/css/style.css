@@ -314,6 +314,10 @@ footer p {
     padding-bottom: 5px;
 }
 
+.mb_8px{
+    margin-bottom: 8px;
+}
+
 .mb_12px{
     margin-bottom: 12px;
 }
@@ -2065,7 +2069,6 @@ ul.gl-input-images > li {
 .label-addiction {
     color: #c0c0c0;
     font-size: 12px;
-    padding-left: 18px;
 }
 
 .goal-form-addiction {
@@ -2564,6 +2567,22 @@ ul.gl-input-images > li {
 
     .container {
         width: 756px;
+    }
+
+    .sm-text-right{
+        text-align: right;
+    }
+
+    .sm-pull-right {
+        float: right !important;
+    }
+
+    .sm-pl_12{
+        padding-left: 12px;
+    }
+
+    .label-addiction {
+        padding-left: 18px;
     }
 
     .gl-nav-container {

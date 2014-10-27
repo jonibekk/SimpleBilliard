@@ -45,7 +45,7 @@ $this->Form->create('KeyResult', [
 <?= $this->Form->hidden('KeyResult.goal_id', ['value' => $this->request->data['KeyResult']['goal_id']]) ?>
 <div class="modal-body modal-circle-body">
     <div class="col col-xxs-12">
-        <div class="row bd-b">
+        <div class="row bd-b mb_8px">
         <?=
         $this->Form->input('KeyResult.name',
                            ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
@@ -81,13 +81,13 @@ $this->Form->create('KeyResult', [
             //                                        ])
             ?>
         </div>
-        <div class="row bd-b">
+        <div class="row bd-b mb_8px">
             <div class="col col-sm-3">
-                <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
+                <label class="control-label width100_per sm-text-right"><?= __d('gl', "程度") ?></label>
 
-                <div class="label-addiction pull-right"><?= __d('gl', "どのくらい？") ?></div>
+                <div class="label-addiction pull-left sm-pull-right"><?= __d('gl', "どのくらい？") ?></div>
             </div>
-            <div class="col col-sm-7 line-vertical-sm goal-set-input">
+            <div class="col col-xxs-12 col-sm-7 line-vertical-sm goal-set-input">
                 <div class="col col-sm-3">
                     <?=
                     $this->Form->input('KeyResult.value_unit',
@@ -103,7 +103,7 @@ $this->Form->create('KeyResult', [
                 </div>
                 <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
                      style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
-                    <div class="col col-sm-4  pl_12px">
+                    <div class="col col-sm-4  sm-pl_12px">
                         <?=
                         $this->Form->input('KeyResult.target_value',
                                            ['label'                        => __d('gl', "達成時"),
@@ -118,7 +118,7 @@ $this->Form->create('KeyResult', [
                                             'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                            ]) ?>
                     </div>
-                    <div class="col col-sm-4  pl_12px">
+                    <div class="col col-sm-4  sm-pl_12px">
                         <?=
                         $this->Form->input('KeyResult.start_value',
                                            ['label'                        => __d('gl', "開始時"),
@@ -136,7 +136,7 @@ $this->Form->create('KeyResult', [
                 </div>
             </div>
         </div>
-        <div class="row bd-b">
+        <div class="row bd-b mb_8px">
             <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
             <div class="col col-sm-7 line-vertical-sm goal-set-input">
@@ -206,7 +206,7 @@ $this->Form->create('KeyResult', [
         $this->Form->input('priority', [
             'before'                   => '<div class="col col-sm-3 control-label set-importance">' .
                 '<label>' . __d('gl', "重要度") . '</label>' .
-                '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>この成果の重要度") . '</div></div>',
+                '<div class="label-addiction">' . __d('gl', "あなたにとってのこの成果の重要度") . '</div></div>',
             'label'                    => false,
             'type'                     => 'select',
             'default'                  => 1,
