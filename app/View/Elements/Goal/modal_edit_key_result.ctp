@@ -144,7 +144,7 @@ $this->Form->create('KeyResult', [
                         __d('gl',
                             "期限") ?></label>
 
-                    <div class="input-group date col col-sm-12 goal-set-date"
+                    <div class="input-group date goal-set-date"
                          data-date-end-date="<?= $limit_end_date ?>"
                          data-date-start-date="<?= $limit_start_date ?>">
                         <?=
@@ -178,7 +178,7 @@ $this->Form->create('KeyResult', [
                                     </span>
                     </p>
 
-                    <div class="col col-sm-12 input-group date plr_5px goal-set-date" style="display: none"
+                    <div class="input-group date plr_5px goal-set-date" style="display: none"
                          data-date-end-date="<?= $limit_end_date ?>"
                          data-date-start-date="<?= $limit_start_date ?>"
                          id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">
