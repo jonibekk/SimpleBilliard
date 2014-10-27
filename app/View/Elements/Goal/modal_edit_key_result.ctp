@@ -46,20 +46,20 @@ $this->Form->create('KeyResult', [
 <div class="modal-body modal-circle-body">
     <div class="col col-xxs-12">
         <div class="row bd-b mb_8px">
-        <?=
-        $this->Form->input('KeyResult.name',
-                           ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
-                               '<label class="no-asterisk">' . __d('gl', "成果名") . '</label>' .
-                               '<div class="label-addiction">' . __d('gl',
-                                                                     "達成の指標として『なに』をどうするか？") . '</div></div>',
-                            'label'                    => false,
-                            'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
-                            "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                            'rows'                     => 1,
-                            'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
-                                                                                                      "例）サービスAの国内市場シェアを増加させる") . '</span>'
-                           ]) ?>
-            </div>
+            <?=
+            $this->Form->input('KeyResult.name',
+                               ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
+                                   '<label class="no-asterisk">' . __d('gl', "成果名") . '</label>' .
+                                   '<div class="label-addiction">' . __d('gl',
+                                                                         "達成の指標として『なに』をどうするか？") . '</div></div>',
+                                'label'                    => false,
+                                'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
+                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                'rows'                     => 1,
+                                'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
+                                                                                                          "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                               ]) ?>
+        </div>
         <div class="row">
             <?
             //TODO 一旦、使わないのでコメントアウト
@@ -103,7 +103,7 @@ $this->Form->create('KeyResult', [
                 </div>
                 <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
                      style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
-                    <div class="col col-sm-4  sm-pl_12px">
+                    <div class="col col-sm-4 sm-pl_12px">
                         <?=
                         $this->Form->input('KeyResult.target_value',
                                            ['label'                        => __d('gl', "達成時"),
