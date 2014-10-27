@@ -575,6 +575,22 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    function ajax_get_particularly_step1()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('Goal/modal_particularly_step1');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_particularly_step2()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('Goal/modal_particularly_step2');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
     private function _flashOpenKrs($goal_id)
     {
         $this->Session->setFlash(null, "flash_open_krs", ['goal_id' => $goal_id], 'open_krs');
