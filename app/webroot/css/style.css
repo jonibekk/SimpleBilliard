@@ -364,6 +364,14 @@ footer p {
     padding-top: 2px;
 }
 
+.pt_4px{
+    padding-top: 4px;
+}
+
+.pt_8px{
+    padding-top: 8px;
+}
+
 .pt_12px {
     padding-top: 12px;
 }
@@ -871,6 +879,9 @@ footer p {
 
 .w_90per{
     width: 90%;
+}
+.h_50px{
+    height: 50px;
 }
 /*/幅指定*/
 
