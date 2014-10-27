@@ -253,6 +253,10 @@ footer p {
     margin-top: 16px;
 }
 
+.mt_18px{
+    margin-top: 18px;
+}
+
 .mt_32px {
     margin-top: 32px;
 }
@@ -335,6 +339,10 @@ footer p {
 
 .pt_1px {
     padding-top: 1px;
+}
+
+.pt_2px{
+    padding-top: 2px;
 }
 
 .pt_12px {
