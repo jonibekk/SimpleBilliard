@@ -404,7 +404,17 @@ footer p {
     padding-left: 16px;
 }
 
+.m_pic{
+    width: 280px;
+    margin: 4px 0 4px 10px;
+}
 /*行数の指定*/
+
+.modal-mini{
+    width: 300px;
+    margin: auto;
+}
+
 /*noinspection CssUnknownProperty*/
 .line-numbers {
     word-wrap: break-word;

@@ -9,7 +9,7 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_particularly_step1.ctp -->
-<div class="modal-dialog">
+<div class="modal-dialog modal-mini">
     <div class="modal-content gl-modal-no-margin">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
@@ -18,7 +18,7 @@
         </div>
         <div class="modal-body">
             <div class="col col-xxs-12">
-                <?= $this->Html->image('no-image.jpg', ['width' => '', 'height' => '', 'class' => '']) ?>
+                <?= $this->Html->image('purpose-is.jpg', ['width' => '280', 'height' => '', 'class' => 'm_pic']) ?>
             </div>
         </div>
         <div class="modal-footer">
