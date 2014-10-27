@@ -125,7 +125,7 @@
                                         <?=
                                         $this->Html->image('ajax-loader.gif',
                                                            [
-                                                               'class'         => 'lazy',
+                                                               'class'         => 'lazy bd-s',
                                                                'data-original' => $this->Upload->uploadUrl($post,
                                                                                                            "Post.photo" . $i,
                                                                                                            ['style' => 'small'])
