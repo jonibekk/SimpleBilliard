@@ -14,7 +14,8 @@
 <!-- START app/View/Elements/Goal/key_result_items.ctp -->
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
-        <div class="col col-xxs-12 w_90per line-numbers ln_1 bd-t ptb_5px">
+        <div class="bd-t h_50px">
+        <div class="col col-xxs-12 w_90per line-numbers ln_1 ptb_5px">
             <a href="#" class="develop--forbiddenLink">
                 <i class=" fa fa-check-circle font_40px pull-left mr_5px tap-btn text-align_c check-off"></i>
             </a>
@@ -24,7 +25,7 @@
                         <?= h($kr['KeyResult']['name']) ?></span>
                 <i class="fa fa-check-circle"><span class="ml_2px">0</span></i>
             </div>
-            </div>
+        </div>
             <? if ($kr_can_edit): ?>
                 <div class="pull-right dropdown mt_16px">
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_2px pb_2px"
@@ -72,9 +73,10 @@
                     </ul>
                 </div>
             <? endif; ?>
+        </div>
     <? endforeach ?>
-    <div class="">
-        <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px">
+    <div class="bd-t pt_8px">
+        <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px" href="#">
         <i class="fa fa-plus-circle"><span class="ml_2px">
                                     <?= __d('gl', "出したい成果を追加") ?></span>
         </i>
