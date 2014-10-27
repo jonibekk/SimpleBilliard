@@ -488,7 +488,7 @@ class GoalsController extends AppController
             }
         }
 
-        $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit'));
+        $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id'));
         $response = $this->render('Goal/key_result_items');
         $html = $response->__toString();
         $result = array(

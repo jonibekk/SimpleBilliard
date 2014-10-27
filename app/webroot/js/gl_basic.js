@@ -129,6 +129,9 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
         $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
@@ -144,6 +147,9 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
         $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
@@ -161,6 +167,9 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
         $modal_elm.on('shown.bs.modal', function (e) {
             $(this).find('textarea').each(function () {
                 $(this).autosize();
@@ -230,6 +239,9 @@ $(function () {
 function getModalFormFromUrl(e) {
     e.preventDefault();
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).remove();
+    });
     $modal_elm.on('shown.bs.modal', function (e) {
         $(this).find('textarea').each(function () {
             $(this).autosize();

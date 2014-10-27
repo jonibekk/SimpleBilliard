@@ -97,7 +97,7 @@
                                             <?=
                                             $this->Html->image('ajax-loader.gif',
                                                                [
-                                                                   'class'         => 'lazy',
+                                                                   'class'         => 'lazy bd-s',
                                                                    //'style'         => 'width: 50px; height: 50px;',
                                                                    'data-original' => $this->Upload->uploadUrl($comment,
                                                                                                                "Comment.photo" . $i,
