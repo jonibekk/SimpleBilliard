@@ -78,9 +78,6 @@
         <? endif; ?>
             </div>
     <? endforeach ?>
-    <div class="">
-        <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px">
-            <i class="fa fa-plus-circle"><span class="ml_2px">
     <div class="bd-t pt_8px">
         <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px" href="#">
         <i class="fa fa-plus-circle"><span class="ml_2px">
