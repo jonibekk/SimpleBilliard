@@ -73,6 +73,13 @@
                 </div>
             <? endif; ?>
     <? endforeach ?>
+    <div class="">
+        <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px">
+        <i class="fa fa-plus-circle"><span class="ml_2px">
+                                    <?= __d('gl', "出したい成果を追加") ?></span>
+        </i>
+        </a>
+    </div>
 <? else: ?>
     <div class="col col-xxs-12">
         <?= __d('gl', "成果はまだありません。") ?>
