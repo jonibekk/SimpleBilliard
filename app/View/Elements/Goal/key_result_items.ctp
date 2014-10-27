@@ -79,14 +79,16 @@
             <? endif; ?>
         </div>
     <? endforeach ?>
-    <div class="bd-t pt_8px">
-        <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
-           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal_id]) ?>">
-            <i class="fa fa-plus-circle"><span class="ml_2px">
+    <? if ($kr_can_edit): ?>
+        <div class="bd-t pt_8px">
+            <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
+               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal_id]) ?>">
+                <i class="fa fa-plus-circle"><span class="ml_2px">
                                     <?= __d('gl', "出したい成果を追加") ?></span>
-            </i>
-        </a>
-    </div>
+                </i>
+            </a>
+        </div>
+    <? endif; ?>
 <? else: ?>
     <div class="col col-xxs-12">
         <?= __d('gl', "成果はまだありません。") ?>
