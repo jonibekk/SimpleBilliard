@@ -185,7 +185,7 @@
                 $this->Form->input('priority', [
                     'before'   => '<div class="col col-sm-3 control-label set-importance">' .
                         '<label>' . __d('gl', "重要度") . '</label>' .
-                        '<div class="label-addiction">' . __d('gl', "あなたにとってのこの基準の重要度") . '</div></div>',
+                        '<div class="label-addiction">' . __d('gl', "ゴールにとってこの成果の重要度") . '</div></div>',
                     'label'    => false,
                     'type'     => 'select',
                     'default'  => 3,
