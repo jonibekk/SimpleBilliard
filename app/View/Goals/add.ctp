@@ -77,8 +77,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="row">
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
-                        $this->Html->link(__d('gl', "詳しくはこちら"), "#",
-                                          ['class' => 'btn btn-link btn-white bd-radius_4px', 'div' => false]) ?>
+                        $this->Html->link(__d('gl', "詳しくはこちら"),
+                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step1'],
+                                          ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
@@ -270,8 +271,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="row">
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
-                        $this->Html->link(__d('gl', "詳しくはこちら"), "#",
-                                          ['class' => 'btn btn-link btn-white', 'div' => false]) ?>
+                        $this->Html->link(__d('gl', "詳しくはこちら"),
+                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step2'],
+                                          ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
                             $disabled = null;
                         }
@@ -434,6 +436,30 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             valid: 'fa fa-check',
             invalid: 'fa fa-times',
             validating: 'fa fa-refresh'
+        },
+        fields: {
+            "data[Goal][start_date]": {
+                validators: {
+                    callback: {
+                        message: '<?=__d('gl',"開始日が期限を過ぎています。")?>',
+                        callback: function (value, validator) {
+                            var m = new moment(value, 'YYYY/MM/DD', true);
+                            return m.isBefore($('[name="data[Goal][end_date]"]').val());
+                        }
+                    }
+                }
+            },
+            "data[Goal][end_date]": {
+                validators: {
+                    callback: {
+                        message: '<?=__d('gl',"期限が開始日以前になっています。")?>',
+                        callback: function (value, validator) {
+                            var m = new moment(value, 'YYYY/MM/DD', true);
+                            return m.isAfter($('[name="data[Goal][start_date]"]').val());
+                        }
+                    }
+                }
+            }
         }
     });
     $('#AddGoalFormOther').bootstrapValidator({
@@ -456,7 +482,11 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         language: "ja",
         autoclose: true,
         todayHighlight: true
-    });
+    })
+        .on('hide', function (e) {
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
+        });
     //noinspection JSJQueryEfficiency
     $('#KeyResult0EndDateContainer .input-group.date').datepicker({
         format: "yyyy/mm/dd",
@@ -464,7 +494,11 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         language: "ja",
         autoclose: true,
         todayHighlight: true
-    });
+    })
+        .on('hide', function (e) {
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
+            $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
+        });
     //modeによってdisableにする
     <?if(isset($this->request->params['named']['mode'])):?>
     <?if($this->request->params['named']['mode'] == 2):?>

@@ -31,6 +31,7 @@ echo $this->Html->script('customRadioCheck.min');
 echo $this->Html->script('select2.min');
 echo $this->Html->script('bootstrap-datepicker.min');
 echo $this->Html->script('locales/bootstrap-datepicker.ja');
+echo $this->Html->script('moment.min');
 echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
@@ -520,6 +521,68 @@ function showMore(obj) {
             height: '105px',
             showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
             hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+        });
+    }
+}
+function getModalFormFromUrl(e) {
+    e.preventDefault();
+    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).remove();
+    });
+    $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).find('textarea').each(function () {
+            $(this).autosize();
+        });
+        $(this).find('.input-group.date').datepicker({
+            format: "yyyy/mm/dd",
+            todayBtn: 'linked',
+            language: "ja",
+            autoclose: true,
+            todayHighlight: true
+            //endDate:"2015/11/30"
+        })
+            .on('hide', function (e) {
+                $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
+                $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
+            });
+    });
+    var url = $(this).attr('href');
+    if (url.indexOf('#') == 0) {
+        $(url).modal('open');
+    } else {
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.find('form').bootstrapValidator({
+                live: 'enabled',
+                feedbackIcons: {},
+                fields: {
+                    "data[KeyResult][start_date]": {
+                        validators: {
+                            callback: {
+                                message: '<?=__d('validate',"開始日が期限を過ぎています。")?>',
+                                callback: function (value, validator) {
+                                    var m = new moment(value, 'YYYY/MM/DD', true);
+                                    return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
+                                }
+                            }
+                        }
+                    },
+                    "data[KeyResult][end_date]": {
+                        validators: {
+                            callback: {
+                                message: '<?=__d('validate',"期限が開始日以前になっています。")?>',
+                                callback: function (value, validator) {
+                                    var m = new moment(value, 'YYYY/MM/DD', true);
+                                    return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            $modal_elm.modal();
+            $('body').addClass('modal-open');
         });
     }
 }

@@ -86,8 +86,27 @@
     margin-right: 0;
 }
 
-.has-feedback .form-control{
+.has-feedback .form-control {
     padding-right: 0;
+}
+
+.form-control {
+    color: #808080;
+    background-color: #ffffff;
+    background-image: none;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-transition: none;
+    transition: none;
+}
+
+.form-control:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 /*==/ normalize bootstrap ===*/
@@ -253,6 +272,10 @@ footer p {
     margin-top: 16px;
 }
 
+.mt_18px {
+    margin-top: 18px;
+}
+
 .mt_32px {
     margin-top: 32px;
 }
@@ -281,7 +304,7 @@ footer p {
     margin-left: 16px;
 }
 
-.mlr_5px{
+.mlr_5px {
     margin-left: 5px;
     margin-right: 5px;
 }
@@ -289,6 +312,10 @@ footer p {
 .mb-pb_5px {
     margin-bottom: 5px;
     padding-bottom: 5px;
+}
+
+.mb_8px{
+    margin-bottom: 8px;
 }
 
 .mb_12px{
@@ -318,7 +345,7 @@ footer p {
     padding-right: 18px;
 }
 
-.mtb_3px{
+.mtb_3px {
     margin-top: 3px;
     margin-bottom: 3px;
 }
@@ -335,6 +362,18 @@ footer p {
 
 .pt_1px {
     padding-top: 1px;
+}
+
+.pt_2px {
+    padding-top: 2px;
+}
+
+.pt_4px {
+    padding-top: 4px;
+}
+
+.pt_8px {
+    padding-top: 8px;
 }
 
 .pt_12px {
@@ -365,7 +404,17 @@ footer p {
     padding-left: 16px;
 }
 
+.m_pic{
+    width: 280px;
+    margin: 4px 0 4px 10px;
+}
 /*行数の指定*/
+
+.modal-mini{
+    width: 300px;
+    margin: auto;
+}
+
 /*noinspection CssUnknownProperty*/
 .line-numbers {
     word-wrap: break-word;
@@ -399,7 +448,7 @@ footer p {
     -ms-line-clamp: 2;
 }
 
-.mw_75per{
+.mw_75per {
     max-width: 75%;
 }
 
@@ -421,7 +470,7 @@ footer p {
 /*/position*/
 
 /* text-align */
-.text-align_l{
+.text-align_l {
     text-align: left;
 }
 
@@ -435,11 +484,12 @@ footer p {
 
 /*/ text-align */
 
-.tap-btn{
+.tap-btn {
     font-size: 40px;
     line-height: 40px;
 }
-.tap-btn-text{
+
+.tap-btn-text {
     line-height: 20px;
     vertical-align: top;
 }
@@ -465,7 +515,7 @@ footer p {
     font-size: 33px;
 }
 
-.font_40px{
+.font_40px {
     font-size: 40px;
 }
 
@@ -547,11 +597,11 @@ footer p {
     color: #91170a;
 }
 
-.font_rouge{
+.font_rouge {
     color: #eb3228;
 }
 
-.font_darkRed{
+.font_darkRed {
     color: #91170a;
 }
 
@@ -619,21 +669,22 @@ footer p {
 /*/fontの設定*/
 
 /*KR*/
-.check-on{
+.check-on {
     color: #00c952;
 }
 
-.check-off{
+.check-off {
     color: #fff;
 }
 
-.check-fin{
+.check-fin {
     visibility: hidden;
 }
 
-.fin-kr{
+.fin-kr {
     color: #808080;
 }
+
 /*/KR*/
 
 /*== Modal Settings ==*/
@@ -664,7 +715,6 @@ footer p {
 .bd-t {
     border-top: 1px solid #ccc;
 }
-
 
 .bd-b {
     border-bottom: 1px solid #f0f0f0;
@@ -710,7 +760,19 @@ footer p {
     -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-/*/  */
+.bd-s {
+    border: 1px solid #ddd;
+}
+
+.m_-1px {
+    margin: -1px;
+}
+
+.bd-dash {
+    border: 1px dashed #ddd;
+}
+
+/*/border  */
 
 /*切り替えスイッチ*/
 .switch-post, .switch-action, .switch-badge {
@@ -838,9 +900,14 @@ footer p {
     width: 100%;
 }
 
-.w_90per{
+.w_90per {
     width: 90%;
 }
+
+.h_50px {
+    height: 50px;
+}
+
 /*/幅指定*/
 
 .modal-content > .modal-header > .close-design {
@@ -2015,7 +2082,6 @@ ul.gl-input-images > li {
 .label-addiction {
     color: #c0c0c0;
     font-size: 12px;
-    padding-left: 18px;
 }
 
 .goal-form-addiction {
@@ -2516,6 +2582,22 @@ ul.gl-input-images > li {
         width: 756px;
     }
 
+    .sm-text-right{
+        text-align: right;
+    }
+
+    .sm-pull-right {
+        float: right !important;
+    }
+
+    .sm-pl_12px{
+        padding-left: 12px;
+    }
+
+    .label-addiction {
+        padding-left: 18px;
+    }
+
     .gl-nav-container {
         width: 756px;
     }
@@ -2854,7 +2936,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .goal-set-date {
-    min-width: 140px;
+    min-width: 150px;
     width: 16%;
 }
 

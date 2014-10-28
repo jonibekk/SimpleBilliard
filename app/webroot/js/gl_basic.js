@@ -236,41 +236,6 @@ $(function () {
     });
 });
 
-function getModalFormFromUrl(e) {
-    e.preventDefault();
-    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-    $modal_elm.on('hidden.bs.modal', function (e) {
-        $(this).remove();
-    });
-    $modal_elm.on('shown.bs.modal', function (e) {
-        $(this).find('textarea').each(function () {
-            $(this).autosize();
-        });
-        $(this).find('.input-group.date').datepicker({
-            format: "yyyy/mm/dd",
-            todayBtn: 'linked',
-            language: "ja",
-            autoclose: true,
-            todayHighlight: true
-            //endDate:"2015/11/30"
-        });
-    });
-    var url = $(this).attr('href');
-    if (url.indexOf('#') == 0) {
-        $(url).modal('open');
-    } else {
-        $.get(url, function (data) {
-            $modal_elm.append(data);
-            $modal_elm.find('form').bootstrapValidator({
-                live: 'enabled',
-                feedbackIcons: {}
-            });
-            $modal_elm.modal();
-            $('body').addClass('modal-open');
-        });
-    }
-}
-
 function imageLazyOn() {
     $("img.lazy").lazy({
         bind: "event",

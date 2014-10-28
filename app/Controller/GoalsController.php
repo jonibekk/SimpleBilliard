@@ -488,7 +488,7 @@ class GoalsController extends AppController
             }
         }
 
-        $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit'));
+        $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id'));
         $response = $this->render('Goal/key_result_items');
         $html = $response->__toString();
         $result = array(
@@ -571,6 +571,22 @@ class GoalsController extends AppController
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_last_kr_confirm');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_particularly_step1()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('Goal/modal_particularly_step1');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_particularly_step2()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('Goal/modal_particularly_step2');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }

@@ -44,6 +44,7 @@
         ]); ?>
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
+                <div class="row bd-b mb_8px">
                 <?=
                 $this->Form->input('KeyResult.name',
                                    ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
@@ -57,13 +58,14 @@
                                     'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
                                                                                                               "例）Webサイトを完成させる") . '</span>'
                                    ]) ?>
-                <div class="row">
+                </div>
+                <div class="row bd-b mb_8px">
                     <div class="col col-sm-3">
-                        <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
+                        <label class="control-label width100_per sm-text-right"><?= __d('gl', "程度") ?></label>
 
-                        <div class="label-addiction pull-right"><?= __d('gl', "どのくらい？") ?></div>
+                        <div class="label-addiction pull-left sm-pull-right"><?= __d('gl', "どのくらい？") ?></div>
                     </div>
-                    <div class="col col-sm-7 line-vertical-sm goal-set-input">
+                    <div class="col col-xxs-12 col-sm-7 line-vertical-sm goal-set-input">
                         <div class="col col-sm-3">
 
                             <?=
@@ -79,7 +81,7 @@
                                                ]) ?>
                         </div>
                         <div id="KeyResult0ValueInputWrap_<?= $goal_id ?>" style="">
-                            <div class="col col-sm-4  pl_12px">
+                            <div class="col col-sm-4 sm-pl_12px">
                                 <?=
                                 $this->Form->input('KeyResult.target_value',
                                                    ['label'                        => __d('gl', "達成時"),
@@ -94,7 +96,7 @@
                                                     'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                    ]) ?>
                             </div>
-                            <div class="col col-sm-4 pl_12px">
+                            <div class="col col-sm-4 sm-pl_12px">
                                 <?=
                                 $this->Form->input('KeyResult.start_value',
                                                    ['label'                        => __d('gl', "開始時"),
@@ -112,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row bd-b mb_8px">
                     <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
                     <div class="col col-sm-8 line-vertical-sm goal-set-input">
@@ -121,7 +123,7 @@
                                 __d('gl',
                                     "期限") ?></label>
 
-                            <div class="input-group date col col-sm-12 goal-set-date"
+                            <div class="input-group date goal-set-date"
                                  data-date-end-date="<?= $limit_end_date ?>"
                                  data-date-start-date="<?= $limit_start_date ?>">
                                 <?=
@@ -183,7 +185,7 @@
                 $this->Form->input('priority', [
                     'before'   => '<div class="col col-sm-3 control-label set-importance">' .
                         '<label>' . __d('gl', "重要度") . '</label>' .
-                        '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>この基準の重要度") . '</div></div>',
+                        '<div class="label-addiction">' . __d('gl', "あなたにとってのこの基準の重要度") . '</div></div>',
                     'label'    => false,
                     'type'     => 'select',
                     'default'  => 3,

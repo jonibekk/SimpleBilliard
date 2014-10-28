@@ -45,19 +45,21 @@ $this->Form->create('KeyResult', [
 <?= $this->Form->hidden('KeyResult.goal_id', ['value' => $this->request->data['KeyResult']['goal_id']]) ?>
 <div class="modal-body modal-circle-body">
     <div class="col col-xxs-12">
-        <?=
-        $this->Form->input('KeyResult.name',
-                           ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
-                               '<label class="no-asterisk">' . __d('gl', "成果名") . '</label>' .
-                               '<div class="label-addiction">' . __d('gl',
-                                                                     "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
-                            'label'                    => false,
-                            'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
-                            "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                            'rows'                     => 1,
-                            'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
-                                                                                                      "例）サービスAの国内市場シェアを増加させる") . '</span>'
-                           ]) ?>
+        <div class="row bd-b mb_8px">
+            <?=
+            $this->Form->input('KeyResult.name',
+                               ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
+                                   '<label class="no-asterisk">' . __d('gl', "成果名") . '</label>' .
+                                   '<div class="label-addiction">' . __d('gl',
+                                                                         "達成の指標として『なに』をどうするか？") . '</div></div>',
+                                'label'                    => false,
+                                'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
+                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                'rows'                     => 1,
+                                'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
+                                                                                                          "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                               ]) ?>
+        </div>
         <div class="row">
             <?
             //TODO 一旦、使わないのでコメントアウト
@@ -79,14 +81,13 @@ $this->Form->create('KeyResult', [
             //                                        ])
             ?>
         </div>
-
-        <div class="row">
+        <div class="row bd-b mb_8px">
             <div class="col col-sm-3">
-                <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
+                <label class="control-label width100_per sm-text-right"><?= __d('gl', "程度") ?></label>
 
-                <div class="label-addiction pull-right"><?= __d('gl', "どのくらい？") ?></div>
+                <div class="label-addiction pull-left sm-pull-right"><?= __d('gl', "どのくらい？") ?></div>
             </div>
-            <div class="col col-sm-7 line-vertical-sm goal-set-input">
+            <div class="col col-xxs-12 col-sm-7 line-vertical-sm goal-set-input">
                 <div class="col col-sm-3">
                     <?=
                     $this->Form->input('KeyResult.value_unit',
@@ -102,7 +103,7 @@ $this->Form->create('KeyResult', [
                 </div>
                 <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
                      style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
-                    <div class="col col-sm-4  pl_12px">
+                    <div class="col col-sm-4 sm-pl_12px">
                         <?=
                         $this->Form->input('KeyResult.target_value',
                                            ['label'                        => __d('gl', "達成時"),
@@ -117,7 +118,7 @@ $this->Form->create('KeyResult', [
                                             'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                            ]) ?>
                     </div>
-                    <div class="col col-sm-4  pl_12px">
+                    <div class="col col-sm-4  sm-pl_12px">
                         <?=
                         $this->Form->input('KeyResult.start_value',
                                            ['label'                        => __d('gl', "開始時"),
@@ -135,7 +136,7 @@ $this->Form->create('KeyResult', [
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row bd-b mb_8px">
             <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
             <div class="col col-sm-7 line-vertical-sm goal-set-input">
@@ -144,7 +145,7 @@ $this->Form->create('KeyResult', [
                         __d('gl',
                             "期限") ?></label>
 
-                    <div class="input-group date col col-sm-12 goal-set-date"
+                    <div class="input-group date goal-set-date"
                          data-date-end-date="<?= $limit_end_date ?>"
                          data-date-start-date="<?= $limit_start_date ?>">
                         <?=
@@ -178,7 +179,7 @@ $this->Form->create('KeyResult', [
                                     </span>
                     </p>
 
-                    <div class="col col-sm-12 input-group date plr_5px goal-set-date" style="display: none"
+                    <div class="input-group date plr_5px goal-set-date" style="display: none"
                          data-date-end-date="<?= $limit_end_date ?>"
                          data-date-start-date="<?= $limit_start_date ?>"
                          id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">
@@ -205,7 +206,7 @@ $this->Form->create('KeyResult', [
         $this->Form->input('priority', [
             'before'                   => '<div class="col col-sm-3 control-label set-importance">' .
                 '<label>' . __d('gl', "重要度") . '</label>' .
-                '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>この成果の重要度") . '</div></div>',
+                '<div class="label-addiction">' . __d('gl', "あなたにとってのこの成果の重要度") . '</div></div>',
             'label'                    => false,
             'type'                     => 'select',
             'default'                  => 1,
