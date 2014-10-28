@@ -196,7 +196,7 @@
                 'value' => (isset($this->request->data['User']['comment']) && !empty($this->request->data['User']['comment']))
                     ? $this->request->data['User']['comment']
                     : __d('gl',
-                          "【現在までにどのような業務に携わっていたか？】\n\n【自分の得意分野(エンジニアであれば言語、ツール等)】\n\n【今後やってみたい事】\n\n【思い描いている将来のキャリアパス】\n")
+                          "【あなたがチームに貢献できることは？】\n\n【得意分野は？】\n\n【やってみたい事は？】\n\n【その他】\n\n")
             ]);
             ?>
 
