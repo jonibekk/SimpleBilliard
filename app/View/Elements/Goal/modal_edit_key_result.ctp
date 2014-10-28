@@ -7,6 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $goal_id
+ * @var                    $goal
  * @var                    $kr_id
  * @var                    $goal_category_list
  * @var                    $priority_list
@@ -25,6 +26,24 @@
     <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
             class="close-icon">&times;</span></button>
     <h4 class="modal-title"><?= __d('gl', "成果を更新") ?></h4>
+    <ul class="fa-ul">
+        <li>
+            <i class="fa fa-flag"><?= h($goal['Goal']['name']) ?></i>
+        </li>
+        <li>
+            <i class="fa fa-bullseye">
+                <?= h($goal['Goal']['target_value']) ?>
+                (← <?= h($goal['Goal']['start_value']) ?>)<?= $kr_value_unit_list[$goal['Goal']['value_unit']] ?>
+            </i>
+        </li>
+        <li>
+            <i class="fa fa-calendar">
+                <?= date('Y/m/d', h($goal['Goal']['end_date']) + ($this->Session->read('timezone') * 3600)) ?>
+                (← <?= date('Y/m/d',
+                            h($goal['Goal']['start_date']) + ($this->Session->read('timezone') * 3600)) ?> - )
+            </i>
+        </li>
+    </ul>
 </div>
 <?=
 $this->Form->create('KeyResult', [

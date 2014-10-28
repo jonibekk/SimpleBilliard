@@ -560,6 +560,11 @@ class Goal extends AppModel
         if (!empty($res)) {
             $res['Goal']['progress'] = $this->getProgress($res);
         }
+        //不要な少数を除去
+        $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
+        $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
+        $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
+
         return $res;
     }
 
