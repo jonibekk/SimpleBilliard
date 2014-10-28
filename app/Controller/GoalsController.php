@@ -238,6 +238,7 @@ class GoalsController extends AppController
                                  $goal['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
 
         $this->set(compact(
+                       'goal',
                        'goal_id',
                        'goal_category_list',
                        'priority_list',
@@ -529,6 +530,7 @@ class GoalsController extends AppController
         $limit_start_date = date('Y/m/d',
                                  $goal['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
         $this->set(compact(
+                       'goal',
                        'goal_id',
                        'kr_id',
                        'goal_category_list',
