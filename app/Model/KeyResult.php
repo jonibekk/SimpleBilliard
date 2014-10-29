@@ -146,17 +146,20 @@ class KeyResult extends AppModel
         return true;
     }
 
-    function getKeyResults($goal_id, $with_skr = false)
+    function getKeyResults($goal_id)
     {
         $options = [
             'conditions' => [
                 'goal_id' => $goal_id,
                 'team_id' => $this->current_team_id,
             ],
+            'order'      => [
+                'KeyResult.progress ASC',
+                'KeyResult.start_date ASC',
+                'KeyResult.end_date ASC',
+                'KeyResult.priority DESC',
+            ]
         ];
-        if ($with_skr) {
-            unset($options['conditions']['special_flg']);
-        }
         $res = $this->find('all', $options);
         return $res;
     }
