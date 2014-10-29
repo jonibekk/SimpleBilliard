@@ -22,8 +22,21 @@ class Post extends AppModel
      * 投稿タイプ
      */
     const TYPE_NORMAL = 1;
-    const TYPE_ACTION = 2;
-    const TYPE_BADGE = 3;
+    const TYPE_CREATE_GOAL = 2;
+    const TYPE_ACTION = 3;
+    const TYPE_BADGE = 4;
+
+    static public $TYPE_MESSAGE = [
+        self::TYPE_NORMAL      => null,
+        self::TYPE_CREATE_GOAL => null,
+        self::TYPE_ACTION      => null,
+        self::TYPE_BADGE       => null,
+    ];
+
+    function _setTypeMessage()
+    {
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d('gl', "ゴールを作成しました。");
+    }
 
     const SHARE_ALL = 1;
     const SHARE_PEOPLE = 2;
@@ -168,6 +181,13 @@ class Post extends AppModel
             'fields'    => ['id']
         ]
     ];
+
+    function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+
+        $this->_setTypeMessage();
+    }
 
     /**
      * 投稿
