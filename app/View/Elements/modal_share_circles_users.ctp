@@ -12,13 +12,13 @@
 ?>
 <!-- START app/View/Elements/modal_share_circles_users.ctp -->
 <div class="modal-dialog">
-    <div class="modal-content modalFeed-content">
-        <div class="modal-header modalFeed-header">
+    <div class="modal-content">
+        <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title font_18px font_bold"><?= __d('gl', "共有範囲") ?></h4>
         </div>
-        <div class="modal-body modalFeed-body">
+        <div class="modal-body modal-feed-body">
             <div class="row borderBottom">
                 <? if (!empty($circles)): ?>
                     <? foreach ($circles as $key => $circle): ?>
@@ -35,7 +35,7 @@
                 <? endif; ?>
             </div>
         </div>
-        <div class="modal-footer modalFeed-footer">
+        <div class="modal-footer modal-feed-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
         </div>
     </div>

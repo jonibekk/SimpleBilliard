@@ -131,7 +131,7 @@
             $this->Form->submit(__d('gl', "変更を保存"),
                                 ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
             <?= $this->Form->end(); ?>
-            <button type="button" class="btn btn-link design-cancel pull-right margin-right-8px bd-radius_4px"
+            <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
                     data-dismiss="modal"><?= __d('gl', "キャンセル") ?></button>
             <?=
             $this->Form->postLink(__d('gl', "サークルを削除"),

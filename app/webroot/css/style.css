@@ -284,6 +284,10 @@ footer p {
     margin-right: 5px;
 }
 
+.mr_8px {
+    margin-right: 8px;
+}
+
 .mr_12px {
     margin-right: 12px;
 }
@@ -2291,12 +2295,12 @@ ul.gl-input-images > li {
     line-height: 12px;
 }
 
-.modalFeed-body {
+.modal-feed-body {
     padding-top: 8px;
     padding-bottom: 4px;
 }
 
-.modalFeed-footer {
+.modal-feed-footer {
     margin: 0;
 }
 
@@ -2925,10 +2929,6 @@ Temporary Properties - YOU MUST FIX
 .gl-input-images {
     margin-top: 4px;
     display: inline-block;
-}
-
-.margin-right-8px {
-    margin-right: 8px;
 }
 
 .required .no-asterisk::after {
