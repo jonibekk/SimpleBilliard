@@ -204,7 +204,6 @@ class KeyResult extends AppModel
 //        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
 //                                                            $data['KeyResult']['target_value'],
 //                                                            $data['KeyResult']['current_value']);
-        $this->create();
         return $this->save($data);
     }
 
