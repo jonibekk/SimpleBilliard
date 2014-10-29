@@ -197,7 +197,7 @@ class Goal extends AppModel
         //新規の場合はデフォルトKRを追加
         if (!isset($data['Goal']['id'])) {
             $kr['name'] = __d('gl', "出したい成果の名前を入れてください");
-            $kr['priority'] = 0;
+            $kr['priority'] = 3;
             $kr['current_value'] = 0;
             $kr['start_value'] = 0;
             $kr['target_value'] = 100;
@@ -559,7 +559,12 @@ class Goal extends AppModel
         $res = $this->find('first', $options);
         if (!empty($res)) {
             $res['Goal']['progress'] = $this->getProgress($res);
+            //不要な少数を除去
+            $res['Goal']['start_value'] = (double)$res['Goal']['start_value'];
+            $res['Goal']['current_value'] = (double)$res['Goal']['current_value'];
+            $res['Goal']['target_value'] = (double)$res['Goal']['target_value'];
         }
+
         return $res;
     }
 
