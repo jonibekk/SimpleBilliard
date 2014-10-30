@@ -35,7 +35,7 @@ class Post extends AppModel
 
     function _setTypeMessage()
     {
-        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d('gl', "ゴールを作成しました。");
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d('gl', "あたらしいゴールをつくりました。");
     }
 
     const SHARE_ALL = 1;

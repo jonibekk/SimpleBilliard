@@ -85,7 +85,11 @@
         <? endif; ?>
         <div class="col col-xxs-12 gl-feed-text showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
-            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <? if ($post['Post']['type'] === Post::TYPE_NORMAL): ?>
+                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <? else: ?>
+                <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
+            <?endif; ?>
         </div>
         <?
         $photo_count = 0;
@@ -191,6 +195,39 @@
                     </div>
                 </a>
             </div>
+        <? elseif ($post['Post']['type'] === Post::TYPE_CREATE_GOAL && !empty($post['Goal'])): ?>
+            <div class="col col-xxs-12 gl-feed-site-link">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
+                   class="no-line font_verydark modal-ajax-get">
+                    <div class="site-info bd-radius_4px">
+                        <div class="media">
+                            <div class="pull-left">
+                                <?=
+                                $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'lazy media-object',
+                                                       'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                   "Goal.photo",
+                                                                                                   ['style' => 'small']),
+                                                       'width'         => '80px',
+                                                   ]
+                                )
+                                ?>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Goal']['name']), 0, 50,
+                                                                                      "...") ?></h4>
+                                <? if (isset($site_info['description'])): ?>
+                                    <div class="font_12px site-info-txt">
+                                        <?= mb_strimwidth(h($post['Goal']['Purpose']['name']), 0, 110, "...") ?>
+                                    </div>
+                                <? endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         <? endif; ?>
         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
             <div class="col col-xxs-12 gl-feed-edit">
