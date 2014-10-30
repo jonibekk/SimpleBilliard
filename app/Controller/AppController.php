@@ -10,6 +10,7 @@
  */
 
 App::uses('Controller', 'Controller');
+App::uses('HelpsController', 'Controller');
 
 /**
  * Application Controller
