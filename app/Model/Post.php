@@ -449,6 +449,17 @@ class Post extends AppModel
                         "PostShareUser.user_id",
                     ]
                 ],
+                'Goal'            => [
+                    'fields'  => [
+                        'name',
+                        'photo_file_name',
+                    ],
+                    'Purpose' => [
+                        'fields' => [
+                            'name'
+                        ]
+                    ]
+                ]
             ],
         ];
         if (!empty($this->orgParams['post_id'])) {
