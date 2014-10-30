@@ -649,4 +649,19 @@ class Post extends AppModel
         }
         return $share_member_list;
     }
+
+    function addGoalPost($type, $goal_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $this->current_team_id,
+            'type'       => $type,
+            'public_flg' => true,
+            'goal_id'    => $goal_id,
+        ];
+        return $this->save($data);
+    }
 }
