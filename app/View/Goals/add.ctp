@@ -78,7 +78,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
-                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step1'],
+                                          ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP01],
                                           ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
@@ -272,7 +272,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
-                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step2'],
+                                          ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP02],
                                           ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
                             $disabled = null;
