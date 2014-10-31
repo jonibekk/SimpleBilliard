@@ -238,6 +238,7 @@ class GoalsController extends AppController
                                  $goal['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
 
         $this->set(compact(
+                       'goal',
                        'goal_id',
                        'goal_category_list',
                        'priority_list',
@@ -529,6 +530,7 @@ class GoalsController extends AppController
         $limit_start_date = date('Y/m/d',
                                  $goal['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
         $this->set(compact(
+                       'goal',
                        'goal_id',
                        'kr_id',
                        'goal_category_list',
@@ -571,22 +573,6 @@ class GoalsController extends AppController
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_last_kr_confirm');
-        $html = $response->__toString();
-        return $this->_ajaxGetResponse($html);
-    }
-
-    function ajax_get_particularly_step1()
-    {
-        $this->_ajaxPreProcess();
-        $response = $this->render('Goal/modal_particularly_step1');
-        $html = $response->__toString();
-        return $this->_ajaxGetResponse($html);
-    }
-
-    function ajax_get_particularly_step2()
-    {
-        $this->_ajaxPreProcess();
-        $response = $this->render('Goal/modal_particularly_step2');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }

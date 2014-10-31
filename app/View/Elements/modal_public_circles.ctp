@@ -11,8 +11,8 @@
 ?>
 <!-- START app/View/Elements/modal_public_circles.ctp -->
 <div class="modal-dialog">
-    <div class="modal-content modalFeed-content">
-        <div class="modal-header modalFeed-header">
+    <div class="modal-content">
+        <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
             <h4 class="modal-title font_18px font_bold"><?= __d('gl', "公開サークル") ?></h4>
@@ -32,7 +32,7 @@
             'novalidate'    => true,
             'id'            => 'CircleJoinForm',
         ]); ?>
-        <div class="modal-body modalFeed-body">
+        <div class="modal-body modal-feed-body">
             <? if (!empty($circles)): ?>
                 <div class="row borderBottom">
                     <? foreach ($circles as $key => $circle): ?>
@@ -44,12 +44,12 @@
                 <?= __d('gl', "公開サークルはありません。") ?>
             <?endif ?>
         </div>
-        <div class="modal-footer modalFeed-footer">
+        <div class="modal-footer modal-feed-footer">
             <? if (!empty($circles)): ?>
                 <?=
                 $this->Form->submit(__d('gl', "変更を保存"),
                                     ['class' => 'btn btn-primary pull-right', 'div' => false /*, 'disabled' => 'disabled'*/]) ?>
-                <button type="button" class="btn btn-link design-cancel margin-right-8px bd-radius_4px"
+                <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px"
                         data-dismiss="modal"><?= __d('gl',
                                                                                                       "キャンセル") ?></button>
             <? else: ?>

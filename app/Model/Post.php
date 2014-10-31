@@ -22,8 +22,21 @@ class Post extends AppModel
      * 投稿タイプ
      */
     const TYPE_NORMAL = 1;
-    const TYPE_ACTION = 2;
-    const TYPE_BADGE = 3;
+    const TYPE_CREATE_GOAL = 2;
+    const TYPE_ACTION = 3;
+    const TYPE_BADGE = 4;
+
+    static public $TYPE_MESSAGE = [
+        self::TYPE_NORMAL      => null,
+        self::TYPE_CREATE_GOAL => null,
+        self::TYPE_ACTION      => null,
+        self::TYPE_BADGE       => null,
+    ];
+
+    function _setTypeMessage()
+    {
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d('gl', "あたらしいゴールをつくりました。");
+    }
 
     const SHARE_ALL = 1;
     const SHARE_PEOPLE = 2;
@@ -168,6 +181,13 @@ class Post extends AppModel
             'fields'    => ['id']
         ]
     ];
+
+    function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+
+        $this->_setTypeMessage();
+    }
 
     /**
      * 投稿
@@ -429,6 +449,18 @@ class Post extends AppModel
                         "PostShareUser.user_id",
                     ]
                 ],
+                'Goal'            => [
+                    'fields'  => [
+                        'name',
+                        'photo_file_name',
+                        'id',
+                    ],
+                    'Purpose' => [
+                        'fields' => [
+                            'name'
+                        ]
+                    ]
+                ]
             ],
         ];
         if (!empty($this->orgParams['post_id'])) {
@@ -628,5 +660,20 @@ class Post extends AppModel
             unset($share_member_list[$key]);
         }
         return $share_member_list;
+    }
+
+    function addGoalPost($type, $goal_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $this->current_team_id,
+            'type'       => $type,
+            'public_flg' => true,
+            'goal_id'    => $goal_id,
+        ];
+        return $this->save($data);
     }
 }
