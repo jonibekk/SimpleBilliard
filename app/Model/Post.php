@@ -453,6 +453,7 @@ class Post extends AppModel
                     'fields'  => [
                         'name',
                         'photo_file_name',
+                        'id',
                     ],
                     'Purpose' => [
                         'fields' => [
