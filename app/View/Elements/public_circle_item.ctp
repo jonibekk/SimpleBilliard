@@ -18,11 +18,11 @@ if (!isset($form)) {
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                               ['class' => 'gl-comment-img'])
+                               ['class' => 'comment-img'])
     ?>
-    <div class="gl-comment-body modal-comment">
+    <div class="comment-body modal-comment">
         <? if ($form): ?>
-            <div class="pull-right gl-circle-join-switch">
+            <div class="pull-right circle-join-switch">
                 <? if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者") ?>
                 <? else: ?>

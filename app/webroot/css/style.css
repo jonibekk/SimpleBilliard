@@ -261,6 +261,10 @@ footer p {
 }
 
 .m_0px {
+    margin: 0;
+}
+
+.m_0px {
     margin: 0 0 0 0;
 }
 
@@ -322,6 +326,14 @@ footer p {
     padding-bottom: 5px;
 }
 
+.mb_0px {
+    margin-bottom: 0;
+}
+
+.mb_2px{
+    margin-bottom: 2px;
+}
+
 .mb_8px {
     margin-bottom: 8px;
 }
@@ -332,6 +344,10 @@ footer p {
 
 .mb_32px {
     margin-bottom: 32px;
+}
+
+.p_0px {
+    padding: 0;
 }
 
 .p_10px {
@@ -346,6 +362,11 @@ footer p {
 .plr_5px {
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.plr_11px{
+    padding-left: 11px;
+    padding-right: 11px;
 }
 
 .plr_18px {
@@ -374,6 +395,11 @@ footer p {
 
 .pt_2px {
     padding-top: 2px;
+}
+
+
+.pt_4px {
+    padding: 4px 0 0 0;
 }
 
 .pt_4px {
@@ -720,8 +746,17 @@ footer p {
 
 /*==/ モジュール ===*/
 
+.lh_12px {
+    line-height: 12px;
+}
+
+
+.lh_15px {
+    line-height: 15px;
+}
+
 /*アイコンを揃える*/
-.line-height_20px {
+.lh_20px {
     line-height: 20px;
     vertical-align: middle;
 }
@@ -1170,10 +1205,6 @@ ul.example-indent {
     border-top: none;
 }
 
-.gl-feed {
-    padding: 10px 11px;
-}
-
 .feed-share-range {
     background: #e5e5e5;
     border: none;
@@ -1202,15 +1233,7 @@ ul.example-indent {
     padding: 10px 0 0 0;
 }
 
-.gl-feed-edit {
-    padding: 0;
-}
-
-.gl-feed-click {
-    padding: 10px 0 0 0;
-}
-
-.gl-comment-block {
+.comment-block {
     padding: 9px 11px 10px;
     border-top: 1px solid #dddddd;
     background-color: #f5f5f5;
@@ -1223,7 +1246,7 @@ ul.example-indent {
     word-wrap: break-word;
 }
 
-.gl-comment-img {
+.comment-img {
     display: block;
     float: left;
     height: 32px;
@@ -1231,14 +1254,10 @@ ul.example-indent {
     margin-right: 8px;
 }
 
-.gl-comment-body {
+.comment-body {
     margin-left: 40px;
     margin-bottom: 4px;
     vertical-align: text-top;
-}
-
-.gl-comment-main {
-    padding: 4px 0 0 0;
 }
 
 .comment-text {
@@ -1315,15 +1334,11 @@ ul.input-images > li {
     margin: 0;
 }
 
-.gl-custom-wrapper > .checkbox {
+.custom-wrapper > .checkbox {
     min-height: 0;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
-}
-
-.gl-no-margin {
-    margin: 0;
 }
 
 .panel {
@@ -1372,13 +1387,13 @@ ul.input-images > li {
 
 /*タブで切り替え*/
 
-.gl-feed-switch {
+.feed-switch {
     list-style: none;
     padding: 10px 0;
     margin: 0;
 }
 
-.gl-feed-switch li {
+.feed-switch li {
     font-size: 12px;
     float: left;
     text-align: center;
@@ -1386,23 +1401,23 @@ ul.input-images > li {
     height: 20px;
 }
 
-.gl-feed-switch a {
+.feed-switch a {
     line-height: 14px;
     vertical-align: baseline;
     color: #999;
 }
 
-.gl-feed-switch .active a {
+.feed-switch .active a {
     color: #231814 !important;
     font-weight: bold;
 }
 
-.gl-feed-switch .active i {
+.feed-switch .active i {
     color: #231814 !important;
     font-weight: bold;
 }
 
-.gl-feed-switch i {
+.feed-switch i {
     padding-right: 2px;
     line-height: 14px;
     vertical-align: baseline;
@@ -1673,16 +1688,7 @@ ul.input-images > li {
     text-align: left;
 }
 
-.gl-comment-name {
-    line-height: 12px;
-    margin-bottom: 2px;
-}
-
 .comment-contents {
-    line-height: 15px;
-}
-
-.gl-comment-info {
     line-height: 15px;
 }
 
@@ -1841,12 +1847,12 @@ ul.input-images > li {
 
 /*/HEADER*/
 
-.gl-s2-post-dropdown {
+.s2-post-dropdown {
     width: 80% !important;
     margin-right: 0;
 }
 
-.gl-circle-join-switch {
+.circle-join-switch {
     height: 32px;
     line-height: 32px;
     vertical-align: middle;
@@ -1854,7 +1860,7 @@ ul.input-images > li {
     width: 80px;
 }
 
-.gl-circle-join-switch .checkbox {
+.circle-join-switch .checkbox {
     padding-left: 0;
 }
 
@@ -2180,14 +2186,14 @@ ul.input-images > li {
     border: 1px dashed #ddd;
 }
 
-.gl-s2-post-dropdown {
+.s2-post-dropdown {
     border: 1px #ddd solid;
     box-shadow: none;
     border-radius: 0;
     margin-left: 5px;
 }
 
-.gl-s2-post-dropdown li {
+.s2-post-dropdown li {
     border-top: none !important;
     font-size: 12px;
 }
@@ -2219,11 +2225,11 @@ ul.input-images > li {
     width: 300px;
 }
 
-.gl-modal-no-margin .modal-body {
+.parent-p_0px .modal-body {
     padding: 0;
 }
 
-.gl-modal-no-margin .modal-footer {
+.parent-p_0px .modal-footer {
     margin: 0;
 }
 
@@ -2253,28 +2259,28 @@ ul.input-images > li {
     margin: 0;
 }
 
-.gl-user-list-in-tooltip {
+.user-list-in-tooltip {
     list-style-type: none;
     padding-left: 0;
 }
 
-.gl-user-list-in-tooltip > li {
+.user-list-in-tooltip > li {
     text-align: left;
 }
 
-.gl-circle-join-switch > .checkbox {
+.circle-join-switch > .checkbox {
     margin-top: auto;
     margin-bottom: auto;
 }
 
-.gl-notify-setting-switch > .checkbox {
+.notify-setting-switch > .checkbox {
     margin-top: auto;
     margin-bottom: auto;
     padding-left: 0;
     display: inline;
 }
 
-.gl-icon-before-input {
+.icon-before-input {
     font-size: 18px;
     vertical-align: middle;
 }
@@ -2324,7 +2330,7 @@ ul.input-images > li {
 
 /*/ゴール作成ページのタテ線の長さ調整一覧*/
 
-.gl-comment-body .site-info {
+.comment-body .site-info {
     margin: 5px 0 7px;
 }
 
@@ -2400,10 +2406,6 @@ ul.input-images > li {
 .check-status i {
     margin-right: 2px;
     text-align: center;
-}
-
-.gl-progress {
-    margin-bottom: 0;
 }
 
 .icon-green {
@@ -2494,7 +2496,7 @@ ul.input-images > li {
         width: 64%;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 80% !important;
         margin-right: 0;
     }
@@ -2620,7 +2622,7 @@ ul.input-images > li {
         width: 160px;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 386px !important;
         margin-right: 4px;
     }
@@ -2715,7 +2717,7 @@ ul.input-images > li {
         width: 100px;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 368px !important;
     }
 
@@ -2752,7 +2754,7 @@ ul.input-images > li {
         width: 56px;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 386px !important;
     }
 

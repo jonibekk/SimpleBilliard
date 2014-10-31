@@ -11,7 +11,7 @@
 ?>
 <!-- START app/View/Elements/modal_help.ctp -->
 <div class="modal-dialog modal-mini">
-    <div class="modal-content gl-modal-no-margin">
+    <div class="modal-content parent-p_0px">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>

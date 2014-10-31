@@ -148,7 +148,7 @@ $(document).ready(function () {
         <?endif;?>
         formatSelection: format,
         formatResult: format,
-        dropdownCssClass: 'gl-s2-post-dropdown',
+        dropdownCssClass: 's2-post-dropdown',
         escapeMarkup: function (m) {
             return m;
         },
@@ -352,7 +352,7 @@ function evFeedMoreView() {
                     });
                 });
 
-                $('.gl-custom-radio-check').customRadioCheck();
+                $('.custom-radio-check').customRadioCheck();
 
             }
             else {
@@ -418,7 +418,7 @@ function evCommentAllView() {
                     });
                 });
 
-                $('.gl-custom-radio-check').customRadioCheck();
+                $('.custom-radio-check').customRadioCheck();
 
             }
             else {

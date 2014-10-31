@@ -96,7 +96,7 @@
         </div>
         <? if (isset($goal['Goal']['id'])): ?>
             <div class="col col-xxs-12">
-                <div class="progress gl-progress goals-column-progress-bar">
+                <div class="progress mb_0px goals-column-progress-bar">
                     <div class="progress-bar progress-bar-info" role="progressbar"
                          aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
                          aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
@@ -127,7 +127,7 @@
                        id="KRsOpen_<?= $goal['Goal']['id'] ?>"
                         >
                         <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                        <i class="fa fa-caret-down feed-arrow line-height_20px"></i>
+                        <i class="fa fa-caret-down feed-arrow lh_20px"></i>
                     </a>
                 </div>
             </div>

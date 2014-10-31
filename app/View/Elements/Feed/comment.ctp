@@ -14,12 +14,12 @@
 ?>
 <!-- START app/View/Elements/Feed/comment.ctp -->
 <div class="font_12px">
-    <div class="col col-xxs-12 gl-comment-main">
+    <div class="col col-xxs-12 pt_4px">
         <?=
         $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
-                                   ['class' => 'gl-comment-img'])
+                                   ['class' => 'comment-img'])
         ?>
-        <div class="gl-comment-body">
+        <div class="comment-body">
             <div class="col col-xxs-12 comment-text comment-user">
                 <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
@@ -49,7 +49,7 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <div class="gl-comment-name font_verydark"><?= h($user['display_username']) ?></div>
+                <div class="mb_2px lh_12px font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
@@ -168,7 +168,7 @@
             <? endif; ?>
 
 
-            <div class="gl-comment-info">
+            <div class="lh_15px">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font_lightgray"> ･ </span>
                 <a href="#" class="click-like font_lightgray <?= empty($like) ? null : "liked" ?>"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"

@@ -52,14 +52,14 @@ if (isset($type)) {
             <? endif ?><? if ($index == 1): ?><i class="fa fa-plus photo-plus"></i><? endif; ?>
         </div>
         <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
-            <div class="gl-custom-wrapper">
+            <div class="custom-wrapper">
                 <?=
                 $this->Form->input('photo_delete.' . $index,
                                    [
                                        'type'         => 'checkbox',
                                        'label'        => "",
                                        'div'          => false,
-                                       'class'        => 'gl-custom-radio-check change-target-enabled',
+                                       'class'        => 'custom-radio-check change-target-enabled',
                                        'target-id'    => $submit_id,
                                        'wrapInput'    => false,
                                        'errorMessage' => false,
