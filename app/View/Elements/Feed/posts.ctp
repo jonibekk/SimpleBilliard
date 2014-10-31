@@ -85,7 +85,7 @@
         <? endif; ?>
         <div class="col col-xxs-12 gl-feed-text showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
-            <? if ($post['Post']['type'] === Post::TYPE_NORMAL): ?>
+            <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                 <?= $this->TextEx->autoLink($post['Post']['body']) ?>
             <? else: ?>
                 <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
