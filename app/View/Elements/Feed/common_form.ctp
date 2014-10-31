@@ -56,7 +56,7 @@
                 ])
                 ?>
                 <div class="row form-group gl-no-margin" id="PostFormImage" style="display: none">
-                    <ul class="col gl-input-images post-images">
+                    <ul class="col input-images post-images">
                         <? for ($i = 1; $i <= 5; $i++): ?>
                             <li>
                             <?= $this->element('Feed/photo_upload',

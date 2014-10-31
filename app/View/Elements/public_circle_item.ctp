@@ -20,7 +20,7 @@ if (!isset($form)) {
     $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
                                ['class' => 'gl-comment-img'])
     ?>
-    <div class="gl-comment-body gl-modal-comment">
+    <div class="gl-comment-body modal-comment">
         <? if ($form): ?>
             <div class="pull-right gl-circle-join-switch">
                 <? if (!empty($circle['CircleAdmin'])): ?>

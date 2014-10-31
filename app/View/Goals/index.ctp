@@ -16,7 +16,7 @@
                 <div class="dropdown">
                     <a href="#" class="font_lightgray font_11px" data-toggle="dropdown" id="download">
                         <span class="line-height_20px"><?= __d('gl', "全て") ?></span><i
-                            class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
+                            class="fa fa-caret-down feed-arrow line-height_20px"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">

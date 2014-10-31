@@ -37,7 +37,7 @@ $this->Form->input('body', [
 ])
 ?>
 <div class="form-group" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
-    <ul class="gl-input-images">
+    <ul class="input-images">
         <? for ($i = 1; $i <= 5; $i++): ?>
             <li>
                 <?=

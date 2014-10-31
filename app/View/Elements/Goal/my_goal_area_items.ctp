@@ -127,7 +127,7 @@
                        id="KRsOpen_<?= $goal['Goal']['id'] ?>"
                         >
                         <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                        <i class="fa fa-caret-down gl-feed-arrow line-height_20px"></i>
+                        <i class="fa fa-caret-down feed-arrow line-height_20px"></i>
                     </a>
                 </div>
             </div>

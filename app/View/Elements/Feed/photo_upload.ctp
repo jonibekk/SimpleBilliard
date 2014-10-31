@@ -32,7 +32,7 @@ if (isset($type)) {
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
         <div
-            class="fileinput-preview thumbnail nailthumb-container gl-thumb-container click-target-enabled photo-plus-frame"
+            class="fileinput-preview thumbnail nailthumb-container m_0px click-target-enabled photo-plus-frame"
             data-trigger="fileinput"
             target-id="<?= $submit_id ?>"
             style="width: 50px; height: 50px;">

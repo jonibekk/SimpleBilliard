@@ -260,6 +260,10 @@ footer p {
     padding-right: 0;
 }
 
+.m_0px {
+    margin: 0 0 0 0;
+}
+
 .mt_5px {
     margin-top: 4px;
 }
@@ -318,11 +322,11 @@ footer p {
     padding-bottom: 5px;
 }
 
-.mb_8px{
+.mb_8px {
     margin-bottom: 8px;
 }
 
-.mb_12px{
+.mb_12px {
     margin-bottom: 12px;
 }
 
@@ -380,6 +384,14 @@ footer p {
     padding-top: 8px;
 }
 
+.pt_10px {
+    padding: 10px 0 0 0;
+}
+
+.pt_10px {
+    padding-top: 10px;
+}
+
 .pt_12px {
     padding-top: 12px;
 }
@@ -408,13 +420,14 @@ footer p {
     padding-left: 16px;
 }
 
-.m_pic{
+.m_pic {
     width: 280px;
     margin: 4px 0 4px 10px;
 }
+
 /*行数の指定*/
 
-.modal-mini{
+.modal-mini {
     width: 300px;
     margin: auto;
 }
@@ -908,20 +921,16 @@ footer p {
     width: 90%;
 }
 
-.w_85per{
+.w_85per {
     width: 85%;
 }
 
-.w_80per{
+.w_80per {
     width: 80%;
 }
 
 .h_50px {
     height: 50px;
-}
-
-.float_l{
-    float: left;
 }
 
 /*/幅指定*/
@@ -945,24 +954,24 @@ footer p {
     color: #e78e99;
 }
 
-.gl-feed-text a {
+.feed-text a {
     color: #ddd;
 }
 
-.gl-comment-contents a {
+.comment-contents a {
     color: #c5c5c5;
 }
 
-.gl-feed-text a:hover,
-.gl-feed-text a:hover,
-.gl-feed-text a:hover,
-.gl-comment-contents a:hover,
-.gl-comment-contents a:hover,
-.gl-comment-contents a:hover {
+.feed-text a:hover,
+.feed-text a:hover,
+.feed-text a:hover,
+.comment-contents a:hover,
+.comment-contents a:hover,
+.comment-contents a:hover {
     color: #91170a;
 }
 
-.gl-comment-contents .comment-add-pic {
+.comment-contents .comment-add-pic {
     color: #d9230f;
 }
 
@@ -971,18 +980,18 @@ footer p {
     background: #d9230f !important;
 }
 
-.gl-feed-arrow,
-.gl-comment-arrow,
-.gl-commetn-cross {
+.feed-arrow,
+.comment-arrow,
+.comment-cross {
     vertical-align: top;
 }
 
-.gl-comment-user {
+.comment-user {
     height: 12px;
     margin-bottom: 2px;
 }
 
-.gl-comment-user > .pull-right {
+.comment-user > .pull-right {
     height: 12px;
     padding-bottom: 2px;
     margin-bottom: 2px;
@@ -1037,23 +1046,13 @@ footer p {
 }
 
 /*inlineのフォームでスマホでも幅を固定する*/
-.gl-inline-fix {
+.inline-fix {
     display: inline-block;
     width: auto;
     vertical-align: middle;
 }
 
-.gl-me-menu-image {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-.gl-me-menu-image > img {
-    width: 26px;
-    height: 26px;
-}
-
-.gl-hamburger {
+.hamburger {
     float: left !important;
     margin-left: 0;
 }
@@ -1106,7 +1105,7 @@ footer p {
     pointer-events: none;
 }
 
-.gl-navbar-nav-fix {
+.navbar-nav-fix {
     float: left;
     margin: 0;
     list-style: none;
@@ -1136,13 +1135,6 @@ footer p {
     color: dimgray;
 }
 
-@media (min-width: 768px) {
-    .gl-nav-container {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
 .sidebar-setting {
     position: fixed;
     top: 90px;
@@ -1156,7 +1148,7 @@ footer p {
     border-left: 2px solid #563d7c;
 }
 
-.gl-sections > div {
+.parent-flash > div {
     padding-top: 50px;
     margin-top: -50px;
 }
@@ -1194,11 +1186,11 @@ ul.example-indent {
     padding-bottom: 3px;
 }
 
-.gl-feed-user {
+.feed-user {
     padding: 0;
 }
 
-.gl-feed-img {
+.feed-img {
     display: block;
     float: left;
     height: 40px;
@@ -1206,24 +1198,12 @@ ul.example-indent {
     margin-right: 8px;
 }
 
-.gl-feed-text {
-    padding: 10px 0 0 0;
-}
-
-.gl-feed-picture {
-    padding: 10px 0 0 0;
-}
-
-.gl-feed-site-link {
+.feed-text {
     padding: 10px 0 0 0;
 }
 
 .gl-feed-edit {
     padding: 0;
-}
-
-.gl-feed-edit-form {
-    padding-top: 10px;
 }
 
 .gl-feed-click {
@@ -1238,7 +1218,7 @@ ul.example-indent {
     border-bottom-left-radius: 3px;
 }
 
-.gl-comment-contents {
+.comment-contents {
     padding: 0;
     word-wrap: break-word;
 }
@@ -1261,7 +1241,7 @@ ul.example-indent {
     padding: 4px 0 0 0;
 }
 
-.gl-comment-text {
+.comment-text {
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 2px;
@@ -1273,57 +1253,18 @@ ul.example-indent {
     border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
-.gl-comment-photo {
+.comment-photo {
     padding: 0;
     margin: 5px 0 7px;
 }
 
-.gl-modal-comment {
+.modal-comment {
     margin: 0;
 }
 
 .click-comment-all {
     padding: 0 0 4px 0;
     font-size: 12px;
-}
-
-.gl-form-inline-fix .form-group {
-    display: inline-block;
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
-.gl-form-inline-fix .form-control {
-    display: inline-block;
-    width: auto;
-}
-
-.gl-form-inline-fix .input-group > .form-control {
-    width: 100%;
-}
-
-.gl-form-inline-fix .control-label {
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
-.gl-form-inline-fix .radio,
-.gl-form-inline-fix .checkbox {
-    display: inline-block;
-    padding-left: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
-.gl-form-inline-fix .radio input[type="radio"],
-.gl-form-inline-fix .checkbox input[type="checkbox"] {
-    float: none;
-    margin-left: 0;
-}
-
-.gl-form-inline-fix .has-feedback .form-control-feedback {
-    top: 0;
 }
 
 .panel-read-more-body {
@@ -1348,28 +1289,24 @@ ul.example-indent {
     height: 100%;
 }
 
-.gl-feed-text .btn-link {
+.feed-text .btn-link {
     color: #ddd;
 }
 
-.gl-comment-text .btn-link {
+.comment-text .btn-link {
     color: #c5c5c5;
-}
-
-.gl-thumb-container {
-    margin: 0 0 0 0;
 }
 
 .showmore {
     word-wrap: break-word;
 }
 
-ul.gl-input-images {
+ul.input-images {
     list-style: none;
     padding-left: 0;
 }
 
-ul.gl-input-images > li {
+ul.input-images > li {
     float: left;
     margin-right: 3px;
 }
@@ -1741,7 +1678,7 @@ ul.gl-input-images > li {
     margin-bottom: 2px;
 }
 
-.gl-comment-contents {
+.comment-contents {
     line-height: 15px;
 }
 
@@ -1882,7 +1819,7 @@ ul.gl-input-images > li {
 /*/サークルのデザイン*/
 
 /*HEADER*/
-.gl-nav-container {
+.nav-container {
     width: 93.75%;
     margin: auto;
 }
@@ -2000,7 +1937,7 @@ ul.gl-input-images > li {
     margin: auto;
 }
 
-.gl-nav-form-icon {
+.nav-form-icon {
     margin-left: 10px;
 }
 
@@ -2523,17 +2460,25 @@ ul.gl-input-images > li {
 /*==/ spFeedAlt ===*/
 
 /*=== メディアクエリで切り替え ===*/
+
+@media (min-width: 768px) {
+    .nav-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 /*Extrasmall*/
 @media (min-width: 480px) {
     .container {
         width: 97.5%;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 97.5%;
     }
 
-    .gl-hamburger {
+    .hamburger {
         margin-left: 0;
     }
 
@@ -2598,7 +2543,7 @@ ul.gl-input-images > li {
         width: 756px;
     }
 
-    .sm-text-right{
+    .sm-text-right {
         text-align: right;
     }
 
@@ -2606,7 +2551,7 @@ ul.gl-input-images > li {
         float: right !important;
     }
 
-    .sm-pl_12px{
+    .sm-pl_12px {
         padding-left: 12px;
     }
 
@@ -2614,7 +2559,7 @@ ul.gl-input-images > li {
         padding-left: 18px;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 756px;
     }
 
@@ -2667,7 +2612,7 @@ ul.gl-input-images > li {
         width: 160px;
     }
 
-    .gl-nav-form-icon {
+    .nav-form-icon {
         margin-left: 0;
     }
 
@@ -2720,7 +2665,7 @@ ul.gl-input-images > li {
         width: 972px;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 972px;
     }
 
@@ -2790,7 +2735,7 @@ ul.gl-input-images > li {
         width: 1008px;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 1008px;
     }
 
@@ -2938,7 +2883,7 @@ Temporary Properties - YOU MUST FIX
     margin-top: 4px;
 }
 
-.gl-input-images {
+.input-images {
     margin-top: 4px;
     display: inline-block;
 }
