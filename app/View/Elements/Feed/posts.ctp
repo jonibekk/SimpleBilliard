@@ -208,7 +208,7 @@
                                                        'class'         => 'lazy media-object',
                                                        'data-original' => $this->Upload->uploadUrl($post,
                                                                                                    "Goal.photo",
-                                                                                                   ['style' => 'small']),
+                                                                                                   ['style' => 'medium_large']),
                                                        'width'         => '80px',
                                                    ]
                                 )
