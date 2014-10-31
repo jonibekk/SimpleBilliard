@@ -908,8 +908,20 @@ footer p {
     width: 90%;
 }
 
+.w_85per{
+    width: 85%;
+}
+
+.w_80per{
+    width: 80%;
+}
+
 .h_50px {
     height: 50px;
+}
+
+.float_l{
+    float: left;
 }
 
 /*/幅指定*/
