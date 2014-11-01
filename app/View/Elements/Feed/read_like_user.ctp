@@ -14,9 +14,9 @@
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
-                               ['class' => 'gl-comment-img'])
+                               ['class' => 'comment-img'])
     ?>
-    <div class="gl-comment-body gl-modal-comment">
+    <div class="comment-body modal-comment">
         <div class="font_12px font_bold modalFeedTextPadding">
         <?= h($user['display_username']) ?></div>
 

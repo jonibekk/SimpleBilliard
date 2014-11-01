@@ -16,14 +16,14 @@
 <?= $this->element("Feed/common_form") ?>
 <? if ($current_circle): ?>
     <div class="panel panel-default feed-share-range">
-        <div class="panel-body gl-feed">
+        <div class="panel-body ptb_10px plr_11px">
             <div class="col col-xxs-12 font_12px">
                 <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
                 <span> ･ </span>
                 <span class="feed-share-range-circle"><?= $current_circle['Circle']['name'] ?></span>
                 <span class="feed-circle-user-number">
         <?
-        $title = '<ul class="gl-user-list-in-tooltip">';
+        $title = '<ul class="user-list-in-tooltip">';
         if (!empty($circle_members)) {
             foreach ($circle_members as $member) {
                 $img = $this->Upload->uploadImage($member, 'User.photo', ['style' => 'small'],
@@ -45,7 +45,7 @@
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
     <div class="panel panel-default">
-        <div class="panel-body gl-feed">
+        <div class="panel-body ptb_10px plr_11px ">
             <div class="col col-xxs-12">
                 <?= __d('gl', "投稿がありません。") ?>
             </div>

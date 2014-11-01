@@ -14,17 +14,17 @@
 ?>
 <!-- START app/View/Elements/Feed/comment.ctp -->
 <div class="font_12px">
-    <div class="col col-xxs-12 gl-comment-main">
+    <div class="col col-xxs-12 pt_4px">
         <?=
         $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
-                                   ['class' => 'gl-comment-img'])
+                                   ['class' => 'comment-img'])
         ?>
-        <div class="gl-comment-body">
-            <div class="col col-xxs-12 gl-comment-text gl-comment-user">
+        <div class="comment-body">
+            <div class="col col-xxs-12 comment-text comment-user">
                 <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                            <i class="fa fa-chevron-down gl-comment-arrow"></i>
+                            <i class="fa fa-chevron-down comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
@@ -44,18 +44,18 @@
                 <? elseif ($my_member_status['TeamMember']['admin_flg']): ?>
                     <div class="pull-right develop--link-gray">
                         <?=
-                        $this->Form->postLink('<i class="fa fa-times gl-comment-cross"></i>',
+                        $this->Form->postLink('<i class="fa fa-times comment-cross"></i>',
                                               ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <div class="gl-comment-name font_verydark"><?= h($user['display_username']) ?></div>
+                <div class="mb_2px lh_12px font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
-            <div class="col col-xxs-12 showmore-comment gl-comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
-                <div class="gl-comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+            <div class="col col-xxs-12 showmore-comment comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
+                <div class="comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
@@ -67,7 +67,7 @@
             }
             ?>
             <? if ($photo_count): ?>
-                <div class="col col-xxs-12 gl-comment-photo">
+                <div class="col col-xxs-12 comment-photo">
 
                     <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
@@ -168,7 +168,7 @@
             <? endif; ?>
 
 
-            <div class="gl-comment-info">
+            <div class="lh_15px">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font_lightgray"> ･ </span>
                 <a href="#" class="click-like font_lightgray <?= empty($like) ? null : "liked" ?>"
                    like_count_id="CommentLikeCount_<?= $comment['id'] ?>"

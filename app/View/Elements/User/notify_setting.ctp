@@ -23,7 +23,7 @@
                 'label'     => [
                     'class' => 'col col-sm-3 control-label form-label'
                 ],
-                'wrapInput' => 'col col-xxs-5 col-sm-3 gl-notify-setting-switch',
+                'wrapInput' => 'col col-xxs-5 col-sm-3 notify-setting-switch',
                 'class'     => 'form-control setting_input-design'
             ],
             'class'         => 'form-horizontal',
@@ -43,7 +43,7 @@
                 //                echo $this->Form->input("NotifySetting.feed_app_flg",
                 //                                   [
                 //                                       'label'       => false,
-                //                                       'beforeInput' => '<i class="fa fa-bell-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                //                                       'beforeInput' => '<i class="fa fa-bell-o icon-before-input" data-toggle="tooltip" title="' .
                 //                                           __d('gl', "アプリ通知") . '"></i>&nbsp;',
                 //                                       'div'         => false,
                 //                                       'type'        => 'checkbox',
@@ -55,7 +55,7 @@
                 $this->Form->input("NotifySetting.feed_email_flg",
                                    [
                                        'label'       => false,
-                                       'beforeInput' => '<i class="fa fa-envelope-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                                       'beforeInput' => '<i class="fa fa-envelope-o icon-before-input" data-toggle="tooltip" title="' .
                                            __d('gl', "メール通知") . '"></i>&nbsp;',
                                        'div'         => false,
                                        'type'        => 'checkbox',
@@ -71,7 +71,7 @@
                 //                echo $this->Form->input("NotifySetting.circle_app_flg",
                 //                                   [
                 //                                       'label'       => false,
-                //                                       'beforeInput' => '<i class="fa fa-bell-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                //                                       'beforeInput' => '<i class="fa fa-bell-o icon-before-input" data-toggle="tooltip" title="' .
                 //                                           __d('gl', "アプリ通知") . '"></i>&nbsp;',
                 //                                       'div'         => false,
                 //                                       'type'        => 'checkbox',
@@ -83,7 +83,7 @@
                 $this->Form->input("NotifySetting.circle_email_flg",
                                    [
                                        'label'       => false,
-                                       'beforeInput' => '<i class="fa fa-envelope-o gl-icon-before-input" data-toggle="tooltip" title="' .
+                                       'beforeInput' => '<i class="fa fa-envelope-o icon-before-input" data-toggle="tooltip" title="' .
                                            __d('gl', "メール通知") . '"></i>&nbsp;',
                                        'div'         => false,
                                        'type'        => 'checkbox',

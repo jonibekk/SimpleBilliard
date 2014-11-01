@@ -14,12 +14,12 @@
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-        <div class="panel-body gl-feed">
-        <div class="col col-xxs-12 gl-feed-user">
+        <div class="panel-body ptb_10px plr_11px ">
+        <div class="col col-xxs-12 feed-user">
             <div class="pull-right">
                 <div class="dropdown">
                     <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                        <i class="fa fa-chevron-down gl-feed-arrow"></i>
+                        <i class="fa fa-chevron-down feed-arrow"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
@@ -49,7 +49,7 @@
             </div>
             <?=
             $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
-                                       ['class' => 'gl-feed-img']) ?>
+                                       ['class' => 'feed-img']) ?>
             <div class="font_14px font_verydark"><?= h($post['User']['display_username']) ?></div>
             <div class="font_11px font_lightgray">
                 <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font_lightgray"> ･ </span>
@@ -79,11 +79,11 @@
             </div>
         </div>
         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-            <div class="col col-xxs-12 gl-feed-edit">
+            <div class="col col-xxs-12 p_0px">
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
-        <div class="col col-xxs-12 gl-feed-text showmore font_14px font_verydark box-align"
+        <div class="col col-xxs-12 feed-text showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
             <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                 <?= $this->TextEx->autoLink($post['Post']['body']) ?>
@@ -100,7 +100,7 @@
         }
         ?>
         <? if ($photo_count): ?>
-            <div class="col col-xxs-12 gl-feed-picture">
+            <div class="col col-xxs-12 pt_10px">
                 <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
                     <? if ($photo_count >= 2): ?>
@@ -160,7 +160,7 @@
         <? endif; ?>
         <? if ($post['Post']['site_info']): ?>
             <? $site_info = json_decode($post['Post']['site_info'], true) ?>
-            <div class="col col-xxs-12 gl-feed-site-link">
+            <div class="col col-xxs-12 pt_10px">
                 <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
                    class="no-line font_verydark">
                     <div class="site-info bd-radius_4px">
@@ -196,7 +196,7 @@
                 </a>
             </div>
         <? elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && !empty($post['Goal'])): ?>
-            <div class="col col-xxs-12 gl-feed-site-link">
+            <div class="col col-xxs-12 pt_10px">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
                    class="no-line font_verydark modal-ajax-get">
                     <div class="site-info bd-radius_4px">
@@ -230,12 +230,12 @@
 
         <? endif; ?>
         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-            <div class="col col-xxs-12 gl-feed-edit">
+            <div class="col col-xxs-12 p_0px">
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
 
-        <div class="col col-xxs-12 font_12px gl-feed-click">
+        <div class="col col-xxs-12 font_12px pt_10px">
             <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                model_id="<?= $post['Post']['id'] ?>"
@@ -256,7 +256,7 @@
 
         </div>
         </div>
-        <div class="panel-body gl-feed gl-comment-block">
+        <div class="panel-body ptb_10px plr_11px comment-block">
             <? if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                 <a href="#" class="btn btn-link click-comment-all"
                    id="Comments_<?= $post['Post']['id'] ?>"
@@ -273,11 +273,11 @@
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
-            <div class="col col-xxs-12 gl-comment-contents">
+            <div class="col col-xxs-12 comment-contents">
                 <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
-                                           ['class' => 'gl-comment-img']) ?>
-                <div class="gl-comment-body">
+                                           ['class' => 'comment-img']) ?>
+                <div class="comment-body">
                     <?=
                     $this->Form->create('Comment', [
                         'url'           => ['controller' => 'posts', 'action' => 'comment_add'],
@@ -307,7 +307,7 @@
                     ?>
                     <div class="form-group" id="CommentFormImage_<?= $post['Post']['id'] ?>"
                          style="display: none">
-                        <ul class="gl-input-images">
+                        <ul class="input-images">
                             <? for ($i = 1; $i <= 5; $i++): ?>
                                 <li>
                                     <?=
