@@ -43,6 +43,7 @@
                     <a href="#" class="btn btn-link click-feed-read-more"
                        parent-id="GoalMoreView"
                        next-page-num="2"
+                       month-index="1"
                        get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_more_index_items']) ?>">
                         <?= __d('gl', "もっと見る ▼") ?></a>
                 </div>

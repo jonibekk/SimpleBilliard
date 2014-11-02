@@ -189,7 +189,16 @@ class PostsController extends AppController
         else {
             $page_num = 1;
         }
-        $posts = $this->Post->get($page_num, 20, null, null, $this->request->params);
+        $start = null;
+        $end = null;
+        //一ヶ月以前を指定された場合
+        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
+            $end_month_offset = $param_named['month_index'];
+            $start_month_offset = $end_month_offset + 1;
+            $end = strtotime("-{$end_month_offset} months", time());
+            $start = strtotime("-{$start_month_offset} months", time());
+        }
+        $posts = $this->Post->get($page_num, 20, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
