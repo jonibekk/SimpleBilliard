@@ -65,7 +65,8 @@ class PagesController extends AppController
                 $collabo_goals = $this->Goal->getMyCollaboGoals();
                 $follow_goals = $this->Goal->getMyFollowedGoals();
                 $current_global_menu = "home";
-                $this->set(compact('select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
+                $feed_filter = 'all';
+                $this->set(compact('feed_filter', 'select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
                                    'current_global_menu'));
                 $this->set('avail_sub_menu', true);
                 try {

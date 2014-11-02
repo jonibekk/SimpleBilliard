@@ -10,17 +10,30 @@
  * @var                       $current_circle
  * @var                       $circle_members
  * @var                       $feed_more_read_url
+ * @var                       $feed_filter
  */
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
 <?= $this->element("Feed/common_form") ?>
-<? if ($current_circle): ?>
-    <div class="panel panel-default feed-share-range">
-        <div class="panel-body ptb_10px plr_11px">
-            <div class="col col-xxs-12 font_12px">
+<div class="panel panel-default feed-share-range">
+    <div class="panel-body ptb_10px plr_11px">
+        <div class="col col-xxs-12 font_12px">
+            <? if ($feed_filter == "all"): ?>
+                <span class="feed-current-filter"><?= __d('gl', 'すべて') ?></span>
+            <? else: ?>
                 <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
+            <?endif; ?>
+            <span> ･ </span>
+            <? if ($feed_filter == "goal"): ?>
+                <span class="feed-current-filter"><?= __d('gl', 'ゴール') ?></span>
+            <? else: ?>
+                <?= $this->Html->link(__d('gl', 'ゴール'),
+                                      ['controller' => 'posts', 'action' => 'feed', 'filter_goal' => true],
+                                      ['class' => 'font_lightgray']) ?>
+            <?endif; ?>
+            <? if ($current_circle): ?>
                 <span> ･ </span>
-                <span class="feed-share-range-circle"><?= $current_circle['Circle']['name'] ?></span>
+                <span class="feed-current-filter"><?= $current_circle['Circle']['name'] ?></span>
                 <span class="feed-circle-user-number">
         <?
         $title = '<ul class="user-list-in-tooltip">';
@@ -38,10 +51,10 @@
                        data-original-title='<?= $title ?>'>
                         <i class="fa fa-user"></i>&nbsp;<?= count($circle_members) ?></a>
                     </span>
-            </div>
+            <? endif; ?>
         </div>
     </div>
-<? endif; ?>
+</div>
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
     <div class="panel panel-default">
