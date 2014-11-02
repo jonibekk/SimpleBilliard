@@ -501,6 +501,7 @@ class Goal extends AppModel
             ],
             'contain'    => [
                 'Purpose',
+                'GoalCategory',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'User'       => [
