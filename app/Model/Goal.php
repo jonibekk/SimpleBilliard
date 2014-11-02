@@ -174,6 +174,10 @@ class Goal extends AppModel
         if (!isset($data['Goal']) || empty($data['Goal'])) {
             return false;
         }
+        $add_new = false;
+        if (!isset($data['Goal']['id'])) {
+            $add_new = true;
+        }
         $data['Goal']['team_id'] = $this->current_team_id;
         $data['Goal']['user_id'] = $this->my_uid;
         //on/offの場合は現在値0,目標値1をセット
@@ -195,7 +199,7 @@ class Goal extends AppModel
                                                   strtotime($data['Goal']['end_date'])) - ($this->me['timezone'] * 60 * 60);
         }
         //新規の場合はデフォルトKRを追加
-        if (!isset($data['Goal']['id'])) {
+        if ($add_new) {
             $kr['name'] = __d('gl', "出したい成果の名前を入れてください");
             $kr['priority'] = 3;
             $kr['current_value'] = 0;
@@ -214,6 +218,10 @@ class Goal extends AppModel
         $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         $this->create();
         $res = $this->saveAll($data);
+        if ($add_new) {
+            //ゴール投稿
+            $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
+        }
         return $res;
     }
 
@@ -493,6 +501,7 @@ class Goal extends AppModel
             ],
             'contain'    => [
                 'Purpose',
+                'GoalCategory',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                     'User'       => [

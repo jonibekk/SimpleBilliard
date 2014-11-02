@@ -76,7 +76,7 @@ $(document).ready(function () {
     //carousel
     $('.carousel').carousel({interval: false});
 
-    $('.gl-custom-radio-check').customRadioCheck();
+    $('.custom-radio-check').customRadioCheck();
 
     //bootstrap switch
     $(".bt-switch").bootstrapSwitch();

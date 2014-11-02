@@ -18,7 +18,7 @@ $this->Form->create('Post', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class' => 'gl-feed-edit-form',
+    'class' => 'pt_10px',
     'style'         => 'display: none',
     'novalidate'    => true,
     'type'          => 'file',
@@ -36,8 +36,8 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
-<div class="row form-group gl-no-margin" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
-    <ul class="col gl-input-images">
+<div class="row form-group m_0px" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+    <ul class="col input-images">
         <? for ($i = 1; $i <= 5; $i++): ?>
             <li>
                 <?=

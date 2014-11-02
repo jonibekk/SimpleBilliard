@@ -22,7 +22,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 <div class="row">
 <!--GoalSet01-->
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="page-title"><?= __d('gl', "新しいゴールを作成") ?></div>
+    <div class="page-title">
+        <?= isset($this->request->data['Goal']['id']) ? __d('gl', "ゴールを編集") : __d('gl', "新しいゴールを作成") ?>
+    </div>
     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
         <div class="panel-heading goal-set-heading clearfix">
             <div class="pull-left goal-set-title"><span class='font_bold'>1</span> <?= __d('gl', "目的を決める") ?>
@@ -78,7 +80,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
-                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step1'],
+                                          ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP01],
                                           ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
@@ -272,7 +274,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
-                                          ['controller' => 'goals', 'action' => 'ajax_get_particularly_step2'],
+                                          ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP02],
                                           ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
                             $disabled = null;

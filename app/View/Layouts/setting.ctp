@@ -27,7 +27,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-xs-9 col-xxs-12 gl-sections" role="main">
+        <div class="col-xs-9 col-xxs-12 parent-flash" role="main">
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>

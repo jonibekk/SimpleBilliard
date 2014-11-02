@@ -32,7 +32,7 @@ if (isset($type)) {
 <div class="form-group">
     <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
         <div
-            class="fileinput-preview thumbnail nailthumb-container gl-thumb-container click-target-enabled photo-plus-frame"
+            class="fileinput-preview thumbnail nailthumb-container m_0px click-target-enabled photo-plus-frame"
             data-trigger="fileinput"
             target-id="<?= $submit_id ?>"
             style="width: 50px; height: 50px;">
@@ -52,14 +52,14 @@ if (isset($type)) {
             <? endif ?><? if ($index == 1): ?><i class="fa fa-plus photo-plus"></i><? endif; ?>
         </div>
         <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
-            <div class="gl-custom-wrapper">
+            <div class="custom-wrapper">
                 <?=
                 $this->Form->input('photo_delete.' . $index,
                                    [
                                        'type'         => 'checkbox',
                                        'label'        => "",
                                        'div'          => false,
-                                       'class'        => 'gl-custom-radio-check change-target-enabled',
+                                       'class'        => 'custom-radio-check change-target-enabled',
                                        'target-id'    => $submit_id,
                                        'wrapInput'    => false,
                                        'errorMessage' => false,

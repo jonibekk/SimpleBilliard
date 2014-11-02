@@ -57,7 +57,7 @@
             <div class="modal-footer modal_pannel-footer">
                 <?= $this->Form->submit(__d('gl', "変更を保存"),
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
-                <button type="button" class="btn btn-link design-cancel margin-right-8px bd-radius_4px" data-dismiss="modal">
+                <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
                     <?= __d('gl', "キャンセル") ?>
                 </button>
             </div>

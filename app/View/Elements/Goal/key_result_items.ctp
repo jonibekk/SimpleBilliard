@@ -18,10 +18,10 @@
         <div class="bd-t h_50px">
             <div class="col col-xxs-12 w_90per line-numbers ln_1 ptb_5px">
                 <a href="#" class="develop--forbiddenLink">
-                    <i class=" fa fa-check-circle font_40px pull-left mr_5px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
+                    <i class=" fa fa-check-circle disp_ib mr_5px font_40px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
                 </a>
 
-                <div class="pull-left">
+                <div class="disp_ib w_80per">
                     <span class="line-numbers ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
                     <i class="fa fa-check-circle"><span class="ml_2px">0</span></i>
