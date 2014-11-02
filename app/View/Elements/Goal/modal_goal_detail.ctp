@@ -65,11 +65,14 @@
                 <? endif; ?>
             </div>
             <? if (isset($goal['Goal']) && !empty($goal['Goal'])): ?>
+                <div class="col col-xxs-12 font_11px">
+                    <i class="fa fa-folder"><?= h($goal['GoalCategory']['name']) ?></i>
+                </div>
                 <div class="col col-xxs-12">
                     <b class="font_18px font_verydark"><?= $goal['Goal']['name'] ?></b>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <?= $goal['Purpose']['name'] ?>
+                    <?= h($goal['Purpose']['name']) ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><?= __d('gl', '程度') ?></div>
