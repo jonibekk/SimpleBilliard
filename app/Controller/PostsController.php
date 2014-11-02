@@ -334,13 +334,22 @@ class PostsController extends AppController
         $my_goals = $this->Goal->getMyGoals();
         $collabo_goals = $this->Goal->getMyCollaboGoals();
         $follow_goals = $this->Goal->getMyFollowedGoals();
-
+        $feed_filter = null;
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
             $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
         }
+        //抽出条件
+        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+            $feed_filter = 'circle';
+        }
+        elseif (isset($this->request->params['named']['filter_goal'])) {
+            $feed_filter = 'goal';
+        }
+
         $this->set('avail_sub_menu', true);
-        $this->set(compact('select2_default', 'circle_members', 'my_goals', 'collabo_goals', 'follow_goals'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'my_goals', 'collabo_goals',
+                           'follow_goals'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
