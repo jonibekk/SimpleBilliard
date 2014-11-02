@@ -95,7 +95,7 @@
                         <?= h($goal['Leader'][0]['User']['display_username']) ?>
                     <? endif; ?>
                 </div>
-                <div class="col col-xxs-12">
+                <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><?= __d('gl', "コラボレータ") ?></div>
                     <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <? foreach ($goal['Collaborator'] as $collabo): ?>
@@ -108,6 +108,12 @@
                     <? else: ?>
                         <?= __d('gl', "なし") ?>
                     <?endif; ?>
+                </div>
+                <div class="col col-xxs-12">
+                    <div><?= __d('gl', '詳細') ?></div>
+                    <div>
+                        <?= $this->TextEx->autoLink($goal['Goal']['description']) ?>
+                    </div>
                 </div>
             <? endif; ?>
         </div>
