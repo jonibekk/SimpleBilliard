@@ -22,7 +22,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 <div class="row">
 <!--GoalSet01-->
 <div class="col-sm-8 col-sm-offset-2">
-    <div class="page-title"><?= __d('gl', "新しいゴールを作成") ?></div>
+    <div class="page-title">
+        <?= isset($this->request->data['Goal']['id']) ? __d('gl', "ゴールを編集") : __d('gl', "新しいゴールを作成") ?>
+    </div>
     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
         <div class="panel-heading goal-set-heading clearfix">
             <div class="pull-left goal-set-title"><span class='font_bold'>1</span> <?= __d('gl', "目的を決める") ?>
