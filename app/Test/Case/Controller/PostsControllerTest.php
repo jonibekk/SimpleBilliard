@@ -17,6 +17,8 @@ class PostsControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.purpose',
         'app.goal',
+        'app.key_result',
+        'app.collaborator',
         'app.follower',
         'app.cake_session',
         'app.post',
@@ -218,6 +220,15 @@ class PostsControllerTest extends ControllerTestCase
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e), "[異常]feedをajax以外で取得しようとしたとき");
+    }
+
+    function testAjaxGetFeedMonthIndex()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_feed/page:1/month_index:2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetComment()
@@ -919,6 +930,33 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->save($post_data);
 
         $this->testAction('/post_permanent/' . $Posts->Post->getLastInsertID());
+    }
+
+    function testFeedGoal()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/feed/filter_goal:1');
+    }
+
+    function testGetTotalShareUserCount()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $circles = [
+            ['CircleMember' => [
+                ['User' => ['id' => 1]],
+                ['User' => ['id' => 2]],
+            ]],
+            ['CircleMember' => [
+                ['User' => ['id' => 2]],
+                ['User' => ['id' => 3]],
+            ]],
+        ];
+        $users = [
+            ['User' => ['id' => 1]],
+            ['User' => ['id' => 4]],
+        ];
+        $res = $Posts->_getTotalShareUserCount($circles, $users);
+        $this->assertEquals(4, $res);
     }
 
     function _getPostsCommonMock()

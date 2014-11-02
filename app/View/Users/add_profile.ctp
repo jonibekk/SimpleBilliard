@@ -109,7 +109,7 @@
                                     '11' => __d('gl', '11月'),
                                     '12' => __d('gl', '12月'),
                                 ],
-                                'class'      => 'form-control gl-inline-fix',
+                                'class'      => 'form-control inline-fix',
                                 'label'      => __d('gl', '誕生日'),
                                 'dateFormat' => 'YMD',
                                 'empty'      => true,

@@ -13,7 +13,7 @@
 <div class="panel panel-default global-form">
     <div class="panel-heading post-panel-heading">
         <!-- Nav tabs -->
-        <ul class="gl-feed-switch clearfix" role="tablist">
+        <ul class="feed-switch clearfix" role="tablist">
             <li class="switch-post active"><a href="#PostForm" role="tab" data-toggle="tab"
                                               class="switch-post-anchor"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
@@ -55,8 +55,8 @@
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-                <div class="row form-group gl-no-margin" id="PostFormImage" style="display: none">
-                    <ul class="col gl-input-images post-images">
+                <div class="row form-group m_0px" id="PostFormImage" style="display: none">
+                    <ul class="col input-images post-images">
                         <? for ($i = 1; $i <= 5; $i++): ?>
                             <li>
                             <?= $this->element('Feed/photo_upload',

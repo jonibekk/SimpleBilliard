@@ -15,7 +15,7 @@
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
-    <div class="gl-nav-container header-container">
+    <div class="nav-container header-container">
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
             <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas" aria-hidden="true">
@@ -69,7 +69,7 @@
                 </li>
                 <li class="header-search-group">
                     <form class="nav-form-group" role="search">
-                        <i class="fa fa-search gl-nav-form-icon"></i>
+                        <i class="fa fa-search nav-form-icon"></i>
                         <input type="text"
                                class="form-control nav-search font_12px disable-change-warning develop--search"
                                placeholder="Search">
@@ -82,14 +82,14 @@
         </div>
 
         <div class="navbar-header navbar-right">
-            <button type="button" class="navbar-toggle gl-hamburger" data-toggle="offcanvas"
+            <button type="button" class="navbar-toggle hamburger" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
             <div class="pull-right nav-icons">
-                <div class="dropdown gl-navbar-nav-fix">
+                <div class="dropdown navbar-nav-fix">
                     <a href="#"
                        class="dropdown-toggle me-menu-image font_verydark no-line header-user-profile pull-right"
                        data-toggle="dropdown"
@@ -110,7 +110,7 @@
                 </div>
                 <a href="<?= $this->Html->url('/') ?>" class="header-home header-link"><?= __d('gl', "ホーム") ?></a>
 
-                <div class="dropdown gl-navbar-nav-fix header-circle">
+                <div class="dropdown navbar-nav-fix header-circle">
                     <a href="#" data-toggle="dropdown" id="download">
                         <i class="fa fa-plus-circle header-link header-icon"></i>
                     </a>

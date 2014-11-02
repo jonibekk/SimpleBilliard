@@ -260,6 +260,14 @@ footer p {
     padding-right: 0;
 }
 
+.m_0px {
+    margin: 0;
+}
+
+.m_0px {
+    margin: 0 0 0 0;
+}
+
 .mt_5px {
     margin-top: 4px;
 }
@@ -318,16 +326,28 @@ footer p {
     padding-bottom: 5px;
 }
 
-.mb_8px{
+.mb_0px {
+    margin-bottom: 0;
+}
+
+.mb_2px {
+    margin-bottom: 2px;
+}
+
+.mb_8px {
     margin-bottom: 8px;
 }
 
-.mb_12px{
+.mb_12px {
     margin-bottom: 12px;
 }
 
 .mb_32px {
     margin-bottom: 32px;
+}
+
+.p_0px {
+    padding: 0;
 }
 
 .p_10px {
@@ -342,6 +362,11 @@ footer p {
 .plr_5px {
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.plr_11px {
+    padding-left: 11px;
+    padding-right: 11px;
 }
 
 .plr_18px {
@@ -373,11 +398,23 @@ footer p {
 }
 
 .pt_4px {
+    padding: 4px 0 0 0;
+}
+
+.pt_4px {
     padding-top: 4px;
 }
 
 .pt_8px {
     padding-top: 8px;
+}
+
+.pt_10px {
+    padding: 10px 0 0 0;
+}
+
+.pt_10px {
+    padding-top: 10px;
 }
 
 .pt_12px {
@@ -408,13 +445,14 @@ footer p {
     padding-left: 16px;
 }
 
-.m_pic{
+.m_pic {
     width: 280px;
     margin: 4px 0 4px 10px;
 }
+
 /*行数の指定*/
 
-.modal-mini{
+.modal-mini {
     width: 300px;
     margin: auto;
 }
@@ -707,8 +745,16 @@ footer p {
 
 /*==/ モジュール ===*/
 
+.lh_12px {
+    line-height: 12px;
+}
+
+.lh_15px {
+    line-height: 15px;
+}
+
 /*アイコンを揃える*/
-.line-height_20px {
+.lh_20px {
     line-height: 20px;
     vertical-align: middle;
 }
@@ -908,20 +954,16 @@ footer p {
     width: 90%;
 }
 
-.w_85per{
+.w_85per {
     width: 85%;
 }
 
-.w_80per{
+.w_80per {
     width: 80%;
 }
 
 .h_50px {
     height: 50px;
-}
-
-.float_l{
-    float: left;
 }
 
 /*/幅指定*/
@@ -945,24 +987,24 @@ footer p {
     color: #e78e99;
 }
 
-.gl-feed-text a {
+.feed-text a {
     color: #ddd;
 }
 
-.gl-comment-contents a {
+.comment-contents a {
     color: #c5c5c5;
 }
 
-.gl-feed-text a:hover,
-.gl-feed-text a:hover,
-.gl-feed-text a:hover,
-.gl-comment-contents a:hover,
-.gl-comment-contents a:hover,
-.gl-comment-contents a:hover {
+.feed-text a:hover,
+.feed-text a:hover,
+.feed-text a:hover,
+.comment-contents a:hover,
+.comment-contents a:hover,
+.comment-contents a:hover {
     color: #91170a;
 }
 
-.gl-comment-contents .comment-add-pic {
+.comment-contents .comment-add-pic {
     color: #d9230f;
 }
 
@@ -971,18 +1013,18 @@ footer p {
     background: #d9230f !important;
 }
 
-.gl-feed-arrow,
-.gl-comment-arrow,
-.gl-commetn-cross {
+.feed-arrow,
+.comment-arrow,
+.comment-cross {
     vertical-align: top;
 }
 
-.gl-comment-user {
+.comment-user {
     height: 12px;
     margin-bottom: 2px;
 }
 
-.gl-comment-user > .pull-right {
+.comment-user > .pull-right {
     height: 12px;
     padding-bottom: 2px;
     margin-bottom: 2px;
@@ -1037,23 +1079,13 @@ footer p {
 }
 
 /*inlineのフォームでスマホでも幅を固定する*/
-.gl-inline-fix {
+.inline-fix {
     display: inline-block;
     width: auto;
     vertical-align: middle;
 }
 
-.gl-me-menu-image {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-.gl-me-menu-image > img {
-    width: 26px;
-    height: 26px;
-}
-
-.gl-hamburger {
+.hamburger {
     float: left !important;
     margin-left: 0;
 }
@@ -1106,7 +1138,7 @@ footer p {
     pointer-events: none;
 }
 
-.gl-navbar-nav-fix {
+.navbar-nav-fix {
     float: left;
     margin: 0;
     list-style: none;
@@ -1136,13 +1168,6 @@ footer p {
     color: dimgray;
 }
 
-@media (min-width: 768px) {
-    .gl-nav-container {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
 .sidebar-setting {
     position: fixed;
     top: 90px;
@@ -1156,7 +1181,7 @@ footer p {
     border-left: 2px solid #563d7c;
 }
 
-.gl-sections > div {
+.parent-flash > div {
     padding-top: 50px;
     margin-top: -50px;
 }
@@ -1178,10 +1203,6 @@ ul.example-indent {
     border-top: none;
 }
 
-.gl-feed {
-    padding: 10px 11px;
-}
-
 .feed-share-range {
     background: #e5e5e5;
     border: none;
@@ -1194,11 +1215,11 @@ ul.example-indent {
     padding-bottom: 3px;
 }
 
-.gl-feed-user {
+.feed-user {
     padding: 0;
 }
 
-.gl-feed-img {
+.feed-img {
     display: block;
     float: left;
     height: 40px;
@@ -1206,31 +1227,11 @@ ul.example-indent {
     margin-right: 8px;
 }
 
-.gl-feed-text {
+.feed-text {
     padding: 10px 0 0 0;
 }
 
-.gl-feed-picture {
-    padding: 10px 0 0 0;
-}
-
-.gl-feed-site-link {
-    padding: 10px 0 0 0;
-}
-
-.gl-feed-edit {
-    padding: 0;
-}
-
-.gl-feed-edit-form {
-    padding-top: 10px;
-}
-
-.gl-feed-click {
-    padding: 10px 0 0 0;
-}
-
-.gl-comment-block {
+.comment-block {
     padding: 9px 11px 10px;
     border-top: 1px solid #dddddd;
     background-color: #f5f5f5;
@@ -1238,12 +1239,12 @@ ul.example-indent {
     border-bottom-left-radius: 3px;
 }
 
-.gl-comment-contents {
+.comment-contents {
     padding: 0;
     word-wrap: break-word;
 }
 
-.gl-comment-img {
+.comment-img {
     display: block;
     float: left;
     height: 32px;
@@ -1251,17 +1252,13 @@ ul.example-indent {
     margin-right: 8px;
 }
 
-.gl-comment-body {
+.comment-body {
     margin-left: 40px;
     margin-bottom: 4px;
     vertical-align: text-top;
 }
 
-.gl-comment-main {
-    padding: 4px 0 0 0;
-}
-
-.gl-comment-text {
+.comment-text {
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 2px;
@@ -1273,57 +1270,18 @@ ul.example-indent {
     border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
-.gl-comment-photo {
+.comment-photo {
     padding: 0;
     margin: 5px 0 7px;
 }
 
-.gl-modal-comment {
+.modal-comment {
     margin: 0;
 }
 
 .click-comment-all {
     padding: 0 0 4px 0;
     font-size: 12px;
-}
-
-.gl-form-inline-fix .form-group {
-    display: inline-block;
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
-.gl-form-inline-fix .form-control {
-    display: inline-block;
-    width: auto;
-}
-
-.gl-form-inline-fix .input-group > .form-control {
-    width: 100%;
-}
-
-.gl-form-inline-fix .control-label {
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
-.gl-form-inline-fix .radio,
-.gl-form-inline-fix .checkbox {
-    display: inline-block;
-    padding-left: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
-.gl-form-inline-fix .radio input[type="radio"],
-.gl-form-inline-fix .checkbox input[type="checkbox"] {
-    float: none;
-    margin-left: 0;
-}
-
-.gl-form-inline-fix .has-feedback .form-control-feedback {
-    top: 0;
 }
 
 .panel-read-more-body {
@@ -1339,7 +1297,6 @@ ul.example-indent {
     background: #f4edf2;
     border: 1px solid #ddd;
     border-radius: 0;
-    height: 40px;
 }
 
 .click-feed-read-more {
@@ -1348,28 +1305,24 @@ ul.example-indent {
     height: 100%;
 }
 
-.gl-feed-text .btn-link {
+.feed-text .btn-link {
     color: #ddd;
 }
 
-.gl-comment-text .btn-link {
+.comment-text .btn-link {
     color: #c5c5c5;
-}
-
-.gl-thumb-container {
-    margin: 0 0 0 0;
 }
 
 .showmore {
     word-wrap: break-word;
 }
 
-ul.gl-input-images {
+ul.input-images {
     list-style: none;
     padding-left: 0;
 }
 
-ul.gl-input-images > li {
+ul.input-images > li {
     float: left;
     margin-right: 3px;
 }
@@ -1378,15 +1331,11 @@ ul.gl-input-images > li {
     margin: 0;
 }
 
-.gl-custom-wrapper > .checkbox {
+.custom-wrapper > .checkbox {
     min-height: 0;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
-}
-
-.gl-no-margin {
-    margin: 0;
 }
 
 .panel {
@@ -1435,13 +1384,13 @@ ul.gl-input-images > li {
 
 /*タブで切り替え*/
 
-.gl-feed-switch {
+.feed-switch {
     list-style: none;
     padding: 10px 0;
     margin: 0;
 }
 
-.gl-feed-switch li {
+.feed-switch li {
     font-size: 12px;
     float: left;
     text-align: center;
@@ -1449,23 +1398,23 @@ ul.gl-input-images > li {
     height: 20px;
 }
 
-.gl-feed-switch a {
+.feed-switch a {
     line-height: 14px;
     vertical-align: baseline;
     color: #999;
 }
 
-.gl-feed-switch .active a {
+.feed-switch .active a {
     color: #231814 !important;
     font-weight: bold;
 }
 
-.gl-feed-switch .active i {
+.feed-switch .active i {
     color: #231814 !important;
     font-weight: bold;
 }
 
-.gl-feed-switch i {
+.feed-switch i {
     padding-right: 2px;
     line-height: 14px;
     vertical-align: baseline;
@@ -1736,16 +1685,7 @@ ul.gl-input-images > li {
     text-align: left;
 }
 
-.gl-comment-name {
-    line-height: 12px;
-    margin-bottom: 2px;
-}
-
-.gl-comment-contents {
-    line-height: 15px;
-}
-
-.gl-comment-info {
+.comment-contents {
     line-height: 15px;
 }
 
@@ -1882,7 +1822,7 @@ ul.gl-input-images > li {
 /*/サークルのデザイン*/
 
 /*HEADER*/
-.gl-nav-container {
+.nav-container {
     width: 93.75%;
     margin: auto;
 }
@@ -1904,12 +1844,12 @@ ul.gl-input-images > li {
 
 /*/HEADER*/
 
-.gl-s2-post-dropdown {
+.s2-post-dropdown {
     width: 80% !important;
     margin-right: 0;
 }
 
-.gl-circle-join-switch {
+.circle-join-switch {
     height: 32px;
     line-height: 32px;
     vertical-align: middle;
@@ -1917,7 +1857,7 @@ ul.gl-input-images > li {
     width: 80px;
 }
 
-.gl-circle-join-switch .checkbox {
+.circle-join-switch .checkbox {
     padding-left: 0;
 }
 
@@ -2000,7 +1940,7 @@ ul.gl-input-images > li {
     margin: auto;
 }
 
-.gl-nav-form-icon {
+.nav-form-icon {
     margin-left: 10px;
 }
 
@@ -2127,7 +2067,7 @@ ul.gl-input-images > li {
     margin-bottom: 0;
 }
 
-.feed-share-range-circle {
+.feed-current-filter {
     color: #231814;
     font-weight: bold;
 }
@@ -2243,14 +2183,14 @@ ul.gl-input-images > li {
     border: 1px dashed #ddd;
 }
 
-.gl-s2-post-dropdown {
+.s2-post-dropdown {
     border: 1px #ddd solid;
     box-shadow: none;
     border-radius: 0;
     margin-left: 5px;
 }
 
-.gl-s2-post-dropdown li {
+.s2-post-dropdown li {
     border-top: none !important;
     font-size: 12px;
 }
@@ -2282,11 +2222,11 @@ ul.gl-input-images > li {
     width: 300px;
 }
 
-.gl-modal-no-margin .modal-body {
+.parent-p_0px .modal-body {
     padding: 0;
 }
 
-.gl-modal-no-margin .modal-footer {
+.parent-p_0px .modal-footer {
     margin: 0;
 }
 
@@ -2316,28 +2256,28 @@ ul.gl-input-images > li {
     margin: 0;
 }
 
-.gl-user-list-in-tooltip {
+.user-list-in-tooltip {
     list-style-type: none;
     padding-left: 0;
 }
 
-.gl-user-list-in-tooltip > li {
+.user-list-in-tooltip > li {
     text-align: left;
 }
 
-.gl-circle-join-switch > .checkbox {
+.circle-join-switch > .checkbox {
     margin-top: auto;
     margin-bottom: auto;
 }
 
-.gl-notify-setting-switch > .checkbox {
+.notify-setting-switch > .checkbox {
     margin-top: auto;
     margin-bottom: auto;
     padding-left: 0;
     display: inline;
 }
 
-.gl-icon-before-input {
+.icon-before-input {
     font-size: 18px;
     vertical-align: middle;
 }
@@ -2387,7 +2327,7 @@ ul.gl-input-images > li {
 
 /*/ゴール作成ページのタテ線の長さ調整一覧*/
 
-.gl-comment-body .site-info {
+.comment-body .site-info {
     margin: 5px 0 7px;
 }
 
@@ -2465,10 +2405,6 @@ ul.gl-input-images > li {
     text-align: center;
 }
 
-.gl-progress {
-    margin-bottom: 0;
-}
-
 .icon-green {
     color: green;
 }
@@ -2523,17 +2459,25 @@ ul.gl-input-images > li {
 /*==/ spFeedAlt ===*/
 
 /*=== メディアクエリで切り替え ===*/
+
+@media (min-width: 768px) {
+    .nav-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 /*Extrasmall*/
 @media (min-width: 480px) {
     .container {
         width: 97.5%;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 97.5%;
     }
 
-    .gl-hamburger {
+    .hamburger {
         margin-left: 0;
     }
 
@@ -2549,7 +2493,7 @@ ul.gl-input-images > li {
         width: 64%;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 80% !important;
         margin-right: 0;
     }
@@ -2598,7 +2542,7 @@ ul.gl-input-images > li {
         width: 756px;
     }
 
-    .sm-text-right{
+    .sm-text-right {
         text-align: right;
     }
 
@@ -2606,7 +2550,7 @@ ul.gl-input-images > li {
         float: right !important;
     }
 
-    .sm-pl_12px{
+    .sm-pl_12px {
         padding-left: 12px;
     }
 
@@ -2614,7 +2558,7 @@ ul.gl-input-images > li {
         padding-left: 18px;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 756px;
     }
 
@@ -2667,7 +2611,7 @@ ul.gl-input-images > li {
         width: 160px;
     }
 
-    .gl-nav-form-icon {
+    .nav-form-icon {
         margin-left: 0;
     }
 
@@ -2675,7 +2619,7 @@ ul.gl-input-images > li {
         width: 160px;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 386px !important;
         margin-right: 4px;
     }
@@ -2720,7 +2664,7 @@ ul.gl-input-images > li {
         width: 972px;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 972px;
     }
 
@@ -2770,7 +2714,7 @@ ul.gl-input-images > li {
         width: 100px;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 368px !important;
     }
 
@@ -2790,7 +2734,7 @@ ul.gl-input-images > li {
         width: 1008px;
     }
 
-    .gl-nav-container {
+    .nav-container {
         width: 1008px;
     }
 
@@ -2807,7 +2751,7 @@ ul.gl-input-images > li {
         width: 56px;
     }
 
-    .gl-s2-post-dropdown {
+    .s2-post-dropdown {
         width: 386px !important;
     }
 
@@ -2938,7 +2882,7 @@ Temporary Properties - YOU MUST FIX
     margin-top: 4px;
 }
 
-.gl-input-images {
+.input-images {
     margin-top: 4px;
     display: inline-block;
 }
