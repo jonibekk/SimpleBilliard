@@ -306,19 +306,26 @@ function evFeedMoreView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
     attrUndefinedCheck(this, 'get-url');
+    attrUndefinedCheck(this, 'month-index');
 
     var $obj = $(this);
     var parent_id = $obj.attr('parent-id');
     var next_page_num = $obj.attr('next-page-num');
     var get_url = $obj.attr('get-url');
+    var month_index = $obj.attr('month-index');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     //ローダー表示
     $obj.after($loader_html);
+    //url生成
+    var url = get_url + '/page:' + next_page_num;
+    if (month_index > 1) {
+        url = url + '/month_index:' + month_index;
+    }
     $.ajax({
         type: 'GET',
-        url: get_url + '/page:' + next_page_num,
+        url: url,
         async: true,
         dataType: 'json',
         success: function (data) {
@@ -340,7 +347,9 @@ function evFeedMoreView() {
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを有効化
+                $obj.text("<?=__d('gl', "もっと見る ▼") ?>");
                 $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
                 //画像リサイズ
@@ -358,13 +367,14 @@ function evFeedMoreView() {
             else {
                 //ローダーを削除
                 $loader_html.remove();
-                //親を取得
-                //noinspection JSCheckFunctionSignatures
-                var $parent = $obj.parent();
-                //「もっと読む」リンクを削除
-                $obj.remove();
-                //データが無かった場合はデータ無いよ。を表示
-                $parent.append("<?=__d('gl','これ以上ありません。')?>");
+                //リンクを有効化
+                $obj.removeAttr('disabled');
+                month_index++;
+                $obj.attr('month-index', month_index);
+                //次のページ番号をセット
+                $obj.attr('next-page-num', 1);
+                $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
+                $("#ShowMoreNoData").show();
             }
         },
         error: function () {

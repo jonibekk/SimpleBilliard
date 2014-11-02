@@ -330,7 +330,7 @@ footer p {
     margin-bottom: 0;
 }
 
-.mb_2px{
+.mb_2px {
     margin-bottom: 2px;
 }
 
@@ -364,7 +364,7 @@ footer p {
     padding-right: 5px;
 }
 
-.plr_11px{
+.plr_11px {
     padding-left: 11px;
     padding-right: 11px;
 }
@@ -396,7 +396,6 @@ footer p {
 .pt_2px {
     padding-top: 2px;
 }
-
 
 .pt_4px {
     padding: 4px 0 0 0;
@@ -749,7 +748,6 @@ footer p {
 .lh_12px {
     line-height: 12px;
 }
-
 
 .lh_15px {
     line-height: 15px;
@@ -1299,7 +1297,6 @@ ul.example-indent {
     background: #f4edf2;
     border: 1px solid #ddd;
     border-radius: 0;
-    height: 40px;
 }
 
 .click-feed-read-more {
