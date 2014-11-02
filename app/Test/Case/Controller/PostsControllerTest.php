@@ -938,6 +938,27 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/posts/feed/filter_goal:1');
     }
 
+    function testGetTotalShareUserCount()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $circles = [
+            ['CircleMember' => [
+                ['User' => ['id' => 1]],
+                ['User' => ['id' => 2]],
+            ]],
+            ['CircleMember' => [
+                ['User' => ['id' => 2]],
+                ['User' => ['id' => 3]],
+            ]],
+        ];
+        $users = [
+            ['User' => ['id' => 1]],
+            ['User' => ['id' => 4]],
+        ];
+        $res = $Posts->_getTotalShareUserCount($circles, $users);
+        $this->assertEquals(4, $res);
+    }
+
     function _getPostsCommonMock()
     {
         /**
