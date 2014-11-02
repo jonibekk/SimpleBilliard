@@ -17,6 +17,8 @@ class PostsControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.purpose',
         'app.goal',
+        'app.key_result',
+        'app.collaborator',
         'app.follower',
         'app.cake_session',
         'app.post',
@@ -919,6 +921,12 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->save($post_data);
 
         $this->testAction('/post_permanent/' . $Posts->Post->getLastInsertID());
+    }
+
+    function testFeedGoal()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/feed/filter_goal:1');
     }
 
     function _getPostsCommonMock()
