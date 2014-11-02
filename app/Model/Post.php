@@ -44,8 +44,9 @@ class Post extends AppModel
     const SHARE_CIRCLE = 4;
 
     public $orgParams = [
-        'circle_id' => null,
-        'post_id'   => null,
+        'circle_id'   => null,
+        'post_id'     => null,
+        'filter_goal' => null,
     ];
 
     public $actsAs = [
@@ -328,7 +329,6 @@ class Post extends AppModel
         }
 
         $p_list = [];
-
         $org_param_exists = false;
         if ($params) {
             foreach ($this->orgParams as $key => $val) {
@@ -381,6 +381,10 @@ class Post extends AppModel
                 ) {
                     $p_list = $this->orgParams['post_id'];
                 }
+            }
+            //ゴールのみの場合
+            elseif ($this->orgParams['filter_goal']) {
+                $p_list = $this->getExistGoalPostList($start, $end);
             }
         }
 
@@ -485,6 +489,24 @@ class Post extends AppModel
         //シェアメッセージの特定
         $res = $this->getShareMessages($res);
 
+        return $res;
+    }
+
+    public function getExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    {
+        $options = [
+            'conditions' => [
+                'NOT'                      => [
+                    'goal_id' => null,
+                ],
+                'team_id'                  => $this->current_team_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'order'      => [$order => $order_direction],
+            'limit'      => $limit,
+            'fields'     => ['id'],
+        ];
+        $res = $this->find('list', $options);
         return $res;
     }
 

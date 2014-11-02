@@ -20,6 +20,10 @@
             <div class="col col-xxs-12 font_12px">
                 <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
                 <span> ･ </span>
+                <?= $this->Html->link(__d('gl', 'ゴール'),
+                                      ['controller' => 'posts', 'action' => 'feed', 'filter_goal' => true],
+                                      ['class' => 'font_lightgray']) ?>
+                <span> ･ </span>
                 <span class="feed-share-range-circle"><?= $current_circle['Circle']['name'] ?></span>
                 <span class="feed-circle-user-number">
         <?
