@@ -380,13 +380,39 @@ class PostsController extends AppController
         /** @noinspection PhpUndefinedMethodInspection */
         $circles = $this->Post->PostShareCircle->getShareCirclesAndMembers($post_id);
         $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
-        $this->set(compact('circles', 'users'));
+        $total_share_user_count = $this->_getTotalShareUserCount($circles, $users);
+        $this->set(compact('circles', 'users', 'total_share_user_count'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('modal_share_circles_users');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
+    }
+
+    function _getTotalShareUserCount($circles, $users)
+    {
+        $all_share_user_list = null;
+        if (!empty($circles)) {
+            foreach ($circles as $k => $v) {
+                if (!empty($v['CircleMember'])) {
+                    foreach ($v['CircleMember'] as $cm) {
+                        if (isset($cm['User']['id'])) {
+                            $all_share_user_list[$cm['User']['id']] = $cm['User']['id'];
+                        }
+                    }
+                }
+            }
+        }
+        if (!empty($users)) {
+            foreach ($users as $k => $v) {
+                if (isset($v['User']['id'])) {
+                    $all_share_user_list[$v['User']['id']] = $v['User']['id'];
+                }
+            }
+        }
+        $total_share_user_count = count($all_share_user_list);
+        return $total_share_user_count;
     }
 
 }
