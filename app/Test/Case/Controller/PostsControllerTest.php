@@ -220,6 +220,15 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "[異常]feedをajax以外で取得しようとしたとき");
     }
 
+    function testAjaxGetFeedMonthIndex()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_feed/page:1/month_index:2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxGetComment()
     {
         /**
