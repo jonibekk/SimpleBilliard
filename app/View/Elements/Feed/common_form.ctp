@@ -46,6 +46,7 @@
                 $this->Form->input('body', [
                     'label'                    => false,
                     'type'                     => 'textarea',
+                    'wrap'                     => 'off',
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
