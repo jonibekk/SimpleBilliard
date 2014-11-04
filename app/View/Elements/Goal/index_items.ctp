@@ -81,7 +81,7 @@
                         $follow_disabled = null;
                     }?>
                     <div class="col col-xxs-6 col-xs-4 mr_5px">
-                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow sm-btn <?= $follow_class ?>"
+                        <a class="btn btn_pureWhite font_verydark-white bd-circle_20 toggle-follow p_8px <?= $follow_class ?>"
                            href="#"
                            data-class="toggle-follow"
                            goal-id="<?= $goal['Goal']['id'] ?>"
@@ -92,7 +92,7 @@
                         </a>
                     </div>
                     <div class="col col-xxs-5 col-xs-4">
-                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white modal-ajax-get-collabo sm-btn <?= $collabo_class ?>"
+                        <a class="btn btn_pureWhite bd-circle_20 font_verydark-white modal-ajax-get-collabo p_8px <?= $collabo_class ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
