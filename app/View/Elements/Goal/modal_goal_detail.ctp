@@ -66,7 +66,7 @@
             </div>
             <? if (isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                 <div class="col col-xxs-12 font_11px">
-                    <i class="fa fa-folder"><?= h($goal['GoalCategory']['name']) ?></i>
+                    <i class="fa fa-folder"><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span></i>
                 </div>
                 <div class="col col-xxs-12">
                     <b class="font_18px font_verydark"><?= $goal['Goal']['name'] ?></b>
@@ -75,7 +75,7 @@
                     <?= h($goal['Purpose']['name']) ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><?= __d('gl', '程度') ?></div>
+                    <i class="fa fa-bullseye"><span class="pl_2px"><?= __d('gl', '程度') ?></span></i>
                     <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
                     <? if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
                         <div><?= __d('gl', '達成時: %s', (double)$goal['Goal']['target_value']) ?></div>
@@ -86,7 +86,7 @@
                     <!-- アクション、フォロワー -->
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><?= __d('gl', "リーダー") ?></div>
+                    <div><i class="fa fa-sun-o"><span class="pl_2px"><?= __d('gl', "リーダー") ?></span></i></div>
                     <? if (isset($goal['Leader'][0]['User'])): ?>
                         <img src="<?=
                         $this->Upload->uploadUrl($goal['Leader'][0]['User'],
@@ -96,7 +96,7 @@
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><?= __d('gl', "コラボレータ") ?></div>
+                    <div><i class="fa fa-child"><span class="pl_2px"><?= __d('gl', "コラボレータ") ?></span></i></div>
                     <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <? foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
@@ -110,7 +110,7 @@
                     <?endif; ?>
                 </div>
                 <div class="col col-xxs-12">
-                    <div><?= __d('gl', '詳細') ?></div>
+                    <div><i class="fa fa-ellipsis-h"><span class="pl_2px"><?= __d('gl', '詳細') ?></span></i></div>
                     <div>
                         <?= $this->TextEx->autoLink($goal['Goal']['description']) ?>
                     </div>
