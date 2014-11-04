@@ -37,18 +37,8 @@
     border: 1px solid #ae2f2f;
 }
 
-.header-function-link {
-}
-
-.header-function-link:hover {
-}
-
 .form-group .text-align_left {
     text-align: left;
-}
-
-.sm-btn {
-    padding: 8px;
 }
 
 /*=== リファクタリング予定 ===*/
@@ -112,12 +102,14 @@
 /*==/ normalize bootstrap ===*/
 
 /*=== normalize select2 3.5.1 ===*/
+
 /* 共通設定 */
 .select2-search-field {
     background: #fff;
 }
 
 /*/共通設定 */
+
 /* 共有範囲設定 */
 /*/共有範囲設定 */
 
@@ -350,6 +342,10 @@ footer p {
     padding: 0;
 }
 
+.p_8px {
+    padding: 8px;
+}
+
 .p_10px {
     padding: 10px;
 }
@@ -431,6 +427,10 @@ footer p {
 
 .pb_2px {
     padding-bottom: 2px;
+}
+
+.pl_2px{
+    padding-left: 2px;
 }
 
 .pl_5px {
