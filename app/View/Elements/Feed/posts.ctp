@@ -296,6 +296,7 @@
                         'id'                       => "CommentFormBody_{$post['Post']['id']}",
                         'label'                    => false,
                         'type'                     => 'textarea',
+                        'wrap'                     => 'off',
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
