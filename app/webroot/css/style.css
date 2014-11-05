@@ -2318,11 +2318,11 @@ ul.input-images > li {
 
 /*ゴール作成ページのタテ線の長さ調整一覧*/
 .set-goal + .line-vertical-sm {
-    height: 72px;
+    min-height: 72px;
 }
 
 .set-detail + .line-vertical-sm {
-    height: 52px;
+    min-height: 52px;
 }
 
 .set-importance + .line-vertical-sm {
