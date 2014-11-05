@@ -10,7 +10,7 @@
 <!-- START app/View/Layouts/setting.ctp -->
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="en">
+<html lang="ja">
 <?= $this->element('head') ?>
 <body>
 <? if (extension_loaded('newrelic')) {
