@@ -490,8 +490,12 @@ footer p {
     -ms-line-clamp: 2;
 }
 
-.mw_75per {
+.mxw_75per {
     max-width: 75%;
+}
+
+.mxh_50px{
+    max-height: 50px;
 }
 
 /*/行数の指定*/
