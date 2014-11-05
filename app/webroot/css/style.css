@@ -44,6 +44,11 @@
 /*=== リファクタリング予定 ===*/
 
 /*=== normalize bootstrap ===*/
+
+body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+    font-family:"Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+}
+
 [class*="col-"] {
     padding-left: 0;
     padding-right: 0;

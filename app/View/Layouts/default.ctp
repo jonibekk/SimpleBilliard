@@ -11,7 +11,7 @@
 <!-- START app/View/Layouts/default.ctp -->
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="en">
+<html lang="ja">
 <?= $this->element('head') ?>
 <body class="<?= (isset($avail_sub_menu) && $avail_sub_menu ? 'avail-sub-menu' : null) ?>">
 <? if (extension_loaded('newrelic')) {
