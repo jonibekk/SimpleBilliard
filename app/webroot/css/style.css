@@ -44,6 +44,11 @@
 /*=== リファクタリング予定 ===*/
 
 /*=== normalize bootstrap ===*/
+
+body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+    font-family:"Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+}
+
 [class*="col-"] {
     padding-left: 0;
     padding-right: 0;
@@ -490,8 +495,12 @@ footer p {
     -ms-line-clamp: 2;
 }
 
-.mw_75per {
+.mxw_75per {
     max-width: 75%;
+}
+
+.mxh_50px{
+    max-height: 50px;
 }
 
 /*/行数の指定*/
@@ -2314,11 +2323,11 @@ ul.input-images > li {
 
 /*ゴール作成ページのタテ線の長さ調整一覧*/
 .set-goal + .line-vertical-sm {
-    height: 72px;
+    min-height: 72px;
 }
 
 .set-detail + .line-vertical-sm {
-    height: 52px;
+    min-height: 52px;
 }
 
 .set-importance + .line-vertical-sm {
@@ -2801,6 +2810,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .develop--forbiddenLink__design {
+    top: 0;
     width: 72px;
     height: 24px;
     line-height: 12px;
