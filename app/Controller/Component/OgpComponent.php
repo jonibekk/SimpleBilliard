@@ -96,6 +96,29 @@ class OgpComponent extends Object
             $res['url'] = $url;
         }
         if (isset($ogp->image)) {
+            //imageのurlにホストが含まれているかチェックし、
+            //含まれていなければ含める
+            $image_url_array = parse_url($ogp->image);
+            if (!isset($image_url_array['scheme']) &&
+                !isset($image_url_array['host'])
+            ) {
+                $url_array = parse_url($url);
+                if (isset($url_array['scheme']) &&
+                    isset($url_array['host'])
+                ) {
+                    $image_url_array['scheme'] = $url_array['scheme'];
+                    $image_url_array['host'] = $url_array['host'];
+                    $image_url = $image_url_array['scheme'];
+                    $image_url .= "://";
+                    $image_url .= $image_url_array['host'];
+                    $image_url .= $image_url_array['path'];
+
+                    $ogp->image = $image_url;
+                }
+                else {
+                    $ogp->image = null;
+                }
+            }
             $res['image'] = $ogp->image;
         }
         if (isset($ogp->site_name)) {
@@ -114,7 +137,7 @@ class OgpComponent extends Object
      *
      * @param $URI    URI to page to parse for Open Graph data
      *
-*@return mixed
+     * @return mixed
      */
     public function fetch($URI)
     {
@@ -149,9 +172,8 @@ class OgpComponent extends Object
      * the document is at least well formed.
      *
      * @param $HTML    HTML to parse
-
      *
-*@return mixed
+     * @return mixed
      */
     static private function _parse($HTML)
     {
