@@ -244,7 +244,12 @@ function imageLazyOn() {
         delay: 100,
         visibleOnly: false,
         effect: "fadeIn",
-        removeAttribute: false
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
+            }
+        }
     });
 }
 function evToggleAjaxGet() {

@@ -174,6 +174,7 @@
                                                                                                    "Post.site_photo",
                                                                                                    ['style' => 'small']),
                                                        'width'         => '80px',
+                                                       'error-img'     => $this->Html->image('no-image-link.png'),
                                                    ]
                                 )
                                 ?>
