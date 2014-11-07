@@ -244,7 +244,12 @@ function imageLazyOn() {
         delay: 100,
         visibleOnly: false,
         effect: "fadeIn",
-        removeAttribute: false
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
+            }
+        }
     });
 }
 function evToggleAjaxGet() {
@@ -281,7 +286,7 @@ function evTargetToggleClick() {
     var target_id = $obj.attr("target-id");
     var click_target_id = $obj.attr("click-target-id");
     if ($obj.attr("hidden-target-id")) {
-        $('#' + $obj.attr("hidden-target-id")).hide();
+        $('#' + $obj.attr("hidden-target-id")).toggle();
     }
     //開いている時と閉じてる時のテキストの指定があった場合は置き換える
     if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {

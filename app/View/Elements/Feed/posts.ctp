@@ -174,6 +174,7 @@
                                                                                                    "Post.site_photo",
                                                                                                    ['style' => 'small']),
                                                        'width'         => '80px',
+                                                       'error-img'     => "/img/no-image-link.png",
                                                    ]
                                 )
                                 ?>

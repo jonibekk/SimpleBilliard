@@ -12,6 +12,8 @@
  * @var                        $kr_value_unit_list
  * @var                        $goal_start_date_format
  * @var                        $goal_end_date_format
+ * @var                        $goal_start_date_limit_format
+ * @var                        $goal_end_date_limit_format
  */
 $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']['id']] : [];
 
@@ -484,7 +486,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         todayBtn: 'linked',
         language: "ja",
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        startDate: "<?=$goal_start_date_limit_format?>",
+        endDate: "<?=$goal_end_date_limit_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
@@ -496,7 +500,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         todayBtn: 'linked',
         language: "ja",
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        startDate: "<?=$goal_start_date_limit_format?>",
+        endDate: "<?=$goal_end_date_limit_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
