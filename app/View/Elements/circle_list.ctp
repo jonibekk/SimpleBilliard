@@ -48,7 +48,7 @@
             </div>
         <? endforeach ?>
         <? if (count($my_circles) > 8): ?>
-            <i class="fa fa-angle-double-down"><a class="pl_2px font_12px font_gray click-show"><?= __d('gl', "すべて表示") ?></a></i>
+            <i class="fa fa-angle-double-down"><a class="pl_2px font_12px font_gray click-show_circle"><?= __d('gl', "すべて表示") ?></a></i>
         <? endif; ?>
     <? endif; ?>
     <div class="clearfix develop--circle-seek">

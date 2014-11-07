@@ -574,7 +574,13 @@ $(function () {
 
 $(function () {
     $(".click-show").on("click", function () {
-            $("#PostFormPicture, .circleListMore:nth-child(n+10)").css("display", "block")
+            $("#PostFormPicture").css("display", "block")
+        }
+    )
+});
+$(function () {
+    $(".click-show_circle").on("click", function () {
+            $(".circleListMore:nth-child(n+10)").css("display", "block")
         }
     )
 });
