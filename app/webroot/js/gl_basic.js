@@ -569,7 +569,7 @@ $(function () {
 
 $(function () {
     $(".click-show").on("click", function () {
-            $("#PostFormPicture").css("display", "block")
+            $("#PostFormPicture, .circleListMore:nth-child(n+10)").css("display", "block")
         }
     )
 });

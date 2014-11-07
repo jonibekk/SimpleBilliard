@@ -608,6 +608,12 @@ footer p {
     color: #808080;
 }
 
+.font_gray:hover,
+.font_gray:active,
+.font_gray:target {
+    color: #808080;
+}
+
 .font_gargoyleGray, .font_gargoyleGray-gray {
     color: #4c4c4c;
 }
@@ -2942,4 +2948,8 @@ Temporary Properties - YOU MUST FIX
 
 .datepicker {
     z-index: 1151 !important;
+}
+
+.circleListMore:nth-child(n+10){
+    display: none;
 }
