@@ -2950,6 +2950,12 @@ Temporary Properties - YOU MUST FIX
     z-index: 1151 !important;
 }
 
+.circle-toggle-icon{
+    width: 16px;
+    height: 16px;
+    text-align: center;
+}
+
 .circleListMore:nth-child(n+10){
     display: none;
 }
