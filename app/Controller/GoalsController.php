@@ -111,21 +111,29 @@ class GoalsController extends AppController
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
+        $goal_start_date_limit_format = date('Y/m/d',
+                                             $this->Goal->Team->getTermStartDate() + ($this->Auth->user('timezone') * 60 * 60));
+        $goal_end_date_limit_format = date('Y/m/d', strtotime("- 1 day",
+                                                              $this->Goal->Team->getTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
-            $goal_start_date_format = date('Y/m/d',
-                                           $this->request->data['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
-            $goal_end_date_format = date('Y/m/d',
-                                         $this->request->data['Goal']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_start_date_format = $goal_start_date_limit_format;
+            $goal_end_date_format = $goal_end_date_limit_format;
         }
         else {
             $goal_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
             //TODO 将来的には期間をまたぐ当日+6ヶ月を期限にするが、現状期間末日にする
             //$goal_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
-            $goal_end_date_format = date('Y/m/d', strtotime("- 1 day",
-                                                            $this->Goal->Team->getTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_end_date_format = $goal_end_date_limit_format;
         }
-        $this->set(compact('goal_category_list', 'priority_list', 'kr_priority_list', 'kr_value_unit_list',
-                           'goal_start_date_format', 'goal_end_date_format'));
+        $this->set(compact('goal_category_list',
+                           'priority_list',
+                           'kr_priority_list',
+                           'kr_value_unit_list',
+                           'goal_start_date_format',
+                           'goal_end_date_format',
+                           'goal_start_date_limit_format',
+                           'goal_end_date_limit_format'
+                   ));
         return $this->render();
     }
 
