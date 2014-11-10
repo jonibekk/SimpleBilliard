@@ -578,29 +578,21 @@ $(function () {
         }
     )
 });
+
+/*表示件数調整*/
+
 $(function () {
-    $(".click-show_circle").on("click", function () {
-            $(".circleListMore:nth-child(n+10)").css("display", "block")
+    var txt = $(this).text();
+    $(".click-circle-trigger").on("click", function () {
+        if ($(this).is('.on')) {
+                $(this).removeClass("on").text(txt.replace(/すべて表示/g, "閉じる"));
+                $(".circleListMore:nth-child(n+10)").css("display", "block");
+                $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
+        } else {
+                $(this).addClass("on").text(txt.replace(/閉じる/g, "すべて表示"));
+                $(".circleListMore:nth-child(n+10)").css("display", "none");
+                $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
         }
-    )
-});
-
-
-$(function(){
-    $('.click-show_circle').on("click", function(){
-        var txt = $(this).text();
-        $(this).text(
-            txt.replace(/すべて表示/g,"閉じる").removeClass("click-show_circle")
-        );
-    });
-});
-
-$(function(){
-    $('.click-hide_circle').on("click", function(){
-        var txt = $(this).text();
-        $(this).text(
-            txt.replace(/閉じる/g,"すべて表示")
-        );
     });
 });
 
@@ -632,6 +624,7 @@ function evTargetShowTargetClick() {
 function disabledAllInput(selector) {
     $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
+
 function enabledAllInput(selector) {
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }
