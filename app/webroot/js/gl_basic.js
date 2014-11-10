@@ -585,6 +585,25 @@ $(function () {
     )
 });
 
+
+$(function(){
+    $('.click-show_circle').on("click", function(){
+        var txt = $(this).text();
+        $(this).text(
+            txt.replace(/すべて表示/g,"閉じる").removeClass("click-show_circle")
+        );
+    });
+});
+
+$(function(){
+    $('.click-hide_circle').on("click", function(){
+        var txt = $(this).text();
+        $(this).text(
+            txt.replace(/閉じる/g,"すべて表示")
+        );
+    });
+});
+
 //noinspection JSUnresolvedVariable
 $(document).on("click", ".target-show", evTargetShow);
 
