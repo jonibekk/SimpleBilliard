@@ -582,14 +582,14 @@ $(function () {
 /*表示件数調整*/
 
 $(function () {
-    var txt = $(this).text();
     $(".click-circle-trigger").on("click", function () {
+        var txt = $(this).text();
         if ($(this).is('.on')) {
-                $(this).removeClass("on").text(txt.replace(/すべて表示/g, "閉じる"));
+                $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
                 $(".circleListMore:nth-child(n+10)").css("display", "block");
                 $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
         } else {
-                $(this).addClass("on").text(txt.replace(/閉じる/g, "すべて表示"));
+                $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
                 $(".circleListMore:nth-child(n+10)").css("display", "none");
                 $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
         }
