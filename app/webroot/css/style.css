@@ -13,12 +13,6 @@
     color: #000000;
 }
 
-.nav-icons > .dropdown > a.me-menu-image {
-    padding: 6px 2px;
-    color: #000000;
-    line-height: 30px;
-}
-
 .nav-icons > .header-function > a {
     float: right;
     font-size: 20px;
@@ -28,13 +22,13 @@
     border: 1px solid #ccc;
 }
 
-.header-user-profile {
-    padding-right: 0 !important;
-    padding-left: 0 !important;
-}
-
 .nav-icons > .header-function > a:hover {
     border: 1px solid #ae2f2f;
+}
+
+.header-user-profile {
+    padding: 6px 0 !important;
+    line-height: 30px;
 }
 
 .form-group .text-align_left {
@@ -45,8 +39,9 @@
 
 /*=== normalize bootstrap ===*/
 
-body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
-    font-family:"Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6,.select2-container .select2-choices .select2-search-field input,
+.select2-container .select2-choice, .select2-container .select2-choices .select2-search input, .select2-container-multi .select2-choices .select2-search-field input, .datepicker.dropdown-menu, #site-nav h1{
+    font-family:"Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", sans-serif;
 }
 
 [class*="col-"] {
@@ -1700,10 +1695,6 @@ ul.input-images > li {
     text-align: left;
 }
 
-.comment-contents {
-    line-height: 15px;
-}
-
 /*/PostAreaのデザイン*/
 /*CommentArea*/
 .comment-post-form {
@@ -2958,4 +2949,8 @@ Temporary Properties - YOU MUST FIX
 
 .circleListMore:nth-child(n+10){
     display: none;
+}
+
+.click-circle-trigger{
+    cursor: pointer;
 }
