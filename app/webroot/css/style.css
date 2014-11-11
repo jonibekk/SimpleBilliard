@@ -45,8 +45,9 @@
 
 /*=== normalize bootstrap ===*/
 
-body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
-    font-family:"Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6,.select2-container .select2-choices .select2-search-field input,
+.select2-container .select2-choice, .select2-container .select2-choices .select2-search input, .select2-container-multi .select2-choices .select2-search-field input, .datepicker.dropdown-menu, #site-nav h1{
+    font-family:"Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", sans-serif;
 }
 
 [class*="col-"] {
@@ -605,6 +606,12 @@ footer p {
 }
 
 .font_gray {
+    color: #808080;
+}
+
+.font_gray:hover,
+.font_gray:active,
+.font_gray:target {
     color: #808080;
 }
 
@@ -1692,10 +1699,6 @@ ul.input-images > li {
 .post-icon {
     width: 12px;
     text-align: left;
-}
-
-.comment-contents {
-    line-height: 15px;
 }
 
 /*/PostAreaのデザイン*/
@@ -2942,4 +2945,14 @@ Temporary Properties - YOU MUST FIX
 
 .datepicker {
     z-index: 1151 !important;
+}
+
+.circle-toggle-icon{
+    width: 16px;
+    height: 16px;
+    text-align: center;
+}
+
+.circleListMore:nth-child(n+10){
+    display: none;
 }
