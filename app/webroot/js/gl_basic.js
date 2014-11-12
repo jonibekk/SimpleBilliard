@@ -244,7 +244,12 @@ function imageLazyOn() {
         delay: 100,
         visibleOnly: false,
         effect: "fadeIn",
-        removeAttribute: false
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
+            }
+        }
     });
 }
 function evToggleAjaxGet() {
@@ -281,7 +286,7 @@ function evTargetToggleClick() {
     var target_id = $obj.attr("target-id");
     var click_target_id = $obj.attr("click-target-id");
     if ($obj.attr("hidden-target-id")) {
-        $('#' + $obj.attr("hidden-target-id")).hide();
+        $('#' + $obj.attr("hidden-target-id")).toggle();
     }
     //開いている時と閉じてる時のテキストの指定があった場合は置き換える
     if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
@@ -574,6 +579,23 @@ $(function () {
     )
 });
 
+/*表示件数調整*/
+
+$(function () {
+    $(".click-circle-trigger").on("click", function () {
+        var txt = $(this).text();
+        if ($(this).is('.on')) {
+                $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
+                $(".circleListMore:nth-child(n+10)").css("display", "block");
+                $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
+        } else {
+                $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
+                $(".circleListMore:nth-child(n+10)").css("display", "none");
+                $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
+        }
+    });
+});
+
 //noinspection JSUnresolvedVariable
 $(document).on("click", ".target-show", evTargetShow);
 
@@ -602,6 +624,7 @@ function evTargetShowTargetClick() {
 function disabledAllInput(selector) {
     $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
+
 function enabledAllInput(selector) {
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }

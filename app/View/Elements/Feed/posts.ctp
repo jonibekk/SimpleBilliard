@@ -174,6 +174,7 @@
                                                                                                    "Post.site_photo",
                                                                                                    ['style' => 'small']),
                                                        'width'         => '80px',
+                                                       'error-img'     => "/img/no-image-link.png",
                                                    ]
                                 )
                                 ?>
@@ -296,6 +297,7 @@
                         'id'                       => "CommentFormBody_{$post['Post']['id']}",
                         'label'                    => false,
                         'type'                     => 'textarea',
+                        'wrap'                     => 'off',
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),

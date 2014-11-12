@@ -13,12 +13,6 @@
     color: #000000;
 }
 
-.nav-icons > .dropdown > a.me-menu-image {
-    padding: 6px 2px;
-    color: #000000;
-    line-height: 30px;
-}
-
 .nav-icons > .header-function > a {
     float: right;
     font-size: 20px;
@@ -28,32 +22,28 @@
     border: 1px solid #ccc;
 }
 
-.header-user-profile {
-    padding-right: 0 !important;
-    padding-left: 0 !important;
-}
-
 .nav-icons > .header-function > a:hover {
     border: 1px solid #ae2f2f;
 }
 
-.header-function-link {
-}
-
-.header-function-link:hover {
+.header-user-profile {
+    padding: 6px 0 !important;
+    line-height: 30px;
 }
 
 .form-group .text-align_left {
     text-align: left;
 }
 
-.sm-btn {
-    padding: 8px;
-}
-
 /*=== リファクタリング予定 ===*/
 
 /*=== normalize bootstrap ===*/
+
+body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6,.select2-container .select2-choices .select2-search-field input,
+.select2-container .select2-choice, .select2-container .select2-choices .select2-search input, .select2-container-multi .select2-choices .select2-search-field input, .datepicker.dropdown-menu, #site-nav h1{
+    font-family:"Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", sans-serif;
+}
+
 [class*="col-"] {
     padding-left: 0;
     padding-right: 0;
@@ -112,12 +102,14 @@
 /*==/ normalize bootstrap ===*/
 
 /*=== normalize select2 3.5.1 ===*/
+
 /* 共通設定 */
 .select2-search-field {
     background: #fff;
 }
 
 /*/共通設定 */
+
 /* 共有範囲設定 */
 /*/共有範囲設定 */
 
@@ -350,6 +342,10 @@ footer p {
     padding: 0;
 }
 
+.p_8px {
+    padding: 8px;
+}
+
 .p_10px {
     padding: 10px;
 }
@@ -433,6 +429,10 @@ footer p {
     padding-bottom: 2px;
 }
 
+.pl_2px{
+    padding-left: 2px;
+}
+
 .pl_5px {
     padding-left: 5px;
 }
@@ -490,8 +490,12 @@ footer p {
     -ms-line-clamp: 2;
 }
 
-.mw_75per {
+.mxw_75per {
     max-width: 75%;
+}
+
+.mxh_50px{
+    max-height: 50px;
 }
 
 /*/行数の指定*/
@@ -596,6 +600,12 @@ footer p {
 }
 
 .font_gray {
+    color: #808080;
+}
+
+.font_gray:hover,
+.font_gray:active,
+.font_gray:target {
     color: #808080;
 }
 
@@ -1685,10 +1695,6 @@ ul.input-images > li {
     text-align: left;
 }
 
-.comment-contents {
-    line-height: 15px;
-}
-
 /*/PostAreaのデザイン*/
 /*CommentArea*/
 .comment-post-form {
@@ -2314,11 +2320,11 @@ ul.input-images > li {
 
 /*ゴール作成ページのタテ線の長さ調整一覧*/
 .set-goal + .line-vertical-sm {
-    height: 72px;
+    min-height: 72px;
 }
 
 .set-detail + .line-vertical-sm {
-    height: 52px;
+    min-height: 52px;
 }
 
 .set-importance + .line-vertical-sm {
@@ -2801,6 +2807,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .develop--forbiddenLink__design {
+    top: 0;
     width: 72px;
     height: 24px;
     line-height: 12px;
@@ -2932,4 +2939,18 @@ Temporary Properties - YOU MUST FIX
 
 .datepicker {
     z-index: 1151 !important;
+}
+
+.circle-toggle-icon{
+    width: 16px;
+    height: 16px;
+    text-align: center;
+}
+
+.circleListMore:nth-child(n+10){
+    display: none;
+}
+
+.click-circle-trigger{
+    cursor: pointer;
 }
