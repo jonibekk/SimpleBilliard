@@ -585,6 +585,34 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    function download_all_goal_csv()
+    {
+        $this->layout = false;
+        $filename = 'all_goal_' . date('YmdHis');
+
+        //見出し
+        $th = [
+            __d('gl', "Sei"),
+            __d('gl', "Mei"),
+            __d('gl', "姓"),
+            __d('gl', "名"),
+            __d('gl', "目的"),
+            __d('gl', "ゴールカテゴリ"),
+            __d('gl', "ゴール名"),
+            __d('gl', "単位"),
+            __d('gl', "程度(達成時)"),
+            __d('gl', "程度(開始時)"),
+            __d('gl', "期限"),
+            __d('gl', "開始日"),
+            __d('gl', "詳細"),
+            __d('gl', "重要度"),
+            __d('gl', "認定"),
+        ];
+        $user_goal = $this->Goal->getAllUserGoal();
+        $this->set(compact('filename', 'th', 'td'));
+
+    }
+
     private function _flashOpenKrs($goal_id)
     {
         $this->Session->setFlash(null, "flash_open_krs", ['goal_id' => $goal_id], 'open_krs');
