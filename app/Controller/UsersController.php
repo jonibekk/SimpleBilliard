@@ -392,6 +392,7 @@ class UsersController extends AppController
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
             $this->User->id = $this->Auth->user('id');
+            //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
                 //セッション更新
                 $this->_refreshAuth();
