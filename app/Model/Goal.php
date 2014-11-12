@@ -776,6 +776,9 @@ class Goal extends AppModel
             ],
             'fields'     => $this->User->profileFields,
             'contain'    => [
+                'LocalName'    => [
+                    'conditions' => ['LocalName.language' => $this->me['language']],
+                ],
                 'Collaborator' => [
                     'conditions' => [
                         'Collaborator.team_id' => $this->current_team_id,
@@ -791,6 +794,7 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->Collaborator->User->find('all', $options);
+        $this->log($res);
         return $res;
     }
 

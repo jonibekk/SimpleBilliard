@@ -610,6 +610,13 @@ class GoalsController extends AppController
             __d('gl', "認定"),
         ];
         $user_goal = $this->Goal->getAllUserGoal();
+        $td = [];
+        foreach ($user_goal as $ug_k => $ug_v) {
+            $user =[];
+            $user[''];
+
+        }
+
         $this->set(compact('filename', 'th', 'td'));
 
     }
