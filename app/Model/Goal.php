@@ -790,7 +790,7 @@ class Goal extends AppModel
                 ]
             ]
         ];
-        $res = $this->find('all', $options);
+        $res = $this->Collaborator->User->find('all', $options);
         return $res;
     }
 

@@ -587,6 +587,7 @@ class GoalsController extends AppController
 
     function download_all_goal_csv()
     {
+        $this->request->allowMethod('post');
         $this->layout = false;
         $filename = 'all_goal_' . date('YmdHis');
 
