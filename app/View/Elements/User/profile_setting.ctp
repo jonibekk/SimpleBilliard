@@ -191,8 +191,10 @@ $this->Form->create('User', [
     </div>
     <hr>
     <div class="form-group">
-        <label for="UserComment" class="col col-sm-3 control-label form-label"><?= __d('gl', "自己紹介") ?></label>
-
+        <div class="col col-sm-3 control-label form-label">
+            <label for="UserComment" class=""><?= __d('gl', "自己紹介") ?></label>
+            <div class="label-addiction"><?=__d('gl',"チーム内限定で共有されます。")?></div>
+        </div>
         <div class="col col-sm-6">
             <? if (isset($this->request->data['TeamMember'][0]['id'])): ?>
                 <?= $this->Form->hidden('TeamMember.0.id', ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
@@ -205,7 +207,7 @@ $this->Form->create('User', [
                                 'css'       => false,
                                 'value'     => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
                                     ? $this->request->data['TeamMember'][0]['comment']
-                                    : __d('gl', "【あなたがチームに貢献できることは？】\n\n【得意分野は？】\n\n【やってみたい事は？】\n\n【その他】\n\n")]
+                                    : __d('gl', "【今、チームに貢献できることは？】\n\n【これからチームで実現してみたいことは？(具体的に)】\n\n【その他】\n\n")]
             )
             ?>
             <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __d('gl',
@@ -213,20 +215,17 @@ $this->Form->create('User', [
                 <span class="help-block disp_ib font_11px" id="CommentHelp" style="display: none">
                     <?= __d('gl', "
 ■ 例文１（技術者向け）<br>
-【あなたがチームに貢献できることは？】<br>
+【今、チームに貢献できることは？】<br>
 スリムな開発環境の構築。オートスケール環境の構築。Git支援。<br><br>
-【得意分野】<br>
-PHP, Javascript, MySQL<br><br>
-【やってみたい事は？】<br>
-iOS,Androidネイティブアプリ開発。<br><br>
+【これからチームで実現してみたいことは？(具体的に)】<br>
+iOS,Androidで100万ダウンロードされるアプリを開発する。<br><br>
 ================================================<br>
 ■ 例文2（技術者以外向け）<br>
-【あなたがチームに貢献できることは？】<br>
+【今、チームに貢献できることは？】<br>
 社内の風通しを良くする事。<br><br>
-【得意分野】<br>
-英会話<br><br>
-【やってみたい事は？】<br>
-自分で営業して仕事を取ってくる事<br>
+【これからチームで実現してみたいことは？(具体的に)】<br>
+地域活性化に貢献できるサービスを作り社会貢献をする事。
+<br>
 ") ?>
                 </span>
         </div>
