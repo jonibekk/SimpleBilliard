@@ -609,12 +609,50 @@ class GoalsController extends AppController
             __d('gl', "重要度"),
             __d('gl', "認定"),
         ];
-        $user_goal = $this->Goal->getAllUserGoal();
+        $user_goals = $this->Goal->getAllUserGoal();
+        $this->Goal->KeyResult->_setUnitName();
         $td = [];
-        foreach ($user_goal as $ug_k => $ug_v) {
-            $user =[];
-            $user[''];
-
+        foreach ($user_goals as $ug_k => $ug_v) {
+            $common_record = [];
+            $common_record['last_name'] = $ug_v['User']['last_name'];
+            $common_record['first_name'] = $ug_v['User']['first_name'];
+            $common_record['local_last_name'] = isset($ug_v['LocalName'][0]['last_name']) ? $ug_v['LocalName'][0]['last_name'] : null;
+            $common_record['local_first_name'] = isset($ug_v['LocalName'][0]['first_name']) ? $ug_v['LocalName'][0]['first_name'] : null;
+            $common_record['purpose'] = null;
+            $common_record['category'] = null;
+            $common_record['goal'] = null;
+            $common_record['value_unit'] = null;
+            $common_record['target_value'] = null;
+            $common_record['start_value'] = null;
+            $common_record['end_date'] = null;
+            $common_record['start_date'] = null;
+            $common_record['description'] = null;
+            $common_record['priority'] = null;
+            $common_record['valued'] = null;
+            if (!empty($ug_v['Collaborator'])) {
+                foreach ($ug_v['Collaborator'] as $c_v) {
+                    $record = $common_record;
+                    if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
+                        $record['purpose'] = $c_v['Goal']['Purpose']['name'];
+                        $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
+                        $record['goal'] = $c_v['Goal']['name'];
+                        $record['value_unit'] = KeyResult::$UNIT[$c_v['Goal']['value_unit']];
+                        $record['target_value'] = (double)$c_v['Goal']['target_value'];
+                        $record['start_value'] = (double)$c_v['Goal']['start_value'];
+                        $record['end_date'] = date("Y/m/d",
+                                                   $c_v['Goal']['end_date'] + $this->Goal->me['timezone'] * 60 * 60);
+                        $record['start_date'] = date("Y/m/d",
+                                                     $c_v['Goal']['start_date'] + $this->Goal->me['timezone'] * 60 * 60);
+                        $record['description'] = $c_v['Goal']['description'];
+                        $record['priority'] = $c_v['priority'];
+                        $record['valued'] = ($c_v['valued_flg'] == true) ? __d('gl', "認定済") : __d('gl', "保留");
+                        $td[] = $record;
+                    }
+                }
+            }
+            else {
+                $td[] = $common_record;
+            }
         }
 
         $this->set(compact('filename', 'th', 'td'));

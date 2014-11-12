@@ -789,12 +789,12 @@ class Goal extends AppModel
                             'Goal.end_date <'    => $end_date
                         ],
                         'Purpose',
+                        'GoalCategory',
                     ]
                 ]
             ]
         ];
         $res = $this->Collaborator->User->find('all', $options);
-        $this->log($res);
         return $res;
     }
 

@@ -11,10 +11,14 @@
  * @var                    $filename
  */
 $this->Csv->addRow($th);
-//foreach
-$this->Csv->addField("");
-$this->Csv->endRow();
-//endforeach
+if (!empty($td)) {
+    foreach ($td as $td_v) {
+        foreach ($td_v as $v) {
+            $this->Csv->addField($v);
+        }
+        $this->Csv->endRow();
+    }
+}
 
 $this->Csv->setFilename($filename);
 echo $this->Csv->render(true, 'SJIS-win', 'UTF-8');
