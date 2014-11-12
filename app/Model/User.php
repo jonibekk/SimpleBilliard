@@ -297,10 +297,22 @@ class User extends AppModel
 
     public function getDetail($id)
     {
-        $recursive = $this->recursive;
-        $this->recursive = 0;
-        $res = $this->findById($id);
-        $this->recursive = $recursive;
+        $options = [
+            'conditions' => [
+                'User.id' => $id,
+            ],
+            'contain'    => [
+                'TeamMember' => [
+                    'conditions' => [
+                        'TeamMember.team_id' => $this->current_team_id,
+                    ]
+                ],
+                'PrimaryEmail',
+                'NotifySetting',
+                'DefaultTeam',
+            ]
+        ];
+        $res = $this->find('first', $options);
         return $res;
     }
 
