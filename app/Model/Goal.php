@@ -211,11 +211,11 @@ class Goal extends AppModel
             $kr['team_id'] = $this->current_team_id;
             $kr['user_id'] = $this->my_uid;
             $data['KeyResult'][0] = $kr;
+            //コラボレータをタイプ　リーダーで保存
+            $data['Collaborator'][0]['user_id'] = $this->my_uid;
+            $data['Collaborator'][0]['team_id'] = $this->current_team_id;
+            $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         }
-        //コラボレータをタイプ　リーダーで保存
-        $data['Collaborator'][0]['user_id'] = $this->my_uid;
-        $data['Collaborator'][0]['team_id'] = $this->current_team_id;
-        $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         $this->create();
         $res = $this->saveAll($data);
         if ($add_new) {
