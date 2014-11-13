@@ -104,5 +104,9 @@ if (false) {
          * @var UploadHelper
          */
         var $Upload;
+        /**
+         * @var CsvHelper
+         */
+        var $Csv;
     }
 }

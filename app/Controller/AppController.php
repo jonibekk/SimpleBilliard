@@ -66,6 +66,7 @@ class AppController extends Controller
         'Upload',
         'TimeEx',
         'TextEx',
+        'Csv',
     ];
 
     public $uses = [
