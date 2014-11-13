@@ -2954,3 +2954,14 @@ Temporary Properties - YOU MUST FIX
 .click-circle-trigger{
     cursor: pointer;
 }
+
+.edit-form{
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+.comment-contents, .edit-form {
+    white-space: normal;
+    line-break: strict;
+    word-break: keep-all;
+}
