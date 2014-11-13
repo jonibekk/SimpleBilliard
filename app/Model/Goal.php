@@ -761,4 +761,41 @@ class Goal extends AppModel
         return false;
     }
 
+    function getAllUserGoal($start_date = null, $end_date = null)
+    {
+        if (!$start_date) {
+            $start_date = $this->Team->getTermStartDate();
+        }
+        if (!$end_date) {
+            $end_date = $this->Team->getTermEndDate();
+        }
+        $team_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
+        $options = [
+            'conditions' => [
+                'User.id' => $team_member_list
+            ],
+            'fields'     => $this->User->profileFields,
+            'contain'    => [
+                'LocalName'    => [
+                    'conditions' => ['LocalName.language' => $this->me['language']],
+                ],
+                'Collaborator' => [
+                    'conditions' => [
+                        'Collaborator.team_id' => $this->current_team_id,
+                    ],
+                    'Goal'       => [
+                        'conditions' => [
+                            'Goal.start_date >=' => $start_date,
+                            'Goal.end_date <'    => $end_date
+                        ],
+                        'Purpose',
+                        'GoalCategory',
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->Collaborator->User->find('all', $options);
+        return $res;
+    }
+
 }

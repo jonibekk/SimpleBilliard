@@ -29,7 +29,7 @@ class KeyResult extends AppModel
     /**
      * 目標値の単位の表示名をセット
      */
-    private function _setUnitName()
+    function _setUnitName()
     {
         self::$UNIT[self::UNIT_PERCENT] = __d('gl', "%");
         self::$UNIT[self::UNIT_YEN] = __d('gl', '¥');
