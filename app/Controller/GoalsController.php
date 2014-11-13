@@ -599,6 +599,7 @@ class GoalsController extends AppController
             __d('gl', "名"),
             __d('gl', "目的"),
             __d('gl', "ゴールカテゴリ"),
+            __d('gl', "ゴールオーナー種別"),
             __d('gl', "ゴール名"),
             __d('gl', "単位"),
             __d('gl', "程度(達成時)"),
@@ -620,6 +621,7 @@ class GoalsController extends AppController
             $common_record['local_first_name'] = isset($ug_v['LocalName'][0]['first_name']) ? $ug_v['LocalName'][0]['first_name'] : null;
             $common_record['purpose'] = null;
             $common_record['category'] = null;
+            $common_record['collabo_type'] = null;
             $common_record['goal'] = null;
             $common_record['value_unit'] = null;
             $common_record['target_value'] = null;
@@ -635,6 +637,8 @@ class GoalsController extends AppController
                     if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
                         $record['purpose'] = $c_v['Goal']['Purpose']['name'];
                         $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
+                        $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
+                            __d('gl', "L") : __d('gl', "C");
                         $record['goal'] = $c_v['Goal']['name'];
                         $record['value_unit'] = KeyResult::$UNIT[$c_v['Goal']['value_unit']];
                         $record['target_value'] = (double)$c_v['Goal']['target_value'];
