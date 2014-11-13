@@ -274,7 +274,7 @@
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
-            <div class="col col-xxs-12 comment-contents">
+            <div class="col col-xxs-12 box-align comment-contents">
                 <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
                                            ['class' => 'comment-img']) ?>

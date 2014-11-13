@@ -55,7 +55,7 @@
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
             <div class="col col-xxs-12 showmore-comment comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
-                <div class="comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+                <div class="box-align comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
