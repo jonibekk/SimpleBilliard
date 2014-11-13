@@ -248,6 +248,30 @@ class GoalTest extends CakeTestCase
         $this->Goal->getAddData($goal_id);
     }
 
+    function testAddFail()
+    {
+        $this->setDefault();
+        $this->Goal->add([]);
+    }
+
+    function testAddNewSuccess()
+    {
+        $this->setDefault();
+        $data = [
+            'Goal' => [
+                'purpose_id'       => 1,
+                'goal_category_id' => 1,
+                'name'             => 'test',
+                'value_unit'       => 0,
+                'target_value'     => 100,
+                'start_value'      => 0,
+                'end_date'         => '2015/03/31',
+                'start_date'       => '2014/11/13',
+            ]
+        ];
+        $this->Goal->add($data);
+    }
+
     function _getNewGoal()
     {
         $goal = [
