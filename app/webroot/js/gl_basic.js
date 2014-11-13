@@ -485,7 +485,9 @@ $('input, textarea')
         $('.navbar').css('position', 'fixed');
         //force page redraw to fix incorrectly positioned fixed elements
         setTimeout(function () {
-            window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+            if (typeof $.mobile != "undefined") {
+                window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+            }
         }, 20);
     });
 
@@ -585,13 +587,13 @@ $(function () {
     $(".click-circle-trigger").on("click", function () {
         var txt = $(this).text();
         if ($(this).is('.on')) {
-                $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
-                $(".circleListMore:nth-child(n+10)").css("display", "block");
-                $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
+            $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
+            $(".circleListMore:nth-child(n+10)").css("display", "block");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
         } else {
-                $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
-                $(".circleListMore:nth-child(n+10)").css("display", "none");
-                $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
+            $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
+            $(".circleListMore:nth-child(n+10)").css("display", "none");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
         }
     });
 });
