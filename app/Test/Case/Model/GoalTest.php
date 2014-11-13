@@ -314,6 +314,8 @@ class GoalTest extends CakeTestCase
         $this->Goal->KeyResult->current_team_id = 1;
         $this->Goal->Collaborator->my_uid = 1;
         $this->Goal->Collaborator->current_team_id = 1;
+        $this->Goal->Post->my_uid = 1;
+        $this->Goal->Post->current_team_id = 1;
     }
 
 }
