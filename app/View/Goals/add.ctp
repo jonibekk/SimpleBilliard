@@ -280,15 +280,16 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                           ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP02],
                                           ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
-                            $disabled = null;
+                            $disabled = false;
                         }
                         else {
-                            $disabled = 'disabled';
+                            $disabled = true;
                         }
                         ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
-                                            ['class' => 'btn btn-primary', 'div' => false, $disabled => $disabled]) ?>
+                                            array_merge(['class' => 'btn btn-primary', 'div' => false],
+                                                        $disabled ? ['disabled' => 'disabled'] : [])) ?>
                     </div>
                 </div>
             </div>
@@ -360,7 +361,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col col-sm-3 control-label">
                         <label for=""><?= __d('gl', "ゴール画像") ?></label>
 
-                        <div class="label-addiction pull-sm-right">イメージに合った画像を追加しましょう</div>
+                        <div class="label-addiction pull-sm-right"><?= __d('gl', "イメージに合った画像を追加しましょう") ?></div>
                     </div>
                     <div class="col col-sm-6 line-vertical-sm goal-set-input">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -391,7 +392,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                         'css'          => false,
                                                         'wrapInput'    => false,
                                                         'errorMessage' => false,
-                                                        ''
                                                        ]) ?>
                                 </span>
                                 <span class="help-block disp_ib font_11px"><?= __d('gl', '10MB以下') ?></span>
