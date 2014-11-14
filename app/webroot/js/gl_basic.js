@@ -511,7 +511,7 @@ $(function () {
         }
     });
     topBtn.click(function () {
-        $("body,html").animate({
+        $("body,html").stop().animate({
             scrollTop: 0
         }, 500, 'swing');
         return false;
@@ -523,23 +523,32 @@ $(function () {
     var showNavFlag = false;
     var subNavbar = $("#SubHeaderMenu");
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 500) {
+        if ($(this).scrollTop() > 1) {
             if (showNavFlag == false) {
                 showNavFlag = true;
-                subNavbar.stop().animate({"top": "-10px"}, 200);
+                subNavbar.stop().animate({"top": "-10px"}, 800);
             }
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
-                subNavbar.stop().animate({"top": "50"}, 200);
+                subNavbar.stop().animate({"top": "50"}, 800);
             }
+        }
+    });
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 10) {
+            $(".navbar").css("box-shadow", "0 2px 4px rgba(0, 0, 0, .15)");
+
+        } else {
+            $(".navbar").css("box-shadow", "none");
+
         }
     });
 });
 
-
 $(function () {
-    $("#gotop").hover(
+    var goT = $("#gotop");
+    goT.hover(
         function () {
             $("#gotop-text").stop().animate({'right': '14px'}, 500);
         },
@@ -548,6 +557,7 @@ $(function () {
         }
     );
 });
+
 
 $(function () {
     $(".hoverPic").hover(

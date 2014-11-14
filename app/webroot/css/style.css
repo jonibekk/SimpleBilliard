@@ -2497,16 +2497,6 @@ ul.input-images > li {
     vertical-align: middle;
 }
 
-#gotop-text {
-    display: inline-block;
-    position: fixed;
-    bottom: 8px;
-    right: -140px;
-    font-size: 10px;
-    margin: 0;
-}
-
-
 @media (min-width: 768px) {
     .nav-container {
         padding-left: 0;
