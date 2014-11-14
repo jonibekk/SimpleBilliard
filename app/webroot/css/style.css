@@ -867,9 +867,12 @@ footer p {
 }
 
 .navbar {
+    background: #fff;
     margin: 0;
-    max-height: 100px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+    max-height: 50px;
+    position: fixed;
+    top:0;
+    z-index: 7777;
 }
 
 .nav-team-select,
@@ -2446,6 +2449,10 @@ ul.input-images > li {
 
 .sp-feed-alt {
     background: #f5f5f5;
+    position: fixed;
+    top:50px;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
 
 .sp-feed-active {
@@ -2464,7 +2471,31 @@ ul.input-images > li {
 
 /*==/ spFeedAlt ===*/
 
-/*=== メディアクエリで切り替え ===*/
+/*=== メディアクエリで切り替え =======================*/
+
+#gotop {
+    position: fixed;
+    bottom: -100px;
+    right: 20px;
+    font-size: 150%;
+    margin: 0;
+}
+
+#gotop a {
+    background: #fff;
+    text-decoration: none;
+    color: #ccc;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    padding: 0;
+    text-align: center;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    opacity: 0.9;
+    vertical-align: middle;
+}
 
 @media (min-width: 768px) {
     .nav-container {
@@ -2530,6 +2561,7 @@ ul.input-images > li {
         padding: 0;
         text-align: center;
         display: block;
+        border: none;
         border-radius: 4px;
         opacity: 0.7;
         vertical-align: middle;
@@ -2672,6 +2704,14 @@ ul.input-images > li {
 
     .nav-container {
         width: 972px;
+    }
+
+    .sp-feed-alt{
+        box-shadow: none;
+    }
+
+    .navbar{
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
     }
 
     .nav-search {
