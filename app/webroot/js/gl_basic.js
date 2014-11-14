@@ -526,12 +526,12 @@ $(function () {
         if ($(this).scrollTop() > 1) {
             if (showNavFlag == false) {
                 showNavFlag = true;
-                subNavbar.stop().animate({"top": "-10px"}, 800);
+                subNavbar.stop().animate({"top": "-10"}, 800);
             }
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
-                subNavbar.stop().animate({"top": "50"}, 800);
+                subNavbar.stop().animate({"top": "50"}, 400);
             }
         }
     });
