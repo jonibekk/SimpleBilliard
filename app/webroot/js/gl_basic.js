@@ -518,6 +518,26 @@ $(function () {
     });
 });
 
+//SubHeaderMenu
+$(function () {
+    var showNavFlag = false;
+    var subNavbar = $("#SubHeaderMenu");
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 500) {
+            if (showNavFlag == false) {
+                showNavFlag = true;
+                subNavbar.stop().animate({"top": "-10px"}, 200);
+            }
+        } else {
+            if (showNavFlag) {
+                showNavFlag = false;
+                subNavbar.stop().animate({"top": "50"}, 200);
+            }
+        }
+    });
+});
+
+
 $(function () {
     $("#gotop").hover(
         function () {
