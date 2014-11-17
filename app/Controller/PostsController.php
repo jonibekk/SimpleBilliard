@@ -206,7 +206,8 @@ class PostsController extends AppController
         $response = $this->render('Feed/posts');
         $html = $response->__toString();
         $result = array(
-            'html' => $html
+            'html'  => $html,
+            'count' => count($posts),
         );
         return $this->_ajaxGetResponse($result);
     }
