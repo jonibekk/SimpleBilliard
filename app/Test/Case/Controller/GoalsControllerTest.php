@@ -578,6 +578,13 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testDownloadAllGoalCsv()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
+    }
+
     /**
      * @param $Goals
      */

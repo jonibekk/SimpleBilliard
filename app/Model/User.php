@@ -5,25 +5,26 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Email             $PrimaryEmail
- * @property Team              $DefaultTeam
- * @property Badge             $Badge
- * @property CommentLike       $CommentLike
- * @property CommentMention    $CommentMention
- * @property CommentRead       $CommentRead
- * @property Comment           $Comment
- * @property Email             $Email
- * @property GivenBadge        $GivenBadge
- * @property Notification      $Notification
- * @property NotifySetting     $NotifySetting
- * @property OauthToken        $OauthToken
- * @property PostLike          $PostLike
- * @property PostMention       $PostMention
- * @property PostRead          $PostRead
- * @property Post              $Post
- * @property TeamMember        $TeamMember
- * @property CircleMember      $CircleMember
- * @property LocalName         $LocalName
+ * @property Email                $PrimaryEmail
+ * @property Team                 $DefaultTeam
+ * @property Badge                $Badge
+ * @property CommentLike          $CommentLike
+ * @property CommentMention       $CommentMention
+ * @property CommentRead          $CommentRead
+ * @property Comment              $Comment
+ * @property Email                $Email
+ * @property GivenBadge           $GivenBadge
+ * @property Notification         $Notification
+ * @property NotifySetting        $NotifySetting
+ * @property OauthToken           $OauthToken
+ * @property PostLike             $PostLike
+ * @property PostMention          $PostMention
+ * @property PostRead             $PostRead
+ * @property Post                 $Post
+ * @property TeamMember           $TeamMember
+ * @property CircleMember         $CircleMember
+ * @property LocalName            $LocalName
+ * @property Collaborator         $Collaborator
  */
 class User extends AppModel
 {
@@ -57,7 +58,7 @@ class User extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-user.jpg',
-                'quality' => 100,
+                'quality'     => 100,
             ]
         ]
     ];
@@ -214,6 +215,8 @@ class User extends AppModel
         'TeamMember',
         'LocalName',
         'CircleMember',
+        'Goal',
+        'Collaborator',
     ];
 
     /**
@@ -294,10 +297,22 @@ class User extends AppModel
 
     public function getDetail($id)
     {
-        $recursive = $this->recursive;
-        $this->recursive = 0;
-        $res = $this->findById($id);
-        $this->recursive = $recursive;
+        $options = [
+            'conditions' => [
+                'User.id' => $id,
+            ],
+            'contain'    => [
+                'TeamMember' => [
+                    'conditions' => [
+                        'TeamMember.team_id' => $this->current_team_id,
+                    ]
+                ],
+                'PrimaryEmail',
+                'NotifySetting',
+                'DefaultTeam',
+            ]
+        ];
+        $res = $this->find('first', $options);
         return $res;
     }
 
@@ -842,7 +857,7 @@ class User extends AppModel
             'conditions' => [
                 'id' => $uid_list,
             ],
-            'order' => ['first_name'],
+            'order'      => ['first_name'],
             'fields'     => $this->profileFields,
         ];
         $res = $this->find('all', $options);

@@ -7,6 +7,23 @@
  */
 ?>
 <!-- START app/View/Goals/index.ctp -->
+<div class="panel panel-default feed-share-range">
+    <div class="panel-body ptb_10px plr_11px">
+        <div class="col col-xxs-12 font_12px">
+            <?= $this->Form
+                ->postLink("<i class='fa fa-download'></i> " . __d('gl', 'CSVの書き出し'),
+                           [
+                               'action' => 'download_all_goal_csv',
+                           ],
+                           [
+                               'class'  => 'pull-right font_verydark',
+                               'escape' => false,
+                           ]
+                );
+            ?>
+        </div>
+    </div>
+</div>
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="col col-xxs-12 goals-feed-head">

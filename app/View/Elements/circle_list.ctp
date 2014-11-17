@@ -15,7 +15,7 @@
     <p class="circle_heading">Circles</p>
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
-            <div class="circle-layout clearfix">
+            <div class="circle-layout clearfix circleListMore">
                 <div class="circle-link">
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
                         <div class="circle-icon_box">
@@ -47,15 +47,18 @@
                 </div>
             </div>
         <? endforeach ?>
+        <? if (count($my_circles) > 8): ?>
+            <i class="fa fa-angle-double-down circle-toggle-icon"></i><a class="pl_5px font_12px font_gray click-circle-trigger on"><?= __d('gl', "すべて表示") ?></a>
+        <? endif; ?>
     <? endif; ?>
     <div class="clearfix develop--circle-seek">
         <i class="fa fa-eye circle-function circle-seek-icon"></i><?=
         $this->Html->link(__d('gl', "公開サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
-                          ['class' => 'modal-ajax-get-public-circles']) ?>
+                          ['class' => 'modal-ajax-get-public-circles font-dimgray']) ?>
     </div>
     <div class="clearfix develop--circle-make">
-        <i class="fa fa-plus-circle circle-function circle-make-icon"></i><a href="#" data-toggle="modal"
+        <i class="fa fa-plus-circle circle-function circle-make-icon"></i><a href="#" class="font-dimgray" data-toggle="modal"
                                                                              data-target="#modal_add_circle"><?=
             __d('gl',
                 "サークルを作成する") ?></a>

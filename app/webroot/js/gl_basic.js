@@ -244,7 +244,12 @@ function imageLazyOn() {
         delay: 100,
         visibleOnly: false,
         effect: "fadeIn",
-        removeAttribute: false
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
+            }
+        }
     });
 }
 function evToggleAjaxGet() {
@@ -281,7 +286,7 @@ function evTargetToggleClick() {
     var target_id = $obj.attr("target-id");
     var click_target_id = $obj.attr("click-target-id");
     if ($obj.attr("hidden-target-id")) {
-        $('#' + $obj.attr("hidden-target-id")).hide();
+        $('#' + $obj.attr("hidden-target-id")).toggle();
     }
     //開いている時と閉じてる時のテキストの指定があった場合は置き換える
     if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
@@ -480,7 +485,9 @@ $('input, textarea')
         $('.navbar').css('position', 'fixed');
         //force page redraw to fix incorrectly positioned fixed elements
         setTimeout(function () {
-            window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+            if (typeof $.mobile != "undefined") {
+                window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+            }
         }, 20);
     });
 
@@ -504,15 +511,44 @@ $(function () {
         }
     });
     topBtn.click(function () {
-        $("body,html").animate({
+        $("body,html").stop().animate({
             scrollTop: 0
         }, 500, 'swing');
         return false;
     });
 });
 
+//SubHeaderMenu
 $(function () {
-    $("#gotop").hover(
+    var showNavFlag = false;
+    var subNavbar = $("#SubHeaderMenu");
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 1) {
+            if (showNavFlag == false) {
+                showNavFlag = true;
+                subNavbar.stop().animate({"top": "-10"}, 800);
+            }
+        } else {
+            if (showNavFlag) {
+                showNavFlag = false;
+                subNavbar.stop().animate({"top": "50"}, 400);
+            }
+        }
+    });
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 10) {
+            $(".navbar").css("box-shadow", "0 2px 4px rgba(0, 0, 0, .15)");
+
+        } else {
+            $(".navbar").css("box-shadow", "none");
+
+        }
+    });
+});
+
+$(function () {
+    var goT = $("#gotop");
+    goT.hover(
         function () {
             $("#gotop-text").stop().animate({'right': '14px'}, 500);
         },
@@ -521,6 +557,7 @@ $(function () {
         }
     );
 });
+
 
 $(function () {
     $(".hoverPic").hover(
@@ -574,6 +611,23 @@ $(function () {
     )
 });
 
+/*表示件数調整*/
+
+$(function () {
+    $(".click-circle-trigger").on("click", function () {
+        var txt = $(this).text();
+        if ($(this).is('.on')) {
+            $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
+            $(".circleListMore:nth-child(n+10)").css("display", "block");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
+        } else {
+            $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
+            $(".circleListMore:nth-child(n+10)").css("display", "none");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
+        }
+    });
+});
+
 //noinspection JSUnresolvedVariable
 $(document).on("click", ".target-show", evTargetShow);
 
@@ -602,6 +656,7 @@ function evTargetShowTargetClick() {
 function disabledAllInput(selector) {
     $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
+
 function enabledAllInput(selector) {
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }

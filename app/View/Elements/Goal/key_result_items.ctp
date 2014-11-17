@@ -16,7 +16,7 @@
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
         <div class="bd-t h_50px">
-            <div class="col col-xxs-12 w_90per line-numbers ln_1 ptb_5px">
+            <div class="col col-xxs-12 w_90per mxh_50px line-numbers ln_1 ptb_5px">
                 <a href="#" class="develop--forbiddenLink">
                     <i class=" fa fa-check-circle disp_ib mr_5px font_40px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
                 </a>

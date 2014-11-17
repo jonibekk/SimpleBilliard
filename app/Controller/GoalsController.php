@@ -111,21 +111,29 @@ class GoalsController extends AppController
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
+        $goal_start_date_limit_format = date('Y/m/d',
+                                             $this->Goal->Team->getTermStartDate() + ($this->Auth->user('timezone') * 60 * 60));
+        $goal_end_date_limit_format = date('Y/m/d', strtotime("- 1 day",
+                                                              $this->Goal->Team->getTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
-            $goal_start_date_format = date('Y/m/d',
-                                           $this->request->data['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
-            $goal_end_date_format = date('Y/m/d',
-                                         $this->request->data['Goal']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_start_date_format = $goal_start_date_limit_format;
+            $goal_end_date_format = $goal_end_date_limit_format;
         }
         else {
             $goal_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
             //TODO 将来的には期間をまたぐ当日+6ヶ月を期限にするが、現状期間末日にする
             //$goal_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
-            $goal_end_date_format = date('Y/m/d', strtotime("- 1 day",
-                                                            $this->Goal->Team->getTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_end_date_format = $goal_end_date_limit_format;
         }
-        $this->set(compact('goal_category_list', 'priority_list', 'kr_priority_list', 'kr_value_unit_list',
-                           'goal_start_date_format', 'goal_end_date_format'));
+        $this->set(compact('goal_category_list',
+                           'priority_list',
+                           'kr_priority_list',
+                           'kr_value_unit_list',
+                           'goal_start_date_format',
+                           'goal_end_date_format',
+                           'goal_start_date_limit_format',
+                           'goal_end_date_limit_format'
+                   ));
         return $this->render();
     }
 
@@ -575,6 +583,84 @@ class GoalsController extends AppController
         $response = $this->render('Goal/modal_last_kr_confirm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    function download_all_goal_csv()
+    {
+        $this->request->allowMethod('post');
+        $this->layout = false;
+        $filename = 'all_goal_' . date('YmdHis');
+
+        //見出し
+        $th = [
+            __d('gl', "Sei"),
+            __d('gl', "Mei"),
+            __d('gl', "姓"),
+            __d('gl', "名"),
+            __d('gl', "目的"),
+            __d('gl', "ゴールカテゴリ"),
+            __d('gl', "ゴールオーナー種別"),
+            __d('gl', "ゴール名"),
+            __d('gl', "単位"),
+            __d('gl', "程度(達成時)"),
+            __d('gl', "程度(開始時)"),
+            __d('gl', "期限"),
+            __d('gl', "開始日"),
+            __d('gl', "詳細"),
+            __d('gl', "重要度"),
+            __d('gl', "認定"),
+        ];
+        $user_goals = $this->Goal->getAllUserGoal();
+        $this->Goal->KeyResult->_setUnitName();
+        $td = [];
+        foreach ($user_goals as $ug_k => $ug_v) {
+            $common_record = [];
+            $common_record['last_name'] = $ug_v['User']['last_name'];
+            $common_record['first_name'] = $ug_v['User']['first_name'];
+            $common_record['local_last_name'] = isset($ug_v['LocalName'][0]['last_name']) ? $ug_v['LocalName'][0]['last_name'] : null;
+            $common_record['local_first_name'] = isset($ug_v['LocalName'][0]['first_name']) ? $ug_v['LocalName'][0]['first_name'] : null;
+            $common_record['purpose'] = null;
+            $common_record['category'] = null;
+            $common_record['collabo_type'] = null;
+            $common_record['goal'] = null;
+            $common_record['value_unit'] = null;
+            $common_record['target_value'] = null;
+            $common_record['start_value'] = null;
+            $common_record['end_date'] = null;
+            $common_record['start_date'] = null;
+            $common_record['description'] = null;
+            $common_record['priority'] = null;
+            $common_record['valued'] = null;
+            if (!empty($ug_v['Collaborator'])) {
+                foreach ($ug_v['Collaborator'] as $c_v) {
+                    $record = $common_record;
+                    if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
+                        $record['purpose'] = $c_v['Goal']['Purpose']['name'];
+                        $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
+                        $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
+                            __d('gl', "L") : __d('gl', "C");
+                        $record['goal'] = $c_v['Goal']['name'];
+                        $record['value_unit'] = KeyResult::$UNIT[$c_v['Goal']['value_unit']];
+                        $record['target_value'] = (double)$c_v['Goal']['target_value'];
+                        $record['start_value'] = (double)$c_v['Goal']['start_value'];
+                        $record['end_date'] = date("Y/m/d",
+                                                   $c_v['Goal']['end_date'] + $this->Goal->me['timezone'] * 60 * 60);
+                        $record['start_date'] = date("Y/m/d",
+                                                     $c_v['Goal']['start_date'] + $this->Goal->me['timezone'] * 60 * 60);
+                        $record['description'] = $c_v['Goal']['description'];
+                        $record['priority'] = $c_v['priority'];
+                        $record['valued'] = ($c_v['valued_flg'] == true) ? __d('gl', "認定済") : __d('gl', "保留");
+                        $td[] = $record;
+                    }
+                }
+            }
+            else {
+                $td[] = $common_record;
+            }
+        }
+
+        $this->set(compact('filename', 'th', 'td'));
+
     }
 
     private function _flashOpenKrs($goal_id)

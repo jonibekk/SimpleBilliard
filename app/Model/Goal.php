@@ -211,11 +211,11 @@ class Goal extends AppModel
             $kr['team_id'] = $this->current_team_id;
             $kr['user_id'] = $this->my_uid;
             $data['KeyResult'][0] = $kr;
+            //コラボレータをタイプ　リーダーで保存
+            $data['Collaborator'][0]['user_id'] = $this->my_uid;
+            $data['Collaborator'][0]['team_id'] = $this->current_team_id;
+            $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         }
-        //コラボレータをタイプ　リーダーで保存
-        $data['Collaborator'][0]['user_id'] = $this->my_uid;
-        $data['Collaborator'][0]['team_id'] = $this->current_team_id;
-        $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         $this->create();
         $res = $this->saveAll($data);
         if ($add_new) {
@@ -759,6 +759,43 @@ class Goal extends AppModel
             return true;
         }
         return false;
+    }
+
+    function getAllUserGoal($start_date = null, $end_date = null)
+    {
+        if (!$start_date) {
+            $start_date = $this->Team->getTermStartDate();
+        }
+        if (!$end_date) {
+            $end_date = $this->Team->getTermEndDate();
+        }
+        $team_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
+        $options = [
+            'conditions' => [
+                'User.id' => $team_member_list
+            ],
+            'fields'     => $this->User->profileFields,
+            'contain'    => [
+                'LocalName'    => [
+                    'conditions' => ['LocalName.language' => $this->me['language']],
+                ],
+                'Collaborator' => [
+                    'conditions' => [
+                        'Collaborator.team_id' => $this->current_team_id,
+                    ],
+                    'Goal'       => [
+                        'conditions' => [
+                            'Goal.start_date >=' => $start_date,
+                            'Goal.end_date <'    => $end_date
+                        ],
+                        'Purpose',
+                        'GoalCategory',
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->Collaborator->User->find('all', $options);
+        return $res;
     }
 
 }

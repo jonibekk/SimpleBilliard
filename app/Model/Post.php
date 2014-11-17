@@ -220,6 +220,9 @@ class Post extends AppModel
         $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
         $res = $this->save($postData);
+        if (empty($res)) {
+            return false;
+        }
         if (!empty($share)) {
             //ユーザとサークルに分割
             $users = [];

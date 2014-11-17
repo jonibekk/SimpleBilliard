@@ -12,6 +12,8 @@
  * @var                        $kr_value_unit_list
  * @var                        $goal_start_date_format
  * @var                        $goal_end_date_format
+ * @var                        $goal_start_date_limit_format
+ * @var                        $goal_end_date_limit_format
  */
 $url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']['id']] : [];
 
@@ -77,7 +79,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
             <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
+                    <div class="pull-right">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
                                           ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP01],
@@ -85,6 +87,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+
                     </div>
                 </div>
             </div>
@@ -271,21 +274,22 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             </div>
             <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-7 col-sm-offset-5 goal-set-buttons">
+                    <div class="pull-right">
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
                                           ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP02],
                                           ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
-                            $disabled = null;
+                            $disabled = false;
                         }
                         else {
-                            $disabled = 'disabled';
+                            $disabled = true;
                         }
                         ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
-                                            ['class' => 'btn btn-primary', 'div' => false, $disabled => $disabled]) ?>
+                                            array_merge(['class' => 'btn btn-primary', 'div' => false],
+                                                        $disabled ? ['disabled' => 'disabled'] : [])) ?>
                     </div>
                 </div>
             </div>
@@ -357,7 +361,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col col-sm-3 control-label">
                         <label for=""><?= __d('gl', "ゴール画像") ?></label>
 
-                        <div class="label-addiction pull-right">イメージに合った画像を追加しましょう</div>
+                        <div class="label-addiction pull-sm-right"><?= __d('gl', "イメージに合った画像を追加しましょう") ?></div>
                     </div>
                     <div class="col col-sm-6 line-vertical-sm goal-set-input">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -388,7 +392,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                         'css'          => false,
                                                         'wrapInput'    => false,
                                                         'errorMessage' => false,
-                                                        ''
                                                        ]) ?>
                                 </span>
                                 <span class="help-block disp_ib font_11px"><?= __d('gl', '10MB以下') ?></span>
@@ -408,7 +411,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             </div>
             <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-3 col-sm-offset-9">
+                    <div class="pull-right">
                         <?=
                         $this->Form->submit(__d('gl', "この内容で作成"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
@@ -483,7 +486,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         todayBtn: 'linked',
         language: "ja",
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        startDate: "<?=$goal_start_date_limit_format?>",
+        endDate: "<?=$goal_end_date_limit_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
@@ -495,7 +500,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         todayBtn: 'linked',
         language: "ja",
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        startDate: "<?=$goal_start_date_limit_format?>",
+        endDate: "<?=$goal_end_date_limit_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
