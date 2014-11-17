@@ -65,19 +65,27 @@
         </div>
     </div>
 <? endif; ?>
-<? if (count($posts) == 20): ?>
-    <div class="panel panel-default feed-read-more" id="FeedMoreRead">
-        <div class="panel-body panel-read-more-body">
-            <span style="display: none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
-            <a href="#" class="btn btn-link click-feed-read-more"
-               parent-id="FeedMoreRead"
-               next-page-num="2"
-               month-index="1"
-               get-url="<?=
-               $this->Html->url($feed_more_read_url) ?>"
-                >
-                <?= __d('gl', "もっと読む ▼") ?></a>
-        </div>
+<?
+$next_page_num = 2;
+$month_index = 1;
+$more_read_text = __d('gl', "もっと読む ▼");
+if ((count($posts) != 20)) {
+    $next_page_num = 1;
+    $month_index = 2;
+    $more_read_text = __d('gl', "さらに以前の投稿を読み込む ▼");
+}
+?>
+<div class="panel panel-default feed-read-more" id="FeedMoreRead">
+    <div class="panel-body panel-read-more-body">
+        <span style="display: none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
+        <a href="#" class="btn btn-link click-feed-read-more"
+           parent-id="FeedMoreRead"
+           next-page-num="<?= $next_page_num ?>"
+           month-index="<?= $month_index ?>"
+           get-url="<?=
+           $this->Html->url($feed_more_read_url) ?>"
+            >
+            <?= $more_read_text ?></a>
     </div>
-<? endif; ?>
+</div>
 <!-- END app/View/Elements/Feed/contents.ctp -->
