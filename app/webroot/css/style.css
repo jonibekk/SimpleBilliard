@@ -1700,7 +1700,8 @@ ul.input-images > li {
 
 /*/PostAreaのデザイン*/
 /*CommentArea*/
-.comment-post-form {
+textarea.comment-post-form {
+    height:18px;
     background: #f5f5f5;
     margin-top: 14px;
     line-height: 15px;
