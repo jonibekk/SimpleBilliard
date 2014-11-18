@@ -159,7 +159,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="col col-sm-3">
                         <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
 
-                        <div class="label-addiction pull-right">どのくらい？</div>
+                        <div class="label-addiction pull-right"><?= __d('gl', "どのくらい？") ?></div>
                     </div>
                     <div class="col col-sm-7 line-vertical-sm goal-set-input">
 
@@ -176,8 +176,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                            ]) ?>
                         <div id="KeyResult0ValueInputWrap"
                              style="<?=
-                             isset($this->request->data['KeyResult'][0]['value_unit'])
-                             && $this->request->data['KeyResult'][0]['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
+                             isset($this->request->data['Goal']['value_unit'])
+                             && $this->request->data['Goal']['value_unit'] == KeyResult::UNIT_BINARY ? 'display:none;' : null ?>">
 
                             <?=
                             $this->Form->input('target_value',
