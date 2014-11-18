@@ -1,3 +1,6 @@
+$.ajaxSetup({
+    cache: false
+});
 $(document).ready(function () {
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
