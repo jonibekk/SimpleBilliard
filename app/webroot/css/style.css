@@ -384,15 +384,14 @@ footer p {
     padding-bottom: 5px;
 }
 
-<<<<<<< HEAD
-.ptb_7px{
-    padding-top:7px;
+.ptb_7px {
+    padding-top: 7px;
     padding-bottom: 7px;
-=======
+}
+
 .ptb_8px{
     padding-top:8px;
     padding-bottom:8px;
->>>>>>> 8b20edecdbd2acfcbadab4ff7cc6a0a36b19569b
 }
 
 .ptb_10px {
