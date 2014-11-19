@@ -11,6 +11,7 @@ $(document).ready(function () {
         }
     });
     //ヘッダーサブメニューでのフィード、ゴール切り換え処理
+    //noinspection JSJQueryEfficiency
     $('#SubHeaderMenu a').click(function () {
         //既に選択中の場合は何もしない
         if ($(this).hasClass('sp-feed-active')) {
@@ -32,6 +33,7 @@ $(document).ready(function () {
             $('[role="goal_area"]').removeClass('visible-md visible-lg');
         }
         else {
+            //noinspection UnnecessaryReturnStatementJS
             return;
         }
     });
@@ -132,6 +134,7 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
@@ -150,6 +153,7 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
@@ -170,9 +174,11 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
+        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
         $modal_elm.on('shown.bs.modal', function (e) {
             $(this).find('textarea').each(function () {
                 $(this).autosize();
@@ -235,6 +241,7 @@ $(document).ready(function () {
 });
 $(function () {
     $('textarea').bind('load', function () {
+        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
         var h = $('textarea').css('height');
     });
 });
@@ -262,6 +269,7 @@ function evToggleAjaxGet() {
     var target_id = $obj.attr("target-id");
     var ajax_url = $obj.attr("ajax-url");
 
+    //noinspection JSJQueryEfficiency
     if (!$('#' + target_id).hasClass('data-exists')) {
         $.get(ajax_url, function (data) {
             $('#' + target_id).append(data.html);
@@ -277,7 +285,9 @@ function evToggleAjaxGet() {
             $(this).addClass('fa-caret-down');
         }
     });
+    //noinspection JSJQueryEfficiency
     $('#' + target_id).addClass('data-exists');
+    //noinspection JSJQueryEfficiency
     $('#' + target_id).toggle();
     return false;
 }
@@ -663,3 +673,19 @@ function disabledAllInput(selector) {
 function enabledAllInput(selector) {
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }
+
+
+$(".h-limit").each(function() {
+    var $minHeight = 24;
+    if ( $(this).height() > $minHeight) {
+        $(this).addClass('ln_2');
+    }
+
+});
+$(".h-limit-f").each(function() {
+    var $minHeight = 24;
+    if ( $(this).height() > $minHeight) {
+        $(this).addClass('ln_2-f');
+    }
+
+});
