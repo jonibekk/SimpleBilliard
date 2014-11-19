@@ -14,7 +14,7 @@
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-        <div class="panel-body ptb_10px plr_11px ">
+        <div class="panel-body pt_10px plr_11px pb_8px">
         <div class="col col-xxs-12 feed-user">
             <div class="pull-right">
                 <div class="dropdown">
@@ -236,7 +236,7 @@
             </div>
         <? endif; ?>
 
-        <div class="col col-xxs-12 font_12px pt_10px">
+        <div class="col col-xxs-12 font_12px pt_8px">
             <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                model_id="<?= $post['Post']['id'] ?>"
@@ -257,7 +257,7 @@
 
         </div>
         </div>
-        <div class="panel-body ptb_10px plr_11px comment-block">
+        <div class="panel-body ptb_8px plr_11px comment-block">
             <? if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                 <a href="#" class="btn btn-link click-comment-all"
                    id="Comments_<?= $post['Post']['id'] ?>"
