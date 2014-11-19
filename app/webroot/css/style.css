@@ -380,6 +380,11 @@ footer p {
     padding-bottom: 5px;
 }
 
+.ptb_8px{
+    padding-top:8px;
+    padding-bottom:8px;
+}
+
 .ptb_10px {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -406,10 +411,6 @@ footer p {
 }
 
 .pt_10px {
-    padding: 10px 0 0 0;
-}
-
-.pt_10px {
     padding-top: 10px;
 }
 
@@ -427,6 +428,10 @@ footer p {
 
 .pb_2px {
     padding-bottom: 2px;
+}
+
+.pb_8px{
+    padding-bottom: 8px;
 }
 
 .pl_2px{
