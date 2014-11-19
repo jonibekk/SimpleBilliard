@@ -364,7 +364,8 @@ function evFeedMoreView() {
                 $('.custom-radio-check').customRadioCheck();
 
             }
-            else {
+
+            if (data.count < 20) {
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを有効化

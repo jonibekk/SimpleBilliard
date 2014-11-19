@@ -350,6 +350,10 @@ footer p {
     padding: 10px;
 }
 
+.plr_0px{
+    padding-left: 0;
+    padding-right: 0;
+}
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
@@ -380,6 +384,16 @@ footer p {
     padding-bottom: 5px;
 }
 
+.ptb_7px {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.ptb_8px{
+    padding-top:8px;
+    padding-bottom:8px;
+}
+
 .ptb_10px {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -406,10 +420,6 @@ footer p {
 }
 
 .pt_10px {
-    padding: 10px 0 0 0;
-}
-
-.pt_10px {
     padding-top: 10px;
 }
 
@@ -427,6 +437,10 @@ footer p {
 
 .pb_2px {
     padding-bottom: 2px;
+}
+
+.pb_8px{
+    padding-bottom: 8px;
 }
 
 .pl_2px{
@@ -867,9 +881,12 @@ footer p {
 }
 
 .navbar {
+    background: #fff;
     margin: 0;
-    max-height: 100px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+    max-height: 50px;
+    position: fixed;
+    top:0;
+    z-index: 7777;
 }
 
 .nav-team-select,
@@ -914,7 +931,7 @@ footer p {
 
 .panel-default > .panel-heading {
     background-color: #fff;
-    padding: 10px 11px;
+//    padding: 10px 11px;
 }
 
 .design-mystatus {
@@ -1242,7 +1259,6 @@ ul.example-indent {
 }
 
 .comment-block {
-    padding: 9px 11px 10px;
     border-top: 1px solid #dddddd;
     background-color: #f5f5f5;
     border-bottom-right-radius: 3px;
@@ -1273,7 +1289,7 @@ ul.example-indent {
     padding-right: 0;
     padding-bottom: 2px;
     padding-left: 0;
-    line-height: 18px;
+    line-height: 1.28;
     margin-right: -1px;
     margin-left: -1px;
     border-left: 1px solid rgba(0, 0, 0, 0);
@@ -1396,7 +1412,6 @@ ul.input-images > li {
 
 .feed-switch {
     list-style: none;
-    padding: 10px 0;
     margin: 0;
 }
 
@@ -1518,7 +1533,6 @@ ul.input-images > li {
 
 /*PostAreaのデザイン*/
 .post-panel-body {
-    padding: 5px 11px 10px;
 }
 
 .post-share-range-panel-body {
@@ -1528,9 +1542,6 @@ ul.input-images > li {
 
 .post-panel-heading {
     background: #f5f5f5 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
 }
 
 .post-panel-footer {
@@ -1560,9 +1571,10 @@ ul.input-images > li {
     resize: none;
 }
 
-.feed-post-form {
-    padding-top: 4px;
-    padding-bottom: 4px;
+textarea.feed-post-form {
+    height: 25px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .post-form:focus, .post-form:target {
@@ -1697,7 +1709,8 @@ ul.input-images > li {
 
 /*/PostAreaのデザイン*/
 /*CommentArea*/
-.comment-post-form {
+textarea.comment-post-form {
+    height:18px;
     background: #f5f5f5;
     margin-top: 14px;
     line-height: 15px;
@@ -2446,6 +2459,10 @@ ul.input-images > li {
 
 .sp-feed-alt {
     background: #f5f5f5;
+    position: fixed;
+    top:50px;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
 
 .sp-feed-active {
@@ -2464,7 +2481,31 @@ ul.input-images > li {
 
 /*==/ spFeedAlt ===*/
 
-/*=== メディアクエリで切り替え ===*/
+/*=== メディアクエリで切り替え =======================*/
+
+#gotop {
+    position: fixed;
+    bottom: -100px;
+    right: 20px;
+    font-size: 150%;
+    margin: 0;
+}
+
+#gotop a {
+    background: #fff;
+    text-decoration: none;
+    color: #ccc;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    padding: 0;
+    text-align: center;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    opacity: 0.9;
+    vertical-align: middle;
+}
 
 @media (min-width: 768px) {
     .nav-container {
@@ -2530,6 +2571,7 @@ ul.input-images > li {
         padding: 0;
         text-align: center;
         display: block;
+        border: none;
         border-radius: 4px;
         opacity: 0.7;
         vertical-align: middle;
@@ -2672,6 +2714,14 @@ ul.input-images > li {
 
     .nav-container {
         width: 972px;
+    }
+
+    .sp-feed-alt{
+        box-shadow: none;
+    }
+
+    .navbar{
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
     }
 
     .nav-search {

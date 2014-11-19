@@ -11,9 +11,9 @@
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
 <div class="panel panel-default global-form">
-    <div class="panel-heading post-panel-heading">
+    <div class="post-panel-heading ptb_7px plr_11px">
         <!-- Nav tabs -->
-        <ul class="feed-switch clearfix" role="tablist">
+        <ul class="feed-switch clearfix plr_0px" role="tablist">
             <li class="switch-post active"><a href="#PostForm" role="tab" data-toggle="tab"
                                               class="switch-post-anchor"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
@@ -41,7 +41,7 @@
                 'type'          => 'file',
                 'novalidate'    => true,
             ]); ?>
-            <div class="panel-body post-panel-body">
+            <div class="post-panel-body plr_11px ptb_7px">
                 <?=
                 $this->Form->input('body', [
                     'label'                    => false,
