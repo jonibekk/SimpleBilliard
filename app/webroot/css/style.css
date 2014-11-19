@@ -512,14 +512,14 @@ footer p {
 .ln_2_contain .ln_2:before {
     content: "...";
     top: 16px;
-    right: -1px;
-    padding-left: 2px;
+    width: 16px;
+    right: 0;
 }
 .ln_2_contain .ln_2-f:before {
     content: "...";
     top: 16px;
-    right: -1px;
-    padding-left: 2px;
+    width: 16px;
+    right: 0;
 }
 
 .ln_2_contain .ln_2-f:before, .ln_2_contain .ln_2-f:after {
