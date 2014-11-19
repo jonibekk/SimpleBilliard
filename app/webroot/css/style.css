@@ -350,6 +350,10 @@ footer p {
     padding: 10px;
 }
 
+.plr_0px{
+    padding-left: 0;
+    padding-right: 0;
+}
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
@@ -378,6 +382,11 @@ footer p {
 .ptb_5px {
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.ptb_7px{
+    padding-top:7px;
+    padding-bottom: 7px;
 }
 
 .ptb_10px {
@@ -917,7 +926,7 @@ footer p {
 
 .panel-default > .panel-heading {
     background-color: #fff;
-    padding: 10px 11px;
+//    padding: 10px 11px;
 }
 
 .design-mystatus {
@@ -1399,7 +1408,6 @@ ul.input-images > li {
 
 .feed-switch {
     list-style: none;
-    padding: 10px 0;
     margin: 0;
 }
 
@@ -1521,7 +1529,6 @@ ul.input-images > li {
 
 /*PostAreaのデザイン*/
 .post-panel-body {
-    padding: 5px 11px 10px;
 }
 
 .post-share-range-panel-body {
@@ -1531,9 +1538,6 @@ ul.input-images > li {
 
 .post-panel-heading {
     background: #f5f5f5 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
 }
 
 .post-panel-footer {
@@ -1563,9 +1567,10 @@ ul.input-images > li {
     resize: none;
 }
 
-.feed-post-form {
-    padding-top: 4px;
-    padding-bottom: 4px;
+textarea.feed-post-form {
+    height: 25px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .post-form:focus, .post-form:target {
