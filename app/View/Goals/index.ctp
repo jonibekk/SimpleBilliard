@@ -49,7 +49,7 @@
         </div>
         <? if (empty($goals)): ?>
             <div class="col col-xxs-12 mt_16px">
-                <div class="alert alert-warning fade in" role="alert">1
+                <div class="alert alert-warning fade in" role="alert">
                     <?= __d('gl', "ゴールがありません。") ?>
                 </div>
             </div>
