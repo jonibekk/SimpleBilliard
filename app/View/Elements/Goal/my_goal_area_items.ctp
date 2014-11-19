@@ -87,7 +87,7 @@
                 </div>
             <? else: ?>
                 <div class="ln_2_contain">
-                <p class="h-limit-f">
+                <p class="h-limit">
                     <i class="fa fa-flag"></i>
                     <?= h($goal['Goal']['name']) ?></p></div>
             <?endif; ?>

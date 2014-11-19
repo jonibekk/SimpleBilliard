@@ -680,7 +680,6 @@ $(".h-limit").each(function() {
     if ( $(this).height() > $minHeight) {
         $(this).addClass('ln_2');
     }
-
 });
 $(".h-limit-f").each(function() {
     var $minHeight = 24;
