@@ -86,12 +86,13 @@
                     </a>
                 </div>
             <? else: ?>
-                <b class="line-numbers ln_2">
+                <div class="ln_2_contain">
+                <p class="h-limit-f">
                     <i class="fa fa-flag"></i>
-                    <?= h($goal['Goal']['name']) ?></b>
+                    <?= h($goal['Goal']['name']) ?></p></div>
             <?endif; ?>
         </div>
-        <div class="col col-xxs-12 font_12px line-numbers ln_1 goals-column-purpose">
+        <div class="col col-xxs-12 font_12px ln_1 goals-column-purpose">
             <?= h($goal['Purpose']['name']) ?>
         </div>
         <? if (isset($goal['Goal']['id'])): ?>
