@@ -1,18 +1,19 @@
 # LANGUAGE translation of CakePHP Application
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-08-25 06:54+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"POT-Creation-Date: 2014-11-20 09:40+0000\n"
+"PO-Revision-Date: 2014-11-20 18:52+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: Controller/UsersController.php:78
 msgid "%sさん、こんにちは。"
@@ -34,27 +35,26 @@ msgstr ""
 msgid "ログアウトしました"
 msgstr ""
 
-#: Controller/UsersController.php:254
+#: Controller/UsersController.php:264
 msgid "本登録が完了しました！"
 msgstr ""
 
-#: Controller/UsersController.php:264
+#: Controller/UsersController.php:274
 msgid "メールアドレスの認証が完了しました。"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:78
+#: Controller/Component/PnotifyComponent.php:62
 msgid "お知らせ"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:79
+#: Controller/Component/PnotifyComponent.php:63
 msgid "成功"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:80
+#: Controller/Component/PnotifyComponent.php:64
 msgid "注意"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:81
+#: Controller/Component/PnotifyComponent.php:65
 msgid "エラー"
 msgstr ""
-

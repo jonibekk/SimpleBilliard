@@ -14,19 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: View/Helper/TimeExHelper.php:86
-msgid "たった今"
-msgstr ""
-
-#: View/Helper/TimeExHelper.php:90
-msgid "1分前"
-msgstr ""
-
-#: View/Helper/TimeExHelper.php:115
-msgid "%s分前"
-msgstr ""
-
-#: View/Helper/TimeExHelper.php:121
-msgid "%s時間前"
+#: Console/Command/DataShell.php:189
+msgid "既にテストデータが存在するため、テストデータのインポートをキャンセルしました。"
 msgstr ""
 

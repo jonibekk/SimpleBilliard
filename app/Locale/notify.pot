@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-08-25 06:54+0000\n"
+"POT-Creation-Date: 2014-11-20 09:40+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -34,27 +34,27 @@ msgstr ""
 msgid "ログアウトしました"
 msgstr ""
 
-#: Controller/UsersController.php:254
+#: Controller/UsersController.php:264
 msgid "本登録が完了しました！"
 msgstr ""
 
-#: Controller/UsersController.php:264
+#: Controller/UsersController.php:274
 msgid "メールアドレスの認証が完了しました。"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:78
+#: Controller/Component/PnotifyComponent.php:62
 msgid "お知らせ"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:79
+#: Controller/Component/PnotifyComponent.php:63
 msgid "成功"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:80
+#: Controller/Component/PnotifyComponent.php:64
 msgid "注意"
 msgstr ""
 
-#: Controller/Component/PnotifyComponent.php:81
+#: Controller/Component/PnotifyComponent.php:65
 msgid "エラー"
 msgstr ""
 

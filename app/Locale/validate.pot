@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-08-25 06:54+0000\n"
+"POT-Creation-Date: 2014-11-20 09:40+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,40 +14,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Model/User.php:457
+#: Model/User.php:472
 msgid "現在のパスワードが間違っています。"
 msgstr ""
 
-#: Model/User.php:541
+#: Model/User.php:556
 msgid "メールアドレスを入力してください。"
 msgstr ""
 
-#: Model/User.php:553
+#: Model/User.php:568
 msgid "このメールアドレスはGoalousに登録されていません。"
 msgstr ""
 
-#: Model/User.php:558
+#: Model/User.php:573
 msgid "このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメールをご確認ください。"
 msgstr ""
 
-#: Model/User.php:563
+#: Model/User.php:578
 msgid "ユーザアカウントが有効ではありません。"
 msgstr ""
 
-#: Model/User.php:634
+#: Model/User.php:649
 msgid "メールアドレスが入力されていません"
 msgstr ""
 
-#: Model/User.php:652
+#: Model/User.php:667
 msgid "現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:16
-#: View/Elements/modal_add_circle.ctp:41
-#: View/Elements/modal_edit_circle.ctp:41
-#: View/Elements/User/modal_change_email.ctp:71
-#: View/Elements/User/modal_change_password.ctp:81;92;103
+#: View/Elements/modal_add_circle.ctp:42
+#: View/Elements/modal_collabo.ctp:47;57;66
+#: View/Elements/modal_edit_circle.ctp:42
+#: View/Elements/Goal/modal_add_key_result.ctp:74;113;128;156;191
+#: View/Elements/Goal/modal_edit_key_result.ctp:76;136;151;179;213;233
+#: View/Elements/User/modal_change_email.ctp:78
+#: View/Elements/User/modal_change_password.ctp:86;97;108
 #: View/Elements/User/profile_setting.ctp:73;80
+#: View/Goals/add.ctp:74;152;192;205;230;265
 #: View/Teams/add.ctp:37
 #: View/Teams/invite.ctp:45
 #: View/Users/add_profile.ctp:63;70
@@ -66,7 +70,7 @@ msgid "アルファベットのみで入力してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:18
-#: View/Elements/User/modal_change_email.ctp:74
+#: View/Elements/User/modal_change_email.ctp:81
 #: View/Users/password_reset_request.ctp:37
 #: View/Users/register.ctp:70
 #: View/Users/token_resend.ctp:37
@@ -79,9 +83,9 @@ msgid "利用規約に同意してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:20
-#: View/Elements/gl_common_js.ctp:67
-#: View/Elements/User/modal_change_password.ctp:100
-#: View/Elements/User/profile_setting.ctp:226
+#: View/Elements/gl_common_js.ctp:82
+#: View/Elements/User/modal_change_password.ctp:105
+#: View/Elements/User/profile_setting.ctp:267
 msgid "パスワードが一致しません。"
 msgstr ""
 
@@ -90,10 +94,10 @@ msgid "パスワードが間違っています。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:22
-#: View/Elements/gl_common_js.ctp:59
-#: View/Elements/User/modal_change_email.ctp:82
-#: View/Elements/User/modal_change_password.ctp:78;89
-#: View/Elements/User/profile_setting.ctp:218
+#: View/Elements/gl_common_js.ctp:74
+#: View/Elements/User/modal_change_email.ctp:89
+#: View/Elements/User/modal_change_password.ctp:83;94
+#: View/Elements/User/profile_setting.ctp:259
 msgid "%2$d文字以上で入力してください。"
 msgstr ""
 
@@ -113,12 +117,32 @@ msgstr ""
 msgid "幾つかのメールアドレスが正しくありません。"
 msgstr ""
 
-#: View/Elements/Feed/common_form.ctp:55
-#: View/Elements/Feed/posts.ctp:276
+#: View/Elements/gl_common_js.ctp:574
+msgid "開始日が期限を過ぎています。"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:585
+msgid "期限が開始日以前になっています。"
+msgstr ""
+
+#: View/Elements/Feed/common_form.ctp:56
+#: View/Elements/Feed/posts.ctp:307
 msgid "何も入力されていません。"
 msgstr ""
 
-#: View/Elements/User/modal_change_email.ctp:85
+#: View/Elements/Goal/modal_add_key_result.ctp:112;127
+#: View/Elements/Goal/modal_edit_key_result.ctp:135;150
+#: View/Goals/add.ctp:191;204
+msgid "文字数がオーバーしています。"
+msgstr ""
+
+#: View/Elements/Goal/modal_add_key_result.ctp:114;129
+#: View/Elements/Goal/modal_edit_key_result.ctp:137;152
+#: View/Goals/add.ctp:193;206
+msgid "数字を入力してください。"
+msgstr ""
+
+#: View/Elements/User/modal_change_email.ctp:92
 msgid "変更する場合はパスワード入力が必要です。"
 msgstr ""
 

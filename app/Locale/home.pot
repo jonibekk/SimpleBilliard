@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-08-25 06:54+0000\n"
+"POT-Creation-Date: 2014-11-20 09:40+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,36 +14,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/PagesController.php:108
+#: Controller/PagesController.php:122
 msgid "Japanese"
 msgstr ""
 
-#: Controller/PagesController.php:109
+#: Controller/PagesController.php:123
 msgid "English"
 msgstr ""
 
-#: View/Elements/footer.ctp:20
-#: View/Layouts/homepage.ctp:142;212
+#: View/Elements/footer.ctp:22
+#: View/Layouts/homepage.ctp:144;214
 #: View/Pages/features.ctp:7
-#: View/Pages/home.ctp:169
+#: View/Pages/home.ctp:140
 msgid "Features"
 msgstr ""
 
-#: View/Elements/footer.ctp:28
-#: View/Elements/header_logged_in.ctp:67
-#: View/Layouts/homepage.ctp:150;221
+#: View/Elements/footer.ctp:30
+#: View/Elements/header_logged_in.ctp:175
+#: View/Layouts/homepage.ctp:152;223
 msgid "Blog"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:139
+#: View/Layouts/homepage.ctp:141
 msgid "Home"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:153
+#: View/Layouts/homepage.ctp:155
 msgid "Sign UP"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:166;242
+#: View/Layouts/homepage.ctp:168;244
 msgid "Sign IN"
 msgstr ""
 
@@ -64,7 +64,7 @@ msgid "In addition, using Goalous, you can designate multiple lists to reach you
 msgstr ""
 
 #: View/Pages/features.ctp:74
-#: View/Pages/home.ctp:258
+#: View/Pages/home.ctp:229
 msgid "Make it open"
 msgstr ""
 
@@ -77,7 +77,7 @@ msgid "Feeling reluctant to share your goal with others? That's the same as you 
 msgstr ""
 
 #: View/Pages/features.ctp:124
-#: View/Pages/home.ctp:305
+#: View/Pages/home.ctp:276
 msgid "Help each other"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgid "In addition, the goal you invited others into will be shared with your co
 msgstr ""
 
 #: View/Pages/features.ctp:167
-#: View/Pages/home.ctp:352
+#: View/Pages/home.ctp:323
 msgid "Send compliments"
 msgstr ""
 
@@ -103,12 +103,12 @@ msgid "Those small \"thank you\" s can make a big impact on one's motivation."
 msgstr ""
 
 #: View/Pages/features.ctp:302
-#: View/Pages/home.ctp:465
+#: View/Pages/home.ctp:436
 msgid "Collaborative achievement goal tool"
 msgstr ""
 
 #: View/Pages/features.ctp:310
-#: View/Pages/home.ctp:473
+#: View/Pages/home.ctp:444
 msgid "Goalous is a tool that all members of a team are able to action in high motivated toward the achievement of self goals.Because the members create public goals in a team,they collaborate each other and get praise to your actions."
 msgstr ""
 
@@ -116,39 +116,31 @@ msgstr ""
 msgid "Let's start Goalous!"
 msgstr ""
 
-#: View/Pages/home.ctp:48
-msgid "Sign up with facebook"
-msgstr ""
-
-#: View/Pages/home.ctp:63
-msgid "Sign up with google"
-msgstr ""
-
-#: View/Pages/home.ctp:68
+#: View/Pages/home.ctp:39
 msgid "here"
 msgstr ""
 
-#: View/Pages/home.ctp:75
+#: View/Pages/home.ctp:46
 msgid "You can also sign up with your email address. Click %s to start."
 msgstr ""
 
-#: View/Pages/home.ctp:211
+#: View/Pages/home.ctp:182
 msgid "Set a goal"
 msgstr ""
 
-#: View/Pages/home.ctp:217
+#: View/Pages/home.ctp:188
 msgid "Create a goal by establishing its title, deadline, challenging point, benefits, alists, and overall image."
 msgstr ""
 
-#: View/Pages/home.ctp:264
+#: View/Pages/home.ctp:235
 msgid "Let team members and other co-workers know of your ambition, collaborators, and daily progress."
 msgstr ""
 
-#: View/Pages/home.ctp:311
+#: View/Pages/home.ctp:282
 msgid "Work towards your goal with your collaborators. You don't need to struggle alone anymore."
 msgstr ""
 
-#: View/Pages/home.ctp:358
+#: View/Pages/home.ctp:329
 msgid "Getting a compliment is the best treat for your brain. Best of all, complimenting one another is free!"
 msgstr ""
 

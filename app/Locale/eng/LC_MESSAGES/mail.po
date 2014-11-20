@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-08-25 06:54+0000\n"
-"PO-Revision-Date: 2014-08-25 16:01+0900\n"
+"POT-Creation-Date: 2014-11-20 09:40+0000\n"
+"PO-Revision-Date: 2014-11-20 18:51+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.8\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: Model/SendMail.php:62
 msgid "アカウントの仮登録が完了しました"
@@ -73,8 +73,6 @@ msgstr ""
 
 #: View/Emails/text/account_verification.ctp:13
 #: View/Emails/text/change_email.ctp:13 View/Emails/text/invite.ctp:16
-#: View/Emails/text/notify_basic.ctp:16
-#: View/Emails/text/notify_not_use_body.ctp:16
 #: View/Emails/text/password_reset.ctp:13
 #: View/Emails/text/password_reset_complete.ctp:13
 #: View/Emails/text/token_resend.ctp:13
@@ -99,8 +97,7 @@ msgid ""
 "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
 msgstr ""
 
-#: View/Emails/text/invite.ctp:19 View/Emails/text/notify_basic.ctp:19
-#: View/Emails/text/notify_not_use_body.ctp:19
+#: View/Emails/text/invite.ctp:19
 #, fuzzy
 msgid "こんにちは。"
 msgstr "Hi %s,"
@@ -117,13 +114,8 @@ msgstr ""
 msgid "%sさんからのメッセージ："
 msgstr ""
 
-#: View/Emails/text/notify_basic.ctp:26
+#: View/Emails/text/notify_basic.ctp:18
 msgid "「%s」"
-msgstr ""
-
-#: View/Emails/text/notify_basic.ctp:29
-#: View/Emails/text/notify_not_use_body.ctp:27
-msgid "以下のリンクから内容の確認ができます。"
 msgstr ""
 
 #: View/Emails/text/password_reset.ctp:16
