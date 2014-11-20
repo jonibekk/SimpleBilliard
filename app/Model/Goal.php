@@ -14,6 +14,7 @@ App::uses('KeyResult', 'Model');
  * @property Collaborator      $Collaborator
  * @property Follower          $Follower
  * @property Purpose           $Purpose
+ * @property Action            $Action
  */
 class Goal extends AppModel
 {
@@ -140,6 +141,9 @@ class Goal extends AppModel
             'dependent' => true,
         ],
         'KeyResult'           => [
+            'dependent' => true,
+        ],
+        'Action'              => [
             'dependent' => true,
         ],
         'IncompleteKeyResult' => [
