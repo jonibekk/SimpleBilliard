@@ -9,11 +9,12 @@
  */
 ?>
 <!-- START app/View/Elements/User/modal_change_email.ctp -->
-<div class="modal fade" id="modal_change_email">
-    <div class="modal-dialog">
+<div class="modal fade" tabindex="-1" id="modal_change_email">
+<div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
+                    <span class="close-icon">&times;</span></button>
                 <h4 class="modal-title"><?= __d('gl', "メールアドレスの変更") ?></h4>
             </div>
             <?=
@@ -48,7 +49,13 @@
                 ])?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-            <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary']) ?>
+                <?= $this->Form->submit(__d('gl', "変更を保存"),
+                                        ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
+                        <?= __d('gl', "キャンセル") ?>
+                    </button>
+                </div>
             </div>
             <?= $this->Form->end() ?>
         </div>

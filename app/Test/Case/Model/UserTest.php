@@ -17,6 +17,7 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.goal',
         'app.local_name',
         'app.user', 'app.notify_setting',
         'app.image',
@@ -32,6 +33,8 @@ class UserTest extends CakeTestCase
         'app.post_read',
         'app.post_share_user',
         'app.post_share_circle',
+        'app.circle',
+        'app.circle_member',
         'app.images_post',
         'app.comment_read',
         'app.group',
@@ -640,6 +643,22 @@ class UserTest extends CakeTestCase
         $this->User->my_uid = 1;
         $this->User->me['language'] = "eng";
         $this->User->getProfileAndEmail(1, 'jpn');
+    }
+
+    function testGetAllUsersCirclesSelect2()
+    {
+        $this->User->my_uid = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->current_team_id = 1;
+        $this->User->CircleMember->current_team_id = 1;
+        $this->User->CircleMember->my_uid = 1;
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+
+        $this->User->TeamMember->Team->id = 1;
+        $this->User->TeamMember->Team->saveField('photo_file_name', null);
+
+        $this->User->getAllUsersCirclesSelect2();
     }
 
 }

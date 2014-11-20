@@ -13,7 +13,8 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
+                    class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __d('gl', "サークルを編集") ?></h4>
         </div>
         <?=
@@ -22,18 +23,18 @@
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
-                    'class' => 'col col-sm-3 control-label'
+                    'class' => 'col col-sm-3 modal-label pr_12px'
                 ],
                 'wrapInput' => 'col col-sm-6',
-                'class'     => 'form-control'
+                'class'     => 'form-control modal_input-design'
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
             'type'          => 'file',
-            'id' => 'EditCircleForm',
+            'id'            => 'EditCircleForm',
         ]); ?>
         <?= $this->Form->hidden('id') ?>
-        <div class="modal-body">
+        <div class="modal-body modal-circle-body">
             <?=
             $this->Form->input('name',
                                ['label'                    => __d('gl', "サークル名"),
@@ -42,14 +43,14 @@
                                ]) ?>
             <hr>
             <div class="form-group">
-                <label class="col col-sm-3 control-label"><?= __d('gl', 'メンバー') ?></label>
+                <label class="col col-sm-3 control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
 
                 <div class="col col-sm-6">
                     <?=
                     $this->Form->hidden('members',
                                         ['class' => 'ajax_add_select2_members', 'value' => $this->request->data['Circle']['members'], 'style' => "width: 100%", 'circle_id' => $this->request->data['Circle']['id']]) ?>
                     <? $this->Form->unlockField('Circle.members') ?>
-                    <span class="help-block"><?=
+                    <span class="help-block font_11px"><?=
                         __d('gl', "管理者：%s",
                             $this->Session->read('Auth.User.display_username')) ?></span>
                 </div>
@@ -57,14 +58,15 @@
             <hr>
             <?
             $privacy_option = Circle::$TYPE_PUBLIC;
-            $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block">' . __d('gl',
-                                                                                         "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
-            $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block">' . __d('gl',
-                                                                                          "サークル名と参加メンバー、投稿はこのサークルの感化メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+            $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
+                                                                                                   "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+            $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
+                                                                                                    "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
             ?>
             <?php echo $this->Form->input('public_flg', array(
                 'type'    => 'radio',
-                'before'  => '<label class="col col-md-3 control-label">' . __d('gl', 'プライバシー') . '</label>',
+                'before'  => '<label class="col col-sm-3 control-label modal-label">' . __d('gl',
+                                                                                            'プライバシー') . '</label>',
                 'legend'  => false,
                 'class'   => false,
                 'options' => $privacy_option,
@@ -74,18 +76,20 @@
             $this->Form->input('description',
                                ['label'       => __d('gl', "サークルの説明"),
                                 'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
+                                'rows'        => 1,
                                ]) ?>
             <hr>
             <div class="form-group">
-                <label for="" class="col col-sm-3 control-label"><?= __d('gl', "サークル画像") ?></label>
+                <label for="" class="col col-sm-3 control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
 
                 <div class="col col-sm-6">
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput_small fileinput-new" data-provides="fileinput">
                         <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                             style="width: 150px; height: 150px;">
+                             style="width: 96px; height: 96px; line-height: 96px;"
+                            >
                             <?=
                             $this->Upload->uploadImage($this->request->data, 'Circle.photo',
-                                                       ['style' => 'x_large']) ?>
+                                                       ['style' => 'medium_large']) ?>
                         </div>
                         <div>
                         <span class="btn btn-default btn-file">
@@ -106,9 +110,9 @@
                                                 ''
                                                ]) ?>
                         </span>
+                            <span class="help-block font_11px disp_ib"><?= __d('gl', '10MB以下') ?></span>
                         </div>
                     </div>
-                    <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
 
                     <div class="has-error">
                         <?=
@@ -127,6 +131,8 @@
             $this->Form->submit(__d('gl', "変更を保存"),
                                 ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
             <?= $this->Form->end(); ?>
+            <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
+                    data-dismiss="modal"><?= __d('gl', "キャンセル") ?></button>
             <?=
             $this->Form->postLink(__d('gl', "サークルを削除"),
                                   ['controller' => 'circles', 'action' => 'delete', $this->request->data['Circle']['id']],

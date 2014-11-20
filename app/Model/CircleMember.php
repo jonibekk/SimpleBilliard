@@ -110,10 +110,27 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
+    public function getAdminMemberList($circle_id, $with_me = false)
     {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
+        $primary_backup = $this->primaryKey;
+        $this->primaryKey = 'user_id';
+        $options = [
+            'conditions' => [
+                'circle_id' => $circle_id,
+                'admin_flg' => true,
+            ],
+            'fields'     => ['user_id']
+        ];
+        if (!$with_me) {
+            $options['conditions']['NOT']['user_id'] = $this->my_uid;
+        }
+        $res = $this->find('list', $options);
+        $this->primaryKey = $primary_backup;
+        return $res;
+    }
+
+    public function getMembers($circle_id, $with_admin = false)
+    {
         $options = [
             'conditions' => [
                 'CircleMember.circle_id' => $circle_id,
@@ -121,13 +138,23 @@ class CircleMember extends AppModel
                 'CircleMember.admin_flg' => false,
             ],
             'contain'    => [
-                'User'
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ]
             ]
         ];
         if ($with_admin) {
-            unset($options['conditions']['admin_flg']);
+            unset($options['conditions']['CircleMember.admin_flg']);
         }
         $users = $this->find('all', $options);
+        return $users;
+    }
+
+    public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $users = $this->getMembers($circle_id, $with_admin);
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];

@@ -29,10 +29,25 @@ echo $this->Html->script('ZeroClipboard.min');
 echo $this->Html->script('placeholders.min');
 echo $this->Html->script('customRadioCheck.min');
 echo $this->Html->script('select2.min');
+echo $this->Html->script('bootstrap-datepicker.min');
+echo $this->Html->script('locales/bootstrap-datepicker.ja');
+echo $this->Html->script('moment.min');
 echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
 $(document).ready(function () {
+    //入力途中での警告表示
+    $("input,select,textarea").change(function () {
+        if (!$(this).hasClass('disable-change-warning')) {
+            $(window).on('beforeunload', function () {
+                return '<?=__d('gl',"入力が途中です。このまま移動しますか？")?>';
+            });
+        }
+    });
+    $("input[type=submit]").click(function () {
+        $(window).off('beforeunload');
+    });
+
     //noinspection JSUnresolvedFunction
     var client = new ZeroClipboard(document.getElementsByClassName('copy_me'));
     //noinspection JSUnusedLocalSymbols
@@ -93,41 +108,21 @@ $(document).ready(function () {
                 };
             },
             results: function (data, page) {
-                return { results: data.results };
+                return {results: data.results};
             }
         },
         formatSelection: format,
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2Member"
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
-        minimumInputLength: 2,
-        placeholder: '<?=__d('gl',"指定なしの為、この投稿は自分以外の人には見えません。")?>',
-        ajax: {
-            url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10 // page size
-                };
-            },
-            results: function (data, page) {
-                var team = {
-                    'id': 'public',
-                    'text': "<?=__d('gl',"チーム全体")?>",
-                    'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
-                };
-                data.results.push(team);
-                return { results: data.results };
-            }
-        },
+        placeholder: '<?=__d('gl',"自分のみ")?>',
+        data: <?=isset($select2_default)?$select2_default:"[]"?>,
         <?if(isset($current_circle)&&!empty($current_circle)):?>
         initSelection: function (element, callback) {
             var data = [
@@ -153,11 +148,36 @@ $(document).ready(function () {
         <?endif;?>
         formatSelection: format,
         formatResult: format,
-        dropdownCssClass: 'gl-s2-post-dropdown',
+        dropdownCssClass: 's2-post-dropdown',
         escapeMarkup: function (m) {
             return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    });
+    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.modal();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                $modal_elm.find(".bt-switch").bootstrapSwitch({
+                    size: "small",
+                    onText: "<?=__d('gl',"参加")?>",
+                    offText: "<?=__d('gl',"不参加")?>"
+                });
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
         }
     });
+
 });
 function format(item) {
     return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
@@ -181,7 +201,7 @@ function bindSelect2Members($this) {
                 };
             },
             results: function (data, page) {
-                return { results: data.results };
+                return {results: data.results};
             }
         },
         initSelection: function (element, callback) {
@@ -198,7 +218,8 @@ function bindSelect2Members($this) {
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        }
+        },
+        containerCssClass: "select2Member"
     });
 }
 /**
@@ -234,23 +255,77 @@ function bindSelect2Members($this) {
     $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
 })(jQuery);
 
+function evFollowGoal() {
+    attrUndefinedCheck(this, 'goal-id');
+    attrUndefinedCheck(this, 'data-class');
+    var $obj = $(this);
+    var kr_id = $obj.attr('goal-id');
+    var data_class = $obj.attr('data-class');
+    var url = "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>";
+    $.ajax({
+        type: 'GET',
+        url: url + '/' + kr_id,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    text: data.msg
+                });
+            }
+            else {
+                if (data.add) {
+                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
+                        $(this).children('span').text("<?=__d('gl',"フォロー中")?>");
+                        $(this).children('i').hide();
+                        $(this).removeClass('follow-off');
+                        $(this).addClass('follow-on');
+                    });
+                }
+                else {
+                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
+                        $(this).children('span').text("<?=__d('gl',"フォロー")?>");
+                        $(this).children('i').show();
+                        $(this).removeClass('follow-on');
+                        $(this).addClass('follow-off');
+                    });
+                }
+            }
+        },
+        error: function () {
+            new PNotify({
+                type: 'error',
+                text: "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>"
+            });
+        }
+    });
+    return false;
+}
 function evFeedMoreView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
     attrUndefinedCheck(this, 'get-url');
+    attrUndefinedCheck(this, 'month-index');
 
     var $obj = $(this);
     var parent_id = $obj.attr('parent-id');
     var next_page_num = $obj.attr('next-page-num');
     var get_url = $obj.attr('get-url');
+    var month_index = $obj.attr('month-index');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     //ローダー表示
     $obj.after($loader_html);
+    //url生成
+    var url = get_url + '/page:' + next_page_num;
+    if (month_index > 1) {
+        url = url + '/month_index:' + month_index;
+    }
     $.ajax({
         type: 'GET',
-        url: get_url + '/page:' + next_page_num,
+        url: url,
         async: true,
         dataType: 'json',
         success: function (data) {
@@ -272,23 +347,35 @@ function evFeedMoreView() {
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを有効化
+                $obj.text("<?=__d('gl', "もっと見る ▼") ?>");
                 $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
 
-                $('.gl-custom-radio-check').customRadioCheck();
+                $('.custom-radio-check').customRadioCheck();
 
             }
-            else {
+
+            if (data.count < 20) {
                 //ローダーを削除
                 $loader_html.remove();
-                //親を取得
-                //noinspection JSCheckFunctionSignatures
-                var $parent = $obj.parent();
-                //「もっと読む」リンクを削除
-                $obj.remove();
-                //データが無かった場合はデータ無いよ。を表示
-                $parent.append("<?=__d('gl','これ以上の投稿がありません。')?>");
+                //リンクを有効化
+                $obj.removeAttr('disabled');
+                month_index++;
+                $obj.attr('month-index', month_index);
+                //次のページ番号をセット
+                $obj.attr('next-page-num', 1);
+                $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
+                $("#ShowMoreNoData").show();
             }
         },
         error: function () {
@@ -333,8 +420,16 @@ function evCommentAllView() {
                 $obj.remove();
                 //画像をレイジーロード
                 imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
 
-                $('.gl-custom-radio-check').customRadioCheck();
+                $('.custom-radio-check').customRadioCheck();
 
             }
             else {
@@ -373,11 +468,6 @@ function evLike() {
         url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>" + "/" + model_id;
     }
 
-    //リンクを非表示
-    $obj.hide();
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    //ローダー表示
-    $obj.after($loader_html);
     $.ajax({
         type: 'GET',
         url: url,
@@ -391,16 +481,13 @@ function evLike() {
                 //「いいね」した場合は「いいね取り消し」表示に
                 //noinspection JSUnresolvedVariable
                 if (data.created == true) {
-                    $obj.text("<?=__d('gl',"いいね取り消し")?>");
+                    $obj.addClass("liked");
                 }
                 //「いいね取り消し」した場合は「いいね」表示に
                 else {
-                    $obj.text("<?=__d('gl',"いいね！")?>");
+                    $obj.removeClass("liked");
                 }
                 $("#" + like_count_id).text(data.count);
-                //ローダーを削除
-                $loader_html.remove();
-                $obj.show();
             }
         },
         error: function () {
@@ -448,6 +535,68 @@ function showMore(obj) {
         });
     }
 }
+function getModalFormFromUrl(e) {
+    e.preventDefault();
+    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).remove();
+    });
+    $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).find('textarea').each(function () {
+            $(this).autosize();
+        });
+        $(this).find('.input-group.date').datepicker({
+            format: "yyyy/mm/dd",
+            todayBtn: 'linked',
+            language: "ja",
+            autoclose: true,
+            todayHighlight: true
+            //endDate:"2015/11/30"
+        })
+            .on('hide', function (e) {
+                $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
+                $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
+            });
+    });
+    var url = $(this).attr('href');
+    if (url.indexOf('#') == 0) {
+        $(url).modal('open');
+    } else {
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.find('form').bootstrapValidator({
+                live: 'enabled',
+                feedbackIcons: {},
+                fields: {
+                    "data[KeyResult][start_date]": {
+                        validators: {
+                            callback: {
+                                message: '<?=__d('validate',"開始日が期限を過ぎています。")?>',
+                                callback: function (value, validator) {
+                                    var m = new moment(value, 'YYYY/MM/DD', true);
+                                    return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
+                                }
+                            }
+                        }
+                    },
+                    "data[KeyResult][end_date]": {
+                        validators: {
+                            callback: {
+                                message: '<?=__d('validate',"期限が開始日以前になっています。")?>',
+                                callback: function (value, validator) {
+                                    var m = new moment(value, 'YYYY/MM/DD', true);
+                                    return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            $modal_elm.modal();
+            $('body').addClass('modal-open');
+        });
+    }
+}
 
 <?if(isset($mode_view)):?>
 <?if($mode_view == MODE_VIEW_TUTORIAL):?>
@@ -455,13 +604,17 @@ $("#modal_tutorial").modal('show');
 <?endif;?>
 <?endif;?>
 </script>
+<?= $this->Session->flash('open_krs') ?>
 <?
 echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
 ?>
 <? if (ENV_NAME == "stg"): ?>
     <p class="ribbon ribbon-staging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Staging</p>
-<? elseif (ENV_NAME == "local"): ?>
+<? elseif (ENV_NAME == "hotfix"): ?>
+    <p class="ribbon ribbon-hotfix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hotfix</p>
+<?
+elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local</p>
 <?endif; ?>
 <!-- END app/View/Elements/gl_common_js.ctp -->

@@ -23,7 +23,7 @@ class NotifyBizComponent extends Component
 
     public $notify_option = [
         'url_data'    => null,
-        'count_num' => 1,
+        'count_num'   => 1,
         'notify_type' => null,
         'model_id'    => null,
         'item_name'   => null,
@@ -67,13 +67,11 @@ class NotifyBizComponent extends Component
                 $this->_setCircleUserJoinOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $this->is_one_on_one_notify = true;
                 $this->has_send_mail_interval_time = false;
                 $this->_setCircleChangePrivacyOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_ADD_USER:
                 $this->has_send_mail_interval_time = false;
-                $this->is_one_on_one_notify = true;
                 $this->_setCircleAddUserOption($model_id, $to_user_list);
                 break;
             default:
@@ -108,14 +106,17 @@ class NotifyBizComponent extends Component
         }
         //宛先は閲覧可能な全ユーザ
         $members = $this->Post->getShareAllMemberList($post_id);
+
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED);
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_POST;
-        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
+//        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
+//        $this->notify_option['url_data'] = ['team_id'=>$this->Session->read('current_team_id')];
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home', 'team_id' => $this->Session->read('current_team_id')];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
-            json_encode([mb_strimwidth($post['Post']['body'], 0, 40, "...")]) : null;
+            json_encode([mb_strimwidth(trim($post['Post']['body']), 0, 40, "...")]) : null;
     }
 
     /**
@@ -127,8 +128,8 @@ class NotifyBizComponent extends Component
      */
     private function _setCircleUserJoinOption($circle_id)
     {
-        //宛先は自分以外のサークルメンバー
-        $circle_member_list = $this->Post->User->CircleMember->getMemberList($circle_id, true, false);
+        //宛先は自分以外のサークル管理者
+        $circle_member_list = $this->Post->User->CircleMember->getAdminMemberList($circle_id);
         if (empty($circle_member_list)) {
             return;
         }
@@ -206,7 +207,7 @@ class NotifyBizComponent extends Component
     private function _setFeedCommentedOnMyCommentedPostOption($post_id, $comment_id)
     {
         //宛先は自分以外のコメント主(投稿主ものぞく)
-        $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id, false);
+        $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id);
         if (empty($commented_user_list)) {
             return;
         }
@@ -229,7 +230,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([mb_strimwidth($comment['Comment']['body'], 0, 40, "...")]) : null;
+            json_encode([mb_strimwidth(trim($comment['Comment']['body']), 0, 40, "...")]) : null;
     }
 
     /**
@@ -261,7 +262,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([mb_strimwidth($comment['Comment']['body'], 0, 40, "...")]) : null;
+            json_encode([mb_strimwidth(trim($comment['Comment']['body']), 0, 40, "...")]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
     }
 
@@ -364,9 +365,8 @@ class NotifyBizComponent extends Component
 
     /**
      * execコマンドにて通知を行う
-
      *
-*@param       $type
+     * @param       $type
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする

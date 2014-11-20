@@ -1,4 +1,4 @@
-<a href="http://zhb.io/zhb-now" target="_blank"><img src="https://raw.github.com/axiomzen/zenhub-now/master/powered-by-zenhub-720.png" width="200px" alt="Powered by ZenHub"/></a>
+<a href="https://zenhub.io"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png" height="18px"></a>
 
 # Goalous 2.0
 Goalous 2.0のリポジトリです。  
@@ -98,7 +98,7 @@ Goalousチームについて
 Goalous開発におけるすべてのドキュメントは[ここ](https://drive.google.com/a/isao.co.jp/#folders/0B6mjvNcPiJ6PLXBlTUJsZWphMG8)にあります。
 
 ## Development
-- [開発フロー](https://www.lucidchart.com/documents/edit/ae4a8af6-88c8-41fe-a67b-e121f973026b)
+- [開発フロー](https://www.lucidchart.com/documents/view/ae4a8af6-88c8-41fe-a67b-e121f973026b)
 
 ## Design Documentation
 - [ER図](https://www.lucidchart.com/documents/edit/4f5b2ed4-5153-79ec-ba7f-70600a004117/0)
@@ -106,7 +106,7 @@ Goalous開発におけるすべてのドキュメントは[ここ](https://drive
 
 ## Operations
 ## Infrastructure
-- [全体像](https://www.lucidchart.com/documents/edit/4b328b80-5327-fa30-8c2f-0aab0a00da8d)
+- [全体像](https://www.lucidchart.com/documents/view/4b328b80-5327-fa30-8c2f-0aab0a00da8d/0)
 
 # Cloud Tools For Project
 Goalousプロジェクトで利用しているクラウドツールについて。

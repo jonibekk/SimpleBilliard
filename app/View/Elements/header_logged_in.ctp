@@ -6,56 +6,164 @@
  * Time: 5:04 PM
  *
  * @var       $title_for_layout string
- * @var       $this             View
+ * @var       $this             CodeCompletionView
  * @var       $nav_disable
  * @var array $my_teams
+ * @var       $current_global_menu
+ * @var       $avail_sub_menu
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
-<div class="navbar navbar-fixed-top navbar-default gl-navbar" style="">
-    <div class="gl-nav-container header-container">
+<header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
+    <div class="nav-container header-container">
+        <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
+            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
+                    data-target=".navbar-offcanvas" aria-hidden="true">
+                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
+            </button>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
+                       href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
+                        <img src="<?= $this->Html->url('/img/logo_off.png') ?>"
+                             class="header-logo-img"
+                             alt="Goalous2.0" width="20px" height="20px">
+
+                        <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link-home header-link">
+                            <?= __d('gl', "ホーム") ?>
+                        </p>
+                        <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
+                    </a>
+                </li>
+                <li><a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
+                        <i class="fa fa-flag header-link header-icon">
+                            <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "ゴール") ?></p>
+                        </i>
+                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
+                    </a></li>
+                <li><a href="#" class="header-team header_l-icons develop--forbiddenLink">
+                        <i class="fa fa-users header-link header-icon">
+                            <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "チーム") ?></p>
+                        </i>&nbsp;
+                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
+                    </a>
+                </li>
+                <li>
+                    <form class="nav-form-group" role="search">
+                        <?
+                        echo $this->Form->input('current_team',
+                                                array(
+                                                    'type'      => 'select',
+                                                    'options'   => !empty($my_teams) ? $my_teams : [__d('gl',
+                                                                                                        'チームがありません')],
+                                                    'value'     => $this->Session->read('current_team_id'),
+                                                    'id'        => 'SwitchTeam',
+                                                    'label'     => false,
+                                                    'div'       => false,
+                                                    'class'     => 'form-control nav-team-select font_12px disable-change-warning',
+                                                    'wrapInput' => false,
+                                                ))
+                        ?>
+                    </form>
+                </li>
+                <li class="header-search-group">
+                    <form class="nav-form-group" role="search">
+                        <i class="fa fa-search nav-form-icon"></i>
+                        <input type="text"
+                               class="form-control nav-search font_12px disable-change-warning develop--search"
+                               placeholder="Search">
+                    </form>
+                </li>
+                <li class="circle-list-in-hamburger visible-xxs hidden-xs">
+                    <?= $this->element('circle_list_in_hamburger') ?>
+                </li>
+            </ul>
+        </div>
+
         <div class="navbar-header navbar-right">
-            <button type="button" class="navbar-toggle gl-hamburger" data-toggle="offcanvas"
-                    data-target=".navbar-offcanvas"
-                    data-canvas="body">
+            <button type="button" class="navbar-toggle hamburger" data-toggle="offcanvas"
+                    data-target=".navbar-offcanvas">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div class="pull-right gl-navbar-icons">
-                <a href="<?= $this->Html->url('/') ?>" class="header-home">ホーム</a>
-
-                <div class="dropdown gl-navbar-nav-fix header-circle">
-                    <a href="#" data-toggle="dropdown" id="download">
-                    <i class="fa fa-plus-circle"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
-                        <? if ($this->Session->read('current_team_id')): ?>
-                            <li>
-                                <a href="#" data-toggle="modal" data-target="#modal_add_circle"><?=
-                                    __d('gl',
-                                        "サークルを作成") ?></a>
-                            </li>
-                        <? endif; ?>
-                        <li><?=
-                            $this->Html->link(__d('gl', "チームを作成"),
-                                              ['controller' => 'teams', 'action' => 'add']) ?></li>
-                    </ul>
-                </div>
-                <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o"></i></a>
-                <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o"></i></a>
-
-                <div class="dropdown gl-navbar-nav-fix">
-                    <a href="#" class="dropdown-toggle me-menu-image no-line header-user-profile" data-toggle="dropdown"
+            <div class="pull-right nav-icons">
+                <div class="dropdown navbar-nav-fix">
+                    <a href="#"
+                       class="dropdown-toggle me-menu-image font_verydark no-line header-user-profile pull-right"
+                       data-toggle="dropdown"
                        id="download">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                                   ['width' => '26px', 'height' => '26px', 'class' => 'img-circle']) ?>
-                        <i class="fa fa-caret-down"></i></a>
+                                                   ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
+                        <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
+                        <span
+                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.first_name') ?></span>
+                    </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
+                        <li class="text-align_c"><?= __d('gl', "準備中") ?></li>
+
+                        <!--
+-->
+                    </ul>
+                </div>
+                <a href="<?= $this->Html->url('/') ?>" class="header-home header-link"><?= __d('gl', "ホーム") ?></a>
+
+                <div class="dropdown navbar-nav-fix header-circle">
+                    <a href="#" data-toggle="dropdown" id="download">
+                        <i class="fa fa-plus-circle header-link header-icon"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
+                        <? if ($this->Session->read('current_team_id')): ?>
+                            <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                                    <i class="fa fa-flag header-drop-icons">
+                                        <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
+                                    </i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" data-toggle="modal" data-target="#modal_add_circle">
+                                    <i class="fa fa-circle-o header-drop-icons">
+                                        <span class="font_verydark"><?= __d('gl', "サークルを作成") ?></span>
+                                    </i>
+                                </a>
+                            </li>
+                        <? endif; ?>
                         <li>
-                        <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
+                            <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
+                                <i class="fa fa-users header-drop-icons">
+                                    <span class="font_verydark"><?= __d('gl', 'チームを作成') ?></span>
+                                </i>
+                            </a>
                         </li>
+                    </ul>
+                </div>
+                <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
+                <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o header-link header-icon"></i></a>
+
+                <div class="pull-right header-function dropdown">
+                    <a href="#"
+                       class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
+                       data-toggle="dropdown"
+                       id="download">
+                        <i class="fa fa-cog header-function-icon"></i><i
+                            class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                        aria-labelledby="dropdownMenu1">
+                        <li>
+                            <?= $this->Html->link(__d('gl', "設定"), ['controller' => 'users', 'action' => 'settings']) ?>
+                        </li>
+                        <?
+                        //TODO 一時的にチーム管理者はチーム招待リンクを表示
+                        if (isset($my_member_status['TeamMember']) && $my_member_status['TeamMember']['admin_flg']):?>
+                            <li>
+                                <?=
+                                $this->Html->link(__d('gl', "メンバーを招待"),
+                                                  ['controller' => 'teams', 'action' => 'invite']) ?>
+                            </li>
+                        <? endif; ?>
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
                                 __d('gl',
                                     "チュートリアル") ?></a></li>
@@ -70,51 +178,23 @@
                 </div>
             </div>
         </div>
-        <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <a class="navmenu-brand" href="#"><?= $title_for_layout ?></a>
-            <ul class="nav navbar-nav">
-                <li><a class="header-logo" href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
-                        <img src="<?= $this->Html->url('/img/goalous.png') ?>"
-                             class="header-logo"
-                             alt="Goalous2.0">&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
-                    </a>
-                </li>
-                <li><a href="#" class="header-goal"><i class="fa fa-bullseye develop--forbiddenLink"></i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
-                    </a></li>
-                <li><a href="#" class="header-team"><i class="fa fa-users develop--forbiddenLink"></i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
-                    </a>
-                </li>
-                <li>
-                    <form class="gl-nav-form-group" role="search">
-                        <?
-                        echo $this->Form->input('current_team',
-                                                array(
-                                                    'type'      => 'select',
-                                                    'options'   => !empty($my_teams) ? $my_teams : [__d('gl',
-                                                                                                        'チームがありません')],
-                                                    'value'     => $this->Session->read('current_team_id'),
-                                                    'id'        => 'SwitchTeam',
-                                                    'label'     => false,
-                                                    'div'       => false,
-                                                    'class'     => 'form-control gl-nav-team-select',
-                                                    'wrapInput' => false,
-                                                ))
-                        ?>
-                    </form>
-                </li>
-                <li class="header-search-group">
-                    <form class="gl-nav-form-group" role="search">
-                        <i class="fa fa-search gl-nav-form-icon"></i>
-                        <input type="text" class="form-control gl-nav-search develop--search" placeholder="Search">
-                    </form>
-                </li>
-            </ul>
-        </div>
         <!--/.nav-collapse -->
     </div>
-</div>
-
+</header>
+<? if ($avail_sub_menu): ?>
+    <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt height_40px" id="SubHeaderMenu">
+        <div class="col col-xxs-6 text-align_r">
+            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link disp_ib pt_12px height_40px sp-feed-active"
+               id="SubHeaderMenuFeed">
+                <?= __d('gl', "ニュースフィード") ?>
+            </a>
+        </div>
+        <div class="col col-xxs-6">
+            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link disp_ib pt_12px height_40px"
+               id="SubHeaderMenuGoal">
+                <?= __d('gl', "関連ゴール") ?>
+            </a>
+        </div>
+    </div>
+<? endif; ?>
 <!-- END app/View/Elements/header_logged_in.ctp -->

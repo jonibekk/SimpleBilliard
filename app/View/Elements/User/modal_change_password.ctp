@@ -13,7 +13,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
+                    <span class="close-icon">&times;</span></button>
                 <h4 class="modal-title"><?= __d('gl', "パスワードの変更") ?></h4>
             </div>
             <?=
@@ -54,7 +55,11 @@
                 <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-            <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary']) ?>
+                <?= $this->Form->submit(__d('gl', "変更を保存"),
+                                        ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
+                <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
+                    <?= __d('gl', "キャンセル") ?>
+                </button>
             </div>
             <?= $this->Form->end() ?>
         </div>

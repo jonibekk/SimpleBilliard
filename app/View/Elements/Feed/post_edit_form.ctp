@@ -18,7 +18,7 @@ $this->Form->create('Post', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class' => 'gl-feed-edit-form',
+    'class' => 'pt_10px',
     'style'         => 'display: none',
     'novalidate'    => true,
     'type'          => 'file',
@@ -29,6 +29,7 @@ $this->Form->input('body', [
     'id'             => "PostEditFormBody_{$post['Post']['id']}",
     'label'          => false,
     'type'           => 'textarea',
+    'wrap'           => 'off',
     'rows'           => 1,
     'class' => 'form-control tiny-form-text blank-disable edit-form feed-edit-form',
     'target_show_id' => "PostEdit_{$post['Post']['id']}",
@@ -36,8 +37,8 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
-<div class="row form-group gl-no-margin" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
-    <ul class="col gl-input-images">
+<div class="row form-group m_0px" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
+    <ul class="col input-images">
         <? for ($i = 1; $i <= 5; $i++): ?>
             <li>
                 <?=
@@ -49,13 +50,17 @@ $this->Form->input('body', [
 </div>
 
 <div class="" style="display: none" id="PostEdit_<?= $post['Post']['id'] ?>">
-    <a href="#" class="target-show-this-del font-size_12" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
-        <i class="fa fa-picture-o"></i>&nbsp;<?= __d('gl', "添付画像を変更する") ?>
+    <a href="#" class="target-show-this-del font_12px" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
+        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                data-placement="bottom"
+                title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
+        </button>
+
     </a>
 
     <?=
     $this->Form->submit(__d('gl', "変更を保存する"),
-                        ['class' => 'btn btn-primary pull-right', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
+                        ['class' => 'btn btn-primary pull-right submit-post-edit', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>

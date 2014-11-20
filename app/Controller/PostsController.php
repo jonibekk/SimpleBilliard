@@ -149,6 +149,7 @@ class PostsController extends AppController
      */
     public function comment_edit($comment_id)
     {
+        $this->request->allowMethod('post');
         $this->Post->Comment->id = $comment_id;
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
@@ -156,7 +157,6 @@ class PostsController extends AppController
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
-        $this->request->allowMethod('post');
         if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
             $this->request->data['Comment']['site_info'] = null;
             $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
@@ -189,7 +189,16 @@ class PostsController extends AppController
         else {
             $page_num = 1;
         }
-        $posts = $this->Post->get($page_num, 20, null, null, $this->request->params);
+        $start = null;
+        $end = null;
+        //一ヶ月以前を指定された場合
+        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
+            $end_month_offset = $param_named['month_index'];
+            $start_month_offset = $end_month_offset + 1;
+            $end = strtotime("-{$end_month_offset} months", time());
+            $start = strtotime("-{$start_month_offset} months", time());
+        }
+        $posts = $this->Post->get($page_num, 20, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -197,7 +206,8 @@ class PostsController extends AppController
         $response = $this->render('Feed/posts');
         $html = $response->__toString();
         $result = array(
-            'html' => $html
+            'html'  => $html,
+            'count' => count($posts),
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -330,9 +340,36 @@ class PostsController extends AppController
     {
         $this->_setMyCircle();
         $this->_setFeedMoreReadUrl();
+        $select2_default = $this->User->getAllUsersCirclesSelect2();
+        $my_goals = $this->Goal->getMyGoals();
+        $collabo_goals = $this->Goal->getMyCollaboGoals();
+        $follow_goals = $this->Goal->getMyFollowedGoals();
+        $feed_filter = null;
+        //サークル指定の場合はメンバーリスト取得
+        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+            $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
+        }
+        //抽出条件
+        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+            $feed_filter = 'circle';
+        }
+        elseif (isset($this->request->params['named']['filter_goal'])) {
+            $feed_filter = 'goal';
+        }
+
+        $this->set('avail_sub_menu', true);
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'my_goals', 'collabo_goals',
+                           'follow_goals'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
+            //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
+            //サークルページに居て当該サークルから抜けた場合の対応
+            $params = $this->request->params;
+            unset($params['_Token']);
+            if ($this->referer(null, true) == Router::url($params)) {
+                $this->redirect('/');
+            }
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
@@ -344,13 +381,39 @@ class PostsController extends AppController
         /** @noinspection PhpUndefinedMethodInspection */
         $circles = $this->Post->PostShareCircle->getShareCirclesAndMembers($post_id);
         $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
-        $this->set(compact('circles', 'users'));
+        $total_share_user_count = $this->_getTotalShareUserCount($circles, $users);
+        $this->set(compact('circles', 'users', 'total_share_user_count'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('modal_share_circles_users');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
+    }
+
+    function _getTotalShareUserCount($circles, $users)
+    {
+        $all_share_user_list = null;
+        if (!empty($circles)) {
+            foreach ($circles as $k => $v) {
+                if (!empty($v['CircleMember'])) {
+                    foreach ($v['CircleMember'] as $cm) {
+                        if (isset($cm['User']['id'])) {
+                            $all_share_user_list[$cm['User']['id']] = $cm['User']['id'];
+                        }
+                    }
+                }
+            }
+        }
+        if (!empty($users)) {
+            foreach ($users as $k => $v) {
+                if (isset($v['User']['id'])) {
+                    $all_share_user_list[$v['User']['id']] = $v['User']['id'];
+                }
+            }
+        }
+        $total_share_user_count = count($all_share_user_list);
+        return $total_share_user_count;
     }
 
 }

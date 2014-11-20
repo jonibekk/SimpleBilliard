@@ -19,7 +19,7 @@
 <!-- START app/View/Layouts/homepage.ctp -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
 <head>
     <?= $this->Html->charset(); ?>
     <title><?=
@@ -33,6 +33,8 @@
             'content' => "width=device-width, initial-scale=1, maximum-scale=1"
         ));
     echo $this->fetch('meta');
+    //TODO botの拒否。一般公開前に必ず外す。
+    echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
     echo $this->Html->css('homepage/bootstrap');
     echo $this->Html->css('homepage/bootstrap-responsive');
     echo $this->Html->css('font-awesome.min');

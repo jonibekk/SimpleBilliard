@@ -10,7 +10,7 @@
 <!-- START app/View/Layouts/setting.ctp -->
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="en">
+<html lang="ja">
 <?= $this->element('head') ?>
 <body>
 <? if (extension_loaded('newrelic')) {
@@ -21,13 +21,13 @@
 <div id="container" class="container">
     <div class="row">
         <div class="col-xs-3 hidden-xxs">
-            <div class="gl-sidebar-setting" role="complementary">
+            <div class="sidebar-setting" role="complementary">
                 <ul class="nav">
                     <?= $this->fetch('sidebar') ?>
                 </ul>
             </div>
         </div>
-        <div class="col-xs-9 col-xxs-12 gl-sections" role="main">
+        <div class="col-xs-9 col-xxs-12 parent-flash" role="main">
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
@@ -43,7 +43,7 @@
 <?= $this->fetch('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('body').scrollspy({ target: '.gl-sidebar-setting' });
+        $('body').scrollspy({ target: '.sidebar-setting' });
     });
 </script>
 </body>

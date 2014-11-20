@@ -15,7 +15,9 @@ class PagesControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.local_name',
+        'app.follower',
         'app.cake_session',
         'app.user', 'app.notify_setting',
         'app.image',
@@ -31,6 +33,7 @@ class PagesControllerTest extends ControllerTestCase
         'app.post_read',
         'app.images_post',
         'app.comment_read',
+        'app.goal',
         'app.group',
         'app.team_member',
         'app.job_category',
@@ -187,7 +190,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())
@@ -250,7 +253,7 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
-        $this->testAction('/');
+        $this->testAction('/team_id:1');
     }
 
     public function testHomeAuthCircle()
@@ -277,7 +280,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())
@@ -365,7 +368,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())
@@ -429,7 +432,7 @@ class PagesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Security
             ->expects($this->any())

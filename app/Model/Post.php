@@ -8,6 +8,7 @@ App::uses('AppModel', 'Model');
  * @property Team               $Team
  * @property CommentMention     $CommentMention
  * @property Comment            $Comment
+ * @property Goal               $Goal
  * @property GivenBadge         $GivenBadge
  * @property PostLike           $PostLike
  * @property PostMention        $PostMention
@@ -21,12 +22,31 @@ class Post extends AppModel
      * 投稿タイプ
      */
     const TYPE_NORMAL = 1;
-    const TYPE_ACTION = 2;
-    const TYPE_BADGE = 3;
+    const TYPE_CREATE_GOAL = 2;
+    const TYPE_ACTION = 3;
+    const TYPE_BADGE = 4;
+
+    static public $TYPE_MESSAGE = [
+        self::TYPE_NORMAL      => null,
+        self::TYPE_CREATE_GOAL => null,
+        self::TYPE_ACTION      => null,
+        self::TYPE_BADGE       => null,
+    ];
+
+    function _setTypeMessage()
+    {
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d('gl', "あたらしいゴールをつくりました。");
+    }
+
+    const SHARE_ALL = 1;
+    const SHARE_PEOPLE = 2;
+    const SHARE_ONLY_ME = 3;
+    const SHARE_CIRCLE = 4;
 
     public $orgParams = [
-        'circle_id' => null,
-        'post_id'   => null,
+        'circle_id'   => null,
+        'post_id'     => null,
+        'filter_goal' => null,
     ];
 
     public $actsAs = [
@@ -76,8 +96,8 @@ class Post extends AppModel
                     'small' => '80w',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 75,
-                'default_url' => 'no-image.jpg',
+                'quality'     => 75,
+                'default_url' => 'no-image-link.png',
             ],
         ],
     ];
@@ -130,8 +150,7 @@ class Post extends AppModel
     public $belongsTo = [
         'User',
         'Team',
-        //TODO ゴールのモデルを追加した後にコメントアウト解除
-        //'Goal',
+        'Goal',
     ];
 
     /**
@@ -164,6 +183,13 @@ class Post extends AppModel
         ]
     ];
 
+    function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+
+        $this->_setTypeMessage();
+    }
+
     /**
      * 投稿
      *
@@ -194,6 +220,9 @@ class Post extends AppModel
         $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
         $res = $this->save($postData);
+        if (empty($res)) {
+            return false;
+        }
         if (!empty($share)) {
             //ユーザとサークルに分割
             $users = [];
@@ -303,7 +332,6 @@ class Post extends AppModel
         }
 
         $p_list = [];
-
         $org_param_exists = false;
         if ($params) {
             foreach ($this->orgParams as $key => $val) {
@@ -356,6 +384,10 @@ class Post extends AppModel
                 ) {
                     $p_list = $this->orgParams['post_id'];
                 }
+            }
+            //ゴールのみの場合
+            elseif ($this->orgParams['filter_goal']) {
+                $p_list = $this->getExistGoalPostList($start, $end);
             }
         }
 
@@ -413,11 +445,29 @@ class Post extends AppModel
                     ],
                 ],
                 'PostShareCircle' => [
-                    'fields' => ["PostShareCircle.id"]
+                    'fields' => [
+                        "PostShareCircle.id",
+                        "PostShareCircle.circle_id",
+                    ]
                 ],
                 'PostShareUser'   => [
-                    'fields' => ["PostShareUser.id"]
+                    'fields' => [
+                        "PostShareUser.id",
+                        "PostShareUser.user_id",
+                    ]
                 ],
+                'Goal'            => [
+                    'fields'  => [
+                        'name',
+                        'photo_file_name',
+                        'id',
+                    ],
+                    'Purpose' => [
+                        'fields' => [
+                            'name'
+                        ]
+                    ]
+                ]
             ],
         ];
         if (!empty($this->orgParams['post_id'])) {
@@ -432,7 +482,162 @@ class Post extends AppModel
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
         }
+
+        //１件のサークル名をランダムで取得
+        $res = $this->getRandomShareCircleNames($res);
+        //１件のユーザ名をランダムで取得
+        $res = $this->getRandomShareUserNames($res);
+        //シェアモードの特定
+        $res = $this->getShareMode($res);
+        //シェアメッセージの特定
+        $res = $this->getShareMessages($res);
+
         return $res;
+    }
+
+    public function getExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    {
+        $options = [
+            'conditions' => [
+                'NOT'                      => [
+                    'goal_id' => null,
+                ],
+                'team_id'                  => $this->current_team_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'order'      => [$order => $order_direction],
+            'limit'      => $limit,
+            'fields'     => ['id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getRandomShareCircleNames($data)
+    {
+        foreach ($data as $key => $val) {
+            if (!empty($val['PostShareCircle'])) {
+                $circle_list = [];
+                foreach ($val['PostShareCircle'] as $circle) {
+                    $circle_list[] = $circle['circle_id'];
+                }
+                $circle_name = $this->PostShareCircle->Circle->getNameRandom($circle_list);
+                $data[$key]['share_circle_name'] = $circle_name;
+            }
+        }
+        return $data;
+    }
+
+    function getRandomShareUserNames($data)
+    {
+        foreach ($data as $key => $val) {
+            if (!empty($val['PostShareUser'])) {
+                $user_list = [];
+                foreach ($val['PostShareUser'] as $user) {
+                    $user_list[] = $user['user_id'];
+                }
+                $user_name = $this->User->getNameRandom($user_list);
+                $data[$key]['share_user_name'] = $user_name;
+            }
+        }
+        return $data;
+    }
+
+    function getShareMode($data)
+    {
+        foreach ($data as $key => $val) {
+            if ($val['Post']['public_flg']) {
+                $data[$key]['share_mode'] = self::SHARE_ALL;
+            }
+            elseif (!empty($val['PostShareCircle'])) {
+                $data[$key]['share_mode'] = self::SHARE_CIRCLE;
+            }
+            else {
+                if (!empty($val['PostShareUser'])) {
+                    $data[$key]['share_mode'] = self::SHARE_PEOPLE;
+                }
+                else {
+                    $data[$key]['share_mode'] = self::SHARE_ONLY_ME;
+                }
+            }
+        }
+        return $data;
+    }
+
+    function getShareMessages($data)
+    {
+        foreach ($data as $key => $val) {
+            $data[$key]['share_text'] = null;
+            switch ($val['share_mode']) {
+                case self::SHARE_ALL:
+                    $data[$key]['share_text'] = __d('gl', "チーム全体に共有");
+                    break;
+                case self::SHARE_PEOPLE:
+                    if (count($val['PostShareUser']) == 1) {
+                        $data[$key]['share_text'] = __d('gl', "%sに共有",
+                                                        $data[$key]['share_user_name']);
+                    }
+                    else {
+                        $data[$key]['share_text'] = __d('gl', '%1$sと他%2$s人に共有',
+                                                        $data[$key]['share_user_name'],
+                                                        count($val['PostShareUser']) - 1);
+                    }
+                    break;
+                case self::SHARE_ONLY_ME:
+                    //自分だけ
+                    $data[$key]['share_text'] = __d('gl', "自分のみ");
+                    break;
+                case self::SHARE_CIRCLE:
+                    //共有ユーザがいない場合
+                    if (count($val['PostShareUser']) == 0) {
+                        if (count($val['PostShareCircle']) == 1) {
+                            $data[$key]['share_text'] = __d('gl', "%sに共有",
+                                                            $data[$key]['share_circle_name']);
+                        }
+                        else {
+                            $data[$key]['share_text'] = __d('gl', '%1$s他%2$sサークルに共有',
+                                                            $data[$key]['share_circle_name'],
+                                                            count($val['PostShareCircle']) - 1);
+                        }
+                    }
+                    //共有ユーザが１人いる場合
+                    elseif (count($val['PostShareUser']) == 1) {
+                        if (count($val['PostShareCircle']) == 1) {
+                            $data[$key]['share_text'] = __d('gl', '%1$sと%2$sに共有',
+                                                            $data[$key]['share_circle_name'],
+                                                            $data[$key]['share_user_name']);
+                        }
+                        else {
+                            $data[$key]['share_text'] = __d('gl', '%1$sと%2$s他%3$sサークルに共有',
+                                                            $data[$key]['share_user_name'],
+                                                            $data[$key]['share_circle_name'],
+                                                            count($val['PostShareCircle']) - 1);
+                        }
+
+                    }
+                    //共有ユーザが２人以上いる場合
+                    else {
+                        if (count($val['PostShareCircle']) == 1) {
+                            $data[$key]['share_text'] = __d('gl', '%1$s,%2$sと他%3$s人に共有',
+                                                            $data[$key]['share_circle_name'],
+                                                            $data[$key]['share_user_name'],
+                                                            count($val['PostShareUser']) - 1);
+                        }
+                        else {
+                            $data[$key]['share_text'] = __d('gl', '%1$sと他%2$s人,%3$s他%4$sサークルに共有',
+                                                            $data[$key]['share_user_name'],
+                                                            count($val['PostShareUser']) - 1,
+                                                            $data[$key]['share_circle_name'],
+                                                            count($val['PostShareCircle']) - 1);
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $data;
     }
 
     function postEdit($data)
@@ -473,10 +678,27 @@ class Post extends AppModel
             $share_member_list = array_merge($share_member_list,
                                              $this->PostShareUser->getShareUserListByPost($post_id));
         }
+        $share_member_list = array_unique($share_member_list);
         //自分自身を除外
-        if ($key = array_search($this->my_uid, $share_member_list)) {
+        $key = array_search($this->my_uid, $share_member_list);
+        if ($key !== false) {
             unset($share_member_list[$key]);
         }
         return $share_member_list;
+    }
+
+    function addGoalPost($type, $goal_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $this->current_team_id,
+            'type'       => $type,
+            'public_flg' => true,
+            'goal_id'    => $goal_id,
+        ];
+        return $this->save($data);
     }
 }

@@ -144,13 +144,14 @@ class SendMail extends AppModel
 
     /**
      * 詳細なユーザ名等を含んだデータを返す
+     * $to_user_idは送信先ユーザID。このIDが指定された場合はNotifyFromUserから送信先ユーザを除外する
      *
      * @param      $id
      * @param null $lang
      *
      * @return array|null
      */
-    public function getDetail($id, $lang = null, $with_notify_from_user = false)
+    public function getDetail($id, $lang = null, $with_notify_from_user = false, $to_user_id = null)
     {
         $lang_backup = null;
         if ($lang) {
@@ -169,22 +170,30 @@ class SendMail extends AppModel
                 'Notification' => []
             ]
         ];
-        if ($with_notify_from_user) {
-            $options['contain']['Notification'] =
-                [
-                    'NotifyFromUser' => [
-                        'limit'  => 2,
-                        'order'  => ['NotifyFromUser.modified desc'],
-                        'fields' => [
-                            'DISTINCT NotifyFromUser.user_id',
-                        ],
-                        'User'   => [
-                            'fields' => $this->SendMailToUser->User->profileFields,
-                        ]
-                    ]
-                ];
-        }
         $res = $this->find('first', $options);
+        if ($with_notify_from_user && !empty($res['Notification'])) {
+            $options = [
+                'conditions' => [
+                    'NotifyFromUser.notification_id' => $res['Notification']['id'],
+                ],
+                'limit'      => 2,
+                'order'      => ['MAX(NotifyFromUser.modified) desc'],
+                'group'      => ['NotifyFromUser.user_id'],
+                'contain'    => [
+                    'User' => [
+                        'fields' => $this->SendMailToUser->User->profileFields,
+                    ]
+                ]
+            ];
+            if ($to_user_id) {
+                $options['conditions']['NOT']['NotifyFromUser.user_id'] = $to_user_id;
+            }
+            $from_users = $this->Notification->NotifyFromUser->find('all', $options);
+            if (!empty($from_users)) {
+                $res['NotifyFromUser'] = $from_users;
+            }
+        }
+
         if ($lang) {
             $this->me['language'] = $lang_backup;
             $this->SendMailToUser->User->me['language'] = $lang_backup;

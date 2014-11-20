@@ -7,7 +7,7 @@
  */
 ?>
 <!-- START app/View/Users/add_profile.ctp -->
-<div class="row">
+<div class="row add-profile">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "プロフィールを入力してください") ?></div>
@@ -16,7 +16,7 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label mr_5px'
                     ],
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control'
@@ -83,11 +83,11 @@
                 $this->Form->input('gender_type',
                                    [
                                        'type'    => 'radio',
-                                       'before' => '<label class="col col-sm-3 control-label">'
+                                       'before' => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
                                            . __d('gl', '性別') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
-                                       'class'   => 'radio-inline'
+                                       'class'  => 'radio-inline profile-radio-inline'
                                    ])
                 ?>
                 <hr>
@@ -109,7 +109,7 @@
                                     '11' => __d('gl', '11月'),
                                     '12' => __d('gl', '12月'),
                                 ],
-                                'class'      => 'form-control gl-inline-fix',
+                                'class'      => 'form-control inline-fix',
                                 'label'      => __d('gl', '誕生日'),
                                 'dateFormat' => 'YMD',
                                 'empty'      => true,
@@ -136,12 +136,15 @@
                 ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "プロフィール画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label mr_5px"><?= __d('gl', "プロフィール画像") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                                 style="width: 150px; height: 150px;"></div>
+                            <div class="fileinput-preview thumbnail nailthumb-container photo-design"
+                                 data-trigger="fileinput"
+                                 style="width: 150px; height: 150px;">
+                                <i class="fa fa-plus photo-plus-large"></i>
+                            </div>
                             <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
@@ -156,13 +159,14 @@
                                                 'label'        => false,
                                                 'div'          => false,
                                                 'css'          => false,
+                                                'style' => 'x_large',
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false
                                                ]) ?>
                         </span>
                             </div>
                         </div>
-                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
+                        <span class="help-block font_11px disp_ib"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=

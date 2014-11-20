@@ -101,30 +101,48 @@ class SendMailShell extends AppShell
         } catch (RuntimeException $e) {
             return;
         }
-
         $this->item = json_decode($data['SendMail']['item'], true);
         $tmpl_type = $data['SendMail']['template_type'];
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
-        foreach ($to_user_ids as $to_user_id) {
-            $data = $this->_getLangToUserData($to_user_id);
-            $options = array_merge(SendMail::$TYPE_TMPL[$tmpl_type],
-                                   ['to' => (isset($data['ToUser']['PrimaryEmail']['email'])) ? $data['ToUser']['PrimaryEmail']['email'] : null]
-            );
+        if (!empty($to_user_ids)) {
+            foreach ($to_user_ids as $to_user_id) {
+                $data = $this->_getLangToUserData($to_user_id);
+                $options = array_merge(SendMail::$TYPE_TMPL[$tmpl_type],
+                                       ['to' => (isset($data['ToUser']['PrimaryEmail']['email'])) ? $data['ToUser']['PrimaryEmail']['email'] : null]
+                );
+                //送信先メールアドレスが指定されていた場合
+                if (isset($this->item['to'])) {
+                    $options['to'] = $this->item['to'];
+                }
+                $viewVars = [
+                    'to_user_name'   => isset($data['ToUser']['display_username']) ? $data['ToUser']['display_username'] : null,
+                    'from_user_name' => (isset($data['FromUser']['display_username'])) ? $data['FromUser']['display_username'] : null,
+                ];
+                if (is_array($this->item)) {
+                    $viewVars = array_merge($this->item, $viewVars);
+                }
+                $this->_sendMailItem($options, $viewVars);
+                $this->SendMail->id = $data['SendMail']['id'];
+                $this->SendMail->save(['sent_datetime' => time()]);
+            }
+        }
+        else {
+            $options = SendMail::$TYPE_TMPL[$tmpl_type];
             //送信先メールアドレスが指定されていた場合
             if (isset($this->item['to'])) {
                 $options['to'] = $this->item['to'];
             }
             $viewVars = [
-                'to_user_name'   => isset($data['ToUser']['display_username']) ? $data['ToUser']['display_username'] : null,
+                'to_user_name'   => null,
                 'from_user_name' => (isset($data['FromUser']['display_username'])) ? $data['FromUser']['display_username'] : null,
             ];
             if (is_array($this->item)) {
                 $viewVars = array_merge($this->item, $viewVars);
             }
             $this->_sendMailItem($options, $viewVars);
+            $this->SendMail->id = $data['SendMail']['id'];
+            $this->SendMail->save(['sent_datetime' => time()]);
         }
-        $this->SendMail->id = $data['SendMail']['id'];
-        $this->SendMail->save(['sent_datetime' => time()]);
     }
 
     /**
@@ -145,7 +163,7 @@ class SendMailShell extends AppShell
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
             $from_user_names = [];
-            foreach ($data['Notification']['NotifyFromUser'] as $user) {
+            foreach ($data['NotifyFromUser'] as $user) {
                 $from_user_names[] = $user['User']['display_username'];
             }
             $subject = $this->User->Notification->getTitle($data['Notification']['type'],
@@ -211,13 +229,7 @@ class SendMailShell extends AppShell
         }
         Configure::write('Config.language', $lang);
         //送信データを再取得
-        if (isset($this->lang_data[$lang])) {
-            $data = $this->lang_data[$lang];
-        }
-        else {
-            $data = $this->SendMail->getDetail($this->params['id'], $lang, $with_notify_from_user);
-            $this->lang_data[$lang] = $data;
-        }
+        $data = $this->SendMail->getDetail($this->params['id'], $lang, $with_notify_from_user, $to_user_id);
         //ToUserデータを付加
         $to_user = $this->User->getProfileAndEmail($to_user_id, $lang);
         $data['ToUser'] = $to_user['User'];
@@ -240,7 +252,6 @@ class SendMailShell extends AppShell
         );
         $options = array_merge($defaults, $options);
         $options['subject'] = "[" . SERVICE_NAME . "]" . $options['subject'];
-
         /**
          * @var CakeEmail $Email
          */

@@ -45,8 +45,8 @@ class Circle extends AppModel
                     'x_large'      => '256x256',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image.jpg',
-                'quality' => 75,
+                'default_url' => 'no-image-circle.jpg',
+                'quality' => 100,
             ]
         ]
     ];
@@ -150,8 +150,9 @@ class Circle extends AppModel
         if (isset($data['Circle']['members']) && !empty($data['Circle']['members'])) {
             $members = explode(",", $data['Circle']['members']);
             foreach ($members as $val) {
-                $val = str_replace('user_', '', $val);;
-                if ($key = array_search($val, $exists_member_list)) {
+                $val = str_replace('user_', '', $val);
+                $key = array_search($val, $exists_member_list);
+                if ($key !== false) {
                     unset($exists_member_list[$key]);
                     continue;
                 }
@@ -222,11 +223,9 @@ class Circle extends AppModel
             'contain'    => [
                 'CircleMember' => [
                     'fields' => [
-                        'CircleMember.id'
+                        'CircleMember.id',
+                        'CircleMember.user_id'
                     ],
-                    'User'   => [
-                        'fields' => $this->CircleMember->User->profileFields
-                    ]
                 ],
                 'CircleAdmin'  => [
                     'conditions' => [
@@ -269,4 +268,24 @@ class Circle extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+    function getNameRandom($ids)
+    {
+        $options = [
+            'conditions' => [
+                'Circle.id'      => $ids,
+                'Circle.team_id' => $this->current_team_id
+            ],
+            'fields'     => [
+                'Circle.name'
+            ],
+            'order'      => 'rand()',
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['Circle']['name'])) {
+            return $res['Circle']['name'];
+        }
+        return null;
+    }
+
 }

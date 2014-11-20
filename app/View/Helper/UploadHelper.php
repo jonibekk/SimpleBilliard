@@ -59,6 +59,9 @@ class UploadHelper extends AppHelper
         if ($options['urlize']) {
             if (isset($settings['default_url']) && $url == $settings['default_url']) {
                 $url = IMAGES_URL . $url;
+                if (!PUBLIC_ENV) {
+                    $url = DS . $url;
+                }
             }
             else {
                 $this->Html->url($url);

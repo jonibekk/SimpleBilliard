@@ -9,11 +9,12 @@
  */
 ?>
 <!-- START app/View/Elements/modal_tutorial.ctp -->
-<div class="modal fade" id="modal_tutorial">
-    <div class="modal-dialog">
-        <div class="modal-content gl-modal-no-margin">
+<div class="modal fade" tabindex="-1" id="modal_tutorial">
+<div class="modal-dialog">
+        <div class="modal-content parent-p_0px">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
+                    <span class="close-icon">&times;</span></button>
                 <h4 class="modal-title"><?= __d('gl', "チュートリアル") ?></h4>
             </div>
             <div class="modal-body">
@@ -28,16 +29,16 @@
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active">
-                            <?= $this->Html->image('homepage/home-slider/slide1.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide1.jpg') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/slide2.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide2.jpg') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/slide3.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide3.jpg') ?>
                         </div>
                         <div class="item">
-                            <?= $this->Html->image('homepage/home-slider/slide4.png') ?>
+                            <?= $this->Html->image('homepage/home-slider/slide4.jpg') ?>
                         </div>
                     </div>
 

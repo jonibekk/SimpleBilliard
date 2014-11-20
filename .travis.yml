@@ -92,12 +92,9 @@ before_deploy:
   - php Vendor/bin/coveralls -v
 
 notifications:
-  hipchat:
-    rooms:
-      - 9a2786129965fc9a2d33d93a09a2b9@goalous2
-    template:
-      - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Change view</a>)'
-    format: html
+  slack: isao:Mcgs4pORm8368wH6Rwo5a6Rh
+  email: false
+
 deploy:
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
@@ -106,6 +103,13 @@ deploy:
     wait-until-deployed: true
     on:
       branch: develop
+  - provider: opsworks
+    access-key-id: AKIAJHXVNZZEOX3TD5BA
+    secret-access-key: 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
+    app-id: feaeb538-35a5-4a1c-bab7-01a70c666987
+    wait-until-deployed: true
+    on:
+      branch: hotfix
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
     secret-access-key: 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

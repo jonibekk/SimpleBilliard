@@ -134,6 +134,7 @@ class UploadBehavior extends ModelBehavior
         $this->toDelete = null;
     }
 
+    /** @noinspection PhpUndefinedClassInspection */
     private function _fetchFromUrl($url)
     {
         $data = array('remote' => true);
@@ -154,7 +155,14 @@ class UploadBehavior extends ModelBehavior
         ];
         $httpSocket = new HttpSocket($config);
         $raw = $httpSocket->get($url);
+        /**
+         * @var HttpResponse $response
+         */
         $response = $httpSocket->response;
+        //404ならnull返す
+        if ($response->code == "404") {
+            return null;
+        }
         $data['size'] = strlen($raw);
         $headerContentType = explode(';', $response['header']['Content-Type']);
         $data['type'] = reset($headerContentType);
@@ -184,6 +192,14 @@ class UploadBehavior extends ModelBehavior
 
     private function _prepareToWriteFiles(&$model, $field)
     {
+        //ファイル名を変更(ファイル名の後にフィールド名を追加)
+        $file_name = $model->data[$model->name][$field]['name'];
+        $file_name = substr($file_name, 0, strrpos($file_name, '.')) . // filename
+            "_" . $field .
+            substr($file_name, strrpos($file_name, '.') //extension
+            );
+        $model->data[$model->name][$field]['name'] = $file_name;
+
         $this->toWrite[$field] = $model->data[$model->name][$field];
         // make filename URL friendly by using Cake's Inflector
         $this->toWrite[$field]['name'] =
@@ -343,8 +359,8 @@ class UploadBehavior extends ModelBehavior
                 break;
             case 'png':
                 $createHandler = 'imagecreatefrompng';
-                $outputHandler = 'imagepng';
-                $quality = null;
+                //pngはjpegに変換
+                $outputHandler = 'imagejpeg';
                 break;
             default:
                 return false;
@@ -433,6 +449,7 @@ class UploadBehavior extends ModelBehavior
             }
 
             $img = imagecreatetruecolor($destW, $destH);
+
             if ($alpha === true) {
                 switch (strtolower($pathinfo['extension'])) {
                     case 'gif':

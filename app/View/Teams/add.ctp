@@ -19,7 +19,7 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label form-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control addteam_input-design'
@@ -38,13 +38,14 @@
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label"><?= __d('gl', "チーム画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label form-label"><?= __d('gl', "チーム画像") ?></label>
 
                     <div class="col col-sm-6">
-                        <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container addteam_photo-design"
+                        <div class="fileinput_small fileinput-new" data-provides="fileinput">
+                            <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
-                                 style="width: 150px; height: 150px;">
+                                 style="width: 96px; height: 96px; line-height:96px;">
+                                <i class="fa fa-plus photo-plus-large"></i>
                             </div>
                             <div>
                         <span class="btn btn-default btn-file">
@@ -65,9 +66,9 @@
                                                 ''
                                                ]) ?>
                         </span>
+                                <span class="help-block font_11px disp_ib"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>
-                        <span class="help-block"><?= __d('gl', '10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=
@@ -85,21 +86,21 @@
                     'label'      => __d('gl', "プラン"),
                     'type'       => 'select',
                     'options'    => Team::$TYPE,
-                    'afterInput' => '<span class="help-block">' . __d('gl',
-                                                                      "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。") . '<br>' . __d('gl',
-                                                                                                                                "このプランはチーム作成後にいつでも変更できます。") . '</span>'
-                ])?>
+                    'afterInput' => '<span class="help-block font_11px">' . __d('gl',
+                                                                                "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。") . '<br>' . __d('gl',
+                                                                                                                                          "このプランはチーム作成後にいつでも変更できます。") . '</span>'
+                ]) ?>
             </div>
 
             <div class="panel-footer addteam_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-9 col-sm-offset-3">
-                        <?=
-                        $this->Form->submit(__d('gl', "チームを作成"),
-                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
+                    <div class="team-button pull-right">
                         <?=
                         $this->Html->link(__d('gl', "スキップ"), "/",
-                                          ['class' => 'btn btn-default', 'div' => false]) ?>
+                                          ['class' => 'btn btn-default design-cancel bd-radius_4px', 'div' => false]) ?>
+                        <?=
+                        $this->Form->submit(__d('gl', "チームを作成"),
+                                            ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>

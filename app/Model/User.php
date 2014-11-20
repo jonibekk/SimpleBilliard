@@ -5,25 +5,26 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Email             $PrimaryEmail
- * @property Team              $DefaultTeam
- * @property Badge             $Badge
- * @property CommentLike       $CommentLike
- * @property CommentMention    $CommentMention
- * @property CommentRead       $CommentRead
- * @property Comment           $Comment
- * @property Email             $Email
- * @property GivenBadge        $GivenBadge
- * @property Notification      $Notification
- * @property NotifySetting     $NotifySetting
- * @property OauthToken        $OauthToken
- * @property PostLike          $PostLike
- * @property PostMention       $PostMention
- * @property PostRead          $PostRead
- * @property Post              $Post
- * @property TeamMember        $TeamMember
- * @property CircleMember      $CircleMember
- * @property LocalName         $LocalName
+ * @property Email                $PrimaryEmail
+ * @property Team                 $DefaultTeam
+ * @property Badge                $Badge
+ * @property CommentLike          $CommentLike
+ * @property CommentMention       $CommentMention
+ * @property CommentRead          $CommentRead
+ * @property Comment              $Comment
+ * @property Email                $Email
+ * @property GivenBadge           $GivenBadge
+ * @property Notification         $Notification
+ * @property NotifySetting        $NotifySetting
+ * @property OauthToken           $OauthToken
+ * @property PostLike             $PostLike
+ * @property PostMention          $PostMention
+ * @property PostRead             $PostRead
+ * @property Post                 $Post
+ * @property TeamMember           $TeamMember
+ * @property CircleMember         $CircleMember
+ * @property LocalName            $LocalName
+ * @property Collaborator         $Collaborator
  */
 class User extends AppModel
 {
@@ -56,8 +57,8 @@ class User extends AppModel
                     'x_large'      => '256x256',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image.jpg',
-                'quality' => 75,
+                'default_url' => 'no-image-user.jpg',
+                'quality'     => 100,
             ]
         ]
     ];
@@ -214,6 +215,8 @@ class User extends AppModel
         'TeamMember',
         'LocalName',
         'CircleMember',
+        'Goal',
+        'Collaborator',
     ];
 
     /**
@@ -294,10 +297,22 @@ class User extends AppModel
 
     public function getDetail($id)
     {
-        $recursive = $this->recursive;
-        $this->recursive = 0;
-        $res = $this->findById($id);
-        $this->recursive = $recursive;
+        $options = [
+            'conditions' => [
+                'User.id' => $id,
+            ],
+            'contain'    => [
+                'TeamMember' => [
+                    'conditions' => [
+                        'TeamMember.team_id' => $this->current_team_id,
+                    ]
+                ],
+                'PrimaryEmail',
+                'NotifySetting',
+                'DefaultTeam',
+            ]
+        ];
+        $res = $this->find('first', $options);
         return $res;
     }
 
@@ -790,6 +805,65 @@ class User extends AppModel
         return ['results' => $res];
     }
 
+    /**
+     * feedのselect2で使うデフォルトデータリスト(json)
+     *
+     * @return array(json)
+     */
+    function getAllUsersCirclesSelect2()
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $circles = $this->CircleMember->getMyCircle();
+        $circle_res = [];
+        foreach ($circles as $val) {
+            $data['id'] = 'circle_' . $val['Circle']['id'];
+            $data['text'] = mb_strimwidth(trim($val['Circle']['name']), 0, 35, "...");
+            $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
+            $circle_res[] = $data;
+        }
+
+        $users = $this->getAllMember(false);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['username'] . " ( " . $val['User']['display_username'] . " )";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
+        $team_res = [];
+        $team = $this->TeamMember->Team->findById($this->current_team_id);
+        if (!empty($team)) {
+            $team_res = [
+                [
+                    'id'    => "public",
+                    'text'  => __d('gl', "チーム全体"),
+                    'image' => $Upload->uploadUrl($team, 'Team.photo', ['style' => 'small']),
+                ]
+            ];
+        }
+
+        $res = array_merge($team_res, $circle_res, $user_res);
+
+        return json_encode($res);
+    }
+
+    public function getAllMember($with_me = true)
+    {
+        $uid_list = $this->TeamMember->getAllMemberUserIdList($with_me);
+
+        $options = [
+            'conditions' => [
+                'id' => $uid_list,
+            ],
+            'order'      => ['first_name'],
+            'fields'     => $this->profileFields,
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
     function getProfileAndEmail($uid, $lang = null)
     {
         $backup_lang = null;
@@ -821,5 +895,21 @@ class User extends AppModel
             $this->me['language'] = $backup_lang;
         }
         return $res;
+    }
+
+    function getNameRandom($uid)
+    {
+        $options = [
+            'conditions' => [
+                'User.id' => $uid,
+            ],
+            'fields'     => $this->profileFields,
+            'order'      => 'rand()',
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['User']['display_username'])) {
+            return $res['User']['display_username'];
+        }
+        return null;
     }
 }

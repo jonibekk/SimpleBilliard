@@ -1,3 +1,6 @@
+$.ajaxSetup({
+    cache: false
+});
 $(document).ready(function () {
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
@@ -5,6 +8,33 @@ $(document).ready(function () {
         if ($(this).is("[name='data[User][agree_tos]']")) {
             //noinspection JSCheckFunctionSignatures
             $(this).parent().parent().nextAll(".help-block" + ".text-danger").remove();
+        }
+    });
+    //ヘッダーサブメニューでのフィード、ゴール切り換え処理
+    //noinspection JSJQueryEfficiency
+    $('#SubHeaderMenu a').click(function () {
+        //既に選択中の場合は何もしない
+        if ($(this).hasClass('sp-feed-active')) {
+            return;
+        }
+
+        if ($(this).attr('id') == 'SubHeaderMenuFeed') {
+            $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
+            $(this).addClass('sp-feed-active');
+            //表示切り換え
+            $('[role="goal_area"]').addClass('visible-md visible-lg');
+            $('[role="main"]').removeClass('visible-md visible-lg');
+        }
+        else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
+            $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
+            $(this).addClass('sp-feed-active');
+            //表示切り換え
+            $('[role="main"]').addClass('visible-md visible-lg');
+            $('[role="goal_area"]').removeClass('visible-md visible-lg');
+        }
+        else {
+            //noinspection UnnecessaryReturnStatementJS
+            return;
         }
     });
     //アップロード画像選択時にトリムして表示
@@ -29,8 +59,11 @@ $(document).ready(function () {
     });
     //投稿の共有範囲切り替え
     $('#ChangeShareSelect2').click(function () {
+        attrUndefinedCheck(this, 'show-target-id');
         attrUndefinedCheck(this, 'target-id');
+        var show_target_id = $(this).attr('show-target-id');
         var target_id = $(this).attr('target-id');
+        $("#" + show_target_id).show();
         $("#" + target_id).find('ul.select2-choices').click();
         return false;
     });
@@ -48,7 +81,7 @@ $(document).ready(function () {
     //carousel
     $('.carousel').carousel({interval: false});
 
-    $('.gl-custom-radio-check').customRadioCheck();
+    $('.custom-radio-check').customRadioCheck();
 
     //bootstrap switch
     $(".bt-switch").bootstrapSwitch();
@@ -81,62 +114,93 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".target-show-this-del", evTargetShowThisDelete);
     //noinspection JSUnresolvedVariable
+    $(document).on("click", ".target-show-target-del", evTargetShowTargetDelete);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".toggle-follow", evFollowGoal);
+    $(document).on("touchend", "#layer-black", function () {
+        $('.navbar-offcanvas').offcanvas('hide');
+    });
+    //evToggleAjaxGet
+    $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
-            $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
-                $modal_elm.modal();
+            $.get(url, function (data) {
+                $modal_elm.append(data);
             }).success(function () {
-            });
-        }
-    });
-    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
-        e.preventDefault();
-        var url = $(this).attr('href');
-        if (url.indexOf('#') == 0) {
-            $(url).modal('open');
-        } else {
-            $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
-                $modal_elm.find(".bt-switch").bootstrapSwitch({size: "small"});
-                $modal_elm.modal();
-            }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
-            $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
-                $modal_elm.modal();
+            $.get(url, function (data) {
+                $modal_elm.append(data);
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
+    $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+    $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $(this).find('textarea').each(function () {
+                $(this).autosize();
+            });
+        });
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
-            $.get(url,function (data) {
-                var $modal_elm = $('<div class="modal on fade">' + data + '</div>');
+            $.get(url, function (data) {
+                $modal_elm.append(data);
                 //noinspection JSUnresolvedFunction
                 bindSelect2Members($modal_elm);
+                //アップロード画像選択時にトリムして表示
+                $modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 96,
+                        height: 96,
+                        fitDirection: 'center center'
+                    });
+                });
+
                 $modal_elm.find('#EditCircleForm').bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
@@ -153,6 +217,7 @@ $(document).ready(function () {
                 });
                 $modal_elm.modal();
             }).success(function () {
+                $('body').addClass('modal-open');
             });
         }
     });
@@ -162,6 +227,23 @@ $(document).ready(function () {
         imageLazyOn();
     });
 
+    //noinspection JSJQueryEfficiency
+    $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
+        $('.container').css('position', 'fixed');
+        $('#layer-black').css('display', 'block');
+    });
+    //noinspection JSJQueryEfficiency
+    $('.navbar-offcanvas').on('hide.bs.offcanvas', function () {
+        $('.container').css('position', '');
+        $('#layer-black').css('display', 'none');
+    });
+
+});
+$(function () {
+    $('textarea').bind('load', function () {
+        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
+        var h = $('textarea').css('height');
+    });
 });
 
 function imageLazyOn() {
@@ -172,8 +254,42 @@ function imageLazyOn() {
         delay: 100,
         visibleOnly: false,
         effect: "fadeIn",
-        removeAttribute: false
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
+            }
+        }
     });
+}
+function evToggleAjaxGet() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var ajax_url = $obj.attr("ajax-url");
+
+    //noinspection JSJQueryEfficiency
+    if (!$('#' + target_id).hasClass('data-exists')) {
+        $.get(ajax_url, function (data) {
+            $('#' + target_id).append(data.html);
+        });
+    }
+    $obj.find('i').each(function () {
+        if ($(this).hasClass('fa-caret-down')) {
+            $(this).removeClass('fa-caret-down');
+            $(this).addClass('fa-caret-up');
+        }
+        else if ($(this).hasClass('fa-caret-up')) {
+            $(this).removeClass('fa-caret-up');
+            $(this).addClass('fa-caret-down');
+        }
+    });
+    //noinspection JSJQueryEfficiency
+    $('#' + target_id).addClass('data-exists');
+    //noinspection JSJQueryEfficiency
+    $('#' + target_id).toggle();
+    return false;
 }
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
@@ -183,8 +299,22 @@ function evTargetToggleClick() {
     var target_id = $obj.attr("target-id");
     var click_target_id = $obj.attr("click-target-id");
     if ($obj.attr("hidden-target-id")) {
-        $('#' + $obj.attr("hidden-target-id")).hide();
+        $('#' + $obj.attr("hidden-target-id")).toggle();
     }
+    //開いている時と閉じてる時のテキストの指定があった場合は置き換える
+    if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
+        //開いてるとき
+        if ($("#" + target_id).is(':visible')) {
+            //閉じてる表示
+            $obj.text($obj.attr("closed-text"));
+        }
+        //閉じてるとき
+        else {
+            //開いてる表示
+            $obj.text($obj.attr("opend-text"));
+        }
+    }
+    //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).trigger('click');
@@ -200,12 +330,36 @@ function evTargetShowThisDelete() {
     $obj.remove();
     return false;
 }
+function evTargetShowTargetDelete() {
+    attrUndefinedCheck(this, 'show-target-id');
+    attrUndefinedCheck(this, 'delete-target-id');
+    var $obj = $(this);
+    var show_target_id = $obj.attr("show-target-id");
+    var delete_target_id = $obj.attr("delete-target-id");
+    $("#" + show_target_id).show();
+    $("#" + delete_target_id).remove();
+    return false;
+}
 
 function evTargetEnabled() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     $("#" + target_id).removeAttr("disabled");
+    return true;
+}
+function evSelectOptionTargetHidden() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'hidden-option-value');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var hidden_option_value = $obj.attr("hidden-option-value");
+    if ($obj.val() == hidden_option_value) {
+        $("#" + target_id).hide();
+    }
+    else {
+        $("#" + target_id).show();
+    }
     return true;
 }
 
@@ -318,15 +472,12 @@ function attrUndefinedCheck(obj, attr_name) {
         throw new Error(msg);
     }
 }
-$(function () {
-    $(".develop--forbiddenLink").hover(
-        function () {
-            $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
-        },
-        function () {
-            $(this).find("div:last").remove();
-        }
-    );
+
+$(document).on("mouseover", ".develop--forbiddenLink", function () {
+    $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
+});
+$(document).on("mouseout", ".develop--forbiddenLink", function () {
+    $(this).find("div:last").remove();
 });
 
 $(function () {
@@ -335,4 +486,205 @@ $(function () {
             $(this).attr('placeholder', '準備中です。');
         }
     );
+});
+
+
+// Workaround for buggy header/footer fixed position when virtual keyboard is on/off
+$('input, textarea')
+    .on('focus', function () {
+        $('.navbar').css('position', 'absolute');
+    })
+    .on('blur', function () {
+        $('.navbar').css('position', 'fixed');
+        //force page redraw to fix incorrectly positioned fixed elements
+        setTimeout(function () {
+            if (typeof $.mobile != "undefined") {
+                window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+            }
+        }, 20);
+    });
+
+
+// goTop
+$(function () {
+    var showFlag = false;
+    var topBtn = $("#gotop");
+    topBtn.css("bottom", "-100px");
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 500) {
+            if (showFlag == false) {
+                showFlag = true;
+                topBtn.stop().animate({"bottom": "28px"}, 200);
+            }
+        } else {
+            if (showFlag) {
+                showFlag = false;
+                topBtn.stop().animate({"bottom": "-100px"}, 200);
+            }
+        }
+    });
+    topBtn.click(function () {
+        $("body,html").stop().animate({
+            scrollTop: 0
+        }, 500, 'swing');
+        return false;
+    });
+});
+
+//SubHeaderMenu
+$(function () {
+    var showNavFlag = false;
+    var subNavbar = $("#SubHeaderMenu");
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 1) {
+            if (showNavFlag == false) {
+                showNavFlag = true;
+                subNavbar.stop().animate({"top": "-10"}, 800);
+            }
+        } else {
+            if (showNavFlag) {
+                showNavFlag = false;
+                subNavbar.stop().animate({"top": "50"}, 400);
+            }
+        }
+    });
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 10) {
+            $(".navbar").css("box-shadow", "0 2px 4px rgba(0, 0, 0, .15)");
+
+        } else {
+            $(".navbar").css("box-shadow", "none");
+
+        }
+    });
+});
+
+$(function () {
+    var goT = $("#gotop");
+    goT.hover(
+        function () {
+            $("#gotop-text").stop().animate({'right': '14px'}, 500);
+        },
+        function () {
+            $("#gotop-text").stop().animate({'right': '-140px'}, 500);
+        }
+    );
+});
+
+
+$(function () {
+    $(".hoverPic").hover(
+        function () {
+            $("img", this).stop().attr("src", $("img", this).attr("src").replace("_off", "_on"));
+        },
+        function () {
+            $("img", this).stop().attr("src", $("img", this).attr("src").replace("_on", "_off"));
+        });
+});
+
+$(function () {
+    $(".header-link").hover(
+        function () {
+            $(this).stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
+        }, function () {
+            $(this).stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
+        });
+});
+$(function () {
+    $(".header-function-link").hover(
+        function () {
+            $(".header-function-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
+        }, function () {
+            $(".header-function-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
+        });
+});
+
+$(function () {
+    $(".header-user-profile").hover(
+        function () {
+            $(".header-profile-icon").stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
+        }, function () {
+            $(".header-profile-icon").stop().animate({opacity: ".88"}, 400).css("color", "#505050");//OFFマウス時のカラーと速度
+        });
+});
+
+$(function () {
+    $("#header").hover(
+        function () {
+            $(".header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
+        }, function () {
+            $(".header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
+        });
+});
+
+$(function () {
+    $(".click-show").on("click", function () {
+            $("#PostFormPicture").css("display", "block")
+        }
+    )
+});
+
+/*表示件数調整*/
+
+$(function () {
+    $(".click-circle-trigger").on("click", function () {
+        var txt = $(this).text();
+        if ($(this).is('.on')) {
+            $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
+            $(".circleListMore:nth-child(n+10)").css("display", "block");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
+        } else {
+            $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
+            $(".circleListMore:nth-child(n+10)").css("display", "none");
+            $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
+        }
+    });
+});
+
+//noinspection JSUnresolvedVariable
+$(document).on("click", ".target-show", evTargetShow);
+
+function evTargetShow() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).show();
+    return false;
+}
+
+//noinspection JSUnresolvedVariable
+$(document).on("click", ".target-show-target-click", evTargetShowTargetClick);
+
+function evTargetShowTargetClick() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'click-target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var click_target_id = $obj.attr("click-target-id");
+    $("#" + target_id).show();
+    $("#" + click_target_id).trigger('click');
+    return false;
+}
+
+function disabledAllInput(selector) {
+    $(selector).find("input,select,textarea").attr('disabled', 'disabled');
+}
+
+function enabledAllInput(selector) {
+    $(selector).find('input,select,textarea').removeAttr('disabled');
+}
+
+
+$(".h-limit").each(function() {
+    var $minHeight = 24;
+    if ( $(this).height() > $minHeight) {
+        $(this).addClass('ln_2');
+    }
+});
+$(".h-limit-f").each(function() {
+    var $minHeight = 24;
+    if ( $(this).height() > $minHeight) {
+        $(this).addClass('ln_2-f');
+    }
+
 });

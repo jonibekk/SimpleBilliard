@@ -18,11 +18,11 @@ if (!isset($form)) {
 <div class="col col-xxs-12 mpTB0">
     <?=
     $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                               ['class' => 'gl-comment-img'])
+                               ['class' => 'comment-img'])
     ?>
-    <div class="gl-comment-body gl-modal-comment">
+    <div class="comment-body modal-comment">
         <? if ($form): ?>
-            <div class="pull-right gl-circle-join-switch">
+            <div class="pull-right circle-join-switch">
                 <? if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者") ?>
                 <? else: ?>
@@ -40,23 +40,11 @@ if (!isset($form)) {
                 <?endif; ?>
             </div>
         <? endif; ?>
-        <div class="font-size_12 font-weight_bold modalFeedTextPadding">
+        <div class="font_12px font_bold modalFeedTextPadding">
             <?= h($circle['Circle']['name']) ?></div>
 
-        <div class="font-size_12 font-lightgray modalFeedTextPaddingSmall">
-        <?
-            $title = '<ul class="gl-user-list-in-tooltip">';
-            foreach ($circle['CircleMember'] as $member) {
-                $img = $this->Upload->uploadImage($member, 'User.photo', ['style' => 'small'],
-                                                  ['width' => '16px', 'height' => '16px']);
-                $username = $member['User']['display_username'];
-                $title .= "<li>{$img}&nbsp;{$username}</li>";
-            }
-            $title .= "</ul>";
-            ?>
-            <a href="#" data-triger="click" data-toggle="tooltip" data-placement="bottom" data-html="true"
-               data-original-title='<?= $title ?>'>
-                <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?></a>
+        <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
+            <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
         </div>
     </div>
 </div>

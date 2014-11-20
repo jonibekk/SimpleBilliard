@@ -42,7 +42,8 @@
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('gl', "送信"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__d('gl', "送信"),
+                                                ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>

@@ -44,8 +44,8 @@ class NotificationFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'           => '',
-            'team_id'      => '',
+            'id'        => '1',
+            'team_id'   => '1',
             'type'         => 1,
             'from_user_id' => '',
             'body'         => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -53,8 +53,8 @@ class NotificationFixture extends CakeTestFixture
             'model_id'  => '',
             'url_data'  => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'count_num' => 1,
-            'del_flg'      => 1,
-            'deleted'      => 1,
+            'del_flg'   => false,
+            'deleted'   => null,
             'created'      => 1,
             'modified'     => 1
         ),

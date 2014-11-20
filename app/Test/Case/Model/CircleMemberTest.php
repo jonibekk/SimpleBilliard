@@ -81,6 +81,15 @@ class CircleMemberTest extends CakeTestCase
         $this->CircleMember->getMemberList(1, true, false);
     }
 
+    function testGetAdminMemberList()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->_setDefault($uid, $team_id);
+        $this->CircleMember->getAdminMemberList(1);
+        $this->CircleMember->getAdminMemberList(1, true);
+    }
+
     function testGetMemberListNotWithMe()
     {
         $uid = 1;

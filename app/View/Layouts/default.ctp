@@ -5,14 +5,15 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var $title_for_layout string
  * @var $this             View
+ * @var $avail_sub_menu
  */
 ?>
 <!-- START app/View/Layouts/default.ctp -->
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="en">
+<html lang="ja">
 <?= $this->element('head') ?>
-<body>
+<body class="<?= (isset($avail_sub_menu) && $avail_sub_menu ? 'avail-sub-menu' : null) ?>">
 <? if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
@@ -28,19 +29,7 @@ else {
 <div id="container" class="container">
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
-            <div class="well layout-sub_padding design-mystatus">
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-
-                <p>test</p>
-            </div>
+            <img src="/img/develop--submenu.jpg" class="develop--goals-column" alt="ちゃんと消しますよ？">
             <?= $this->element('circle_list') ?>
 
         </div>
@@ -48,23 +37,8 @@ else {
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
-        <div class="col-md-4 visible-md visible-lg layout-goal">
-            <img src="/img/develop--goals-column.jpg" class="develop--goals-column" alt="ちゃんと消しますよ？">
-            <!--
-                        <div class="well layout-goal_padding design-goal">
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-
-                            <p>test</p>
-                        </div>
-            -->
+        <div class="col-md-4 visible-md visible-lg col-sm-8 col-xs-8 col-xxs-12 layout-goal" role="goal_area">
+            <?= $this->element('my_goals_area') ?>
         </div>
     </div>
 
@@ -75,6 +49,7 @@ else {
     echo newrelic_get_browser_timing_footer();
 } ?>
 <?= $this->element('modals') ?>
+<?= $this->fetch('modal') ?>
 <?= $this->element('gl_common_js') ?>
 <?= $this->fetch('script') ?>
 </body>

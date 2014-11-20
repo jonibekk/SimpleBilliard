@@ -124,6 +124,18 @@ class Invite extends AppModel
         if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {
             return $invite['Invite']['to_user_id'] === $uid;
         }
+        //招待先のメアドが既に登録済みユーザの場合で、そのユーザが自分だった場合はtrueを返す
+        elseif (isset($invite['Invite']['email'])) {
+            $options = [
+                'conditions' => [
+                    'user_id' => $uid,
+                    'email'   => $invite['Invite']['email'],
+                ]
+            ];
+            if (!empty($this->ToUser->Email->find('first', $options))) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -145,6 +157,17 @@ class Invite extends AppModel
         if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {
             return true;
         }
+        elseif (isset($invite['Invite']['email'])) {
+            $options = [
+                'conditions' => [
+                    'email' => $invite['Invite']['email'],
+                ]
+            ];
+            if (!empty($this->ToUser->Email->find('first', $options))) {
+                return true;
+            }
+        }
+
         return false;
     }
 

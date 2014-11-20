@@ -111,10 +111,29 @@ class UsersController extends AppController
      */
     public function register()
     {
+        //TODO basic認証 本番公開後に外す
+        if ((ENV_NAME == "www" || ENV_NAME == "stg") && !isset($this->request->params['named']['invite_token'])) {
+            $this->_setBasicAuth();
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         //ログイン済の場合はトップへ
         if ($this->Auth->user()) {
             $this->redirect('/');
+        }
+        //トークン付きの場合はメアドデータを取得
+        if (isset($this->request->params['named']['invite_token'])) {
+            try {
+                //トークンが有効かチェック
+                $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            } catch (RuntimeException $e) {
+                $this->Pnotify->outError($e->getMessage());
+                $this->redirect('/');
+            }
+            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
+            if (isset($invite['Invite']['email'])) {
+                $this->set(['email' => $invite['Invite']['email']]);
+            }
         }
 
         if ($this->request->is('post') && !empty($this->request->data)) {
@@ -151,15 +170,6 @@ class UsersController extends AppController
                     $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
                     $this->redirect(['action' => 'sent_mail']);
                 }
-            }
-        }
-        //トークン付きの場合はメアドデータを取得
-        if (isset($this->request->params['named']['invite_token'])) {
-            //トークンチェック
-            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
-            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
-            if (isset($invite['Invite']['email'])) {
-                $this->set(['email' => $invite['Invite']['email']]);
             }
         }
 
@@ -382,6 +392,7 @@ class UsersController extends AppController
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
             $this->User->id = $this->Auth->user('id');
+            //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
                 //セッション更新
                 $this->_refreshAuth();
@@ -590,6 +601,7 @@ class UsersController extends AppController
         if ($this->Auth->user('default_team_id')) {
             $this->User->TeamMember->updateLastLogin($this->Auth->user('default_team_id'), $this->Auth->user('id'));
         }
+        $this->User->_setSessionVariable();
         $this->Mixpanel->setUser($this->User->id);
     }
 

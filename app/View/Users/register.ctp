@@ -17,16 +17,16 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'col col-sm-3 control-label form-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class' => 'form-control register_input-design'
+                    'class'     => 'form-control register_input-design'
                 ],
                 'class'         => 'form-horizontal validate',
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body register-panel-body">
-            <?
+                <?
                 //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __d('gl', "姓(ローマ字)"),
@@ -54,14 +54,14 @@
                 <hr>
                 <? if (isset($email)): ?>
                     <div class="form-group">
-                        <label for="" class="col col-sm-3 control-label"><?= __d('gl', "メール") ?></label>
+                        <label for="" class="col col-sm-3 control-label form-label"><?= __d('gl', "メール") ?></label>
 
                         <div class="col col-sm-6">
                             <p class="form-control-static"><?= h($email) ?></p>
                         </div>
                     </div>
                     <?=
-                    $this->Form->hidden('Email.0.email', ['value' => $email])?>
+                    $this->Form->hidden('Email.0.email', ['value' => $email]) ?>
                 <? else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
@@ -69,7 +69,7 @@
                         'placeholder'                  => __d('gl', "hiroshi@example.com"),
                         'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
                         "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                    ])?>
+                    ]) ?>
                 <? endif; ?>
 
                 <?=
@@ -78,7 +78,7 @@
                     'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
                     'class'     => false,
                     'default'   => true,
-                ])?>
+                ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('password', [
@@ -86,13 +86,13 @@
                     'placeholder'              => __d('gl', '8文字以上'),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
-                ])?>
+                ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
                     'label'                    => __d('gl', "パスワードを再入力"),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
-                ])?>
+                ]) ?>
                 <hr>
                 <?
                 $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',
@@ -121,7 +121,8 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('gl', "新規登録"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__d('gl', "新規登録"),
+                                                ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>

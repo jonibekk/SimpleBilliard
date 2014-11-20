@@ -60,6 +60,15 @@ class PagesController extends AppController
                 }
                 $this->_setMyCircle();
                 $this->_setFeedMoreReadUrl();
+                $select2_default = $this->User->getAllUsersCirclesSelect2();
+                $my_goals = $this->Goal->getMyGoals();
+                $collabo_goals = $this->Goal->getMyCollaboGoals();
+                $follow_goals = $this->Goal->getMyFollowedGoals();
+                $current_global_menu = "home";
+                $feed_filter = 'all';
+                $this->set(compact('feed_filter', 'select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
+                                   'current_global_menu'));
+                $this->set('avail_sub_menu', true);
                 try {
                     $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
                 } catch (RuntimeException $e) {
@@ -84,6 +93,11 @@ class PagesController extends AppController
         $this->_setLanguage();
         //全ページ許可
         $this->Auth->allow('display');
+        //チームidがあった場合は許可しない
+        if (isset($this->request->params['team_id'])) {
+            $this->Auth->deny('display');
+        }
+
         //切り換え可能な言語をセット
         $this->set('lang_list', $this->_getPageLanguageList());
         parent::beforeFilter();

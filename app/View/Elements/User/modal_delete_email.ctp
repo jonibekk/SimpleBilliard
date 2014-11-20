@@ -11,11 +11,12 @@
  */
 ?>
 <!-- START app/View/Elements/User/modal_delete_email.ctp -->
-<div class="modal fade" id="modal_delete_email">
-    <div class="modal-dialog">
+<div class="modal fade" tabindex="-1" id="modal_delete_email">
+<div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
+                    <span class="close-icon">&times;</span></button>
                 <h4 class="modal-title"><?= __d('gl', "確認") ?></h4>
             </div>
             <div class="modal-body">

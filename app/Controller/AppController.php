@@ -10,26 +10,28 @@
  */
 
 App::uses('Controller', 'Controller');
+App::uses('HelpsController', 'Controller');
 
 /**
  * Application Controller
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
-
  *
-*@package        app.Controller
+ * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent              $Lang
- * @property SessionComponent           $Session
- * @property TimezoneComponent          $Timezone
- * @property CookieComponent            $Cookie
- * @property GlEmailComponent           $GlEmail
- * @property PnotifyComponent           $Pnotify
- * @property MixpanelComponent          $Mixpanel
- * @property OgpComponent               $Ogp
- * @property User                       $User
- * @property Post                       $Post
- * @property NotifyBizComponent         $NotifyBiz
+ * @property LangComponent               $Lang
+ * @property SessionComponent            $Session
+ * @property SecurityComponent           $Security
+ * @property TimezoneComponent           $Timezone
+ * @property CookieComponent             $Cookie
+ * @property GlEmailComponent            $GlEmail
+ * @property PnotifyComponent            $Pnotify
+ * @property MixpanelComponent           $Mixpanel
+ * @property OgpComponent                $Ogp
+ * @property User                        $User
+ * @property Post                        $Post
+ * @property Goal                        $Goal
+ * @property NotifyBizComponent          $NotifyBiz
  */
 class AppController extends Controller
 {
@@ -64,11 +66,13 @@ class AppController extends Controller
         'Upload',
         'TimeEx',
         'TextEx',
+        'Csv',
     ];
 
     public $uses = [
         'User',
         'Post',
+        'Goal',
     ];
 
     /**
@@ -91,9 +95,15 @@ class AppController extends Controller
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
                 $this->_setMyTeam();
+                //リクエストがログイン中のチーム以外なら切り替える
+                if ($this->request->is('get')) {
+                    $this->_switchTeamBeforeCheck();
+                }
             }
             $this->_setMyMemberStatus();
         }
+        $this->set('current_global_menu', null);
+        $this->set('avail_sub_menu', false);
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }
@@ -241,4 +251,172 @@ class AppController extends Controller
         return $this->response;
     }
 
+    function _setBasicAuth()
+    {
+        $loginId = 'isao';
+        $loginPassword = '1qaz2wsx';
+
+        $this->autoRender = false;
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="Private Page"');
+            header('HTTP/1.0 401 Unauthorized');
+            die("id / password Required");
+        }
+        else {
+            if ($_SERVER['PHP_AUTH_USER'] != $loginId || $_SERVER['PHP_AUTH_PW'] != $loginPassword) {
+                header('WWW-Authenticate: Basic realm="Private Page"');
+                header('HTTP/1.0 401 Unauthorized');
+                die("Invalid id / password combination.  Please try again");
+            }
+        }
+        $this->autoRender = true;
+    }
+
+    /**
+     * 指定ヶ月後の月末のUnixtimeを返す
+     *
+     * @param int    $month_count
+     * @param string $symbol
+     *
+     * @return int
+     */
+    function getEndMonthLocalDateTime($month_count = 6, $symbol = "+")
+    {
+        if (!is_numeric($month_count)) {
+            return null;
+        }
+        if (!in_array($symbol, ["+", "-"])) {
+            return null;
+        }
+        $month_count++;
+        $add_date = strtotime("{$symbol}{$month_count} month", time() + ($this->Auth->user('timezone') * 60 * 60));
+        $year = date("Y", $add_date);
+        $month = date("m", $add_date);
+        $first_day = $year . "-" . $month . "-01";
+        $end_day = strtotime("-1 day", strtotime($first_day));
+        return $end_day;
+    }
+
+    /**
+     * リクエストされたページが現在のページ以外の場合にチーム切換えを行う。
+     * 所属していないチームの場合はエラー表示し、リファラにリダイレクト
+     * コントローラの処理の最初に実行する事
+     *
+     * @return boolean
+     */
+    public function _switchTeamBeforeCheck()
+    {
+        $allow_controllers = array(
+            'teams',
+            'admins',
+        );
+        //許可コントローラの場合は何もせずreturn
+        if (in_array($this->request->params['controller'], $allow_controllers)) {
+            return false;
+        }
+        $current_team_id = $this->Session->read('current_team_id');
+        $request_team_id = $this->_getTeamIdFromRequest($this->request->params);
+        //チームidが判別できない場合は何もせずreturn
+        if (!$request_team_id) {
+            return false;
+        }
+        //リクエストされたチームと現在のチームが違う場合はチーム切換えを行う
+        if ($current_team_id != $request_team_id) {
+            //リクエストされたチームに所属しているか確認
+            $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
+            if (!array_key_exists($request_team_id, $team_list)) {
+                //所属しているチームでは無い場合はエラー表示でtopにリダイレクト
+                $this->Pnotify->outError(__d('gl', "このチームへのアクセス権限がありません。"));
+                $this->redirect('/');
+            }
+            else {
+                //チームを切り替え
+                $this->_switchTeam($request_team_id);
+                $this->redirect($this->request->here);
+            }
+        }
+        return false;
+    }
+
+    public function _getTeamIdFromRequest($request_params)
+    {
+        if (empty($request_params)) {
+            return null;
+        }
+        if (isset($request_params['controller']) && !empty($request_params['controller'])
+        ) {
+            //対象IDを特定
+            $id = null;
+            //サークルID指定されてた場合
+            if (isset($request_params['circle_id']) && !empty($request_params['circle_id'])) {
+                $id = $request_params['circle_id'];
+            }
+            //投稿ID指定されてた場合
+            elseif (isset($request_params['post_id']) && !empty($request_params['post_id'])) {
+                $id = $request_params['post_id'];
+            }
+            //チームID指定されてた場合
+            elseif (isset($request_params['team_id']) && !empty($request_params['team_id'])) {
+                $id = $request_params['team_id'];
+            }
+            //通常のID指定されていた場合
+            elseif (isset($request_params['pass'][0]) && !empty($request_params['pass'][0])) {
+                $id = $request_params['pass'][0];
+            }
+
+            //IDが特定できない場合はnullを返す
+            if (!$id) {
+                return null;
+            }
+            //idが数値じゃない場合はnullを返す
+            if (!is_numeric($id)) {
+                return null;
+            }
+
+            //モデル名抽出
+            $model_name = null;
+            if ($request_params['controller'] == 'pages') {
+                $model_name = 'Team';
+            }
+            elseif (isset($request_params['circle_id']) && !empty($request_params['circle_id'])) {
+                $model_name = 'Circle';
+            }
+            else {
+                $model_name = Inflector::classify($request_params['controller']);
+            }
+            $Model = ClassRegistry::init($model_name);
+
+            $team_id = null;
+            switch ($Model->name) {
+                case 'User':
+                    //Userの場合
+                    //相手が現在のチームに所属しているか確認
+                    $options = array(
+                        'conditions' => array(
+                            'user_id' => $id,
+                            'team_id' => $this->Session->read('current_team_id'),
+                        ),
+                    );
+                    $team = $this->User->TeamMember->find('first', $options);
+                    if (!empty($team)) {
+                        $team_id = $team['TeamMember']['team_id'];
+                    }
+                    break;
+                case 'Team':
+                    //チームの場合はそのまま
+                    $team_id = $id;
+                    break;
+                default:
+                    $Model->recursive = -1;
+                    $result = $Model->findById($id);
+                    $Model->recursive = 1;
+                    if (empty($result)) {
+                        return null;
+                    }
+                    $team_id = $result[$Model->name]['team_id'];
+            }
+            return $team_id;
+        }
+        return null;
+    }
 }

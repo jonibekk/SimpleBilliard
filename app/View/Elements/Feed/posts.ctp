@@ -14,17 +14,19 @@
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-        <div class="panel-body gl-feed">
-        <div class="col col-xxs-12 gl-feed-user">
+        <div class="panel-body pt_10px plr_11px pb_8px">
+        <div class="col col-xxs-12 feed-user">
             <div class="pull-right">
                 <div class="dropdown">
-                    <a href="#" class="link-gray font-size_11" data-toggle="dropdown" id="download">
-                        <i class="fa fa-chevron-down gl-feed-arrow"></i>
+                    <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
+                        <i class="fa fa-chevron-down feed-arrow"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                             <li><a href="#" class="target-toggle-click"
                                    target-id="PostEditForm_<?= $post['Post']['id'] ?>"
+                                   opend-text="<?= __d('gl', "編集をやめる") ?>"
+                                   closed-text="<?= __d('gl', "投稿を編集") ?>"
                                    click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
                                    hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
                                     ><?= __d('gl', "投稿を編集") ?></a>
@@ -47,50 +49,47 @@
             </div>
             <?=
             $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
-                                       ['class' => 'gl-feed-img']) ?>
-            <div class="font-size_14 font-verydark"><?= h($post['User']['display_username']) ?></div>
-            <div class="font-size_11 font-lightgray">
-                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font-lightgray"> ･ </span>
+                                       ['class' => 'feed-img']) ?>
+            <div class="font_14px font_verydark"><?= h($post['User']['display_username']) ?></div>
+            <div class="font_11px font_lightgray">
+                <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font_lightgray"> ･ </span>
                 <?
                 //公開の場合
-                if ($post['Post']['public_flg']): ?>
-                    <i class="fa fa-group"></i>&nbsp;<?= __d('gl', "チーム全体に共有") ?>
+                if ($post['share_mode'] == Post::SHARE_ALL): ?>
+                    <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
                 <?
                 //自分のみ
-                elseif (empty($post['PostShareUser']) && empty($post['PostShareCircle'])): ?>
-                    <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "自分のみ") ?>
+                elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
+                    <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
+                <?
+                //共有ユーザ
+                elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
+                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                       class="modal-ajax-get-share-circles-users link-dark-gray">
+                        <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
+                    </a>
                 <?
                 //共有サークル、共有ユーザ
-                elseif (!empty($post['PostShareUser']) && !empty($post['PostShareCircle'])): ?>
+                elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
                        class="modal-ajax-get-share-circles-users link-dark-gray">
-                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークル他に共有") ?>
-                    </a>
-                <?
-                //共有サークルのみ
-                elseif (!empty($post['PostShareCircle'])): ?>
-                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                       class="modal-ajax-get-share-circles-users link-dark-gray">
-                        <i class="fa fa-circle-o"></i>&nbsp;<?= __d('gl', "サークルに共有") ?>
-                    </a>
-                <?
-                //共有ユーザのみ
-                elseif (!empty($post['PostShareUser'])): ?>
-                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                       class="modal-ajax-get-share-circles-users link-dark-gray">
-                        <i class="fa fa-user"></i>&nbsp;<?= __d('gl', "メンバーに共有") ?>
+                        <i class="fa fa-circle-o"></i>&nbsp;<?= $post['share_text'] ?>
                     </a>
                 <? endif; ?>
             </div>
         </div>
         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-            <div class="col col-xxs-12 gl-feed-edit">
+            <div class="col col-xxs-12 p_0px">
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
-        <div class="col col-xxs-12 gl-feed-text showmore font-size_14 font-verydark"
+        <div class="col col-xxs-12 feed-text showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
-            <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
+                <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+            <? else: ?>
+                <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
+            <?endif; ?>
         </div>
         <?
         $photo_count = 0;
@@ -101,7 +100,7 @@
         }
         ?>
         <? if ($photo_count): ?>
-            <div class="col col-xxs-12 gl-feed-picture">
+            <div class="col col-xxs-12 pt_10px">
                 <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
                     <? if ($photo_count >= 2): ?>
@@ -130,7 +129,7 @@
                                         <?=
                                         $this->Html->image('ajax-loader.gif',
                                                            [
-                                                               'class'         => 'lazy',
+                                                               'class'         => 'lazy bd-s',
                                                                'data-original' => $this->Upload->uploadUrl($post,
                                                                                                            "Post.photo" . $i,
                                                                                                            ['style' => 'small'])
@@ -161,32 +160,35 @@
         <? endif; ?>
         <? if ($post['Post']['site_info']): ?>
             <? $site_info = json_decode($post['Post']['site_info'], true) ?>
-            <div class="col col-xxs-12 gl-feed-site-link">
+            <div class="col col-xxs-12 pt_10px">
                 <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
-                   class="no-line">
-                    <div class="site-info">
+                   class="no-line font_verydark">
+                    <div class="site-info bd-radius_4px">
                         <div class="media">
                             <div class="pull-left">
                                 <?=
                                 $this->Html->image('ajax-loader.gif',
                                                    [
-                                                       'class' => 'lazy media-object',
+                                                       'class'         => 'lazy media-object',
                                                        'data-original' => $this->Upload->uploadUrl($post,
                                                                                                    "Post.site_photo",
                                                                                                    ['style' => 'small']),
                                                        'width'         => '80px',
+                                                       'error-img'     => "/img/no-image-link.png",
                                                    ]
                                 )
                                 ?>
                             </div>
-
                             <div class="media-body">
-                                <h4 class="media-heading font-size_18"><?= isset($site_info['title']) ? $site_info['title'] : null ?></h4>
+                                <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? mb_strimwidth(h($site_info['title']),
+                                                                                                                   0,
+                                                                                                                   50,
+                                                                                                                   "...") : null ?></h4>
 
-                                <p class="font-size_11"><?= isset($site_info['url']) ? $site_info['url'] : null ?></p>
+                                <p class="font_11px media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
                                 <? if (isset($site_info['description'])): ?>
-                                    <div class="font-size_12">
-                                        <?= $site_info['description'] ?>
+                                    <div class="font_12px site-info-txt">
+                                        <?= mb_strimwidth(h($site_info['description']), 0, 110, "...") ?>
                                     </div>
                                 <? endif; ?>
                             </div>
@@ -194,40 +196,68 @@
                     </div>
                 </a>
             </div>
+        <? elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && !empty($post['Goal'])): ?>
+            <div class="col col-xxs-12 pt_10px">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
+                   class="no-line font_verydark modal-ajax-get">
+                    <div class="site-info bd-radius_4px">
+                        <div class="media">
+                            <div class="pull-left">
+                                <?=
+                                $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'lazy media-object',
+                                                       'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                   "Goal.photo",
+                                                                                                   ['style' => 'medium_large']),
+                                                       'width'         => '80px',
+                                                   ]
+                                )
+                                ?>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Goal']['name']), 0, 50,
+                                                                                      "...") ?></h4>
+                                <? if (isset($post['Goal']['Purpose']['name'])): ?>
+                                    <div class="font_12px site-info-txt">
+                                        <?= mb_strimwidth(h($post['Goal']['Purpose']['name']), 0, 110, "...") ?>
+                                    </div>
+                                <? endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         <? endif; ?>
         <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-            <div class="col col-xxs-12 gl-feed-edit">
+            <div class="col col-xxs-12 p_0px">
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
 
-        <div class="col col-xxs-12 font-size_12 gl-feed-click">
-            <a href="#" class="click-like link-rose-red"
+        <div class="col col-xxs-12 font_12px pt_8px">
+            <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                model_id="<?= $post['Post']['id'] ?>"
                like_type="post">
-                <?= empty($post['MyPostLike']) ? __d('gl', "いいね！") : __d('gl', "いいね取り消し") ?></a>
-            <span class="font-lightgray"> ･ </span>
-            <a class="trigger-click link-rose-red"
-               href="#"
-               target-id="<?= "CommentFormBody_{$post['Post']['id']}" ?>"><?=
-                __d('gl',
-                    "コメントする") ?></a><span class="font-lightgray"> ･ </span>
+                <?= __d('gl', "いいね！") ?></a>
+            <span class="font_lightgray"> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
-                               class="modal-ajax-get link-rose-red">
+                               class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
-                            </a><span class="font-lightgray"> ･ </span>
+                            </a><span class="font_lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"
-               class="modal-ajax-get link-rose-red"><i
+               class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>
 
         </div>
         </div>
-        <div class="panel-body gl-feed gl-comment-block">
+        <div class="panel-body ptb_8px plr_11px comment-block">
             <? if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                 <a href="#" class="btn btn-link click-comment-all"
                    id="Comments_<?= $post['Post']['id'] ?>"
@@ -244,11 +274,11 @@
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
-            <div class="col col-xxs-12 gl-comment-contents">
+            <div class="col col-xxs-12 box-align comment-contents">
                 <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
-                                           ['class' => 'gl-comment-img']) ?>
-                <div class="gl-comment-body">
+                                           ['class' => 'comment-img']) ?>
+                <div class="comment-body">
                     <?=
                     $this->Form->create('Comment', [
                         'url'           => ['controller' => 'posts', 'action' => 'comment_add'],
@@ -267,10 +297,11 @@
                         'id'                       => "CommentFormBody_{$post['Post']['id']}",
                         'label'                    => false,
                         'type'                     => 'textarea',
+                        'wrap'                     => 'off',
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),
-                        'class' => 'form-control tiny-form-text blank-disable font-size_12 comment-post-form',
+                        'class'                    => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
                         'target_show_id'           => "Comment_{$post['Post']['id']}",
                         'target-id'                => "CommentSubmit_{$post['Post']['id']}",
                         "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -278,28 +309,31 @@
                     ?>
                     <div class="form-group" id="CommentFormImage_<?= $post['Post']['id'] ?>"
                          style="display: none">
-                        <ul class="gl-input-images">
+                        <ul class="input-images">
                             <? for ($i = 1; $i <= 5; $i++): ?>
                                 <li>
                                     <?=
                                     $this->element('Feed/photo_upload',
-                                                   ['type' => 'comment', 'index' => $i, 'submit_id' => "CommentSubmit_{$post['Post']['id']}"]) ?>
+                                                   ['type' => 'comment', 'index' => $i, 'submit_id' => "CommentSubmit_{$post['Post']['id']}", 'post_id' => $post['Post']['id']]) ?>
                                 </li>
                             <? endfor ?>
                         </ul>
                     </div>
                     <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
-                    <div class="" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
-                        <a href="#" class="target-show-this-del font-size_12"
-                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>"><i
-                                class="fa fa-picture-o"></i>&nbsp;<?=
-                            __d('gl',
-                                "画像を追加する") ?>
+                    <div class="comment-btn" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
+                        <a href="#" class="target-show-target-click font_12px comment-add-pic"
+                           target-id="CommentFormImage_<?= $post['Post']['id'] ?>"
+                           click-target-id="Comment__Post_<?= $post['Post']['id'] ?>_Photo_1">
+                            <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
+                            </button>
+
                         </a>
 
                         <?=
                         $this->Form->submit(__d('gl', "コメントする"),
-                                            ['class' => 'btn btn-primary pull-right', 'id' => "CommentSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
+                                            ['class' => 'btn btn-primary pull-right submit-btn', 'id' => "CommentSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
                         <div class="clearfix"></div>
                     </div>
                     <?= $this->Form->end() ?>
