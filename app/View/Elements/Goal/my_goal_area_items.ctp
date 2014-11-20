@@ -71,6 +71,14 @@
                                    class="modal-ajax-get-add-key-result"
                                     ><i class="fa fa-plus-circle"><span class="ml_2px">
                                     <?= __d('gl', "出したい成果を追加") ?></span></i></a>
+
+                                <a class="modal-ajax-get-collabo"
+                                   data-toggle="modal"
+                                   data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
+                                    <i class="fa fa-pencil"></i>
+                                    <span class="ml_2px"><?= __d('gl', "コラボを編集") ?></span>
+                                </a>
                             </li>
                         <? endif; ?>
                     </ul>
@@ -86,12 +94,13 @@
                     </a>
                 </div>
             <? else: ?>
-                <b class="line-numbers ln_2">
+                <div class="ln_2_contain">
+                <p class="h-limit">
                     <i class="fa fa-flag"></i>
-                    <?= h($goal['Goal']['name']) ?></b>
+                    <?= h($goal['Goal']['name']) ?></p></div>
             <?endif; ?>
         </div>
-        <div class="col col-xxs-12 font_12px line-numbers ln_1 goals-column-purpose">
+        <div class="col col-xxs-12 font_12px ln_1 goals-column-purpose">
             <?= h($goal['Purpose']['name']) ?>
         </div>
         <? if (isset($goal['Goal']['id'])): ?>
