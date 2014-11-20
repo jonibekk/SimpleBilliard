@@ -1015,16 +1015,16 @@ footer p {
     width: 100%;
 }
 
-.w_90per {
-    width: 90%;
+.responsive-goal-space-width {
+    width: 92%;
+}
+
+.responsive-goal-title-width {
+    width: 82%;
 }
 
 .w_85per {
     width: 85%;
-}
-
-.w_80per {
-    width: 80%;
 }
 
 .h_50px {
@@ -2734,6 +2734,14 @@ textarea.comment-post-form {
     .line-vertical-sm {
         border-left: 1px solid #e0e0e0;
     }
+
+    .responsive-goal-space-width {
+        width: 95%;
+    }
+
+    .responsive-goal-title-width {
+        width: 90%;
+    }
 }
 
 /*Medium*/
@@ -2819,7 +2827,13 @@ textarea.comment-post-form {
     .goal-set-buttons {
         margin-left: 60%;
     }
+    .responsive-goal-space-width {
+        width: 93%;
+    }
 
+    .responsive-goal-title-width {
+        width: 84%;
+    }
 }
 
 /*ExtraMedium*/
