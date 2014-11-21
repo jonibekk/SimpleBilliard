@@ -95,9 +95,13 @@
                 </div>
             <? else: ?>
                 <div class="ln_2_contain">
-                <p class="h-limit">
-                    <i class="fa fa-flag"></i>
-                    <?= h($goal['Goal']['name']) ?></p></div>
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
+                       class="modal-ajax-get">
+                        <p class="h-limit font_gray">
+                            <i class="fa fa-flag"></i>
+                            <?= h($goal['Goal']['name']) ?></p>
+                    </a>
+                </div>
             <?endif; ?>
         </div>
         <div class="col col-xxs-12 font_12px ln_1 goals-column-purpose">
