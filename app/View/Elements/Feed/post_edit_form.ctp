@@ -29,7 +29,7 @@ $this->Form->input('body', [
     'id'             => "PostEditFormBody_{$post['Post']['id']}",
     'label'          => false,
     'type'           => 'textarea',
-    'wrap'           => 'off',
+    'wrap'           => 'soft',
     'rows'           => 1,
     'class' => 'form-control tiny-form-text blank-disable edit-form post-edit-form',
     'target_show_id' => "PostEdit_{$post['Post']['id']}",
