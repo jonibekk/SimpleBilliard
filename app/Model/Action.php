@@ -85,8 +85,14 @@ class Action extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'Goal',
-        'KeyResult',
+        'Goal'      => [
+            "counterCache" => true,
+            'counterScope' => ['Action.del_flg' => false]
+        ],
+        'KeyResult' => [
+            "counterCache" => true,
+            'counterScope' => ['Action.del_flg' => false]
+        ],
         'User',
     ];
 

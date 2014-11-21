@@ -31,7 +31,10 @@ class ActionResult extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'Action',
+        'Action' => [
+            "counterCache" => true,
+            'counterScope' => ['ActionResult.del_flg' => false]
+        ],
         'User',
     ];
 }
