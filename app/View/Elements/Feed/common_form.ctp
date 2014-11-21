@@ -32,7 +32,7 @@
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'posts', 'action' => 'add'],
                 'inputDefaults' => [
-                    'div'       => 'form-group',
+                    'div'       => 'form-group box-align',
                     'label'     => false,
                     'wrapInput' => '',
                     'class'     => 'form-control',
@@ -46,11 +46,11 @@
                 $this->Form->input('body', [
                     'label'                    => false,
                     'type'                     => 'textarea',
-                    'wrap'                     => 'off',
+                    'wrap'                     => 'soft',
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
+                    'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form',
                     'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="panel-body post-panel-body post-panel-footer">
-                <div class="font_12px col-xxs-12" style="display: none" id="PostFormFooter">
+                <div class="font_12px" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
                         <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"

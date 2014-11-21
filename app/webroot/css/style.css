@@ -1707,31 +1707,6 @@ textarea.feed-post-form {
     margin-top: 8px;
 }
 
-.edit-form {
-    color: #231814;
-    border-radius: 0;
-    box-shadow: none !important;
-    padding-top: 4px;
-    padding-right: 0 !important;
-    padding-bottom: 4px;
-    padding-left: 0;
-    margin-left: -1px;
-    margin-right: -1px;
-    resize: none;
-}
-
-.post-edit-form {
-    width: 100%;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-.comment-edit-form {
-    width: 100%;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
 .border-none {
     text-decoration: none !important;
 }
@@ -3088,4 +3063,29 @@ Temporary Properties - YOU MUST FIX
 
 .comment-box-align{
 
+}
+
+.edit-form {
+    color: #231814;
+    border-radius: 0;
+    box-shadow: none !important;
+    padding-top: 4px;
+    padding-right: 0 !important;
+    padding-bottom: 4px;
+    padding-left: 0;
+    margin-left: -1px;
+    margin-right: -1px;
+    resize: none;
+}
+
+.post-edit-form {
+    width: 100%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.comment-edit-form {
+    width: 100%;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
