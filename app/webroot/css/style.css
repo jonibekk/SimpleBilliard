@@ -241,6 +241,14 @@ footer p {
     margin-bottom: 0;
 }
 
+a, a:hover, a:active, a:focus {
+    outline: 0;
+}
+
+input::-moz-focus-inner {
+    border: 0;
+}
+
 .navbar {
     border: none;
 }
@@ -1949,6 +1957,14 @@ textarea.comment-post-form {
 
 .disp_ib {
     display: inline-block;
+}
+
+.disp_bx{
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-box;
+    display: -o-box;
 }
 
 .fileinput-new {
