@@ -3067,7 +3067,7 @@ Temporary Properties - YOU MUST FIX
     margin-right: -1px;
 }
 
-.comment-contents, .edit-form {
+.feed-contents, .edit-form {
     white-space: normal;
     line-break: strict;
     word-break: keep-all;

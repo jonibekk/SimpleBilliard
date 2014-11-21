@@ -83,7 +83,7 @@
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
-        <div class="col col-xxs-12 post-contents showmore font_14px font_verydark box-align"
+        <div class="col col-xxs-12 feed-contents post-contents showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
             <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                 <?= $this->TextEx->autoLink($post['Post']['body']) ?>
@@ -274,7 +274,7 @@
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
-            <div class="col col-xxs-12 box-align comment-contents">
+            <div class="col col-xxs-12 box-align feed-contents comment-contents">
                 <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
                                            ['class' => 'comment-img']) ?>
