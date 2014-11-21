@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="panel-body post-panel-body post-panel-footer">
-                <div class="font_12px" style="display: none" id="PostFormFooter">
+                <div class="font_12px col-xxs-12" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
                         <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"

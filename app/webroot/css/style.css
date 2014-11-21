@@ -3019,31 +3019,6 @@ Temporary Properties - YOU MUST FIX
     margin-top: 6px;
 }
 
-.box-align {
-    margin-right: -1px;
-    margin-left: -1px;
-    border-left: 1px solid rgba(0, 0, 0, 0);
-    border-right: 1px solid rgba(0, 0, 0, 0);
-}
-
-.has-success .box-align {
-    margin-right: -1px;
-    margin-left: -1px;
-    border-left: 1px solid rgba(0, 0, 0, 0);
-    border-right: 1px solid rgba(0, 0, 0, 0);
-}
-
-.box-align:focus,
-.box-align:active {
-    border-left-color: rgba(0, 0, 0, 0);
-    border-right-color: rgba(0, 0, 0, 0);
-}
-
-.has-success .box-align:focus,
-.has-success .box-align:active {
-    border-color: rgba(0, 0, 0, 0);
-}
-
 .datepicker {
     z-index: 1151 !important;
 }
@@ -3071,4 +3046,46 @@ Temporary Properties - YOU MUST FIX
     white-space: normal;
     line-break: strict;
     word-break: keep-all;
+}
+
+
+.box-align {
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
+}
+
+.has-success .box-align {
+    margin-right: -1px;
+    margin-left: -1px;
+    border-left: 1px solid rgba(0, 0, 0, 0);
+    border-right: 1px solid rgba(0, 0, 0, 0);
+}
+
+.box-align:focus,
+.box-align:active {
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+}
+
+.has-success .box-align:focus,
+.has-success .box-align:active {
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.edit-box-align{
+
+}
+
+.feed-box-align{
+
+}
+
+.post-box-align{
+
+}
+
+.comment-box-align{
+
 }
