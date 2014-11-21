@@ -1052,7 +1052,7 @@ footer p {
     color: #e78e99;
 }
 
-.feed-text a {
+.post-contents a {
     color: #ddd;
 }
 
@@ -1060,9 +1060,9 @@ footer p {
     color: #c5c5c5;
 }
 
-.feed-text a:hover,
-.feed-text a:hover,
-.feed-text a:hover,
+.post-contents a:hover,
+.post-contents a:hover,
+.post-contents a:hover,
 .comment-contents a:hover,
 .comment-contents a:hover,
 .comment-contents a:hover {
@@ -1292,7 +1292,7 @@ ul.example-indent {
     margin-right: 8px;
 }
 
-.feed-text {
+.post-contents {
     padding: 10px 0 0 0;
 }
 
@@ -1369,7 +1369,7 @@ ul.example-indent {
     height: 100%;
 }
 
-.feed-text .btn-link {
+.post-contents .btn-link {
     color: #ddd;
 }
 
@@ -1720,7 +1720,7 @@ textarea.feed-post-form {
     resize: none;
 }
 
-.feed-edit-form {
+.post-edit-form {
     width: 100%;
     padding-top: 4px;
     padding-bottom: 4px;
@@ -3067,7 +3067,7 @@ Temporary Properties - YOU MUST FIX
     margin-right: -1px;
 }
 
-.comment-contents, .edit-form {
+.feed-contents, .edit-form {
     white-space: normal;
     line-break: strict;
     word-break: keep-all;
