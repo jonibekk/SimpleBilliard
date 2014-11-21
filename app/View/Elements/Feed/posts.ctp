@@ -50,7 +50,7 @@
             <?=
             $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                        ['class' => 'feed-img']) ?>
-            <div class="font_14px font_verydark"><?= h($post['User']['display_username']) ?></div>
+            <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
             <div class="font_11px font_lightgray">
                 <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font_lightgray"> ･ </span>
                 <?
