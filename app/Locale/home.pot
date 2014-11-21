@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-06-24 07:46+0000\n"
+"POT-Creation-Date: 2014-11-20 09:40+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,145 +14,133 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/PagesController.php:109
+#: Controller/PagesController.php:122
 msgid "Japanese"
 msgstr ""
 
-#: Controller/PagesController.php:110
+#: Controller/PagesController.php:123
 msgid "English"
 msgstr ""
 
-#: View/Elements/footer.ctp:19
-#: View/Layouts/homepage.ctp:139;208
-#: View/Pages/features.ctp:6
-#: View/Pages/home.ctp:175
+#: View/Elements/footer.ctp:22
+#: View/Layouts/homepage.ctp:144;214
+#: View/Pages/features.ctp:7
+#: View/Pages/home.ctp:140
 msgid "Features"
 msgstr ""
 
-#: View/Elements/footer.ctp:27
-#: View/Elements/header_logged_in.ctp:46
-#: View/Layouts/homepage.ctp:147;217
+#: View/Elements/footer.ctp:30
+#: View/Elements/header_logged_in.ctp:175
+#: View/Layouts/homepage.ctp:152;223
 msgid "Blog"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:136
+#: View/Layouts/homepage.ctp:141
 msgid "Home"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:150
+#: View/Layouts/homepage.ctp:155
 msgid "Sign UP"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:163;238
+#: View/Layouts/homepage.ctp:168;244
 msgid "Sign IN"
 msgstr ""
 
-#: View/Pages/features.ctp:30
+#: View/Pages/features.ctp:31
 msgid "Set up a goal"
 msgstr ""
 
-#: View/Pages/features.ctp:39
+#: View/Pages/features.ctp:40
 msgid "Understanding always comes after a goal is set. If you plan on going somewhere, you first need to set a destination, or you will just wander around. So, set a goal before you start working on it."
 msgstr ""
 
-#: View/Pages/features.ctp:46
+#: View/Pages/features.ctp:47
 msgid "Also, goals must be clear and ambitious. Your goal should be attainable, concrete, measurable, challenging, and have a reasonable deadline.  When setting a goal, remember to be honest with your wish. Do not think about \"Have-To's\", think about \"Want-To's\". You are setting the goal for yourself, and your team. You won't be motivated if you are feeling forced or unconfident."
 msgstr ""
 
-#: View/Pages/features.ctp:53
+#: View/Pages/features.ctp:54
 msgid "In addition, using Goalous, you can designate multiple lists to reach your goal. In order to accurately determine your accomplishments, you need to set a measurable value for each list."
 msgstr ""
 
-#: View/Pages/features.ctp:73
-#: View/Pages/home.ctp:264
+#: View/Pages/features.ctp:74
+#: View/Pages/home.ctp:229
 msgid "Make it open"
 msgstr ""
 
-#: View/Pages/features.ctp:82
+#: View/Pages/features.ctp:83
 msgid "Every goal you set up on Goalous will be visible to every member of your team. They will know your goal, and all of your progress. By making it open, you will gain more information than if you do it by yourself. It gives you a better understanding of your current situation, and the confidence to make the right decision."
 msgstr ""
 
-#: View/Pages/features.ctp:89
+#: View/Pages/features.ctp:90
 msgid "Feeling reluctant to share your goal with others? That's the same as you are not willing to work with your team members to achieve something. If you belong to a group, why not corporate with others?  To plow ahead more efficiently, having a mutual aim is essential."
 msgstr ""
 
-#: View/Pages/features.ctp:123
-#: View/Pages/home.ctp:311
+#: View/Pages/features.ctp:124
+#: View/Pages/home.ctp:276
 msgid "Help each other"
 msgstr ""
 
-#: View/Pages/features.ctp:132
+#: View/Pages/features.ctp:133
 msgid "On Goalous, you can collaborate with others towards a goal. Choose members you would like to work with, send an invitation message to them, and assign them roles. If they accept your request, they will become your collaborators."
 msgstr ""
 
-#: View/Pages/features.ctp:139
+#: View/Pages/features.ctp:140
 msgid "In addition, the goal you invited others into will be shared with your collaborators. They can work on the goal and record their progress on Goalous."
 msgstr ""
 
-#: View/Pages/features.ctp:166
-#: View/Pages/home.ctp:358
+#: View/Pages/features.ctp:167
+#: View/Pages/home.ctp:323
 msgid "Send compliments"
 msgstr ""
 
-#: View/Pages/features.ctp:174
+#: View/Pages/features.ctp:175
 msgid "It is said that when someone is complimented, their brain becomes stimulated and shows better performance.Even you have probably experienced it before, right? On Goalous, you can send various kinds of emblems to each other to give them a pat on shoulder. You can even let all the team members know that you sent someone a compliment."
 msgstr ""
 
-#: View/Pages/features.ctp:181
+#: View/Pages/features.ctp:182
 msgid "Those small \"thank you\" s can make a big impact on one's motivation."
 msgstr ""
 
-#: View/Pages/features.ctp:301
-#: View/Pages/home.ctp:471
+#: View/Pages/features.ctp:302
+#: View/Pages/home.ctp:436
 msgid "Collaborative achievement goal tool"
 msgstr ""
 
-#: View/Pages/features.ctp:309
-#: View/Pages/home.ctp:479
+#: View/Pages/features.ctp:310
+#: View/Pages/home.ctp:444
 msgid "Goalous is a tool that all members of a team are able to action in high motivated toward the achievement of self goals.Because the members create public goals in a team,they collaborate each other and get praise to your actions."
 msgstr ""
 
-#: View/Pages/home.ctp:24
-msgid "Registered users : %s"
-msgstr ""
-
-#: View/Pages/home.ctp:36
+#: View/Pages/home.ctp:30
 msgid "Let's start Goalous!"
 msgstr ""
 
-#: View/Pages/home.ctp:54
-msgid "Sign up with facebook"
-msgstr ""
-
-#: View/Pages/home.ctp:69
-msgid "Sign up with google"
-msgstr ""
-
-#: View/Pages/home.ctp:74
+#: View/Pages/home.ctp:39
 msgid "here"
 msgstr ""
 
-#: View/Pages/home.ctp:81
+#: View/Pages/home.ctp:46
 msgid "You can also sign up with your email address. Click %s to start."
 msgstr ""
 
-#: View/Pages/home.ctp:217
+#: View/Pages/home.ctp:182
 msgid "Set a goal"
 msgstr ""
 
-#: View/Pages/home.ctp:223
+#: View/Pages/home.ctp:188
 msgid "Create a goal by establishing its title, deadline, challenging point, benefits, alists, and overall image."
 msgstr ""
 
-#: View/Pages/home.ctp:270
+#: View/Pages/home.ctp:235
 msgid "Let team members and other co-workers know of your ambition, collaborators, and daily progress."
 msgstr ""
 
-#: View/Pages/home.ctp:317
+#: View/Pages/home.ctp:282
 msgid "Work towards your goal with your collaborators. You don't need to struggle alone anymore."
 msgstr ""
 
-#: View/Pages/home.ctp:364
+#: View/Pages/home.ctp:329
 msgid "Getting a compliment is the best treat for your brain. Best of all, complimenting one another is free!"
 msgstr ""
 

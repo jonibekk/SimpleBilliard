@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-06-24 07:46+0000\n"
+"POT-Creation-Date: 2014-11-20 09:40+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,24 +14,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Model/SendMail.php:51
+#: Model/SendMail.php:62
 msgid "アカウントの仮登録が完了しました"
 msgstr ""
 
-#: Model/SendMail.php:52
+#: Model/SendMail.php:63
 msgid "パスワードの再設定"
 msgstr ""
 
-#: Model/SendMail.php:53
+#: Model/SendMail.php:64
 msgid "パスワードの再設定が完了しました"
 msgstr ""
 
-#: Model/SendMail.php:54
+#: Model/SendMail.php:65
 msgid "メールアドレス認証"
 msgstr ""
 
-#: Model/SendMail.php:55
+#: Model/SendMail.php:66
 msgid "メールアドレス変更に伴う認証"
+msgstr ""
+
+#: Model/SendMail.php:67
+msgid "Goalousのチームへ招待"
 msgstr ""
 
 #: View/Elements/Email/goalous_web.ctp:18
@@ -68,6 +72,7 @@ msgstr ""
 
 #: View/Emails/text/account_verification.ctp:13
 #: View/Emails/text/change_email.ctp:13
+#: View/Emails/text/invite.ctp:16
 #: View/Emails/text/password_reset.ctp:13
 #: View/Emails/text/password_reset_complete.ctp:13
 #: View/Emails/text/token_resend.ctp:13
@@ -91,6 +96,26 @@ msgstr ""
 #: View/Emails/text/change_email.ctp:21
 #: View/Emails/text/password_reset.ctp:21
 msgid "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+msgstr ""
+
+#: View/Emails/text/invite.ctp:19
+msgid "こんにちは。"
+msgstr ""
+
+#: View/Emails/text/invite.ctp:24
+msgid "%sさんがGoalous内のチーム「%s」へあなたを招待しています。"
+msgstr ""
+
+#: View/Emails/text/invite.ctp:27
+msgid "この招待に応じる場合は、次のリンクをクリックしてください。"
+msgstr ""
+
+#: View/Emails/text/invite.ctp:33
+msgid "%sさんからのメッセージ："
+msgstr ""
+
+#: View/Emails/text/notify_basic.ctp:18
+msgid "「%s」"
 msgstr ""
 
 #: View/Emails/text/password_reset.ctp:16

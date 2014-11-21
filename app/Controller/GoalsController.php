@@ -26,7 +26,14 @@ class GoalsController extends AppController
         $collabo_goals = $this->Goal->getMyCollaboGoals();
         $follow_goals = $this->Goal->getMyFollowedGoals();
         $current_global_menu = "goal";
-        $this->set(compact('goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu'));
+        //アドミン権限チェック
+        $is_admin = false;
+        if (isset($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'])
+            && $this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']
+        ) {
+            $is_admin = true;
+        }
+        $this->set(compact('is_admin', 'goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu'));
     }
 
     /**

@@ -16,13 +16,13 @@
 <? if (!empty($key_results)): ?>
     <? foreach ($key_results as $kr): ?>
         <div class="bd-t h_50px">
-            <div class="col col-xxs-12 w_90per mxh_50px line-numbers ln_1 ptb_5px">
+            <div class="col col-xxs-12 responsive-goal-space-width mxh_50px ln_1 ptb_5px">
                 <a href="#" class="develop--forbiddenLink">
                     <i class=" fa fa-check-circle disp_ib mr_5px font_40px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
                 </a>
 
-                <div class="disp_ib w_80per">
-                    <span class="line-numbers ln_1 tap-btn-text font_verydark fin-kr">
+                <div class="disp_ib responsive-goal-title-width">
+                    <span class="ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
                     <i class="fa fa-check-circle"><span class="ml_2px">0</span></i>
                 </div>

@@ -49,13 +49,13 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <? endif; ?>
-                <div class="mb_2px lh_12px font_verydark"><?= h($user['display_username']) ?></div>
+                <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                 <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
             <? endif; ?>
             <div class="col col-xxs-12 showmore-comment comment-text" id="CommentTextBody_<?= $comment['id'] ?>">
-                <div class="box-align comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+                <div class="box-align feed-contents comment-contents font_verydark"><?= $this->TextEx->autoLink($comment['body']) ?></div>
             </div>
 
             <?
