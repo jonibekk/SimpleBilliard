@@ -97,7 +97,7 @@
                 <div class="ln_2_contain">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
                        class="modal-ajax-get">
-                        <p class="h-limit font_lightGray-veryDark">
+                        <p class="h-limit font_gray">
                             <i class="fa fa-flag"></i>
                             <?= h($goal['Goal']['name']) ?></p>
                     </a>
