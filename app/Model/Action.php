@@ -20,12 +20,29 @@ class Action extends AppModel
      */
     public $displayField = 'name';
 
+    public $actsAs = [
+        'Upload' => [
+            'photo' => [
+                'styles'  => [
+                    'x_small' => '128l',
+                    'small'   => '460l',
+                    'large'   => '2048l',
+                ],
+                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality' => 70,
+            ],
+        ],
+    ];
     /**
      * Validation rules
      *
      * @var array
      */
     public $validate = [
+        'photo'       => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
         'priority'    => [
             'numeric' => [
                 'rule' => ['numeric'],
