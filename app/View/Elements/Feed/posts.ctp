@@ -83,7 +83,7 @@
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
-        <div class="col col-xxs-12 feed-text showmore font_14px font_verydark box-align"
+        <div class="col col-xxs-12 post-contents showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
             <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                 <?= $this->TextEx->autoLink($post['Post']['body']) ?>
