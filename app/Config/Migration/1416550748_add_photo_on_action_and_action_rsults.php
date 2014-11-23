@@ -25,10 +25,21 @@ class AddPhotoOnActionAndActionRsults extends CakeMigration
                 'actions'        => array(
                     'photo_file_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アクション画像', 'charset' => 'utf8', 'after' => 'priority'),
                 ),
+                'goals'          => array(
+                    'completed' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true, 'after' => 'progress'),
+                ),
+            ),
+            'drop_field'   => array(
+                'goals' => array('compleated',),
             ),
         ),
         'down' => array(
-            'drop_field' => array(
+            'create_field' => array(
+                'goals' => array(
+                    'compleated' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true),
+                ),
+            ),
+            'drop_field'   => array(
                 'action_results' => array('photo_file_name', 'note',),
                 'actions'        => array('photo_file_name',),
             ),
