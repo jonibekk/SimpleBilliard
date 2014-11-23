@@ -42,6 +42,7 @@ class AddPhotoOnActionAndActionRsults extends CakeMigration
             'drop_field'   => array(
                 'action_results' => array('photo_file_name', 'note',),
                 'actions'        => array('photo_file_name',),
+                'goals'          => array('completed',),
             ),
         ),
     );
