@@ -32,7 +32,7 @@
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'posts', 'action' => 'add'],
                 'inputDefaults' => [
-                    'div'       => 'form-group box-align',
+                    'div'       => 'form-group',
                     'label'     => false,
                     'wrapInput' => '',
                     'class'     => 'form-control',
@@ -50,7 +50,7 @@
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form',
+                    'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
                     'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
@@ -82,7 +82,7 @@
                     <? $this->Form->unlockField('Post.share') ?>
                 </div>
             </div>
-            <div class="panel-body post-panel-body post-panel-footer">
+            <div class="post-panel-footer">
                 <div class="font_12px" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
