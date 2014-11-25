@@ -3034,12 +3034,13 @@ Temporary Properties - YOU MUST FIX
     margin-right: -1px;
 }
 
+/*
 .feed-contents, .edit-form {
     white-space: normal;
     line-break: strict;
     word-break: keep-all;
 }
-
+*/
 
 .box-align {
     margin-right: -1px;
