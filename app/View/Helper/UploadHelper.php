@@ -1,4 +1,5 @@
 <?php
+App::uses('AppHelper', 'View/Helper');
 App::uses('UploadBehavior', 'Model/Behavior');
 
 /**

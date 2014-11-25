@@ -1,4 +1,5 @@
 <?php
+App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 /** @noinspection PhpUndefinedClassInspection */
 

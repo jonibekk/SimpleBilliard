@@ -16,24 +16,33 @@
  * @since         CakePHP(tm) v 2.0
  */
 
-$ds = DIRECTORY_SEPARATOR;
-$dispatcher = 'Cake' . $ds . 'Console' . $ds . 'ShellDispatcher.php';
+if (!defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
+
+$dispatcher = 'Cake' . DS . 'Console' . DS . 'ShellDispatcher.php';
 
 if (function_exists('ini_set')) {
     $root = dirname(dirname(dirname(__FILE__)));
-    // the following line differs from its sibling
+    $appDir = basename(dirname(dirname(__FILE__)));
+    $install = $root . DS . 'lib';
+    $composerInstall = $root . DS . $appDir . DS . 'Vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib';
+    echo $composerInstall;
+    // the following lines differ from its sibling
     // /app/Console/cake.php
-
-    ini_set('include_path',
-            $root . PATH_SEPARATOR . $root . $ds . 'Vendor' . $ds . 'pear-pear.cakephp.org' . $ds . 'CakePHP' . PATH_SEPARATOR . ini_get('include_path'));
+    if (file_exists($composerInstall . DS . $dispatcher)) {
+        $install = $composerInstall;
+    } elseif (!file_exists($install . DS . $dispatcher)) {
+        $install = $root . PATH_SEPARATOR . $root . DS . 'Vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib';
+    }
+    ini_set('include_path', $install . PATH_SEPARATOR . ini_get('include_path'));
+    unset($root, $appDir, $install, $composerInstall);
 }
 
 /** @noinspection PhpIncludeInspection */
 if (!include $dispatcher) {
     trigger_error('Could not locate CakePHP core files.', E_USER_ERROR);
 }
-unset($paths, $path, $dispatcher, $root, $ds);
+unset($dispatcher);
 
-/** @noinspection PhpUndefinedClassInspection */
-/** @noinspection PhpVoidFunctionResultUsedInspection */
 return ShellDispatcher::run($argv);

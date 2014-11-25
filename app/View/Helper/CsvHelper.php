@@ -1,4 +1,5 @@
 <?php
+App::uses('AppHelper', 'Helper');
 
 /**
  * Created by PhpStorm.

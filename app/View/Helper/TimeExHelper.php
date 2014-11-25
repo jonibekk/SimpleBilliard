@@ -1,4 +1,5 @@
 <?php
+App::uses('AppHelper', 'View/Helper');
 
 /**
  * 時差を考慮したローカライズされた時間を表示する。
