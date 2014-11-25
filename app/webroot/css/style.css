@@ -3110,7 +3110,6 @@ Temporary Properties - YOU MUST FIX
 .edit-form,
 .edit-form:focus,
 .edit-form:target{
-    padding: 1px;
     border-top: 1px solid #999;
     border-right: 1px solid #999;
     border-bottom: 1px solid #999;
