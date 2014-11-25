@@ -31,7 +31,7 @@ $this->Form->input('body', [
     'type'           => 'textarea',
     'wrap'           => 'soft',
     'rows'           => 1,
-    'class' => 'form-control tiny-form-text blank-disable edit-form post-edit-form box-align',
+    'class' => 'form-control tiny-form-text blank-disable edit-form post-edit-form box-align disp_bx',
     'target_show_id' => "PostEdit_{$post['Post']['id']}",
     'target-id'      => "PostEditSubmit_{$post['Post']['id']}",
     'value'          => $post['Post']['body'],
