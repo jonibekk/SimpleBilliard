@@ -24,6 +24,7 @@ $this->Form->create('Post', [
     'type'          => 'file',
     'id'            => "PostEditForm_{$post['Post']['id']}",
 ]); ?>
+<div class="mlr_-1px">
 <?=
 $this->Form->input('body', [
     'id'             => "PostEditFormBody_{$post['Post']['id']}",
@@ -37,6 +38,7 @@ $this->Form->input('body', [
     'value'          => $post['Post']['body'],
 ])
 ?>
+</div>
 <div class="row form-group m_0px" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
     <ul class="col input-images">
         <? for ($i = 1; $i <= 5; $i++): ?>

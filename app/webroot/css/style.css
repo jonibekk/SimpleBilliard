@@ -896,6 +896,11 @@ textarea{
     margin: -1px;
 }
 
+.mlr_-1px {
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
 .bd-dash {
     border: 1px dashed #ddd;
 }
@@ -1321,7 +1326,10 @@ ul.example-indent {
 
 .comment-contents {
     padding: 0;
-    word-wrap: break-word;
+    word-break: normal;
+}
+
+.comment-edit-form {
 }
 
 .comment-img {
@@ -1329,7 +1337,7 @@ ul.example-indent {
     float: left;
     height: 32px;
     width: 32px;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 .comment-body {
