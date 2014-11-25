@@ -212,6 +212,8 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 
 /*==/ normalize select2 3.5.1 ===*/
 
+/*=== normalize css ===*/
+
 body {
     background: #e5e5e5;
     padding: 60px 0 0;
@@ -252,6 +254,12 @@ input::-moz-focus-inner {
 .navbar {
     border: none;
 }
+
+textarea{
+    white-space: normal;
+}
+
+/*==/ normalize css ===/
 
 /*=== 全体的な設定 ===*/
 .container {
