@@ -50,7 +50,7 @@ if (!defined('APP_DIR')) {
  * The following line differs from its sibling
  * /app/webroot/test.php
  */
-define('CAKE_CORE_INCLUDE_PATH', DS . 'vagrant_data' . DS . 'Vendor' . DS . 'pear-pear.cakephp.org' . DS . 'CakePHP');
+define('CAKE_CORE_INCLUDE_PATH', DS . 'vagrant_data' . DS . 'Vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib');
 
 /**
  * Editing below this line should not be necessary.
