@@ -24,6 +24,7 @@ $this->Form->create('Comment', [
     'type'          => 'file',
     'id'            => "CommentEditForm_{$comment['id']}",
 ]); ?>
+<div class="m_-1px">
 <?=
 $this->Form->input('body', [
     'id'             => "CommentEditFormBody_{$comment['id']}",
@@ -31,12 +32,13 @@ $this->Form->input('body', [
     'type'           => 'textarea',
     'wrap'          => 'soft',
     'rows'           => 1,
-    'class' => 'form-control tiny-form-text blank-disable font_12px edit-form comment-edit-form box-align disp_bx',
+    'class' => 'form-control tiny-form-text blank-disable font_12px edit-form comment-edit-form',
     'target_show_id' => "CommentEdit_{$comment['id']}",
     'target-id'      => "CommentEditSubmit_{$comment['id']}",
     'value'          => $comment['body'],
 ])
 ?>
+</div>
 <div class="form-group" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
     <ul class="input-images">
         <? for ($i = 1; $i <= 5; $i++): ?>

@@ -283,7 +283,7 @@
                     $this->Form->create('Comment', [
                         'url'           => ['controller' => 'posts', 'action' => 'comment_add'],
                         'inputDefaults' => [
-                            'div'       => 'form-group',
+                            'div'       => 'form-group mlr_-1px',
                             'label'     => false,
                             'wrapInput' => '',
                             'class'     => 'form-control'

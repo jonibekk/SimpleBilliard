@@ -212,6 +212,8 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 
 /*==/ normalize select2 3.5.1 ===*/
 
+/*=== normalize css ===*/
+
 body {
     background: #e5e5e5;
     padding: 60px 0 0;
@@ -252,6 +254,12 @@ input::-moz-focus-inner {
 .navbar {
     border: none;
 }
+
+textarea{
+    white-space: normal;
+}
+
+/*==/ normalize css ===/
 
 /*=== 全体的な設定 ===*/
 .container {
@@ -888,6 +896,11 @@ input::-moz-focus-inner {
     margin: -1px;
 }
 
+.mlr_-1px {
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
 .bd-dash {
     border: 1px dashed #ddd;
 }
@@ -1313,7 +1326,10 @@ ul.example-indent {
 
 .comment-contents {
     padding: 0;
-    word-wrap: break-word;
+    word-break: normal;
+}
+
+.comment-edit-form {
 }
 
 .comment-img {
@@ -1321,7 +1337,7 @@ ul.example-indent {
     float: left;
     height: 32px;
     width: 32px;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 .comment-body {
