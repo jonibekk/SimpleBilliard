@@ -490,6 +490,16 @@ textarea{
 
 /*noinspection CssUnknownProperty*/
 
+.ln_contain{
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.ln_trigger-f5, .ln_trigger-ff {
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
 .ln_1 {
     display: block;
     overflow: hidden;
@@ -497,30 +507,15 @@ textarea{
     white-space: nowrap;
 }
 
-/* line 8, test.scss */
-.ln_2_contain {
-    overflow: hidden;
-    width: 90%;
-    word-break: break-all;
-}
-
 .ln_2, .ln_2-f {
     margin: 0;
     line-break: normal;
-}
-
-.h-limit, .h-limit-f {
-    margin-bottom: 0;
-    font-weight: bold;
-}
-
-.ln_2_contain .ln_2, .ln_2_contain .ln_2-f {
     height: 40px;
     line-height: 1.4;
     position: relative;
 }
 
-.ln_2_contain .ln_2:before, .ln_2_contain .ln_2:after {
+.ln_2:before, .ln_2:after {
     background: #f5f5f5;
     background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
     background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
@@ -530,7 +525,7 @@ textarea{
     position: absolute;
 }
 
-.ln_2_contain .ln_2:before {
+.ln_2:before {
     content: "...";
     color: rgba(0,0,0,0);
     top: 18px;
@@ -541,7 +536,7 @@ textarea{
     text-align: right;
 }
 
-.ln_2_contain .ln_2-f:before {
+.ln_2-f:before {
     content: "...";
     color: rgba(0,0,0,0);
     top: 18px;
@@ -552,7 +547,7 @@ textarea{
     text-align: right;
 }
 
-.ln_2_contain .ln_2-f:before, .ln_2_contain .ln_2-f:after {
+.ln_2-f:before, .ln_2-f:after {
     background: #fff;
     background: linear-gradient(to right, rgba(255,255,255,0), #fff);
     background: -webkit-linear-gradient(to right, rgba(255,255,255,0), #fff);
@@ -562,13 +557,7 @@ textarea{
     position: absolute;
 }
 
-.ln_2_contain .ln_2:after {
-    content: "";
-    height: 100%;
-    width: 100%;
-}
-
-.ln_2_contain .ln_2-f:after {
+.ln_2:after, .ln_2-f:after {
     content: "";
     height: 100%;
     width: 100%;
@@ -1065,6 +1054,10 @@ textarea{
 
 .w_85per {
     width: 85%;
+}
+
+.w_90per {
+    width: 90%;
 }
 
 .h_50px {

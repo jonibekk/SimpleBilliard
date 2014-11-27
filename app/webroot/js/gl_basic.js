@@ -675,13 +675,13 @@ function enabledAllInput(selector) {
 }
 
 
-$(".h-limit").each(function() {
+$(".ln_trigger-f5").each(function() {
     var $minHeight = 24;
     if ( $(this).height() > $minHeight) {
         $(this).addClass('ln_2');
     }
 });
-$(".h-limit-f").each(function() {
+$(".ln_trigger-ff").each(function() {
     var $minHeight = 24;
     if ( $(this).height() > $minHeight) {
         $(this).addClass('ln_2-f');
