@@ -212,6 +212,8 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 
 /*==/ normalize select2 3.5.1 ===*/
 
+/*=== normalize css ===*/
+
 body {
     background: #e5e5e5;
     padding: 60px 0 0;
@@ -252,6 +254,12 @@ input::-moz-focus-inner {
 .navbar {
     border: none;
 }
+
+textarea{
+    white-space: normal;
+}
+
+/*==/ normalize css ===/
 
 /*=== 全体的な設定 ===*/
 .container {
@@ -888,6 +896,11 @@ input::-moz-focus-inner {
     margin: -1px;
 }
 
+.mlr_-1px {
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
 .bd-dash {
     border: 1px dashed #ddd;
 }
@@ -1313,7 +1326,10 @@ ul.example-indent {
 
 .comment-contents {
     padding: 0;
-    word-wrap: break-word;
+    word-break: normal;
+}
+
+.comment-edit-form {
 }
 
 .comment-img {
@@ -1321,7 +1337,7 @@ ul.example-indent {
     float: left;
     height: 32px;
     width: 32px;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 .comment-body {
@@ -1591,6 +1607,7 @@ ul.input-images > li {
 }
 
 .post-panel-footer {
+    padding: 10px 11px;
     background: #f5f5f5;
     border-top: 1px solid #eee;
     padding-top: 0;
@@ -1713,31 +1730,6 @@ textarea.feed-post-form {
 
 .post-images {
     margin-top: 8px;
-}
-
-.edit-form {
-    color: #231814;
-    border-radius: 0;
-    box-shadow: none !important;
-    padding-top: 4px;
-    padding-right: 0 !important;
-    padding-bottom: 4px;
-    padding-left: 0;
-    margin-left: -1px;
-    margin-right: -1px;
-    resize: none;
-}
-
-.post-edit-form {
-    width: 100%;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-.comment-edit-form {
-    width: 100%;
-    padding-top: 4px;
-    padding-bottom: 4px;
 }
 
 .border-none {
@@ -3035,6 +3027,29 @@ Temporary Properties - YOU MUST FIX
     margin-top: 6px;
 }
 
+.datepicker {
+    z-index: 1151 !important;
+}
+
+.circle-toggle-icon {
+    width: 16px;
+    height: 16px;
+    text-align: center;
+}
+
+.circleListMore:nth-child(n+10) {
+    display: none;
+}
+
+.click-circle-trigger {
+    cursor: pointer;
+}
+
+.edit-form {
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
 .box-align {
     margin-right: -1px;
     margin-left: -1px;
@@ -3060,31 +3075,46 @@ Temporary Properties - YOU MUST FIX
     border-color: rgba(0, 0, 0, 0);
 }
 
-.datepicker {
-    z-index: 1151 !important;
+.edit-box-align{
+
 }
 
-.circle-toggle-icon {
-    width: 16px;
-    height: 16px;
-    text-align: center;
+.feed-box-align{
+
 }
 
-.circleListMore:nth-child(n+10) {
-    display: none;
+.post-box-align{
+
 }
 
-.click-circle-trigger {
-    cursor: pointer;
+.comment-box-align{
+
 }
 
 .edit-form {
+    color: #231814;
+    border-radius: 0;
+    box-shadow: none !important;
+    padding-top: 1px;
+    padding-right: 0 !important;
+    padding-bottom: 1px;
+    padding-left: 0;
     margin-left: -1px;
     margin-right: -1px;
+    resize: none;
 }
 
-.feed-contents, .edit-form {
-    white-space: normal;
-    line-break: strict;
-    word-break: keep-all;
+.post-edit-form {
+}
+
+.comment-edit-form {
+}
+
+.edit-form,
+.edit-form:focus,
+.edit-form:target{
+    border-top: 1px solid #999;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    border-left: 1px solid #999;
 }

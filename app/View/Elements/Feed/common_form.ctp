@@ -46,7 +46,7 @@
                 $this->Form->input('body', [
                     'label'                    => false,
                     'type'                     => 'textarea',
-                    'wrap'                     => 'off',
+                    'wrap'                     => 'soft',
                     'rows'                     => 1,
                     'required'                 => true,
                     'placeholder'              => __d('gl', "何か投稿しよう"),
@@ -82,7 +82,7 @@
                     <? $this->Form->unlockField('Post.share') ?>
                 </div>
             </div>
-            <div class="panel-body post-panel-body post-panel-footer">
+            <div class="post-panel-footer">
                 <div class="font_12px" style="display: none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
