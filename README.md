@@ -111,6 +111,7 @@ Goalous開発におけるすべてのドキュメントは[ここ](https://drive
 # Cloud Tools For Project
 Goalousプロジェクトで利用しているクラウドツールについて。
 ## Development
+- [Waffle（かんばん）](https://waffle.io/isaocorp/goalous2)
 - [TravisCI (テストツール)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
 - [Coveralls (カバレッジ分析)](https://coveralls.io/r/IsaoCorp/goalous2)
 
