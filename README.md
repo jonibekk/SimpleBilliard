@@ -1,5 +1,3 @@
-<a href="https://zenhub.io"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png" height="18px"></a>
-
 # Goalous 2.0
 Goalous 2.0のリポジトリです。  
 旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)  
