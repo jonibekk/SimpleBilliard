@@ -372,8 +372,7 @@ class UserTest extends CakeTestCase
         $this->assertEquals($expected, $actual, "[正常]英語ユーザの場合は表示ユーザ名が`first_name last_name`になる");
 
         $user_id = "6";
-        $res = $this->User->findById($user_id);
-        $this->User->me = $res['User'];
+        $this->User->me['language'] = 'jpn';
         $res = $this->User->findById($user_id);
         $actual = $res['User']['display_username'];
         $expected = "姓 名";
