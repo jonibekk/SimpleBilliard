@@ -164,6 +164,9 @@ class UploadBehavior extends ModelBehavior
             return null;
         }
         $data['size'] = strlen($raw);
+        if (!isset($response['header']['Content-Type'])) {
+            return null;
+        }
         $headerContentType = explode(';', $response['header']['Content-Type']);
         $data['type'] = reset($headerContentType);
 
@@ -741,15 +744,15 @@ class UploadBehavior extends ModelBehavior
         try {
             $response = $this->s3
                 ->putObject(
-                array(
-                    'Bucket'               => S3_ASSETS_BUCKET,
-                    'Key'                  => $to_path,
-                    'Body'                 => EntityBody::factory(fopen($from_path, 'r')),
-                    'ContentType'          => $type,
-                    'StorageClass'         => 'STANDARD',
-                    'ServerSideEncryption' => 'AES256',
-                    'ACL'                  => CannedAcl::AUTHENTICATED_READ
-                ));
+                    array(
+                        'Bucket'               => S3_ASSETS_BUCKET,
+                        'Key'                  => $to_path,
+                        'Body'                 => EntityBody::factory(fopen($from_path, 'r')),
+                        'ContentType'          => $type,
+                        'StorageClass'         => 'STANDARD',
+                        'ServerSideEncryption' => 'AES256',
+                        'ACL'                  => CannedAcl::AUTHENTICATED_READ
+                    ));
             return $response;
 
         } catch (S3Exception $e) {
@@ -777,11 +780,11 @@ class UploadBehavior extends ModelBehavior
     {
         // S3を操作するためのオブジェクトを生成（リージョンは東京）
         $this->s3 = Aws::factory(
-                       array(
-                           'key'    => AWS_ACCESS_KEY,
-                           'secret' => AWS_SECRET_KEY,
-                           'region' => Region::AP_NORTHEAST_1
-                       ))
+            array(
+                'key'    => AWS_ACCESS_KEY,
+                'secret' => AWS_SECRET_KEY,
+                'region' => Region::AP_NORTHEAST_1
+            ))
                        ->get('s3');
     }
 }
