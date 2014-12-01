@@ -520,8 +520,8 @@ textarea{
     background: -moz-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
     background: -o-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
     background: -ms-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    width: 160px;
-    height: 17px;
+    width: 30%;
+    height: 20px;
     padding-bottom: 4px;
 }
 
@@ -547,8 +547,8 @@ textarea{
     content: "...";
     color: rgba(0,0,0,0);
     top: 18px;
-    width: 160px;
-    height: 17px;
+    width: 30%;
+    height: 20px;
     right: 0;
     padding-bottom: 4px;
 }
@@ -557,8 +557,8 @@ textarea{
     content: "...";
     color: rgba(0,0,0,0);
     top: 18px;
-    width: 160px;
-    height: 17px;
+    width: 30%;
+    height: 20px;
     right: 0;
     padding-bottom: 4px;
 }
