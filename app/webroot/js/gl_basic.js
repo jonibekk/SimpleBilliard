@@ -230,7 +230,7 @@ $(document).ready(function () {
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
-        $('.container').css('position', 'fixed');
+        $('.container').addClass('container-onside');
         $('#layer-black').css('display', 'block');
         $(".toggle-icon").addClass('rotate').removeClass('rotate-reverse').addClass('fa-arrow-right').removeClass('fa-navicon');
     });
