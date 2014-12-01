@@ -500,12 +500,14 @@ textarea{
     font-weight: bold;
 }
 
+/*
 .ln_1 {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+*/
 
 .ln_2, .ln_2-f {
     margin: 0;
