@@ -236,7 +236,7 @@ $(document).ready(function () {
     });
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('hide.bs.offcanvas', function () {
-        $('.container').css('position', '');
+        $('.container').removeClass('container-onside');
         $('#layer-black').css('display', 'none');
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });

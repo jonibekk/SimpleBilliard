@@ -1297,7 +1297,7 @@ textarea{
     list-style: none;
 }
 
-/* Offcanvasのサイズを独自に定義 */
+/* Offcanvasのサイズを独自に定義 - jasny */
 .navbar-offcanvas {
     width: 200px;
 }
