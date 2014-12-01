@@ -509,6 +509,31 @@ textarea{
 }
 */
 
+.ln_1 {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+}
+
+.ln_1:before{
+    content:"...";
+    color: rgba(0,0,0,0);
+    display: block;
+    position: absolute;
+    top:0;
+    right:0;
+    background: #f5f5f5;
+    background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -moz-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -o-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -ms-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    width: 32px;
+    height: 17px;
+    padding-bottom: 4px;
+}
+
 .ln_2, .ln_2-f {
     margin: 0;
     line-break: normal;
@@ -535,7 +560,6 @@ textarea{
     height: 17px;
     right: 0;
     padding-bottom: 4px;
-    text-align: right;
 }
 
 .ln_2-f:before {
@@ -546,7 +570,6 @@ textarea{
     height: 17px;
     right: 0;
     padding-bottom: 4px;
-    text-align: right;
 }
 
 .ln_2-f:before, .ln_2-f:after {
