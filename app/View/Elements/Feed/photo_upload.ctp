@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 7/22/14
  * Time: 11:05 AM
-
  *
-*@var                    $index
+ * @var                    $index
  * @var                    $submit_id
  * @var                    $data
  * @var                    $post_id
@@ -65,7 +64,7 @@ if (isset($type)) {
                                        'errorMessage' => false,
                                        'id'           => $model . "PhotoDelete" . $index
                                    ]
-                )?>
+                ) ?>
             </div>
         <? endif; ?>
         <div>
@@ -85,6 +84,7 @@ if (isset($type)) {
                                          'class'        => false,
                                          'wrapInput'    => false,
                                          'errorMessage' => false,
+                                         'required'     => false,
                                          'id'           => $model . "_" . $model_id . '_Photo_' . $index
                                         ]) ?>
             </span>
