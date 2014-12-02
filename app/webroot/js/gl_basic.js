@@ -230,13 +230,11 @@ $(document).ready(function () {
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
-        $('.container').addClass('container-onside');
         $('#layer-black').css('display', 'block');
         $(".toggle-icon").addClass('rotate').removeClass('rotate-reverse').addClass('fa-arrow-right').removeClass('fa-navicon');
     });
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('hide.bs.offcanvas', function () {
-        $('.container').removeClass('container-onside');
         $('#layer-black').css('display', 'none');
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });

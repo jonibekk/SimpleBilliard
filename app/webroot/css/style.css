@@ -268,11 +268,6 @@ textarea{
     padding-right: 0;
 }
 
-.container-onside {
-    position: fixed;
-    margin-left: 3.125%;
-}
-
 .m_0px {
     margin: 0;
 }
@@ -2636,9 +2631,7 @@ textarea.comment-post-form {
     .container {
         width: 97.5%;
     }
-    .container-onside {
-        margin-left: 1.125%;
-    }
+
     .nav-container {
         width: 97.5%;
     }
@@ -2707,11 +2700,6 @@ textarea.comment-post-form {
 
     .container {
         width: 756px;
-    }
-
-    .container-onside {
-        position: static;
-        margin: auto;
     }
 
     .sm-text-right {
