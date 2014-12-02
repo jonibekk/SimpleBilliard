@@ -53,37 +53,4 @@ class ActionFixture extends CakeTestFixture
         ),
         'tableParameters'     => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
-
-    /**
-     * Records
-     *
-     * @var array
-     */
-    public $records = array(
-        array(
-            'id'            => '',
-            'team_id'       => '',
-            'goal_id'       => '',
-            'key_result_id' => '',
-            'user_id'       => '',
-            'name'          => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'description'   => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'priority'      => 1,
-            'start_date'    => 1,
-            'end_date'      => 1,
-            'repeat_type'   => 1,
-            'mon_flg'       => 1,
-            'tues_flg'      => 1,
-            'wed_flg'       => 1,
-            'thurs_flg'     => 1,
-            'fri_flg'       => 1,
-            'sat_flg'       => 1,
-            'sun_flg'       => 1,
-            'del_flg'       => 1,
-            'deleted'       => 1,
-            'created'       => 1,
-            'modified'      => 1
-        ),
-    );
-
 }
