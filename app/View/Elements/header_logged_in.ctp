@@ -15,12 +15,19 @@
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
+    <div class="navbar-toggle-box">
+        <button type="button" class="navbar-toggle hamburger header-toggle-icon" data-toggle="offcanvas"
+                data-target=".navbar-offcanvas">
+            <i class="fa fa-navicon toggle-icon"></i>
+<!--
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+-->
+        </button>
+    </div>
     <div class="nav-container header-container">
-        <div class="navbar-offcanvas offcanvas navmenu-fixed-left">
-            <button type="button" class="close font_33px close-design humbarger-close" data-toggle="offcanvas"
-                    data-target=".navbar-offcanvas" aria-hidden="true">
-                <span class="close-icon hidden-sm hidden-md hidden-lg">×</span>
-            </button>
+        <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
             <ul class="nav navbar-nav">
                 <li>
                     <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
@@ -80,14 +87,7 @@
                 </li>
             </ul>
         </div>
-
         <div class="navbar-header navbar-right">
-            <button type="button" class="navbar-toggle hamburger" data-toggle="offcanvas"
-                    data-target=".navbar-offcanvas">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
             <div class="pull-right nav-icons">
                 <div class="dropdown navbar-nav-fix">
                     <a href="#"

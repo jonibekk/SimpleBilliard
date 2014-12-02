@@ -481,6 +481,10 @@ textarea{
     margin: 4px 0 4px 10px;
 }
 
+.top_50px{
+    top: 50px;
+}
+
 /*行数の指定*/
 
 .modal-mini {
@@ -1204,6 +1208,36 @@ textarea{
     margin-left: 0;
 }
 
+.toggle-icon{
+    font-size: 20px;
+    transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+}
+
+.rotate{
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+.rotate-reverse{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.header-toggle-icon{
+    border: none;
+    height: 50px;
+    margin-top:0;
+    margin-bottom: 0;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.navbar-default .header-toggle-icon:hover,
+.navbar-default .header-toggle-icon:focus,
+.navbar-default .header-toggle-icon:target {
+    background-color: #fff;
+}
+
 /* インラインで非表示にする */
 @media screen and (max-width: 768px) {
     .visible-xs-inline {
@@ -1258,7 +1292,7 @@ textarea{
     list-style: none;
 }
 
-/* Offcanvasのサイズを独自に定義 */
+/* Offcanvasのサイズを独自に定義 - jasny */
 .navbar-offcanvas {
     width: 200px;
 }
