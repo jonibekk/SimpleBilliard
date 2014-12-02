@@ -27,10 +27,10 @@
                 ?></a>
         </div>
         <div class="col col-xxs-9 col-xs-10 pl_5px">
-            <div class="col col-xxs-12 ln_2_contain">
+            <div class="col col-xxs-12 ln_contain">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
                    class="modal-ajax-get"><p
-                        class="h-limit-f font_verydark"><?= h($goal['Goal']['name']) ?></p></a>
+                        class="ln_trigger-ff font_verydark"><?= h($goal['Goal']['name']) ?></p></a>
             </div>
             <div class="col col-xxs-12 font_lightgray font_12px">
                 <? if (!empty($goal['Leader'])): ?>
