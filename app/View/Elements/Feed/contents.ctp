@@ -66,6 +66,9 @@
     </div>
 <? endif; ?>
 <?
+if(!isset($this->request->params['post_id']) || empty($this->request->params['post_id'])):
+?>
+<?
 $next_page_num = 2;
 $month_index = 1;
 $more_read_text = __d('gl', "もっと読む ▼");
@@ -88,4 +91,5 @@ if ((count($posts) != 20)) {
             <?= $more_read_text ?></a>
     </div>
 </div>
+<?endif;?>
 <!-- END app/View/Elements/Feed/contents.ctp -->

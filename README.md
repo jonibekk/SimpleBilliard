@@ -1,11 +1,9 @@
-<a href="https://zenhub.io"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png" height="18px"></a>
-
 # Goalous 2.0
 Goalous 2.0のリポジトリです。  
 旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)  
 当プロジェクトで管理しているソース、ドキュメント、その他のツールのすべてはここから辿れるようになっています。  
 ## Health
-- TravisCI
+- Travis
  - master [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
  - develop [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
 - Coveralls
@@ -58,9 +56,7 @@ Goalousで素早く開発を始められるよう心がけております。
 `vagrant up`  
 1. アプリケーションをアップデート   
 ターミナルを起動し、以下を実行   
-`vagrant ssh`   
-`sudo su`   
-`sh ../etc/local/update_app.sh`
+`sudo sh ../etc/local/update_app.sh`
 1. 作業用ブランチを作成   
 `git branch topic-xxxx`   
 1. 作業ブランチにチェックアウト   
@@ -111,6 +107,7 @@ Goalous開発におけるすべてのドキュメントは[ここ](https://drive
 # Cloud Tools For Project
 Goalousプロジェクトで利用しているクラウドツールについて。
 ## Development
+- [Waffle（かんばん）](https://waffle.io/isaocorp/goalous2)
 - [TravisCI (テストツール)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
 - [Coveralls (カバレッジ分析)](https://coveralls.io/r/IsaoCorp/goalous2)
 

@@ -212,6 +212,8 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 
 /*==/ normalize select2 3.5.1 ===*/
 
+/*=== normalize css ===*/
+
 body {
     background: #e5e5e5;
     padding: 60px 0 0;
@@ -241,9 +243,23 @@ footer p {
     margin-bottom: 0;
 }
 
+a, a:hover, a:active, a:focus {
+    outline: 0;
+}
+
+input::-moz-focus-inner {
+    border: 0;
+}
+
 .navbar {
     border: none;
 }
+
+textarea{
+    white-space: normal;
+}
+
+/*==/ normalize css ===/
 
 /*=== 全体的な設定 ===*/
 .container {
@@ -465,6 +481,10 @@ footer p {
     margin: 4px 0 4px 10px;
 }
 
+.top_50px{
+    top: 50px;
+}
+
 /*行数の指定*/
 
 .modal-mini {
@@ -474,67 +494,90 @@ footer p {
 
 /*noinspection CssUnknownProperty*/
 
+.ln_contain{
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.ln_trigger-f5, .ln_trigger-ff {
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
 .ln_1 {
     display: block;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    position: relative;
 }
 
-/* line 8, test.scss */
-.ln_2_contain {
-    overflow: hidden;
-    width: 90%;
-    word-break: break-all;
+.ln_1:before{
+    content:"...";
+    color: rgba(0,0,0,0);
+    display: block;
+    position: absolute;
+    top:0;
+    right:0;
+    background: #f5f5f5;
+    background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -moz-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -o-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -ms-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    width: 30%;
+    height: 20px;
+    padding-bottom: 4px;
 }
 
 .ln_2, .ln_2-f {
     margin: 0;
     line-break: normal;
-}
-
-.h-limit, .h-limit-f {
-    margin-bottom: 0;
-    font-weight: bold;
-}
-
-.ln_2_contain .ln_2, .ln_2_contain .ln_2-f {
     height: 40px;
     line-height: 1.4;
     position: relative;
 }
 
-.ln_2_contain .ln_2:before, .ln_2_contain .ln_2:after {
+.ln_2:before, .ln_2:after {
     background: #f5f5f5;
+    background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -moz-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -o-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -ms-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
     position: absolute;
 }
 
-.ln_2_contain .ln_2:before {
+.ln_2:before {
     content: "...";
-    top: 16px;
-    width: 16px;
+    color: rgba(0,0,0,0);
+    top: 18px;
+    width: 30%;
+    height: 20px;
     right: 0;
+    padding-bottom: 4px;
 }
 
-.ln_2_contain .ln_2-f:before {
+.ln_2-f:before {
     content: "...";
-    top: 16px;
-    width: 16px;
+    color: rgba(0,0,0,0);
+    top: 18px;
+    width: 30%;
+    height: 20px;
     right: 0;
+    padding-bottom: 4px;
 }
 
-.ln_2_contain .ln_2-f:before, .ln_2_contain .ln_2-f:after {
+.ln_2-f:before, .ln_2-f:after {
     background: #fff;
+    background: linear-gradient(to right, rgba(255,255,255,0), #fff);
+    background: -webkit-linear-gradient(to right, rgba(255,255,255,0), #fff);
+    background: -moz-linear-gradient(to right, rgba(255,255,255,0), #fff);
+    background: -o-linear-gradient(to right, rgba(255,255,255,0), #fff);
+    background: -ms-linear-gradient(to right, rgba(255,255,255,0), #fff);
     position: absolute;
 }
 
-.ln_2_contain .ln_2:after {
-    content: "";
-    height: 100%;
-    width: 100%;
-}
-
-.ln_2_contain .ln_2-f:after {
+.ln_2:after, .ln_2-f:after {
     content: "";
     height: 100%;
     width: 100%;
@@ -794,6 +837,7 @@ footer p {
 /*== Modal Settings ==*/
 .modal-label {
     padding-right: 12px;
+    margin-right: 12px;
     text-align: right;
 }
 
@@ -878,6 +922,11 @@ footer p {
 
 .m_-1px {
     margin: -1px;
+}
+
+.mlr_-1px {
+    margin-left: -1px;
+    margin-right: -1px;
 }
 
 .bd-dash {
@@ -1027,6 +1076,10 @@ footer p {
     width: 85%;
 }
 
+.w_90per {
+    width: 90%;
+}
+
 .h_50px {
     height: 50px;
 }
@@ -1052,7 +1105,7 @@ footer p {
     color: #e78e99;
 }
 
-.feed-text a {
+.post-contents a {
     color: #ddd;
 }
 
@@ -1060,9 +1113,9 @@ footer p {
     color: #c5c5c5;
 }
 
-.feed-text a:hover,
-.feed-text a:hover,
-.feed-text a:hover,
+.post-contents a:hover,
+.post-contents a:hover,
+.post-contents a:hover,
 .comment-contents a:hover,
 .comment-contents a:hover,
 .comment-contents a:hover {
@@ -1155,6 +1208,36 @@ footer p {
     margin-left: 0;
 }
 
+.toggle-icon{
+    font-size: 20px;
+    transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+}
+
+.rotate{
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+.rotate-reverse{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.header-toggle-icon{
+    border: none;
+    height: 50px;
+    margin-top:0;
+    margin-bottom: 0;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.navbar-default .header-toggle-icon:hover,
+.navbar-default .header-toggle-icon:focus,
+.navbar-default .header-toggle-icon:target {
+    background-color: #fff;
+}
+
 /* インラインで非表示にする */
 @media screen and (max-width: 768px) {
     .visible-xs-inline {
@@ -1209,7 +1292,7 @@ footer p {
     list-style: none;
 }
 
-/* Offcanvasのサイズを独自に定義 */
+/* Offcanvasのサイズを独自に定義 - jasny */
 .navbar-offcanvas {
     width: 200px;
 }
@@ -1292,7 +1375,7 @@ ul.example-indent {
     margin-right: 8px;
 }
 
-.feed-text {
+.post-contents {
     padding: 10px 0 0 0;
 }
 
@@ -1305,7 +1388,10 @@ ul.example-indent {
 
 .comment-contents {
     padding: 0;
-    word-wrap: break-word;
+    word-break: normal;
+}
+
+.comment-edit-form {
 }
 
 .comment-img {
@@ -1313,7 +1399,7 @@ ul.example-indent {
     float: left;
     height: 32px;
     width: 32px;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 .comment-body {
@@ -1369,7 +1455,7 @@ ul.example-indent {
     height: 100%;
 }
 
-.feed-text .btn-link {
+.post-contents .btn-link {
     color: #ddd;
 }
 
@@ -1583,6 +1669,7 @@ ul.input-images > li {
 }
 
 .post-panel-footer {
+    padding: 10px 11px;
     background: #f5f5f5;
     border-top: 1px solid #eee;
     padding-top: 0;
@@ -1705,31 +1792,6 @@ textarea.feed-post-form {
 
 .post-images {
     margin-top: 8px;
-}
-
-.edit-form {
-    color: #231814;
-    border-radius: 0;
-    box-shadow: none !important;
-    padding-top: 4px;
-    padding-right: 0 !important;
-    padding-bottom: 4px;
-    padding-left: 0;
-    margin-left: -1px;
-    margin-right: -1px;
-    resize: none;
-}
-
-.feed-edit-form {
-    width: 100%;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-.comment-edit-form {
-    width: 100%;
-    padding-top: 4px;
-    padding-bottom: 4px;
 }
 
 .border-none {
@@ -1949,6 +2011,14 @@ textarea.comment-post-form {
 
 .disp_ib {
     display: inline-block;
+}
+
+.disp_bx{
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-box;
+    display: -o-box;
 }
 
 .fileinput-new {
@@ -3019,6 +3089,29 @@ Temporary Properties - YOU MUST FIX
     margin-top: 6px;
 }
 
+.datepicker {
+    z-index: 1151 !important;
+}
+
+.circle-toggle-icon {
+    width: 16px;
+    height: 16px;
+    text-align: center;
+}
+
+.circleListMore:nth-child(n+10) {
+    display: none;
+}
+
+.click-circle-trigger {
+    cursor: pointer;
+}
+
+.edit-form {
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
 .box-align {
     margin-right: -1px;
     margin-left: -1px;
@@ -3044,31 +3137,46 @@ Temporary Properties - YOU MUST FIX
     border-color: rgba(0, 0, 0, 0);
 }
 
-.datepicker {
-    z-index: 1151 !important;
+.edit-box-align{
+
 }
 
-.circle-toggle-icon {
-    width: 16px;
-    height: 16px;
-    text-align: center;
+.feed-box-align{
+
 }
 
-.circleListMore:nth-child(n+10) {
-    display: none;
+.post-box-align{
+
 }
 
-.click-circle-trigger {
-    cursor: pointer;
+.comment-box-align{
+
 }
 
 .edit-form {
+    color: #231814;
+    border-radius: 0;
+    box-shadow: none !important;
+    padding-top: 1px;
+    padding-right: 0 !important;
+    padding-bottom: 1px;
+    padding-left: 0;
     margin-left: -1px;
     margin-right: -1px;
+    resize: none;
 }
 
-.comment-contents, .edit-form {
-    white-space: normal;
-    line-break: strict;
-    word-break: keep-all;
+.post-edit-form {
+}
+
+.comment-edit-form {
+}
+
+.edit-form,
+.edit-form:focus,
+.edit-form:target{
+    border-top: 1px solid #999;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    border-left: 1px solid #999;
 }

@@ -53,7 +53,7 @@ if (!defined('APP_DIR')) {
  * /app/webroot/index.php
  */
 // define('CAKE_CORE_INCLUDE_PATH',  DS . 'vagrant_data' . DS . 'Vendor' . DS . 'pear-pear.cakephp.org' . DS . 'CakePHP');
-define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . '/Vendor/pear-pear.cakephp.org/CakePHP');
+define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'Vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib');
 //ROOT . DS . APP_DIR . '/Vendor/pear-pear.cakephp.org/CakePHP'
 /**
  * Editing below this line should NOT be necessary.

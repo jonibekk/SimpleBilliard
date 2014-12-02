@@ -119,6 +119,10 @@ class OgpComponent extends Object
                     $ogp->image = null;
                 }
             }
+            //urlの文字列が//で始まっていた場合
+            elseif (strpos($ogp->image, '//') === 0) {
+                $ogp->image = 'http:' . $ogp->image;
+            }
             $res['image'] = $ogp->image;
         }
         if (isset($ogp->site_name)) {

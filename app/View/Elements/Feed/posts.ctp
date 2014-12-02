@@ -50,7 +50,7 @@
             <?=
             $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                        ['class' => 'feed-img']) ?>
-            <div class="font_14px font_verydark"><?= h($post['User']['display_username']) ?></div>
+            <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
             <div class="font_11px font_lightgray">
                 <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span class="font_lightgray"> ･ </span>
                 <?
@@ -83,7 +83,7 @@
                 <?= $this->element('Feed/post_edit_form', compact('post')) ?>
             </div>
         <? endif; ?>
-        <div class="col col-xxs-12 feed-text showmore font_14px font_verydark box-align"
+        <div class="col col-xxs-12 feed-contents post-contents showmore font_14px font_verydark box-align"
              id="PostTextBody_<?= $post['Post']['id'] ?>">
             <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                 <?= $this->TextEx->autoLink($post['Post']['body']) ?>
@@ -274,7 +274,7 @@
                 $this->element('Feed/comment',
                                ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
             <? endforeach ?>
-            <div class="col col-xxs-12 box-align comment-contents">
+            <div class="col-xxs-12 box-align feed-contents comment-contents">
                 <?=
                 $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
                                            ['class' => 'comment-img']) ?>
@@ -283,7 +283,7 @@
                     $this->Form->create('Comment', [
                         'url'           => ['controller' => 'posts', 'action' => 'comment_add'],
                         'inputDefaults' => [
-                            'div'       => 'form-group',
+                            'div'       => 'form-group mlr_-1px',
                             'label'     => false,
                             'wrapInput' => '',
                             'class'     => 'form-control'
@@ -297,7 +297,7 @@
                         'id'                       => "CommentFormBody_{$post['Post']['id']}",
                         'label'                    => false,
                         'type'                     => 'textarea',
-                        'wrap'                     => 'off',
+                        'wrap'                     => 'soft',
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "コメントする"),

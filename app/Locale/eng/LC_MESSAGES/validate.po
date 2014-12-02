@@ -1,18 +1,19 @@
 # LANGUAGE translation of CakePHP Application
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-11-20 09:40+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"PO-Revision-Date: 2014-11-20 18:53+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: Model/User.php:472
 msgid "現在のパスワードが間違っています。"
@@ -27,7 +28,9 @@ msgid "このメールアドレスはGoalousに登録されていません。"
 msgstr ""
 
 #: Model/User.php:573
-msgid "このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメールをご確認ください。"
+msgid ""
+"このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメー"
+"ルをご確認ください。"
 msgstr ""
 
 #: Model/User.php:578
@@ -39,7 +42,8 @@ msgid "メールアドレスが入力されていません"
 msgstr ""
 
 #: Model/User.php:667
-msgid "現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"
+msgid ""
+"現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:16
@@ -51,28 +55,23 @@ msgstr ""
 #: View/Elements/User/modal_change_email.ctp:78
 #: View/Elements/User/modal_change_password.ctp:86;97;108
 #: View/Elements/User/profile_setting.ctp:73;80
-#: View/Goals/add.ctp:74;152;192;205;230;265
-#: View/Teams/add.ctp:37
-#: View/Teams/invite.ctp:45
-#: View/Users/add_profile.ctp:63;70
+#: View/Goals/add.ctp:74;152;192;205;230;265 View/Teams/add.ctp:37
+#: View/Teams/invite.ctp:45 View/Users/add_profile.ctp:63;70
 #: View/Users/password_reset.ctp:35;41
 #: View/Users/password_reset_request.ctp:38
-#: View/Users/register.ctp:36;43;71;87;93
-#: View/Users/token_resend.ctp:38
+#: View/Users/register.ctp:36;43;71;87;93 View/Users/token_resend.ctp:38
 msgid "入力必須項目です。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:17
 #: View/Elements/User/profile_setting.ctp:72;79
-#: View/Users/add_profile.ctp:62;69
-#: View/Users/register.ctp:35;42
+#: View/Users/add_profile.ctp:62;69 View/Users/register.ctp:35;42
 msgid "アルファベットのみで入力してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:18
 #: View/Elements/User/modal_change_email.ctp:81
-#: View/Users/password_reset_request.ctp:37
-#: View/Users/register.ctp:70
+#: View/Users/password_reset_request.ctp:37 View/Users/register.ctp:70
 #: View/Users/token_resend.ctp:37
 msgid "メールアドレスが正しくありません。"
 msgstr ""
@@ -102,7 +101,9 @@ msgid "%2$d文字以上で入力してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:23
-msgid "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"
+msgid ""
+"このメールアドレスは既に使用されています。他のメールアドレスを指定してくださ"
+"い。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:24
@@ -110,7 +111,9 @@ msgid "ファイルサイズが上限を超えています。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:25
-msgid "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"
+msgid ""
+"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
+"ださい。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:26
@@ -125,8 +128,7 @@ msgstr ""
 msgid "期限が開始日以前になっています。"
 msgstr ""
 
-#: View/Elements/Feed/common_form.ctp:56
-#: View/Elements/Feed/posts.ctp:307
+#: View/Elements/Feed/common_form.ctp:56 View/Elements/Feed/posts.ctp:307
 msgid "何も入力されていません。"
 msgstr ""
 
@@ -145,4 +147,3 @@ msgstr ""
 #: View/Elements/User/modal_change_email.ctp:92
 msgid "変更する場合はパスワード入力が必要です。"
 msgstr ""
-

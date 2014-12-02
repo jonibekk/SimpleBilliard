@@ -24,19 +24,21 @@ $this->Form->create('Post', [
     'type'          => 'file',
     'id'            => "PostEditForm_{$post['Post']['id']}",
 ]); ?>
+<div class="mlr_-1px">
 <?=
 $this->Form->input('body', [
     'id'             => "PostEditFormBody_{$post['Post']['id']}",
     'label'          => false,
     'type'           => 'textarea',
-    'wrap'           => 'off',
+    'wrap'           => 'soft',
     'rows'           => 1,
-    'class' => 'form-control tiny-form-text blank-disable edit-form feed-edit-form',
+    'class' => 'form-control tiny-form-text blank-disable edit-form post-edit-form box-align',
     'target_show_id' => "PostEdit_{$post['Post']['id']}",
     'target-id'      => "PostEditSubmit_{$post['Post']['id']}",
     'value'          => $post['Post']['body'],
 ])
 ?>
+</div>
 <div class="row form-group m_0px" id="PostFormImage_<?= $post['Post']['id'] ?>" style="display: none">
     <ul class="col input-images">
         <? for ($i = 1; $i <= 5; $i++): ?>

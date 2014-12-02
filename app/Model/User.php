@@ -1,4 +1,5 @@
 <?php
+App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -77,6 +78,20 @@ class User extends AppModel
     ];
 
     public $displayField = 'username';
+
+    /**
+     * ローカル名の一時格納用
+     *
+     * @var array
+     */
+    protected $local_names = [];
+
+    /**
+     * ユーザIDの一時格納用
+     *
+     * @var array
+     */
+    protected $uids = [];
 
     /**
      * Validation rules
@@ -228,6 +243,7 @@ class User extends AppModel
 
     function __construct($id = false, $table = null, $ds = null)
     {
+        /** @noinspection PhpUndefinedClassInspection */
         parent::__construct($id, $table, $ds);
         $this->_setGenderTypeName();
         $this->_setVirtualFields();
@@ -267,14 +283,31 @@ class User extends AppModel
         if (empty($results)) {
             return $results;
         }
-        //TODO php5.3だとクロージャで$thisが使えないため、$thisを変数に格納して、useで渡す。php5.4なら簡潔に書ける
-        //TODO これなおす！
-        $self = $this;
+        $this->uids = [];
+        /** @noinspection PhpUnusedParameterInspection */
+        //ユーザIDのみを抽出(データのゆらぎを吸収する)
+        $this
+            ->dataIter($results,
+                function (&$entity, &$model) {
+                    if (isset($entity[$this->alias]['id'])) {
+                        array_push($this->uids, $entity[$this->alias]['id']);
+                    }
+                });
+
+        //LocalName取得(まだ取得していないIDのみ)
+        foreach ($this->uids as $k => $v) {
+            if (array_key_exists($v, $this->local_names)) {
+                unset($this->uids[$k]);
+            }
+        }
+        $this->local_names = $this->local_names +
+            $this->LocalName->getNames($this->uids, $this->me['language']);
+        //データにLocalName付与する
         /** @noinspection PhpUnusedParameterInspection */
         $this
             ->dataIter($results,
-                function (&$entity, &$model) use ($self) {
-                    $entity = $self->setUsername($entity);
+                function (&$entity, &$model) {
+                    $entity = $this->setUsername($entity);
                 });
         return $results;
     }
@@ -367,26 +400,24 @@ class User extends AppModel
         if (!isset($this->me['language']) || empty($this->me['language'])) {
             return null;
         }
-        //ローカル名を取得
-        $options = [
-            'conditions' => [
-                'user_id'  => $row[$this->alias]['id'],
-                'language' => $this->me['language'],
-            ]
-        ];
-        $res = $this->LocalName->find('first', $options);
-        if (empty($res) || (empty($res['LocalName']['last_name']) && empty($res['LocalName']['first_name']))) {
+
+        if (array_key_exists($row[$this->alias]['id'], $this->local_names)
+            && !empty($this->local_names[$row[$this->alias]['id']])
+        ) {
+            $res = $this->local_names[$row[$this->alias]['id']];
+        }
+        else {
             return null;
         }
         //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
         $last_first = in_array($this->me['language'], $this->langCodeOfLastFirst);
         if ($last_first) {
-            $local_username = $res['LocalName']['last_name'] . " "
-                . $res['LocalName']['first_name'];
+            $local_username = $res['last_name'] . " "
+                . $res['first_name'];
         }
         else {
-            $local_username = $res['LocalName']['first_name'] . " "
-                . $res['LocalName']['last_name'];
+            $local_username = $res['first_name'] . " "
+                . $res['last_name'];
         }
         return $local_username;
     }
