@@ -1,12 +1,7 @@
-/*
-bw-simplex
- *!
- * Bootswatch v3.1.1+1
- * Homepage: http://bootswatch.com
- * Copyright 2012-2014 Thomas Park
- * Licensed under MIT
- * Based on Bootstrap
-*/
+/*============================================================
+    1.normalize.css - 切り離し予定
+=============================================================*/
+/*  styleで確実に上書きされるものは消してあります。 */
 /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
 html {
     font-family: sans-serif;
@@ -16,23 +11,10 @@ html {
 body {
     margin: 0;
 }
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-main,
-nav,
-section,
-summary {
+article, aside, details, figcaption, figure, footer, header, main, nav, section, summary {
     display: block;
 }
-audio,
-canvas,
-progress,
-video {
+audio, canvas, progress, video {
     display: inline-block;
     vertical-align: baseline;
 }
@@ -54,15 +36,13 @@ a:hover {
 abbr[title] {
     border-bottom: 1px dotted;
 }
-b,
-strong {
+b, strong {
     font-weight: bold;
 }
 dfn {
     font-style: italic;
 }
 h1 {
-    font-size: 2em;
     margin: 0.67em 0;
 }
 mark {
@@ -102,18 +82,11 @@ hr {
 pre {
     overflow: auto;
 }
-code,
-kbd,
-pre,
-samp{
+code, kbd, pre, samp{
     font-family: monospace, monospace;
     font-size: 1em;
 }
-button,
-input,
-optgroup,
-select,
-textarea {
+button, input, optgroup, select, textarea {
     color: inherit;
     font: inherit;
     margin: 0;
@@ -121,19 +94,18 @@ textarea {
 button {
     overflow: visible;
 }
-button,
-select {
+button, select {
     text-transform: none;
 }
 button,
-html input[type="button"],
+input[type="button"],
 input[type="reset"],
 input[type="submit"] {
     -webkit-appearance: button;
     cursor: pointer;
 }
 button[disabled],
-html input[disabled] {
+input[disabled] {
     cursor: default;
 }
 button::-moz-focus-inner,
@@ -186,6 +158,14 @@ td,
 th {
     padding: 0;
 }
+
+/*============================================================/
+    1.normalize.css - 切り離し予定
+=============================================================*/
+
+/*=============================================================
+    2.印刷時のみ有効になる設定 @media print
+=============================================================*/
 @media print {
     * {
         text-shadow: none !important;
@@ -257,6 +237,48 @@ th {
         border: 1px solid #ddd !important;
     }
 }
+
+/*============================================================/
+    2.印刷時のみ有効になる設定 @media print
+=============================================================*/
+
+/*============================================================
+    3.基本設計
+=============================================================*/
+/*============================================================/
+    3.基本設計
+=============================================================*/
+
+
+
+/*============================================================/
+    x.hoge - hoge
+=============================================================*/
+/*============================================================/
+    x.hoge - hoge
+=============================================================*/
+/*============================================================/
+    x.hoge - hoge
+=============================================================*/
+/*============================================================/
+    x.hoge - hoge
+=============================================================*/
+/*============================================================/
+    x.hoge - hoge
+=============================================================*/
+
+
+/*
+bw-simplex
+ *!
+ * Bootswatch v3.1.1+1
+ * Homepage: http://bootswatch.com
+ * Copyright 2012-2014 Thomas Park
+ * Licensed under MIT
+ * Based on Bootstrap
+*/
+
+
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -350,19 +372,7 @@ hr {
     clip: rect(0, 0, 0, 0);
     border: 0;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-weight: 300;
     line-height: 1.1;
     color: #333333;
@@ -378,23 +388,12 @@ h6 small,
 .h3 small,
 .h4 small,
 .h5 small,
-.h6 small,
-h1 .small,
-h2 .small,
-h3 .small,
-h4 .small,
-h5 .small,
-h6 .small,
-.h1 .small,
-.h2 .small,
-.h3 .small,
-.h4 .small,
-.h5 .small,
-.h6 .small {
+.h6 small, {
     font-weight: normal;
     line-height: 1;
     color: #808080;
 }
+
 h1,
 .h1,
 h2,
@@ -409,13 +408,7 @@ h1 small,
 h2 small,
 .h2 small,
 h3 small,
-.h3 small,
-h1 .small,
-.h1 .small,
-h2 .small,
-.h2 .small,
-h3 .small,
-.h3 .small {
+.h3 small {
     font-size: 65%;
 }
 h4,
@@ -432,37 +425,26 @@ h4 small,
 h5 small,
 .h5 small,
 h6 small,
-.h6 small,
-h4 .small,
-.h4 .small,
-h5 .small,
-.h5 .small,
-h6 .small,
-.h6 .small {
+.h6 small {
     font-size: 75%;
 }
-h1,
-.h1 {
+
+h1, .h1 {
     font-size: 36px;
 }
-h2,
-.h2 {
+h2, .h2 {
     font-size: 30px;
 }
-h3,
-.h3 {
+h3, .h3 {
     font-size: 24px;
 }
-h4,
-.h4 {
+h4, .h4 {
     font-size: 18px;
 }
-h5,
-.h5 {
+h5, .h5 {
     font-size: 14px;
 }
-h6,
-.h6 {
+h6, .h6 {
     font-size: 12px;
 }
 p {
@@ -5891,9 +5873,11 @@ legend {
 .pager .disabled > a {
     border-color: #dddddd;
 }
-/*/==========================================================
+/*/=============================================================================================================
+
 bw-simplex
-==========================================================/*/
+
+================================================================================================================/*/
 
 /*=== Header部のリファクタリング ===*/
 .nav-icons > a {
