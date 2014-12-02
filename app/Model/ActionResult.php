@@ -6,7 +6,8 @@ App::uses('AppModel', 'Model');
  *
  * @property Team   $Team
  * @property Action $Action
- * @property User   $User
+ * @property User   $CreatedUser
+ * @property User   $CompletedUser
  */
 class ActionResult extends AppModel
 {
