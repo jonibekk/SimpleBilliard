@@ -1,4 +1,4 @@
-/*=== リファクタリング予定 ===*/
+/*=== Header部のリファクタリング ===*/
 .nav-icons > a {
     float: left;
     font-size: 20px;
@@ -30,6 +30,97 @@
     padding: 6px 0 !important;
     line-height: 30px;
 }
+
+
+/*=== headerの設定 ===*/
+
+.header_icon-text {
+    margin: 0;
+}
+
+.navbar {
+    background: #fff;
+    margin: 0;
+    max-height: 50px;
+    position: fixed;
+    top: 0;
+    z-index: 7777;
+}
+
+.nav-team-select,
+.nav-search {
+    height: 28px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 0;
+}
+
+.nav-form-group input {
+    padding-left: 27px;
+}
+
+.nav-form-group {
+    position: relative;
+    padding: 10px 0;
+}
+
+/*noinspection ALL*/
+.nav-form-group i {
+    position: absolute;
+    font-size: 15px !important;
+    padding: 7px 7px;
+    pointer-events: none;
+}
+
+.nav-icons .header-home {
+    font-size: 12px;
+    line-height: 30px;
+    color: #808080;
+}
+
+
+.hamburger {
+    float: left !important;
+    margin-left: 0;
+}
+
+.toggle-icon{
+    font-size: 20px;
+    transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+}
+
+.rotate{
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+.rotate-reverse{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.header-toggle-icon{
+    border: none;
+    height: 50px;
+    margin-top:0;
+    margin-bottom: 0;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.navbar-default .header-toggle-icon:hover,
+.navbar-default .header-toggle-icon:focus,
+.navbar-default .header-toggle-icon:target {
+    background-color: #fff;
+}
+
+
+/*==/ headerの設定 ===*/
+
+/*==/ Header部のリファクタリング ===*/
+
+
+/*=== リファクタリング予定 ===*/
 
 .form-group .text-align_left {
     text-align: left;
@@ -961,53 +1052,7 @@ textarea{
 
 /*==/ モジュール ===*/
 
-/*=== headerの設定 ===*/
 
-.header_icon-text {
-    margin: 0;
-}
-
-.navbar {
-    background: #fff;
-    margin: 0;
-    max-height: 50px;
-    position: fixed;
-    top: 0;
-    z-index: 7777;
-}
-
-.nav-team-select,
-.nav-search {
-    height: 28px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-right: 0;
-}
-
-.nav-form-group input {
-    padding-left: 27px;
-}
-
-.nav-form-group {
-    position: relative;
-    padding: 10px 0;
-}
-
-/*noinspection ALL*/
-.nav-form-group i {
-    position: absolute;
-    font-size: 15px !important;
-    padding: 7px 7px;
-    pointer-events: none;
-}
-
-.nav-icons .header-home {
-    font-size: 12px;
-    line-height: 30px;
-    color: #808080;
-}
-
-/*==/ headerの設定 ===*/
 
 /*早めに整理する*/
 .btn-followCollabo {
@@ -1203,41 +1248,6 @@ textarea{
     vertical-align: middle;
 }
 
-.hamburger {
-    float: left !important;
-    margin-left: 0;
-}
-
-.toggle-icon{
-    font-size: 20px;
-    transition: 0.3s ease-in-out;
-    -webkit-transition: 0.3s ease-in-out;
-}
-
-.rotate{
-    transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-}
-
-.rotate-reverse{
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-}
-
-.header-toggle-icon{
-    border: none;
-    height: 50px;
-    margin-top:0;
-    margin-bottom: 0;
-    padding-left: 18px;
-    padding-right: 18px;
-}
-.navbar-default .header-toggle-icon:hover,
-.navbar-default .header-toggle-icon:focus,
-.navbar-default .header-toggle-icon:target {
-    background-color: #fff;
-}
-
 /* インラインで非表示にする */
 @media screen and (max-width: 768px) {
     .visible-xs-inline {
@@ -1308,8 +1318,14 @@ textarea{
 }
 
 .navbar-nav > li > a {
-    padding-top: 9px;
+    padding-top: 0;
     padding-bottom: 9px;
+}
+
+.navbar-default .navbar-nav>li>a{
+    padding: 2px 0;
+    margin: auto;
+    width: 180px;
 }
 
 .navbar i {
@@ -1947,8 +1963,8 @@ textarea.comment-post-form {
 }
 
 .header-logo-img {
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .header-circle {
@@ -2725,19 +2741,26 @@ textarea.comment-post-form {
     .header-search-group {
         margin-left: 20px;
     }
-
+/*
     .nav > li > a {
         padding: 9px 0 0;
     }
 
     .navbar-nav > li > .header-logo {
-        padding-left: 10px;
     }
 
     .navbar-nav > li > .header-goal,
     .navbar-nav > li > .header-team {
-        padding-left: 10px;
     }
+*/
+
+    /*Pluginの修正なので、階層構造を使わない形に書き換え予定*/
+    .navbar-default .navbar-nav>li>a{
+        width: 56px;
+        padding-left: 10px;
+        padding: 9px 0 0;
+    }
+
 
     .header-logo-img {
         margin-left: 5px;
