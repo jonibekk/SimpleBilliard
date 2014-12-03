@@ -109,7 +109,7 @@ class AppController extends Controller
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
         $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
-        $this->Session->write(compact('is_isao_user'));
+        $this->set(compact('is_isao_user'));
     }
 
     public function _setSecurity()
