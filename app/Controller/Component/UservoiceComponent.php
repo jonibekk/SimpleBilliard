@@ -63,7 +63,7 @@ class UservoiceComponent extends Object
             if (class_exists('UploadHelper')) {
                 $upload = new UploadHelper(new View($this->Controller));
                 $url = $upload->uploadUrl($user, 'User.photo', ['style' => 'small']);
-                if (!ENV) {
+                if (!PUBLIC_ENV) {
                     //ローカルの場合
                     $url = FULL_BASE_URL . $url;
                 }

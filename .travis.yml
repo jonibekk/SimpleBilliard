@@ -22,7 +22,8 @@ before_script:
   - echo "short_open_tag = On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   - sudo apt-get install php5-xdebug
-  - sudo apt-get install php5-curl php5-mcrypt php5-oauth
+  - sudo apt-get install php5-curl php5-mcrypt php-pear
+  - sudo pecl install oauth
   - mkdir build
   - chmod -R 777 ./build
   - cp app/Test/travis/travis-ci-apache build/travis-ci-apache
