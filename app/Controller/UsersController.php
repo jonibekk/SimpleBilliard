@@ -63,6 +63,8 @@ class UsersController extends AppController
      */
     public function login()
     {
+        //uservoiceから渡ってきた時用
+        $this->_uservoiceSetSession();
         //リダイレクト先
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -587,6 +589,16 @@ class UsersController extends AppController
         }
         else {
             return false;
+        }
+    }
+
+    function _uservoiceSetSession()
+    {
+        if (isset($_GET['uv_login'])) {
+            $this->Session->write('uv_status', $_GET);
+        }
+        else {
+            $this->Session->delete('uv_status');
         }
     }
 

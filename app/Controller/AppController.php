@@ -19,19 +19,20 @@ App::uses('HelpsController', 'Controller');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent               $Lang
- * @property SessionComponent            $Session
- * @property SecurityComponent           $Security
- * @property TimezoneComponent           $Timezone
- * @property CookieComponent             $Cookie
- * @property GlEmailComponent            $GlEmail
- * @property PnotifyComponent            $Pnotify
- * @property MixpanelComponent           $Mixpanel
- * @property OgpComponent                $Ogp
- * @property User                        $User
- * @property Post                        $Post
- * @property Goal                        $Goal
- * @property NotifyBizComponent          $NotifyBiz
+ * @property LangComponent                $Lang
+ * @property SessionComponent             $Session
+ * @property SecurityComponent            $Security
+ * @property TimezoneComponent            $Timezone
+ * @property CookieComponent              $Cookie
+ * @property GlEmailComponent             $GlEmail
+ * @property PnotifyComponent             $Pnotify
+ * @property MixpanelComponent            $Mixpanel
+ * @property UservoiceComponent           $Uservoice
+ * @property OgpComponent                 $Ogp
+ * @property User                         $User
+ * @property Post                         $Post
+ * @property Goal                         $Goal
+ * @property NotifyBizComponent           $NotifyBiz
  */
 class AppController extends Controller
 {
@@ -57,6 +58,7 @@ class AppController extends Controller
         'Mixpanel',
         'Ogp',
         'NotifyBiz',
+        'Uservoice',
     ];
     public $helpers = [
         'Session',
