@@ -615,6 +615,8 @@ class UsersController extends AppController
         }
         $this->User->_setSessionVariable();
         $this->Mixpanel->setUser($this->User->id);
+        $uservoice_token = $this->Uservoice->getToken();
+        $this->Session->write(compact('uservoice_token'));
     }
 
     public function _setDefaultTeam($team_id)
