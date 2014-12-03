@@ -108,6 +108,8 @@ class AppController extends Controller
         $this->set('avail_sub_menu', false);
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
+        $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
+        $this->Session->write(compact('is_isao_user'));
     }
 
     public function _setSecurity()
@@ -118,6 +120,33 @@ class AppController extends Controller
         if (ENV_NAME != "local") {
             $this->Security->blackHoleCallback = 'forceSSL';
             $this->Security->requireSecure();
+        }
+    }
+
+    /**
+     * isaoのユーザか判定
+     * チームISAOもしくは、ISAOメールアドレスをプライマリに指定しているユーザを判別
+     *
+     * @param $user
+     * @param $team_id
+     *
+     * @return bool
+     */
+    function _isIsaoUser($user, $team_id)
+    {
+        if ($team_id == ISAO_TEAM_ID) {
+            return true;
+        }
+        else {
+            if (!isset($user['PrimaryEmail']['email'])) {
+                return false;
+            }
+            if (strstr($user['PrimaryEmail']['email'], ISAO_EMAIL_DOMAIN)) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     }
 

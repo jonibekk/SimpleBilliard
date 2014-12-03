@@ -13,6 +13,8 @@ define('USERVOICE_API_KEY', null);
 define('USERVOICE_SUBDOMAIN', null);
 define('USERVOICE_FORUM_ID_PRIVATE', null);
 define('USERVOICE_FORUM_ID_PUBLIC', null);
+define('ISAO_TEAM_ID', null);
+define('ISAO_EMAIL_DOMAIN', 'isao.co.jp');
 define('AWS_ACCESS_KEY', null);
 define('AWS_SECRET_KEY', null);
 define('S3_LOGS_BUCKET', null);
