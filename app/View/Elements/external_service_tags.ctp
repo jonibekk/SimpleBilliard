@@ -71,7 +71,7 @@
         mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
     <!-- end Mixpanel -->
 <? endif; ?>
-<?if(USERVOICE_API_KEY):?>
+<?if(USERVOICE_API_KEY && $this->Session->read('Auth.User.id')):?>
 <!-- start Uservoice -->
 <script>
     (function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
