@@ -70,16 +70,34 @@
             for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
         mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
     <!-- end Mixpanel -->
-    <!-- start Uservoice -->
-    <script type="text/javascript">
-
-        UserVoice=window.UserVoice||[];(function(){
-            var uv=document.createElement('script');uv.type='text/javascript';
-            uv.async = true;
-            uv.src = '//widget.uservoice.com/<?= USERVOICE_API_KEY?>.js';
-            var s=document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(uv,s)})();
-    </script>
-    <!-- end Uservoice -->
 <? endif; ?>
+<?if(USERVOICE_API_KEY):?>
+<!-- start Uservoice -->
+<script>
+    UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/<?=USERVOICE_API_KEY?>.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+    UserVoice.push(['set', {
+        accent_color: '#e23a39',
+        trigger_color: 'white',
+        trigger_background_color: 'rgba(46, 49, 51, 0.6)'
+    }]);
+    UserVoice.push(['identify', {
+        //email:      'john.doe@example.com', // User’s email address
+        //name:       'John Doe', // User’s real name
+        //created_at: 1364406966, // Unix timestamp for the date the user signed up
+        //id:         123, // Optional: Unique id of the user (if set, this should not change)
+        //type:       'Owner', // Optional: segment your users by type
+        //account: {
+        //  id:           123, // Optional: associate multiple users with a single account
+        //  name:         'Acme, Co.', // Account name
+        //  created_at:   1364406966, // Unix timestamp for the date the account was created
+        //  monthly_rate: 9.99, // Decimal; monthly rate of the account
+        //  ltv:          1495.00, // Decimal; lifetime value of the account
+        //  plan:         'Enhanced' // Plan name for the account
+        //}
+    }]);
+    UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-left' }]);
+    UserVoice.push(['autoprompt', {}]);
+</script>
+<?endif;?>
+<!-- end Uservoice -->
 <!-- END app/View/Elements/external_service_tags.ctp -->
