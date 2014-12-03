@@ -17,6 +17,7 @@
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
         ga('create', '<?= GOOGLE_ANALYTICS_ID?>', 'auto');
+        ga('require', 'displayfeatures');
         ga('send', 'pageview');
 
     </script>
