@@ -27,6 +27,7 @@
 
     //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
+    echo $this->Html->css('goalstrap', array('media' => 'screen'));
     echo $this->Html->css('jasny-bootstrap.min');
     echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('jquery.nailthumb.1.1');
