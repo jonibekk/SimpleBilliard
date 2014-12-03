@@ -74,7 +74,7 @@
 <?if(USERVOICE_API_KEY):?>
 <!-- start Uservoice -->
 <script>
-    UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/<?=USERVOICE_API_KEY?>.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+    UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
     UserVoice.push(['set', {
         accent_color: '#e23a39',
         trigger_color: 'white',
