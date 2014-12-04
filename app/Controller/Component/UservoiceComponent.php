@@ -41,7 +41,7 @@ class UservoiceComponent extends Object
     {
     }
 
-    public function getToken()
+    public function getToken($with_avatar = false)
     {
         $user = $this->Controller->Session->read('Auth');
         $data = array(
@@ -51,22 +51,24 @@ class UservoiceComponent extends Object
         if (isset($user['PrimaryEmail']['email'])) {
             $data['email'] = $user['PrimaryEmail']['email'];
         }
-        //アバター画像がある場合はセット
-        App::uses('View', 'View');
-        //HtmlHelperのインスタンス生成
-        App::uses('HtmlHelper', 'View/Helper');
-        $html = new HtmlHelper(new View($this->Controller));
-        //UploadHelperのインスタンス生成
-        App::uses('UploadHelper', 'View/Helper');
-        //TODO 画像を変更した後はなぜかUploadHelperが使えない。一旦、クラスが見つからない場合はアバターを設定しないように変更。
-        if (class_exists('UploadHelper')) {
-            $upload = new UploadHelper(new View($this->Controller));
-            $url = $upload->uploadUrl($user, 'User.photo', ['style' => 'small']);
-            if (!PUBLIC_ENV) {
-                //ローカルの場合
-                $url = FULL_BASE_URL . $url;
+        if ($with_avatar) {
+            //アバター画像がある場合はセット
+            App::uses('View', 'View');
+            //HtmlHelperのインスタンス生成
+            App::uses('HtmlHelper', 'View/Helper');
+            $html = new HtmlHelper(new View($this->Controller));
+            //UploadHelperのインスタンス生成
+            App::uses('UploadHelper', 'View/Helper');
+            //TODO 画像を変更した後はなぜかUploadHelperが使えない。一旦、クラスが見つからない場合はアバターを設定しないように変更。
+            if (class_exists('UploadHelper')) {
+                $upload = new UploadHelper(new View($this->Controller));
+                $url = $upload->uploadUrl($user, 'User.photo', ['style' => 'small']);
+                if (!PUBLIC_ENV) {
+                    //ローカルの場合
+                    $url = FULL_BASE_URL . $url;
+                }
+                $data['avatar_url'] = $url;
             }
-            $data['avatar_url'] = $url;
         }
         $this->user_data = array_merge($this->user_data, $data);
         $account_key = USERVOICE_SUBDOMAIN;
