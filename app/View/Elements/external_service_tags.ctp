@@ -95,7 +95,10 @@
                      {
                          echo USERVOICE_FORUM_ID_PUBLIC;
                      }
-                     ?>'
+                     ?>',
+        email:      '<?=$this->Session->read('Auth.User.PrimaryEmail.email')?>',
+        name:       '<?=$this->Session->read('Auth.User.display_username')?>',
+        id:         <?=$this->Session->read('Auth.User.id')?>
     }]);
     UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-left' }]);
     UserVoice.push(['autoprompt', {}]);
