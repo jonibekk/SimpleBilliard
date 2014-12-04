@@ -94,7 +94,7 @@
                     </a>
                 </div>
             <? else: ?>
-                <div class="ln_contain w_90per">
+                <div class="ln_contain w_88per">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
                        class="modal-ajax-get">
                         <p class="ln_trigger-f5 font_gray">
