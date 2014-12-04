@@ -81,11 +81,6 @@
     ?>
 
     UserVoice.push(['set', {
-        accent_color: '#e23a39',
-        trigger_color: 'white',
-        trigger_background_color: 'rgba(46, 49, 51, 0.6)'
-    }]);
-    UserVoice.push(['identify', {
         forum_id: '<?
                      if ($is_isao_user)
                      {
@@ -96,6 +91,11 @@
                          echo USERVOICE_FORUM_ID_PUBLIC;
                      }
                      ?>',
+        accent_color: '#e23a39',
+        trigger_color: 'white',
+        trigger_background_color: 'rgba(46, 49, 51, 0.6)'
+    }]);
+    UserVoice.push(['identify', {
         email:      '<?=$this->Session->read('Auth.User.PrimaryEmail.email')?>',
         name:       '<?=$this->Session->read('Auth.User.display_username')?>',
         id:         <?=$this->Session->read('Auth.User.id')?>
