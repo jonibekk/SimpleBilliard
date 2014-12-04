@@ -38,6 +38,10 @@
     margin: 0;
 }
 
+.header_icon-text{
+    line-height: 14px;
+}
+
 .navbar {
     background: #fff;
     margin: 0;
@@ -1268,10 +1272,6 @@ textarea{
 
 .left-inner-addon {
     position: relative;
-}
-
-.header-link-home {
-    line-height: 9px;
 }
 
 .left-inner-addon input {
@@ -2747,6 +2747,15 @@ textarea.comment-post-form {
         padding-left: 12px;
     }
 
+    .mtb-sm_0{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .ta-sm_c{
+        text-align: center;
+    }
+
     .label-addiction {
         padding-left: 18px;
     }
@@ -2781,7 +2790,7 @@ textarea.comment-post-form {
 
     .header-logo-img {
         margin: 0;
-        margin-left: 5px;
+        margin-left: 0;
         margin-right: 0;
     }
 
