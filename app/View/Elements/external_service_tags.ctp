@@ -80,8 +80,12 @@
         : ""
     ?>
 
-    UserVoice.push(['set', {
-        forum_id: '<?
+    UserVoice.push(['showTab', 'classic_widget', {
+        mode: 'full',
+        primary_color: '#f0636f',
+        link_color: '#007dbf',
+        default_mode: 'feedback',
+        forum_id: '<?php
                      if ($is_isao_user)
                      {
                          echo USERVOICE_FORUM_ID_PRIVATE;
@@ -91,17 +95,11 @@
                          echo USERVOICE_FORUM_ID_PUBLIC;
                      }
                      ?>',
-        accent_color: '#e23a39',
-        trigger_color: 'white',
-        trigger_background_color: 'rgba(46, 49, 51, 0.6)'
+        tab_label: '<?php echo __d('global', 'Goalousはどうしたらもっとよくなりますか？') ?>',
+        tab_color: '#f0636f',
+        tab_position: 'bottom-left',
+        tab_inverted: false
     }]);
-    UserVoice.push(['identify', {
-        email:      '<?=$this->Session->read('Auth.User.PrimaryEmail.email')?>',
-        name:       '<?=$this->Session->read('Auth.User.display_username')?>',
-        id:         <?=$this->Session->read('Auth.User.id')?>
-    }]);
-    UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-left' }]);
-    UserVoice.push(['autoprompt', {}]);
 </script>
 <?endif;?>
 <!-- end Uservoice -->
