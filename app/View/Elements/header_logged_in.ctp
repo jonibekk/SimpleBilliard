@@ -19,17 +19,17 @@
         <button type="button" class="navbar-toggle hamburger header-toggle-icon" data-toggle="offcanvas"
                 data-target=".navbar-offcanvas">
             <i class="fa fa-navicon toggle-icon"></i>
-<!--
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
--->
+            <!--
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+            -->
         </button>
     </div>
     <div class="nav-container header-container">
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
             <ul class="nav navbar-nav">
-                <li>
+                <li class="mtb_5px">
                     <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                        href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                         <img src="<?= $this->Html->url('/img/logo_off.png') ?>"
@@ -39,21 +39,23 @@
                         <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link-home header-link">
                             <?= __d('gl', "ホーム") ?>
                         </p>
-                        <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
+                        <span class="visible-xs-inline va_bl ml_5px"><?= __d('gl', "ホーム") ?></span>
                     </a>
                 </li>
-                <li><a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
+                <li class="mtb_5px"><a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
-                        <i class="fa fa-flag header-link header-icon">
+                        <i class="fa fa-flag header-link header-icon nav-xxs-icon">
                             <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "ゴール") ?></p>
                         </i>
-                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
+
+                        <span class="visible-xs-inline ml_5px"><?= __d('gl', "ゴール") ?></span>
                     </a></li>
-                <li><a href="#" class="header-team header_l-icons develop--forbiddenLink">
-                        <i class="fa fa-users header-link header-icon">
+                <li class="mtb_5px"><a href="#" class="header-team header_l-icons develop--forbiddenLink">
+                        <i class="fa fa-users header-link header-icon nav-xxs-icon">
                             <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "チーム") ?></p>
-                        </i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
+                        </i>
+
+                        <span class="visible-xs-inline ml_5px"><?= __d('gl', "チーム") ?></span>
                     </a>
                 </li>
                 <li>

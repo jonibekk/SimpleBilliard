@@ -5659,10 +5659,25 @@ button.close {
 @-ms-viewport {
     width: device-width;
 }
+/*==/ Bootstrap3.3.1の変更を取り入れた ===*/
 .visible-xs,
 .visible-sm,
 .visible-md,
 .visible-lg {
+    display: none !important;
+}
+.visible-xs-block,
+.visible-xs-inline,
+.visible-xs-inline-block,
+.visible-sm-block,
+.visible-sm-inline,
+.visible-sm-inline-block,
+.visible-md-block,
+.visible-md-inline,
+.visible-md-inline-block,
+.visible-lg-block,
+.visible-lg-inline,
+.visible-lg-inline-block {
     display: none !important;
 }
 @media (max-width: 767px) {
@@ -5680,6 +5695,21 @@ button.close {
         display: table-cell !important;
     }
 }
+@media (max-width: 767px) {
+    .visible-xs-block {
+        display: block !important;
+    }
+}
+@media (max-width: 767px) {
+    .visible-xs-inline {
+        display: inline !important;
+    }
+}
+@media (max-width: 767px) {
+    .visible-xs-inline-block {
+        display: inline-block !important;
+    }
+}
 @media (min-width: 768px) and (max-width: 991px) {
     .visible-sm {
         display: block !important;
@@ -5693,6 +5723,21 @@ button.close {
     th.visible-sm,
     td.visible-sm {
         display: table-cell !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .visible-sm-block {
+        display: block !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .visible-sm-inline {
+        display: inline !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .visible-sm-inline-block {
+        display: inline-block !important;
     }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -5710,6 +5755,21 @@ button.close {
         display: table-cell !important;
     }
 }
+@media (min-width: 992px) and (max-width: 1199px) {
+    .visible-md-block {
+        display: block !important;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    .visible-md-inline {
+        display: inline !important;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    .visible-md-inline-block {
+        display: inline-block !important;
+    }
+}
 @media (min-width: 1200px) {
     .visible-lg {
         display: block !important;
@@ -5723,6 +5783,21 @@ button.close {
     th.visible-lg,
     td.visible-lg {
         display: table-cell !important;
+    }
+}
+@media (min-width: 1200px) {
+    .visible-lg-block {
+        display: block !important;
+    }
+}
+@media (min-width: 1200px) {
+    .visible-lg-inline {
+        display: inline !important;
+    }
+}
+@media (min-width: 1200px) {
+    .visible-lg-inline-block {
+        display: inline-block !important;
     }
 }
 @media (max-width: 767px) {
@@ -5763,11 +5838,36 @@ button.close {
         display: table-cell !important;
     }
 }
+.visible-print-block {
+    display: none !important;
+}
+@media print {
+    .visible-print-block {
+        display: block !important;
+    }
+}
+.visible-print-inline {
+    display: none !important;
+}
+@media print {
+    .visible-print-inline {
+        display: inline !important;
+    }
+}
+.visible-print-inline-block {
+    display: none !important;
+}
+@media print {
+    .visible-print-inline-block {
+        display: inline-block !important;
+    }
+}
 @media print {
     .hidden-print {
         display: none !important;
     }
 }
+/*==/ Bootstrap3.3.1の変更を取り入れた ===*/
 .navbar-inverse .badge {
     background-color: #fff;
     color: #d9230f;
