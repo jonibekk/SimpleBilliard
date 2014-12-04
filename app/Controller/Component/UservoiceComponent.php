@@ -44,12 +44,15 @@ class UservoiceComponent extends Object
     public function getToken($with_avatar = false)
     {
         $user = $this->Controller->Session->read('Auth');
+        if (empty($user)) {
+            return null;
+        }
         $data = array(
             'guid'         => $user['User']['id'],
             'display_name' => $user['User']['display_username'],
         );
-        if (isset($user['PrimaryEmail']['email'])) {
-            $data['email'] = $user['PrimaryEmail']['email'];
+        if (isset($user['User']['PrimaryEmail']['email'])) {
+            $data['email'] = $user['User']['PrimaryEmail']['email'];
         }
         if ($with_avatar) {
             //アバター画像がある場合はセット
