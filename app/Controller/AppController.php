@@ -232,6 +232,7 @@ class AppController extends Controller
             $uid = $this->Auth->user('id');
         }
         $this->Auth->logout();
+        $this->User->resetLocalNames();
         $this->User->recursive = 0;
         $user_buff = $this->User->findById($uid);
         $this->User->recursive = -1;
@@ -252,7 +253,8 @@ class AppController extends Controller
             $user['User'] = array_merge($user['User'], $associations);
         }
         $this->User->me = $user['User'];
-        return $this->Auth->login($user['User']);
+        $res = $this->Auth->login($user['User']);
+        return $res;
     }
 
     function _switchTeam($team_id, $uid = null)

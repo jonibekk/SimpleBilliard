@@ -306,7 +306,7 @@ class UsersController extends AppController
             return $this->redirect(['action' => 'settings']);
         }
         $this->User->commit();
-        $this->_refreshAuth();
+        $this->_autoLogin($this->Auth->user('id'));
         $this->Pnotify->outSuccess(__d('gl', "メールアドレスの変更が正常に完了しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect(['action' => 'settings']);
@@ -396,17 +396,10 @@ class UsersController extends AppController
             $this->User->id = $this->Auth->user('id');
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
-                //セッション更新
-                $this->_refreshAuth();
+                //ログインし直し。
+                $this->_autoLogin($this->Auth->user('id'));
                 //言語設定
                 $this->_setAppLanguage();
-                $me = $this->User->getDetail($this->Auth->user('id'));
-                unset($me['User']['password']);
-                $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
-                if (isset($local_name['LocalName'])) {
-                    $me['LocalName'][0] = $local_name['LocalName'];
-                }
-                $this->request->data = $me;
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
             }
             else {
@@ -486,6 +479,8 @@ class UsersController extends AppController
      * 招待に応じる
      * 登録済みユーザの場合は、チーム参加でホームへリダイレクト
      * 未登録ユーザの場合は、個人情報入力ページへ
+     *
+     * @param $token
      */
     public function accept_invite($token)
     {
