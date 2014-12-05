@@ -15,6 +15,7 @@ class PostTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action',
         'app.post',
         'app.user', 'app.notify_setting',
         'app.team',
@@ -364,6 +365,6 @@ class PostTest extends CakeTestCase
     function testAddGoalPost()
     {
         $this->Post->current_team_id = 1;
-        $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL,1,1);
+        $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1);
     }
 }
