@@ -70,16 +70,37 @@
             for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
         mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
     <!-- end Mixpanel -->
-    <!-- start Uservoice -->
-    <script type="text/javascript">
-
-        UserVoice=window.UserVoice||[];(function(){
-            var uv=document.createElement('script');uv.type='text/javascript';
-            uv.async = true;
-            uv.src = '//widget.uservoice.com/<?= USERVOICE_API_KEY?>.js';
-            var s=document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(uv,s)})();
-    </script>
-    <!-- end Uservoice -->
 <? endif; ?>
+<?if(USERVOICE_API_KEY && $this->Session->read('Auth.User.id')):?>
+<!-- start Uservoice -->
+<script>
+    (function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+    UserVoice=window.UserVoice||[];
+    <?= ($this->Session->read('uservoice_token')) ? "UserVoice.push(['setSSO', '{$this->Session-> read('uservoice_token')}']);"
+        : ""
+    ?>
+
+    UserVoice.push(['showTab', 'classic_widget', {
+        mode: 'full',
+        primary_color: '#f0636f',
+        link_color: '#007dbf',
+        default_mode: 'feedback',
+        forum_id: '<?php
+                     if ($is_isao_user)
+                     {
+                         echo USERVOICE_FORUM_ID_PRIVATE;
+                     }
+                     else
+                     {
+                         echo USERVOICE_FORUM_ID_PUBLIC;
+                     }
+                     ?>',
+        tab_label: '<?php echo __d('global', 'Goalousはどうしたらもっとよくなりますか？') ?>',
+        tab_color: '#f0636f',
+        tab_position: 'bottom-left',
+        tab_inverted: false
+    }]);
+</script>
+<?endif;?>
+<!-- end Uservoice -->
 <!-- END app/View/Elements/external_service_tags.ctp -->

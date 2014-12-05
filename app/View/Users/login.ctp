@@ -62,4 +62,7 @@
         </div>
     </div>
 </div>
+<?php $this->append('script') ?>
+<?php echo $this->Html->script('https://goalous.uservoice.com/logout.js') ?>
+<?php $this->end() ?>
 <!-- END app/View/Users/login.ctp -->
