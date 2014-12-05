@@ -411,6 +411,9 @@ class User extends AppModel
             && !empty($this->local_names[$row[$this->alias]['id']])
         ) {
             $res = $this->local_names[$row[$this->alias]['id']];
+            if (empty($res['first_name']) || empty($res['last_name'])) {
+                return null;
+            }
         }
         else {
             return null;
