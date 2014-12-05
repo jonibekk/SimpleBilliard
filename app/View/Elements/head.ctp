@@ -25,8 +25,9 @@
     //TODO botの拒否。一般公開前に必ず外す。
     echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
 
-    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
+    //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
+    echo $this->Html->css('goalstrap', array('media' => 'screen'));
     echo $this->Html->css('jasny-bootstrap.min');
     echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('jquery.nailthumb.1.1');
