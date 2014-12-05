@@ -1463,7 +1463,7 @@ ul.example-indent {
     color: #c5c5c5;
 }
 
-.showmore {
+.feed-contents {
     word-wrap: break-word;
 }
 
@@ -3090,7 +3090,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .datepicker {
-    z-index: 1151 !important;
+    z-index: 8010 !important;
 }
 
 .circle-toggle-icon {
