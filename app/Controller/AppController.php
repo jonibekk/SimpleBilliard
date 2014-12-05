@@ -19,19 +19,20 @@ App::uses('HelpsController', 'Controller');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent               $Lang
- * @property SessionComponent            $Session
- * @property SecurityComponent           $Security
- * @property TimezoneComponent           $Timezone
- * @property CookieComponent             $Cookie
- * @property GlEmailComponent            $GlEmail
- * @property PnotifyComponent            $Pnotify
- * @property MixpanelComponent           $Mixpanel
- * @property OgpComponent                $Ogp
- * @property User                        $User
- * @property Post                        $Post
- * @property Goal                        $Goal
- * @property NotifyBizComponent          $NotifyBiz
+ * @property LangComponent                $Lang
+ * @property SessionComponent             $Session
+ * @property SecurityComponent            $Security
+ * @property TimezoneComponent            $Timezone
+ * @property CookieComponent              $Cookie
+ * @property GlEmailComponent             $GlEmail
+ * @property PnotifyComponent             $Pnotify
+ * @property MixpanelComponent            $Mixpanel
+ * @property UservoiceComponent           $Uservoice
+ * @property OgpComponent                 $Ogp
+ * @property User                         $User
+ * @property Post                         $Post
+ * @property Goal                         $Goal
+ * @property NotifyBizComponent           $NotifyBiz
  */
 class AppController extends Controller
 {
@@ -57,6 +58,7 @@ class AppController extends Controller
         'Mixpanel',
         'Ogp',
         'NotifyBiz',
+        'Uservoice',
     ];
     public $helpers = [
         'Session',
@@ -106,6 +108,8 @@ class AppController extends Controller
         $this->set('avail_sub_menu', false);
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
+        $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
+        $this->set(compact('is_isao_user'));
     }
 
     public function _setSecurity()
@@ -116,6 +120,33 @@ class AppController extends Controller
         if (ENV_NAME != "local") {
             $this->Security->blackHoleCallback = 'forceSSL';
             $this->Security->requireSecure();
+        }
+    }
+
+    /**
+     * isaoのユーザか判定
+     * チームISAOもしくは、ISAOメールアドレスをプライマリに指定しているユーザを判別
+     *
+     * @param $user
+     * @param $team_id
+     *
+     * @return bool
+     */
+    function _isIsaoUser($user, $team_id)
+    {
+        if ($team_id == ISAO_TEAM_ID) {
+            return true;
+        }
+        else {
+            if (!isset($user['PrimaryEmail']['email'])) {
+                return false;
+            }
+            if (strstr($user['PrimaryEmail']['email'], ISAO_EMAIL_DOMAIN)) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     }
 
@@ -201,6 +232,7 @@ class AppController extends Controller
             $uid = $this->Auth->user('id');
         }
         $this->Auth->logout();
+        $this->User->resetLocalNames();
         $this->User->recursive = 0;
         $user_buff = $this->User->findById($uid);
         $this->User->recursive = -1;
@@ -221,7 +253,8 @@ class AppController extends Controller
             $user['User'] = array_merge($user['User'], $associations);
         }
         $this->User->me = $user['User'];
-        return $this->Auth->login($user['User']);
+        $res = $this->Auth->login($user['User']);
+        return $res;
     }
 
     function _switchTeam($team_id, $uid = null)

@@ -249,6 +249,12 @@ class User extends AppModel
         $this->_setVirtualFields();
     }
 
+    public function resetLocalNames()
+    {
+        $this->local_names = [];
+        $this->uids = [];
+    }
+
     public function beforeSave($options = [])
     {
         //英名、英性の頭文字を大文字に変更
@@ -405,6 +411,9 @@ class User extends AppModel
             && !empty($this->local_names[$row[$this->alias]['id']])
         ) {
             $res = $this->local_names[$row[$this->alias]['id']];
+            if (empty($res['first_name']) || empty($res['last_name'])) {
+                return null;
+            }
         }
         else {
             return null;
