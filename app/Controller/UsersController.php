@@ -76,6 +76,8 @@ class UsersController extends AppController
         }
         if ($this->request->is('post') && isset($this->request->data['User'])) {
             if ($this->Auth->login()) {
+
+                $this->_refreshAuth();
                 $this->_setAfterLogin();
                 $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
                                            ['title' => __d('notify', "ログイン成功")]);

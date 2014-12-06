@@ -231,8 +231,11 @@ class AppController extends Controller
         if (!$uid) {
             $uid = $this->Auth->user('id');
         }
+        //言語設定を退避
+        $lang = $this->Auth->user('language');
         $this->Auth->logout();
         $this->User->resetLocalNames();
+        $this->User->me['language'] = $lang;
         $this->User->recursive = 0;
         $user_buff = $this->User->findById($uid);
         $this->User->recursive = -1;
