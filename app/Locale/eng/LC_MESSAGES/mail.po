@@ -100,7 +100,7 @@ msgstr ""
 #: View/Emails/text/invite.ctp:19
 #, fuzzy
 msgid "こんにちは。"
-msgstr "Hi %s,"
+msgstr ""
 
 #: View/Emails/text/invite.ctp:24
 msgid "%sさんがGoalous内のチーム「%s」へあなたを招待しています。"
