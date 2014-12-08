@@ -23,9 +23,9 @@
         </span>
         <div class="dashboard-profile-card-stats">
             <div class="dashboard-profile-card-point">
-                <div class="ml_5px">今期のポイント</div>
+                <div class="ml_8px">今期のポイント</div>
                 <div class="disp_ib">
-                    <span class="dashboard-profile-card-score font_bold font_33px ml_5px">1,246</span>
+                    <span class="dashboard-profile-card-score font_bold font_33px ml_8px">1,246</span>
                     <span class="ml_2px">pt</span>
                 </div>
                 <div class="disp_ib">
@@ -33,23 +33,23 @@
                     <span>(<span class="font_seagreen font_bold plr_1px">236<i class="fa fa-level-up"></i></span>)</span>
                 </div>
             </div>
-            <div class="dashboard-profile-card-activities bd-t mt_5px">
-                <div class="ml_5px">今期のアクティビティ</div>
-                <ul class="dashboard-profile-card-activity-list">
-                    <li class="dashboard-profile-card-activity">
-                        <span>アクション</span>
-                        <span>50</span>
+            <div class="dashboard-profile-card-activities bd-t mt_8px">
+                <div class="ml_8px mt_5px">今期のアクティビティ</div>
+                <ul class="dashboard-profile-card-activity-list text-align_c">
+                    <li class="dashboard-profile-card-activity disp_ib font_11px col-xxs-4">
+                        <div>アクション</div>
+                        <i class="fa fa-check-circle"></i><span>50</span>
                     </li>
-                    <li class="dashboard-profile-card-activity">
-                        <span>出した成果</span>
-                        <span>999,999</span>
+                    <li class="dashboard-profile-card-activity disp_ib font_11px col-xxs-4">
+                        <div>出した成果</div>
+                        <i class="fa fa-key"></i><span>999,999</span>
                     </li>
-                    <li class="dashboard-profile-card-activity">
-                        <span>投稿</span>
-                        <span>80</span>
+                    <li class="dashboard-profile-card-activity disp_ib font_11px col-xxs-4">
+                        <div>投稿</div>
+                        <i class="fa fa-comment-o"></i><span>80</span>
                     </li>
                 </ul>
-                <div class="dashboard-profile-card-more-read">もっと見る</div>
+                <div class="dashboard-profile-card-more-read text-align_c mtb_8px"><a class="font_lightGray-gray" href="/#"><i class="fa fa-eye mr_5px"></i>もっと見る</a></div>
             </div>
         </div>
     </div>

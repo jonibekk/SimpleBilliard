@@ -376,7 +376,7 @@ textarea{
 }
 
 .mt_5px {
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 .mt_8px {
@@ -393,6 +393,10 @@ textarea{
 
 .mt_32px {
     margin-top: 32px;
+}
+
+.mr_2px{
+    margin-right: 2px;
 }
 
 .mr_5px {
@@ -413,6 +417,10 @@ textarea{
 
 .ml_5px {
     margin-left: 5px;
+}
+
+.ml_8px {
+    margin-left: 8px;
 }
 
 .ml_12px {
@@ -508,6 +516,11 @@ textarea{
 .mtb_5px{
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.mtb_8px{
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .ptb_5px {
@@ -3202,6 +3215,10 @@ Temporary Properties - YOU MUST FIX
 
 .dashboard-profile-card-score{
     line-height: 30px;
+}
+
+.dashboard-profile-card-activity-list{
+    padding: 8px;
 }
 
 .dropdown-menu {
