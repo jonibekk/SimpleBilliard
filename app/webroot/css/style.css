@@ -3097,10 +3097,20 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dashboard-profile-card {
+    background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     max-width: 100%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 16px;
+}
+
+.dashboard-profile-card-bg{
+    background-img: url(../img/dashboard-profile-card-bg.jpg);
+}
+
+.dashboard-profile-card-avatar-image{
+    border-radius: 50%;
 }
 
 .dropdown-menu {

@@ -9,10 +9,10 @@
 ?>
 <!-- START app/View/Elements/dashboard_profile_card.ctp -->
 <div class="dashboard-profile-card">
-    <a class="dashboard-profile-card-bg" tabindex="-1" href="/user"></a>
+    <a class="dashboard-profile-card-bg col-xxs-12" tabindex="-1" href="/user"></a>
     <div class="dashboard-profile-card-content"></div>
     <a class="dashboard-profile-card-avator-link">
-        <?= $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'medium'], ['class' => 'dashboard-profile-card-avator-image']) ?>
+        <?= $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'medium'], ['class' => 'dashboard-profile-card-avatar-image']) ?>
     </a>
     <div class="dashboard-profile-card-user-field">
         <?= $this->Session->read('Auth.User.first_name') ?>
@@ -22,11 +22,11 @@
         <div class="dashboard-profile-card-point">
             <div>今期のポイント</div>
             <div>
-                <span>1,246</span>pt
+                <span class="font_bold font_33px">1,246</span>pt
             </div>
             <div>
                 <span>先週比</span>
-                <span>(236↑)</span>>
+                <span>(236↑)</span>
             </div>
         </div>
         <div class="dashboard-profile-card-activities">
