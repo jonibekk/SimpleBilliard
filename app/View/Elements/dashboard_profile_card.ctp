@@ -18,7 +18,7 @@
                                            ['class' => 'dashboard-profile-card-avatar-image disp_ib']) ?>
         </a>
 
-        <span class="dashboard-profile-card-user-field font_bold ln_1-f">
+        <span class="dashboard-profile-card-user-field font_bold font_verydark ln_1-f">
             <?= $this->Session->read('Auth.User.first_name') ?>
             <?= $this->Session->read('Auth.User.last_name') ?>
         </span>
@@ -30,7 +30,7 @@
                     <span class="ml_2px">pt</span>
                 </div>
                 <div class="disp_ib">
-                    <div>先週比</div>
+                    <div class="font_11px ml_2px">先週比</div>
                     <span>(<span class="font_seagreen font_bold plr_1px">236<i class="fa fa-level-up"></i></span>)</span>
                 </div>
             </div>
