@@ -31,7 +31,7 @@
                 </div>
                 <div class="disp_ib">
                     <div>先週比</div>
-                    <span>(236↑)</span>
+                    <span>(<span class="font_seagreen font_bold plr_1px">236<i class="fa fa-level-up"></i></span>)</span>
                 </div>
             </div>
             <div class="dashboard-profile-card-activities bd-t mt_5px">

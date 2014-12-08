@@ -466,6 +466,16 @@ textarea{
     padding-right: 0;
 }
 
+.plr_1px {
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+.plr_2px{
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
@@ -700,6 +710,41 @@ textarea{
     width: 100%;
 }
 
+/*投稿の制限をするときに使おうと考えている
+.post-fade:before{
+    content:"...";
+    color: rgba(0,0,0,0);
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right:0;
+    background: #fff;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -webkit-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -moz-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -o-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -ms-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    width: 100%;
+    height: 22px;
+}
+
+.comment-fade:before{
+    content:"...";
+    color: rgba(0,0,0,0);
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right:0;
+    background: #fff;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -webkit-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -moz-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -o-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -ms-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    width: 100%;
+    height: 22px;
+}
+
 /*=========*/
 
 .mxw_75per {
@@ -891,6 +936,10 @@ textarea{
 .font_lightGray-veryDark:active,
 .font_lightGray-veryDark:focus {
     color: #231814;
+}
+
+.font_seagreen{
+    color : #00ca54;
 }
 
 .link-dark-gray {
