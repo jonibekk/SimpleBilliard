@@ -19,7 +19,6 @@
         </a>
 
         <span class="dashboard-profile-card-user-field font_bold font_verydark ln_1-f">
-            <?= $this->Session->read('Auth.User.first_name') ?>
             <?= $this->Session->read('Auth.User.last_name') ?>
         </span>
         <div class="dashboard-profile-card-stats">
