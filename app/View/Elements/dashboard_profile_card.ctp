@@ -21,35 +21,42 @@
         <span class="dashboard-profile-card-user-field font_bold font_verydark ln_1-f">
             <?= $this->Session->read('Auth.User.last_name') ?>
         </span>
+
         <div class="dashboard-profile-card-stats">
             <div class="dashboard-profile-card-point">
                 <div class="ml_8px">今期のポイント</div>
-                <div class="disp_ib">
-                    <span class="dashboard-profile-card-score font_bold font_33px ml_8px">1,246</span>
-                    <span class="ml_2px">pt</span>
-                </div>
-                <div class="disp_ib">
-                    <div class="font_11px ml_2px">先週比</div>
-                    <span>(<span class="font_seagreen font_bold plr_1px">236<i class="fa fa-level-up"></i></span>)</span>
+                <div class="text-align_c">
+                    <div class="disp_ib">
+                        <span class="dashboard-profile-card-score font_bold font_33px ml_8px">1,246</span>
+                        <span class="ml_2px">pt</span>
+                    </div>
+                    <div class="disp_ib">
+                        <div class="font_11px ml_2px">先週比</div>
+                        <span>
+                            (<span class="font_seagreen font_bold plr_1px">236<i class="fa fa-level-up"></i></span>)
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="dashboard-profile-card-activities bd-t mt_8px">
                 <div class="ml_8px mt_5px">今期のアクティビティ</div>
-                <ul class="dashboard-profile-card-activity-list text-align_c">
+                <ul class="dashboard-profile-card-activity-list text-align_c col-xxs-12 mb_0px">
                     <li class="dashboard-profile-card-activity disp_ib font_11px col-xxs-4">
-                        <div>アクション</div>
-                        <i class="fa fa-check-circle"></i><span>50</span>
+                        <div class="ls_title">アクション</div>
+                        <i class="fa fa-check-circle mr_1px"></i><span class="ls_number">50</span>
                     </li>
                     <li class="dashboard-profile-card-activity disp_ib font_11px col-xxs-4">
-                        <div>出した成果</div>
-                        <i class="fa fa-key"></i><span>999,999</span>
+                        <div class="ls_title">出した成果</div>
+                        <i class="fa fa-key mr_1px"></i><span class="ls_number">999,999</span>
                     </li>
                     <li class="dashboard-profile-card-activity disp_ib font_11px col-xxs-4">
-                        <div>投稿</div>
-                        <i class="fa fa-comment-o"></i><span>80</span>
+                        <div class="ls_title">投稿</div>
+                        <i class="fa fa-comment-o mr_1px"></i><span class="ls_number">80</span>
                     </li>
                 </ul>
-                <div class="dashboard-profile-card-more-read text-align_c mtb_8px"><a class="font_lightGray-gray" href="/#"><i class="fa fa-eye mr_5px"></i>もっと見る</a></div>
+                <div class="dashboard-profile-card-more-read text-align_c mtb_8px"><a class="font_lightGray-gray"
+                                                                                      href="/#"><i
+                            class="fa fa-eye mr_5px"></i>もっと見る</a></div>
             </div>
         </div>
     </div>

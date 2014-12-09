@@ -395,6 +395,10 @@ textarea{
     margin-top: 32px;
 }
 
+.mr_1px{
+    margin-right: 1px;
+}
+
 .mr_2px{
     margin-right: 2px;
 }
@@ -3204,7 +3208,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dashboard-profile-card-user-field {
-    width: 66%;
+    width: 64%;
     float: right;
     margin: 4px 0 0 0;
 }
@@ -3218,7 +3222,11 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dashboard-profile-card-activity-list{
-    padding: 8px;
+    padding: 8px 0;
+}
+
+.dashboard-profile-card-activity {
+    padding: 1px;
 }
 
 .dropdown-menu {
@@ -3349,4 +3357,19 @@ Temporary Properties - YOU MUST FIX
     border-right: 1px solid #999;
     border-bottom: 1px solid #999;
     border-left: 1px solid #999;
+}
+
+
+.ls_title{
+    letter-spacing: -0.12rem;
+}
+
+.ls_number {
+    letter-spacing: -0.04rem;
+}
+
+@media (mix-width: 520px){
+    .ls_title{
+        letter-spacing: -0.08rem;
+    }
 }
