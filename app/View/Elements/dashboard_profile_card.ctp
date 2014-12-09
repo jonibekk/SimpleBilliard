@@ -10,12 +10,12 @@
 ?>
 <!-- START app/View/Elements/dashboard_profile_card.ctp -->
 <div class="dashboard-profile-card" xmlns="http://www.w3.org/1999/html">
-    <a class="dashboard-profile-card-bg col-xxs-12" tabindex="-1" href="/user"></a>
+    <a class="dashboard-profile-card-bg col-xxs-12" tabindex="-1" href="/#"></a>
 
     <div class="dashboard-profile-card-content">
         <a class="dashboard-profile-card-avator-link">
             <?= $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'medium'],
-                                           ['class' => 'dashboard-profile-card-avatar-image disp_ib']) ?>
+                                           ['class' => 'dashboardProfileCard-avatarImage disp_ib']) ?>
         </a>
 
         <span class="dashboard-profile-card-user-field font_bold font_verydark ln_1-f">

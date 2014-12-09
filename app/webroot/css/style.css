@@ -3200,11 +3200,12 @@ Temporary Properties - YOU MUST FIX
 }
 
 
-.dashboard-profile-card-avatar-image{
+.dashboardProfileCard-avatarImage {
     border: 2px solid #fff;
     border-radius: 50%;
     margin: -25px 0 0 2px;
     position: relative;
+    width: 52px;
 }
 
 .dashboard-profile-card-user-field {
@@ -3368,7 +3369,7 @@ Temporary Properties - YOU MUST FIX
     letter-spacing: -0.04rem;
 }
 
-@media (mix-width: 520px){
+@media (min-width: 520px){
     .ls_title{
         letter-spacing: -0.08rem;
     }
