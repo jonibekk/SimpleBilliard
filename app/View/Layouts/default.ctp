@@ -29,7 +29,7 @@ else {
 <div id="container" class="container">
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
-            <img src="/img/develop--submenu.jpg" class="develop--goals-column" alt="ちゃんと消しますよ？">
+            <?= $this->element('dashboard_profile_card') ?>
             <?= $this->element('circle_list') ?>
 
         </div>
