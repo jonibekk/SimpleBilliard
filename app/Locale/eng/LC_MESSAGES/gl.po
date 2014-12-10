@@ -774,16 +774,16 @@ msgstr ""
 
 #: View/Elements/header_logged_in.ctp:33;35;111
 msgid "ホーム"
-msgstr ""
+msgstr "Home"
 
 #: View/Elements/header_logged_in.ctp:41;43
 #: View/Elements/Feed/contents.ctp:28;30
 msgid "ゴール"
-msgstr ""
+msgstr "Goal"
 
 #: View/Elements/header_logged_in.ctp:47;49
 msgid "チーム"
-msgstr ""
+msgstr "Team"
 
 #: View/Elements/header_logged_in.ctp:58
 msgid "チームがありません"
@@ -795,115 +795,115 @@ msgstr ""
 
 #: View/Elements/header_logged_in.ctp:121
 msgid "ゴールを作成"
-msgstr ""
+msgstr "Create a goal"
 
 #: View/Elements/header_logged_in.ctp:128
 #: View/Elements/modal_add_circle.ctp:19;133
 msgid "サークルを作成"
-msgstr ""
+msgstr "Create a circle"
 
 #: View/Elements/header_logged_in.ctp:136 View/Teams/add.ctp:102
 msgid "チームを作成"
-msgstr ""
+msgstr "Create a team"
 
 #: View/Elements/header_logged_in.ctp:156
 msgid "設定"
-msgstr ""
+msgstr "Settings"
 
 #: View/Elements/header_logged_in.ctp:163
 msgid "メンバーを招待"
-msgstr ""
+msgstr "Invite team members"
 
 #: View/Elements/header_logged_in.ctp:168 View/Elements/modal_tutorial.ctp:18
 msgid "チュートリアル"
-msgstr ""
+msgstr "Tutorial"
 
 #: View/Elements/header_logged_in.ctp:171
 msgid "ログアウト"
-msgstr ""
+msgstr "Logout"
 
 #: View/Elements/header_logged_in.ctp:189
 msgid "ニュースフィード"
-msgstr ""
+msgstr "Newsfeed"
 
 #: View/Elements/header_logged_in.ctp:195
 msgid "関連ゴール"
-msgstr ""
+msgstr "Related goals"
 
 #: View/Elements/modal_add_circle.ctp:40
 #: View/Elements/modal_edit_circle.ctp:40
 msgid "サークル名"
-msgstr ""
+msgstr "Circle name"
 
 #: View/Elements/modal_add_circle.ctp:41
 #: View/Elements/modal_edit_circle.ctp:41
 msgid "例) 営業部"
-msgstr ""
+msgstr "eg) the sales division"
 
 #: View/Elements/modal_add_circle.ctp:46
 #: View/Elements/modal_edit_circle.ctp:46
 msgid "メンバー"
-msgstr ""
+msgstr "Members"
 
 #: View/Elements/modal_add_circle.ctp:54
 #: View/Elements/modal_edit_circle.ctp:54
 msgid "管理者：%s"
-msgstr ""
+msgstr "Administrators"
 
 #: View/Elements/modal_add_circle.ctp:61
 #: View/Elements/modal_edit_circle.ctp:61
 msgid ""
 "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰で"
 "も自由に参加できます。"
-msgstr ""
+msgstr "Anyone can see the circle, its members and their posts."
 
 #: View/Elements/modal_add_circle.ctp:63
 #: View/Elements/modal_edit_circle.ctp:63
 msgid ""
 "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されま"
 "す。サークル管理者だけがメンバーを追加できます。"
-msgstr ""
+msgstr "Only members can find the circle and see posts."
 
 #: View/Elements/modal_add_circle.ctp:68
 #: View/Elements/modal_edit_circle.ctp:68
 msgid "プライバシー"
-msgstr ""
+msgstr "Privacy"
 
 #: View/Elements/modal_add_circle.ctp:78
 #: View/Elements/modal_edit_circle.ctp:77
 msgid "サークルの説明"
-msgstr ""
+msgstr "Description"
 
 #: View/Elements/modal_add_circle.ctp:79
 #: View/Elements/modal_edit_circle.ctp:78
 msgid "例) 最新情報を共有しましょう。"
-msgstr ""
+msgstr "eg) Let's share the latest information."
 
 #: View/Elements/modal_add_circle.ctp:83
 #: View/Elements/modal_edit_circle.ctp:83
 msgid "サークル画像"
-msgstr ""
+msgstr "Image"
 
 #: View/Elements/modal_add_circle.ctp:95
 #: View/Elements/modal_edit_circle.ctp:98
 #: View/Elements/User/profile_setting.ctp:163 View/Goals/add.ctp:383
 #: View/Teams/add.ctp:54 View/Users/add_profile.ctp:152
 msgid "画像を選択"
-msgstr ""
+msgstr "Select an image"
 
 #: View/Elements/modal_add_circle.ctp:98
 #: View/Elements/modal_edit_circle.ctp:101
 #: View/Elements/User/profile_setting.ctp:166 View/Goals/add.ctp:386
 #: View/Teams/add.ctp:57 View/Users/add_profile.ctp:155
 msgid "画像を再選択"
-msgstr ""
+msgstr "Reselect an image"
 
 #: View/Elements/modal_add_circle.ctp:109
 #: View/Elements/modal_edit_circle.ctp:113
 #: View/Elements/User/profile_setting.ctp:178 View/Goals/add.ctp:397
 #: View/Teams/add.ctp:69 View/Users/add_profile.ctp:169
 msgid "10MB以下"
-msgstr ""
+msgstr "Smaller than 10MB"
 
 #: View/Elements/modal_add_circle.ctp:130 View/Elements/modal_collabo.ctp:79
 #: View/Elements/modal_edit_circle.ctp:135
@@ -911,37 +911,37 @@ msgstr ""
 #: View/Elements/User/modal_change_email.ctp:56
 #: View/Elements/User/modal_change_password.ctp:61
 msgid "キャンセル"
-msgstr ""
+msgstr "Cancel"
 
 #: View/Elements/modal_collabo.ctp:19;82 View/Elements/Goal/index_items.ctp:80
 #: View/Elements/Goal/modal_goal_detail.ctp:47
 msgid "コラボる"
-msgstr ""
+msgstr "Collaborate"
 
 #: View/Elements/modal_collabo.ctp:19;82
 #: View/Elements/Goal/my_goal_area_items.ctp:80
 msgid "コラボを編集"
-msgstr ""
+msgstr "Edit Collaborate"
 
 #: View/Elements/modal_collabo.ctp:45
 msgid "役割"
-msgstr ""
+msgstr "Role"
 
 #: View/Elements/modal_collabo.ctp:46;56
 msgid "例) ○○"
-msgstr ""
+msgstr "eg) **"
 
 #: View/Elements/modal_collabo.ctp:87
 msgid "コラボ抜ける"
-msgstr ""
+msgstr "Quite the collaboration"
 
 #: View/Elements/modal_collabo.ctp:90
 msgid "本当にコラボレータから抜けますか？"
-msgstr ""
+msgstr "Do you really want to quit the collaboration?"
 
 #: View/Elements/modal_edit_circle.ctp:18
 msgid "サークルを編集"
-msgstr ""
+msgstr "Edit Circle"
 
 #: View/Elements/modal_edit_circle.ctp:131
 #: View/Elements/modal_public_circles.ctp:50
@@ -951,331 +951,331 @@ msgstr ""
 #: View/Elements/User/notify_setting.ctp:97
 #: View/Elements/User/profile_setting.ctp:235
 msgid "変更を保存"
-msgstr ""
+msgstr "Save change"
 
 #: View/Elements/modal_edit_circle.ctp:137
 msgid "サークルを削除"
-msgstr ""
+msgstr "Delete circle"
 
 #: View/Elements/modal_edit_circle.ctp:139
 msgid "本当にこのサークルを削除しますか？"
-msgstr ""
+msgstr "Do you really want to delete the circle?"
 
 #: View/Elements/modal_privacy_policy.ctp:13 View/Users/register.ctp:101
 msgid "プライバシーポリシー"
-msgstr ""
+msgstr "Privacy Policy"
 
 #: View/Elements/modal_public_circles.ctp:18
 msgid "公開サークル"
-msgstr ""
+msgstr "Public Circle"
 
 #: View/Elements/modal_public_circles.ctp:44
 msgid "公開サークルはありません。"
-msgstr ""
+msgstr "There are no public circles."
 
 #: View/Elements/modal_share_circles_users.ctp:20
 msgid "%s人に共有しました"
-msgstr ""
+msgstr "Shared with %s people"
 
 #: View/Elements/modal_tos.ctp:15 View/Users/register.ctp:98
 msgid "利用規約"
-msgstr ""
+msgstr "Terms of Use"
 
 #: View/Elements/my_goals_area.ctp:16
 msgid "あなたのゴール"
-msgstr ""
+msgstr "Your goals"
 
 #: View/Elements/my_goals_area.ctp:22;74 View/Goals/index.ctp:35
 msgid "全て"
-msgstr ""
+msgstr "All"
 
 #: View/Elements/my_goals_area.ctp:28;80 View/Goals/index.ctp:41
 msgid "完了しているゴール"
-msgstr ""
+msgstr "Completed Goals"
 
 #: View/Elements/my_goals_area.ctp:31;83 View/Goals/index.ctp:44
 msgid "今期のゴール"
-msgstr ""
+msgstr "Goals this term"
 
 #: View/Elements/my_goals_area.ctp:39
 #: View/Elements/Goal/modal_goal_detail.ctp:89
 msgid "リーダー"
-msgstr ""
+msgstr "Leader"
 
 #: View/Elements/my_goals_area.ctp:47;55
 msgid "新しいゴールをつくる"
-msgstr ""
+msgstr "Create a new goal"
 
 #: View/Elements/my_goals_area.ctp:68
 msgid "フォロー中のゴール"
-msgstr ""
+msgstr "Following goals"
 
 #: View/Elements/public_circle_item.ctp:27
 msgid "管理者"
-msgstr ""
+msgstr "Administrators"
 
 #: View/Elements/public_circle_item.ctp:47
 msgid "%s メンバー"
-msgstr ""
+msgstr "%s members"
 
 #: View/Elements/Feed/comment.ctp:32 View/Elements/Feed/posts.ctp:28
 msgid "編集をやめる"
-msgstr ""
+msgstr "Stop editing"
 
 #: View/Elements/Feed/comment.ctp:33;37
 msgid "コメントを編集"
-msgstr ""
+msgstr "Edit comment"
 
 #: View/Elements/Feed/comment.ctp:39
 msgid "コメントを削除"
-msgstr ""
+msgstr "Delete comment"
 
 #: View/Elements/Feed/comment.ctp:41;49
 msgid "本当にこのコメントを削除しますか？"
-msgstr ""
+msgstr "Do you really want to delete this comment?"
 
 #: View/Elements/Feed/comment.ctp:177 View/Elements/Feed/posts.ctp:244
 msgid "いいね！"
-msgstr ""
+msgstr "Like!"
 
 #: View/Elements/Feed/comment_edit_form.ctp:61
 #: View/Elements/Feed/post_edit_form.ctp:62
 msgid "変更を保存する"
-msgstr ""
+msgstr "Save changes"
 
 #: View/Elements/Feed/common_form.ctp:19
 msgid "投稿"
-msgstr ""
+msgstr "Post"
 
 #: View/Elements/Feed/common_form.ctp:22
 msgid "アクション"
-msgstr ""
+msgstr "Action"
 
 #: View/Elements/Feed/common_form.ctp:25
 msgid "バッジ"
-msgstr ""
+msgstr "Badge"
 
 #: View/Elements/Feed/common_form.ctp:52
 msgid "何か投稿しよう"
-msgstr ""
+msgstr "Write something..."
 
 #: View/Elements/Feed/common_form.ctp:97
 msgid "投稿する"
-msgstr ""
+msgstr "Post"
 
 #: View/Elements/Feed/common_form.ctp:103
 msgid "共有範囲"
-msgstr ""
+msgstr "Share with"
 
 #: View/Elements/Feed/contents.ctp:22;24
 msgid "すべて"
-msgstr ""
+msgstr "All"
 
 #: View/Elements/Feed/contents.ctp:63
 msgid "投稿がありません。"
-msgstr ""
+msgstr "There are no posts."
 
 #: View/Elements/Feed/contents.ctp:71
 msgid "もっと読む ▼"
-msgstr ""
+msgstr "More..."
 
 #: View/Elements/Feed/contents.ctp:80
 msgid "これ以上のデータがありません。"
-msgstr ""
+msgstr "There is no more data."
 
 #: View/Elements/Feed/modal_comment_liked_users.ctp:18
 msgid "このコメントに%s人が「いいね！」と言っています。"
-msgstr ""
+msgstr "%s people liked this comment."
 
 #: View/Elements/Feed/modal_comment_liked_users.ctp:30
 #: View/Elements/Feed/modal_post_liked_users.ctp:31
 msgid "まだ、いいね！と言っている人はいません。"
-msgstr ""
+msgstr "There are no likes yet."
 
 #: View/Elements/Feed/modal_comment_red_users.ctp:18
 msgid "このコメントを%s人が読みました。"
-msgstr ""
+msgstr "%s people read this comment."
 
 #: View/Elements/Feed/modal_comment_red_users.ctp:30
 #: View/Elements/Feed/modal_post_red_users.ctp:31
 msgid "まだ、この投稿を読んだ人はいません。"
-msgstr ""
+msgstr "No-one has read this comment yet."
 
 #: View/Elements/Feed/modal_post_liked_users.ctp:18
 msgid "この投稿を%s人が「いいね！」と言っています。"
-msgstr ""
+msgstr "%s people liked this post."
 
 #: View/Elements/Feed/modal_post_red_users.ctp:18
 msgid "この投稿を%s人が読みました。"
-msgstr ""
+msgstr "%s people read this post."
 
 #: View/Elements/Feed/posts.ctp:29;32
 msgid "投稿を編集"
-msgstr ""
+msgstr "Edit post"
 
 #: View/Elements/Feed/posts.ctp:37
 msgid "投稿を削除"
-msgstr ""
+msgstr "Delete post"
 
 #: View/Elements/Feed/posts.ctp:39
 msgid "本当にこの投稿を削除しますか？"
-msgstr ""
+msgstr "Do you really want to delete this post?"
 
 #: View/Elements/Feed/posts.ctp:45
 msgid "リンクをコピー"
-msgstr ""
+msgstr "Copy Link"
 
 #: View/Elements/Feed/posts.ctp:268
 msgid "他%s件のコメントを見る"
-msgstr ""
+msgstr "View %s more comments"
 
 #: View/Elements/Feed/posts.ctp:303;335
 msgid "コメントする"
-msgstr ""
+msgstr "Comment"
 
 #: View/Elements/Goal/index_items.ctp:38
 msgid "リーダー: %s"
-msgstr ""
+msgstr "Leader: %s"
 
 #: View/Elements/Goal/index_items.ctp:41
 msgid "コラボ: "
-msgstr ""
+msgstr "Collab: "
 
 #: View/Elements/Goal/index_items.ctp:43
 msgid "0人"
-msgstr ""
+msgstr "0"
 
 #: View/Elements/Goal/index_items.ctp:55
 msgid "他%s人"
-msgstr ""
+msgstr "%s other people"
 
 #: View/Elements/Goal/index_items.ctp:74
 #: View/Elements/Goal/modal_goal_detail.ctp:41
 msgid "コラボり中"
-msgstr ""
+msgstr "Collaborating"
 
 #: View/Elements/Goal/key_result_items.ctp:42
 msgid "出したい成果を編集する"
-msgstr ""
+msgstr "Edit Key Result"
 
 #: View/Elements/Goal/key_result_items.ctp:47
 msgid "出したい成果を未完了にする"
-msgstr ""
+msgstr "Uncomplete Key Result"
 
 #: View/Elements/Goal/key_result_items.ctp:56;61
 msgid "出したい成果を完了にする"
-msgstr ""
+msgstr "Complete Key Result"
 
 #: View/Elements/Goal/key_result_items.ctp:72
 msgid "出したい成果を削除する"
-msgstr ""
+msgstr "Delete Key Result"
 
 #: View/Elements/Goal/key_result_items.ctp:74
 msgid "本当にこの成果を削除しますか？"
-msgstr ""
+msgstr "Do you really want to delete this Key Result?"
 
 #: View/Elements/Goal/key_result_items.ctp:87
 #: View/Elements/Goal/modal_add_key_result.ctp:218
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:33
 #: View/Elements/Goal/my_goal_area_items.ctp:40;73
 msgid "出したい成果を追加"
-msgstr ""
+msgstr "Add Key Result"
 
 #: View/Elements/Goal/key_result_items.ctp:94
 msgid "成果はまだありません。"
-msgstr ""
+msgstr "There are no Key Results."
 
 #: View/Elements/Goal/modal_add_key_result.ctp:28
 msgid "出したい成果を追加する"
-msgstr ""
+msgstr "Add Key Result"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:69
 msgid "出したい成果"
-msgstr ""
+msgstr "Key Result"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:70
 msgid "進捗の指標として『なに』をどうするか？"
-msgstr ""
+msgstr "What signs of progress will there be?"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:73
 #: View/Elements/Goal/modal_edit_key_result.ctp:75 View/Goals/add.ctp:151
 msgid "具体的に絞り込んで書く"
-msgstr ""
+msgstr "Write specifics"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:76
 msgid "例）Webサイトを完成させる"
-msgstr ""
+msgstr "eg) Complete Website"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:82
 #: View/Elements/Goal/modal_edit_key_result.ctp:105
 #: View/Elements/Goal/modal_goal_detail.ctp:78 View/Goals/add.ctp:160
 msgid "程度"
-msgstr ""
+msgstr "Measurement"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:84
 #: View/Elements/Goal/modal_edit_key_result.ctp:107 View/Goals/add.ctp:162
 msgid "どのくらい？"
-msgstr ""
+msgstr "How much?"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:105
 #: View/Elements/Goal/modal_edit_key_result.ctp:128
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:27 View/Goals/add.ctp:184
 msgid "達成時"
-msgstr ""
+msgstr "Final"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:120
 #: View/Elements/Goal/modal_edit_key_result.ctp:143
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:26 View/Goals/add.ctp:197
 msgid "開始時"
-msgstr ""
+msgstr "Initial"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:136
 #: View/Elements/Goal/modal_edit_key_result.ctp:159 View/Goals/add.ctp:212
 msgid "期間"
-msgstr ""
+msgstr "Time"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:165
 #: View/Elements/Goal/modal_edit_key_result.ctp:188 View/Goals/add.ctp:239
 msgid "開始"
-msgstr ""
+msgstr "Start"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:171 View/Goals/add.ctp:246
 msgid "（本日）"
-msgstr ""
+msgstr "(Today)"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:175
 #: View/Elements/Goal/modal_edit_key_result.ctp:197 View/Goals/add.ctp:251
 msgid "変更"
-msgstr ""
+msgstr "Change"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:206
 #: View/Elements/Goal/modal_edit_key_result.ctp:228
 msgid "ゴールにとってこの成果の重要度"
-msgstr ""
+msgstr "Importance of Key Result for this goal"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:28;241
 msgid "成果を更新"
-msgstr ""
+msgstr "Update Key Result"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:71
 msgid "成果名"
-msgstr ""
+msgstr "Name"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:72
 msgid "達成の指標として『なに』をどうするか？"
-msgstr ""
+msgstr "What signs of achievement will there be?"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:78 View/Goals/add.ctp:155
 msgid "例）サービスAの国内市場シェアを増加させる"
-msgstr ""
+msgstr "eg. Increasing the internal market share of A"
 
 #: View/Elements/Goal/modal_goal_detail.ctp:18
 msgid "ゴール概要"
-msgstr ""
+msgstr "Goal Summary"
 
 #: View/Elements/Goal/modal_goal_detail.ctp:79
 msgid "単位: %s"
-msgstr ""
+msgstr "Unit: %s"
 
 #: View/Elements/Goal/modal_goal_detail.ctp:81
 msgid "達成時: %s"
