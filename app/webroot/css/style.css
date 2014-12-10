@@ -502,6 +502,11 @@ textarea{
     padding-right: 5px;
 }
 
+.plr_8px {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
 .plr_11px {
     padding-left: 11px;
     padding-right: 11px;
@@ -819,6 +824,10 @@ textarea{
 }
 
 /*Fontの指定*/
+.font_10px{
+    font-size: 10px;
+}
+
 .font_11px {
     font-size: 11px;
 }
@@ -3183,7 +3192,9 @@ Temporary Properties - YOU MUST FIX
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-.dashboard-profile-card {
+/*===== dashboardProfileCard =====*/
+
+.dashboardProfileCard {
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -3192,13 +3203,12 @@ Temporary Properties - YOU MUST FIX
     margin-bottom: 16px;
 }
 
-.dashboard-profile-card-bg{
+.dashboardProfileCard-bg {
     background-image: url(../img/dashboard-profile-card-bg.jpg);
     background-size: 100%;
     background-position: 0 50%;
     height: 50px;
 }
-
 
 .dashboardProfileCard-avatarImage {
     border: 2px solid #fff;
@@ -3208,27 +3218,28 @@ Temporary Properties - YOU MUST FIX
     width: 52px;
 }
 
-.dashboard-profile-card-user-field {
+.dashboardProfileCard-userField {
     width: 64%;
     float: right;
     margin: 4px 0 0 0;
 }
 
-.dashboard-profile-card-stats{
+.dashboardProfileCard-stats {
     clear: right;
 }
 
-.dashboard-profile-card-score{
+.dashboardProfileCard-score {
     line-height: 30px;
 }
 
-.dashboard-profile-card-activity-list{
-    padding: 8px 0;
+.dashboardProfileCard-activityList {
 }
 
-.dashboard-profile-card-activity {
+.dashboardProfileCard-activity {
     padding: 1px;
 }
+
+/*=====/ dashboardProfileCard ======*/
 
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
