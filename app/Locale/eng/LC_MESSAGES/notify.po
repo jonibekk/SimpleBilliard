@@ -17,7 +17,7 @@ msgstr ""
 
 #: Controller/UsersController.php:78
 msgid "%sさん、こんにちは。"
-msgstr ""
+msgstr "Hello! %s."
 
 #: Controller/UsersController.php:79
 msgid "ログイン成功"
