@@ -585,7 +585,7 @@ msgstr ""
 
 #: Model/Team.php:39
 msgid "プロ"
-msgstr ""
+msgstr "Pro"
 
 #: Model/TeamMember.php:126
 msgid "このページにアクセスする場合は、チームに切り換えてください。"
