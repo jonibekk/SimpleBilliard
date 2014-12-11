@@ -33,9 +33,11 @@
                     <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                        href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                         <div class="ta-sm_c">
-                            <img src="<?= $this->Html->url('/img/logo_off.png') ?>" class="header-logo-img" alt="Goalous2.0" width="20px" height="20px">
+                            <img src="<?= $this->Html->url('/img/logo_off.png') ?>" class="header-logo-img"
+                                 alt="Goalous2.0" width="20px" height="20px">
+
                             <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link"><?= __d('gl',
-                                                                                                                                "ホーム") ?></p>
+                                                                                                               "ホーム") ?></p>
                             <span class="visible-xs-inline va_bl ml_5px"><?= __d('gl', "ホーム") ?></span>
                         </div>
                     </a>
@@ -45,6 +47,7 @@
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                         <div class="ta-sm_c">
                             <i class="fa fa-flag header-link header-icon nav-xxs-icon"></i>
+
                             <p class="font_11px header_icon-text hidden-xs header-link"><?= __d('gl', "ゴール") ?></p>
                             <span class="visible-xs-inline ml_5px"><?= __d('gl', "ゴール") ?></span>
 
@@ -104,7 +107,7 @@
                                                    ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
                         <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
                         <span
-                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.first_name') ?></span>
+                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.display_first_name') ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li class="text-align_c"><?= __d('gl', "準備中") ?></li>
