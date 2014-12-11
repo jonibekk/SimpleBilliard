@@ -1513,6 +1513,16 @@ class UsersControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetPostCount()
+    {
+        $this->_getUsersCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_get_post_count/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+
     function _getUsersCommonMock()
     {
         /**

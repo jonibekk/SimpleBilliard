@@ -51,7 +51,7 @@
                     </li>
                     <li class="dashboardProfileCard-activity disp_ib col-xxs-4">
                         <div class="ls_title"><?= __d('gl', "投稿") ?></div>
-                        <i class="fa fa-comment-o mr_1px"></i><span class="ls_number">?</span>
+                        <i class="fa fa-comment-o mr_1px"></i><span class="ls_number" id="CountPostByMe"></span>
                     </li>
                 </ul>
                 <div class="dashboardProfileCard-moreRead text-align_c mtb_8px"><a class="font_lightGray-gray"
@@ -61,4 +61,12 @@
         </div>
     </div>
 </div>
+<? $this->append('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ajaxAppendCount('CountPostByMe', "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_post_count'])?>");
+    });
+</script>
+<? $this->end() ?>
+
 <!-- END app/View/Elements/dashboard_profile_card.ctp -->
