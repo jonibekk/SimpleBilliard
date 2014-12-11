@@ -630,4 +630,29 @@ class UsersController extends AppController
     {
         $this->Session->write('current_team_id', $team_id);
     }
+
+    /**
+     * ajaxで投稿数を取得(defaultで自分の投稿数および今期)
+     *
+     * @param string $type
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_post_count($type = "me")
+    {
+        $start_date = isset($this->request->params['named']['start_date']) ? $this->request->params['named']['start_date'] : null;
+        $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
+        if (!$start_date && !$end_date) {
+            //デフォルトで今期
+            $start_date = $this->User->TeamMember->Team->getTermStartDate();
+            $end_date = $this->User->TeamMember->Team->getTermEndDate();
+        }
+        $post_count = $this->Post->getCount($type, $start_date, $end_date);
+        $this->_ajaxPreProcess();
+
+        $result = [
+            'count' => $post_count
+        ];
+        return $this->_ajaxGetResponse($result);
+    }
 }
