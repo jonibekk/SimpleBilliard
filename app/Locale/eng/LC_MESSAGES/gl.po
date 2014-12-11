@@ -137,72 +137,72 @@ msgstr ""
 
 #: Controller/GoalsController.php:603
 msgid "Sei"
-msgstr ""
+msgstr "Last Name"
 
 #: Controller/GoalsController.php:604
 msgid "Mei"
-msgstr ""
+msgstr "First Name"
 
 #: Controller/GoalsController.php:605
 msgid "姓"
-msgstr ""
+msgstr "Last Name"
 
 #: Controller/GoalsController.php:606
 msgid "名"
-msgstr ""
+msgstr "First Name"
 
 #: Controller/GoalsController.php:607 View/Goals/add.ctp:69
 msgid "目的"
-msgstr ""
+msgstr "Purpose"
 
 #: Controller/GoalsController.php:608
 msgid "ゴールカテゴリ"
-msgstr ""
+msgstr "Goal Category"
 
 #: Controller/GoalsController.php:609
 msgid "ゴールオーナー種別"
-msgstr ""
+msgstr "Goal Owner Type"
 
 #: Controller/GoalsController.php:610
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:23 View/Goals/add.ctp:147
 msgid "ゴール名"
-msgstr ""
+msgstr "Goal Name"
 
 #: Controller/GoalsController.php:611
 #: View/Elements/Goal/modal_add_key_result.ctp:91
 #: View/Elements/Goal/modal_edit_key_result.ctp:113
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:24 View/Goals/add.ctp:168
 msgid "単位"
-msgstr ""
+msgstr "Unit"
 
 #: Controller/GoalsController.php:612
 msgid "程度(達成時)"
-msgstr ""
+msgstr "Measurement(Final)"
 
 #: Controller/GoalsController.php:613
 msgid "程度(開始時)"
-msgstr ""
+msgstr "Measurement(Initial)"
 
 #: Controller/GoalsController.php:614
 #: View/Elements/Goal/modal_add_key_result.ctp:141
 #: View/Elements/Goal/modal_edit_key_result.ctp:164 View/Goals/add.ctp:217
 msgid "期限"
-msgstr ""
+msgstr "Limit Date"
 
 #: Controller/GoalsController.php:615
 msgid "開始日"
-msgstr ""
+msgstr "Start Data"
 
 #: Controller/GoalsController.php:616 View/Elements/modal_collabo.ctp:55
 #: View/Elements/Goal/modal_goal_detail.ctp:113 View/Goals/add.ctp:336
 msgid "詳細"
-msgstr ""
+msgstr "Description"
 
 #: Controller/GoalsController.php:617 View/Elements/modal_collabo.ctp:65
 #: View/Elements/Goal/modal_add_key_result.ctp:205
 #: View/Elements/Goal/modal_edit_key_result.ctp:227 View/Goals/add.ctp:351
 msgid "重要度"
-msgstr ""
+msgstr "Weight"
 
 #: Controller/GoalsController.php:618
 msgid "認定"
@@ -210,11 +210,11 @@ msgstr ""
 
 #: Controller/GoalsController.php:648
 msgid "L"
-msgstr ""
+msgstr "L"
 
 #: Controller/GoalsController.php:648
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #: Controller/GoalsController.php:659
 msgid "認定済"
@@ -226,15 +226,15 @@ msgstr ""
 
 #: Controller/HelpsController.php:45
 msgid "1 目的を決める"
-msgstr ""
+msgstr "1 Decide Your Purpose"
 
 #: Controller/HelpsController.php:47
 msgid "2 基準を定める"
-msgstr ""
+msgstr "2 Set Reference Values"
 
 #: Controller/PostsController.php:32
 msgid "投稿しました。"
-msgstr ""
+msgstr "Posted."
 
 #: Controller/PostsController.php:37;40
 msgid "投稿に失敗しました。"
@@ -1271,7 +1271,7 @@ msgstr "Change"
 #: View/Elements/Goal/modal_add_key_result.ctp:206
 #: View/Elements/Goal/modal_edit_key_result.ctp:228
 msgid "ゴールにとってこの成果の重要度"
-msgstr "Importance of Key Result for this goal"
+msgstr "Weight of Key Result for this goal"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:28;241
 msgid "成果を更新"
