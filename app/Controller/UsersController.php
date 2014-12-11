@@ -385,12 +385,7 @@ class UsersController extends AppController
     public function settings()
     {
         //ユーザデータ取得
-        $me = $this->User->getDetail($this->Auth->user('id'));
-        unset($me['User']['password']);
-        $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
-        if (isset($local_name['LocalName'])) {
-            $me['LocalName'][0] = $local_name['LocalName'];
-        }
+        $me = $this->_getMyUserDataForSetting();
         if ($this->request->is('put') && !empty($this->request->data)) {
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
@@ -402,6 +397,9 @@ class UsersController extends AppController
                 $this->_autoLogin($this->Auth->user('id'));
                 //言語設定
                 $this->_setAppLanguage();
+                $me = $this->_getMyUserDataForSetting();
+                $this->request->data = $me;
+
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
             }
             else {
@@ -425,6 +423,18 @@ class UsersController extends AppController
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
                            'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
+    }
+
+    private function _getMyUserDataForSetting()
+    {
+        $me = $this->User->getDetail($this->Auth->user('id'));
+        unset($me['User']['password']);
+        $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
+        if (isset($local_name['LocalName'])) {
+            $me['LocalName'][0] = $local_name['LocalName'];
+        }
+
+        return $me;
     }
 
     /**
