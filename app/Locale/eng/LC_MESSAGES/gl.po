@@ -1637,119 +1637,119 @@ msgstr ""
 
 #: View/Goals/add.ctp:32
 msgid "目的を決める"
-msgstr ""
+msgstr "Decide Your Purpose"
 
 #: View/Goals/add.ctp:35;105;308
 msgid "変更する"
-msgstr ""
+msgstr "Change"
 
 #: View/Goals/add.ctp:70
 msgid "達成したいことは？"
-msgstr ""
+msgstr "What do you want to achieve?"
 
 #: View/Goals/add.ctp:72
 msgid "達成したいことをざっくり書く"
-msgstr ""
+msgstr "Write something that you want to achieve roughly."
 
 #: View/Goals/add.ctp:75
 msgid "例）新しい価値を人々に提供する"
-msgstr ""
+msgstr "eg. Provide a new value to the people."
 
 #: View/Goals/add.ctp:84;279
 msgid "詳しくはこちら"
-msgstr ""
+msgstr "Learn More"
 
 #: View/Goals/add.ctp:88;290
 msgid "次のステップ"
-msgstr ""
+msgstr "Next Step"
 
 #: View/Goals/add.ctp:102
 msgid "基準を定める"
-msgstr ""
+msgstr "Set Reference Values"
 
 #: View/Goals/add.ctp:138
 msgid "カテゴリ"
-msgstr ""
+msgstr "Category"
 
 #: View/Goals/add.ctp:148
 msgid "達成の指標として<br>『なに』をどうするか？"
-msgstr ""
+msgstr "What signs of <br>achievement will there be?"
 
 #: View/Goals/add.ctp:305
 msgid "情報を追加する"
-msgstr ""
+msgstr "Add more information"
 
 #: View/Goals/add.ctp:337
 msgid "内容を補足しましょう"
-msgstr ""
+msgstr "Let complement the contents."
 
 #: View/Goals/add.ctp:339
 msgid "ゴールの内容を詳しく書く"
-msgstr ""
+msgstr "Write details of this goal."
 
 #: View/Goals/add.ctp:352
 msgid "あなたにとっての<br>このゴールの重要度"
-msgstr ""
+msgstr "Weight of <br>this goal for you"
 
 #: View/Goals/add.ctp:362
 msgid "ゴール画像"
-msgstr ""
+msgstr "Goal Image"
 
 #: View/Goals/add.ctp:364
 msgid "イメージに合った画像を追加しましょう"
-msgstr ""
+msgstr "Let's add an image that motivated yourself."
 
 #: View/Goals/add.ctp:416
 msgid "この内容で作成"
-msgstr ""
+msgstr "Save Goal"
 
 #: View/Goals/add.ctp:449
 msgid "開始日が期限を過ぎています。"
-msgstr ""
+msgstr "Start date has expired."
 
 #: View/Goals/add.ctp:460
 msgid "期限が開始日以前になっています。"
-msgstr ""
+msgstr "Limit date is not been before the start date."
 
 #: View/Goals/index.ctp:16
 msgid "CSVの書き出し"
-msgstr ""
+msgstr "Export Data"
 
 #: View/Goals/index.ctp:33
 msgid "みんなのゴール"
-msgstr ""
+msgstr "Our Goals"
 
 #: View/Goals/index.ctp:56
 msgid "ゴールがありません。"
-msgstr ""
+msgstr "There is no goal."
 
 #: View/Layouts/homepage.ctp:179
 msgid "Language"
-msgstr ""
+msgstr "Language"
 
 #: View/Pages/logged_in_home.ctp:13 View/Posts/feed.ctp:13
 msgid "チームを作成してください。"
-msgstr ""
+msgstr "Create a team."
 
 #: View/Teams/add.ctp:16
 msgid "チームを作成してください"
-msgstr ""
+msgstr "Create a team."
 
 #: View/Teams/add.ctp:35 View/Teams/invite.ctp:33
 msgid "チーム名"
-msgstr ""
+msgstr "Team Name"
 
 #: View/Teams/add.ctp:36
 msgid "例) チームGoalous"
-msgstr ""
+msgstr "eg. Team Goal"
 
 #: View/Teams/add.ctp:41
 msgid "チーム画像"
-msgstr ""
+msgstr "Team Image"
 
 #: View/Teams/add.ctp:86
 msgid "プラン"
-msgstr ""
+msgstr "Plan"
 
 #: View/Teams/add.ctp:89
 msgid ""
@@ -1764,15 +1764,15 @@ msgstr ""
 #: View/Teams/add.ctp:99 View/Teams/invite.ctp:73
 #: View/Users/add_profile.ctp:192
 msgid "スキップ"
-msgstr ""
+msgstr "Skip"
 
 #: View/Teams/invite.ctp:16
 msgid "新しいメンバーを招待"
-msgstr ""
+msgstr "Invite new members"
 
 #: View/Teams/invite.ctp:42
 msgid "招待するメンバーのメールアドレス"
-msgstr ""
+msgstr "Mail Address"
 
 #: View/Teams/invite.ctp:47
 msgid ""
@@ -1785,7 +1785,7 @@ msgstr ""
 
 #: View/Teams/invite.ctp:59
 msgid "コメント(オプション)"
-msgstr ""
+msgstr "Comment(Optional)"
 
 #: View/Teams/invite.ctp:62
 msgid "コメント(任意)はメールの本文に追加されます。"
@@ -1805,7 +1805,7 @@ msgstr ""
 
 #: View/Users/login.ctp:16
 msgid "Goalousにログイン！"
-msgstr ""
+msgstr "Login Goalous!"
 
 #: View/Users/login.ctp:44
 msgid "ログイン"
