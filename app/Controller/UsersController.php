@@ -63,6 +63,8 @@ class UsersController extends AppController
      */
     public function login()
     {
+        //uservoiceから渡ってきた時用
+        $this->_uservoiceSetSession();
         //リダイレクト先
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -74,6 +76,8 @@ class UsersController extends AppController
         }
         if ($this->request->is('post') && isset($this->request->data['User'])) {
             if ($this->Auth->login()) {
+
+                $this->_refreshAuth();
                 $this->_setAfterLogin();
                 $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
                                            ['title' => __d('notify', "ログイン成功")]);
@@ -304,7 +308,7 @@ class UsersController extends AppController
             return $this->redirect(['action' => 'settings']);
         }
         $this->User->commit();
-        $this->_refreshAuth();
+        $this->_autoLogin($this->Auth->user('id'));
         $this->Pnotify->outSuccess(__d('gl', "メールアドレスの変更が正常に完了しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect(['action' => 'settings']);
@@ -381,12 +385,7 @@ class UsersController extends AppController
     public function settings()
     {
         //ユーザデータ取得
-        $me = $this->User->getDetail($this->Auth->user('id'));
-        unset($me['User']['password']);
-        $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
-        if (isset($local_name['LocalName'])) {
-            $me['LocalName'][0] = $local_name['LocalName'];
-        }
+        $me = $this->_getMyUserDataForSetting();
         if ($this->request->is('put') && !empty($this->request->data)) {
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
@@ -394,17 +393,13 @@ class UsersController extends AppController
             $this->User->id = $this->Auth->user('id');
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
-                //セッション更新
-                $this->_refreshAuth();
+                //ログインし直し。
+                $this->_autoLogin($this->Auth->user('id'));
                 //言語設定
                 $this->_setAppLanguage();
-                $me = $this->User->getDetail($this->Auth->user('id'));
-                unset($me['User']['password']);
-                $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
-                if (isset($local_name['LocalName'])) {
-                    $me['LocalName'][0] = $local_name['LocalName'];
-                }
+                $me = $this->_getMyUserDataForSetting();
                 $this->request->data = $me;
+
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
             }
             else {
@@ -428,6 +423,18 @@ class UsersController extends AppController
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
                            'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
+    }
+
+    private function _getMyUserDataForSetting()
+    {
+        $me = $this->User->getDetail($this->Auth->user('id'));
+        unset($me['User']['password']);
+        $local_name = $this->User->LocalName->getName($this->Auth->user('id'), $this->Auth->user('language'));
+        if (isset($local_name['LocalName'])) {
+            $me['LocalName'][0] = $local_name['LocalName'];
+        }
+
+        return $me;
     }
 
     /**
@@ -484,6 +491,8 @@ class UsersController extends AppController
      * 招待に応じる
      * 登録済みユーザの場合は、チーム参加でホームへリダイレクト
      * 未登録ユーザの場合は、個人情報入力ページへ
+     *
+     * @param $token
      */
     public function accept_invite($token)
     {
@@ -590,6 +599,16 @@ class UsersController extends AppController
         }
     }
 
+    function _uservoiceSetSession()
+    {
+        if (isset($_GET['uv_login'])) {
+            $this->Session->write('uv_status', $_GET);
+        }
+        else {
+            $this->Session->delete('uv_status');
+        }
+    }
+
     /**
      * ログイン後に実行する
      */
@@ -603,6 +622,8 @@ class UsersController extends AppController
         }
         $this->User->_setSessionVariable();
         $this->Mixpanel->setUser($this->User->id);
+        $uservoice_token = $this->Uservoice->getToken();
+        $this->Session->write(compact('uservoice_token'));
     }
 
     public function _setDefaultTeam($team_id)

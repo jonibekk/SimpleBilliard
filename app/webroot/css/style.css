@@ -1,4 +1,8 @@
-/*=== リファクタリング予定 ===*/
+ul{
+    list-style: none;
+}
+
+/*=== Header部のリファクタリング ===*/
 .nav-icons > a {
     float: left;
     font-size: 20px;
@@ -31,6 +35,101 @@
     line-height: 30px;
 }
 
+
+/*=== headerの設定 ===*/
+
+.header_icon-text {
+    margin: 0;
+}
+
+.header_icon-text{
+    line-height: 14px;
+}
+
+.navbar {
+    background: #fff;
+    margin: 0;
+    max-height: 50px;
+    position: fixed;
+    top: 0;
+    z-index: 7777;
+}
+
+.nav-team-select,
+.nav-search {
+    height: 28px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 0;
+}
+
+.nav-form-group input {
+    padding-left: 27px;
+}
+
+.nav-form-group {
+    position: relative;
+    padding: 10px 0;
+}
+
+/*noinspection ALL*/
+.nav-form-group i {
+    position: absolute;
+    font-size: 15px !important;
+    padding: 7px 7px;
+    pointer-events: none;
+}
+
+.nav-icons .header-home {
+    font-size: 12px;
+    line-height: 30px;
+    color: #808080;
+}
+
+
+.hamburger {
+    float: left !important;
+    margin-left: 0;
+}
+
+.toggle-icon{
+    font-size: 20px;
+    transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+}
+
+.rotate{
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+.rotate-reverse{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.header-toggle-icon{
+    border: none;
+    height: 50px;
+    margin-top:0;
+    margin-bottom: 0;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.navbar-default .header-toggle-icon:hover,
+.navbar-default .header-toggle-icon:focus,
+.navbar-default .header-toggle-icon:target {
+    background-color: #fff;
+}
+
+
+/*==/ headerの設定 ===*/
+
+/*==/ Header部のリファクタリング ===*/
+
+
+/*=== リファクタリング予定 ===*/
+
 .form-group .text-align_left {
     text-align: left;
 }
@@ -50,7 +149,7 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 }
 
 .navbar-toggle {
-    margin-top: 6px;
+    margin-top: 0;
     margin-right: 0;
 }
 
@@ -277,7 +376,7 @@ textarea{
 }
 
 .mt_5px {
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 .mt_8px {
@@ -294,6 +393,14 @@ textarea{
 
 .mt_32px {
     margin-top: 32px;
+}
+
+.mr_1px{
+    margin-right: 1px;
+}
+
+.mr_2px{
+    margin-right: 2px;
 }
 
 .mr_5px {
@@ -314,6 +421,10 @@ textarea{
 
 .ml_5px {
     margin-left: 5px;
+}
+
+.ml_8px {
+    margin-left: 8px;
 }
 
 .ml_12px {
@@ -371,6 +482,16 @@ textarea{
     padding-right: 0;
 }
 
+.plr_1px {
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+.plr_2px{
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
 .plr_4px {
     padding-right: 4px;
     padding-left: 4px;
@@ -379,6 +500,11 @@ textarea{
 .plr_5px {
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.plr_8px {
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .plr_11px {
@@ -394,6 +520,16 @@ textarea{
 .mtb_3px {
     margin-top: 3px;
     margin-bottom: 3px;
+}
+
+.mtb_5px{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.mtb_8px{
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .ptb_5px {
@@ -504,7 +640,7 @@ textarea{
     font-weight: bold;
 }
 
-.ln_1 {
+.ln_1,.ln_1-f {
     display: block;
     overflow: hidden;
     white-space: nowrap;
@@ -524,6 +660,23 @@ textarea{
     background: -moz-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
     background: -o-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
     background: -ms-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    width: 30%;
+    height: 20px;
+    padding-bottom: 4px;
+}
+.ln_1-f:before{
+    content:"...";
+    color: rgba(0,0,0,0);
+    display: block;
+    position: absolute;
+    top:0;
+    right:0;
+    background: #fff;
+    background: linear-gradient(to right, rgba(245,245,245,0), #fff);
+    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #fff);
+    background: -moz-linear-gradient(to right, rgba(245,245,245,0), #fff);
+    background: -o-linear-gradient(to right, rgba(245,245,245,0), #fff);
+    background: -ms-linear-gradient(to right, rgba(245,245,245,0), #fff);
     width: 30%;
     height: 20px;
     padding-bottom: 4px;
@@ -583,6 +736,41 @@ textarea{
     width: 100%;
 }
 
+/*投稿の制限をするときに使おうと考えている
+.post-fade:before{
+    content:"...";
+    color: rgba(0,0,0,0);
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right:0;
+    background: #fff;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -webkit-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -moz-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -o-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -ms-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    width: 100%;
+    height: 22px;
+}
+
+.comment-fade:before{
+    content:"...";
+    color: rgba(0,0,0,0);
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right:0;
+    background: #fff;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -webkit-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -moz-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -o-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    background: -ms-linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    width: 100%;
+    height: 22px;
+}
+
 /*=========*/
 
 .mxw_75per {
@@ -636,6 +824,10 @@ textarea{
 }
 
 /*Fontの指定*/
+.font_10px{
+    font-size: 10px;
+}
+
 .font_11px {
     font-size: 11px;
 }
@@ -774,6 +966,10 @@ textarea{
 .font_lightGray-veryDark:active,
 .font_lightGray-veryDark:focus {
     color: #231814;
+}
+
+.font_seagreen{
+    color : #00ca54;
 }
 
 .link-dark-gray {
@@ -961,53 +1157,7 @@ textarea{
 
 /*==/ モジュール ===*/
 
-/*=== headerの設定 ===*/
 
-.header_icon-text {
-    margin: 0;
-}
-
-.navbar {
-    background: #fff;
-    margin: 0;
-    max-height: 50px;
-    position: fixed;
-    top: 0;
-    z-index: 7777;
-}
-
-.nav-team-select,
-.nav-search {
-    height: 28px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-right: 0;
-}
-
-.nav-form-group input {
-    padding-left: 27px;
-}
-
-.nav-form-group {
-    position: relative;
-    padding: 10px 0;
-}
-
-/*noinspection ALL*/
-.nav-form-group i {
-    position: absolute;
-    font-size: 15px !important;
-    padding: 7px 7px;
-    pointer-events: none;
-}
-
-.nav-icons .header-home {
-    font-size: 12px;
-    line-height: 30px;
-    color: #808080;
-}
-
-/*==/ headerの設定 ===*/
 
 /*早めに整理する*/
 .btn-followCollabo {
@@ -1074,6 +1224,10 @@ textarea{
 
 .w_85per {
     width: 85%;
+}
+
+.w_88per {
+    width: 88%;
 }
 
 .w_90per {
@@ -1203,41 +1357,6 @@ textarea{
     vertical-align: middle;
 }
 
-.hamburger {
-    float: left !important;
-    margin-left: 0;
-}
-
-.toggle-icon{
-    font-size: 20px;
-    transition: 0.3s ease-in-out;
-    -webkit-transition: 0.3s ease-in-out;
-}
-
-.rotate{
-    transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-}
-
-.rotate-reverse{
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-}
-
-.header-toggle-icon{
-    border: none;
-    height: 50px;
-    margin-top:0;
-    margin-bottom: 0;
-    padding-left: 18px;
-    padding-right: 18px;
-}
-.navbar-default .header-toggle-icon:hover,
-.navbar-default .header-toggle-icon:focus,
-.navbar-default .header-toggle-icon:target {
-    background-color: #fff;
-}
-
 /* インラインで非表示にする */
 @media screen and (max-width: 768px) {
     .visible-xs-inline {
@@ -1253,10 +1372,6 @@ textarea{
 
 .left-inner-addon {
     position: relative;
-}
-
-.header-link-home {
-    line-height: 9px;
 }
 
 .left-inner-addon input {
@@ -1308,8 +1423,14 @@ textarea{
 }
 
 .navbar-nav > li > a {
-    padding-top: 9px;
+    padding-top: 0;
     padding-bottom: 9px;
+}
+
+.navbar-default .navbar-nav>li>a{
+    padding: 2px 0;
+    margin: auto;
+    width: 180px;
 }
 
 .navbar i {
@@ -1352,7 +1473,7 @@ ul.example-indent {
 }
 
 .feed-share-range {
-    background: #e5e5e5;
+    background: inherit;
     border: none;
     box-shadow: none;
 }
@@ -1947,8 +2068,7 @@ textarea.comment-post-form {
 }
 
 .header-logo-img {
-    margin-left: 8px;
-    margin-right: 8px;
+    margin:1px;
 }
 
 .header-circle {
@@ -1986,6 +2106,11 @@ textarea.comment-post-form {
     text-align: center;
 }
 
+.nav-xxs-icon{
+    width:22px;
+    height:22px;
+}
+
 .header-profile-icon {
     width: 16px;
     line-height: 36px;
@@ -2009,6 +2134,11 @@ textarea.comment-post-form {
     padding-bottom: 10px;
 }
 
+.va_bl{
+    vertical-align: baseline;
+    line-height: 1px;
+}
+
 .disp_ib {
     display: inline-block;
 }
@@ -2019,6 +2149,9 @@ textarea.comment-post-form {
     display: -moz-box;
     display: -ms-box;
     display: -o-box;
+}
+.disp_blk{
+    display: block;
 }
 
 .fileinput-new {
@@ -2714,6 +2847,15 @@ textarea.comment-post-form {
         padding-left: 12px;
     }
 
+    .mtb-sm_0{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .ta-sm_c{
+        text-align: center;
+    }
+
     .label-addiction {
         padding-left: 18px;
     }
@@ -2725,22 +2867,30 @@ textarea.comment-post-form {
     .header-search-group {
         margin-left: 20px;
     }
-
+/*
     .nav > li > a {
         padding: 9px 0 0;
     }
 
     .navbar-nav > li > .header-logo {
-        padding-left: 10px;
     }
 
     .navbar-nav > li > .header-goal,
     .navbar-nav > li > .header-team {
+    }
+*/
+
+    /*Pluginの修正なので、階層構造を使わない形に書き換え予定*/
+    .navbar-default .navbar-nav>li>a{
+        width: 56px;
         padding-left: 10px;
+        padding: 9px 0 0;
     }
 
+
     .header-logo-img {
-        margin-left: 5px;
+        margin: 0;
+        margin-left: 0;
         margin-right: 0;
     }
 
@@ -2858,7 +3008,6 @@ textarea.comment-post-form {
     }
 
     .header-logo-img {
-        margin-left: 5px;
     }
 
     .header-icon {
@@ -3043,12 +3192,54 @@ Temporary Properties - YOU MUST FIX
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-.develop--goals-column {
+/*===== dashboardProfileCard =====*/
+
+.dashboardProfileCard {
+    background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     max-width: 100%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 16px;
 }
+
+.dashboardProfileCard-bg {
+    background-image: url(../img/dashboard-profile-card-bg.jpg);
+    background-size: 100%;
+    background-position: 0 50%;
+    height: 50px;
+}
+
+.dashboardProfileCard-avatarImage {
+    border: 2px solid #fff;
+    border-radius: 50%;
+    margin: -25px 0 0 2px;
+    position: relative;
+    width: 52px;
+}
+
+.dashboardProfileCard-userField {
+    width: 64%;
+    float: right;
+    margin: 4px 0 0 0;
+}
+
+.dashboardProfileCard-stats {
+    clear: right;
+}
+
+.dashboardProfileCard-score {
+    line-height: 30px;
+}
+
+.dashboardProfileCard-activityList {
+}
+
+.dashboardProfileCard-activity {
+    padding: 1px;
+}
+
+/*=====/ dashboardProfileCard ======*/
 
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -3168,7 +3359,6 @@ Temporary Properties - YOU MUST FIX
 
 .post-edit-form {
 }
-
 .comment-edit-form {
 }
 
@@ -3179,4 +3369,19 @@ Temporary Properties - YOU MUST FIX
     border-right: 1px solid #999;
     border-bottom: 1px solid #999;
     border-left: 1px solid #999;
+}
+
+
+.ls_title{
+    letter-spacing: -0.12rem;
+}
+
+.ls_number {
+    letter-spacing: -0.04rem;
+}
+
+@media (min-width: 520px){
+    .ls_title{
+        letter-spacing: -0.08rem;
+    }
 }

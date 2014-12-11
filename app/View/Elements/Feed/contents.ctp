@@ -15,7 +15,7 @@
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
 <?= $this->element("Feed/common_form") ?>
-<div class="panel panel-default feed-share-range">
+<div class="feed-share-range">
     <div class="panel-body ptb_10px plr_11px">
         <div class="col col-xxs-12 font_12px">
             <? if ($feed_filter == "all"): ?>

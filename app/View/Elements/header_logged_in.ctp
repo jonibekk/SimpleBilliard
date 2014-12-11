@@ -14,46 +14,54 @@
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
-<header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
+<header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="navbar-toggle-box">
         <button type="button" class="navbar-toggle hamburger header-toggle-icon" data-toggle="offcanvas"
                 data-target=".navbar-offcanvas">
             <i class="fa fa-navicon toggle-icon"></i>
-<!--
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
--->
+            <!--
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+            -->
         </button>
     </div>
     <div class="nav-container header-container">
         <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
             <ul class="nav navbar-nav">
-                <li>
+                <li class="mtb_5px mtb-sm_0">
                     <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                        href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
-                        <img src="<?= $this->Html->url('/img/logo_off.png') ?>"
-                             class="header-logo-img"
-                             alt="Goalous2.0" width="20px" height="20px">
+                        <div class="ta-sm_c">
+                            <img src="<?= $this->Html->url('/img/logo_off.png') ?>" class="header-logo-img"
+                                 alt="Goalous2.0" width="20px" height="20px">
 
-                        <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link-home header-link">
-                            <?= __d('gl', "ホーム") ?>
-                        </p>
-                        <span class="visible-xs-inline"><?= __d('gl', "ホーム") ?></span>
+                            <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link"><?= __d('gl',
+                                                                                                               "ホーム") ?></p>
+                            <span class="visible-xs-inline va_bl ml_5px"><?= __d('gl', "ホーム") ?></span>
+                        </div>
                     </a>
                 </li>
-                <li><a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
+                <li class="mtb_5px mtb-sm_0">
+                    <a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
-                        <i class="fa fa-flag header-link header-icon">
-                            <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "ゴール") ?></p>
-                        </i>
-                        <span class="visible-xs-inline"><?= __d('gl', "ゴール") ?></span>
-                    </a></li>
-                <li><a href="#" class="header-team header_l-icons develop--forbiddenLink">
-                        <i class="fa fa-users header-link header-icon">
-                            <p class="font_11px header_icon-text hidden-xs"><?= __d('gl', "チーム") ?></p>
-                        </i>&nbsp;
-                        <span class="visible-xs-inline"><?= __d('gl', "チーム") ?></span>
+                        <div class="ta-sm_c">
+                            <i class="fa fa-flag header-link header-icon nav-xxs-icon"></i>
+
+                            <p class="font_11px header_icon-text hidden-xs header-link"><?= __d('gl', "ゴール") ?></p>
+                            <span class="visible-xs-inline ml_5px"><?= __d('gl', "ゴール") ?></span>
+
+                        </div>
+                    </a>
+                </li>
+                <li class="mtb_5px mtb-sm_0">
+                    <a href="#" class="header-team header_l-icons develop--forbiddenLink">
+                        <div class="ta-sm_c">
+                            <i class="fa fa-users header-link header-icon nav-xxs-icon"></i>
+
+                            <p class="font_11px header_icon-text hidden-xs header-link"><?= __d('gl', "チーム") ?></p>
+                            <span class="visible-xs-inline ml_5px"><?= __d('gl', "チーム") ?></span>
+                        </div>
                     </a>
                 </li>
                 <li>
@@ -99,7 +107,7 @@
                                                    ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
                         <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
                         <span
-                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.first_name') ?></span>
+                            class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.display_first_name') ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li class="text-align_c"><?= __d('gl', "準備中") ?></li>

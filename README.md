@@ -123,7 +123,7 @@ Goalousプロジェクトで利用しているクラウドツールについて�
 - SurveryMonkey (アンケート)
 
 ## Communication
-- [HipChat (チャットツール)](https://isao.hipchat.com/chat)
+- [Slack (チャット・通知集約ツール)](https://isao.slack.com/messages/goalous/)
 
 ## Other
 - [Zapier (API連携)](https://zapier.com/app/dashboard)

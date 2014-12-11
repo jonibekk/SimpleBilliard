@@ -249,6 +249,12 @@ class User extends AppModel
         $this->_setVirtualFields();
     }
 
+    public function resetLocalNames()
+    {
+        $this->local_names = [];
+        $this->uids = [];
+    }
+
     public function beforeSave($options = [])
     {
         //英名、英性の頭文字を大文字に変更
@@ -362,20 +368,26 @@ class User extends AppModel
             return $row;
         }
         $display_username = null;
-        $local_username = null;
+        $local_name = null;
+        //姓名別の表示名のセット
+        $row[$this->alias]['display_first_name'] = $row[$this->alias]['first_name'];
+        $row[$this->alias]['display_last_name'] = $row[$this->alias]['last_name'];
         //ローカルユーザ名の設定
-        $local_username = $this->_getLocalUsername($row);
-        if (!$local_username) {
+        $local_names = $this->_getLocalUsername($row);
+        if (!$local_names) {
             //ローカル名が存在しない場合はローマ字で
             $display_username = $this->_getRomanUsername($row);
         }
         else {
             //それ以外は
-            $display_username = $local_username;
+            $local_name = $local_names['local_username'];
+            $row[$this->alias]['display_first_name'] = $local_names['first_name'];
+            $row[$this->alias]['display_last_name'] = $local_names['last_name'];
+            $display_username = $local_name;
         }
 
         $row[$this->alias]['display_username'] = $display_username;
-        $row[$this->alias]['local_username'] = $local_username;
+        $row[$this->alias]['local_username'] = $local_name;
 
         //姓名の並び順の場合フラグをセット
         if (isset($row[$this->alias]['language'])) {
@@ -394,6 +406,11 @@ class User extends AppModel
         return $display_username;
     }
 
+    /**
+     * @param $row
+     *
+     * @return null|array
+     */
     private function _getLocalUsername($row)
     {
         $local_username = null;
@@ -414,15 +431,20 @@ class User extends AppModel
         }
         //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
         $last_first = in_array($this->me['language'], $this->langCodeOfLastFirst);
+        $local_names = [
+            'first_name'     => $res['first_name'],
+            'last_name'      => $res['last_name'],
+            'local_username' => null,
+        ];
         if ($last_first) {
-            $local_username = $res['last_name'] . " "
+            $local_names['local_username'] = $res['last_name'] . " "
                 . $res['first_name'];
         }
         else {
-            $local_username = $res['first_name'] . " "
+            $local_names['local_username'] = $res['first_name'] . " "
                 . $res['last_name'];
         }
-        return $local_username;
+        return $local_names;
     }
 
     /**

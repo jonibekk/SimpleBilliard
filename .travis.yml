@@ -21,12 +21,15 @@ before_script:
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "short_open_tag = On" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  - sudo apt-get install php5-xdebug
   - mkdir build
   - chmod -R 777 ./build
   - cp app/Test/travis/travis-ci-apache build/travis-ci-apache
   - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+  - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
+  - sudo apt-get install php-pear php5-dev
+  - pecl install oauth
+  - echo "extension=oauth.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
