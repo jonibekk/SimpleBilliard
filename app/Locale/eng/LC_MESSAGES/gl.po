@@ -581,7 +581,7 @@ msgstr ""
 
 #: Model/Team.php:38
 msgid "フリー"
-msgstr ""
+msgstr "Free"
 
 #: Model/Team.php:39
 msgid "プロ"
