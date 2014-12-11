@@ -233,6 +233,12 @@ class PostTest extends CakeTestCase
         $this->assertEquals($excepted, $res);
     }
 
+    function testGetCount()
+    {
+        $this->Post->getCount('me', 1, 1);
+        $this->Post->getCount(null, 1, 1);
+    }
+
     function testGetShareMode()
     {
         $data = [
