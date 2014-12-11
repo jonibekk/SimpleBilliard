@@ -674,16 +674,36 @@ function enabledAllInput(selector) {
 }
 
 
-$(".ln_trigger-f5").each(function() {
+$(".ln_trigger-f5").each(function () {
     var $minHeight = 24;
-    if ( $(this).height() > $minHeight) {
+    if ($(this).height() > $minHeight) {
         $(this).addClass('ln_2');
     }
 });
-$(".ln_trigger-ff").each(function() {
+$(".ln_trigger-ff").each(function () {
     var $minHeight = 24;
-    if ( $(this).height() > $minHeight) {
+    if ($(this).height() > $minHeight) {
         $(this).addClass('ln_2-f');
     }
 
 });
+//noinspection JSUnusedGlobalSymbols
+function ajaxAppendCount(id, url) {
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    $('#' + id).append($loader_html);
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        dataType: 'json',
+        success: function (data) {
+            //ローダーを削除
+            $loader_html.remove();
+            //カウント数を表示
+            $('#' + id).text(data.count);
+        },
+        error: function () {
+        }
+    });
+    return false;
+}
