@@ -1299,59 +1299,59 @@ msgstr "Unit: %s"
 
 #: View/Elements/Goal/modal_goal_detail.ctp:81
 msgid "達成時: %s"
-msgstr ""
+msgstr "Final: %s"
 
 #: View/Elements/Goal/modal_goal_detail.ctp:82
 msgid "開始時: %s"
-msgstr ""
+msgstr "Initial: %s"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:19
 msgid "ゴールが達成しましたか？"
-msgstr ""
+msgstr "Did you achieve the goal?"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:25
 msgid "現在値"
-msgstr ""
+msgstr "Current"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:35
 msgid "ゴール達成"
-msgstr ""
+msgstr "Achieve the goal"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:46 View/Goals/add.ctp:28
 msgid "ゴールを編集"
-msgstr ""
+msgstr "Edit goal"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:53
 msgid "ゴールを削除"
-msgstr ""
+msgstr "Delete goal"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:55
 msgid "本当にこのゴールを削除しますか？"
-msgstr ""
+msgstr "Do you really want to delete this goal?"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:93
 msgid "基準を追加する"
-msgstr ""
+msgstr "Add Reference Values"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:124
 msgid "%d日経過"
-msgstr ""
+msgstr "%d days pass"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:126
 msgid "残り%d日"
-msgstr ""
+msgstr "%d days left"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:142
 msgid "出したい成果をみる"
-msgstr ""
+msgstr "View Key Results"
 
 #: View/Elements/User/account_setting.ctp:20 View/Users/settings.ctp:13
 msgid "アカウント"
-msgstr ""
+msgstr "Account"
 
 #: View/Elements/User/account_setting.ctp:37 View/Users/register.ctp:57;68
 msgid "メール"
-msgstr ""
+msgstr "Mail"
 
 #: View/Elements/User/account_setting.ctp:44
 msgid "認証待ちのメールアドレスが存在するため、変更はできません。"
@@ -1359,7 +1359,7 @@ msgstr ""
 
 #: View/Elements/User/account_setting.ctp:45;62
 msgid "メールアドレスを変更する"
-msgstr ""
+msgstr "Change mail address"
 
 #: View/Elements/User/account_setting.ctp:50
 msgid "現在、%sの認証待ちです。"
@@ -1387,19 +1387,19 @@ msgstr "Timezone"
 
 #: View/Elements/User/account_setting.ctp:94
 msgid "デフォルトチーム"
-msgstr ""
+msgstr "Default Team"
 
 #: View/Elements/User/account_setting.ctp:102 View/Users/login.ctp:37
 msgid "パスワード"
-msgstr ""
+msgstr "Password"
 
 #: View/Elements/User/account_setting.ctp:107
 msgid "パスワードを変更する"
-msgstr ""
+msgstr "Change password"
 
 #: View/Elements/User/modal_change_email.ctp:18
 msgid "メールアドレスの変更"
-msgstr ""
+msgstr "Change mail address"
 
 #: View/Elements/User/modal_change_email.ctp:36
 msgid ""
@@ -1414,53 +1414,53 @@ msgstr ""
 #: View/Elements/User/modal_change_email.ctp:41 View/Users/login.ctp:33
 #: View/Users/password_reset_request.ctp:36 View/Users/token_resend.ctp:36
 msgid "メールアドレス"
-msgstr ""
+msgstr "Mail Address"
 
 #: View/Elements/User/modal_change_email.ctp:42 View/Users/register.ctp:69
 msgid "hiroshi@example.com"
-msgstr ""
+msgstr "tom@example.com"
 
 #: View/Elements/User/modal_change_email.ctp:47
 msgid "パスワード入力"
-msgstr ""
+msgstr "Input your password"
 
 #: View/Elements/User/modal_change_password.ctp:18
 msgid "パスワードの変更"
-msgstr ""
+msgstr "Change password"
 
 #: View/Elements/User/modal_change_password.ctp:38
 msgid "現在のパスワード"
-msgstr ""
+msgstr "Current password"
 
 #: View/Elements/User/modal_change_password.ctp:44
 msgid "新しいパスワード"
-msgstr ""
+msgstr "New password"
 
 #: View/Elements/User/modal_change_password.ctp:45
 #: View/Users/password_reset.ctp:34 View/Users/register.ctp:86
 msgid "8文字以上"
-msgstr ""
+msgstr "Use at least 8 characters"
 
 #: View/Elements/User/modal_change_password.ctp:51
 #: View/Users/password_reset.ctp:40 View/Users/register.ctp:92
 msgid "パスワードを再入力"
-msgstr ""
+msgstr "Confirm your password"
 
 #: View/Elements/User/modal_delete_email.ctp:20
 msgid "確認"
-msgstr ""
+msgstr "Confirm"
 
 #: View/Elements/User/modal_delete_email.ctp:23
 msgid "%sへのメールアドレス変更をキャンセルしますか？"
-msgstr ""
+msgstr "Do you really want to cancel the changing of your mail address?%s"
 
 #: View/Elements/User/modal_delete_email.ctp:28
 msgid "はい"
-msgstr ""
+msgstr "Yes"
 
 #: View/Elements/User/notify_setting.ctp:18 View/Users/settings.ctp:16
 msgid "通知"
-msgstr ""
+msgstr "Notification"
 
 #: View/Elements/User/notify_setting.ctp:40
 msgid "自分の投稿への反応"
@@ -1476,123 +1476,123 @@ msgstr ""
 
 #: View/Elements/User/profile_setting.ctp:18 View/Users/settings.ctp:14
 msgid "プロフィール"
-msgstr ""
+msgstr "Profile"
 
 #: View/Elements/User/profile_setting.ctp:40 View/Users/add_profile.ctp:35
 msgid "姓(%s)"
-msgstr ""
+msgstr "Last Name(%s)"
 
 #: View/Elements/User/profile_setting.ctp:41 View/Users/add_profile.ctp:36
 msgid "例) 鈴木"
-msgstr ""
+msgstr "eg. Jobs"
 
 #: View/Elements/User/profile_setting.ctp:45 View/Users/add_profile.ctp:40
 msgid "名(%s)"
-msgstr ""
+msgstr "FIrst Name(%s)"
 
 #: View/Elements/User/profile_setting.ctp:46 View/Users/add_profile.ctp:41
 msgid "例) 太郎"
-msgstr ""
+msgstr "eg. Bruce"
 
 #: View/Elements/User/profile_setting.ctp:69 View/Users/add_profile.ctp:59
 #: View/Users/register.ctp:32
 msgid "姓(ローマ字)"
-msgstr ""
+msgstr "Last Name"
 
 #: View/Elements/User/profile_setting.ctp:70 View/Users/add_profile.ctp:60
 #: View/Users/register.ctp:33
 msgid "例) Suzuki"
-msgstr ""
+msgstr "eg. Jobs"
 
 #: View/Elements/User/profile_setting.ctp:76 View/Users/add_profile.ctp:66
 #: View/Users/register.ctp:39
 msgid "名(ローマ字)"
-msgstr ""
+msgstr "First Name"
 
 #: View/Elements/User/profile_setting.ctp:77 View/Users/add_profile.ctp:67
 #: View/Users/register.ctp:40
 msgid "例) Hiroshi"
-msgstr ""
+msgstr "eg. Hiroshi"
 
 #: View/Elements/User/profile_setting.ctp:97 View/Users/add_profile.ctp:87
 msgid "性別"
-msgstr ""
+msgstr "Gender"
 
 #: View/Elements/User/profile_setting.ctp:109 View/Users/add_profile.ctp:99
 msgid "1月"
-msgstr ""
+msgstr "Jan"
 
 #: View/Elements/User/profile_setting.ctp:110 View/Users/add_profile.ctp:100
 msgid "2月"
-msgstr ""
+msgstr "Feb"
 
 #: View/Elements/User/profile_setting.ctp:111 View/Users/add_profile.ctp:101
 msgid "3月"
-msgstr ""
+msgstr "Mar"
 
 #: View/Elements/User/profile_setting.ctp:112 View/Users/add_profile.ctp:102
 msgid "4月"
-msgstr ""
+msgstr "Apr"
 
 #: View/Elements/User/profile_setting.ctp:113 View/Users/add_profile.ctp:103
 msgid "5月"
-msgstr ""
+msgstr "May"
 
 #: View/Elements/User/profile_setting.ctp:114 View/Users/add_profile.ctp:104
 msgid "6月"
-msgstr ""
+msgstr "Jun"
 
 #: View/Elements/User/profile_setting.ctp:115 View/Users/add_profile.ctp:105
 msgid "7月"
-msgstr ""
+msgstr "Jul"
 
 #: View/Elements/User/profile_setting.ctp:116 View/Users/add_profile.ctp:106
 msgid "8月"
-msgstr ""
+msgstr "Aug"
 
 #: View/Elements/User/profile_setting.ctp:117 View/Users/add_profile.ctp:107
 msgid "9月"
-msgstr ""
+msgstr "Sep"
 
 #: View/Elements/User/profile_setting.ctp:118 View/Users/add_profile.ctp:108
 msgid "10月"
-msgstr ""
+msgstr "Oct"
 
 #: View/Elements/User/profile_setting.ctp:119 View/Users/add_profile.ctp:109
 msgid "11月"
-msgstr ""
+msgstr "Nov"
 
 #: View/Elements/User/profile_setting.ctp:120 View/Users/add_profile.ctp:110
 msgid "12月"
-msgstr ""
+msgstr "Dec"
 
 #: View/Elements/User/profile_setting.ctp:123 View/Users/add_profile.ctp:113
 msgid "誕生日"
-msgstr ""
+msgstr "Birthday"
 
 #: View/Elements/User/profile_setting.ctp:136 View/Users/add_profile.ctp:126
 msgid "生年を隠す。"
-msgstr ""
+msgstr "Hide birthday year"
 
 #: View/Elements/User/profile_setting.ctp:143 View/Users/add_profile.ctp:133
 msgid "出身地"
-msgstr ""
+msgstr "Birthplace"
 
 #: View/Elements/User/profile_setting.ctp:144 View/Users/add_profile.ctp:134
 msgid "例) 東京都"
-msgstr ""
+msgstr "eg. Tokyo"
 
 #: View/Elements/User/profile_setting.ctp:149 View/Users/add_profile.ctp:139
 msgid "プロフィール画像"
-msgstr ""
+msgstr "Profile Image"
 
 #: View/Elements/User/profile_setting.ctp:195
 msgid "自己紹介"
-msgstr ""
+msgstr "About me"
 
 #: View/Elements/User/profile_setting.ctp:196
 msgid "チーム内限定で共有されます。"
-msgstr ""
+msgstr "It will be shared with the team in the limited."
 
 #: View/Elements/User/profile_setting.ctp:210
 msgid ""
@@ -1603,9 +1603,15 @@ msgid ""
 "【その他】\n"
 "\n"
 msgstr ""
+"[Now, What is that you can contribute to the team?]\n"
+"\n"
+"[What is the thing you want to achieve in the team?(Specifically)]\n"
+"\n"
+"[Others]\n"
+"\n"
 
 #: View/Elements/User/profile_setting.ctp:213
-msgid "例文を表示"
+msgid "View Example"
 msgstr ""
 
 #: View/Elements/User/profile_setting.ctp:216
