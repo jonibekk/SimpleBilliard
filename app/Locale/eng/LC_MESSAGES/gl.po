@@ -388,11 +388,11 @@ msgstr ""
 
 #: Model/Circle.php:27
 msgid "公開"
-msgstr ""
+msgstr "Public"
 
 #: Model/Circle.php:28
 msgid "秘密"
-msgstr ""
+msgstr "Secret"
 
 #: Model/Collaborator.php:29 View/Elements/my_goals_area.ctp:62
 #: View/Elements/Goal/modal_goal_detail.ctp:99
@@ -644,24 +644,24 @@ msgstr ""
 #: View/Elements/circle_list.ctp:56
 #: View/Elements/circle_list_in_hamburger.ctp:53
 msgid "公開サークルを見る"
-msgstr ""
+msgstr "View Public Circles"
 
 #: View/Elements/circle_list.ctp:63
 #: View/Elements/circle_list_in_hamburger.ctp:60
 msgid "サークルを作成する"
-msgstr ""
+msgstr "Create a circles"
 
 #: View/Elements/dashboard_profile_card.ctp:27
 msgid "今期のポイント"
-msgstr ""
+msgstr "This term point"
 
 #: View/Elements/dashboard_profile_card.ctp:34
 msgid "先週比"
-msgstr ""
+msgstr "Last week ratio"
 
 #: View/Elements/dashboard_profile_card.ctp:42
 msgid "今期のアクティビティ"
-msgstr ""
+msgstr "This term Activity"
 
 #: View/Elements/dashboard_profile_card.ctp:45
 #: View/Elements/Feed/common_form.ctp:22
@@ -671,57 +671,57 @@ msgstr "Action"
 #: View/Elements/dashboard_profile_card.ctp:49
 #, fuzzy
 msgid "成果"
-msgstr "Name"
+msgstr "Results"
 
 #: View/Elements/dashboard_profile_card.ctp:53
 #: View/Elements/Feed/common_form.ctp:19
 msgid "投稿"
-msgstr "Post"
+msgstr "Posts"
 
 #: View/Elements/dashboard_profile_card.ctp:59
 #: View/Elements/gl_common_js.ctp:510;517;526;533
 msgid "もっと見る"
-msgstr ""
+msgstr "More"
 
 #: View/Elements/footer.ctp:33 View/Layouts/homepage.ctp:226
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Privacy Policy"
 
 #: View/Elements/footer.ctp:41 View/Layouts/homepage.ctp:235
 msgid "Terms of Service"
-msgstr ""
+msgstr "Terms of Service"
 
 #: View/Elements/footer.ctp:49
 msgid "Isao Corporation"
-msgstr ""
+msgstr "ISAO Corporation"
 
 #: View/Elements/footer.ctp:51
 msgid "Made By %s"
-msgstr ""
+msgstr "Made By %s"
 
 #: View/Elements/gl_common_js.ctp:43
 msgid "入力が途中です。このまま移動しますか？"
-msgstr ""
+msgstr "You haven't finished your input data yet. Do you want to leave without finishing?"
 
 #: View/Elements/gl_common_js.ctp:56
 msgid "クリップボードに投稿URLをコピーしました。"
-msgstr ""
+msgstr "Copied the post URL to the clipboard."
 
 #: View/Elements/gl_common_js.ctp:98;191
 msgid "スペルを入力してください。"
-msgstr ""
+msgstr "Please enter spells."
 
 #: View/Elements/gl_common_js.ctp:172
 msgid "参加"
-msgstr ""
+msgstr "Join"
 
 #: View/Elements/gl_common_js.ctp:173
 msgid "不参加"
-msgstr ""
+msgstr "..."
 
 #: View/Elements/gl_common_js.ctp:234
 msgid "該当なし"
-msgstr ""
+msgstr "N/A"
 
 #: View/Elements/gl_common_js.ctp:238
 msgid "あと"
