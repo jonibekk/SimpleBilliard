@@ -694,7 +694,7 @@ function ajaxAppendCount(id, url) {
     $.ajax({
         type: 'GET',
         url: url,
-        async: false,
+        async: true,
         dataType: 'json',
         success: function (data) {
             //ローダーを削除
