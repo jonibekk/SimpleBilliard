@@ -99,6 +99,7 @@ $(document).ready(function () {
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
     $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("click", ".tiny-form-text-close", evShowAndThisWideClose);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
     //noinspection SpellCheckingInspection
@@ -123,6 +124,7 @@ $(document).ready(function () {
     $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
+    $(document).on("click", ".target-toggle", evTargetToggle);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("touchend", "#layer-black", function () {
@@ -292,6 +294,13 @@ function evToggleAjaxGet() {
     $('#' + target_id).toggle();
     return false;
 }
+function evTargetToggle() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    $("#" + target_id).toggle();
+    return false;
+}
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
@@ -390,7 +399,6 @@ function evBlankDisable() {
 function evTriggerClick() {
     attrUndefinedCheck(this, 'target-id');
     var target_id = $(this).attr("target-id");
-    console.log(target_id);
     //noinspection JSJQueryEfficiency
     $("#" + target_id).trigger('click');
     //noinspection JSJQueryEfficiency
@@ -426,6 +434,10 @@ function evShowAndThisWide() {
     //autosizeを一旦、切る。
     $(this).trigger('autosize.destroy');
     var current_height = $(this).height();
+    if ($(this).attr('init-height') == undefined) {
+        $(this).attr('init-height', current_height);
+    }
+    //$(this).attr('init-height', current_height);
     //現在のheightを倍にする。
     $(this).height(current_height * 2);
     //再度autosizeを有効化
@@ -434,6 +446,18 @@ function evShowAndThisWide() {
     $("#" + $(this).attr('target_show_id')).show();
     //クリック済みにする
     $(this).addClass('clicked');
+}
+
+function evShowAndThisWideClose() {
+    attrUndefinedCheck(this, 'target-id');
+    var target_id = $(this).attr("target-id");
+    var $target = $("#" + target_id);
+    $target.removeClass('clicked');
+    if ($target.attr('init-height') != undefined) {
+        $target.height($target.attr('init-height'));
+    }
+    $("#" + $target.attr('target_show_id')).hide();
+    return false;
 }
 
 function evThisHeightUp() {

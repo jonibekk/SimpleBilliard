@@ -128,37 +128,46 @@
                 ]); ?>
                 <?=
                 $this->Form->input('Action.name', [
-                        'label'       => false,
-                        'rows'        => 1,
-                        'placeholder' => __d('gl', "アクションをいれる")
+                        'label'          => false,
+                        'rows'           => 1,
+                        'placeholder'    => __d('gl', "アクションをいれる"),
+                        'class'          => 'form-control tiny-form-text blank-disable',
+                        'id'             => "ActionFormName_" . $goal['Goal']['id'],
+                        'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
+                        'target-id'      => "ActionFormSubmit_" . $goal['Goal']['id'],
                     ]
                 )
                 ?>
-                <div class="form-group"><label for="ActionPhotos"><?= __d('gl', "画像追加(オプション)") ?></label>
+                <div id="ActionFormDetail_<?= $goal['Goal']['id'] ?>" style="display: none">
+                    <div class="form-group"><label for="ActionPhotos"><?= __d('gl', "画像追加(オプション)") ?></label>
 
-                    <div>
-                        <ul class="col input-images post-images">
-                            <? for ($i = 1; $i <= 5; $i++): ?>
-                                <li>
-                                <?= $this->element('Feed/photo_upload',
-                                                   ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
-                                </li><? endfor ?>
-                        </ul>
+                        <div>
+                            <ul class="col input-images post-images">
+                                <? for ($i = 1; $i <= 5; $i++): ?>
+                                    <li>
+                                    <?= $this->element('Feed/photo_upload',
+                                                       ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
+                                    </li><? endfor ?>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <?=
-                $this->Form->input('Action.key_result_id', [
-                        'label'   => __d('gl', "紐付ける出したい成果を選択(オプション)"),
-                        'options' => ['test', 'test'],
-                    ]
-                )
-                ?>
-                <div class="form-group pull-right">
-                    <a href="#" class="btn"><?= __d('gl', "キャンセル") ?></a>
-                    <?= $this->Form->submit(__d('gl', "アクション登録"), [
-                        'div'   => false,
-                        'class' => 'btn btn-primary'
-                    ]); ?>
+                    <?=
+                    $this->Form->input('Action.key_result_id', [
+                            'label'   => __d('gl', "紐付ける出したい成果を選択(オプション)"),
+                            'options' => ['test', 'test'],
+                        ]
+                    )
+                    ?>
+                    <div class="form-group pull-right">
+                        <a href="#" target-id="ActionFormName_<?= $goal['Goal']['id'] ?>"
+                           class="btn tiny-form-text-close"><?= __d('gl', "キャンセル") ?></a>
+                        <?= $this->Form->submit(__d('gl', "アクション登録"), [
+                            'div'      => false,
+                            'id'       => "ActionFormSubmit_" . $goal['Goal']['id'],
+                            'class'    => 'btn btn-primary',
+                            'disabled' => 'disabled',
+                        ]); ?>
+                    </div>
                 </div>
                 <?= $this->Form->end() ?>
             </div>
