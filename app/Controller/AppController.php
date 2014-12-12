@@ -233,7 +233,10 @@ class AppController extends Controller
         }
         //言語設定を退避
         $user_lang = $this->User->findById($uid);
-        $lang = $user_lang['User']['language'];
+        $lang = null;
+        if (!empty($user_lang)) {
+            $lang = $user_lang['User']['language'];
+        }
         $this->Auth->logout();
         $this->User->resetLocalNames();
         $this->User->me['language'] = $lang;
