@@ -372,11 +372,11 @@ msgstr ""
 
 #: Controller/UsersController.php:517
 msgid "チーム「%s」に参加しました。"
-msgstr ""
+msgstr "Joined %s."
 
 #: Model/Badge.php:24
 msgid "選択してください"
-msgstr ""
+msgstr "Please select"
 
 #: Model/Badge.php:25
 msgid "賞賛"
@@ -384,7 +384,7 @@ msgstr ""
 
 #: Model/Badge.php:26
 msgid "スキル"
-msgstr ""
+msgstr "Skill"
 
 #: Model/Circle.php:27
 msgid "公開"
@@ -397,11 +397,11 @@ msgstr "Secret"
 #: Model/Collaborator.php:29 View/Elements/my_goals_area.ctp:62
 #: View/Elements/Goal/modal_goal_detail.ctp:99
 msgid "コラボレータ"
-msgstr ""
+msgstr "Collaborator"
 
 #: Model/Collaborator.php:30
 msgid "オーナ"
-msgstr ""
+msgstr "Owner"
 
 #: Model/Goal.php:34
 msgid "進行中"
@@ -413,39 +413,39 @@ msgstr ""
 
 #: Model/Goal.php:36
 msgid "完了"
-msgstr ""
+msgstr "Completed"
 
 #: Model/Goal.php:44
 msgid "0 (認定対象外)"
-msgstr ""
+msgstr "0(Certified exempt)"
 
 #: Model/Goal.php:45 Model/KeyResult.php:48
 msgid "1 (とても低い)"
-msgstr ""
+msgstr "1(Very low)"
 
 #: Model/Goal.php:46 Model/KeyResult.php:49
 msgid "3 (デフォルト)"
-msgstr ""
+msgstr "3(Default)"
 
 #: Model/Goal.php:47 Model/KeyResult.php:50
 msgid "5 (とても高い)"
-msgstr ""
+msgstr "5(Very High)"
 
 #: Model/Goal.php:207
 msgid "出したい成果の名前を入れてください"
-msgstr ""
+msgstr "Input the name of a key result."
 
 #: Model/Goal.php:244
 msgid "このゴールは存在しません。"
-msgstr ""
+msgstr "This goal dose not exist."
 
 #: Model/Goal.php:247
 msgid "このゴールの編集の権限がありません。"
-msgstr ""
+msgstr "You do not have permission to edit this goal."
 
 #: Model/Goal.php:696;709
 msgid "ゴールが存在しません。"
-msgstr ""
+msgstr "The goal does not exist."
 
 #: Model/GoalCategory.php:70
 msgid "職務"
@@ -725,65 +725,65 @@ msgstr "N/A"
 
 #: View/Elements/gl_common_js.ctp:238
 msgid "あと"
-msgstr ""
+msgstr "After"
 
 #: View/Elements/gl_common_js.ctp:238
 msgid "文字入れてください"
-msgstr ""
+msgstr "put characters."
 
 #: View/Elements/gl_common_js.ctp:242
 msgid "検索文字列が"
-msgstr ""
+msgstr "Search string"
 
 #: View/Elements/gl_common_js.ctp:242
 msgid "文字長すぎます"
-msgstr ""
+msgstr "is too long."
 
 #: View/Elements/gl_common_js.ctp:245
 msgid "最多で"
-msgstr ""
+msgstr "In most,"
 
 #: View/Elements/gl_common_js.ctp:245
 msgid "項目までしか選択できません"
-msgstr ""
+msgstr "item can only be selected."
 
 #: View/Elements/gl_common_js.ctp:248
 msgid "読込中･･･"
-msgstr ""
+msgstr "Loading..."
 
 #: View/Elements/gl_common_js.ctp:251
 msgid "検索中･･･"
-msgstr ""
+msgstr "Searching..."
 
 #: View/Elements/gl_common_js.ctp:280 View/Elements/Goal/index_items.ctp:69
 #: View/Elements/Goal/modal_goal_detail.ctp:36
 msgid "フォロー中"
-msgstr ""
+msgstr "Following"
 
 #: View/Elements/gl_common_js.ctp:288 View/Elements/Goal/index_items.ctp:64
 #: View/Elements/Goal/modal_goal_detail.ctp:31
 msgid "フォロー"
-msgstr ""
+msgstr "Follow"
 
 #: View/Elements/gl_common_js.ctp:299;382;448
 msgid "エラーが発生しました。データ取得できません。"
-msgstr ""
+msgstr "An error has occurred. Data can not be retrieved."
 
 #: View/Elements/gl_common_js.ctp:350 View/Goals/index.ctp:68
 msgid "もっと見る ▼"
-msgstr ""
+msgstr "View more ▼"
 
 #: View/Elements/gl_common_js.ctp:377 View/Elements/Feed/contents.ctp:78
 msgid "さらに以前の投稿を読み込む ▼"
-msgstr ""
+msgstr "View previous posts ▼"
 
 #: View/Elements/gl_common_js.ctp:444
 msgid "これ以上のコメントがありません。"
-msgstr ""
+msgstr "No more comments."
 
 #: View/Elements/gl_common_js.ctp:478;494
 msgid "エラーが発生しました。"
-msgstr ""
+msgstr "An error has occurred."
 
 #: View/Elements/gl_common_js.ctp:511;518;527;534
 #: View/Elements/modal_help.ctp:34 View/Elements/modal_privacy_policy.ctp:19
@@ -798,7 +798,7 @@ msgstr ""
 #: View/Elements/Goal/modal_edit_key_result.ctp:244
 #: View/Elements/Goal/modal_goal_detail.ctp:122
 msgid "閉じる"
-msgstr ""
+msgstr "Close"
 
 #: View/Elements/header_logged_in.ctp:39;41;119
 msgid "ホーム"
@@ -815,11 +815,11 @@ msgstr "Team"
 
 #: View/Elements/header_logged_in.ctp:73
 msgid "チームがありません"
-msgstr ""
+msgstr "There is no team."
 
 #: View/Elements/header_logged_in.ctp:113
 msgid "準備中"
-msgstr ""
+msgstr "Comming soon..."
 
 #: View/Elements/header_logged_in.ctp:129
 msgid "ゴールを作成"
@@ -1355,7 +1355,7 @@ msgstr "Mail"
 
 #: View/Elements/User/account_setting.ctp:44
 msgid "認証待ちのメールアドレスが存在するため、変更はできません。"
-msgstr ""
+msgstr "Because the e-mail address of the authentication waiting is present, it can not be changed."
 
 #: View/Elements/User/account_setting.ctp:45;62
 msgid "メールアドレスを変更する"
@@ -1363,19 +1363,19 @@ msgstr "Change mail address"
 
 #: View/Elements/User/account_setting.ctp:50
 msgid "現在、%sの認証待ちです。"
-msgstr ""
+msgstr "%s Authentication waiting currently."
 
 #: View/Elements/User/account_setting.ctp:53
 msgid "このメールアドレスに送られた確認用のメールをご確認ください。"
-msgstr ""
+msgstr "Please check your mail for the confirmation sent to this mail address."
 
 #: View/Elements/User/account_setting.ctp:55
 msgid "メールアドレスの変更をキャンセルする"
-msgstr ""
+msgstr "Cancel the mail address change."
 
 #: View/Elements/User/account_setting.ctp:72 View/Users/register.ctp:78
 msgid "Goalousからのメールによるニュースや更新情報などを受け取る。"
-msgstr ""
+msgstr "I receive the news and updates by mail from Goalous."
 
 #: View/Elements/User/account_setting.ctp:78
 msgid "言語"
@@ -1404,12 +1404,12 @@ msgstr "Change mail address"
 #: View/Elements/User/modal_change_email.ctp:36
 msgid ""
 "メールアドレスを保存後に、そのメールアドレス宛に認証用のメールが届きます。"
-msgstr ""
+msgstr "After saving the mail address, mail for authentication you will receive addressed to the mail address."
 
 #: View/Elements/User/modal_change_email.ctp:38
 msgid ""
 "これは、あなたがそのメールアドレスの持ち主である事を確認する為のものです。"
-msgstr ""
+msgstr "This is for you to confirm that it is the owner of the mail address."
 
 #: View/Elements/User/modal_change_email.ctp:41 View/Users/login.ctp:33
 #: View/Users/password_reset_request.ctp:36 View/Users/token_resend.ctp:36
@@ -1755,11 +1755,11 @@ msgstr "Plan"
 msgid ""
 "フリープランは、５人までのチームで使えます。また、複数の機能制限がございま"
 "す。"
-msgstr ""
+msgstr "You use a team of up to five people at Free Plan. In addition, there is more than one function limitation."
 
 #: View/Teams/add.ctp:90
 msgid "このプランはチーム作成後にいつでも変更できます。"
-msgstr ""
+msgstr "You can be changed plan after at any time."
 
 #: View/Teams/add.ctp:99 View/Teams/invite.ctp:73
 #: View/Users/add_profile.ctp:192
@@ -1777,11 +1777,11 @@ msgstr "Mail Address"
 #: View/Teams/invite.ctp:47
 msgid ""
 "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。"
-msgstr ""
+msgstr "Mail addresses are comma(,) separated, or is more that can be specified with a newline-separated."
 
 #: View/Teams/invite.ctp:48;51
 msgid "例%s"
-msgstr ""
+msgstr "eg. %s"
 
 #: View/Teams/invite.ctp:59
 msgid "コメント(オプション)"
@@ -1789,19 +1789,19 @@ msgstr "Comment(Optional)"
 
 #: View/Teams/invite.ctp:62
 msgid "コメント(任意)はメールの本文に追加されます。"
-msgstr ""
+msgstr "Comments (optional) will be added to the body of the mail."
 
 #: View/Teams/invite.ctp:70
 msgid "招待メールを送信"
-msgstr ""
+msgstr "Send an invitation mail"
 
 #: View/Users/add_profile.ctp:13
 msgid "プロフィールを入力してください"
-msgstr ""
+msgstr "Enter your profile."
 
 #: View/Users/add_profile.ctp:187
 msgid "プロフィールを登録"
-msgstr ""
+msgstr "Register the profile"
 
 #: View/Users/login.ctp:16
 msgid "Goalousにログイン！"
@@ -1813,70 +1813,70 @@ msgstr "Login"
 
 #: View/Users/login.ctp:51
 msgid "パスワードを忘れた場合はこちら"
-msgstr ""
+msgstr "Forgot your password?"
 
 #: View/Users/login.ctp:56
 msgid "新規ユーザ登録はこちら"
-msgstr ""
+msgstr "Do you want to new user registration?"
 
 #: View/Users/password_reset.ctp:16 View/Users/password_reset_request.ctp:16
 msgid "パスワードの再設定"
-msgstr ""
+msgstr "Re-setting of a password"
 
 #: View/Users/password_reset.ctp:33 View/Users/register.ctp:85
 msgid "パスワードを作成"
-msgstr ""
+msgstr "Create a password"
 
 #: View/Users/password_reset.ctp:48
 msgid "パスワードを設定"
-msgstr ""
+msgstr "Set a password"
 
 #: View/Users/password_reset_request.ctp:31 View/Users/token_resend.ctp:31
 msgid "Goalousに登録しているメールアドレスを入力して送信してください。"
-msgstr ""
+msgstr "Please send it by entering the mail address you have registered with Goalous."
 
 #: View/Users/password_reset_request.ctp:33
 msgid "Goalousからパスワード再設定用のURLを送信いたします。"
-msgstr ""
+msgstr "We will send the URL for password reset from Goalous."
 
 #: View/Users/password_reset_request.ctp:45 View/Users/token_resend.ctp:45
 msgid "送信"
-msgstr ""
+msgstr "Send"
 
 #: View/Users/register.ctp:14
 msgid "新しいアカウントを作成"
-msgstr ""
+msgstr "Create a new account"
 
 #: View/Users/register.ctp:107
 msgid "Goalousの%sと%sに同意します。"
-msgstr ""
+msgstr "I agree to %s and %s of Goalous."
 
 #: View/Users/register.ctp:124
 msgid "新規登録"
-msgstr ""
+msgstr "New registration"
 
 #: View/Users/sent_mail.ctp:11
 msgid "おめでとうございます！"
-msgstr ""
+msgstr "Congratulations!"
 
 #: View/Users/sent_mail.ctp:13
 msgid "あなたはフリートライアルとしてGoalousに登録されました。"
-msgstr ""
+msgstr "You have been registered in Goalous as a free trial."
 
 #: View/Users/sent_mail.ctp:15
 msgid ""
 "%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURL"
 "をクリックして下さい。"
-msgstr ""
+msgstr "Sent a mail to %s. To authenticate the account, click on the URL listed in the mail ."
 
 #: View/Users/settings.ctp:18
 msgid "リンク"
-msgstr ""
+msgstr "Link"
 
 #: View/Users/token_resend.ctp:16
 msgid "メールアドレスの再認証"
-msgstr ""
+msgstr "Re-authentication of the mail address"
 
 #: View/Users/token_resend.ctp:33
 msgid "Goalousからメールアドレス認証用のURLを送信いたします。"
-msgstr ""
+msgstr "We will send the URL of the mail address authentication from Goalous."
