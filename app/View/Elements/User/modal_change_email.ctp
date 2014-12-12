@@ -10,7 +10,7 @@
 ?>
 <!-- START app/View/Elements/User/modal_change_email.ctp -->
 <div class="modal fade" tabindex="-1" id="modal_change_email">
-<div class="modal-dialog">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
@@ -25,7 +25,7 @@
                         'class' => 'col col-sm-3 control-label'
                     ],
                     'wrapInput' => 'col col-sm-6',
-                    'class' => 'form-control modal_input-design'
+                    'class'     => 'form-control modal_input-design'
                 ],
                 'url'           => ['controller' => 'users', 'action' => 'change_email'],
                 'class'         => 'form-horizontal',
@@ -40,13 +40,13 @@
                 $this->Form->input('email', [
                     'label'       => __d('gl', "メールアドレス"),
                     'placeholder' => __d('gl', "hiroshi@example.com"),
-                ])?>
+                ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('password_request2', [
                     'label' => __d('gl', "パスワード入力"),
                     'type'  => 'password',
-                ])?>
+                ]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
                 <?= $this->Form->submit(__d('gl', "変更を保存"),
@@ -75,10 +75,10 @@
                 "data[User][email]": {
                     validators: {
                         notEmpty: {
-                            message: '<?=__d('validate', "入力必須項目です。")?>'
+                            message: "<?=__d('validate', "入力必須項目です。")?>"
                         },
                         emailAddress: {
-                            message: '<?=__d('validate', "メールアドレスが正しくありません。")?>'
+                            message: "<?=__d('validate', "メールアドレスが正しくありません。")?>"
                         }
                     }
                 },
@@ -86,10 +86,10 @@
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: '<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>'
+                            message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
                         },
                         notEmpty: {
-                            message: '<?=__d('validate', "変更する場合はパスワード入力が必要です。")?>'
+                            message: "<?=__d('validate', "変更する場合はパスワード入力が必要です。")?>"
                         }
                     }
                 }

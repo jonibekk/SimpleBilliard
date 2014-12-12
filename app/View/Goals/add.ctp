@@ -446,7 +446,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             "data[Goal][start_date]": {
                 validators: {
                     callback: {
-                        message: '<?=__d('gl',"開始日が期限を過ぎています。")?>',
+                        message: "<?=__d('gl',"開始日が期限を過ぎています。")?>",
                         callback: function (value, validator) {
                             var m = new moment(value, 'YYYY/MM/DD', true);
                             return m.isBefore($('[name="data[Goal][end_date]"]').val());
@@ -457,7 +457,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             "data[Goal][end_date]": {
                 validators: {
                     callback: {
-                        message: '<?=__d('gl',"期限が開始日以前になっています。")?>',
+                        message: "<?=__d('gl',"期限が開始日以前になっています。")?>",
                         callback: function (value, validator) {
                             var m = new moment(value, 'YYYY/MM/DD', true);
                             return m.isAfter($('[name="data[Goal][start_date]"]').val());
