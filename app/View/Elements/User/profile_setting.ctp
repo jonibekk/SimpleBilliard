@@ -193,7 +193,8 @@ $this->Form->create('User', [
     <div class="form-group">
         <div class="col col-sm-3 control-label form-label">
             <label for="UserComment" class=""><?= __d('gl', "自己紹介") ?></label>
-            <div class="label-addiction"><?=__d('gl',"チーム内限定で共有されます。")?></div>
+
+            <div class="label-addiction"><?= __d('gl', "チーム内限定で共有されます。") ?></div>
         </div>
         <div class="col col-sm-6">
             <? if (isset($this->request->data['TeamMember'][0]['id'])): ?>
@@ -256,7 +257,7 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: '<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>'
+                            message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
                         }
                     }
                 },
@@ -264,7 +265,7 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
                     validators: {
                         identical: {
                             field: "data[User][password]",
-                            message: '<?=__d('validate', "パスワードが一致しません。")?>'
+                            message: "<?=__d('validate', "パスワードが一致しません。")?>"
                         }
                     }
                 }

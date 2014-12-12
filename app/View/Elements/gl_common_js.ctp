@@ -40,7 +40,7 @@ $(document).ready(function () {
     $("input,select,textarea").change(function () {
         if (!$(this).hasClass('disable-change-warning')) {
             $(window).on('beforeunload', function () {
-                return '<?=__d('gl',"入力が途中です。このまま移動しますか？")?>';
+                return "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>";
             });
         }
     });
@@ -71,7 +71,7 @@ $(document).ready(function () {
                 validators: {
                     stringLength: {
                         min: 8,
-                        message: '<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>'
+                        message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
                     }
                 }
             },
@@ -79,7 +79,7 @@ $(document).ready(function () {
                 validators: {
                     identical: {
                         field: "data[User][password]",
-                        message: '<?=__d('validate', "パスワードが一致しません。")?>'
+                        message: "<?=__d('validate', "パスワードが一致しません。")?>"
                     }
                 }
             }
@@ -95,7 +95,7 @@ $(document).ready(function () {
     $('#select2Member').select2({
         multiple: true,
         minimumInputLength: 2,
-        placeholder: '<?=__d('gl',"スペルを入力してください。")?>',
+        placeholder: "<?=__d('gl',"スペルを入力してください。")?>",
         ajax: {
             url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
             dataType: 'json',
@@ -121,7 +121,7 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
-        placeholder: '<?=__d('gl',"自分のみ")?>',
+        placeholder: "<?=__d('gl',"自分のみ")?>",
         data: <?=isset($select2_default)?$select2_default:"[]"?>,
         <?if(isset($current_circle)&&!empty($current_circle)):?>
         initSelection: function (element, callback) {
@@ -188,7 +188,7 @@ function bindSelect2Members($this) {
         'val': null,
         multiple: true,
         minimumInputLength: 2,
-        placeholder: '<?=__d('gl',"スペルを入力してください。")?>',
+        placeholder: "<?=__d('gl',"スペルを入力してください。")?>",
         ajax: {
             url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
             dataType: 'json',
@@ -571,7 +571,7 @@ function getModalFormFromUrl(e) {
                     "data[KeyResult][start_date]": {
                         validators: {
                             callback: {
-                                message: '<?=__d('validate',"開始日が期限を過ぎています。")?>',
+                                message: "<?=__d('validate',"開始日が期限を過ぎています。")?>",
                                 callback: function (value, validator) {
                                     var m = new moment(value, 'YYYY/MM/DD', true);
                                     return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
@@ -582,7 +582,7 @@ function getModalFormFromUrl(e) {
                     "data[KeyResult][end_date]": {
                         validators: {
                             callback: {
-                                message: '<?=__d('validate',"期限が開始日以前になっています。")?>',
+                                message: "<?=__d('validate',"期限が開始日以前になっています。")?>",
                                 callback: function (value, validator) {
                                     var m = new moment(value, 'YYYY/MM/DD', true);
                                     return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
