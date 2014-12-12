@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-11-20 09:40+0000\n"
+"POT-Creation-Date: 2014-12-11 09:46+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,31 +14,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/UsersController.php:78
+#: Controller/UsersController.php:82
 msgid "%sさん、こんにちは。"
 msgstr ""
 
-#: Controller/UsersController.php:79
+#: Controller/UsersController.php:83
 msgid "ログイン成功"
 msgstr ""
 
-#: Controller/UsersController.php:85
+#: Controller/UsersController.php:89
 msgid "メールアドレスもしくはパスワードが正しくありません。"
 msgstr ""
 
-#: Controller/UsersController.php:100
+#: Controller/UsersController.php:104
 msgid "%sさん、またお会いしましょう。"
 msgstr ""
 
-#: Controller/UsersController.php:101
+#: Controller/UsersController.php:105
 msgid "ログアウトしました"
 msgstr ""
 
-#: Controller/UsersController.php:264
+#: Controller/UsersController.php:268
 msgid "本登録が完了しました！"
 msgstr ""
 
-#: Controller/UsersController.php:274
+#: Controller/UsersController.php:278
 msgid "メールアドレスの認証が完了しました。"
 msgstr ""
 

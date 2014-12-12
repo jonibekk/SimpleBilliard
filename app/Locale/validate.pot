@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-11-20 09:40+0000\n"
+"POT-Creation-Date: 2014-12-11 09:46+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,31 +14,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Model/User.php:472
+#: Model/User.php:528
 msgid "現在のパスワードが間違っています。"
 msgstr ""
 
-#: Model/User.php:556
+#: Model/User.php:612
 msgid "メールアドレスを入力してください。"
 msgstr ""
 
-#: Model/User.php:568
+#: Model/User.php:624
 msgid "このメールアドレスはGoalousに登録されていません。"
 msgstr ""
 
-#: Model/User.php:573
+#: Model/User.php:629
 msgid "このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメールをご確認ください。"
 msgstr ""
 
-#: Model/User.php:578
+#: Model/User.php:634
 msgid "ユーザアカウントが有効ではありません。"
 msgstr ""
 
-#: Model/User.php:649
+#: Model/User.php:705
 msgid "メールアドレスが入力されていません"
 msgstr ""
 
-#: Model/User.php:667
+#: Model/User.php:723
 msgid "現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"
 msgstr ""
 

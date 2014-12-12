@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-11-20 09:40+0000\n"
+"POT-Creation-Date: 2014-12-11 09:46+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,19 +14,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: View/Helper/TimeExHelper.php:86
+#: View/Helper/TimeExHelper.php:87
 msgid "たった今"
 msgstr ""
 
-#: View/Helper/TimeExHelper.php:90
+#: View/Helper/TimeExHelper.php:91
 msgid "1分前"
 msgstr ""
 
-#: View/Helper/TimeExHelper.php:115
+#: View/Helper/TimeExHelper.php:116
 msgid "%s分前"
 msgstr ""
 
-#: View/Helper/TimeExHelper.php:121
+#: View/Helper/TimeExHelper.php:122
 msgid "%s時間前"
 msgstr ""
 

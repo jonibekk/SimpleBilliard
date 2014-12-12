@@ -17,16 +17,16 @@ msgstr ""
 
 #: View/Helper/TimeExHelper.php:86
 msgid "たった今"
-msgstr ""
+msgstr "now"
 
 #: View/Helper/TimeExHelper.php:90
 msgid "1分前"
-msgstr ""
+msgstr "1 min"
 
 #: View/Helper/TimeExHelper.php:115
 msgid "%s分前"
-msgstr ""
+msgstr "%s mins"
 
 #: View/Helper/TimeExHelper.php:121
 msgid "%s時間前"
-msgstr ""
+msgstr "%s hr"
