@@ -118,6 +118,51 @@
                 </div>
             </div>
             <div class="col col-xxs-12">
+                <?= $this->Form->create('ActionResult', [
+                    'inputDefaults' => [
+                        'div'       => 'form-group',
+                        'wrapInput' => false,
+                        'class'     => 'form-control'
+                    ],
+                    //                    'class' => 'well'
+                ]); ?>
+                <?=
+                $this->Form->input('Action.name', [
+                        'label'       => false,
+                        'rows'        => 1,
+                        'placeholder' => __d('gl', "アクションをいれる")
+                    ]
+                )
+                ?>
+                <div class="form-group"><label for="ActionPhotos"><?= __d('gl', "画像追加(オプション)") ?></label>
+
+                    <div>
+                        <ul class="col input-images post-images">
+                            <? for ($i = 1; $i <= 5; $i++): ?>
+                                <li>
+                                <?= $this->element('Feed/photo_upload',
+                                                   ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
+                                </li><? endfor ?>
+                        </ul>
+                    </div>
+                </div>
+                <?=
+                $this->Form->input('Action.key_result_id', [
+                        'label'   => __d('gl', "紐付ける出したい成果を選択(オプション)"),
+                        'options' => ['test', 'test'],
+                    ]
+                )
+                ?>
+                <div class="form-group pull-right">
+                    <a href="#" class="btn"><?= __d('gl', "キャンセル") ?></a>
+                    <?= $this->Form->submit(__d('gl', "アクション登録"), [
+                        'div'   => false,
+                        'class' => 'btn btn-primary'
+                    ]); ?>
+                </div>
+                <?= $this->Form->end() ?>
+            </div>
+            <div class="col col-xxs-12">
                 <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
                     <div class="pull-left font_12px">
                         <? if (($limit_day = ($goal['Goal']['end_date'] - time()) / (60 * 60 * 24)) < 0): ?>
