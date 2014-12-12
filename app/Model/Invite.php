@@ -53,7 +53,7 @@ class Invite extends AppModel
         $data['Invite']['team_id'] = $team_id;
         $data['Invite']['email'] = $email;
         $data['Invite']['email_token'] = $this->generateToken();
-        $data['Invite']['email_token_expires'] = $this->getTokenExpire();
+        $data['Invite']['email_token_expires'] = $this->getTokenExpire(TOKEN_EXPIRE_SEC_INVITE);
         //既に登録済みのユーザの場合はuser_idをセット
         if (!empty($user_id = $this->ToUser->Email->findByEmail($email))) {
             $data['Invite']['to_user_id'] = $user_id['Email']['user_id'];
