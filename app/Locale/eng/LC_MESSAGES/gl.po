@@ -17,123 +17,123 @@ msgstr ""
 
 #: Controller/AppController.php:365
 msgid "このチームへのアクセス権限がありません。"
-msgstr ""
+msgstr "You do not have access to this team."
 
 #: Controller/CirclesController.php:36
 msgid "サークルを作成しました。"
-msgstr ""
+msgstr "Created a circle."
 
 #: Controller/CirclesController.php:39
 msgid "サークルの作成に失敗しました。"
-msgstr ""
+msgstr "Failed to create a circle."
 
 #: Controller/CirclesController.php:97
 msgid "サークル設定を保存しました。"
-msgstr ""
+msgstr "Saved circle settings."
 
 #: Controller/CirclesController.php:100
 msgid "サークル設定の保存に失敗しました。"
-msgstr ""
+msgstr "Failed to save circle settings."
 
 #: Controller/CirclesController.php:121
 msgid "サークルを削除しました。"
-msgstr ""
+msgstr "Deleted a circle."
 
 #: Controller/CirclesController.php:147
 msgid "公開サークルの参加設定を保存しました。"
-msgstr ""
+msgstr "Saved participation settings public circle."
 
 #: Controller/CirclesController.php:150
 msgid "公開サークルの参加設定の保存に失敗しました。"
-msgstr ""
+msgstr "Failed to save participation settings public circle."
 
 #: Controller/EmailsController.php:35
 msgid "メールアドレス変更をキャンセルしました。"
-msgstr ""
+msgstr "Canceled your mail address changes."
 
 #: Controller/GoalsController.php:70
 msgid "ゴールを保存しました。"
-msgstr ""
+msgstr "Saved the goal."
 
 #: Controller/GoalsController.php:76
 msgid "ゴールの作成が完了しました。"
-msgstr ""
+msgstr "Succeeded to create a goal."
 
 #: Controller/GoalsController.php:83
 msgid "ゴールの保存に失敗しました。"
-msgstr ""
+msgstr "Failed to save a goal."
 
 #: Controller/GoalsController.php:89
 msgid "ゴールの目的を保存しました。"
-msgstr ""
+msgstr "Succeeded to create a purpose."
 
 #: Controller/GoalsController.php:96
 msgid "ゴールの目的の保存に失敗しました。"
-msgstr ""
+msgstr "Failed to save a goal."
 
 #: Controller/GoalsController.php:112;182;309;314;339;362;393;417
 msgid "権限がありません。"
-msgstr ""
+msgstr "You have no permission."
 
 #: Controller/GoalsController.php:165;191
 msgid "ゴールを削除しました。"
-msgstr ""
+msgstr "Succeeded to delete a goal."
 
 #: Controller/GoalsController.php:294
 msgid "コラボレータを保存しました。"
-msgstr ""
+msgstr "Succeeded to save a collaborator."
 
 #: Controller/GoalsController.php:297
 msgid "コラボレータの保存に失敗しました。"
-msgstr ""
+msgstr "Failed to save a goal."
 
 #: Controller/GoalsController.php:326
 msgid "出したい成果を追加しました。"
-msgstr ""
+msgstr "Added a key result."
 
 #: Controller/GoalsController.php:342
 msgid "データの保存に失敗しました。"
-msgstr ""
+msgstr "Failed to save data."
 
 #: Controller/GoalsController.php:350
 msgid "成果を更新しました。"
-msgstr ""
+msgstr "Updated a key result"
 
 #: Controller/GoalsController.php:370
 msgid "ゴールを完了にしました。"
-msgstr ""
+msgstr "Succeeded to complete a goal."
 
 #: Controller/GoalsController.php:373
 msgid "成果を完了にしました。"
-msgstr ""
+msgstr "Succeeded to complete a key result."
 
 #: Controller/GoalsController.php:407
 msgid "成果を未完了にしました。"
-msgstr ""
+msgstr "Succeeded to uncomplete a key result."
 
 #: Controller/GoalsController.php:428
 msgid "成果を削除しました。"
-msgstr ""
+msgstr "Succeeded to delete a key result."
 
 #: Controller/GoalsController.php:445
 msgid "コラボレータから外れました。"
-msgstr ""
+msgstr "Succeeded to quit a collaborator."
 
 #: Controller/GoalsController.php:469
 msgid "存在しないゴールです。"
-msgstr ""
+msgstr "It is a goal that does not exist."
 
 #: Controller/GoalsController.php:480
 msgid "フォローしました。"
-msgstr ""
+msgstr "Following."
 
 #: Controller/GoalsController.php:484
 msgid "フォローに失敗しました。"
-msgstr ""
+msgstr "Failed to follow."
 
 #: Controller/GoalsController.php:489
 msgid "フォロー解除しました。"
-msgstr ""
+msgstr "Succeeded to "
 
 #: Controller/GoalsController.php:603
 msgid "Sei"
