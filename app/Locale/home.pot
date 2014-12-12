@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-11-20 09:40+0000\n"
+"POT-Creation-Date: 2014-12-11 09:46+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -30,7 +30,7 @@ msgid "Features"
 msgstr ""
 
 #: View/Elements/footer.ctp:30
-#: View/Elements/header_logged_in.ctp:175
+#: View/Elements/header_logged_in.ctp:183
 #: View/Layouts/homepage.ctp:152;223
 msgid "Blog"
 msgstr ""
