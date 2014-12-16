@@ -12,11 +12,6 @@
 <div class="modal fade" tabindex="-1" id="modal_tutorial">
 <div class="modal-dialog">
         <div class="modal-content parent-p_0px">
-            <div class="modal-header">
-                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
-                    <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('gl', "チュートリアル") ?></h4>
-            </div>
             <div class="modal-body">
                 <div id="carousel-tutorial" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
@@ -52,7 +47,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="close-icon">&times;</span><?= __d('gl', "閉じる") ?></button>
+                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
+                    </button>
             </div>
         </div>
     </div>
