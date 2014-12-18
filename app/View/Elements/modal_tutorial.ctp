@@ -10,7 +10,7 @@
 ?>
 <!-- START app/View/Elements/modal_tutorial.ctp -->
 <div class="modal fade" tabindex="-1" id="modal_tutorial">
-<div class="modal-dialog">
+    <div class="modal-dialog">
         <div class="modal-content parent-p_0px">
             <div class="modal-body">
                 <div id="carousel-tutorial" class="carousel slide" data-ride="carousel">
@@ -47,9 +47,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="close-icon">&times;</span><?= __d('gl', "閉じる") ?></button>
+                <div class="col-xs-10 text-align_l">
+                    <?= __d('gl', "ニュースフィードに投稿してみよう。既読管理ができて、いいね！が伝わります。") ?>
+                    <?= __d('gl', "サークルをつくったり、サークルに入ってみよう。サークルには秘密と公開の2種類があります。") ?>
+                    <?= __d('gl', "ゴールをつくりましょう。ゴールページでは、より詳細な設定ができます。") ?>
+                    <?= __d('gl', "チーム力を向上させよう。Goalousをさっそく使ってみましょう") ?>
+                </div>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
-                    </button>
+                </button>
             </div>
         </div>
     </div>
