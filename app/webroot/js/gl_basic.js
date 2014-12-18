@@ -707,3 +707,11 @@ function ajaxAppendCount(id, url) {
     });
     return false;
 }
+
+/*
+$(function () {
+    $(".develop--search").on("click", function () {
+            $(this).attr('placeholder', '準備中です。');
+        }
+    );
+});

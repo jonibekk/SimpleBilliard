@@ -2,6 +2,31 @@ ul{
     list-style: none;
 }
 
+/*==== CSS Animation ====*/
+/*回転するメニューボタン*/
+.toggle-icon{
+    font-size: 20px;
+    transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+}
+
+.rotate{
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+.rotate-reverse{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+/*/回転するメニューボタン*/
+/* 画像のスライド */
+
+/*/ 画像のスライド */
+
+/*/=== CSS Animation ====*/
+
+
 /*=== Header部のリファクタリング ===*/
 .nav-icons > a {
     float: left;
@@ -90,22 +115,6 @@ ul{
 .hamburger {
     float: left !important;
     margin-left: 0;
-}
-
-.toggle-icon{
-    font-size: 20px;
-    transition: 0.3s ease-in-out;
-    -webkit-transition: 0.3s ease-in-out;
-}
-
-.rotate{
-    transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-}
-
-.rotate-reverse{
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
 }
 
 .header-toggle-icon{
@@ -3371,7 +3380,6 @@ Temporary Properties - YOU MUST FIX
     border-left: 1px solid #999;
 }
 
-
 .ls_title{
     letter-spacing: -0.12rem;
 }
@@ -3384,4 +3392,24 @@ Temporary Properties - YOU MUST FIX
     .ls_title{
         letter-spacing: -0.08rem;
     }
+}
+
+.modal-close-base{
+    position: relative;
+}
+
+.modal-close-wrap{
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    z-index: 10;
+    right: 4px;
+}
+
+.tutorial-box {
+    background-image: url(../img/homepage/home-slider/slide1.jpg);
+    background-size: 100%;
+    background-position: 0 50%;
+    width: 600px;
+    height: 450px;
 }
