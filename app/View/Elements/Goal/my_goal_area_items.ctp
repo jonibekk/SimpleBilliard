@@ -160,11 +160,11 @@
                     ?>
                     <div class="form-group pull-right">
                         <a href="#" target-id="ActionFormName_<?= $goal['Goal']['id'] ?>"
-                           class="btn tiny-form-text-close"><?= __d('gl', "キャンセル") ?></a>
+                           class="btn btn-white tiny-form-text-close"><?= __d('gl', "キャンセル") ?></a>
                         <?= $this->Form->submit(__d('gl', "アクション登録"), [
                             'div'      => false,
                             'id'       => "ActionFormSubmit_" . $goal['Goal']['id'],
-                            'class'    => 'btn btn-primary',
+                            'class'    => 'btn btn-info',
                             'disabled' => 'disabled',
                         ]); ?>
                     </div>
@@ -173,7 +173,7 @@
             </div>
             <div class="col col-xxs-12">
                 <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
-                    <div class="pull-left font_12px">
+                    <div class="pull-right font_12px">
                         <? if (($limit_day = ($goal['Goal']['end_date'] - time()) / (60 * 60 * 24)) < 0): ?>
                             <?= __d('gl', "%d日経過", $limit_day * -1) ?>
                         <? else: ?>
@@ -181,7 +181,7 @@
                         <?endif; ?>
                     </div>
                 <? endif; ?>
-                <div class="pull-right font_12px">
+                <div class="pull-left btn-white bd-radius_4px p_8px font_12px">
                     <?
                     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
                     if ($type == "follow") {
