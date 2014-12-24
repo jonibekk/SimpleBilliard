@@ -232,7 +232,11 @@ class AppController extends Controller
             $uid = $this->Auth->user('id');
         }
         //言語設定を退避
-        $lang = $this->Auth->user('language');
+        $user_lang = $this->User->findById($uid);
+        $lang = null;
+        if (!empty($user_lang)) {
+            $lang = $user_lang['User']['language'];
+        }
         $this->Auth->logout();
         $this->User->resetLocalNames();
         $this->User->me['language'] = $lang;

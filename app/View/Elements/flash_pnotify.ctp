@@ -14,10 +14,10 @@
 <!-- START app/View/Elements/flash_pnotify.ctp -->
 <script type="text/javascript">
     new PNotify({
-        title: '<?=$title?>',
-        text: '<?=$message?>',
-        icon: '<?=$icon?>',
-        type: '<?=$type?>',
+        title: "<?=$title?>",
+        text: "<?=$message?>",
+        icon: "<?=$icon?>",
+        type: "<?=$type?>",
         delay: 4000,
         mouse_reset: false
     });
