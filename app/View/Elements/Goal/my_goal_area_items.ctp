@@ -181,22 +181,20 @@
                         <?endif; ?>
                     </div>
                 <? endif; ?>
-                <div class="pull-left btn-white bd-radius_4px p_8px font_12px">
                     <?
                     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
                     if ($type == "follow") {
                         $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
                     }
                     ?>
-                    <a href="#" class="link-dark-gray toggle-ajax-get"
+                <a href="#" class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px"
                        target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
                        ajax-url="<?= $this->Html->url($url) ?>"
                        id="KRsOpen_<?= $goal['Goal']['id'] ?>"
                         >
+                    <i class="fa fa-caret-down feed-arrow lh_20px"></i>
                         <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                        <i class="fa fa-caret-down feed-arrow lh_20px"></i>
                     </a>
-                </div>
             </div>
             <div class="con col-xxs-12" style="display: none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
         <? endif; ?>

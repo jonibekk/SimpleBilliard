@@ -469,6 +469,10 @@ textarea{
     padding: 0;
 }
 
+.p_4px{
+    padding: 4px;
+}
+
 .p_8px {
     padding: 8px;
 }
@@ -1092,6 +1096,10 @@ textarea{
 .bd-radius_4px:active,
 .bd-radius_4px:target {
     border-radius: 4px;
+}
+
+.bd-radius_14px {
+    border-radius: 14px;
 }
 
 .bd-r-radius_4px {

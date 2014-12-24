@@ -4530,14 +4530,14 @@ input[type="button"].btn-block {
     color: #231814;
     text-decoration: none;
 }
-
-.btn-white,
-/*.btn_pureWhite-rougeOrange*/ {
+/*.btn_pureWhite-rougeOrange,*/
+.btn-white{
     border: 1px solid #ccc;
     background-color: #fff;
     background-image: none;
 }
 
+.btn-white:focus,
 .btn-white:target,
 .btn-white:hover {
     border: 1px solid #aaa;
