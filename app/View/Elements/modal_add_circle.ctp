@@ -106,7 +106,7 @@
                                                 'errorMessage' => false,
                                                ]) ?>
                         </span>
-                                <span class="help-block font_11px disp_ib"><?= __d('gl',
+                                <span class="help-block font_11px inline-block"><?= __d('gl',
                                                                                    '10MB以下') ?></span>
                             </div>
                         </div>

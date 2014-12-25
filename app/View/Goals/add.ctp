@@ -252,8 +252,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                 "変更") ?></a></span>
                             </p>
 
-                            <div class="input-group date plr_5px goal-set-date" style="display: none"
-                                 id="KeyResult0StartDateInputWrap">
+                            <div class="input-group date plr_5px goal-set-date none" id="KeyResult0StartDateInputWrap">
                                 <?=
                                 $this->Form->input('start_date',
                                                    [
@@ -394,7 +393,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                         'errorMessage' => false,
                                                        ]) ?>
                                 </span>
-                                <span class="help-block disp_ib font_11px"><?= __d('gl', '10MB以下') ?></span>
+                                <span class="help-block inline-block font_11px"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>
 

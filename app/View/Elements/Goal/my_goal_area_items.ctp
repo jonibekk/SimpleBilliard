@@ -117,10 +117,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col col-xxs-12">
+            <div class="col col-xxs-12 goalsCard-actionResult">
                 <?= $this->Form->create('ActionResult', [
                     'inputDefaults' => [
-                        'div'       => 'form-group',
+                        'div'       => 'form-group mb_5px develop--font_normal',
                         'wrapInput' => false,
                         'class'     => 'form-control'
                     ],
@@ -138,8 +138,8 @@
                     ]
                 )
                 ?>
-                <div id="ActionFormDetail_<?= $goal['Goal']['id'] ?>" style="display: none">
-                    <div class="form-group"><label for="ActionPhotos"><?= __d('gl', "画像追加(オプション)") ?></label>
+                <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
+                    <div class="form-group"><label class="font_normal" for="ActionPhotos"><?= __d('gl', "画像追加(オプション)") ?></label>
 
                         <div>
                             <ul class="col input-images post-images">
@@ -164,14 +164,14 @@
                         <?= $this->Form->submit(__d('gl', "アクション登録"), [
                             'div'      => false,
                             'id'       => "ActionFormSubmit_" . $goal['Goal']['id'],
-                            'class'    => 'btn btn-info',
+                            'class'    => 'btn btn-info bd-radius_18px',
                             'disabled' => 'disabled',
                         ]); ?>
                     </div>
                 </div>
                 <?= $this->Form->end() ?>
             </div>
-            <div class="col col-xxs-12">
+            <div class="col col-xxs-12 goalsCard-krSeek">
                 <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
                     <div class="pull-right font_12px">
                         <? if (($limit_day = ($goal['Goal']['end_date'] - time()) / (60 * 60 * 24)) < 0): ?>
@@ -187,16 +187,16 @@
                         $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
                     }
                     ?>
-                <a href="#" class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px"
+                <a href="#" class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
                        target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
                        ajax-url="<?= $this->Html->url($url) ?>"
                        id="KRsOpen_<?= $goal['Goal']['id'] ?>"
                         >
-                    <i class="fa fa-caret-down feed-arrow lh_20px"></i>
+                    <i class="fa fa-caret-down feed-arrow lh_18px"></i>
                         <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
                     </a>
             </div>
-            <div class="con col-xxs-12" style="display: none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
+            <div class="con col-xxs-12 none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
         <? endif; ?>
     </div>
 <? endforeach ?>
