@@ -3218,6 +3218,18 @@ Temporary Properties - YOU MUST FIX
 
 /*=====/ dashboardProfileCard ======*/
 
+/*===== goalsCard-activity =====*/
+.goalsCard-activity {
+    padding: 1px;
+    text-align: center;
+    line-height: 40px;
+    height: 40px;
+}
+
+.goalsCard-actionInput {
+    padding: 8px 4px;
+}
+
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

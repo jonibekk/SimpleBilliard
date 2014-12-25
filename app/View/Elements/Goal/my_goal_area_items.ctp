@@ -131,13 +131,16 @@
                         'label'          => false,
                         'rows'           => 1,
                         'placeholder'    => __d('gl', "アクションをいれる"),
-                        'class'          => 'form-control tiny-form-text blank-disable',
+                        'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput',
                         'id'             => "ActionFormName_" . $goal['Goal']['id'],
                         'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
                         'target-id'      => "ActionFormSubmit_" . $goal['Goal']['id'],
                     ]
                 )
                 ?>
+                <div class="goalsCard-activity inline-block col-xxs-2">
+                    <i class="fa fa-check-circle mr_1px"></i><span class="ls_number">?</span>
+                </div>
                 <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
                     <div class="form-group"><label class="font_normal" for="ActionPhotos"><?= __d('gl', "画像追加(オプション)") ?></label>
 
