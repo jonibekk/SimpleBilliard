@@ -103,6 +103,14 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/ajax_get_more_index_items/page:2', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+    function testAjaxGetKRList()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_kr_list/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
 
     function testAdd()
     {
