@@ -115,7 +115,7 @@ class KeyResultTest extends CakeTestCase
     function testGetKeyResults()
     {
         $this->setDefault();
-        $res = $this->KeyResult->getKeyResults(1, true);
+        $res = $this->KeyResult->getKeyResults(1);
         $this->assertNotEmpty($res);
     }
 
