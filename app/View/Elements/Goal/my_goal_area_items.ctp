@@ -142,7 +142,7 @@
                 )
                 ?>
                 <div class="goalsCard-activity inline-block col-xxs-2">
-                    <i class="fa fa-check-circle mr_1px"></i><span class="ls_number">?</span>
+                    <i class="fa fa-check-circle mr_1px"></i><span class="ls_number"><?=$goal['Goal']['action_count']?></span>
                 </div>
                 <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
                     <div class="form-group"><label class="font_normal" for="ActionPhotos"><?= __d('gl',
