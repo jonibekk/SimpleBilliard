@@ -1,4 +1,4 @@
-ul{
+ul {
     list-style: none;
 }
 
@@ -35,14 +35,13 @@ ul{
     line-height: 30px;
 }
 
-
 /*=== headerの設定 ===*/
 
 .header_icon-text {
     margin: 0;
 }
 
-.header_icon-text{
+.header_icon-text {
     line-height: 14px;
 }
 
@@ -86,47 +85,45 @@ ul{
     color: #808080;
 }
 
-
 .hamburger {
     float: left !important;
     margin-left: 0;
 }
 
-.toggle-icon{
+.toggle-icon {
     font-size: 20px;
     transition: 0.3s ease-in-out;
     -webkit-transition: 0.3s ease-in-out;
 }
 
-.rotate{
+.rotate {
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
 }
 
-.rotate-reverse{
+.rotate-reverse {
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
 }
 
-.header-toggle-icon{
+.header-toggle-icon {
     border: none;
     height: 50px;
-    margin-top:0;
+    margin-top: 0;
     margin-bottom: 0;
     padding-left: 18px;
     padding-right: 18px;
 }
+
 .navbar-default .header-toggle-icon:hover,
 .navbar-default .header-toggle-icon:focus,
 .navbar-default .header-toggle-icon:target {
     background-color: #fff;
 }
 
-
 /*==/ headerの設定 ===*/
 
 /*==/ Header部のリファクタリング ===*/
-
 
 /*=== リファクタリング予定 ===*/
 
@@ -350,7 +347,7 @@ input::-moz-focus-inner {
     border: none;
 }
 
-textarea{
+textarea {
     white-space: normal;
 }
 
@@ -395,11 +392,11 @@ textarea{
     margin-top: 32px;
 }
 
-.mr_1px{
+.mr_1px {
     margin-right: 1px;
 }
 
-.mr_2px{
+.mr_2px {
     margin-right: 2px;
 }
 
@@ -473,7 +470,7 @@ textarea{
     padding: 0;
 }
 
-.p_4px{
+.p_4px {
     padding: 4px;
 }
 
@@ -495,7 +492,7 @@ textarea{
     padding-right: 1px;
 }
 
-.plr_2px{
+.plr_2px {
     padding-right: 2px;
     padding-left: 2px;
 }
@@ -530,12 +527,12 @@ textarea{
     margin-bottom: 3px;
 }
 
-.mtb_5px{
+.mtb_5px {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.mtb_8px{
+.mtb_8px {
     margin-top: 8px;
     margin-bottom: 8px;
 }
@@ -625,7 +622,7 @@ textarea{
     margin: 4px 0 4px 10px;
 }
 
-.top_50px{
+.top_50px {
     top: 50px;
 }
 
@@ -638,7 +635,7 @@ textarea{
 
 /*noinspection CssUnknownProperty*/
 
-.ln_contain{
+.ln_contain {
     overflow: hidden;
     word-break: break-all;
 }
@@ -648,43 +645,44 @@ textarea{
     font-weight: bold;
 }
 
-.ln_1,.ln_1-f {
+.ln_1, .ln_1-f {
     display: block;
     overflow: hidden;
     white-space: nowrap;
     position: relative;
 }
 
-.ln_1:before{
-    content:"...";
-    color: rgba(0,0,0,0);
+.ln_1:before {
+    content: "...";
+    color: rgba(0, 0, 0, 0);
     display: block;
     position: absolute;
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
     background: #f5f5f5;
-    background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -moz-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -o-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -ms-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -moz-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -o-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -ms-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
     width: 30%;
     height: 20px;
     padding-bottom: 4px;
 }
-.ln_1-f:before{
-    content:"...";
-    color: rgba(0,0,0,0);
+
+.ln_1-f:before {
+    content: "...";
+    color: rgba(0, 0, 0, 0);
     display: block;
     position: absolute;
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
     background: #fff;
-    background: linear-gradient(to right, rgba(245,245,245,0), #fff);
-    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #fff);
-    background: -moz-linear-gradient(to right, rgba(245,245,245,0), #fff);
-    background: -o-linear-gradient(to right, rgba(245,245,245,0), #fff);
-    background: -ms-linear-gradient(to right, rgba(245,245,245,0), #fff);
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
+    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
+    background: -moz-linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
+    background: -o-linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
+    background: -ms-linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
     width: 30%;
     height: 20px;
     padding-bottom: 4px;
@@ -700,17 +698,17 @@ textarea{
 
 .ln_2:before, .ln_2:after {
     background: #f5f5f5;
-    background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -moz-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -o-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -ms-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -moz-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -o-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -ms-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
     position: absolute;
 }
 
 .ln_2:before {
     content: "...";
-    color: rgba(0,0,0,0);
+    color: rgba(0, 0, 0, 0);
     top: 18px;
     width: 30%;
     height: 20px;
@@ -720,7 +718,7 @@ textarea{
 
 .ln_2-f:before {
     content: "...";
-    color: rgba(0,0,0,0);
+    color: rgba(0, 0, 0, 0);
     top: 18px;
     width: 30%;
     height: 20px;
@@ -730,11 +728,11 @@ textarea{
 
 .ln_2-f:before, .ln_2-f:after {
     background: #fff;
-    background: linear-gradient(to right, rgba(255,255,255,0), #fff);
-    background: -webkit-linear-gradient(to right, rgba(255,255,255,0), #fff);
-    background: -moz-linear-gradient(to right, rgba(255,255,255,0), #fff);
-    background: -o-linear-gradient(to right, rgba(255,255,255,0), #fff);
-    background: -ms-linear-gradient(to right, rgba(255,255,255,0), #fff);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+    background: -webkit-linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+    background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+    background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+    background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
     position: absolute;
 }
 
@@ -832,7 +830,7 @@ textarea{
 }
 
 /*Fontの指定*/
-.font_10px{
+.font_10px {
     font-size: 10px;
 }
 
@@ -976,8 +974,8 @@ textarea{
     color: #231814;
 }
 
-.font_seagreen{
-    color : #00ca54;
+.font_seagreen {
+    color: #00ca54;
 }
 
 .link-dark-gray {
@@ -1114,7 +1112,7 @@ textarea{
     border-radius: 14px;
 }
 
-.bd-radius_18px{
+.bd-radius_18px {
     border-radius: 18px;
 }
 
@@ -1180,8 +1178,6 @@ textarea{
 /*/切り替えスイッチ*/
 
 /*==/ モジュール ===*/
-
-
 
 /*早めに整理する*/
 .btn-followCollabo {
@@ -1451,7 +1447,7 @@ textarea{
     padding-bottom: 9px;
 }
 
-.navbar-default .navbar-nav>li>a{
+.navbar-default .navbar-nav > li > a {
     padding: 2px 0;
     margin: auto;
     width: 180px;
@@ -1621,6 +1617,7 @@ ul.input-images > li {
     float: left;
     margin-right: 2px;
 }
+
 /*
 
 ul.input-images {
@@ -2105,7 +2102,7 @@ textarea.comment-post-form {
 }
 
 .header-logo-img {
-    margin:1px;
+    margin: 1px;
 }
 
 .header-circle {
@@ -2143,9 +2140,9 @@ textarea.comment-post-form {
     text-align: center;
 }
 
-.nav-xxs-icon{
-    width:22px;
-    height:22px;
+.nav-xxs-icon {
+    width: 22px;
+    height: 22px;
 }
 
 .header-profile-icon {
@@ -2171,19 +2168,20 @@ textarea.comment-post-form {
     padding-bottom: 10px;
 }
 
-.va_bl{
+.va_bl {
     vertical-align: baseline;
     line-height: 1px;
 }
 
-.disp_bx{
+.disp_bx {
     display: box;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-box;
     display: -o-box;
 }
-.disp_blk{
+
+.disp_blk {
     display: block;
 }
 
@@ -2273,7 +2271,6 @@ textarea.comment-post-form {
     line-height: 38px;
     vertical-align: middle;
 }
-
 
 .follow-on, .follow-on:hover, .collabo-on, .collabo-on:hover {
     color: #fff;
@@ -2599,9 +2596,10 @@ textarea.comment-post-form {
 .goals-feed-head {
     border-bottom: 1px solid #F0F0F0;
 }
-.goalsCard-actionResult{
+
+.goalsCard-actionResult {
     border-bottom: 1px solid #ccc;
-    margin : 6px 0;
+    margin: 6px 0;
     padding: 4px 0;
 }
 
@@ -2856,12 +2854,12 @@ textarea.comment-post-form {
         padding-left: 12px;
     }
 
-    .mtb-sm_0{
+    .mtb-sm_0 {
         margin-top: 0;
         margin-bottom: 0;
     }
 
-    .ta-sm_c{
+    .ta-sm_c {
         text-align: center;
     }
 
@@ -2876,26 +2874,25 @@ textarea.comment-post-form {
     .header-search-group {
         margin-left: 20px;
     }
-/*
-    .nav > li > a {
-        padding: 9px 0 0;
-    }
 
-    .navbar-nav > li > .header-logo {
-    }
+    /*
+        .nav > li > a {
+            padding: 9px 0 0;
+        }
 
-    .navbar-nav > li > .header-goal,
-    .navbar-nav > li > .header-team {
-    }
-*/
+        .navbar-nav > li > .header-logo {
+        }
 
+        .navbar-nav > li > .header-goal,
+        .navbar-nav > li > .header-team {
+        }
+    */
     /*Pluginの修正なので、階層構造を使わない形に書き換え予定*/
-    .navbar-default .navbar-nav>li>a{
+    .navbar-default .navbar-nav > li > a {
         width: 56px;
         padding-left: 10px;
         padding: 9px 0 0;
     }
-
 
     .header-logo-img {
         margin: 0;
@@ -3349,19 +3346,19 @@ Temporary Properties - YOU MUST FIX
     border-color: rgba(0, 0, 0, 0);
 }
 
-.edit-box-align{
+.edit-box-align {
 
 }
 
-.feed-box-align{
+.feed-box-align {
 
 }
 
-.post-box-align{
+.post-box-align {
 
 }
 
-.comment-box-align{
+.comment-box-align {
 
 }
 
@@ -3380,20 +3377,20 @@ Temporary Properties - YOU MUST FIX
 
 .post-edit-form {
 }
+
 .comment-edit-form {
 }
 
 .edit-form,
 .edit-form:focus,
-.edit-form:target{
+.edit-form:target {
     border-top: 1px solid #999;
     border-right: 1px solid #999;
     border-bottom: 1px solid #999;
     border-left: 1px solid #999;
 }
 
-
-.ls_title{
+.ls_title {
     letter-spacing: -0.12rem;
 }
 
@@ -3401,8 +3398,8 @@ Temporary Properties - YOU MUST FIX
     letter-spacing: -0.04rem;
 }
 
-@media (min-width: 520px){
-    .ls_title{
+@media (min-width: 520px) {
+    .ls_title {
         letter-spacing: -0.08rem;
     }
 }
@@ -3411,10 +3408,10 @@ Temporary Properties - YOU MUST FIX
     font-weight: normal;
 }
 
-.develop--font_normal label{
+.develop--font_normal label {
     font-weight: normal;
 }
 
-.selectKrForAction{
+.selectKrForAction {
     font-size: 10px;
 }

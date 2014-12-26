@@ -142,19 +142,21 @@
                 )
                 ?>
                 <div class="goalsCard-activity inline-block col-xxs-2">
-                    <i class="fa fa-check-circle mr_1px"></i><span class="ls_number"><?=$goal['Goal']['action_count']?></span>
+                    <i class="fa fa-check-circle mr_1px"></i><span
+                        class="ls_number"><?= $goal['Goal']['action_count'] ?></span>
                 </div>
                 <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
                     <div class="form-group">
                         <label class="font_normal col-xxs-4 lh_40px" for="ActionPhotos">
                             <i class="fa fa-camera mr_2px"></i><?= __d('gl', "画像") ?>
                         </label>
+
                         <div class="col-xxs-8">
                             <ul class="col input-images post-images">
                                 <? for ($i = 1; $i <= 5; $i++): ?>
                                     <li>
-                                    <?= $this->element('Feed/photo_upload_mini',
-                                                       ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => true]) ?>
+                                        <?= $this->element('Feed/photo_upload_mini',
+                                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => true]) ?>
                                     </li>
                                 <? endfor ?>
                             </ul>
@@ -167,7 +169,7 @@
                     $this->Form->input('Action.key_result_id', [
                                                                  'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
                                                                  'options' => [null => __d('gl', "選択なし")],
-                                                                 'class'    => 'form-control col-xxs-8 selectKrForAction',
+                                                                 'class'   => 'form-control col-xxs-8 selectKrForAction',
                                                                  'id'      => 'ActionKeyResultId_' . $goal['Goal']['id'],
                                                              ]
                     )
