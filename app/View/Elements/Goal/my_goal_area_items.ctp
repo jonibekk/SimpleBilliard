@@ -163,8 +163,8 @@
                     <?=
                     $this->Form->input('Action.key_result_id', [
                                                                  'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
-                                                                 'options' => ['test', 'test'],
-                                                                 'class'    => 'form-control col-xxs-8',
+                                                                 'options' => ['アクション対象の出したい成果を選択', 'Select a key result for the action'],
+                                                                 'class'    => 'form-control col-xxs-8 selectKrForAction',
                                                              ]
                     )
                     ?>

@@ -34,7 +34,7 @@ if (isset($type)) {
             class="fileinput-preview thumbnail nailthumb-container m_0px click-target-enabled photo-plus-frame"
             data-trigger="fileinput"
             target-id="<?= $submit_id ?>"
-            style="width: 36px; height: 36px;">
+            style="width: 34px; height: 34px;">
             <? $delete_style = null ?>
             <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
                 <? $delete_style = "display:block" ?>
@@ -42,7 +42,7 @@ if (isset($type)) {
                 $this->Html->image('ajax-loader.gif',
                                    [
                                        'class'         => 'lazy',
-                                       'style'         => 'width: 36px; height: 36px;',
+                                       'style'         => 'width: 34px; height: 34px;',
                                        'data-original' => $this->Upload->uploadUrl($data, "{$model}.photo" . $index,
                                                                                    ['style' => ''])
                                    ]

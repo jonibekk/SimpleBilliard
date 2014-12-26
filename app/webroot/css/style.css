@@ -1619,7 +1619,7 @@ ul.input-images {
 
 ul.input-images > li {
     float: left;
-    margin-right: 3px;
+    margin-right: 2px;
 }
 /*
 
@@ -3413,4 +3413,8 @@ Temporary Properties - YOU MUST FIX
 
 .develop--font_normal label{
     font-weight: normal;
+}
+
+.selectKrForAction{
+    font-size: 10px;
 }
