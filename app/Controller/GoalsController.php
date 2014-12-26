@@ -592,6 +592,13 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_kr_list($goal_id)
+    {
+        $this->_ajaxPreProcess();
+        $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list");
+        return $this->_ajaxGetResponse($kr_list);
+    }
+
     function download_all_goal_csv()
     {
         $this->request->allowMethod('post');
@@ -676,7 +683,7 @@ class GoalsController extends AppController
     }
 
     /**
-     * アクション追加
+     * 完了アクション追加
      * TODO 今後様々なバリエーションのアクションが追加されるが、全てこのfunctionで処理する
      *
      * @param $goal_id
@@ -690,7 +697,6 @@ class GoalsController extends AppController
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             //アクション追加
-            $this->log($this->request->data);
             if (!$this->Goal->Action->addCompletedAction($this->request->data, $goal_id)) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }

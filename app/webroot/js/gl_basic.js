@@ -431,6 +431,10 @@ function evShowAndThisWide() {
     //クリック済みの場合は処理しない
     if ($(this).hasClass('clicked'))return;
 
+    //KRのセレクトオプションを取得する。
+    if ($(this).hasClass('add-select-options')) {
+        setSelectOptions($(this).attr('add-select-url'), $(this).attr('select-id'));
+    }
     //autosizeを一旦、切る。
     $(this).trigger('autosize.destroy');
     var current_height = $(this).height();
@@ -442,10 +446,22 @@ function evShowAndThisWide() {
     $(this).height(current_height * 2);
     //再度autosizeを有効化
     $(this).autosize();
+
     //submitボタンを表示
     $("#" + $(this).attr('target_show_id')).show();
     //クリック済みにする
     $(this).addClass('clicked');
+}
+function setSelectOptions(url, select_id) {
+    var options_elem = null;
+    $.get(url, function (data) {
+        $.each(data, function (k, v) {
+            var option = '<option value="' + k + '">' + v + '</option>';
+            options_elem += option;
+        });
+
+        $("#" + select_id).append(options_elem);
+    });
 }
 
 function evShowAndThisWideClose() {

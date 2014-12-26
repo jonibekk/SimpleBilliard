@@ -125,16 +125,19 @@
                         'class'     => 'form-control',
                     ],
                     'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', $goal['Goal']['id']],
+                    'type'          => 'file',
                 ]); ?>
                 <?=
                 $this->Form->input('Action.name', [
                                                     'label'          => false,
                                                     'rows'           => 1,
                                                     'placeholder'    => __d('gl', "アクションをいれる"),
-                                                    'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput',
+                                                    'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput add-select-options',
                                                     'id'             => "ActionFormName_" . $goal['Goal']['id'],
                                                     'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
                                                     'target-id'      => "ActionFormSubmit_" . $goal['Goal']['id'],
+                                                    'select-id'      => "ActionKeyResultId_" . $goal['Goal']['id'],
+                                                    'add-select-url' => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', $goal['Goal']['id']])
                                                 ]
                 )
                 ?>
@@ -158,7 +161,8 @@
                     <?=
                     $this->Form->input('Action.key_result_id', [
                                                                  'label'   => __d('gl', "紐付ける出したい成果を選択(オプション)"),
-                                                                 'options' => ['test', 'test'],
+                                                                 'options' => [null => __d('gl', "選択なし")],
+                                                                 'id'      => 'ActionKeyResultId_' . $goal['Goal']['id']
                                                              ]
                     )
                     ?>
