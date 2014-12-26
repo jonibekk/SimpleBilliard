@@ -131,7 +131,7 @@
                                                     'label'          => false,
                                                     'rows'           => 1,
                                                     'placeholder'    => __d('gl', "アクションをいれる"),
-                                                    'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput',
+                                                    'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px',
                                                     'id'             => "ActionFormName_" . $goal['Goal']['id'],
                                                     'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
                                                     'target-id'      => "ActionFormSubmit_" . $goal['Goal']['id'],
