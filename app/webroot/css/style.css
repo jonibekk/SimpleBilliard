@@ -379,6 +379,10 @@ textarea{
     margin-top: 8px;
 }
 
+.mt_12px {
+    margin-top: 12px;
+}
+
 .mt_16px {
     margin-top: 16px;
 }
@@ -1069,6 +1073,10 @@ textarea{
     vertical-align: middle;
 }
 
+.lh_40px {
+    line-height: 40px;
+}
+
 /*/アイコンを揃える*/
 
 /* ボーダー */
@@ -1611,9 +1619,22 @@ ul.input-images {
 
 ul.input-images > li {
     float: left;
-    margin-right: 3px;
+    margin-right: 2px;
+}
+/*
+
+ul.input-images {
+    width: 100%;
+    list-style: none;
+    padding-left: 0;
 }
 
+ul.input-images > li {
+    width:20%;
+    float: left;
+    text-align: center;
+}
+*/
 .custom-check {
     margin: 0;
 }
@@ -2516,6 +2537,17 @@ textarea.comment-post-form {
 
 /*/modalのデザイン*/
 
+.photo-plus-mini {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    color: #dddddd;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 .photo-plus {
     width: 50px;
     height: 50px;
@@ -3381,4 +3413,8 @@ Temporary Properties - YOU MUST FIX
 
 .develop--font_normal label{
     font-weight: normal;
+}
+
+.selectKrForAction{
+    font-size: 10px;
 }

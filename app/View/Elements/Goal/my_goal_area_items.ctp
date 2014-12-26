@@ -132,7 +132,7 @@
                                                     'label'          => false,
                                                     'rows'           => 1,
                                                     'placeholder'    => __d('gl', "アクションをいれる"),
-                                                    'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput add-select-options',
+                                                    'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px add-select-options',
                                                     'id'             => "ActionFormName_" . $goal['Goal']['id'],
                                                     'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
                                                     'target-id'      => "ActionFormSubmit_" . $goal['Goal']['id'],
@@ -145,34 +145,40 @@
                     <i class="fa fa-check-circle mr_1px"></i><span class="ls_number"><?=$goal['Goal']['action_count']?></span>
                 </div>
                 <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
-                    <div class="form-group"><label class="font_normal" for="ActionPhotos"><?= __d('gl',
-                                                                                                  "画像追加(オプション)") ?></label>
-
-                        <div>
+                    <div class="form-group">
+                        <label class="font_normal col-xxs-4 lh_40px" for="ActionPhotos">
+                            <i class="fa fa-camera mr_2px"></i><?= __d('gl', "画像") ?>
+                        </label>
+                        <div class="col-xxs-8">
                             <ul class="col input-images post-images">
                                 <? for ($i = 1; $i <= 5; $i++): ?>
                                     <li>
-                                    <?= $this->element('Feed/photo_upload',
-                                                       ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => true]) ?>
-                                    </li><? endfor ?>
+                                    <?= $this->element('Feed/photo_upload_mini',
+                                                       ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => true]) ?>
+                                    </li>
+                                <? endfor ?>
                             </ul>
                         </div>
                     </div>
+                    <label class="font_normal col-xxs-4 lh_40px" for="KeyResults_<?= $goal['Goal']['id'] ?>">
+                        <i class="fa fa-key mr_2px"></i><?= __d('gl', "成果") ?>
+                    </label>
                     <?=
                     $this->Form->input('Action.key_result_id', [
-                                                                 'label'   => __d('gl', "紐付ける出したい成果を選択(オプション)"),
+                                                                 'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
                                                                  'options' => [null => __d('gl', "選択なし")],
-                                                                 'id'      => 'ActionKeyResultId_' . $goal['Goal']['id']
+                                                                 'class'    => 'form-control col-xxs-8 selectKrForAction',
+                                                                 'id'      => 'ActionKeyResultId_' . $goal['Goal']['id'],
                                                              ]
                     )
                     ?>
-                    <div class="form-group pull-right">
+                    <div class="form-group col-xxs-12 mt_12px">
                         <a href="#" target-id="ActionFormName_<?= $goal['Goal']['id'] ?>"
-                           class="btn btn-white tiny-form-text-close"><?= __d('gl', "キャンセル") ?></a>
+                           class="btn btn-white tiny-form-text-close font_verydark"><?= __d('gl', "キャンセル") ?></a>
                         <?= $this->Form->submit(__d('gl', "アクション登録"), [
                             'div'      => false,
                             'id'       => "ActionFormSubmit_" . $goal['Goal']['id'],
-                            'class'    => 'btn btn-info bd-radius_18px',
+                            'class'    => 'btn btn-info pull-right',
                             'disabled' => 'disabled',
                         ]); ?>
                     </div>
