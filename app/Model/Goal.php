@@ -587,8 +587,6 @@ class Goal extends AppModel
      * @param int  $limit
      * @param null $params
      *
-     * @internal param bool $required_skr
-     * @internal param int $page
      * @return array
      */
     function getAllGoals($limit = 20, $params = null)

@@ -102,7 +102,7 @@
                             <?= h($goal['Goal']['name']) ?></p>
                     </a>
                 </div>
-            <?endif; ?>
+            <? endif; ?>
         </div>
         <div class="col col-xxs-12 font_12px ln_1 goals-column-purpose">
             <?= h($goal['Purpose']['name']) ?>
@@ -122,43 +122,44 @@
                     'inputDefaults' => [
                         'div'       => 'form-group mb_5px develop--font_normal',
                         'wrapInput' => false,
-                        'class'     => 'form-control'
+                        'class'     => 'form-control',
                     ],
-                    //                    'class' => 'well'
+                    'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', $goal['Goal']['id']],
                 ]); ?>
                 <?=
                 $this->Form->input('Action.name', [
-                        'label'          => false,
-                        'rows'           => 1,
-                        'placeholder'    => __d('gl', "アクションをいれる"),
-                        'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput',
-                        'id'             => "ActionFormName_" . $goal['Goal']['id'],
-                        'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
-                        'target-id'      => "ActionFormSubmit_" . $goal['Goal']['id'],
-                    ]
+                                                    'label'          => false,
+                                                    'rows'           => 1,
+                                                    'placeholder'    => __d('gl', "アクションをいれる"),
+                                                    'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput',
+                                                    'id'             => "ActionFormName_" . $goal['Goal']['id'],
+                                                    'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
+                                                    'target-id'      => "ActionFormSubmit_" . $goal['Goal']['id'],
+                                                ]
                 )
                 ?>
                 <div class="goalsCard-activity inline-block col-xxs-2">
                     <i class="fa fa-check-circle mr_1px"></i><span class="ls_number">?</span>
                 </div>
                 <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
-                    <div class="form-group"><label class="font_normal" for="ActionPhotos"><?= __d('gl', "画像追加(オプション)") ?></label>
+                    <div class="form-group"><label class="font_normal" for="ActionPhotos"><?= __d('gl',
+                                                                                                  "画像追加(オプション)") ?></label>
 
                         <div>
                             <ul class="col input-images post-images">
                                 <? for ($i = 1; $i <= 5; $i++): ?>
                                     <li>
                                     <?= $this->element('Feed/photo_upload',
-                                                       ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
+                                                       ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => true]) ?>
                                     </li><? endfor ?>
                             </ul>
                         </div>
                     </div>
                     <?=
                     $this->Form->input('Action.key_result_id', [
-                            'label'   => __d('gl', "紐付ける出したい成果を選択(オプション)"),
-                            'options' => ['test', 'test'],
-                        ]
+                                                                 'label'   => __d('gl', "紐付ける出したい成果を選択(オプション)"),
+                                                                 'options' => ['test', 'test'],
+                                                             ]
                     )
                     ?>
                     <div class="form-group pull-right">
@@ -181,23 +182,24 @@
                             <?= __d('gl', "%d日経過", $limit_day * -1) ?>
                         <? else: ?>
                             <?= __d('gl', "残り%d日", $limit_day) ?>
-                        <?endif; ?>
+                        <? endif; ?>
                     </div>
                 <? endif; ?>
-                    <?
-                    $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
-                    if ($type == "follow") {
-                        $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
-                    }
-                    ?>
-                <a href="#" class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
-                       target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
-                       ajax-url="<?= $this->Html->url($url) ?>"
-                       id="KRsOpen_<?= $goal['Goal']['id'] ?>"
-                        >
+                <?
+                $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
+                if ($type == "follow") {
+                    $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
+                }
+                ?>
+                <a href="#"
+                   class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
+                   target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
+                   ajax-url="<?= $this->Html->url($url) ?>"
+                   id="KRsOpen_<?= $goal['Goal']['id'] ?>"
+                    >
                     <i class="fa fa-caret-down feed-arrow lh_18px"></i>
-                        <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                    </a>
+                    <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
+                </a>
             </div>
             <div class="con col-xxs-12 none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
         <? endif; ?>

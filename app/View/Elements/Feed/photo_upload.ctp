@@ -10,6 +10,7 @@
  * @var                    $data
  * @var                    $post_id
  * @var                    $type
+ * @var                    $has_many
  * @var CodeCompletionView $this
  */
 $model = null;
@@ -21,10 +22,16 @@ if (isset($type)) {
         case "comment":
             $model = "Comment";
             break;
+        case "action_result":
+            $model = "ActionResult";
+            break;
         default:
             $model = "User";
             break;
     }
+}
+if (!isset($has_many)) {
+    $has_many = false;
 }
 ?>
 <!-- START app/View/Elements/Feed/photo_upload.ctp -->
@@ -77,7 +84,12 @@ if (isset($type)) {
                 if (isset($post_id)) {
                     $model_id = $model_id . "_Post_" . $post_id;
                 }
-                echo $this->Form->input('photo' . $index,
+                $field_prefix = $model;
+                if ($has_many) {
+                    $field_prefix .= ".0";
+                }
+
+                echo $this->Form->input($field_prefix . '.photo' . $index,
                                         ['type'         => 'file',
                                          'label'        => false,
                                          'div'          => false,
