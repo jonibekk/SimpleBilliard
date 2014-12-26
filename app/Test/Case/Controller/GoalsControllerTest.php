@@ -351,6 +351,68 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/delete_collabo/' . $this->collabo_id, ['method' => 'POST']);
     }
 
+    function testAddCompletedActionSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'Action'       => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+            ],
+            'ActionResult' => [
+                [
+                    'note' => 'test'
+                ]
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionSuccessNoKR()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'Action'       => [
+                'name' => 'test',
+            ],
+            'ActionResult' => [
+                [
+                    'note' => 'test'
+                ]
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionFailNotCollabo()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'Action'       => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+            ],
+            'ActionResult' => [
+                [
+                    'note' => 'test'
+                ]
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/99999999', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionFailEmptyAction()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+        ];
+        $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
+    }
+
     function testAddFollowSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -688,6 +750,10 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->Action->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->Action->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->GoalCategory->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
