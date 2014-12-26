@@ -32,7 +32,7 @@ if (isset($type)) {
 ?>
 <!-- START app/View/Elements/Feed/photo_upload_mini.ctp -->
 <div class="form-group">
-    <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
+    <div class="fileinput_very_small fileinput-new" data-provides="fileinput">
         <div
             class="fileinput-preview thumbnail nailthumb-container m_0px click-target-enabled photo-plus-frame"
             data-trigger="fileinput"
