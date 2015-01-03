@@ -175,7 +175,7 @@ $this->Form->create('User', [
                                                 ''
                                                ]) ?>
                         </span>
-                    <span class="help-block disp_ib font_11px"><?= __d('gl', '10MB以下') ?></span>
+                    <span class="help-block inline-block font_11px"><?= __d('gl', '10MB以下') ?></span>
                 </div>
             </div>
 
@@ -213,7 +213,7 @@ $this->Form->create('User', [
             ?>
             <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __d('gl',
                                                                                                     "例文を表示") ?></a>
-                <span class="help-block disp_ib font_11px" id="CommentHelp" style="display: none">
+                <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
                     <?= __d('gl', "
 ■ 例文１（技術者向け）<br>
 【今、チームに貢献できることは？】<br>

@@ -12,7 +12,7 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result'];
+        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action'];
     }
 
     /**
@@ -592,6 +592,13 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_kr_list($goal_id)
+    {
+        $this->_ajaxPreProcess();
+        $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list");
+        return $this->_ajaxGetResponse($kr_list);
+    }
+
     function download_all_goal_csv()
     {
         $this->request->allowMethod('post');
@@ -673,5 +680,36 @@ class GoalsController extends AppController
     private function _flashOpenKrs($goal_id)
     {
         $this->Session->setFlash(null, "flash_open_krs", ['goal_id' => $goal_id], 'open_krs');
+    }
+
+    /**
+     * 完了アクション追加
+     * TODO 今後様々なバリエーションのアクションが追加されるが、全てこのfunctionで処理する
+     *
+     * @param $goal_id
+     */
+    public function add_completed_action($goal_id)
+    {
+        $this->request->allowMethod('post');
+        try {
+            $this->Goal->begin();
+            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+            //アクション追加
+            if (!$this->Goal->Action->addCompletedAction($this->request->data, $goal_id)) {
+                throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
+            }
+
+        } catch (RuntimeException $e) {
+            $this->Goal->rollback();
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+
+        $this->Goal->commit();
+        $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));
+        $this->redirect($this->referer());
+
     }
 }

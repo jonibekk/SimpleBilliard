@@ -15,7 +15,7 @@
     <div class="dashboardProfileCard-content">
         <a class="dashboardProfileCard-avatorLink">
             <?= $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'medium'],
-                                           ['class' => 'dashboardProfileCard-avatarImage disp_ib']) ?>
+                                           ['class' => 'dashboardProfileCard-avatarImage inline-block']) ?>
         </a>
 
         <span class="dashboardProfileCard-userField font_bold font_verydark ln_1-f">
@@ -26,11 +26,11 @@
             <div class="dashboardProfileCard-point">
                 <div class="ml_8px"><?= __d('gl', "今期のポイント") ?></div>
                 <div class="text-align_c">
-                    <div class="disp_ib">
+                    <div class="inline-block">
                         <span class="dashboardProfileCard-score font_bold font_33px ml_8px">?</span>
                         <span class="ml_2px">pt</span>
                     </div>
-                    <div class="disp_ib">
+                    <div class="inline-block">
                         <div class="ml_2px"><?= __d('gl', "先週比") ?></div>
                         <span>
                             (<span class="font_seagreen font_bold plr_1px">?<i class="fa fa-level-up"></i></span>)
@@ -41,15 +41,15 @@
             <div class="dashboardProfileCard-activities bd-t mt_8px">
                 <div class="ml_8px mt_5px"><?= __d('gl', "今期のアクティビティ") ?></div>
                 <ul class="dashboardProfileCard-activityList text-align_c col-xxs-12 p_8px mb_0px">
-                    <li class="dashboardProfileCard-activity disp_ib col-xxs-4">
+                    <li class="dashboardProfileCard-activity inline-block col-xxs-4">
                         <div class="ls_title"><?= __d('gl', "アクション") ?></div>
                         <i class="fa fa-check-circle mr_1px"></i><span class="ls_number">?</span>
                     </li>
-                    <li class="dashboardProfileCard-activity disp_ib col-xxs-4">
+                    <li class="dashboardProfileCard-activity inline-block col-xxs-4">
                         <div class="ls_title"><?= __d('gl', "成果") ?></div>
                         <i class="fa fa-key mr_1px"></i><span class="ls_number">?</span>
                     </li>
-                    <li class="dashboardProfileCard-activity disp_ib col-xxs-4">
+                    <li class="dashboardProfileCard-activity inline-block col-xxs-4">
                         <div class="ls_title"><?= __d('gl', "投稿") ?></div>
                         <i class="fa fa-comment-o mr_1px"></i><span class="ls_number" id="CountPostByMe"></span>
                     </li>

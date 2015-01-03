@@ -80,7 +80,7 @@ if ((count($posts) != 20)) {
 ?>
 <div class="panel panel-default feed-read-more" id="FeedMoreRead">
     <div class="panel-body panel-read-more-body">
-        <span style="display: none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
+        <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
         <a href="#" class="btn btn-link click-feed-read-more"
            parent-id="FeedMoreRead"
            next-page-num="<?= $next_page_num ?>"
