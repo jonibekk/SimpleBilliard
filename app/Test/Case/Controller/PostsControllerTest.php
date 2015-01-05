@@ -15,6 +15,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.purpose',
         'app.goal',
         'app.action',

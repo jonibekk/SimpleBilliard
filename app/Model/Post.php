@@ -151,7 +151,7 @@ class Post extends AppModel
         'User',
         'Team',
         'Goal',
-        'Action',
+        'ActionResult',
     ];
 
     /**

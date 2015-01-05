@@ -171,7 +171,9 @@ class Action extends AppModel
      * @var array
      */
     public $hasMany = [
-        'ActionResult',
+        'ActionResult' => [
+            'dependent' => true,
+        ],
     ];
 
     public function addCompletedAction($data, $goal_id)

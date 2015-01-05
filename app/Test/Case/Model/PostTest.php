@@ -15,6 +15,7 @@ class PostTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.action',
         'app.post',
         'app.user', 'app.notify_setting',
@@ -76,6 +77,7 @@ class PostTest extends CakeTestCase
 
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
+        $this->Post->create();
         $res = $this->Post->add($postData);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }

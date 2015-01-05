@@ -15,6 +15,7 @@ class GoalTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.action',
         'app.purpose',
         'app.goal',

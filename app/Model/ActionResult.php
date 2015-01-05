@@ -122,6 +122,17 @@ class ActionResult extends AppModel
     ];
 
     /**
+     * hasMany associations
+     *
+     * @var array
+     */
+    public $hasMany = [
+        'Post' => [
+            'dependent' => true,
+        ],
+    ];
+
+    /**
      * アクション数のカウントを返却
      *
      * @param string $type
