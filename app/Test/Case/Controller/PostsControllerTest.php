@@ -1042,6 +1042,10 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->PostLike->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostLike->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->ActionResult->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->ActionResult->current_team_id = '1';
 
         return $Posts;
     }

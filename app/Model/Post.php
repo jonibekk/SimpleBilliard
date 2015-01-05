@@ -4,17 +4,18 @@ App::uses('AppModel', 'Model');
 /**
  * Post Model
  *
- * @property User               $User
- * @property Team               $Team
- * @property CommentMention     $CommentMention
- * @property Comment            $Comment
- * @property Goal               $Goal
- * @property GivenBadge         $GivenBadge
- * @property PostLike           $PostLike
- * @property PostMention        $PostMention
- * @property PostShareUser      $PostShareUser
- * @property PostShareCircle    $PostShareCircle
- * @property PostRead           $PostRead
+ * @property User                   $User
+ * @property Team                   $Team
+ * @property CommentMention         $CommentMention
+ * @property Comment                $Comment
+ * @property Goal                   $Goal
+ * @property GivenBadge             $GivenBadge
+ * @property PostLike               $PostLike
+ * @property PostMention            $PostMention
+ * @property PostShareUser          $PostShareUser
+ * @property PostShareCircle        $PostShareCircle
+ * @property PostRead               $PostRead
+ * @property ActionResult           $ActionResult
  */
 class Post extends AppModel
 {

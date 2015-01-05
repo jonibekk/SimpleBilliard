@@ -24,7 +24,7 @@ class PostFixture extends CakeTestFixture
         'public_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'important_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'goal_id'              => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'action_result_id'     => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'アクション結果ID'),
+        'action_result_id'     => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'アクションID'),
         'photo1_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿画像1', 'charset' => 'utf8'),
         'photo2_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿画像2', 'charset' => 'utf8'),
         'photo3_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿画像3', 'charset' => 'utf8'),
@@ -35,9 +35,9 @@ class PostFixture extends CakeTestFixture
         'del_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
         'deleted'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
         'created'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を追加した日付時刻'),
-        'modified'             => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を更新した日付時刻'),
+        'modified'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
         'indexes'              => array(
-            'PRIMARY'          => array('column' => array('id', 'modified'), 'unique' => 1),
+            'PRIMARY'          => array('column' => 'id', 'unique' => 1),
             'user_id'          => array('column' => 'user_id', 'unique' => 0),
             'team_id'          => array('column' => 'team_id', 'unique' => 0),
             'goal_id'          => array('column' => 'goal_id', 'unique' => 0),
@@ -46,8 +46,7 @@ class PostFixture extends CakeTestFixture
             'type'             => array('column' => 'type', 'unique' => 0),
             'public_flg'       => array('column' => 'public_flg', 'unique' => 0),
             'important_flg'    => array('column' => 'important_flg', 'unique' => 0),
-            'team_id_modified' => array('column' => array('team_id', 'modified'), 'unique' => 0),
-            'action_result_id' => array('column' => 'action_result_id', 'unique' => 0)
+            'action_result_id' => array('column' => 'action_result_id', 'unique' => 0),
         ),
         'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
