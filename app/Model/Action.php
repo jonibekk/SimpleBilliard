@@ -198,4 +198,11 @@ class Action extends AppModel
         return $res;
     }
 
+    public function releaseKr($kr_id)
+    {
+        $res = $this->updateAll(['Action.key_result_id' => null],
+                                ['Action.key_result_id' => $kr_id, 'Action.team_id' => $this->current_team_id]);
+        return $res;
+    }
+
 }

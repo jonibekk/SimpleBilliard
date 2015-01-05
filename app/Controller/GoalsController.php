@@ -424,6 +424,9 @@ class GoalsController extends AppController
         $this->Goal->KeyResult->id = $kr_id;
         $kr = $this->Goal->KeyResult->read();
         $this->Goal->KeyResult->delete();
+        //関連アクションの紐付け解除
+        $this->Goal->Action->releaseKr($kr_id);
+
         $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
