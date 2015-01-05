@@ -120,4 +120,39 @@ class ActionResult extends AppModel
             'foreignKey' => 'completed_user_id',
         ],
     ];
+
+    /**
+     * アクション数のカウントを返却
+     *
+     * @param string $type
+     * @param null   $start_date
+     * @param null   $end_date
+     *
+     * @return int
+     */
+    function getCount($type = 'me', $start_date = null, $end_date = null)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+            ]
+        ];
+        //タイプ別に条件変更する
+        switch ($type) {
+            case 'me':
+                $options['conditions']['completed_user_id'] = $this->my_uid;
+                break;
+            default:
+                break;
+        }
+        //期間で絞り込む
+        if ($start_date) {
+            $options['conditions']['modified >'] = $start_date;
+        }
+        if ($end_date) {
+            $options['conditions']['modified <'] = $end_date;
+        }
+        $res = $this->find('count', $options);
+        return $res;
+    }
 }
