@@ -43,7 +43,7 @@
                 <ul class="dashboardProfileCard-activityList text-align_c col-xxs-12 p_8px mb_0px">
                     <li class="dashboardProfileCard-activity inline-block col-xxs-4">
                         <div class="ls_title"><?= __d('gl', "アクション") ?></div>
-                        <i class="fa fa-check-circle mr_1px"></i><span class="ls_number">?</span>
+                        <i class="fa fa-check-circle mr_1px"></i><span class="ls_number" id="CountActionByMe"></span>
                     </li>
                     <li class="dashboardProfileCard-activity inline-block col-xxs-4">
                         <div class="ls_title"><?= __d('gl', "成果") ?></div>
@@ -65,6 +65,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         ajaxAppendCount('CountPostByMe', "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_post_count'])?>");
+        ajaxAppendCount('CountActionByMe', "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_action_count'])?>");
     });
 </script>
 <? $this->end() ?>

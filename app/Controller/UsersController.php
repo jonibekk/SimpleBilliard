@@ -655,4 +655,30 @@ class UsersController extends AppController
         ];
         return $this->_ajaxGetResponse($result);
     }
+
+    /**
+     * ajaxでアクション数を取得(defaultで自分のアクション数および今期)
+     *
+     * @param string $type
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_action_count($type = "me")
+    {
+        $start_date = isset($this->request->params['named']['start_date']) ? $this->request->params['named']['start_date'] : null;
+        $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
+        if (!$start_date && !$end_date) {
+            //デフォルトで今期
+            $start_date = $this->User->TeamMember->Team->getTermStartDate();
+            $end_date = $this->User->TeamMember->Team->getTermEndDate();
+        }
+        $action_count = $this->Goal->Action->ActionResult->getCount($type, $start_date, $end_date);
+        $this->_ajaxPreProcess();
+
+        $result = [
+            'count' => $action_count
+        ];
+        return $this->_ajaxGetResponse($result);
+    }
+
 }
