@@ -162,6 +162,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Goal->id = $id;
         $this->Goal->delete();
+        $this->Goal->Action->releaseGoal($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
