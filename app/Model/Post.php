@@ -499,7 +499,27 @@ class Post extends AppModel
                     ]
                 ],
                 'ActionResult'    => [
-                    'Action',
+                    'fields' => [
+                        'id',
+                        'note',
+                        'photo1_file_name',
+                        'photo2_file_name',
+                        'photo3_file_name',
+                        'photo4_file_name',
+                        'photo5_file_name',
+                    ],
+                    'Action' => [
+                        'fields'    => [
+                            'id',
+                            'name',
+                        ],
+                        'KeyResult' => [
+                            'fields' => [
+                                'id',
+                                'name',
+                            ],
+                        ],
+                    ],
                 ]
             ],
         ];

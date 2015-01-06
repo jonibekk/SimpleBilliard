@@ -15,13 +15,9 @@
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
             <? if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
+                <!--START Goal Post Header -->
                 <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                     <div class="col col-xxs-12">
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
-                           class="no-line font_verydark modal-ajax-get">
-                            <?= $post['Goal']['name'] ?>
-                        </a>
-
                         <div class="pull-right">
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
                                class="no-line font_verydark modal-ajax-get">
@@ -39,8 +35,16 @@
                                 ?>
                             </a>
                         </div>
+                        <div class="ln_contain w_88per">
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
+                               class="no-line font_verydark modal-ajax-get">
+                                <i class="fa fa-flag">&nbsp;<?= h($post['Goal']['name']) ?></i>
+                            </a>
+
+                        </div>
                     </div>
                 </div>
+                <!--END Goal Post Header -->
             <? endif; ?>
             <div class="panel-body pt_10px plr_11px pb_8px">
                 <div class="col col-xxs-12 feed-user">
@@ -80,30 +84,32 @@
                                                ['class' => 'feed-img']) ?>
                     <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
                     <div class="font_11px font_lightgray">
-                        <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?><span
-                            class="font_lightgray"> ･ </span>
-                        <?
-                        //公開の場合
-                        if ($post['share_mode'] == Post::SHARE_ALL): ?>
-                            <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
-                        <?
-                        //自分のみ
-                        elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
-                            <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
-                        <?
-                        //共有ユーザ
-                        elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                               class="modal-ajax-get-share-circles-users link-dark-gray">
+                        <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
+                        <? if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
+                            <span class="font_lightgray"> ･ </span>
+                            <?
+                            //公開の場合
+                            if ($post['share_mode'] == Post::SHARE_ALL): ?>
+                                <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
+                            <?
+                            //自分のみ
+                            elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
                                 <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
-                            </a>
-                        <?
-                        //共有サークル、共有ユーザ
-                        elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                               class="modal-ajax-get-share-circles-users link-dark-gray">
-                                <i class="fa fa-circle-o"></i>&nbsp;<?= $post['share_text'] ?>
-                            </a>
+                            <?
+                            //共有ユーザ
+                            elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                                   class="modal-ajax-get-share-circles-users link-dark-gray">
+                                    <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
+                                </a>
+                            <?
+                            //共有サークル、共有ユーザ
+                            elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
+                                   class="modal-ajax-get-share-circles-users link-dark-gray">
+                                    <i class="fa fa-circle-o"></i>&nbsp;<?= $post['share_text'] ?>
+                                </a>
+                            <? endif; ?>
                         <? endif; ?>
                     </div>
                 </div>
@@ -116,14 +122,23 @@
                      id="PostTextBody_<?= $post['Post']['id'] ?>">
                     <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                         <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+                    <? elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                        <i class="fa fa-check-circle">&nbsp;<?= h($post['ActionResult']['Action']['name']) ?></i>
                     <? else: ?>
                         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
                     <? endif; ?>
                 </div>
                 <?
                 $photo_count = 0;
+                //タイプ別に切り分け
+                if ($post['Post']['type'] == Post::TYPE_ACTION) {
+                    $model_name = 'ActionResult';
+                }
+                else {
+                    $model_name = 'Post';
+                }
                 for ($i = 1; $i <= 5; $i++) {
-                    if ($post['Post']["photo{$i}_file_name"]) {
+                    if ($post[$model_name]["photo{$i}_file_name"]) {
                         $photo_count++;
                     }
                 }
@@ -136,8 +151,8 @@
                                 <ol class="carousel-indicators">
                                     <? $index = 0 ?>
                                     <? for ($i = 1; $i <= 5; $i++): ?>
-                                        <? if ($post['Post']["photo{$i}_file_name"]): ?>
-                                            <li data-target="#CarouselPost_<?= $post['Post']['id'] ?>"
+                                        <? if ($post[$model_name]["photo{$i}_file_name"]): ?>
+                                            <li data-target="#CarouselPost_<?= $post[$model_name]['id'] ?>"
                                                 data-slide-to="<?= $index ?>"
                                                 class="<?= ($index === 0) ? "active" : null ?>"></li>
                                             <? $index++ ?>
@@ -149,10 +164,10 @@
                             <div class="carousel-inner">
                                 <? $index = 0 ?>
                                 <? for ($i = 1; $i <= 5; $i++): ?>
-                                    <? if ($post['Post']["photo{$i}_file_name"]): ?>
+                                    <? if ($post[$model_name]["photo{$i}_file_name"]): ?>
                                         <div class="item <?= ($index === 0) ? "active" : null ?>">
                                             <a href="<?=
-                                            $this->Upload->uploadUrl($post, "Post.photo" . $i,
+                                            $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
                                                                      ['style' => 'large']) ?>"
                                                rel="lightbox" data-lightbox="LightBoxPost_<?= $post['Post']['id'] ?>">
                                                 <?=
@@ -160,7 +175,7 @@
                                                                    [
                                                                        'class'         => 'lazy bd-s',
                                                                        'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                                   "Post.photo" . $i,
+                                                                                                                   "{$model_name}.photo" . $i,
                                                                                                                    ['style' => 'small'])
                                                                    ]
                                                 )
@@ -258,7 +273,11 @@
                             </div>
                         </a>
                     </div>
-
+                <? endif; ?>
+                <? if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['Action']['KeyResult']['name'])): ?>
+                    <div class="col col-xxs-12 pt_6px">
+                        <i class="fa fa-key">&nbsp;<?= h($post['ActionResult']['Action']['KeyResult']['name']) ?></i>
+                    </div>
                 <? endif; ?>
                 <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="col col-xxs-12 p_0px">
