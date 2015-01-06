@@ -497,6 +497,9 @@ class Post extends AppModel
                             'name'
                         ]
                     ]
+                ],
+                'ActionResult'    => [
+                    'Action',
                 ]
             ],
         ];
