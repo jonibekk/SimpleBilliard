@@ -21,6 +21,8 @@ class PostTest extends CakeTestCase
         'app.user', 'app.notify_setting',
         'app.team',
         'app.goal',
+        'app.follower',
+        'app.collaborator',
         'app.comment_mention',
         'app.comment',
         'app.comment_like',
@@ -374,5 +376,16 @@ class PostTest extends CakeTestCase
     {
         $this->Post->current_team_id = 1;
         $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1);
+    }
+
+    function testGetFollowCollaboPostList()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+        $this->Post->Goal->Follower->current_team_id = 1;
+        $this->Post->Goal->Collaborator->current_team_id = 1;
+
+        $this->Post->Goal->Follower->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1]);
+        $this->Post->getFollowCollaboPostList(1, 10000);
     }
 }

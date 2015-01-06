@@ -81,6 +81,7 @@ class ActionResultTest extends CakeTestCase
     {
         $this->_setDefault();
         $this->ActionResult->getCount('me', 1, 1000000000);
+        $this->ActionResult->getCount('xxxx', 1, 1000000000);
     }
 
     function _setDefault()
