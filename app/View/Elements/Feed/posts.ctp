@@ -35,10 +35,10 @@
                                 ?>
                             </a>
                         </div>
-                        <div class="ln_contain w_88per">
+                        <div class="ln_contain w_88per h_28px">
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
                                class="no-line font_verydark modal-ajax-get">
-                                <i class="fa fa-flag">&nbsp;<?= h($post['Goal']['name']) ?></i>
+                                <i class="fa fa-flag font_gray">&nbsp;<?= h($post['Goal']['name']) ?></i>
                             </a>
 
                         </div>
