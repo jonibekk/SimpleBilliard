@@ -265,6 +265,38 @@ class Post extends AppModel
         return $res;
     }
 
+    /**
+     * @param        $start
+     * @param        $end
+     * @param string $order
+     * @param string $order_direction
+     * @param int    $limit
+     *
+     * @return array|null|void
+     */
+    public function getFollowCollaboPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    {
+        $g_list = [];
+        $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
+        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid));
+
+        if (empty($g_list)) {
+            return [];
+        }
+        $options = [
+            'conditions' => [
+                'team_id'                  => $this->current_team_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+                'goal_id'                  => $g_list,
+            ],
+            'order'      => [$order => $order_direction],
+            'limit'      => $limit,
+            'fields'     => ['id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     public function isPublic($post_id)
     {
         $options = [
@@ -358,6 +390,9 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
             //自分のサークルが共有範囲指定された投稿
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
+            //フォローorコラボのゴール投稿を取得
+            $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
+
         }
         //パラメータ指定あり
         else {
@@ -411,6 +446,7 @@ class Post extends AppModel
             ];
             $post_list = $this->find('list', $post_options);
         }
+
         //投稿を既読に
         $this->PostRead->red($post_list);
         //コメントを既読に
