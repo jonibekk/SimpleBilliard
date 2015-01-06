@@ -48,37 +48,39 @@
             <? endif; ?>
             <div class="panel-body pt_10px plr_11px pb_8px">
                 <div class="col col-xxs-12 feed-user">
-                    <div class="pull-right">
-                        <div class="dropdown">
-                            <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                                <i class="fa fa-chevron-down feed-arrow"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                    <li><a href="#" class="target-toggle-click"
-                                           target-id="PostEditForm_<?= $post['Post']['id'] ?>"
-                                           opend-text="<?= __d('gl', "編集をやめる") ?>"
-                                           closed-text="<?= __d('gl', "投稿を編集") ?>"
-                                           click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
-                                           hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
-                                            ><?= __d('gl', "投稿を編集") ?></a>
+                    <? if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
+                        <div class="pull-right">
+                            <div class="dropdown">
+                                <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
+                                    <i class="fa fa-chevron-down feed-arrow"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                                    <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                                        <li><a href="#" class="target-toggle-click"
+                                               target-id="PostEditForm_<?= $post['Post']['id'] ?>"
+                                               opend-text="<?= __d('gl', "編集をやめる") ?>"
+                                               closed-text="<?= __d('gl', "投稿を編集") ?>"
+                                               click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
+                                               hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
+                                                ><?= __d('gl', "投稿を編集") ?></a>
+                                        </li>
+                                    <? endif ?>
+                                    <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                                        <li><?=
+                                            $this->Form->postLink(__d('gl', "投稿を削除"),
+                                                                  ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
+                                                                  null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
+                                    <? endif ?>
+                                    <li><a href="#" class="copy_me"
+                                           data-clipboard-text="<?=
+                                           $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
+                                                            true) ?>">
+                                            <?= __d('gl', "リンクをコピー") ?></a>
                                     </li>
-                                <? endif ?>
-                                <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                    <li><?=
-                                        $this->Form->postLink(__d('gl', "投稿を削除"),
-                                                              ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
-                                                              null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
-                                <? endif ?>
-                                <li><a href="#" class="copy_me"
-                                       data-clipboard-text="<?=
-                                       $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
-                                                        true) ?>">
-                                        <?= __d('gl', "リンクをコピー") ?></a>
-                                </li>
-                            </ul>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    <? endif; ?>
                     <?=
                     $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
                                                ['class' => 'feed-img']) ?>
