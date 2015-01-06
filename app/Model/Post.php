@@ -249,34 +249,6 @@ class Post extends AppModel
         return $res;
     }
 
-    /**
-     * @param $model_id
-     * @param $type
-     * @param $goal_id
-     *
-     * @return bool
-     */
-    public function addExtendPost($model_id, $type, $goal_id = null)
-    {
-        $data = [
-            'type'    => $type,
-            'team_id' => $this->current_team_id,
-            'user_id' => $this->my_uid
-        ];
-
-        switch ($type) {
-            case self::TYPE_ACTION:
-                $data['action_result_id'] = $model_id;
-                $data['goal_id'] = $goal_id;
-                break;
-            default:
-                return false;
-        }
-
-        $res = $this->save($data);
-        return $res;
-    }
-
     public function getPublicList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
@@ -740,18 +712,36 @@ class Post extends AppModel
         return $share_member_list;
     }
 
-    function addGoalPost($type, $goal_id, $uid = null)
+    /**
+     * @param      $type
+     * @param      $goal_id
+     * @param null $uid
+     * @param bool $public
+     * @param null $model_id
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    function addGoalPost($type, $goal_id, $uid = null, $public = true, $model_id = null)
     {
         if (!$uid) {
             $uid = $this->my_uid;
         }
+
         $data = [
             'user_id'    => $uid,
             'team_id'    => $this->current_team_id,
             'type'       => $type,
-            'public_flg' => true,
+            'public_flg' => $public,
             'goal_id'    => $goal_id,
         ];
+
+        switch ($type) {
+            case self::TYPE_ACTION:
+                $data['action_result_id'] = $model_id;
+                break;
+        }
+
         return $this->save($data);
     }
 

@@ -702,8 +702,8 @@ class GoalsController extends AppController
             }
             //アクション追加,投稿
             if (!$this->Goal->Action->addCompletedAction($this->request->data, $goal_id)
-                || !$this->Goal->Post->addExtendPost($this->Goal->Action->ActionResult->getLastInsertID(),
-                                                     Post::TYPE_ACTION, $goal_id)
+                || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
+                                                   $this->Goal->Action->ActionResult->getLastInsertID())
             ) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }
