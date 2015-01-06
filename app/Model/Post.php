@@ -249,6 +249,34 @@ class Post extends AppModel
         return $res;
     }
 
+    /**
+     * @param $model_id
+     * @param $type
+     * @param $goal_id
+     *
+     * @return bool
+     */
+    public function addExtendPost($model_id, $type, $goal_id = null)
+    {
+        $data = [
+            'type'    => $type,
+            'team_id' => $this->current_team_id,
+            'user_id' => $this->my_uid
+        ];
+
+        switch ($type) {
+            case self::TYPE_ACTION:
+                $data['action_result_id'] = $model_id;
+                $data['goal_id'] = $goal_id;
+                break;
+            default:
+                return false;
+        }
+
+        $res = $this->save($data);
+        return $res;
+    }
+
     public function getPublicList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
