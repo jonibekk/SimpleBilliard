@@ -14,6 +14,7 @@ class CirclesControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.cake_session',
         'app.circle',
         'app.team',
@@ -236,7 +237,7 @@ class CirclesControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Circles->Auth->staticExpects($this->any())->method('user')
                       ->will($this->returnValueMap($value_map)
-            );
+                      );
         /** @noinspection PhpUndefinedFieldInspection */
         $Circles->Circle->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

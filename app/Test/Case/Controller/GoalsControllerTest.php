@@ -15,6 +15,7 @@ class GoalsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.action',
         'app.purpose',
         'app.goal',
@@ -103,6 +104,7 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/ajax_get_more_index_items/page:2', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxGetKRList()
     {
         $this->_getGoalsCommonMock();

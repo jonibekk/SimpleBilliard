@@ -4,17 +4,18 @@ App::uses('AppModel', 'Model');
 /**
  * Post Model
  *
- * @property User               $User
- * @property Team               $Team
- * @property CommentMention     $CommentMention
- * @property Comment            $Comment
- * @property Goal               $Goal
- * @property GivenBadge         $GivenBadge
- * @property PostLike           $PostLike
- * @property PostMention        $PostMention
- * @property PostShareUser      $PostShareUser
- * @property PostShareCircle    $PostShareCircle
- * @property PostRead           $PostRead
+ * @property User                   $User
+ * @property Team                   $Team
+ * @property CommentMention         $CommentMention
+ * @property Comment                $Comment
+ * @property Goal                   $Goal
+ * @property GivenBadge             $GivenBadge
+ * @property PostLike               $PostLike
+ * @property PostMention            $PostMention
+ * @property PostShareUser          $PostShareUser
+ * @property PostShareCircle        $PostShareCircle
+ * @property PostRead               $PostRead
+ * @property ActionResult           $ActionResult
  */
 class Post extends AppModel
 {
@@ -151,7 +152,7 @@ class Post extends AppModel
         'User',
         'Team',
         'Goal',
-        'Action',
+        'ActionResult',
     ];
 
     /**
@@ -264,6 +265,38 @@ class Post extends AppModel
         return $res;
     }
 
+    /**
+     * @param        $start
+     * @param        $end
+     * @param string $order
+     * @param string $order_direction
+     * @param int    $limit
+     *
+     * @return array|null|void
+     */
+    public function getFollowCollaboPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    {
+        $g_list = [];
+        $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
+        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid));
+
+        if (empty($g_list)) {
+            return [];
+        }
+        $options = [
+            'conditions' => [
+                'team_id'                  => $this->current_team_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+                'goal_id'                  => $g_list,
+            ],
+            'order'      => [$order => $order_direction],
+            'limit'      => $limit,
+            'fields'     => ['id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     public function isPublic($post_id)
     {
         $options = [
@@ -357,6 +390,9 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
             //自分のサークルが共有範囲指定された投稿
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
+            //フォローorコラボのゴール投稿を取得
+            $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
+
         }
         //パラメータ指定あり
         else {
@@ -410,6 +446,7 @@ class Post extends AppModel
             ];
             $post_list = $this->find('list', $post_options);
         }
+
         //投稿を既読に
         $this->PostRead->red($post_list);
         //コメントを既読に
@@ -468,6 +505,29 @@ class Post extends AppModel
                             'name'
                         ]
                     ]
+                ],
+                'ActionResult'    => [
+                    'fields' => [
+                        'id',
+                        'note',
+                        'photo1_file_name',
+                        'photo2_file_name',
+                        'photo3_file_name',
+                        'photo4_file_name',
+                        'photo5_file_name',
+                    ],
+                    'Action' => [
+                        'fields'    => [
+                            'id',
+                            'name',
+                        ],
+                        'KeyResult' => [
+                            'fields' => [
+                                'id',
+                                'name',
+                            ],
+                        ],
+                    ],
                 ]
             ],
         ];
@@ -688,18 +748,36 @@ class Post extends AppModel
         return $share_member_list;
     }
 
-    function addGoalPost($type, $goal_id, $uid = null)
+    /**
+     * @param      $type
+     * @param      $goal_id
+     * @param null $uid
+     * @param bool $public
+     * @param null $model_id
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    function addGoalPost($type, $goal_id, $uid = null, $public = true, $model_id = null)
     {
         if (!$uid) {
             $uid = $this->my_uid;
         }
+
         $data = [
             'user_id'    => $uid,
             'team_id'    => $this->current_team_id,
             'type'       => $type,
-            'public_flg' => true,
+            'public_flg' => $public,
             'goal_id'    => $goal_id,
         ];
+
+        switch ($type) {
+            case self::TYPE_ACTION:
+                $data['action_result_id'] = $model_id;
+                break;
+        }
+
         return $this->save($data);
     }
 

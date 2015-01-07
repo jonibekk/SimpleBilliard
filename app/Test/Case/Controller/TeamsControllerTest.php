@@ -14,6 +14,7 @@ class TeamsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.goal',
         'app.local_name',
         'app.cake_session',
@@ -78,7 +79,7 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
 
         $data = [
             'Team' => [
@@ -112,7 +113,7 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
 
         $data = [
             'Team' => [
@@ -160,7 +161,7 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         $postData = [
             'Team' => [
                 'name' => "test",
@@ -223,11 +224,11 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($session_value_map)
-            );
+                       );
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'GET']);
     }
@@ -266,7 +267,7 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedFieldInspection */
         $Teams->Team->TeamMember->myStatusWithTeam = null;
         $data = [
@@ -290,7 +291,7 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($session_value_map)
-            );
+                       );
         $emails = "aaa@example.com";
         $data = ['Team' => ['emails' => $emails]];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -352,11 +353,11 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($session_value_map)
-            );
+                       );
         $data = ['Team' => ['emails' => $email]];
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
@@ -417,11 +418,11 @@ class TeamsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($session_value_map)
-            );
+                       );
         $data = ['Team' => ['emails' => $email]];
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
