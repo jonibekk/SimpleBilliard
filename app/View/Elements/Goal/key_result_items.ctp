@@ -24,7 +24,7 @@
                 <div class="inline-block responsive-goal-title-width">
                     <span class="ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
-                    <i class="fa fa-check-circle"><span class="ml_2px">0</span></i>
+                    <i class="fa fa-check-circle"><span class="ml_2px"><?= h($kr['KeyResult']['action_count']) ?></span></i>
                 </div>
             </div>
             <? if ($kr_can_edit): ?>
@@ -93,5 +93,5 @@
     <div class="col col-xxs-12">
         <?= __d('gl', "成果はまだありません。") ?>
     </div>
-<?endif; ?>
+<? endif; ?>
 <!-- End app/View/Elements/Goal/key_result_items.ctp -->
