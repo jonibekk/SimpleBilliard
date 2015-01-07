@@ -15,11 +15,14 @@ class PostTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.action',
         'app.post',
         'app.user', 'app.notify_setting',
         'app.team',
         'app.goal',
+        'app.follower',
+        'app.collaborator',
         'app.comment_mention',
         'app.comment',
         'app.comment_like',
@@ -76,6 +79,7 @@ class PostTest extends CakeTestCase
 
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
+        $this->Post->create();
         $res = $this->Post->add($postData);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
@@ -372,5 +376,16 @@ class PostTest extends CakeTestCase
     {
         $this->Post->current_team_id = 1;
         $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1);
+    }
+
+    function testGetFollowCollaboPostList()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+        $this->Post->Goal->Follower->current_team_id = 1;
+        $this->Post->Goal->Collaborator->current_team_id = 1;
+
+        $this->Post->Goal->Follower->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1]);
+        $this->Post->getFollowCollaboPostList(1, 10000);
     }
 }

@@ -77,9 +77,17 @@ class ActionResultTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetCount()
     {
+        $this->_setDefault();
+        $this->ActionResult->getCount('me', 1, 1000000000);
+        $this->ActionResult->getCount('xxxx', 1, 1000000000);
+    }
 
+    function _setDefault()
+    {
+        $this->ActionResult->current_team_id = 1;
+        $this->ActionResult->my_uid = 1;
     }
 
 }

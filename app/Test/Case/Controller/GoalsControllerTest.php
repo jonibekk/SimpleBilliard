@@ -15,6 +15,7 @@ class GoalsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.action',
         'app.purpose',
         'app.goal',
@@ -101,6 +102,15 @@ class GoalsControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_more_index_items/page:2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetKRList()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_kr_list/1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -349,6 +359,68 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->Collaborator->id = $this->collabo_id;
         $Goals->Goal->Collaborator->saveField('user_id', 99999999);
         $this->testAction('/goals/delete_collabo/' . $this->collabo_id, ['method' => 'POST']);
+    }
+
+    function testAddCompletedActionSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'Action'       => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+            ],
+            'ActionResult' => [
+                [
+                    'note' => 'test'
+                ]
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionSuccessNoKR()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'Action'       => [
+                'name' => 'test',
+            ],
+            'ActionResult' => [
+                [
+                    'note' => 'test'
+                ]
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionFailNotCollabo()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'Action'       => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+            ],
+            'ActionResult' => [
+                [
+                    'note' => 'test'
+                ]
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/99999999', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionFailEmptyAction()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+        ];
+        $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddFollowSuccess()
@@ -688,6 +760,10 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->Action->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->Action->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->GoalCategory->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

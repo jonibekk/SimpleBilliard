@@ -34,7 +34,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormPurposeWrap",
@@ -83,7 +83,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
                                           ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP01],
-                                          ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
+                                          ['class' => 'btn btn-link btn-lightGray bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?=
                         $this->Form->submit(__d('gl', "次のステップ"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
@@ -104,7 +104,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormKeyResultWrap",
@@ -252,8 +252,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                 "変更") ?></a></span>
                             </p>
 
-                            <div class="input-group date plr_5px goal-set-date" style="display: none"
-                                 id="KeyResult0StartDateInputWrap">
+                            <div class="input-group date plr_5px goal-set-date none" id="KeyResult0StartDateInputWrap">
                                 <?=
                                 $this->Form->input('start_date',
                                                    [
@@ -278,7 +277,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <?=
                         $this->Html->link(__d('gl', "詳しくはこちら"),
                                           ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP02],
-                                          ['class' => 'btn btn-link btn-white bd-radius_4px modal-ajax-get', 'div' => false]) ?>
+                                          ['class' => 'btn btn-link btn-lightGray bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                         <?if (isset($this->request->data['KeyResult'][0])) {
                             $disabled = false;
                         }
@@ -307,7 +306,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             <?=
             $this->Html->link(__d('gl', "変更する"), "#",
                               [
-                                  'class'     => 'btn btn-link btn_pureWhite goal-add-edit-button pull-right bd-radius_4px',
+                                  'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
                                   'div'       => false,
                                   'style'     => 'display:none',
                                   'target-id' => "AddGoalFormOtherWrap",
@@ -394,7 +393,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                         'errorMessage' => false,
                                                        ]) ?>
                                 </span>
-                                <span class="help-block disp_ib font_11px"><?= __d('gl', '10MB以下') ?></span>
+                                <span class="help-block inline-block font_11px"><?= __d('gl', '10MB以下') ?></span>
                             </div>
                         </div>
 

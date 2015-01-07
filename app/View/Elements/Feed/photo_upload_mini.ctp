@@ -10,7 +10,6 @@
  * @var                    $data
  * @var                    $post_id
  * @var                    $type
- * @var                    $has_many
  * @var CodeCompletionView $this
  */
 $model = null;
@@ -30,18 +29,15 @@ if (isset($type)) {
             break;
     }
 }
-if (!isset($has_many)) {
-    $has_many = false;
-}
 ?>
-<!-- START app/View/Elements/Feed/photo_upload.ctp -->
+<!-- START app/View/Elements/Feed/photo_upload_mini.ctp -->
 <div class="form-group">
-    <div class="fileinput_post_comment fileinput-new" data-provides="fileinput">
+    <div class="fileinput_very_small fileinput-new" data-provides="fileinput">
         <div
             class="fileinput-preview thumbnail nailthumb-container m_0px click-target-enabled photo-plus-frame"
             data-trigger="fileinput"
             target-id="<?= $submit_id ?>"
-            style="width: 50px; height: 50px;">
+            style="width: 34px; height: 34px;">
             <? $delete_style = null ?>
             <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
                 <? $delete_style = "display:block" ?>
@@ -49,13 +45,13 @@ if (!isset($has_many)) {
                 $this->Html->image('ajax-loader.gif',
                                    [
                                        'class'         => 'lazy',
-                                       'style'         => 'width: 50px; height: 50px;',
+                                       'style'         => 'width: 34px; height: 34px;',
                                        'data-original' => $this->Upload->uploadUrl($data, "{$model}.photo" . $index,
-                                                                                   ['style' => 'small'])
+                                                                                   ['style' => ''])
                                    ]
                 )
                 ?>
-            <? endif ?><? if ($index == 1): ?><i class="fa fa-plus photo-plus"></i><? endif; ?>
+            <? endif ?><? if ($index == 1): ?><i class="fa fa-plus photo-plus-mini"></i><? endif; ?>
         </div>
         <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
             <div class="custom-wrapper">
@@ -88,7 +84,6 @@ if (!isset($has_many)) {
                 if ($has_many) {
                     $field_prefix .= ".0";
                 }
-
                 echo $this->Form->input($field_prefix . '.photo' . $index,
                                         ['type'         => 'file',
                                          'label'        => false,
@@ -103,4 +98,4 @@ if (!isset($has_many)) {
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Feed/photo_upload.ctp -->
+<!-- END app/View/Elements/Feed/photo_upload_mini.ctp -->
