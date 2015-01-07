@@ -795,6 +795,7 @@ class Post extends AppModel
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id,
+                'type'    => self::TYPE_NORMAL
             ]
         ];
         //タイプ別に条件変更する
