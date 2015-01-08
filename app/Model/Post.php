@@ -566,8 +566,8 @@ class Post extends AppModel
         if (!isset($post['Post']['goal_id']) || !$post['Post']['goal_id']) {
             return false;
         }
-        if ($this->Goal->Collaborator->isCollaborated($post['Post']['goal_id'])
-            || $this->Goal->Follower->isFollowed($post['Post']['goal_id'])
+        if ($this->Goal->Follower->isFollowed($post['Post']['goal_id'])
+            || $this->Goal->Collaborator->isCollaborated($post['Post']['goal_id'])
         ) {
             return true;
         }
