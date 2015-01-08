@@ -21,7 +21,7 @@ class GoalsController extends AppController
     public function index()
     {
         $this->_setMyCircle();
-        $goals = $this->Goal->getAllGoals();
+        $goals = $this->Goal->getAllGoals(300);//TODO 暫定的に300、将来的に20に戻す
         $my_goals = $this->Goal->getMyGoals();
         $collabo_goals = $this->Goal->getMyCollaboGoals();
         $follow_goals = $this->Goal->getMyFollowedGoals();
@@ -198,7 +198,7 @@ class GoalsController extends AppController
     public function ajax_get_more_index_items()
     {
         $this->_ajaxPreProcess();
-        $goals = $this->Goal->getAllGoals(20, $this->request->params);
+        $goals = $this->Goal->getAllGoals(300, $this->request->params);//TODO 暫定的に300、将来的に20に戻す
         $this->set(compact('goals'));
 
         //エレメントの出力を変数に格納する
