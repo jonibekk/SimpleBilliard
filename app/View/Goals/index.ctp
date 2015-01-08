@@ -58,7 +58,7 @@
             </div>
         <? else: ?>
             <?= $this->element('Goal/index_items') ?>
-            <? if (count($goals) == 20): ?>
+            <? if (count($goals) == 300)://TODO 暫定的に300、いずれ20に戻す ?>
                 <div class="panel-body panel-read-more-body" id="GoalMoreView">
                     <a href="#" class="btn btn-link click-feed-read-more"
                        parent-id="GoalMoreView"
