@@ -347,10 +347,6 @@ input::-moz-focus-inner {
     border: none;
 }
 
-textarea {
-    white-space: normal;
-}
-
 /*==/ normalize css ===/
 
 /*=== 全体的な設定 ===*/
