@@ -57,6 +57,7 @@
                                 <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')
                                     && $post['Post']['type'] != Post::TYPE_ACTION
                                     && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
+                                    && $post['Post']['type'] != Post::TYPE_GOAL_COMPLETE
                                 ): ?>
                                     <li><a href="#" class="target-toggle-click"
                                            target-id="PostEditForm_<?= $post['Post']['id'] ?>"
@@ -131,6 +132,8 @@
                         <i class="fa fa-check-circle">&nbsp;<?= h($post['ActionResult']['Action']['name']) ?></i>
                     <? elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
                         <i class="fa fa-key">&nbsp;<?= __d('gl', "%s を達成しました！", h($post['KeyResult']['name'])) ?></i>
+                    <? elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
+                        <i class="fa fa-flag">&nbsp;<?= __d('gl', "%s を達成しました！", h($post['Goal']['name'])) ?></i>
                     <? else: ?>
                         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
                     <? endif; ?>

@@ -369,6 +369,8 @@ class GoalsController extends AppController
             //ゴールも一緒に完了にする場合
             if ($with_goal) {
                 $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
+                //ゴール完了の投稿
+                $this->Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $key_result['KeyResult']['goal_id'], null);
                 $this->Goal->complete($goal['Goal']['id']);
                 $this->Pnotify->outSuccess(__d('gl', "ゴールを完了にしました。"));
             }
