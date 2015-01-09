@@ -786,6 +786,9 @@ class Post extends AppModel
             case self::TYPE_ACTION:
                 $data['action_result_id'] = $model_id;
                 break;
+            case self::TYPE_KR_COMPLETE:
+                $data['key_result_id'] = $model_id;
+                break;
         }
 
         return $this->save($data);

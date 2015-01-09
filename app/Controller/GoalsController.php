@@ -364,6 +364,8 @@ class GoalsController extends AppController
             }
             $this->Goal->KeyResult->complete($kr_id);
             $key_result = $this->Goal->KeyResult->findById($kr_id);
+            //KR完了の投稿
+            $this->Post->addGoalPost(Post::TYPE_KR_COMPLETE, $key_result['KeyResult']['goal_id'], null, false, $kr_id);
             //ゴールも一緒に完了にする場合
             if ($with_goal) {
                 $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
