@@ -16,6 +16,7 @@ App::uses('AppModel', 'Model');
  * @property PostShareCircle        $PostShareCircle
  * @property PostRead               $PostRead
  * @property ActionResult           $ActionResult
+ * @property KeyResult              $KeyResult
  */
 class Post extends AppModel
 {
@@ -26,12 +27,14 @@ class Post extends AppModel
     const TYPE_CREATE_GOAL = 2;
     const TYPE_ACTION = 3;
     const TYPE_BADGE = 4;
+    const TYPE_KR_COMPLETE = 5;
 
     static public $TYPE_MESSAGE = [
         self::TYPE_NORMAL      => null,
         self::TYPE_CREATE_GOAL => null,
         self::TYPE_ACTION      => null,
         self::TYPE_BADGE       => null,
+        self::TYPE_KR_COMPLETE => null,
     ];
 
     function _setTypeMessage()
@@ -153,6 +156,7 @@ class Post extends AppModel
         'Team',
         'Goal',
         'ActionResult',
+        'KeyResult',
     ];
 
     /**
