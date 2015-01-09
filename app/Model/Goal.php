@@ -508,13 +508,21 @@ class Goal extends AppModel
                 'GoalCategory',
                 'Leader'       => [
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'fields'     => ['Leader.id', 'Leader.user_id'],
                     'User'       => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
                 'Collaborator' => [
                     'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
+                    'fields'     => ['Collaborator.id', 'Collaborator.user_id'],
                     'User'       => [
+                        'fields' => $this->User->profileFields,
+                    ]
+                ],
+                'Follower'     => [
+                    'fields' => ['Follower.id', 'Follower.user_id'],
+                    'User'   => [
                         'fields' => $this->User->profileFields,
                     ]
                 ],
