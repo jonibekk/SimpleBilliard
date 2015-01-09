@@ -353,7 +353,7 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function complete($kr_id, $with_goal = null)
+    public function complete_kr($kr_id, $with_goal = null)
     {
         $key_result = null;
         $this->request->allowMethod('post');
@@ -364,6 +364,8 @@ class GoalsController extends AppController
             }
             $this->Goal->KeyResult->complete($kr_id);
             $key_result = $this->Goal->KeyResult->findById($kr_id);
+            //KR完了の投稿
+            $this->Post->addGoalPost(Post::TYPE_KR_COMPLETE, $key_result['KeyResult']['goal_id'], null, false, $kr_id);
             //ゴールも一緒に完了にする場合
             if ($with_goal) {
                 $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
@@ -385,7 +387,7 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function incomplete($kr_id)
+    public function incomplete_kr($kr_id)
     {
         $this->request->allowMethod('post');
         try {

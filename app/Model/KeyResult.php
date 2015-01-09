@@ -7,6 +7,7 @@ App::uses('AppModel', 'Model');
  * @property Team        $Team
  * @property Goal        $Goal
  * @property Action      $Action
+ * @property Post        $Post
  */
 class KeyResult extends AppModel
 {
@@ -96,6 +97,7 @@ class KeyResult extends AppModel
 
     public $hasMany = [
         'Action',
+        'Post',
     ];
 
     function __construct($id = false, $table = null, $ds = null)

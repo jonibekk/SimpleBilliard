@@ -56,6 +56,7 @@
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                                 <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')
                                     && $post['Post']['type'] != Post::TYPE_ACTION
+                                    && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
                                 ): ?>
                                     <li><a href="#" class="target-toggle-click"
                                            target-id="PostEditForm_<?= $post['Post']['id'] ?>"
@@ -87,7 +88,9 @@
                     <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
                     <div class="font_11px font_lightgray">
                         <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
-                        <? if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
+                        <? if ($post['Post']['type'] != Post::TYPE_ACTION
+                            && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
+                        ): ?>
                             <span class="font_lightgray"> ･ </span>
                             <?
                             //公開の場合
@@ -126,6 +129,8 @@
                         <?= $this->TextEx->autoLink($post['Post']['body']) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                         <i class="fa fa-check-circle">&nbsp;<?= h($post['ActionResult']['Action']['name']) ?></i>
+                    <? elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
+                        <i class="fa fa-key">&nbsp;<?= __d('gl', "%s を達成しました！", h($post['KeyResult']['name'])) ?></i>
                     <? else: ?>
                         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
                     <? endif; ?>

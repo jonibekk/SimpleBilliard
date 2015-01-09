@@ -45,7 +45,7 @@
                             <? if ($kr['KeyResult']['completed']): ?>
                                 <?= $this->Form->postLink('<i class="fa fa-reply"><span class="ml_2px">' .
                                                           __d('gl', "出したい成果を未完了にする") . '</span></i>',
-                                                          ['controller' => 'goals', 'action' => 'incomplete', $kr['KeyResult']['id']],
+                                                          ['controller' => 'goals', 'action' => 'incomplete_kr', $kr['KeyResult']['id']],
                                                           ['escape' => false]) ?>
                             <? else: ?>
                                 <?
@@ -59,7 +59,7 @@
                                 <? else: ?>
                                     <?= $this->Form->postLink('<i class="fa fa-check"><span class="ml_2px">' .
                                                               __d('gl', "出したい成果を完了にする") . '</span></i>',
-                                                              ['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']],
+                                                              ['controller' => 'goals', 'action' => 'complete_kr', $kr['KeyResult']['id']],
                                                               ['escape' => false]) ?>
                                 <? endif; ?>
                             <? endif; ?>

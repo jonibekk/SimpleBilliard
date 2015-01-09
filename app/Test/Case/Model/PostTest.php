@@ -16,6 +16,7 @@ class PostTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.action_result',
+        'app.key_result',
         'app.action',
         'app.post',
         'app.user', 'app.notify_setting',
