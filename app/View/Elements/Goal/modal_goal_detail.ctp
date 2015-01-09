@@ -34,7 +34,7 @@
                             $follow_class = 'follow-on';
                             $follow_style = 'display:none;';
                             $follow_text = __d('gl', "フォロー中");
-                        }?>
+                        } ?>
                         <? if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
                             $collabo_class = 'collabo-on';
                             $collabo_style = 'display:none;';
@@ -46,7 +46,7 @@
                             $collabo_style = null;
                             $collabo_text = __d('gl', "コラボる");
                             $follow_disabled = null;
-                        }?>
+                        } ?>
                         <a class="btn btn-white bd-circle_20 pull-right mt_16px toggle-follow font_verydark-white <?= $follow_class ?>"
                            href="#" <?= $follow_disabled ?>="<?= $follow_disabled ?>"
                         data-class="toggle-follow"
@@ -76,6 +76,7 @@
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <i class="fa fa-bullseye"><span class="pl_2px"><?= __d('gl', '程度') ?></span></i>
+
                     <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
                     <? if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
                         <div><?= __d('gl', '達成時: %s', (double)$goal['Goal']['target_value']) ?></div>
@@ -96,7 +97,8 @@
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"><span class="pl_2px"><?= __d('gl', "コラボレータ") ?></span></i></div>
+                    <div><i class="fa fa-child"><span class="pl_2px"><?= __d('gl', "コラボレータ") ?>
+                                &nbsp;(<?= count($goal['Collaborator']) ?>)</span></i></div>
                     <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <? foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
@@ -107,7 +109,22 @@
                         <? endforeach ?>
                     <? else: ?>
                         <?= __d('gl', "なし") ?>
-                    <?endif; ?>
+                    <? endif; ?>
+                </div>
+                <div class="col col-xxs-12 bd-b mb-pb_5px">
+                    <div><i class="fa fa-child"><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
+                                &nbsp;(<?= count($goal['Follower']) ?>)</span></i></div>
+                    <? if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
+                        <? foreach ($goal['Follower'] as $follower): ?>
+                            <img src="<?=
+                            $this->Upload->uploadUrl($follower['User'],
+                                                     'User.photo', ['style' => 'small']) ?>"
+                                 style="width:32px;height: 32px;" alt="<?= h($follower['User']['display_username']) ?>"
+                                 title="<?= h($follower['User']['display_username']) ?>">
+                        <? endforeach ?>
+                    <? else: ?>
+                        <?= __d('gl', "なし") ?>
+                    <? endif; ?>
                 </div>
                 <div class="col col-xxs-12">
                     <div><i class="fa fa-ellipsis-h"><span class="pl_2px"><?= __d('gl', '詳細') ?></span></i></div>
