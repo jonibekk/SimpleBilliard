@@ -33,7 +33,7 @@
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __d('gl',
                                                                                                   "出したい成果を追加") ?></a>
             <?= $this->Form->postLink(__d('gl', "ゴール達成"),
-                                      ['controller' => 'goals', 'action' => 'complete', $kr_id, true],
+                                      ['controller' => 'goals', 'action' => 'complete_kr', $kr_id, true],
                                       ['escape' => false, 'class' => 'btn btn-default']) ?>
         </div>
     </div>

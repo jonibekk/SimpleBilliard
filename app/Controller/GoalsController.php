@@ -353,7 +353,7 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function complete($kr_id, $with_goal = null)
+    public function complete_kr($kr_id, $with_goal = null)
     {
         $key_result = null;
         $this->request->allowMethod('post');
@@ -385,7 +385,7 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function incomplete($kr_id)
+    public function incomplete_kr($kr_id)
     {
         $this->request->allowMethod('post');
         try {

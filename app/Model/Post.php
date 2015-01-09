@@ -510,6 +510,12 @@ class Post extends AppModel
                         ]
                     ]
                 ],
+                'KeyResult'       => [
+                    'fields' => [
+                        'id',
+                        'name',
+                    ],
+                ],
                 'ActionResult'    => [
                     'fields' => [
                         'id',

@@ -605,33 +605,33 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $this->testAction('/goals/complete/' . $this->kr_id, ['method' => 'POST']);
+        $this->testAction('/goals/complete_kr/' . $this->kr_id, ['method' => 'POST']);
     }
 
     function testCompleteSuccessWithGoal()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $this->testAction('/goals/complete/' . $this->kr_id . "/1", ['method' => 'POST']);
+        $this->testAction('/goals/complete_kr/' . $this->kr_id . "/1", ['method' => 'POST']);
     }
 
     function testIncompleteSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $this->testAction('/goals/incomplete/' . $this->kr_id, ['method' => 'POST']);
+        $this->testAction('/goals/incomplete_kr/' . $this->kr_id, ['method' => 'POST']);
     }
 
     function testCompleteFail()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/complete/9999999', ['method' => 'POST']);
+        $this->testAction('/goals/complete_kr/9999999', ['method' => 'POST']);
     }
 
     function testIncompleteFail()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/incomplete/9999999999', ['method' => 'POST']);
+        $this->testAction('/goals/incomplete_kr/9999999999', ['method' => 'POST']);
     }
 
     function testAjaxGetLastKrConfirmFail()
