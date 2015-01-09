@@ -75,6 +75,24 @@ class Follower extends AppModel
         return $res;
     }
 
+    function isFollowed($goal_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+        $options = [
+            'conditions' => [
+                'Follower.goal_id' => $goal_id,
+                'Follower.user_id' => $uid,
+            ],
+        ];
+        $res = $this->find('first', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
+    }
+
     function isExists($goal_id)
     {
         $options = [

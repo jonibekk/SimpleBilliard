@@ -409,7 +409,11 @@ class Post extends AppModel
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {
                 //アクセス可能かチェック
-                if (
+                //ゴール投稿なら参照可能なゴールか？
+                if ($this->isPermittedGoalPost($this->orgParams['post_id'])) {
+                    $p_list = $this->orgParams['post_id'];
+                }
+                elseif (
                     //公開か？
                     $this->isPublic($this->orgParams['post_id']) ||
                     //自分の投稿か？
@@ -554,6 +558,20 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
 
         return $res;
+    }
+
+    public function isPermittedGoalPost($post_id)
+    {
+        $post = $this->find('first', ['conditions' => ['Post.id' => $post_id], 'fields' => ['Post.goal_id']]);
+        if (!isset($post['Post']['goal_id']) || !$post['Post']['goal_id']) {
+            return false;
+        }
+        if ($this->Goal->Follower->isFollowed($post['Post']['goal_id'])
+            || $this->Goal->Collaborator->isCollaborated($post['Post']['goal_id'])
+        ) {
+            return true;
+        }
+        return false;
     }
 
     public function getExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
