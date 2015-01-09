@@ -16,6 +16,7 @@ App::uses('AppModel', 'Model');
  * @property PostShareCircle        $PostShareCircle
  * @property PostRead               $PostRead
  * @property ActionResult           $ActionResult
+ * @property KeyResult              $KeyResult
  */
 class Post extends AppModel
 {
@@ -26,12 +27,14 @@ class Post extends AppModel
     const TYPE_CREATE_GOAL = 2;
     const TYPE_ACTION = 3;
     const TYPE_BADGE = 4;
+    const TYPE_KR_COMPLETE = 5;
 
     static public $TYPE_MESSAGE = [
         self::TYPE_NORMAL      => null,
         self::TYPE_CREATE_GOAL => null,
         self::TYPE_ACTION      => null,
         self::TYPE_BADGE       => null,
+        self::TYPE_KR_COMPLETE => null,
     ];
 
     function _setTypeMessage()
@@ -153,6 +156,7 @@ class Post extends AppModel
         'Team',
         'Goal',
         'ActionResult',
+        'KeyResult',
     ];
 
     /**
@@ -409,7 +413,11 @@ class Post extends AppModel
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {
                 //アクセス可能かチェック
-                if (
+                //ゴール投稿なら参照可能なゴールか？
+                if ($this->isPermittedGoalPost($this->orgParams['post_id'])) {
+                    $p_list = $this->orgParams['post_id'];
+                }
+                elseif (
                     //公開か？
                     $this->isPublic($this->orgParams['post_id']) ||
                     //自分の投稿か？
@@ -506,6 +514,12 @@ class Post extends AppModel
                         ]
                     ]
                 ],
+                'KeyResult'       => [
+                    'fields' => [
+                        'id',
+                        'name',
+                    ],
+                ],
                 'ActionResult'    => [
                     'fields' => [
                         'id',
@@ -554,6 +568,20 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
 
         return $res;
+    }
+
+    public function isPermittedGoalPost($post_id)
+    {
+        $post = $this->find('first', ['conditions' => ['Post.id' => $post_id], 'fields' => ['Post.goal_id']]);
+        if (!isset($post['Post']['goal_id']) || !$post['Post']['goal_id']) {
+            return false;
+        }
+        if ($this->Goal->Follower->isFollowed($post['Post']['goal_id'])
+            || $this->Goal->Collaborator->isCollaborated($post['Post']['goal_id'])
+        ) {
+            return true;
+        }
+        return false;
     }
 
     public function getExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
@@ -775,6 +803,9 @@ class Post extends AppModel
         switch ($type) {
             case self::TYPE_ACTION:
                 $data['action_result_id'] = $model_id;
+                break;
+            case self::TYPE_KR_COMPLETE:
+                $data['key_result_id'] = $model_id;
                 break;
         }
 
