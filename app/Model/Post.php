@@ -28,13 +28,15 @@ class Post extends AppModel
     const TYPE_ACTION = 3;
     const TYPE_BADGE = 4;
     const TYPE_KR_COMPLETE = 5;
+    const TYPE_GOAL_COMPLETE = 6;
 
     static public $TYPE_MESSAGE = [
-        self::TYPE_NORMAL      => null,
-        self::TYPE_CREATE_GOAL => null,
-        self::TYPE_ACTION      => null,
-        self::TYPE_BADGE       => null,
-        self::TYPE_KR_COMPLETE => null,
+        self::TYPE_NORMAL        => null,
+        self::TYPE_CREATE_GOAL   => null,
+        self::TYPE_ACTION        => null,
+        self::TYPE_BADGE         => null,
+        self::TYPE_KR_COMPLETE   => null,
+        self::TYPE_GOAL_COMPLETE => null,
     ];
 
     function _setTypeMessage()
