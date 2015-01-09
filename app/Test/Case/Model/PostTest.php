@@ -389,4 +389,47 @@ class PostTest extends CakeTestCase
         $this->Post->Goal->Follower->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1]);
         $this->Post->getFollowCollaboPostList(1, 10000);
     }
+
+    function testIsPermittedGoalPostSuccess()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+        $this->Post->Goal->Follower->current_team_id = 1;
+        $this->Post->Goal->Collaborator->current_team_id = 1;
+        $this->Post->Goal->Follower->my_uid = 1;
+        $this->Post->Goal->Collaborator->my_uid = 1;
+
+        $this->Post->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1, 'body' => 'test']);
+        $res = $this->Post->isPermittedGoalPost($this->Post->getLastInsertID());
+        $this->assertTrue($res);
+    }
+
+    function testIsPermittedGoalPostFailNotGoal()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+        $this->Post->Goal->Follower->current_team_id = 1;
+        $this->Post->Goal->Collaborator->current_team_id = 1;
+        $this->Post->Goal->Follower->my_uid = 1;
+        $this->Post->Goal->Collaborator->my_uid = 1;
+
+        $this->Post->save(['user_id' => 1, 'team_id' => 1, 'body' => 'test']);
+        $res = $this->Post->isPermittedGoalPost($this->Post->getLastInsertID());
+        $this->assertFalse($res);
+    }
+
+    function testIsPermittedGoalPostFailNotGoalFollowAndCollabo()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+        $this->Post->Goal->Follower->current_team_id = 1;
+        $this->Post->Goal->Collaborator->current_team_id = 1;
+        $this->Post->Goal->Follower->my_uid = 1;
+        $this->Post->Goal->Collaborator->my_uid = 1;
+
+        $this->Post->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1000, 'body' => 'test']);
+        $res = $this->Post->isPermittedGoalPost($this->Post->getLastInsertID());
+        $this->assertFalse($res);
+    }
+
 }
