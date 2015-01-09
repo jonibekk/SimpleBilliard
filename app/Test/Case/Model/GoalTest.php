@@ -256,6 +256,22 @@ class GoalTest extends CakeTestCase
         $this->Goal->add([]);
     }
 
+    function testCompleteSuccess()
+    {
+        $this->setDefault();
+        $goal_id = $this->_getNewGoal();
+        $this->Goal->complete($goal_id);
+    }
+
+    function testCompleteFail()
+    {
+        $this->setDefault();
+        try {
+            $this->Goal->complete(null);
+        } catch (RuntimeException $e) {
+        }
+    }
+
     function testAddNewSuccess()
     {
         $this->setDefault();

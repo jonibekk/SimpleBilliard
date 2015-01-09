@@ -761,6 +761,10 @@ class GoalsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->Team->TeamMember->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Goals->Goal->Team->TeamMember->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Action->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Action->current_team_id = '1';
