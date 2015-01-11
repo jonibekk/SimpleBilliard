@@ -185,12 +185,33 @@ Configure::write('App.encoding', 'UTF-8');
  * the cake shell command: cake schema create Sessions
 
  */
-Configure::write('Session', array(
-    'defaults' => 'database',
-    'cookie'   => 'SID',
-    //セッションの保持時間（秒数）
-    'timeout'  => 60 * 60 * 24 * 30, //30days
-));
+if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+    Configure::write('Session', array(
+        'defaults'      => 'cache',
+        'cookie'        => 'A-Cookie-Name',
+        //    'timeout'       => 125,
+        'timeout'       => 60 * 60 * 24 * 30, //30days
+        'cookieTimeout' => 0,
+        'start'         => true,
+        'checkAgent'    => false,
+        'handler'       => array(
+            'config' => 'session'
+        ),
+        'prefix'        => 'cake_session_',
+        'engine'        => 'Redis',
+        'server'        => ELASTICACHE_SESSION_HOST,
+        'port'          => 6379
+    ));
+}
+else {
+    Configure::write('Session', array(
+        'defaults' => 'database',
+        'cookie'   => 'SID',
+        //セッションの保持時間（秒数）
+        'timeout'  => 60 * 60 * 24 * 30, //30days
+    ));
+}
+
 /**
  * A random string used in security hashing methods.
  */
