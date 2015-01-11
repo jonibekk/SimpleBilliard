@@ -12,7 +12,17 @@
  */
 
 // Setup a 'default' cache configuration for use in the application.
-Cache::config('default', array('engine' => 'File'));
+if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+    Cache::config('default', array(
+                               'engine' => 'Redis',
+                               'server' => ELASTICACHE_SESSION_HOST,
+                               'port'   => 6379,
+                           )
+    );
+}
+else {
+    Cache::config('default', array('engine' => 'File'));
+}
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
