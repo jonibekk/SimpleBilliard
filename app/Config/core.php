@@ -197,7 +197,6 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
         'handler'       => array(
             'config' => 'session'
         ),
-        'prefix'        => 'cake_session_',
         'engine'        => 'Redis',
         'server'        => ELASTICACHE_SESSION_HOST,
         'port'          => 6379
@@ -352,3 +351,13 @@ Cache::config('_cake_model_', array(
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
 ));
+
+if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+    Cache::config('session', array(
+        'engine'   => 'Redis',
+        'server'   => ELASTICACHE_SESSION_HOST,
+        'port'     => 6379,
+        'prefix'   => 'cake_session_',
+        'duration' => '+2 days', // always cache for ages
+    ));
+}
