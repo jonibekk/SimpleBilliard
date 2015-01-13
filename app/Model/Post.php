@@ -284,7 +284,7 @@ class Post extends AppModel
     {
         $g_list = [];
         $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
-        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid));
+        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true));
 
         if (empty($g_list)) {
             return [];
