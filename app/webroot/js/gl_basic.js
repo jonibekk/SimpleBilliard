@@ -129,6 +129,8 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
     $(document).on("click", ".target-toggle", evTargetToggle);
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+    $(document).on("click", ".click-show-post-modal", getModalPostList);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("touchend", "#layer-black", function () {
@@ -175,6 +177,7 @@ $(document).ready(function () {
             });
         }
     });
+
     $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
     $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {

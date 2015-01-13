@@ -212,6 +212,20 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_goal_action_feed()
+    {
+        $this->_ajaxPreProcess();
+        $posts = $this->Post->get(1, null, null, null, $this->request->params);
+        $this->set(compact('posts'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_action_list');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_comment($post_id)
     {
         $this->_ajaxPreProcess();

@@ -302,6 +302,49 @@ echo $this->Html->script('gl_basic');
         });
         return false;
     }
+
+    function getModalPostList(e) {
+        e.preventDefault();
+
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.modal();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                //クリップボードコピーの処理を追加
+                //noinspection JSUnresolvedFunction
+                var client = new ZeroClipboard($modal_elm.find('.copy_me'));
+                //noinspection JSUnusedLocalSymbols
+                client.on("ready", function (readyEvent) {
+                    client.on("aftercopy", function (event) {
+                        alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
+                    });
+                });
+                //画像をレイジーロード
+                imageLazyOn();
+                //画像リサイズ
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $('.custom-radio-check').customRadioCheck();
+
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    }
     function evFeedMoreView() {
         attrUndefinedCheck(this, 'parent-id');
         attrUndefinedCheck(this, 'next-page-num');

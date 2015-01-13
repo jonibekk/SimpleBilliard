@@ -143,8 +143,16 @@
                     )
                     ?>
                     <div class="goalsCard-activity inline-block col-xxs-2">
-                        <i class="fa fa-check-circle mr_1px"></i><span
-                            class="ls_number"><?= $goal['Goal']['action_count'] ?></span>
+                        <? if ($goal['Goal']['action_count'] > 0): ?>
+                            <a class="click-show-post-modal font_gray"
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                                <i class="fa fa-check-circle mr_1px"></i><span
+                                    class="ls_number"><?= $goal['Goal']['action_count'] ?></span>
+                            </a>
+                        <? else: ?>
+                            <i class="fa fa-check-circle mr_1px"></i><span
+                                class="ls_number">0</span>
+                        <? endif; ?>
                     </div>
                     <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
                         <div class="form-group">
