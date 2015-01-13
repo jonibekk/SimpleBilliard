@@ -189,8 +189,8 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
     Configure::write('Session', array(
         'defaults'      => 'cache',
         'cookie'        => 'SID',
-        //    'timeout'       => 125,
-        'timeout'       => 60 * 60 * 24 * 30, //30days
+        //セッションの保持時間（分）
+        'timeout'       => 60 * 24 * 30, //30days
         'cookieTimeout' => 0,
         'start'         => true,
         'checkAgent'    => false,
@@ -206,8 +206,8 @@ else {
     Configure::write('Session', array(
         'defaults' => 'database',
         'cookie'   => 'SID',
-        //セッションの保持時間（秒数）
-        'timeout'  => 60 * 60 * 24 * 30, //30days
+        //セッションの保持時間（分）
+        'timeout'  => 60 * 24 * 30, //30days
     ));
 }
 
