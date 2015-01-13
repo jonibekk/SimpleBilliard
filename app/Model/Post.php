@@ -434,7 +434,9 @@ class Post extends AppModel
             }
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
-                $p_list = $this->getExistGoalPostList($start, $end);
+                $p_list = $this->getExistGoalPublicPostList($start, $end);
+                //フォローorコラボのゴール投稿を取得
+                $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
             }
         }
 
@@ -586,7 +588,7 @@ class Post extends AppModel
         return false;
     }
 
-    public function getExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getExistGoalPublicPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
             'conditions' => [
@@ -594,6 +596,7 @@ class Post extends AppModel
                     'goal_id' => null,
                 ],
                 'team_id'                  => $this->current_team_id,
+                'public_flg'                   => true,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [$order => $order_direction],
