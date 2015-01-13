@@ -752,10 +752,69 @@ function ajaxAppendCount(id, url) {
     return false;
 }
 
-/*
 $(function () {
-    $(".develop--search").on("click", function () {
-            $(this).attr('placeholder', '準備中です。');
+    var tutorialNum=1;
+    if (tutorialNum==1){
+        $("#modalTutorialPrev").hide();
+    }
+    $("#modalTutorialNext").on("click", function () {
+            if (tutorialNum == 1) {
+                $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
+                $("#tutorialText1").hide();
+                $("#tutorialText2").show();
+                tutorialNum++;
+                $("#modalTutorialPrev").show();
+            }
+            else if (tutorialNum == 2) {
+                $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
+                $("#tutorialText2").hide();
+                $("#tutorialText3").show();
+                tutorialNum++;
+            }
+            else if (tutorialNum == 3) {
+                $("#modalTutorialBox").addClass("tutorial-box4").removeClass("tutorial-box3");
+                $("#tutorialText3").hide();
+                $("#tutorialText4").show();
+                $(this).hide();
+                $("#modalTutorialGo").show();
+                tutorialNum++;
+            }
         }
     );
+    $("#modalTutorialPrev").on("click", function () {
+            if (tutorialNum == 2) {
+                $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box2");
+                $("#tutorialText2").hide();
+                $("#tutorialText1").show();
+                tutorialNum--;
+                $("#modalTutorialPrev").hide();
+            }
+            else if (tutorialNum == 3) {
+                $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box3");
+                $("#tutorialText3").hide();
+                $("#tutorialText2").show();
+                tutorialNum--;
+            }
+            else {
+                $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box4");
+                $("#tutorialText4").hide();
+                $("#tutorialText3").show();
+                $("#modalTutorialNext").show();
+                $("#modalTutorialGo").hide();
+                tutorialNum--;
+            }
+        }
+    );
+    $("#modalTutorialGo").on("click", function () {
+            $(this).fadeOut(function(){
+                $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box4");
+                $("#tutorialText4").hide();
+                $("#tutorialText1").show();
+                $("#modalTutorialNext").show();
+                $("#modalTutorialPrev").hide();
+            });
+            tutorialNum=1;
+        }
+    );
+
 });

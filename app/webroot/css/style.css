@@ -872,6 +872,10 @@ textarea{
     font-size: 40px;
 }
 
+.font_72px {
+    font-size: 72px;
+}
+
 .font_bold {
     font-weight: bold;
 }
@@ -3474,13 +3478,90 @@ Temporary Properties - YOU MUST FIX
     right: 4px;
 }
 
-.tutorial-box {
+.tutorial-box1 {
     background-image: url(../img/homepage/home-slider/slide1.jpg);
     background-size: 100%;
     background-position: 0 50%;
-    width: 600px;
-    height: 450px;
+    width: 598px;
+    height: 448px;
 }
+.tutorial-box2 {
+    background-image: url(../img/homepage/home-slider/slide2.jpg);
+    background-size: 100%;
+    background-position: 0 50%;
+    width: 598px;
+    height: 448px;
+}
+.tutorial-box3 {
+    background-image: url(../img/homepage/home-slider/slide3.jpg);
+    background-size: 100%;
+    background-position: 0 50%;
+    width: 598px;
+    height: 448px;
+}
+.tutorial-box4 {
+    background-image: url(../img/homepage/home-slider/slide4.jpg);
+    background-size: 100%;
+    background-position: 0 50%;
+    width: 598px;
+    height: 448px;
+}
+
+#tutorialText2, #tutorialText3, #tutorialText4{
+    display: none;
+}
+
+#modalTutorialPrev {
+    display: none;
+}
+
+.modalTutorial-btnPrev {
+    width: 96px;
+    height: 96px;
+    display: inline;
+    line-height: 100px;
+    border-radius: 50%;
+    background: #fff;
+    text-align: center;
+    opacity: .55;
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    padding-right: 8px;
+}
+
+.modalTutorial-btnNext {
+    width: 96px;
+    height: 96px;
+    display: inline;
+    line-height: 100px;
+    border-radius: 50%;
+    background: #fff;
+    text-align: center;
+    opacity: .55;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    padding-left: 8px;
+}
+
+.modalTutorial-btnGo {
+    display: none;
+    width: 96px;
+    height: 96px;
+    line-height: 100px;
+    border-radius: 50%;
+    background: #fff;
+    text-align: center;
+    opacity: .85;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+}
+
+.modalTutorial-btnIcon {
+    display: inline;
+    line-height: 96px;
 }
 
 .font_normal {
