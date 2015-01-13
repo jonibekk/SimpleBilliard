@@ -28,13 +28,15 @@ class Post extends AppModel
     const TYPE_ACTION = 3;
     const TYPE_BADGE = 4;
     const TYPE_KR_COMPLETE = 5;
+    const TYPE_GOAL_COMPLETE = 6;
 
     static public $TYPE_MESSAGE = [
-        self::TYPE_NORMAL      => null,
-        self::TYPE_CREATE_GOAL => null,
-        self::TYPE_ACTION      => null,
-        self::TYPE_BADGE       => null,
-        self::TYPE_KR_COMPLETE => null,
+        self::TYPE_NORMAL        => null,
+        self::TYPE_CREATE_GOAL   => null,
+        self::TYPE_ACTION        => null,
+        self::TYPE_BADGE         => null,
+        self::TYPE_KR_COMPLETE   => null,
+        self::TYPE_GOAL_COMPLETE => null,
     ];
 
     function _setTypeMessage()
@@ -282,7 +284,7 @@ class Post extends AppModel
     {
         $g_list = [];
         $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
-        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid));
+        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true));
 
         if (empty($g_list)) {
             return [];
@@ -432,7 +434,9 @@ class Post extends AppModel
             }
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
-                $p_list = $this->getExistGoalPostList($start, $end);
+                $p_list = $this->getExistGoalPublicPostList($start, $end);
+                //フォローorコラボのゴール投稿を取得
+                $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
             }
         }
 
@@ -584,7 +588,7 @@ class Post extends AppModel
         return false;
     }
 
-    public function getExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getExistGoalPublicPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
             'conditions' => [
@@ -592,6 +596,7 @@ class Post extends AppModel
                     'goal_id' => null,
                 ],
                 'team_id'                  => $this->current_team_id,
+                'public_flg'                   => true,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [$order => $order_direction],
