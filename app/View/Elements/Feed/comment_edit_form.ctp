@@ -39,7 +39,7 @@ $this->Form->input('body', [
 ])
 ?>
 </div>
-<div class="form-group" id="CommentEditFormImage_<?= $comment['id'] ?>" style="display: none">
+<div class="form-group none" id="CommentEditFormImage_<?= $comment['id'] ?>">
     <ul class="input-images">
         <? for ($i = 1; $i <= 5; $i++): ?>
             <li>
@@ -51,7 +51,7 @@ $this->Form->input('body', [
     </ul>
 </div>
 
-<div class="" style="display: none" id="CommentEdit_<?= $comment['id'] ?>">
+<div class="none" id="CommentEdit_<?= $comment['id'] ?>">
     <a href="#" class="target-show-this-del" target-id="CommentEditFormImage_<?= $comment['id'] ?>">
         <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
                 data-placement="bottom"

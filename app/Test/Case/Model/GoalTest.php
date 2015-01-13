@@ -15,6 +15,7 @@ class GoalTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.action',
         'app.purpose',
         'app.goal',
@@ -253,6 +254,22 @@ class GoalTest extends CakeTestCase
     {
         $this->setDefault();
         $this->Goal->add([]);
+    }
+
+    function testCompleteSuccess()
+    {
+        $this->setDefault();
+        $goal_id = $this->_getNewGoal();
+        $this->Goal->complete($goal_id);
+    }
+
+    function testCompleteFail()
+    {
+        $this->setDefault();
+        try {
+            $this->Goal->complete(null);
+        } catch (RuntimeException $e) {
+        }
     }
 
     function testAddNewSuccess()

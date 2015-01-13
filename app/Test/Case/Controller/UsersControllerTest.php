@@ -15,6 +15,7 @@ class UsersControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.goal',
         'app.local_name',
         'app.cake_session',
@@ -71,12 +72,12 @@ class UsersControllerTest extends ControllerTestCase
             'Email' => []
         ];
         $this->testAction(
-             '/users/register',
-             [
-                 'return' => 'contents',
-                 'data'   => $data,
-                 'method' => 'post',
-             ]
+            '/users/register',
+            [
+                'return' => 'contents',
+                'data'   => $data,
+                'method' => 'post',
+            ]
         );
         $this->assertTextContains('help-block text-danger', $this->view, "【異常系】[ユーザ登録画面]Post");
 
@@ -95,32 +96,32 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ];
         $this->testAction(
-             '/users/register',
-             [
-                 'return' => 'contents',
-                 'data'   => $data,
-                 'method' => 'post',
-             ]
+            '/users/register',
+            [
+                'return' => 'contents',
+                'data'   => $data,
+                'method' => 'post',
+            ]
         );
         $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]Post");
 
         $intite_token = 'token_test002';
         $this->testAction(
-             '/users/register/invite_token:' . $intite_token,
-             [
-                 'return' => 'contents',
-                 'method' => 'get',
-             ]
+            '/users/register/invite_token:' . $intite_token,
+            [
+                'return' => 'contents',
+                'method' => 'get',
+            ]
         );
         $this->assertTextContains('<input type="hidden" name="data[Email][0][email]"', $this->view, "【正常系】[ユーザ登録画面]招待");
 
         //異常系（トークンが存在しない）
         $this->testAction(
-             '/users/register/invite_token:not_found_token',
-             [
-                 'return' => 'contents',
-                 'method' => 'get',
-             ]
+            '/users/register/invite_token:not_found_token',
+            [
+                'return' => 'contents',
+                'method' => 'get',
+            ]
         );
 
         /**
@@ -149,7 +150,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         $data = [
             'User'  => [
                 'first_name'       => 'taro',
@@ -164,12 +165,12 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ];
         $this->testAction(
-             '/users/register/invite_token:' . $intite_token,
-             [
-                 'return' => 'contents',
-                 'data'   => $data,
-                 'method' => 'post',
-             ]
+            '/users/register/invite_token:' . $intite_token,
+            [
+                'return' => 'contents',
+                'data'   => $data,
+                'method' => 'post',
+            ]
         );
         $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]招待Post");
     }
@@ -221,7 +222,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
 
         $this->testAction('/users/login', ['method' => 'GET', 'return' => 'contents']);
     }
@@ -249,7 +250,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
                     ->will($this->returnValue(true));
@@ -290,7 +291,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Security
             ->expects($this->any())
@@ -333,7 +334,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         $this->testAction('/users/logout', ['method' => 'GET']);
     }
 
@@ -352,7 +353,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->staticExpects($this->any())->method('read')
                        ->will($this->returnValueMap($value_map)
-            );
+                       );
         try {
             $this->testAction('/users/sent_mail', ['method' => 'GET', 'return' => 'contents']);
         } catch (NotFoundException $e) {
@@ -419,7 +420,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         $this->testAction('/users/register', ['method' => 'GET']);
         $this->assertEquals('en', Configure::read('Config.language'), "自動言語設定がonの場合は言語設定が無視される");
     }
@@ -447,7 +448,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         $this->testAction('/users/register', ['method' => 'GET']);
         $this->assertEquals('jpn', Configure::read('Config.language'), "自動言語設定がoffの場合は言語設定が適用される");
     }
@@ -500,7 +501,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
@@ -549,7 +550,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
@@ -612,7 +613,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
@@ -666,7 +667,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
@@ -704,7 +705,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', null]]));
@@ -768,7 +769,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         try {
             $this->testAction('users/password_reset');
         } catch (Exception $e) {
@@ -901,7 +902,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         try {
             $this->testAction('users/token_resend');
         } catch (Exception $e) {
@@ -1522,7 +1523,6 @@ class UsersControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-
     function _getUsersCommonMock()
     {
         /**
@@ -1565,7 +1565,7 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
-            );
+                    );
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

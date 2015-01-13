@@ -60,6 +60,8 @@ class NotifyShell extends AppShell
             'model_id'     => ['short' => 'm', 'help' => 'モデルID', 'required' => false,],
             'sub_model_id' => ['short' => 'n', 'help' => 'サブモデルID', 'required' => false,],
             'user_list'    => ['short' => 'u', 'help' => '送信先ユーザリスト', 'required' => false,],
+            'user_id'      => ['short' => 'i', 'help' => '自分のユーザID', 'required' => true,],
+            'team_id'      => ['short' => 'o', 'help' => 'チームID', 'required' => true,],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -74,7 +76,10 @@ class NotifyShell extends AppShell
         $this->NotifyBiz->sendNotify($this->params['type'],
                                      $this->params['model_id'],
                                      isset($this->params['sub_model_id']) ? $this->params['sub_model_id'] : null,
-                                     $to_user_list);
+                                     $to_user_list,
+                                     $this->params['user_id'],
+                                     $this->params['team_id']
+        );
     }
 
 }

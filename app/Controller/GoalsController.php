@@ -12,7 +12,7 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result'];
+        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action'];
     }
 
     /**
@@ -21,7 +21,7 @@ class GoalsController extends AppController
     public function index()
     {
         $this->_setMyCircle();
-        $goals = $this->Goal->getAllGoals();
+        $goals = $this->Goal->getAllGoals(300);//TODO 暫定的に300、将来的に20に戻す
         $my_goals = $this->Goal->getMyGoals();
         $collabo_goals = $this->Goal->getMyCollaboGoals();
         $follow_goals = $this->Goal->getMyFollowedGoals();
@@ -162,6 +162,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Goal->id = $id;
         $this->Goal->delete();
+        $this->Goal->Action->releaseGoal($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -197,7 +198,7 @@ class GoalsController extends AppController
     public function ajax_get_more_index_items()
     {
         $this->_ajaxPreProcess();
-        $goals = $this->Goal->getAllGoals(20, $this->request->params);
+        $goals = $this->Goal->getAllGoals(300, $this->request->params);//TODO 暫定的に300、将来的に20に戻す
         $this->set(compact('goals'));
 
         //エレメントの出力を変数に格納する
@@ -352,7 +353,7 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function complete($kr_id, $with_goal = null)
+    public function complete_kr($kr_id, $with_goal = null)
     {
         $key_result = null;
         $this->request->allowMethod('post');
@@ -363,9 +364,13 @@ class GoalsController extends AppController
             }
             $this->Goal->KeyResult->complete($kr_id);
             $key_result = $this->Goal->KeyResult->findById($kr_id);
+            //KR完了の投稿
+            $this->Post->addGoalPost(Post::TYPE_KR_COMPLETE, $key_result['KeyResult']['goal_id'], null, false, $kr_id);
             //ゴールも一緒に完了にする場合
             if ($with_goal) {
                 $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
+                //ゴール完了の投稿
+                $this->Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $key_result['KeyResult']['goal_id'], null);
                 $this->Goal->complete($goal['Goal']['id']);
                 $this->Pnotify->outSuccess(__d('gl', "ゴールを完了にしました。"));
             }
@@ -384,7 +389,7 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function incomplete($kr_id)
+    public function incomplete_kr($kr_id)
     {
         $this->request->allowMethod('post');
         try {
@@ -424,6 +429,9 @@ class GoalsController extends AppController
         $this->Goal->KeyResult->id = $kr_id;
         $kr = $this->Goal->KeyResult->read();
         $this->Goal->KeyResult->delete();
+        //関連アクションの紐付け解除
+        $this->Goal->Action->releaseKr($kr_id);
+
         $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -592,6 +600,13 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_kr_list($goal_id)
+    {
+        $this->_ajaxPreProcess();
+        $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list");
+        return $this->_ajaxGetResponse($kr_list);
+    }
+
     function download_all_goal_csv()
     {
         $this->request->allowMethod('post');
@@ -673,5 +688,39 @@ class GoalsController extends AppController
     private function _flashOpenKrs($goal_id)
     {
         $this->Session->setFlash(null, "flash_open_krs", ['goal_id' => $goal_id], 'open_krs');
+    }
+
+    /**
+     * 完了アクション追加
+     * TODO 今後様々なバリエーションのアクションが追加されるが、全てこのfunctionで処理する
+     *
+     * @param $goal_id
+     */
+    public function add_completed_action($goal_id)
+    {
+        $this->request->allowMethod('post');
+        try {
+            $this->Goal->begin();
+            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+            //アクション追加,投稿
+            if (!$this->Goal->Action->addCompletedAction($this->request->data, $goal_id)
+                || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
+                                                   $this->Goal->Action->ActionResult->getLastInsertID())
+            ) {
+                throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
+            }
+
+        } catch (RuntimeException $e) {
+            $this->Goal->rollback();
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+
+        $this->Goal->commit();
+        $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));
+        $this->redirect($this->referer());
+
     }
 }

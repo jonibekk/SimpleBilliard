@@ -7,6 +7,7 @@ App::uses('AppModel', 'Model');
  * @property Team        $Team
  * @property Goal        $Goal
  * @property Action      $Action
+ * @property Post        $Post
  */
 class KeyResult extends AppModel
 {
@@ -96,6 +97,7 @@ class KeyResult extends AppModel
 
     public $hasMany = [
         'Action',
+        'Post',
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -148,7 +150,7 @@ class KeyResult extends AppModel
         return true;
     }
 
-    function getKeyResults($goal_id)
+    function getKeyResults($goal_id, $find_type = "all")
     {
         $options = [
             'conditions' => [
@@ -162,7 +164,7 @@ class KeyResult extends AppModel
                 'KeyResult.priority DESC',
             ]
         ];
-        $res = $this->find('all', $options);
+        $res = $this->find($find_type, $options);
         return $res;
     }
 

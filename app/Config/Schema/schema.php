@@ -494,7 +494,7 @@ class AppSchema extends CakeSchema
     public $local_names = array(
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ローカル名ID'),
         'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
-        'language'        => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8'),
+        'language'        => array('type' => 'string', 'null' => false, 'length' => 3, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8'),
         'first_name'      => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '名', 'charset' => 'utf8'),
         'last_name'       => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '姓', 'charset' => 'utf8'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
@@ -502,9 +502,10 @@ class AppSchema extends CakeSchema
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを登録した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを最後に更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY' => array('column' => 'id', 'unique' => 1),
-            'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'del_flg' => array('column' => 'del_flg', 'unique' => 0)
+            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
+            'user_id'  => array('column' => 'user_id', 'unique' => 0),
+            'del_flg'  => array('column' => 'del_flg', 'unique' => 0),
+            'language' => array('column' => 'language', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -747,7 +748,8 @@ class AppSchema extends CakeSchema
         'public_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'important_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'goal_id'              => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'action_id'            => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'アクションID'),
+        'action_result_id'     => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'アクション結果ID'),
+        'key_result_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'KR ID'),
         'photo1_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿画像1', 'charset' => 'utf8'),
         'photo2_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿画像2', 'charset' => 'utf8'),
         'photo3_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿画像3', 'charset' => 'utf8'),
@@ -769,7 +771,9 @@ class AppSchema extends CakeSchema
             'type'             => array('column' => 'type', 'unique' => 0),
             'public_flg'       => array('column' => 'public_flg', 'unique' => 0),
             'important_flg'    => array('column' => 'important_flg', 'unique' => 0),
-            'team_id_modified' => array('column' => array('team_id', 'modified'), 'unique' => 0)
+            'team_id_modified' => array('column' => array('team_id', 'modified'), 'unique' => 0),
+            'action_result_id' => array('column' => 'action_result_id', 'unique' => 0),
+            'key_result_id'    => array('column' => 'key_result_id', 'unique' => 0)
         ),
         'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );

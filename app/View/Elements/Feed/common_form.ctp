@@ -56,7 +56,7 @@
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-                <div class="row form-group m_0px" id="PostFormImage" style="display: none">
+                <div class="row form-group m_0px none" id="PostFormImage">
                     <ul class="col input-images post-images">
                         <? for ($i = 1; $i <= 5; $i++): ?>
                             <li>
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="post-panel-footer">
-                <div class="font_12px" style="display: none" id="PostFormFooter">
+                <div class="font_12px none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
                         <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"

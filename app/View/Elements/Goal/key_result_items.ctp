@@ -18,13 +18,13 @@
         <div class="bd-t h_50px">
             <div class="col col-xxs-12 responsive-goal-space-width mxh_50px ln_1 ptb_5px">
                 <a href="#" class="develop--forbiddenLink">
-                    <i class=" fa fa-check-circle disp_ib mr_5px font_40px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
+                    <i class=" fa fa-check-circle inline-block mr_5px font_40px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
                 </a>
 
-                <div class="disp_ib responsive-goal-title-width">
+                <div class="inline-block responsive-goal-title-width">
                     <span class="ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
-                    <i class="fa fa-check-circle"><span class="ml_2px">0</span></i>
+                    <i class="fa fa-check-circle"><span class="ml_2px"><?= h($kr['KeyResult']['action_count']) ?></span></i>
                 </div>
             </div>
             <? if ($kr_can_edit): ?>
@@ -45,7 +45,7 @@
                             <? if ($kr['KeyResult']['completed']): ?>
                                 <?= $this->Form->postLink('<i class="fa fa-reply"><span class="ml_2px">' .
                                                           __d('gl', "出したい成果を未完了にする") . '</span></i>',
-                                                          ['controller' => 'goals', 'action' => 'incomplete', $kr['KeyResult']['id']],
+                                                          ['controller' => 'goals', 'action' => 'incomplete_kr', $kr['KeyResult']['id']],
                                                           ['escape' => false]) ?>
                             <? else: ?>
                                 <?
@@ -59,7 +59,7 @@
                                 <? else: ?>
                                     <?= $this->Form->postLink('<i class="fa fa-check"><span class="ml_2px">' .
                                                               __d('gl', "出したい成果を完了にする") . '</span></i>',
-                                                              ['controller' => 'goals', 'action' => 'complete', $kr['KeyResult']['id']],
+                                                              ['controller' => 'goals', 'action' => 'complete_kr', $kr['KeyResult']['id']],
                                                               ['escape' => false]) ?>
                                 <? endif; ?>
                             <? endif; ?>
@@ -93,5 +93,5 @@
     <div class="col col-xxs-12">
         <?= __d('gl', "成果はまだありません。") ?>
     </div>
-<?endif; ?>
+<? endif; ?>
 <!-- End app/View/Elements/Goal/key_result_items.ctp -->

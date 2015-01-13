@@ -1,4 +1,4 @@
-ul{
+ul {
     list-style: none;
 }
 
@@ -67,7 +67,7 @@ ul{
     margin: 0;
 }
 
-.header_icon-text{
+.header_icon-text {
     line-height: 14px;
 }
 
@@ -111,20 +111,36 @@ ul{
     color: #808080;
 }
 
-
 .hamburger {
     float: left !important;
     margin-left: 0;
 }
 
-.header-toggle-icon{
+.toggle-icon {
+    font-size: 20px;
+    transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+}
+
+.rotate {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+.rotate-reverse {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.header-toggle-icon {
     border: none;
     height: 50px;
-    margin-top:0;
+    margin-top: 0;
     margin-bottom: 0;
     padding-left: 18px;
     padding-right: 18px;
 }
+
 .navbar-default .header-toggle-icon:hover,
 .navbar-default .header-toggle-icon:focus,
 .navbar-default .header-toggle-icon:target {
@@ -135,7 +151,6 @@ ul{
 /*==/ headerの設定 ===*/
 
 /*==/ Header部のリファクタリング ===*/
-
 
 /*=== リファクタリング予定 ===*/
 
@@ -168,10 +183,6 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 
 .panel-body {
     padding: 10px 11px;
-}
-
-.form-group {
-    margin-bottom: 3px;
 }
 
 .form-horizontal .form-group {
@@ -1103,6 +1114,14 @@ textarea{
     border-radius: 4px;
 }
 
+.bd-radius_14px {
+    border-radius: 14px;
+}
+
+.bd-radius_18px {
+    border-radius: 18px;
+}
+
 .bd-r-radius_4px {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -1165,8 +1184,6 @@ textarea{
 /*/切り替えスイッチ*/
 
 /*==/ モジュール ===*/
-
-
 
 /*早めに整理する*/
 .btn-followCollabo {
@@ -1241,6 +1258,10 @@ textarea{
 
 .w_90per {
     width: 90%;
+}
+
+.h_28px {
+    height: 28px;
 }
 
 .h_50px {
@@ -1604,9 +1625,23 @@ ul.input-images {
 
 ul.input-images > li {
     float: left;
-    margin-right: 3px;
+    margin-right: 2px;
 }
 
+/*
+
+ul.input-images {
+    width: 100%;
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.input-images > li {
+    width:20%;
+    float: left;
+    text-align: center;
+}
+*/
 .custom-check {
     margin: 0;
 }
@@ -2557,6 +2592,17 @@ textarea.comment-post-form {
 
 /*/modalのデザイン*/
 
+.photo-plus-mini {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    color: #dddddd;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 .photo-plus {
     width: 50px;
     height: 50px;
@@ -2607,6 +2653,16 @@ textarea.comment-post-form {
 /*========== ゴールフィード ==========*/
 .goals-feed-head {
     border-bottom: 1px solid #F0F0F0;
+}
+
+.goalsCard-actionResult {
+    border-bottom: 1px solid #ccc;
+    margin: 6px 0;
+    padding: 4px 0;
+}
+
+.goalsCard-krSeek {
+    margin: 0 0 4px;
 }
 
 /*========== ゴールカラム ==========*/
@@ -3250,6 +3306,18 @@ Temporary Properties - YOU MUST FIX
 
 /*=====/ dashboardProfileCard ======*/
 
+/*===== goalsCard-activity =====*/
+.goalsCard-activity {
+    padding: 1px;
+    text-align: center;
+    line-height: 40px;
+    height: 40px;
+}
+
+.goalsCard-actionInput {
+    padding: 8px 4px;
+}
+
 .dropdown-menu {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -3380,7 +3448,7 @@ Temporary Properties - YOU MUST FIX
     border-left: 1px solid #999;
 }
 
-.ls_title{
+.ls_title {
     letter-spacing: -0.12rem;
 }
 
@@ -3412,4 +3480,17 @@ Temporary Properties - YOU MUST FIX
     background-position: 0 50%;
     width: 600px;
     height: 450px;
+}
+}
+
+.font_normal {
+    font-weight: normal;
+}
+
+.develop--font_normal label {
+    font-weight: normal;
+}
+
+.selectKrForAction {
+    font-size: 10px;
 }

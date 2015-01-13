@@ -15,6 +15,8 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
+        'app.key_result',
         'app.purpose',
         'app.goal',
         'app.action',
@@ -1041,6 +1043,10 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->PostLike->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Posts->Post->PostLike->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->ActionResult->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Posts->Post->ActionResult->current_team_id = '1';
 
         return $Posts;
     }

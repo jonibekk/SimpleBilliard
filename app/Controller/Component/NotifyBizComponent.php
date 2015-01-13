@@ -49,9 +49,19 @@ class NotifyBizComponent extends Component
         $this->GlEmail->startup($controller);
     }
 
-    function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null)
+    /**
+     * @param      $notify_type
+     * @param      $model_id
+     * @param null $sub_model_id
+     * @param null $to_user_list
+     * @param      $user_id
+     * @param      $team_id
+     */
+    function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null, $user_id, $team_id)
     {
-        $this->notify_option['from_user_id'] = $this->Auth->user('id');
+        $this->notify_option['from_user_id'] = $user_id;
+        $this->_setModelProperty($user_id, $team_id);
+
         switch ($notify_type) {
             case Notification::TYPE_FEED_POST:
                 $this->is_one_on_one_notify = true;
@@ -91,6 +101,33 @@ class NotifyBizComponent extends Component
         }
     }
 
+    private function _setModelProperty($user_id, $team_id)
+    {
+        $this->Post->my_uid
+            = $this->Post->Comment->my_uid
+            = $this->Post->PostShareCircle->my_uid
+            = $this->Post->PostShareUser->my_uid
+            = $this->Post->Team->TeamMember->my_uid
+            = $this->Post->User->CircleMember->my_uid
+            = $this->NotifySetting->my_uid
+            = $this->Notification->my_uid
+            = $this->GlEmail->SendMail->my_uid
+            = $this->GlEmail->SendMail->SendMailToUser->my_uid
+            = $user_id;
+
+        $this->Post->current_team_id
+            = $this->Post->Comment->current_team_id
+            = $this->Post->PostShareCircle->current_team_id
+            = $this->Post->PostShareUser->current_team_id
+            = $this->Post->Team->TeamMember->current_team_id
+            = $this->Post->User->CircleMember->current_team_id
+            = $this->NotifySetting->current_team_id
+            = $this->Notification->current_team_id
+            = $this->GlEmail->SendMail->current_team_id
+            = $this->GlEmail->SendMail->SendMailToUser->current_team_id
+            = $team_id;
+    }
+
     /**
      * 自分が閲覧可能な投稿があった場合
      *
@@ -113,7 +150,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_POST;
 //        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
 //        $this->notify_option['url_data'] = ['team_id'=>$this->Session->read('current_team_id')];
-        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home', 'team_id' => $this->Session->read('current_team_id')];
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home', 'team_id' => $this->Post->current_team_id];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([mb_strimwidth(trim($post['Post']['body']), 0, 40, "...")]) : null;
@@ -393,7 +430,8 @@ class NotifyBizComponent extends Component
             $cmd .= " -u " . $to_user_list;
         }
         $cmd .= " -b " . Router::fullBaseUrl();
-        $cmd .= " -s " . $this->Session->id();
+        $cmd .= " -i " . $this->Auth->user('id');
+        $cmd .= " -o " . $this->Session->read('current_team_id');
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
