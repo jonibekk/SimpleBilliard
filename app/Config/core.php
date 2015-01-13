@@ -188,7 +188,7 @@ Configure::write('App.encoding', 'UTF-8');
 if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
     Configure::write('Session', array(
         'defaults'      => 'cache',
-        'cookie'        => 'A-Cookie-Name',
+        'cookie'        => 'SID',
         //    'timeout'       => 125,
         'timeout'       => 60 * 60 * 24 * 30, //30days
         'cookieTimeout' => 0,
