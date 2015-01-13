@@ -286,7 +286,7 @@ class Post extends AppModel
     {
         $g_list = [];
         $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
-        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid));
+        $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true));
 
         if (empty($g_list)) {
             return [];
@@ -446,6 +446,8 @@ class Post extends AppModel
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
                 $p_list = $this->getAllExistGoalPostList($start, $end);
+                //フォローorコラボのゴール投稿を取得
+                $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
             }
         }
 
@@ -605,6 +607,7 @@ class Post extends AppModel
                     'goal_id' => null,
                 ],
                 'team_id'                  => $this->current_team_id,
+                'public_flg'                   => true,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [$order => $order_direction],
