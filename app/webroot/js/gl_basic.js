@@ -178,7 +178,9 @@ $(document).ready(function () {
         }
     });
 
+    //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
@@ -544,7 +546,9 @@ $('input, textarea')
         $('.navbar').css('position', 'fixed');
         //force page redraw to fix incorrectly positioned fixed elements
         setTimeout(function () {
+            //noinspection JSUnresolvedVariable
             if (typeof $.mobile != "undefined") {
+                //noinspection JSUnresolvedVariable
                 window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
             }
         }, 20);

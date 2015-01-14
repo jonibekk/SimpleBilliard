@@ -338,7 +338,7 @@ echo $this->Html->script('gl_basic');
                     });
                 });
 
-                $('.custom-radio-check').customRadioCheck();
+                $modal_elm.find('.custom-radio-check').customRadioCheck();
 
             }).success(function () {
                 $('body').addClass('modal-open');
