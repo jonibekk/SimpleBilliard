@@ -439,11 +439,11 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_action($action_id)
+    public function delete_action($action_result_id)
     {
         $this->request->allowMethod('post', 'delete');
         try {
-            if (!$action = $this->Goal->Action->findById($action_id)) {
+            if (!$action = $this->Goal->Action->ActionResult->findById($action_result_id)) {
                 throw new RuntimeException(__d('gl', "アクションが存在しません。"));
             }
             if (!$this->Goal->Collaborator->isCollaborated($action['Action']['goal_id'])) {
@@ -454,8 +454,8 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Goal->Action->id = $action_id;
-        $this->Goal->Action->delete();
+        $this->Goal->Action->ActionResult->id = $action_result_id;
+        $this->Goal->Action->ActionResult->delete();
         //関連アクションの紐付け解除
 //        $this->Goal->Action->releaseKr($kr_id);
 

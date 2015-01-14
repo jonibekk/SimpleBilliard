@@ -69,10 +69,17 @@
                                     </li>
                                 <? endif ?>
                                 <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                    <li><?=
-                                        $this->Form->postLink(__d('gl', "投稿を削除"),
-                                                              ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
-                                                              null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
+                                    <? if ($post['Post']['type'] == Post::TYPE_ACTION && !empty($post['ActionResult'])): ?>
+                                        <li><?=
+                                            $this->Form->postLink(__d('gl', "アクションを削除"),
+                                                                  ['controller' => 'goals', 'action' => 'delete_action', $post['ActionResult']['id']],
+                                                                  null, __d('gl', "本当にこのアクションを削除しますか？")) ?></li>
+                                    <? else: ?>
+                                        <li><?=
+                                            $this->Form->postLink(__d('gl', "投稿を削除"),
+                                                                  ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
+                                                                  null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
+                                    <? endif; ?>
                                 <? endif ?>
                                 <li><a href="#" class="copy_me"
                                        data-clipboard-text="<?=
