@@ -97,18 +97,29 @@ class Collaborator extends AppModel
         return $res;
     }
 
-    function getCollaboGoalList($user_id)
+    function getCollaboGoalList($user_id, $with_owner = false)
     {
         $options = [
             'conditions' => [
                 'user_id' => $user_id,
                 'team_id' => $this->current_team_id,
-                'type'    => Collaborator::TYPE_COLLABORATOR,
+                'type'    => [
+                    Collaborator::TYPE_COLLABORATOR,
+                ],
             ],
             'fields'     => [
                 'goal_id'
             ],
         ];
+        if ($with_owner) {
+            unset($options['conditions']['type']);
+            $options['OR'] = [
+                'type' => [
+                    Collaborator::TYPE_COLLABORATOR,
+                    Collaborator::TYPE_OWNER,
+                ],
+            ];
+        }
         $res = $this->find('list', $options);
         return $res;
     }

@@ -1235,7 +1235,7 @@ input::-moz-focus-inner {
 }
 
 .responsive-goal-title-width {
-    width: 82%;
+    width: 100%;
 }
 
 .w_85per {
@@ -2970,7 +2970,7 @@ textarea.comment-post-form {
     }
 
     .responsive-goal-title-width {
-        width: 90%;
+        width: 100%;
     }
 }
 
@@ -3062,7 +3062,7 @@ textarea.comment-post-form {
     }
 
     .responsive-goal-title-width {
-        width: 84%;
+        width: 100%;
     }
 }
 

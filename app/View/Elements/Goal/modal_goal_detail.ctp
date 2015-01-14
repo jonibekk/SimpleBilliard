@@ -112,7 +112,7 @@
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
+                    <div><i class="fa fa-heart"><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
                                 &nbsp;(<?= count($goal['Follower']) ?>)</span></i></div>
                     <? if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
                         <? foreach ($goal['Follower'] as $follower): ?>
