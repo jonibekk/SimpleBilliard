@@ -79,8 +79,15 @@ $action = $this->request->data;
             <?=
             $this->Form->submit(__d('gl', "アクションを変更"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'id' => "ActionEditFormSubmit_" . $action['ActionResult']['id']]) ?>
+            <?=$this->Form->end()?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+            <?=
+            $this->Form->postLink(__d('gl', "アクションを削除"),
+                                  ['controller' => 'goals', 'action' => 'delete_action', $action['ActionResult']['id']],
+                                  ['class' => 'btn btn-default pull-left'], __d('gl', "本当にこのアクションを削除しますか？")) ?>
+
+
         </div>
     </div>
 </div>
