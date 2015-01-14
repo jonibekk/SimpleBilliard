@@ -439,6 +439,32 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    public function delete_action($action_id)
+    {
+        $this->request->allowMethod('post', 'delete');
+        try {
+            if (!$action = $this->Goal->Action->findById($action_id)) {
+                throw new RuntimeException(__d('gl', "アクションが存在しません。"));
+            }
+            if (!$this->Goal->Collaborator->isCollaborated($action['Action']['goal_id'])) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        $this->Goal->Action->id = $action_id;
+        $this->Goal->Action->delete();
+        //関連アクションの紐付け解除
+//        $this->Goal->Action->releaseKr($kr_id);
+
+        $this->Pnotify->outSuccess(__d('gl', "アクションを削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
     public function delete_collabo($key_result_user_id)
     {
         $this->request->allowMethod('post', 'put');
