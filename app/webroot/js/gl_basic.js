@@ -153,6 +153,19 @@ $(document).ready(function () {
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+                //画像をレイジーロード
+                imageLazyOn($modal_elm);
+                //画像リサイズ
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $modal_elm.find('.custom-radio-check').customRadioCheck();
+
             }).success(function () {
                 $('body').addClass('modal-open');
             });
@@ -258,21 +271,39 @@ $(function () {
     });
 });
 
-function imageLazyOn() {
-    $("img.lazy").lazy({
-        bind: "event",
-        attribute: "data-original",
-        combined: true,
-        delay: 100,
-        visibleOnly: false,
-        effect: "fadeIn",
-        removeAttribute: false,
-        onError: function (element) {
-            if (element.attr('error-img') != undefined) {
-                element.attr("src", element.attr('error-img'));
+function imageLazyOn($elm_obj) {
+    if ($elm_obj === undefined) {
+        $("img.lazy").lazy({
+            bind: "event",
+            attribute: "data-original",
+            combined: true,
+            delay: 100,
+            visibleOnly: false,
+            effect: "fadeIn",
+            removeAttribute: false,
+            onError: function (element) {
+                if (element.attr('error-img') != undefined) {
+                    element.attr("src", element.attr('error-img'));
+                }
             }
-        }
-    });
+        });
+    }
+    else {
+        $elm_obj.find("img.lazy").lazy({
+            bind: "event",
+            attribute: "data-original",
+            combined: true,
+            delay: 100,
+            visibleOnly: false,
+            effect: "fadeIn",
+            removeAttribute: false,
+            onError: function (element) {
+                if (element.attr('error-img') != undefined) {
+                    element.attr("src", element.attr('error-img'));
+                }
+            }
+        });
+    }
 }
 function evToggleAjaxGet() {
     attrUndefinedCheck(this, 'target-id');

@@ -166,4 +166,32 @@ class ActionResult extends AppModel
         $res = $this->find('count', $options);
         return $res;
     }
+
+    /**
+     * 作成者かどうかのチェック
+     *
+     * @param null   $id
+     * @param string $uid
+     *
+     * @return bool
+     */
+    public function isCreator($uid, $id = null)
+    {
+        if ($id === null) {
+            $id = $this->getID();
+        }
+
+        if ($id === false) {
+            return false;
+        }
+
+        return (bool)$this->find('count', array(
+            'conditions' => array(
+                $this->alias . '.' . $this->primaryKey => $id,
+                $this->alias . '.' . 'created_user_id' => $uid,
+            ),
+            'recursive'  => -1,
+            'callbacks'  => false
+        ));
+    }
 }

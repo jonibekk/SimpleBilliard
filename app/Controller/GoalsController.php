@@ -633,6 +633,28 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($kr_list);
     }
 
+    public function ajax_get_edit_action_modal($ar_id)
+    {
+        $this->_ajaxPreProcess();
+        try {
+            if (!$this->Goal->Action->ActionResult->isCreator($this->Auth->user('id'), $ar_id)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $action = $this->Goal->Action->ActionResult->find('first',
+                                                          ['conditions' => ['ActionResult.id' => $ar_id], 'contain' => ['Action']]);
+        $this->request->data = $action;
+        $kr_list = $this->Goal->KeyResult->getKeyResults($action['Action']['goal_id'], 'list');
+        $this->set(compact('kr_list'));
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_edit_action_result');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
     function download_all_goal_csv()
     {
         $this->request->allowMethod('post');

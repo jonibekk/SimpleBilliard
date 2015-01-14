@@ -47,7 +47,7 @@ if (isset($type)) {
                                        'class'         => 'lazy',
                                        'style'         => 'width: 34px; height: 34px;',
                                        'data-original' => $this->Upload->uploadUrl($data, "{$model}.photo" . $index,
-                                                                                   ['style' => ''])
+                                                                                   ['style' => 'small'])
                                    ]
                 )
                 ?>

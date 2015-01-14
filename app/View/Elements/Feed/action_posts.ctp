@@ -57,24 +57,13 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                                 <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')
-                                    && $post['Post']['type'] != Post::TYPE_ACTION
-                                    && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
-                                    && $post['Post']['type'] != Post::TYPE_GOAL_COMPLETE
+                                    && $post['Post']['type'] == Post::TYPE_ACTION
                                 ): ?>
-                                    <li><a href="#" class="target-toggle-click"
-                                           target-id="ActionPostEditForm_<?= $post['Post']['id'] ?>"
-                                           opend-text="<?= __d('gl', "編集をやめる") ?>"
-                                           closed-text="<?= __d('gl', "投稿を編集") ?>"
-                                           click-target-id="ActionPostEditFormBody_<?= $post['Post']['id'] ?>"
-                                           hidden-target-id="ActionPostTextBody_<?= $post['Post']['id'] ?>"
-                                            ><?= __d('gl', "投稿を編集") ?></a>
+                                    <li>
+                                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', $post['Post']['action_result_id']]) ?>"
+                                           class="modal-ajax-get"
+                                            ><?= __d('gl', "アクションを編集") ?></a>
                                     </li>
-                                <? endif ?>
-                                <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                    <li><?=
-                                        $this->Form->postLink(__d('gl', "投稿を削除"),
-                                                              ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
-                                                              null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
                                 <? endif ?>
                                 <li><a href="#" class="copy_me"
                                        data-clipboard-text="<?=
