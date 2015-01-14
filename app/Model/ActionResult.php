@@ -194,4 +194,17 @@ class ActionResult extends AppModel
             'callbacks'  => false
         ));
     }
+
+    function actionEdit($data)
+    {
+        if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
+            foreach ($data['photo_delete'] as $index => $val) {
+                if ($val) {
+                    $data['ActionResult']['photo' . $index] = null;
+                }
+            }
+        }
+        return $this->saveAll($data);
+    }
+
 }

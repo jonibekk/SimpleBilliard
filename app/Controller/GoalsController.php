@@ -12,7 +12,7 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action'];
+        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action', 'edit_action'];
     }
 
     /**
@@ -653,6 +653,29 @@ class GoalsController extends AppController
         $response = $this->render('Goal/modal_edit_action_result');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * @param $ar_id
+     */
+    public function edit_action($ar_id)
+    {
+        $this->request->allowMethod('post', 'put');
+        try {
+            if (!$this->Goal->Action->ActionResult->isCreator($this->Auth->user('id'), $ar_id)) {
+                throw new RuntimeException();
+            }
+            if (!$this->Goal->Action->ActionResult->actionEdit($this->request->data)) {
+                throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     function download_all_goal_csv()
