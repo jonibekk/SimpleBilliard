@@ -467,6 +467,10 @@ class Post extends AppModel
                     'Post.modified' => 'desc'
                 ],
             ];
+            if ($this->orgParams['type'] == self::TYPE_ACTION) {
+                $post_options['order']=['ActionResult.id'=>'desc'];
+                $post_options['contain']=['ActionResult'];
+            }
             $post_list = $this->find('list', $post_options);
         }
 
@@ -564,6 +568,11 @@ class Post extends AppModel
             //単独の場合はコメントの件数上限外す
             unset($options['contain']['Comment']['limit']);
         }
+
+        if ($this->orgParams['type'] == self::TYPE_ACTION) {
+            $options['order']=['ActionResult.id'=>'desc'];
+        }
+
 
         $res = $this->find('all', $options);
         //コメントを逆順に
