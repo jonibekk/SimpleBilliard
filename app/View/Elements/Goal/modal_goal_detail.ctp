@@ -69,7 +69,7 @@
                     <i class="fa fa-folder"><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span></i>
                 </div>
                 <div class="col col-xxs-12">
-                    <b class="font_18px font_verydark"><?= $goal['Goal']['name'] ?></b>
+                    <b class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></b>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <?= h($goal['Purpose']['name']) ?>

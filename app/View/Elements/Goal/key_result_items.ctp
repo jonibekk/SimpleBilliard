@@ -17,10 +17,6 @@
     <? foreach ($key_results as $kr): ?>
         <div class="bd-t h_50px">
             <div class="col col-xxs-12 responsive-goal-space-width mxh_50px ln_1 ptb_5px">
-                <a href="#" class="develop--forbiddenLink">
-                    <i class=" fa fa-check-circle inline-block mr_5px font_40px tap-btn text-align_c <?= empty($kr['KeyResult']['completed']) ? 'check-off' : 'check-fin' ?>"></i>
-                </a>
-
                 <div class="inline-block responsive-goal-title-width">
                     <span class="ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
