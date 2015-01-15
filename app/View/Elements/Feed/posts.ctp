@@ -385,9 +385,8 @@
                             <a href="#" class="target-show-target-click font_12px comment-add-pic"
                                target-id="CommentFormImage_<?= $post['Post']['id'] ?>"
                                click-target-id="Comment__Post_<?= $post['Post']['id'] ?>_Photo_1">
-                                <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
+                                <button type="button" class="btn pull-left photo-up-btn">
+                                    <i class="fa fa-camera post-camera-icon"></i>
                                 </button>
 
                             </a>
