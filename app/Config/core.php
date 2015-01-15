@@ -334,7 +334,7 @@ $prefix = 'app_';
  */
 Cache::config('_cake_core_', array(
     'engine'    => $engine,
-    'prefix'    => $prefix . 'cake_core_',
+    'prefix'    => $prefix . 'cake_core:',
     'path'      => CACHE . 'persistent' . DS,
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
@@ -346,7 +346,7 @@ Cache::config('_cake_core_', array(
  */
 Cache::config('_cake_model_', array(
     'engine'    => $engine,
-    'prefix'    => $prefix . 'cake_model_',
+    'prefix'    => $prefix . 'cake_model:',
     'path'      => CACHE . 'models' . DS,
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
@@ -357,7 +357,7 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
         'engine'   => 'Redis',
         'server'   => ELASTICACHE_SESSION_HOST,
         'port'     => 6379,
-        'prefix'   => 'cake_session_',
+        'prefix'   => 'cake_session:',
         'duration' => '+2 days', // always cache for ages
     ));
 }
