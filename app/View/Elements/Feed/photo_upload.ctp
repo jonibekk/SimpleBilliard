@@ -12,6 +12,7 @@
  * @var                    $type
  * @var                    $has_many
  * @var CodeCompletionView $this
+ * @var                    $id_prefix
  */
 $model = null;
 if (isset($type)) {
@@ -32,6 +33,9 @@ if (isset($type)) {
 }
 if (!isset($has_many)) {
     $has_many = false;
+}
+if (!isset($id_prefix)) {
+    $id_prefix = null;
 }
 ?>
 <!-- START app/View/Elements/Feed/photo_upload.ctp -->
@@ -69,7 +73,7 @@ if (!isset($has_many)) {
                                        'target-id'    => $submit_id,
                                        'wrapInput'    => false,
                                        'errorMessage' => false,
-                                       'id'           => $model . "PhotoDelete" . $index
+                                       'id'           => $id_prefix . $model . "PhotoDelete" . $index
                                    ]
                 ) ?>
             </div>
@@ -97,7 +101,7 @@ if (!isset($has_many)) {
                                          'wrapInput'    => false,
                                          'errorMessage' => false,
                                          'required'     => false,
-                                         'id'           => $model . "_" . $model_id . '_Photo_' . $index
+                                         'id'           => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index
                                         ]) ?>
             </span>
         </div>
