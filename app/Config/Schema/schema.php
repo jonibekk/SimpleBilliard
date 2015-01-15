@@ -16,8 +16,11 @@ class AppSchema extends CakeSchema
         'id'                => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'アクションリザルトID'),
         'team_id'           => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'action_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'アクションID(belongsToでGoalモデルに関連)'),
+        'goal_id'           => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ゴールID(belongsToでGoalモデルに関連)'),
+        'key_result_id'     => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'キーリザルトID(belongsToでGoalモデルに関連)'),
         'created_user_id'   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '作成者ID(belongsToでUserモデルに関連)'),
         'completed_user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '完了者ID(belongsToでUserモデルに関連)'),
+        'name'              => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '名前', 'charset' => 'utf8'),
         'type'              => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'タイプ(0:user,1:goal,2:kr)'),
         'scheduled'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '予定日'),
         'completed'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '完了日'),
@@ -39,7 +42,9 @@ class AppSchema extends CakeSchema
             'action_id'         => array('column' => 'action_id', 'unique' => 0),
             'modified'          => array('column' => 'modified', 'unique' => 0),
             'created_user_id'   => array('column' => 'created_user_id', 'unique' => 0),
-            'completed_user_id' => array('column' => 'completed_user_id', 'unique' => 0)
+            'completed_user_id' => array('column' => 'completed_user_id', 'unique' => 0),
+            'goal_id'           => array('column' => 'goal_id', 'unique' => 0),
+            'key_result_id'     => array('column' => 'key_result_id', 'unique' => 0)
         ),
         'tableParameters'   => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -184,9 +189,9 @@ class AppSchema extends CakeSchema
         'indexes'         => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id' => array('column' => 'team_id', 'unique' => 0),
-            'goal_id' => array('column' => 'goal_id', 'unique' => 0),
             'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'del_flg' => array('column' => 'del_flg', 'unique' => 0)
+            'del_flg' => array('column' => 'del_flg', 'unique' => 0),
+            'goal_id' => array('column' => 'goal_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -384,11 +389,11 @@ class AppSchema extends CakeSchema
         'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ゴールを更新した日付時刻'),
         'indexes'          => array(
             'PRIMARY'    => array('column' => 'id', 'unique' => 1),
-            'purpose_id' => array('column' => 'purpose_id', 'unique' => 0),
             'modified'   => array('column' => 'modified', 'unique' => 0),
             'user_id'    => array('column' => 'user_id', 'unique' => 0),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
-            'del_flg'    => array('column' => 'del_flg', 'unique' => 0)
+            'del_flg'    => array('column' => 'del_flg', 'unique' => 0),
+            'purpose_id' => array('column' => 'purpose_id', 'unique' => 0)
         ),
         'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -494,7 +499,7 @@ class AppSchema extends CakeSchema
     public $local_names = array(
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ローカル名ID'),
         'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
-        'language'        => array('type' => 'string', 'null' => false, 'length' => 3, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8'),
+        'language'        => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 3, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8'),
         'first_name'      => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '名', 'charset' => 'utf8'),
         'last_name'       => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '姓', 'charset' => 'utf8'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
