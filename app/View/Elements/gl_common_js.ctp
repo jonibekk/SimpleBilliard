@@ -657,7 +657,7 @@ echo $this->Html->script('gl_basic');
     <?endif;?>
     <?endif;?>
 </script>
-<?= $this->Session->flash('open_krs') ?>
+<?= $this->Session->flash('click_event') ?>
 <?
 echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示

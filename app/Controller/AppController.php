@@ -459,4 +459,13 @@ class AppController extends Controller
         }
         return null;
     }
+
+    /**
+     * @param $id
+     */
+    public function _flashClickEvent($id)
+    {
+        $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
+    }
+
 }
