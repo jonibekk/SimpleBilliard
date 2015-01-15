@@ -53,9 +53,8 @@ $this->Form->input('body', [
 
 <div class="none" id="CommentEdit_<?= $comment['id'] ?>">
     <a href="#" class="target-show-this-del" target-id="CommentEditFormImage_<?= $comment['id'] ?>">
-        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
-                data-placement="bottom"
-                title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
+        <button type="button" class="btn pull-left photo-up-btn">
+            <i class="fa fa-camera post-camera-icon"></i>
         </button>
 
     </a>
