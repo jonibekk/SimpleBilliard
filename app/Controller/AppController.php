@@ -190,9 +190,9 @@ class AppController extends Controller
         $this->set('current_circle', $current_circle);
     }
 
-    public function _setFeedMoreReadUrl()
+    public function _setFeedMoreReadUrl($controller = 'posts', $action = 'ajax_get_feed')
     {
-        $base_url = ["controller" => "posts", 'action' => 'ajax_get_feed'];
+        $base_url = ["controller" => $controller, 'action' => $action];
         $url = array_merge($base_url, $this->request->params['named']);
         foreach ($this->Post->orgParams as $key => $val) {
             if (array_key_exists($key, $this->request->params)) {

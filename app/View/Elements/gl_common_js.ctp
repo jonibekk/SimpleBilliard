@@ -349,13 +349,13 @@ echo $this->Html->script('gl_basic');
         attrUndefinedCheck(this, 'parent-id');
         attrUndefinedCheck(this, 'next-page-num');
         attrUndefinedCheck(this, 'get-url');
-        attrUndefinedCheck(this, 'month-index');
 
         var $obj = $(this);
         var parent_id = $obj.attr('parent-id');
         var next_page_num = $obj.attr('next-page-num');
         var get_url = $obj.attr('get-url');
         var month_index = $obj.attr('month-index');
+        var no_data_text_id = $obj.attr('no-data-text-id');
         //リンクを無効化
         $obj.attr('disabled', 'disabled');
         var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
@@ -363,7 +363,7 @@ echo $this->Html->script('gl_basic');
         $obj.after($loader_html);
         //url生成
         var url = get_url + '/page:' + next_page_num;
-        if (month_index > 1) {
+        if (month_index != undefined && month_index > 1) {
             url = url + '/month_index:' + month_index;
         }
         $.ajax({
@@ -419,16 +419,25 @@ echo $this->Html->script('gl_basic');
                 }
 
                 if (data.count < 20) {
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //リンクを有効化
-                    $obj.removeAttr('disabled');
-                    month_index++;
-                    $obj.attr('month-index', month_index);
-                    //次のページ番号をセット
-                    $obj.attr('next-page-num', 1);
-                    $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
-                    $("#ShowMoreNoData").show();
+                    if (month_index != undefined) {
+                        //ローダーを削除
+                        $loader_html.remove();
+                        //リンクを有効化
+                        $obj.removeAttr('disabled');
+                        month_index++;
+                        $obj.attr('month-index', month_index);
+                        //次のページ番号をセット
+                        $obj.attr('next-page-num', 1);
+                        $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
+                        $("#" + no_data_text_id).show();
+                    }
+                    else {
+                        //ローダーを削除
+                        $loader_html.remove();
+                        $("#" + no_data_text_id).show();
+                        //もっと読む表示をやめる
+                        $obj.remove();
+                    }
                 }
             },
             error: function () {
