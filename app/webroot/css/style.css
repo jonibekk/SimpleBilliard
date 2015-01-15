@@ -403,6 +403,10 @@ textarea{
     margin-top: 8px;
 }
 
+.mt_12px {
+    margin-top: 12px;
+}
+
 .mt_16px {
     margin-top: 16px;
 }
@@ -1083,6 +1087,10 @@ textarea{
 .lh_20px {
     line-height: 20px;
     vertical-align: middle;
+}
+
+.lh_40px {
+    line-height: 40px;
 }
 
 /*/アイコンを揃える*/
