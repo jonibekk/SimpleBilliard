@@ -128,7 +128,7 @@ echo $this->Html->script('gl_basic');
                 var data = [
                     {
                         id: "circle_<?=$current_circle['Circle']['id']?>",
-                        text: "<?=$current_circle['Circle']['name']?>",
+                        text: "<?=h($current_circle['Circle']['name'])?>",
                         image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
                     }
                 ];
