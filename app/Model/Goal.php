@@ -6,15 +6,15 @@ App::uses('KeyResult', 'Model');
 /**
  * Goal Model
  *
- * @property User              $User
- * @property Team              $Team
- * @property GoalCategory      $GoalCategory
- * @property Post              $Post
- * @property KeyResult         $KeyResult
- * @property Collaborator      $Collaborator
- * @property Follower          $Follower
- * @property Purpose           $Purpose
- * @property Action            $Action
+ * @property User                    $User
+ * @property Team                    $Team
+ * @property GoalCategory            $GoalCategory
+ * @property Post                    $Post
+ * @property KeyResult               $KeyResult
+ * @property Collaborator            $Collaborator
+ * @property Follower                $Follower
+ * @property Purpose                 $Purpose
+ * @property ActionResult            $ActionResult
  */
 class Goal extends AppModel
 {
@@ -143,7 +143,7 @@ class Goal extends AppModel
         'KeyResult'           => [
             'dependent' => true,
         ],
-        'Action'              => [
+        'ActionResult'        => [
             'dependent' => true,
         ],
         'IncompleteKeyResult' => [

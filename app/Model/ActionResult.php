@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * ActionResult Model
  *
- * @property Team   $Team
- * @property Action $Action
- * @property User   $CreatedUser
- * @property User   $CompletedUser
+ * @property Team         $Team
+ * @property User         $User
+ * @property Goal         $Goal
+ * @property KeyResult    $KeyResult
  */
 class ActionResult extends AppModel
 {
@@ -107,18 +107,15 @@ class ActionResult extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'Action'        => [
+        'Goal'      => [
             "counterCache" => true,
             'counterScope' => ['ActionResult.del_flg' => false]
         ],
-        'CreatedUser'   => [
-            'className'  => 'User',
-            'foreignKey' => 'created_user_id',
+        'KeyResult' => [
+            "counterCache" => true,
+            'counterScope' => ['ActionResult.del_flg' => false]
         ],
-        'CompletedUser' => [
-            'className'  => 'User',
-            'foreignKey' => 'completed_user_id',
-        ],
+        'User',
     ];
 
     /**
