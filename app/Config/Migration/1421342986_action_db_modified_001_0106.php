@@ -57,6 +57,31 @@ class ActionDbModified0010106 extends CakeMigration
      */
     public function after($direction)
     {
+        if ($direction == 'up') {
+            //データ移行
+            /**
+             * @var Action $Action
+             */
+            $Action = $this->generateModel('Action');
+            $actions = $Action->find('all', ['fields' => ['id', 'goal_id', 'key_result_id', 'name']]);
+            /**
+             * @var ActionResult $ActionResult
+             */
+            $ActionResult = $this->generateModel('ActionResult');
+
+            foreach ($actions as $action) {
+                if (isset($action['Action']['id']) && !empty($action['Action']['id'])) {
+                    $action_id = $action['Action']['id'];
+                    $fields = [
+                        'ActionResult.name'          => "'" . $action['Action']['name'] . "'",
+                        'ActionResult.goal_id'       => $action['Action']['goal_id'],
+                        'ActionResult.key_result_id' => $action['Action']['key_result_id'],
+                    ];
+                    $ActionResult->recursive = -1;
+                    $ActionResult->updateAll($fields, ['ActionResult.action_id' => $action_id]);
+                }
+            }
+        }
         return true;
     }
 }
