@@ -493,6 +493,10 @@ textarea{
     padding: 0;
 }
 
+.p_4px {
+    padding: 4px;
+}
+
 .p_8px {
     padding: 8px;
 }
@@ -1083,6 +1087,9 @@ textarea{
     line-height: 15px;
 }
 
+.lh_18px {
+    line-height: 18px;
+}
 /*アイコンを揃える*/
 .lh_20px {
     line-height: 20px;
@@ -2299,47 +2306,6 @@ textarea.comment-post-form {
 
 .btn-help {
     padding-right: 0;
-}
-
-.btn-white {
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
-    background-image: none;
-    color: #777;
-}
-
-.btn-white:target,
-.btn-white:hover {
-    border: 1px solid #aaa;
-    background-color: #f0f0f0;
-    background-image: none;
-    color: #231814;
-    text-decoration: none;
-}
-
-.btn_pureWhite,
-.btn_pureWhite-rougeOrange {
-    border: 1px solid #ccc;
-    background-color: #fff;
-    background-image: none;
-}
-
-.btn_pureWhite:target,
-.btn_pureWhite:hover {
-    border: 1px solid #aaa;
-    background-color: #fff;
-    background-image: none;
-    color: #231814;
-    text-decoration: none;
-}
-
-.btn_pureWhite-rougeOrange:target,
-.btn_pureWhite-rougeOrange:hover {
-    border: 1px solid #aaa;
-    background-color: #fff;
-    background-image: none;
-    color: #231814;
-    text-decoration: none;
 }
 
 .follow-on, .follow-on:hover, .collabo-on, .collabo-on:hover {
