@@ -113,7 +113,14 @@ CakePlugin::loadAll();
 /**
  * Goalous独自定数
  */
-define('SERVICE_NAME', "Goalous2.0");
+switch (ENV_NAME) {
+    case "www":
+        define('SERVICE_NAME', "Goalous2.0");
+        break;
+    default:
+        define('SERVICE_NAME', "[" . ENV_NAME . "]Goalous2.0");
+        break;
+}
 //トークン期限
 define('TOKEN_EXPIRE_SEC_REGISTER', 86400); //1day
 define('TOKEN_EXPIRE_SEC_ADD_EMAIL', 86400); //1day
