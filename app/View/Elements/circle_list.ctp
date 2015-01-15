@@ -24,7 +24,7 @@
                                                        ['width' => '16px', 'height' => '16px']) ?>
                         </div>
                         <div class="circle-name_box">
-                            <p title="<?= $circle['Circle']['name'] ?>"><?= $circle['Circle']['name'] ?></p>
+                            <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
                         </div>
                     </a>
 
@@ -34,7 +34,7 @@
                                 9+
                             <? elseif ($circle['CircleMember']['unread_count'] > 0): ?>
                                 <?= $circle['CircleMember']['unread_count'] ?>
-                            <?endif; ?>
+                            <? endif; ?>
                         </p>
                     </div>
                 </div>
@@ -48,7 +48,8 @@
             </div>
         <? endforeach ?>
         <? if (count($my_circles) > 8): ?>
-            <i class="fa fa-angle-double-down circle-toggle-icon"></i><a class="pl_5px font_12px font_gray click-circle-trigger on"><?= __d('gl', "すべて表示") ?></a>
+            <i class="fa fa-angle-double-down circle-toggle-icon"></i><a
+                class="pl_5px font_12px font_gray click-circle-trigger on"><?= __d('gl', "すべて表示") ?></a>
         <? endif; ?>
     <? endif; ?>
     <div class="clearfix develop--circle-seek">
@@ -58,7 +59,8 @@
                           ['class' => 'modal-ajax-get-public-circles font-dimgray']) ?>
     </div>
     <div class="clearfix develop--circle-make">
-        <i class="fa fa-plus-circle circle-function circle-make-icon"></i><a href="#" class="font-dimgray" data-toggle="modal"
+        <i class="fa fa-plus-circle circle-function circle-make-icon"></i><a href="#" class="font-dimgray"
+                                                                             data-toggle="modal"
                                                                              data-target="#modal_add_circle"><?=
             __d('gl',
                 "サークルを作成する") ?></a>

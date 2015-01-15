@@ -12,7 +12,7 @@
 ?>
 <!-- START app/View/Elements/circle_list_in_hamburger.ctp -->
 <div class="layout-sub_padding clearfix layout-circle-humbarger">
-<p class="circle_heading">Circles</p>
+    <p class="circle_heading">Circles</p>
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix">
@@ -24,7 +24,7 @@
                                                        ['width' => '16px', 'height' => '16px']) ?>
                         </div>
                         <div class="circle-name_box">
-                            <p title="<?= $circle['Circle']['name'] ?>"><?= $circle['Circle']['name'] ?></p>
+                            <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
                         </div>
                     </a>
 
@@ -34,7 +34,7 @@
                                 9+
                             <? elseif ($circle['CircleMember']['unread_count'] > 0): ?>
                                 <?= $circle['CircleMember']['unread_count'] ?>
-                            <?endif; ?>
+                            <? endif; ?>
                         </p>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
     </div>
     <div class="clearfix develop--circle-make">
         <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i><a href="#" data-toggle="modal"
-                                                                                          data-target="#modal_add_circle"><?=
+                                                                                       data-target="#modal_add_circle"><?=
             __d('gl',
                 "サークルを作成する") ?></a>
     </div>
