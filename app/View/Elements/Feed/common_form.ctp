@@ -86,9 +86,7 @@
                 <div class="font_12px none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
-                        <button type="button" class="btn pull-left photo-up-btn" data-toggle="tooltip"
-                                data-placement="bottom"
-                                title="画像を追加する"><i class="fa fa-camera post-camera-icon"></i>
+                        <button type="button" class="btn pull-left photo-up-btn"><i class="fa fa-camera post-camera-icon"></i>
                         </button>
                     </a>
 
