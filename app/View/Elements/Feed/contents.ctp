@@ -83,6 +83,7 @@ if (!isset($this->request->params['post_id']) || empty($this->request->params['p
             <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
             <a href="#" class="btn btn-link click-feed-read-more"
                parent-id="FeedMoreRead"
+               no-data-text-id="ShowMoreNoData"
                next-page-num="<?= $next_page_num ?>"
                month-index="<?= $month_index ?>"
                get-url="<?=
