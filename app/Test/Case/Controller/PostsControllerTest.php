@@ -19,7 +19,7 @@ class PostsControllerTest extends ControllerTestCase
         'app.key_result',
         'app.purpose',
         'app.goal',
-        'app.action',
+
         'app.key_result',
         'app.collaborator',
         'app.follower',

@@ -131,7 +131,7 @@
                     <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                         <?= $this->TextEx->autoLink($post['Post']['body']) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-                        <i class="fa fa-check-circle">&nbsp;<?= h($post['ActionResult']['Action']['name']) ?></i>
+                        <i class="fa fa-check-circle">&nbsp;<?= h($post['ActionResult']['name']) ?></i>
                     <? elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
                         <i class="fa fa-key">&nbsp;<?= __d('gl', "%s を達成しました！", h($post['KeyResult']['name'])) ?></i>
                     <? elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
@@ -286,9 +286,9 @@
                         </a>
                     </div>
                 <? endif; ?>
-                <? if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['Action']['KeyResult']['name'])): ?>
+                <? if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px">
-                        <i class="fa fa-key">&nbsp;<?= h($post['ActionResult']['Action']['KeyResult']['name']) ?></i>
+                        <i class="fa fa-key">&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?></i>
                     </div>
                 <? endif; ?>
                 <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>

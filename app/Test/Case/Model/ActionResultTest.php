@@ -51,7 +51,6 @@ class ActionResultTest extends CakeTestCase
         'app.invite',
         'app.thread',
         'app.message',
-        'app.action'
     );
 
     /**

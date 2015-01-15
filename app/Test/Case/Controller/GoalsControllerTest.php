@@ -16,7 +16,7 @@ class GoalsControllerTest extends ControllerTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.action',
+
         'app.purpose',
         'app.goal',
         'app.follower',
@@ -366,14 +366,10 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $data = [
-            'Action'       => [
+            'ActionResult' => [
                 'name'          => 'test',
                 'key_result_id' => 0,
-            ],
-            'ActionResult' => [
-                [
-                    'note' => 'test'
-                ]
+                'note'          => 'test',
             ]
         ];
         $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
@@ -384,13 +380,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $data = [
-            'Action'       => [
-                'name' => 'test',
-            ],
             'ActionResult' => [
-                [
-                    'note' => 'test'
-                ]
+                'name' => 'test',
+                'note' => 'test'
             ]
         ];
         $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
@@ -401,14 +393,10 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $data = [
-            'Action'       => [
+            'ActionResult' => [
                 'name'          => 'test',
                 'key_result_id' => 0,
-            ],
-            'ActionResult' => [
-                [
-                    'note' => 'test'
-                ]
+                'note'          => 'test'
             ]
         ];
         $this->testAction('/goals/add_completed_action/99999999', ['method' => 'POST', 'data' => $data]);
@@ -765,9 +753,9 @@ class GoalsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Team->TeamMember->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->Action->my_uid = '1';
+        $Goals->Goal->ActionResult->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->Action->current_team_id = '1';
+        $Goals->Goal->ActionResult->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->GoalCategory->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
