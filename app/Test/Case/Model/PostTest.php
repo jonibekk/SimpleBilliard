@@ -17,11 +17,12 @@ class PostTest extends CakeTestCase
     public $fixtures = array(
         'app.action_result',
         'app.key_result',
-
         'app.post',
         'app.user', 'app.notify_setting',
         'app.team',
         'app.goal',
+        'app.local_name',
+        'app.purpose',
         'app.follower',
         'app.collaborator',
         'app.comment_mention',
@@ -85,13 +86,25 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
-    public function testGet()
+    public function testGetNormal()
     {
         $this->_setDefault();
 
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
+    }
+
+    public function testGetSinglePost()
+    {
+        $this->_setDefault();
         //post_id指定
+        $this->Post->id = 1;
+        $this->Post->saveField('goal_id', 1);
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31", ['named' => ['post_id' => 1]]);
+    }
+
+    public function testGetGoalPost()
+    {
+        $this->_setDefault();
         //goal_id指定&Action指定
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31", ['named' => ['goal_id' => 1, 'type' => Post::TYPE_ACTION]]);
 
@@ -450,6 +463,10 @@ class PostTest extends CakeTestCase
         $this->Post->User->CircleMember->current_team_id = $team_id;
         $this->Post->Team->TeamMember->my_uid = $uid;
         $this->Post->Team->TeamMember->current_team_id = $team_id;
+        $this->Post->Goal->my_uid = $uid;
+        $this->Post->Goal->current_team_id = $team_id;
+        $this->Post->Goal->Collaborator->my_uid = $uid;
+        $this->Post->Goal->Collaborator->current_team_id = $team_id;
 
     }
 
