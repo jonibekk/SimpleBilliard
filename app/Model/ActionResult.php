@@ -181,7 +181,7 @@ class ActionResult extends AppModel
 
     public function addCompletedAction($data, $goal_id)
     {
-        if (!empty($data)) {
+        if (empty($data)) {
             return false;
         }
         $data['ActionResult']['team_id'] = $this->current_team_id;

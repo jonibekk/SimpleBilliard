@@ -99,6 +99,19 @@ class ActionResultTest extends CakeTestCase
         $this->assertTrue(!empty($res));
     }
 
+    function testAddCompletedAction()
+    {
+        $this->_setDefault();
+        $data = [
+            'ActionResult' => [
+                'name'          => 'test',
+                'key_result_id' => 1
+            ]
+        ];
+        $res = $this->ActionResult->addCompletedAction($data, 1);
+        $this->assertTrue(!empty($res));
+    }
+
     function _setDefault()
     {
         $this->ActionResult->current_team_id = 1;
