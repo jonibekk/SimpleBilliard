@@ -412,9 +412,13 @@ class Goal extends AppModel
     {
         $priority_list = array();
         foreach ($goals as $key => $goal) {
-            $priority_list[$key] = $goal['MyCollabo'][0]['priority'];
+            if (isset($goal['MyCollabo'][0]['priority'])) {
+                $priority_list[$key] = $goal['MyCollabo'][0]['priority'];
+            }
         }
-        array_multisort($priority_list, $direction, SORT_NUMERIC, $goals);
+        if (!empty($priority_list)) {
+            array_multisort($priority_list, $direction, SORT_NUMERIC, $goals);
+        }
         return $goals;
     }
 

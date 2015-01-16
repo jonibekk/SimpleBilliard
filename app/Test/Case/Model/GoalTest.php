@@ -81,8 +81,10 @@ class GoalTest extends CakeTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id' => 1,
-            'team_id' => 1
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -101,8 +103,10 @@ class GoalTest extends CakeTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id' => 1,
-            'team_id' => 1
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -130,6 +134,8 @@ class GoalTest extends CakeTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -143,7 +149,8 @@ class GoalTest extends CakeTestCase
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($key_results);
-        $this->Goal->getAllGoals();
+        $res = $this->Goal->getAllGoals();
+        $this->assertTrue(!empty($res));
     }
 
     function testGetByGoalId()
@@ -153,10 +160,13 @@ class GoalTest extends CakeTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
-        $this->Goal->getByGoalId($goal_id);
+        $res = $this->Goal->getByGoalId($goal_id);
+        $this->assertTrue(!empty($res));
     }
 
     function testGetProgress()
@@ -403,6 +413,8 @@ class GoalTest extends CakeTestCase
         $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
         $this->Goal->my_uid = 1;
         $this->Goal->current_team_id = 1;
+        $this->Goal->Purpose->my_uid = 1;
+        $this->Goal->Purpose->current_team_id = 1;
         $this->Goal->Team->my_uid = 1;
         $this->Goal->Team->current_team_id = 1;
         $this->Goal->KeyResult->my_uid = 1;
