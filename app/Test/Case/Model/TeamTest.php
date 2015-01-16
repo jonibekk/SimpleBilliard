@@ -252,6 +252,11 @@ class TeamTest extends CakeTestCase
         $this->setDefault();
         $time_offset = $this->Team->me['timezone'] * 60 * 60;
 
+        //no target_date
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = null;
+        $this->Team->setCurrentTermStartEndFromParam(1, 6);
+
         ////期間半年
         $this->Team->current_term_start_date = null;
         $this->Team->current_term_end_date = null;
