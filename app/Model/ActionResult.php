@@ -166,6 +166,9 @@ class ActionResult extends AppModel
 
     function actionEdit($data)
     {
+        if (empty($data)) {
+            return false;
+        }
         if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
             foreach ($data['photo_delete'] as $index => $val) {
                 if ($val) {
@@ -178,6 +181,9 @@ class ActionResult extends AppModel
 
     public function addCompletedAction($data, $goal_id)
     {
+        if (!empty($data)) {
+            return false;
+        }
         $data['ActionResult']['team_id'] = $this->current_team_id;
         $data['ActionResult']['goal_id'] = $goal_id;
         $data['ActionResult']['user_id'] = $this->my_uid;

@@ -481,6 +481,77 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testEditActionFailNoArId()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+                'note'          => 'test',
+            ]
+        ];
+        $this->testAction('/goals/edit_action/99999999999999', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testEditActionFailEmpty()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+        ];
+        $this->testAction('/goals/edit_action/1', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testEditActionSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'id'     => 1,
+                'name'   => 'test',
+                'photo1' => null,
+            ],
+            'photo_delete' => [
+                1 => 1
+            ]
+        ];
+        $this->testAction('/goals/edit_action/1', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testDeleteActionFailNotExists()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/delete_action/9999999', ['method' => 'POST']);
+    }
+
+    function testDeleteActionFailNotCollabo()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'    => 'test',
+                'team_id' => 1,
+                'user_id' => 1,
+                'goal_id' => 99,
+            ],
+        ];
+        $Goals->Goal->ActionResult->save($data);
+        $ar_id = $Goals->Goal->ActionResult->getLastInsertID();
+        $this->testAction('/goals/delete_action/' . $ar_id, ['method' => 'POST']);
+    }
+
+    function testDeleteActionSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/delete_action/1', ['method' => 'POST']);
+    }
+
     function testAddKeyResultFail()
     {
         $this->_getGoalsCommonMock();

@@ -42,4 +42,19 @@ class ActionResultFixture extends CakeTestFixture
         ),
         'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
+
+    /**
+     * Records
+     *
+     * @var array
+     */
+    public $records = [
+        [
+            'id'      => '1',
+            'user_id' => '1',
+            'team_id' => '1',
+            'goal_id' => '1',
+            'name'    => 'test',
+        ],
+    ];
 }
