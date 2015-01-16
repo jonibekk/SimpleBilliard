@@ -173,7 +173,7 @@ class ActionResult extends AppModel
                 }
             }
         }
-        return $this->saveAll($data);
+        return $this->save($data);
     }
 
     public function addCompletedAction($data, $goal_id)

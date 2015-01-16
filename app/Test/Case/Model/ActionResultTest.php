@@ -83,6 +83,22 @@ class ActionResultTest extends CakeTestCase
         $this->ActionResult->getCount('xxxx', 1, 1000000000);
     }
 
+    function testActionEdit()
+    {
+        $this->_setDefault();
+        $before_save = [
+            'ActionResult' => [
+                'name'    => 'test',
+                'team_id' => 1,
+                'user_id' => 1,
+            ]
+        ];
+        $save_data = $this->ActionResult->save($before_save);
+        $save_data['photo_delete'][1] = 1;
+        $res = $this->ActionResult->actionEdit($save_data);
+        $this->assertTrue(!empty($res));
+    }
+
     function _setDefault()
     {
         $this->ActionResult->current_team_id = 1;
