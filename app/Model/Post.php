@@ -756,8 +756,6 @@ class Post extends AppModel
                     }
 
                     break;
-                default:
-                    break;
             }
         }
         return $data;
