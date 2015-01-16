@@ -717,6 +717,10 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 
+    var $current_date;
+    var $start_date;
+    var $end_date;
+
     /**
      * @param $Goals
      */
@@ -735,8 +739,8 @@ class GoalsControllerTest extends ControllerTestCase
             'team_id'    => 1,
             'purpose_id' => $this->purpose_id,
             'name'       => 'test',
-            'start_date' => time(),
-            'end_date'   => time(),
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $Goals->Goal->create();
         $Goals->Goal->save($goal);
@@ -746,8 +750,8 @@ class GoalsControllerTest extends ControllerTestCase
             'team_id'    => 1,
             'goal_id'    => $this->goal_id,
             'name'       => 'test',
-            'start_date' => time(),
-            'end_date'   => time(),
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
@@ -843,6 +847,14 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->Follower->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Follower->current_team_id = '1';
+
+        $this->current_date = strtotime('2015/7/1');
+        $this->start_date = strtotime('2015/7/1');
+        $this->end_date = strtotime('2015/10/1');
+
+        $Goals->Goal->Team->current_term_start_date = strtotime('2015/1/1');
+        $Goals->Goal->Team->current_term_end_date = strtotime('2015/12/1');
+
         return $Goals;
     }
 }
