@@ -127,9 +127,9 @@ class GoalTest extends CakeTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id' => 1,
-            'team_id' => 1,
-            'purpose' => "test",
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'purpose_id' => 1,
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -144,6 +144,19 @@ class GoalTest extends CakeTestCase
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->getAllGoals();
+    }
+
+    function testGetByGoalId()
+    {
+        $this->setDefault();
+        $goal_data = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'purpose_id' => 1,
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+        $this->Goal->getByGoalId($goal_id);
     }
 
     function testGetProgress()
@@ -365,6 +378,15 @@ class GoalTest extends CakeTestCase
         $this->Goal->Collaborator->create();
         $this->Goal->Collaborator->save($collabo);
         return $goal_id;
+    }
+
+    function testIncompleteFail()
+    {
+        try {
+            $this->Goal->incomplete(null);
+        } catch (Exception $e) {
+        }
+        $this->assertTrue(isset($e));
     }
 
     var $current_date;
