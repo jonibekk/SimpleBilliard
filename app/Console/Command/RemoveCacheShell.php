@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Remove Cache Shell
  * This shell allows you to remove cache files easily and provides you with a couple configuration options.
@@ -20,10 +21,14 @@ class RemoveCacheShell extends AppShell
     {
         $config_list = Cache::configured();
         foreach ($config_list as $value) {
-            echo 'clear ' . $value . "\n";
+            if ($value == "session") {
+                continue;
+            }
+            $this->out('clear ' . $value);
             Cache::clear(false, $value);
         }
         clearCache();
-        echo "...done\n";
+
+        $this->out('...done!');
     }
 }
