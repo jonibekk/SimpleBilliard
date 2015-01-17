@@ -52,7 +52,9 @@ class Post extends AppModel
     public $orgParams = [
         'circle_id'   => null,
         'post_id'     => null,
+        'goal_id'     => null,
         'filter_goal' => null,
+        'type'        => null,
     ];
 
     public $actsAs = [
@@ -432,9 +434,18 @@ class Post extends AppModel
                     $p_list = $this->orgParams['post_id'];
                 }
             }
+            //特定ゴール指定
+            elseif ($this->orgParams['goal_id']) {
+                if ($this->Goal->Collaborator->isCollaborated($this->orgParams['goal_id'])) {
+                    //アクションのみの場合
+                    if ($this->orgParams['type'] == self::TYPE_ACTION) {
+                        $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION);
+                    }
+                }
+            }
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
-                $p_list = $this->getExistGoalPublicPostList($start, $end);
+                $p_list = $this->getAllExistGoalPostList($start, $end);
                 //フォローorコラボのゴール投稿を取得
                 $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
             }
@@ -456,6 +467,10 @@ class Post extends AppModel
                     'Post.modified' => 'desc'
                 ],
             ];
+            if ($this->orgParams['type'] == self::TYPE_ACTION) {
+                $post_options['order']=['ActionResult.id'=>'desc'];
+                $post_options['contain']=['ActionResult'];
+            }
             $post_list = $this->find('list', $post_options);
         }
 
@@ -554,6 +569,11 @@ class Post extends AppModel
             unset($options['contain']['Comment']['limit']);
         }
 
+        if ($this->orgParams['type'] == self::TYPE_ACTION) {
+            $options['order']=['ActionResult.id'=>'desc'];
+        }
+
+
         $res = $this->find('all', $options);
         //コメントを逆順に
         foreach ($res as $key => $val) {
@@ -588,7 +608,7 @@ class Post extends AppModel
         return false;
     }
 
-    public function getExistGoalPublicPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getAllExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
             'conditions' => [
@@ -601,6 +621,21 @@ class Post extends AppModel
             ],
             'order'      => [$order => $order_direction],
             'limit'      => $limit,
+            'fields'     => ['id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    public function getGoalPostList($goal_id, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc")
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'type'    => $type,
+                'team_id' => $this->current_team_id,
+            ],
+            'order'      => [$order => $order_direction],
             'fields'     => ['id'],
         ];
         $res = $this->find('list', $options);

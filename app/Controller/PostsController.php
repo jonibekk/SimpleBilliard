@@ -212,6 +212,45 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_action_list_more()
+    {
+        $param_named = $this->request->params['named'];
+        $this->_ajaxPreProcess();
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        else {
+            $page_num = 1;
+        }
+        $posts = $this->Post->get($page_num, 20, null, null, $this->request->params);
+        $this->set(compact('posts'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/action_posts');
+        $html = $response->__toString();
+        $result = array(
+            'html'  => $html,
+            'count' => count($posts),
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_get_goal_action_feed()
+    {
+        $this->_ajaxPreProcess();
+        $this->_setFeedMoreReadUrl('posts', 'ajax_get_action_list_more');
+        $posts = $this->Post->get(1, 20, null, null, $this->request->params);
+        $this->set(compact('posts'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_action_list');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_comment($post_id)
     {
         $this->_ajaxPreProcess();

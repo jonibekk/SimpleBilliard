@@ -129,6 +129,8 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
     $(document).on("click", ".target-toggle", evTargetToggle);
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+    $(document).on("click", ".click-show-post-modal", getModalPostList);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("touchend", "#layer-black", function () {
@@ -151,6 +153,19 @@ $(document).ready(function () {
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+                //画像をレイジーロード
+                imageLazyOn($modal_elm);
+                //画像リサイズ
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $modal_elm.find('.custom-radio-check').customRadioCheck();
+
             }).success(function () {
                 $('body').addClass('modal-open');
             });
@@ -175,7 +190,10 @@ $(document).ready(function () {
             });
         }
     });
+
+    //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
+    //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
@@ -253,21 +271,39 @@ $(function () {
     });
 });
 
-function imageLazyOn() {
-    $("img.lazy").lazy({
-        bind: "event",
-        attribute: "data-original",
-        combined: true,
-        delay: 100,
-        visibleOnly: false,
-        effect: "fadeIn",
-        removeAttribute: false,
-        onError: function (element) {
-            if (element.attr('error-img') != undefined) {
-                element.attr("src", element.attr('error-img'));
+function imageLazyOn($elm_obj) {
+    if ($elm_obj === undefined) {
+        $("img.lazy").lazy({
+            bind: "event",
+            attribute: "data-original",
+            combined: true,
+            delay: 100,
+            visibleOnly: false,
+            effect: "fadeIn",
+            removeAttribute: false,
+            onError: function (element) {
+                if (element.attr('error-img') != undefined) {
+                    element.attr("src", element.attr('error-img'));
+                }
             }
-        }
-    });
+        });
+    }
+    else {
+        $elm_obj.find("img.lazy").lazy({
+            bind: "event",
+            attribute: "data-original",
+            combined: true,
+            delay: 100,
+            visibleOnly: false,
+            effect: "fadeIn",
+            removeAttribute: false,
+            onError: function (element) {
+                if (element.attr('error-img') != undefined) {
+                    element.attr("src", element.attr('error-img'));
+                }
+            }
+        });
+    }
 }
 function evToggleAjaxGet() {
     attrUndefinedCheck(this, 'target-id');
@@ -541,7 +577,9 @@ $('input, textarea')
         $('.navbar').css('position', 'fixed');
         //force page redraw to fix incorrectly positioned fixed elements
         setTimeout(function () {
+            //noinspection JSUnresolvedVariable
             if (typeof $.mobile != "undefined") {
+                //noinspection JSUnresolvedVariable
                 window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
             }
         }, 20);
