@@ -561,7 +561,8 @@ class GoalsControllerTest extends ControllerTestCase
 
     function testAddKeyResultSuccess()
     {
-        $this->_getGoalsCommonMock();
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
         $data = ['KeyResult' =>
                      [
                          'name'        => 'test',
@@ -569,7 +570,22 @@ class GoalsControllerTest extends ControllerTestCase
                          'start_value' => 1
                      ]
         ];
-        $this->testAction('/goals/add_key_result/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add_key_result/{$this->goal_id}/{$this->kr_id}",
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddKeyResultFailPermit()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = ['KeyResult' =>
+                     [
+                         'name'        => 'test',
+                         'value_unit'  => 0,
+                         'start_value' => 1
+                     ]
+        ];
+        $this->testAction("/goals/add_key_result/{$this->goal_id}/99999", ['method' => 'POST', 'data' => $data]);
     }
 
     function testAjaxGetEditActionModalSuccess()
@@ -695,34 +711,34 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testCompleteSuccess()
+    function testCompleteKrSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $this->testAction('/goals/complete_kr/' . $this->kr_id, ['method' => 'POST']);
     }
 
-    function testCompleteSuccessWithGoal()
+    function testCompleteKrSuccessWithGoal()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $this->testAction('/goals/complete_kr/' . $this->kr_id . "/1", ['method' => 'POST']);
     }
 
-    function testIncompleteSuccess()
+    function testIncompleteKrSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $this->testAction('/goals/incomplete_kr/' . $this->kr_id, ['method' => 'POST']);
     }
 
-    function testCompleteFail()
+    function testCompleteKrFail()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/complete_kr/9999999', ['method' => 'POST']);
     }
 
-    function testIncompleteFail()
+    function testIncompleteKrFail()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/incomplete_kr/9999999999', ['method' => 'POST']);
@@ -882,6 +898,8 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->Follower->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Follower->current_team_id = '1';
+        $Goals->Goal->Post->my_uid = '1';
+        $Goals->Goal->Post->current_team_id = '1';
 
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
