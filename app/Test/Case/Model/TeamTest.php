@@ -198,6 +198,9 @@ class TeamTest extends CakeTestCase
     function testSetCurrentTermStartEnd()
     {
         $this->setDefault();
+
+        $this->Team->setCurrentTermStartEnd();
+
         $this->Team->current_term_start_date = strtotime('2014-04-01 00:00:00');
         $this->Team->current_term_end_date = strtotime('2014-09-31 00:00:00');
         $this->Team->setCurrentTermStartEnd();
