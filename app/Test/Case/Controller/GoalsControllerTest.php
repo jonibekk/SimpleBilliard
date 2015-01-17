@@ -839,7 +839,59 @@ class GoalsControllerTest extends ControllerTestCase
             ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
+    }
 
+    function testIsIsaoUser()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $user = [
+            'PrimaryEmail' => [
+                'email' => 'test@isao.co.jp'
+            ]
+        ];
+        $Goals->_isIsaoUser($user, 999);
+        $user = [
+            'PrimaryEmail' => [
+                'email' => 'test@aaa.com'
+            ]
+        ];
+        $Goals->_isIsaoUser($user, 999);
+    }
+
+    function testForceSSL()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $Goals->forceSSL();
+    }
+
+    function testSwitchTeamBeforeCheckFalse()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $Goals->request->params['controller'] = 'teams';
+        $res = $Goals->_switchTeamBeforeCheck();
+        $this->assertFalse($res);
+    }
+
+    function testSwitchTeamBeforeCheckNotBelongTeam()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        //所属していないチームのゴールをあらかじめ保存
+        $goal = [
+            'name'       => 'test',
+            'purpose_id' => 1,
+            'user_id'    => 1,
+            'team_id'    => 999,
+        ];
+        $Goals->Goal->save($goal);
+
+        $Goals->request->params = [
+            'controller' => 'goals',
+            'action'     => 'add',
+            'pass'       => [
+                0 => $Goals->Goal->getLastInsertID(),
+            ]
+        ];
+        $Goals->_switchTeamBeforeCheck();
     }
 
     var $current_date;
