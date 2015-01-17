@@ -513,13 +513,8 @@ class GoalsController extends AppController
         }
 
         if ($return['add']) {
-            if ($this->Goal->Follower->addFollower($goal_id)) {
-                $return['msg'] = __d('gl', "フォローしました。");
-            }
-            else {
-                $return['error'] = true;
-                $return['msg'] = __d('gl', "フォローに失敗しました。");
-            }
+            $this->Goal->Follower->addFollower($goal_id);
+            $return['msg'] = __d('gl', "フォローしました。");
         }
         else {
             $this->Goal->Follower->deleteFollower($goal_id);
