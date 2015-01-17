@@ -69,7 +69,7 @@
                     <i class="fa fa-folder"><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span></i>
                 </div>
                 <div class="col col-xxs-12">
-                    <b class="font_18px font_verydark"><?= $goal['Goal']['name'] ?></b>
+                    <b class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></b>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <?= h($goal['Purpose']['name']) ?>
@@ -112,7 +112,7 @@
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
+                    <div><i class="fa fa-heart"><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
                                 &nbsp;(<?= count($goal['Follower']) ?>)</span></i></div>
                     <? if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
                         <? foreach ($goal['Follower'] as $follower): ?>

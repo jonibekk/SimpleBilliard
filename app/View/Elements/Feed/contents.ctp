@@ -22,7 +22,7 @@
                 <span class="feed-current-filter"><?= __d('gl', 'すべて') ?></span>
             <? else: ?>
                 <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
-            <?endif; ?>
+            <? endif; ?>
             <span> ･ </span>
             <? if ($feed_filter == "goal"): ?>
                 <span class="feed-current-filter"><?= __d('gl', 'ゴール') ?></span>
@@ -30,10 +30,10 @@
                 <?= $this->Html->link(__d('gl', 'ゴール'),
                                       ['controller' => 'posts', 'action' => 'feed', 'filter_goal' => true],
                                       ['class' => 'font_lightgray']) ?>
-            <?endif; ?>
+            <? endif; ?>
             <? if ($current_circle): ?>
                 <span> ･ </span>
-                <span class="feed-current-filter"><?= $current_circle['Circle']['name'] ?></span>
+                <span class="feed-current-filter"><?= h($current_circle['Circle']['name']) ?></span>
                 <span class="feed-circle-user-number">
         <?
         $title = '<ul class="user-list-in-tooltip">';
@@ -41,7 +41,7 @@
             foreach ($circle_members as $member) {
                 $img = $this->Upload->uploadImage($member, 'User.photo', ['style' => 'small'],
                                                   ['width' => '16px', 'height' => '16px']);
-                $username = $member['User']['display_username'];
+                $username = h($member['User']['display_username']);
                 $title .= "<li>{$img}&nbsp;{$username}</li>";
             }
         }
@@ -66,30 +66,31 @@
     </div>
 <? endif; ?>
 <?
-if(!isset($this->request->params['post_id']) || empty($this->request->params['post_id'])):
-?>
-<?
-$next_page_num = 2;
-$month_index = 1;
-$more_read_text = __d('gl', "もっと読む ▼");
-if ((count($posts) != 20)) {
-    $next_page_num = 1;
-    $month_index = 2;
-    $more_read_text = __d('gl', "さらに以前の投稿を読み込む ▼");
-}
-?>
-<div class="panel panel-default feed-read-more" id="FeedMoreRead">
-    <div class="panel-body panel-read-more-body">
-        <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
-        <a href="#" class="btn btn-link click-feed-read-more"
-           parent-id="FeedMoreRead"
-           next-page-num="<?= $next_page_num ?>"
-           month-index="<?= $month_index ?>"
-           get-url="<?=
-           $this->Html->url($feed_more_read_url) ?>"
-            >
-            <?= $more_read_text ?></a>
+if (!isset($this->request->params['post_id']) || empty($this->request->params['post_id'])):
+    ?>
+    <?
+    $next_page_num = 2;
+    $month_index = 1;
+    $more_read_text = __d('gl', "もっと読む ▼");
+    if ((count($posts) != 20)) {
+        $next_page_num = 1;
+        $month_index = 2;
+        $more_read_text = __d('gl', "さらに以前の投稿を読み込む ▼");
+    }
+    ?>
+    <div class="panel panel-default feed-read-more" id="FeedMoreRead">
+        <div class="panel-body panel-read-more-body">
+            <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
+            <a href="#" class="btn btn-link click-feed-read-more"
+               parent-id="FeedMoreRead"
+               no-data-text-id="ShowMoreNoData"
+               next-page-num="<?= $next_page_num ?>"
+               month-index="<?= $month_index ?>"
+               get-url="<?=
+               $this->Html->url($feed_more_read_url) ?>"
+                >
+                <?= $more_read_text ?></a>
+        </div>
     </div>
-</div>
-<?endif;?>
+<? endif; ?>
 <!-- END app/View/Elements/Feed/contents.ctp -->

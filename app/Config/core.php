@@ -188,9 +188,9 @@ Configure::write('App.encoding', 'UTF-8');
 if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
     Configure::write('Session', array(
         'defaults'      => 'cache',
-        'cookie'        => 'A-Cookie-Name',
-        //    'timeout'       => 125,
-        'timeout'       => 60 * 60 * 24 * 30, //30days
+        'cookie'        => 'SID',
+        //セッションの保持時間（分）
+        'timeout'       => 60 * 24 * 30, //30days
         'cookieTimeout' => 0,
         'start'         => true,
         'checkAgent'    => false,
@@ -206,8 +206,8 @@ else {
     Configure::write('Session', array(
         'defaults' => 'database',
         'cookie'   => 'SID',
-        //セッションの保持時間（秒数）
-        'timeout'  => 60 * 60 * 24 * 30, //30days
+        //セッションの保持時間（分）
+        'timeout'  => 60 * 24 * 30, //30days
     ));
 }
 
@@ -332,16 +332,25 @@ if (Configure::read('debug') > 0) {
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
 $prefix = 'app_';
+if (PUBLIC_ENV) {
+    $prefix = ENV_NAME . ":";
+}
 
 /**
  * Configure the cache used for general framework caching. Path information,
  * object listings, and translation cache files are stored with this configuration.
  */
+$server = null;
+$port = null;
+if(PUBLIC_ENV && ELASTICACHE_SESSION_HOST){
+$server = ELASTICACHE_SESSION_HOST;
+    $port = 6379;
+}
 Cache::config('_cake_core_', array(
     'engine'    => $engine,
-    'server'    => ELASTICACHE_SESSION_HOST,
-    'port'      => 6379,
-    'prefix'    => $prefix . 'cake_core_',
+    'server'    => $server,
+    'port'      => $port,
+    'prefix'    => $prefix . 'cake_core:',
     'path'      => CACHE . 'persistent' . DS,
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
@@ -353,9 +362,9 @@ Cache::config('_cake_core_', array(
  */
 Cache::config('_cake_model_', array(
     'engine'    => $engine,
-    'server'    => ELASTICACHE_SESSION_HOST,
-    'port'      => 6379,
-    'prefix'    => $prefix . 'cake_model_',
+    'server'    => $server,
+    'port'      => $port,
+    'prefix'    => $prefix . 'cake_model:',
     'path'      => CACHE . 'models' . DS,
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
@@ -364,9 +373,9 @@ Cache::config('_cake_model_', array(
 if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
     Cache::config('session', array(
         'engine'   => 'Redis',
-        'server'   => ELASTICACHE_SESSION_HOST,
-        'port'     => 6379,
-        'prefix'   => $prefix . 'cake_session_',
+        'server'    => $server,
+        'port'      => $port,
+        'prefix'   => $prefix . 'cake_session:',
         'duration' => '+2 days', // always cache for ages
     ));
 }

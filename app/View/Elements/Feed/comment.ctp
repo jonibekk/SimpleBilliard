@@ -9,8 +9,14 @@
  * @var                    $my_member_status
  * @var                    $user
  * @var                    $like
+ * @var                    $id_prefix
  * @var CodeCompletionView $this
  */
+?>
+<?
+if (!isset($id_prefix)) {
+    $id_prefix = null;
+}
 ?>
 <!-- START app/View/Elements/Feed/comment.ctp -->
 <div class="font_12px">
@@ -28,11 +34,11 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
-                                   target-id="CommentEditForm_<?= $comment['id'] ?>"
+                                   target-id="<?= $id_prefix ?>CommentEditForm_<?= $comment['id'] ?>"
                                    opend-text="<?= __d('gl', "編集をやめる") ?>"
                                    closed-text="<?= __d('gl', "コメントを編集") ?>"
-                                   click-target-id="CommentEditFormBody_<?= $comment['id'] ?>"
-                                   hidden-target-id="CommentTextBody_<?= $comment['id'] ?>"
+                                   click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
+                                   hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
                                     ><?= __d('gl', "コメントを編集") ?></a></li>
                             <li><?=
@@ -52,9 +58,11 @@
                 <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-                <?= $this->element('Feed/comment_edit_form', compact('comment')) ?>
+                <?= $this->element('Feed/comment_edit_form', ['comment' => $comment, 'id_prefix' => $id_prefix]) ?>
             <? endif; ?>
-                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_<?= $comment['id'] ?>"><?= $this->TextEx->autoLink($comment['body']) ?></div>
+            <div
+                class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"
+                id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= $this->TextEx->autoLink($comment['body']) ?></div>
 
             <?
             $photo_count = 0;
@@ -67,14 +75,15 @@
             <? if ($photo_count): ?>
                 <div class="col col-xxs-12 comment-photo">
 
-                    <div id="CarouselComment_<?= $comment['id'] ?>" class="carousel slide" data-ride="carousel">
+                    <div id="<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>" class="carousel slide"
+                         data-ride="carousel">
                         <!-- Indicators -->
                         <? if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
                                 <? $index = 0 ?>
                                 <? for ($i = 1; $i <= 5; $i++): ?>
                                     <? if ($comment["photo{$i}_file_name"]): ?>
-                                        <li data-target="#CarouselComment_<?= $comment['id'] ?>"
+                                        <li data-target="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
                                             data-slide-to="<?= $index ?>"
                                             class="<?= ($index === 0) ? "active" : null ?>"></li>
                                         <? $index++ ?>
@@ -91,7 +100,7 @@
                                         <a href="<?=
                                         $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
                                                                  ['style' => 'large']) ?>" rel="lightbox"
-                                           data-lightbox="LightBoxComment_<?= $comment['id'] ?>">
+                                           data-lightbox="<?= $id_prefix ?>LightBoxComment_<?= $comment['id'] ?>">
                                             <?=
                                             $this->Html->image('ajax-loader.gif',
                                                                [
@@ -112,11 +121,13 @@
 
                         <!-- Controls -->
                         <? if ($photo_count >= 2): ?>
-                            <a class="left carousel-control" href="#CarouselComment_<?= $comment['id'] ?>"
+                            <a class="left carousel-control"
+                               href="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
                                data-slide="prev">
                                 <span class="glyphicon glyphicon-chevron-left"></span>
                             </a>
-                            <a class="right carousel-control" href="#CarouselComment_<?= $comment['id'] ?>"
+                            <a class="right carousel-control"
+                               href="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
                                data-slide="next">
                                 <span class="glyphicon glyphicon-chevron-right"></span>
                             </a>
@@ -169,7 +180,7 @@
             <div class="lh_15px">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font_lightgray"> ･ </span>
                 <a href="#" class="click-like font_lightgray <?= empty($like) ? null : "liked" ?>"
-                   like_count_id="CommentLikeCount_<?= $comment['id'] ?>"
+                   like_count_id="<?= $id_prefix ?>CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
                     <?= __d('gl', "いいね！") ?></a><span
@@ -178,7 +189,7 @@
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', $comment['id']]) ?>"
                                class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
-                                    id="CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
+                                    id="<?= $id_prefix ?>CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
                     class="font_lightgray"> ･ </span>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
                class="modal-ajax-get font_lightgray"><i

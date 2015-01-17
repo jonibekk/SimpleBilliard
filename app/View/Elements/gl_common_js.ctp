@@ -128,7 +128,7 @@ echo $this->Html->script('gl_basic');
                 var data = [
                     {
                         id: "circle_<?=$current_circle['Circle']['id']?>",
-                        text: "<?=$current_circle['Circle']['name']?>",
+                        text: "<?=h($current_circle['Circle']['name'])?>",
                         image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
                     }
                 ];
@@ -302,17 +302,60 @@ echo $this->Html->script('gl_basic');
         });
         return false;
     }
+
+    function getModalPostList(e) {
+        e.preventDefault();
+
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.modal();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                //クリップボードコピーの処理を追加
+                //noinspection JSUnresolvedFunction
+                var client = new ZeroClipboard($modal_elm.find('.copy_me'));
+                //noinspection JSUnusedLocalSymbols
+                client.on("ready", function (readyEvent) {
+                    client.on("aftercopy", function (event) {
+                        alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
+                    });
+                });
+                //画像をレイジーロード
+                imageLazyOn();
+                //画像リサイズ
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $modal_elm.find('.custom-radio-check').customRadioCheck();
+
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    }
     function evFeedMoreView() {
         attrUndefinedCheck(this, 'parent-id');
         attrUndefinedCheck(this, 'next-page-num');
         attrUndefinedCheck(this, 'get-url');
-        attrUndefinedCheck(this, 'month-index');
 
         var $obj = $(this);
         var parent_id = $obj.attr('parent-id');
         var next_page_num = $obj.attr('next-page-num');
         var get_url = $obj.attr('get-url');
         var month_index = $obj.attr('month-index');
+        var no_data_text_id = $obj.attr('no-data-text-id');
         //リンクを無効化
         $obj.attr('disabled', 'disabled');
         var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
@@ -320,7 +363,7 @@ echo $this->Html->script('gl_basic');
         $obj.after($loader_html);
         //url生成
         var url = get_url + '/page:' + next_page_num;
-        if (month_index > 1) {
+        if (month_index != undefined && month_index > 1) {
             url = url + '/month_index:' + month_index;
         }
         $.ajax({
@@ -376,16 +419,25 @@ echo $this->Html->script('gl_basic');
                 }
 
                 if (data.count < 20) {
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //リンクを有効化
-                    $obj.removeAttr('disabled');
-                    month_index++;
-                    $obj.attr('month-index', month_index);
-                    //次のページ番号をセット
-                    $obj.attr('next-page-num', 1);
-                    $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
-                    $("#ShowMoreNoData").show();
+                    if (month_index != undefined) {
+                        //ローダーを削除
+                        $loader_html.remove();
+                        //リンクを有効化
+                        $obj.removeAttr('disabled');
+                        month_index++;
+                        $obj.attr('month-index', month_index);
+                        //次のページ番号をセット
+                        $obj.attr('next-page-num', 1);
+                        $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
+                        $("#" + no_data_text_id).show();
+                    }
+                    else {
+                        //ローダーを削除
+                        $loader_html.remove();
+                        $("#" + no_data_text_id).show();
+                        //もっと読む表示をやめる
+                        $obj.remove();
+                    }
                 }
             },
             error: function () {
@@ -614,7 +666,7 @@ echo $this->Html->script('gl_basic');
     <?endif;?>
     <?endif;?>
 </script>
-<?= $this->Session->flash('open_krs') ?>
+<?= $this->Session->flash('click_event') ?>
 <?
 echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示

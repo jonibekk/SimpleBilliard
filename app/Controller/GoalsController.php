@@ -12,7 +12,7 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action'];
+        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action', 'edit_action'];
     }
 
     /**
@@ -323,7 +323,7 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
-        $this->_flashOpenKrs($goal_id);
+        $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
         $this->redirect($this->referer());
     }
@@ -347,7 +347,7 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
+        $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -384,7 +384,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Goal->commit();
-        $this->_flashOpenKrs($key_result['KeyResult']['goal_id']);
+        $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
     }
@@ -408,7 +408,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Goal->commit();
-        $this->_flashOpenKrs($key_result['KeyResult']['goal_id']);
+        $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -432,8 +432,40 @@ class GoalsController extends AppController
         //関連アクションの紐付け解除
         $this->Goal->Action->releaseKr($kr_id);
 
-        $this->_flashOpenKrs($kr['KeyResult']['goal_id']);
+        $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
+        /** @noinspection PhpInconsistentReturnPointsInspection */
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
+    public function delete_action($ar_id)
+    {
+        $this->request->allowMethod('post', 'delete');
+        try {
+            if (!$action = $this->Goal->Action->ActionResult->find('first',
+                                                                   ['conditions' => ['ActionResult.id' => $ar_id],
+                                                                    'contain'    => ['Action']])
+            ) {
+                throw new RuntimeException(__d('gl', "アクションが存在しません。"));
+            }
+            if (!$this->Goal->Collaborator->isCollaborated($action['Action']['goal_id'])) {
+                throw new RuntimeException(__d('gl', "権限がありません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        $this->Goal->Action->ActionResult->id = $ar_id;
+        $this->Goal->Action->ActionResult->delete();
+        $this->Goal->Action->id = $action['Action']['id'];
+        $this->Goal->Action->delete();
+        if (isset($action['Action']['goal_id']) && !empty($action['Action']['goal_id'])) {
+            $this->_flashClickEvent("ActionListOpen_" . $action['Action']['goal_id']);
+        }
+
+        $this->Pnotify->outSuccess(__d('gl', "アクションを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -607,6 +639,56 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($kr_list);
     }
 
+    public function ajax_get_edit_action_modal($ar_id)
+    {
+        $this->_ajaxPreProcess();
+        try {
+            if (!$this->Goal->Action->ActionResult->isCreator($this->Auth->user('id'), $ar_id)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $action = $this->Goal->Action->ActionResult->find('first',
+                                                          ['conditions' => ['ActionResult.id' => $ar_id], 'contain' => ['Action']]);
+        $this->request->data = $action;
+        $kr_list = $this->Goal->KeyResult->getKeyResults($action['Action']['goal_id'], 'list');
+        $this->set(compact('kr_list'));
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_edit_action_result');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * @param $ar_id
+     */
+    public function edit_action($ar_id)
+    {
+        $this->request->allowMethod('post', 'put');
+        try {
+            if (!$this->Goal->Action->ActionResult->isCreator($this->Auth->user('id'), $ar_id)) {
+                throw new RuntimeException();
+            }
+            if (!$this->Goal->Action->ActionResult->actionEdit($this->request->data)) {
+                throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
+        $action = $this->Goal->Action->ActionResult->find('first',
+                                                          ['conditions' => ['ActionResult.id' => $ar_id], 'contain' => ['Action']]);
+        if (isset($action['Action']['goal_id']) && !empty($action['Action']['goal_id'])) {
+            $this->_flashClickEvent("ActionListOpen_" . $action['Action']['goal_id']);
+        }
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
+    }
+
     function download_all_goal_csv()
     {
         $this->request->allowMethod('post');
@@ -683,11 +765,6 @@ class GoalsController extends AppController
 
         $this->set(compact('filename', 'th', 'td'));
 
-    }
-
-    private function _flashOpenKrs($goal_id)
-    {
-        $this->Session->setFlash(null, "flash_open_krs", ['goal_id' => $goal_id], 'open_krs');
     }
 
     /**
