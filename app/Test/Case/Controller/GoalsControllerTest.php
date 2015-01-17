@@ -787,6 +787,61 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 
+    function testGetTeamIdFromRequest()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+
+        $request_params = [];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'pages',
+            'action'     => 'home',
+            'circle_id'  => 1,
+            'post_id'    => 1,
+            'team_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'circle_id'  => 1,
+            'post_id'    => 1,
+            'team_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'circle_id'  => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'team_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'users',
+            'action'     => 'add',
+            'pass'       => [
+                0 => 1,
+            ]
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+    }
+
     var $current_date;
     var $start_date;
     var $end_date;
@@ -881,6 +936,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
         $Goals->Goal->Team->my_uid = 1;
         $Goals->Goal->Team->current_team_id = 1;
         $Goals->Goal->Team->current_team = [
