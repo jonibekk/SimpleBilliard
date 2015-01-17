@@ -19,9 +19,14 @@ class RemoveCacheShell extends AppShell
 {
     public function main()
     {
+        $ignore_configs = [
+            'session',
+            'default',
+        ];
+
         $config_list = Cache::configured();
         foreach ($config_list as $value) {
-            if ($value == "session") {
+            if (in_array($value, $ignore_configs)) {
                 continue;
             }
             $this->out('clear ' . $value);
