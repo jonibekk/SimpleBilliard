@@ -328,7 +328,7 @@ if (Configure::read('debug') > 0) {
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
 $prefix = 'app_';
 if (PUBLIC_ENV) {
-    $prefix = ENV_NAME . ":" . $prefix;
+    $prefix = ENV_NAME . ":";
 }
 
 /**
