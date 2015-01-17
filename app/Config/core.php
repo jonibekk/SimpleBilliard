@@ -327,6 +327,9 @@ if (Configure::read('debug') > 0) {
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
 $prefix = 'app_';
+if (PUBLIC_ENV) {
+    $prefix = ENV_NAME . ":" . $prefix;
+}
 
 /**
  * Configure the cache used for general framework caching. Path information,
@@ -357,7 +360,7 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
         'engine'   => 'Redis',
         'server'   => ELASTICACHE_SESSION_HOST,
         'port'     => 6379,
-        'prefix'   => 'cake_session:',
+        'prefix'   => $prefix . 'cake_session:',
         'duration' => '+2 days', // always cache for ages
     ));
 }
