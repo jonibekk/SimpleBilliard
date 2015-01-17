@@ -893,6 +893,33 @@ class GoalsControllerTest extends ControllerTestCase
         ];
         $Goals->_switchTeamBeforeCheck();
     }
+    function testSwitchTeamBeforeCheckBelongTeam()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        //所属していないチームのゴールをあらかじめ保存
+        $goal = [
+            'name'       => 'test',
+            'purpose_id' => 1,
+            'user_id'    => 1,
+            'team_id'    => 2,
+        ];
+        $Goals->Goal->save($goal);
+
+        $team_member = [
+            'user_id'=>1,
+            'team_id'=>2,
+        ];
+        $Goals->User->TeamMember->save($team_member);
+
+        $Goals->request->params = [
+            'controller' => 'goals',
+            'action'     => 'add',
+            'pass'       => [
+                0 => $Goals->Goal->getLastInsertID(),
+            ]
+        ];
+        $Goals->_switchTeamBeforeCheck();
+    }
 
     var $current_date;
     var $start_date;
