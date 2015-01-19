@@ -346,10 +346,10 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
     $server = ELASTICACHE_SESSION_HOST;
     $port = 6379;
 }
+//RedisではなくApcを使う。
+//file_mapがオリジナルのパスを保有してしまうので、OpsworksでRedisが使えない為。
 Cache::config('_cake_core_', array(
-    'engine'    => $engine,
-    'server'    => $server,
-    'port'      => $port,
+    'engine'    => 'Apc',
     'prefix'    => $prefix . 'cake_core:',
     'path'      => CACHE . 'persistent' . DS,
     'serialize' => ($engine === 'File'),
