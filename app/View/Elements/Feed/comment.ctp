@@ -22,8 +22,12 @@ if (!isset($id_prefix)) {
 <div class="font_12px">
     <div class="col col-xxs-12 pt_4px">
         <?=
-        $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
-                                   ['class' => 'comment-img'])
+        $this->Html->image('ajax-loader.gif',
+                           [
+                               'class'         => 'lazy comment-img',
+                               'data-original' => $this->Upload->uploadUrl($user, 'User.photo', ['style' => 'small']),
+                           ]
+        )
         ?>
         <div class="comment-body">
             <div class="col col-xxs-12 comment-text comment-user">
