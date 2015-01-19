@@ -26,8 +26,6 @@ before_script:
   - cp app/Test/travis/travis-ci-apache build/travis-ci-apache
   - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - printf "\n" | sudo add-apt-repository ppa:ondrej/php5
-  - sudo apt-get update
   - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
   - sudo apt-get install php-pear php5-dev
   - pecl install oauth
