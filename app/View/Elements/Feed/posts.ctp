@@ -86,8 +86,14 @@
                         </div>
                     </div>
                     <?=
-                    $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
-                                               ['class' => 'feed-img']) ?>
+                    $this->Html->image('ajax-loader.gif',
+                                       [
+                                           'class'         => 'lazy feed-img',
+                                           'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
+                                                                                       ['style' => 'medium']),
+                                       ]
+                    )
+                    ?>
                     <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
                     <div class="font_11px font_lightgray">
                         <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
@@ -337,8 +343,15 @@
                 <? endforeach ?>
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <?=
-                    $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'small'],
-                                               ['class' => 'comment-img']) ?>
+                    $this->Html->image('ajax-loader.gif',
+                                       [
+                                           'class'         => 'lazy comment-img',
+                                           'data-original' => $this->Upload->uploadUrl($this->Session->read('Auth.User'),
+                                                                                       'User.photo',
+                                                                                       ['style' => 'small']),
+                                       ]
+                    )
+                    ?>
                     <div class="comment-body">
                         <?=
                         $this->Form->create('Comment', [
