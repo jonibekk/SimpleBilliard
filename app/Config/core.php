@@ -381,6 +381,6 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
         'server'   => $server,
         'port'     => $port,
         'prefix'   => $prefix . 'cake_session:',
-        'duration' => '+2 days', // always cache for ages
+        'duration' => $duration,
     ));
 }
