@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * KeyResult Model
  *
- * @property Team        $Team
- * @property Goal        $Goal
- * @property Action      $Action
- * @property Post        $Post
+ * @property Team              $Team
+ * @property Goal              $Goal
+ * @property ActionResult      $ActionResult
+ * @property Post              $Post
  */
 class KeyResult extends AppModel
 {
@@ -96,7 +96,7 @@ class KeyResult extends AppModel
     ];
 
     public $hasMany = [
-        'Action',
+        'ActionResult',
         'Post',
     ];
 

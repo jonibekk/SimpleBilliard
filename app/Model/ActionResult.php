@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * ActionResult Model
  *
- * @property Team   $Team
- * @property Action $Action
- * @property User   $CreatedUser
- * @property User   $CompletedUser
+ * @property Team         $Team
+ * @property User         $User
+ * @property Goal         $Goal
+ * @property KeyResult    $KeyResult
  */
 class ActionResult extends AppModel
 {
@@ -107,18 +107,15 @@ class ActionResult extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'Action'        => [
+        'Goal'      => [
             "counterCache" => true,
             'counterScope' => ['ActionResult.del_flg' => false]
         ],
-        'CreatedUser'   => [
-            'className'  => 'User',
-            'foreignKey' => 'created_user_id',
+        'KeyResult' => [
+            "counterCache" => true,
+            'counterScope' => ['ActionResult.del_flg' => false]
         ],
-        'CompletedUser' => [
-            'className'  => 'User',
-            'foreignKey' => 'completed_user_id',
-        ],
+        'User',
     ];
 
     /**
@@ -151,7 +148,7 @@ class ActionResult extends AppModel
         //タイプ別に条件変更する
         switch ($type) {
             case 'me':
-                $options['conditions']['completed_user_id'] = $this->my_uid;
+                $options['conditions']['user_id'] = $this->my_uid;
                 break;
             default:
                 break;
@@ -167,36 +164,11 @@ class ActionResult extends AppModel
         return $res;
     }
 
-    /**
-     * 作成者かどうかのチェック
-     *
-     * @param null   $id
-     * @param string $uid
-     *
-     * @return bool
-     */
-    public function isCreator($uid, $id = null)
-    {
-        if ($id === null) {
-            $id = $this->getID();
-        }
-
-        if ($id === false) {
-            return false;
-        }
-
-        return (bool)$this->find('count', array(
-            'conditions' => array(
-                $this->alias . '.' . $this->primaryKey => $id,
-                $this->alias . '.' . 'created_user_id' => $uid,
-            ),
-            'recursive'  => -1,
-            'callbacks'  => false
-        ));
-    }
-
     function actionEdit($data)
     {
+        if (empty($data)) {
+            return false;
+        }
         if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
             foreach ($data['photo_delete'] as $index => $val) {
                 if ($val) {
@@ -204,7 +176,39 @@ class ActionResult extends AppModel
                 }
             }
         }
-        return $this->saveAll($data);
+        return $this->save($data);
     }
 
+    public function addCompletedAction($data, $goal_id)
+    {
+        if (empty($data)) {
+            return false;
+        }
+        $data['ActionResult']['team_id'] = $this->current_team_id;
+        $data['ActionResult']['goal_id'] = $goal_id;
+        $data['ActionResult']['user_id'] = $this->my_uid;
+        if (isset($data['ActionResult']['key_result_id'])) {
+            $data['ActionResult']['type'] = ActionResult::TYPE_KR;
+        }
+        else {
+            $data['ActionResult']['type'] = ActionResult::TYPE_GOAL;
+        }
+        $data['ActionResult']['completed'] = time();
+        $res = $this->save($data);
+        return $res;
+    }
+
+    public function releaseKr($kr_id)
+    {
+        $res = $this->updateAll(['ActionResult.key_result_id' => null],
+                                ['ActionResult.key_result_id' => $kr_id, 'ActionResult.team_id' => $this->current_team_id]);
+        return $res;
+    }
+
+    public function releaseGoal($goal_id)
+    {
+        $res = $this->updateAll(['ActionResult.goal_id' => null, 'ActionResult.key_result_id' => null],
+                                ['ActionResult.goal_id' => $goal_id, 'ActionResult.team_id' => $this->current_team_id]);
+        return $res;
+    }
 }

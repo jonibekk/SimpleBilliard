@@ -75,9 +75,18 @@ class PurposeTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testAdd()
     {
+        $this->_setDefault();
+        $data = ['Purpose' => ['name' => 'test']];
+        $res = $this->Purpose->add($data);
+        $this->assertTrue(!empty($res));
+    }
 
+    function _setDefault()
+    {
+        $this->Purpose->my_uid = 1;
+        $this->Purpose->current_team_id = 1;
     }
 
 }

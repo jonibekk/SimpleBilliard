@@ -467,6 +467,10 @@ class Post extends AppModel
                     'Post.modified' => 'desc'
                 ],
             ];
+            if ($this->orgParams['type'] == self::TYPE_ACTION) {
+                $post_options['order'] = ['ActionResult.id' => 'desc'];
+                $post_options['contain'] = ['ActionResult'];
+            }
             $post_list = $this->find('list', $post_options);
         }
 
@@ -536,25 +540,20 @@ class Post extends AppModel
                     ],
                 ],
                 'ActionResult'    => [
-                    'fields' => [
+                    'fields'    => [
                         'id',
                         'note',
+                        'name',
                         'photo1_file_name',
                         'photo2_file_name',
                         'photo3_file_name',
                         'photo4_file_name',
                         'photo5_file_name',
                     ],
-                    'Action' => [
-                        'fields'    => [
+                    'KeyResult' => [
+                        'fields' => [
                             'id',
                             'name',
-                        ],
-                        'KeyResult' => [
-                            'fields' => [
-                                'id',
-                                'name',
-                            ],
                         ],
                     ],
                 ]
@@ -563,6 +562,10 @@ class Post extends AppModel
         if (!empty($this->orgParams['post_id'])) {
             //単独の場合はコメントの件数上限外す
             unset($options['contain']['Comment']['limit']);
+        }
+
+        if ($this->orgParams['type'] == self::TYPE_ACTION) {
+            $options['order'] = ['ActionResult.id' => 'desc'];
         }
 
         $res = $this->find('all', $options);
@@ -607,7 +610,7 @@ class Post extends AppModel
                     'goal_id' => null,
                 ],
                 'team_id'                  => $this->current_team_id,
-                'public_flg'                   => true,
+                'public_flg'               => true,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [$order => $order_direction],
@@ -752,8 +755,6 @@ class Post extends AppModel
                         }
                     }
 
-                    break;
-                default:
                     break;
             }
         }

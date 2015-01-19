@@ -76,7 +76,8 @@ class Purpose extends AppModel
                 'goal_count' => 0,
             ]
         ];
-        return $this->find('all', $options);
+        $res = $this->find('all', $options);
+        return $res;
     }
 
 }
