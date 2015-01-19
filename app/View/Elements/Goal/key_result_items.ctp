@@ -20,7 +20,8 @@
                 <div class="inline-block responsive-goal-title-width">
                     <span class="ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
-                    <i class="fa fa-check-circle"><span class="ml_2px"><?= h($kr['KeyResult']['action_count']) ?></span></i>
+                    <i class="fa fa-check-circle"><span
+                            class="ml_2px"><?= h($kr['KeyResult']['action_result_count']) ?></span></i>
                 </div>
             </div>
             <? if ($kr_can_edit): ?>

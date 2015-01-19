@@ -162,7 +162,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Goal->id = $id;
         $this->Goal->delete();
-        $this->Goal->Action->releaseGoal($id);
+        $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -430,7 +430,7 @@ class GoalsController extends AppController
         $kr = $this->Goal->KeyResult->read();
         $this->Goal->KeyResult->delete();
         //関連アクションの紐付け解除
-        $this->Goal->Action->releaseKr($kr_id);
+        $this->Goal->ActionResult->releaseKr($kr_id);
 
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
@@ -443,13 +443,12 @@ class GoalsController extends AppController
     {
         $this->request->allowMethod('post', 'delete');
         try {
-            if (!$action = $this->Goal->Action->ActionResult->find('first',
-                                                                   ['conditions' => ['ActionResult.id' => $ar_id],
-                                                                    'contain'    => ['Action']])
+            if (!$action = $this->Goal->ActionResult->find('first',
+                                                           ['conditions' => ['ActionResult.id' => $ar_id],])
             ) {
                 throw new RuntimeException(__d('gl', "アクションが存在しません。"));
             }
-            if (!$this->Goal->Collaborator->isCollaborated($action['Action']['goal_id'])) {
+            if (!$this->Goal->Collaborator->isCollaborated($action['ActionResult']['goal_id'])) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
         } catch (RuntimeException $e) {
@@ -457,12 +456,10 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Goal->Action->ActionResult->id = $ar_id;
-        $this->Goal->Action->ActionResult->delete();
-        $this->Goal->Action->id = $action['Action']['id'];
-        $this->Goal->Action->delete();
-        if (isset($action['Action']['goal_id']) && !empty($action['Action']['goal_id'])) {
-            $this->_flashClickEvent("ActionListOpen_" . $action['Action']['goal_id']);
+        $this->Goal->ActionResult->id = $ar_id;
+        $this->Goal->ActionResult->delete();
+        if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
+            $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
         }
 
         $this->Pnotify->outSuccess(__d('gl', "アクションを削除しました。"));
@@ -516,13 +513,8 @@ class GoalsController extends AppController
         }
 
         if ($return['add']) {
-            if ($this->Goal->Follower->addFollower($goal_id)) {
-                $return['msg'] = __d('gl', "フォローしました。");
-            }
-            else {
-                $return['error'] = true;
-                $return['msg'] = __d('gl', "フォローに失敗しました。");
-            }
+            $this->Goal->Follower->addFollower($goal_id);
+            $return['msg'] = __d('gl', "フォローしました。");
         }
         else {
             $this->Goal->Follower->deleteFollower($goal_id);
@@ -643,16 +635,15 @@ class GoalsController extends AppController
     {
         $this->_ajaxPreProcess();
         try {
-            if (!$this->Goal->Action->ActionResult->isCreator($this->Auth->user('id'), $ar_id)) {
+            if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
                 throw new RuntimeException();
             }
         } catch (RuntimeException $e) {
             return $this->_ajaxGetResponse(null);
         }
-        $action = $this->Goal->Action->ActionResult->find('first',
-                                                          ['conditions' => ['ActionResult.id' => $ar_id], 'contain' => ['Action']]);
+        $action = $this->Goal->ActionResult->find('first', ['conditions' => ['ActionResult.id' => $ar_id]]);
         $this->request->data = $action;
-        $kr_list = $this->Goal->KeyResult->getKeyResults($action['Action']['goal_id'], 'list');
+        $kr_list = $this->Goal->KeyResult->getKeyResults($action['ActionResult']['goal_id'], 'list');
         $this->set(compact('kr_list'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -668,10 +659,10 @@ class GoalsController extends AppController
     {
         $this->request->allowMethod('post', 'put');
         try {
-            if (!$this->Goal->Action->ActionResult->isCreator($this->Auth->user('id'), $ar_id)) {
+            if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
                 throw new RuntimeException();
             }
-            if (!$this->Goal->Action->ActionResult->actionEdit($this->request->data)) {
+            if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
                 throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
             }
         } catch (RuntimeException $e) {
@@ -680,10 +671,10 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
-        $action = $this->Goal->Action->ActionResult->find('first',
-                                                          ['conditions' => ['ActionResult.id' => $ar_id], 'contain' => ['Action']]);
-        if (isset($action['Action']['goal_id']) && !empty($action['Action']['goal_id'])) {
-            $this->_flashClickEvent("ActionListOpen_" . $action['Action']['goal_id']);
+        $action = $this->Goal->ActionResult->find('first',
+                                                  ['conditions' => ['ActionResult.id' => $ar_id]]);
+        if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
+            $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
         }
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -782,9 +773,9 @@ class GoalsController extends AppController
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             //アクション追加,投稿
-            if (!$this->Goal->Action->addCompletedAction($this->request->data, $goal_id)
+            if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
-                                                   $this->Goal->Action->ActionResult->getLastInsertID())
+                                                   $this->Goal->ActionResult->getLastInsertID())
             ) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }

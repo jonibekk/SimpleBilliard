@@ -672,7 +672,7 @@ class UsersController extends AppController
             $start_date = $this->User->TeamMember->Team->getTermStartDate();
             $end_date = $this->User->TeamMember->Team->getTermEndDate();
         }
-        $action_count = $this->Goal->Action->ActionResult->getCount($type, $start_date, $end_date);
+        $action_count = $this->Goal->ActionResult->getCount($type, $start_date, $end_date);
         $this->_ajaxPreProcess();
 
         $result = [

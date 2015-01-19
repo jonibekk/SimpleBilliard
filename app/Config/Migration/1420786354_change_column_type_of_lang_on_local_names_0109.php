@@ -19,8 +19,8 @@ class ChangeColumnTypeOfLangOnLocalNames0109 extends CakeMigration
         'up'   => array(
             'alter_field'  => array(
                 'local_names' => array(
-                    'language' => array('type' => 'string', 'null' => false, 'length' => 3, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8'),
-                ),
+                    'language' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 3, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8'),
+                )
             ),
             'create_field' => array(
                 'local_names' => array(
