@@ -348,8 +348,13 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
 }
 //RedisではなくApcを使う。
 //file_mapがオリジナルのパスを保有してしまうので、OpsworksでRedisが使えない為。
+//travisのテストファイルの修正が面倒なので公開環境のみApcそれ意外はFileにする
+$core_cache_engine = 'File';
+if (PUBLIC_ENV) {
+    $core_cache_engine = 'Apc';
+}
 Cache::config('_cake_core_', array(
-    'engine'    => 'Apc',
+    'engine' => $core_cache_engine,
     'prefix'    => $prefix . 'cake_core:',
     'path'      => CACHE . 'persistent' . DS,
     'serialize' => ($engine === 'File'),
