@@ -21,6 +21,8 @@ define('AWS_ACCESS_KEY', null);
 define('AWS_SECRET_KEY', null);
 define('S3_LOGS_BUCKET', null);
 define('S3_ASSETS_BUCKET', null);
+define('ELASTICACHE_SESSION_HOST', null);
+define('ELASTICACHE_CACHE_HOST', null);
 define('SES_FROM_ADDRESS', 'support@goalous.com');
 define('SES_FROM_ADDRESS_NEWS', 'news@goalous.com');
 define('SES_FROM_ADDRESS_NOTICE', 'notice@goalous.com');
