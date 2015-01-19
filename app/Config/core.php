@@ -317,7 +317,7 @@ date_default_timezone_set('UTC');
  *       Please check the comments in bootstrap.php for more info on the cache engines available
  *       and their settings.
  */
-if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+if (PUBLIC_ENV && ELASTICACHE_CACHE_HOST) {
     $engine = 'Redis';
 }
 else {
@@ -342,8 +342,8 @@ if (PUBLIC_ENV) {
  */
 $server = null;
 $port = null;
-if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
-    $server = ELASTICACHE_SESSION_HOST;
+if (PUBLIC_ENV && ELASTICACHE_CACHE_HOST) {
+    $server = ELASTICACHE_CACHE_HOST;
     $port = 6379;
 }
 //RedisではなくApcを使う。
