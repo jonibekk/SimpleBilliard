@@ -457,7 +457,6 @@ class AppController extends Controller
             }
             return $team_id;
         }
-        return null;
     }
 
     /**

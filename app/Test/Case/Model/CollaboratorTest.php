@@ -73,9 +73,12 @@ class CollaboratorTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testAdd()
     {
-
+        $this->Collaborator->my_uid = 1;
+        $this->Collaborator->current_team_id = 1;
+        $res = $this->Collaborator->add(1);
+        $this->assertTrue(!empty($res));
     }
 
 }

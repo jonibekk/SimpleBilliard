@@ -284,10 +284,9 @@ class Team extends AppModel
         if ($start_date <= $target_date && $end_date > $target_date) {
             $this->current_term_start_date = $start_date;
             $this->current_term_end_date = $end_date;
-            return null;
         }
         //開始日が現在より後の場合
-        if ($start_date > $target_date) {
+        elseif ($start_date > $target_date) {
             while ($start_date > $target_date) {
                 $start_date_tmp = date("Y-m-1", $start_date + $this->me['timezone'] * 3600);
                 $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $this->me['timezone'] * 3600;
@@ -295,10 +294,9 @@ class Team extends AppModel
             $this->current_term_start_date = $start_date;
             $start_date_tmp = date("Y-m-1", $this->current_term_start_date + $this->me['timezone'] * 3600);
             $this->current_term_end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
-            return null;
         }
         //終了日が現在より前の場合
-        if ($end_date < $target_date) {
+        elseif ($end_date < $target_date) {
             while ($end_date < $target_date) {
                 $end_date_tmp = date("Y-m-1", $end_date + $this->me['timezone'] * 3600);
                 $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
@@ -306,7 +304,7 @@ class Team extends AppModel
             $this->current_term_end_date = $end_date;
             $end_date_tmp = date("Y-m-1", $this->current_term_end_date + $this->me['timezone'] * 3600);
             $this->current_term_start_date = strtotime($end_date_tmp . "- {$border_months} month") - $this->me['timezone'] * 3600;
-            return null;
         }
+        return null;
     }
 }

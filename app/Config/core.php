@@ -214,12 +214,12 @@ else {
 /**
  * A random string used in security hashing methods.
  */
-Configure::write('Security.salt', 'daa676085dda11e7aa935c33a1c6e27c22b9e79d');
+Configure::write('Security.salt', SECURITY_SALT);
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
-Configure::write('Security.cipherSeed', '303139623634383766316337663731');
+Configure::write('Security.cipherSeed', SECURITY_CIPHER_SEED);
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).

@@ -51,7 +51,6 @@ class ActionResultTest extends CakeTestCase
         'app.invite',
         'app.thread',
         'app.message',
-        'app.action'
     );
 
     /**
@@ -82,6 +81,35 @@ class ActionResultTest extends CakeTestCase
         $this->_setDefault();
         $this->ActionResult->getCount('me', 1, 1000000000);
         $this->ActionResult->getCount('xxxx', 1, 1000000000);
+    }
+
+    function testActionEdit()
+    {
+        $this->_setDefault();
+        $before_save = [
+            'ActionResult' => [
+                'name'    => 'test',
+                'team_id' => 1,
+                'user_id' => 1,
+            ]
+        ];
+        $save_data = $this->ActionResult->save($before_save);
+        $save_data['photo_delete'][1] = 1;
+        $res = $this->ActionResult->actionEdit($save_data);
+        $this->assertTrue(!empty($res));
+    }
+
+    function testAddCompletedAction()
+    {
+        $this->_setDefault();
+        $data = [
+            'ActionResult' => [
+                'name'          => 'test',
+                'key_result_id' => 1
+            ]
+        ];
+        $res = $this->ActionResult->addCompletedAction($data, 1);
+        $this->assertTrue(!empty($res));
     }
 
     function _setDefault()

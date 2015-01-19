@@ -9,6 +9,8 @@
 define('PUBLIC_ENV', false);
 define('ENV_NAME', "local");
 define('DEBUG_MODE', 2);
+define('SECURITY_SALT', "wt37PFe4eDzNF5GRdQtqHDGSTyK7uznbXc1s73ea");
+define('SECURITY_CIPHER_SEED', "50705400113420924223192670299");
 define('USERVOICE_API_KEY', null);
 define('USERVOICE_SUBDOMAIN', null);
 define('USERVOICE_FORUM_ID_PRIVATE', null);
