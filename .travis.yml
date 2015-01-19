@@ -28,10 +28,12 @@ before_script:
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
   - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
   - sudo apt-get install php-pear php5-dev
-  - sudo pecl install apc
+  - sudo apt-get install php-apc
   - sudo find / -name apc.so
   - sudo find / -name apcu.so
   - echo "extension=apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - pecl install oauth
   - echo "extension=oauth.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
