@@ -1353,7 +1353,7 @@ textarea{
 
 .circle-link {
     position: absolute;
-    padding: 4px 0;
+    padding: 7px 0;
     width: 92%;
 }
 
@@ -2072,7 +2072,7 @@ textarea.comment-post-form {
     height: 16px;
     line-height: 16px;
     float: right;
-    padding: 4px 0;
+    padding: 7px 0;
 }
 
 .circle_heading {
