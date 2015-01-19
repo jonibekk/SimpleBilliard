@@ -17,11 +17,12 @@ class PostTest extends CakeTestCase
     public $fixtures = array(
         'app.action_result',
         'app.key_result',
-        'app.action',
         'app.post',
         'app.user', 'app.notify_setting',
         'app.team',
         'app.goal',
+        'app.local_name',
+        'app.purpose',
         'app.follower',
         'app.collaborator',
         'app.comment_mention',
@@ -85,38 +86,34 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
-    public function testGet()
+    public function testGetNormal()
     {
-        $uid = '1';
-        $team_id = '1';
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $this->Post->PostRead->my_uid = $uid;
-        $this->Post->PostRead->current_team_id = $team_id;
-        $this->Post->Comment->CommentRead->my_uid = $uid;
-        $this->Post->Comment->CommentRead->current_team_id = $team_id;
-        $this->Post->PostShareCircle->my_uid = $uid;
-        $this->Post->PostShareCircle->current_team_id = $team_id;
-        $this->Post->PostShareUser->my_uid = $uid;
-        $this->Post->PostShareUser->current_team_id = $team_id;
-        $this->Post->User->CircleMember->my_uid = $uid;
-        $this->Post->User->CircleMember->current_team_id = $team_id;
+        $this->_setDefault();
+
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
+    }
+
+    public function testGetSinglePost()
+    {
+        $this->_setDefault();
+        //post_id指定
+        $this->Post->id = 1;
+        $this->Post->saveField('goal_id', 1);
+        $this->Post->get(1, 20, "2014-01-01", "2014-01-31", ['named' => ['post_id' => 1]]);
+    }
+
+    public function testGetGoalPost()
+    {
+        $this->_setDefault();
+        //goal_id指定&Action指定
+        $this->Post->get(1, 20, "2014-01-01", "2014-01-31", ['named' => ['goal_id' => 1, 'type' => Post::TYPE_ACTION]]);
+
     }
 
     function testGetShareAllMemberList()
     {
-        $uid = '1';
-        $team_id = '1';
+        $this->_setDefault();
         $post_id = 1;
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $this->Post->Team->TeamMember->my_uid = $uid;
-        $this->Post->Team->TeamMember->current_team_id = $team_id;
-        $this->Post->PostShareCircle->my_uid = $uid;
-        $this->Post->PostShareCircle->current_team_id = $team_id;
-        $this->Post->PostShareUser->my_uid = $uid;
-        $this->Post->PostShareUser->current_team_id = $team_id;
 
         $this->Post->getShareAllMemberList($post_id);
         $this->Post->id = $post_id;
@@ -158,6 +155,22 @@ class PostTest extends CakeTestCase
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
         $this->assertTrue($res);
+    }
+
+    function testGetGoalPostList()
+    {
+        $this->Post->my_uid = 1;
+        $this->Post->current_team_id = 1;
+        $data = [
+            'team_id' => 1,
+            'user_id' => 1,
+            'body'    => 'test',
+            'goal_id' => 1,
+            'type'    => Post::TYPE_ACTION
+        ];
+        $this->Post->save($data);
+        $res = $this->Post->getGoalPostList(1);
+        $this->assertTrue(!empty($res));
     }
 
     function testGetRandomShareCircleNames()
@@ -430,6 +443,31 @@ class PostTest extends CakeTestCase
         $this->Post->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1000, 'body' => 'test']);
         $res = $this->Post->isPermittedGoalPost($this->Post->getLastInsertID());
         $this->assertFalse($res);
+    }
+
+    function _setDefault()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $this->Post->PostRead->my_uid = $uid;
+        $this->Post->PostRead->current_team_id = $team_id;
+        $this->Post->Comment->CommentRead->my_uid = $uid;
+        $this->Post->Comment->CommentRead->current_team_id = $team_id;
+        $this->Post->PostShareCircle->my_uid = $uid;
+        $this->Post->PostShareCircle->current_team_id = $team_id;
+        $this->Post->PostShareUser->my_uid = $uid;
+        $this->Post->PostShareUser->current_team_id = $team_id;
+        $this->Post->User->CircleMember->my_uid = $uid;
+        $this->Post->User->CircleMember->current_team_id = $team_id;
+        $this->Post->Team->TeamMember->my_uid = $uid;
+        $this->Post->Team->TeamMember->current_team_id = $team_id;
+        $this->Post->Goal->my_uid = $uid;
+        $this->Post->Goal->current_team_id = $team_id;
+        $this->Post->Goal->Collaborator->my_uid = $uid;
+        $this->Post->Goal->Collaborator->current_team_id = $team_id;
+
     }
 
 }

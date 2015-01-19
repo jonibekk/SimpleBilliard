@@ -6,15 +6,15 @@ App::uses('KeyResult', 'Model');
 /**
  * Goal Model
  *
- * @property User              $User
- * @property Team              $Team
- * @property GoalCategory      $GoalCategory
- * @property Post              $Post
- * @property KeyResult         $KeyResult
- * @property Collaborator      $Collaborator
- * @property Follower          $Follower
- * @property Purpose           $Purpose
- * @property Action            $Action
+ * @property User                    $User
+ * @property Team                    $Team
+ * @property GoalCategory            $GoalCategory
+ * @property Post                    $Post
+ * @property KeyResult               $KeyResult
+ * @property Collaborator            $Collaborator
+ * @property Follower                $Follower
+ * @property Purpose                 $Purpose
+ * @property ActionResult            $ActionResult
  */
 class Goal extends AppModel
 {
@@ -143,7 +143,7 @@ class Goal extends AppModel
         'KeyResult'           => [
             'dependent' => true,
         ],
-        'Action'              => [
+        'ActionResult'        => [
             'dependent' => true,
         ],
         'IncompleteKeyResult' => [
@@ -412,9 +412,13 @@ class Goal extends AppModel
     {
         $priority_list = array();
         foreach ($goals as $key => $goal) {
-            $priority_list[$key] = $goal['MyCollabo'][0]['priority'];
+            if (isset($goal['MyCollabo'][0]['priority'])) {
+                $priority_list[$key] = $goal['MyCollabo'][0]['priority'];
+            }
         }
-        array_multisort($priority_list, $direction, SORT_NUMERIC, $goals);
+        if (!empty($priority_list)) {
+            array_multisort($priority_list, $direction, SORT_NUMERIC, $goals);
+        }
         return $goals;
     }
 

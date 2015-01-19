@@ -16,7 +16,7 @@ class GoalsControllerTest extends ControllerTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.action',
+
         'app.purpose',
         'app.goal',
         'app.follower',
@@ -131,6 +131,22 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add/' . $this->goal_id, ['method' => 'GET']);
     }
 
+    function testAddWithPurposeIdSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+
+        $this->testAction('/goals/add/purpose_id:' . $this->purpose_id, ['method' => 'GET']);
+    }
+
+    function testAddWithPurposeIdFail()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+
+        $this->testAction('/goals/add/purpose_id:' . 999999, ['method' => 'GET']);
+    }
+
     function testAddWithIdNotOwn()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -148,25 +164,25 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add/' . 9999999999, ['method' => 'GET']);
     }
 
-    function testAddPost()
+    function testAddPostPurpose()
     {
-        $this->_getGoalsCommonMock();
+        $Goal = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goal);
         $data = [
-            'Goal'      => [
-                'name'       => 'test',
-                'start_date' => '2014/07/07',
-                'end_date'   => '2014/10/07',
+            'Purpose' => [
+                'name' => 'test',
             ],
-            'KeyResult' => [
-                [
-                    'name'         => 'test',
-                    'target_value' => 1,
-                    'start_value'  => 0,
-                    'value_unit'   => 2,
-                    'start_date'   => '2014/07/07',
-                    'end_date'     => '2014/10/07',
-                ]
-            ]
+        ];
+        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddPostPurposeFail()
+    {
+        $Goal = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goal);
+        $data = [
+            'Purpose' => [
+            ],
         ];
         $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
     }
@@ -174,61 +190,64 @@ class GoalsControllerTest extends ControllerTestCase
     function testAddPostMode2()
     {
         $Goal = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goal);
         $data = [
-            'Goal'      => [
-                'name'       => 'test',
-                'start_date' => '2014/07/07',
-                'end_date'   => '2014/10/07',
-            ],
-            'KeyResult' => [
-                [
-                    'name'         => 'test',
-                    'target_value' => 1,
-                    'start_value'  => 0,
-                    'value_unit'   => 2,
-                    'start_date'   => '2014/07/07',
-                    'end_date'     => '2014/10/07',
-                ]
+            'Goal' => [
+                'purpose_id'       => $this->purpose_id,
+                'goal_category_id' => 1,
+                'name'             => 'test',
+                'value_unit'       => 0,
+                'target_value'     => 100,
+                'start_value'      => 0,
+                'start_date'       => $this->start_date,
+                'end_date'         => $this->end_date,
             ]
         ];
-        $Goal->Goal->save($data);
-        $id = $Goal->Goal->getLastInsertID();
-        $this->testAction('/goals/add/' . $id . "/mode:2", ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add/mode:2/{$this->purpose_id}", ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddPostMode2Edit()
+    {
+        $Goal = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goal);
+        $data = [
+            'Goal' => [
+                'goal_category_id' => 1,
+                'name'             => 'test',
+                'value_unit'       => 0,
+                'target_value'     => 100,
+                'start_value'      => 0,
+                'start_date'       => $this->start_date,
+                'end_date'         => $this->end_date,
+            ]
+        ];
+        $this->testAction("/goals/add/{$this->goal_id}/mode:2/{$this->purpose_id}",
+                          ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddPostMode3()
     {
         $Goal = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goal);
         $data = [
-            'Goal' => [
-                'name'       => 'test',
-                'start_date' => '2014/07/07',
-                'end_date'   => '2014/10/07',
+            'Goal'         => [
+                'description' => 'test',
             ],
+            'Collaborator' => [
+                [
+                    'id'       => $this->collabo_id,
+                    'priority' => 3
+                ]
+            ]
         ];
-        $Goal->Goal->save($data);
-        $id = $Goal->Goal->getLastInsertID();
-        $this->testAction('/goals/add/' . $id . "/mode:3", ['method' => 'POST', 'data' => $data]);
-    }
-
-    function testAddPostEmptyKr()
-    {
-        $this->_getGoalsCommonMock();
-        $data = [
-            'Goal' => [
-                'name'       => 'test',
-                'start_date' => '2014/07/07',
-                'end_date'   => '2014/10/07',
-            ],
-        ];
-        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add/{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddPostEmpty()
     {
         $this->_getGoalsCommonMock();
         $data = ['Goal' => []];
-        $this->testAction('/goals/add', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/goals/add/mode:2', ['method' => 'POST', 'data' => $data]);
     }
 
     function testGetEndMonthLocalDateTime()
@@ -366,14 +385,10 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $data = [
-            'Action'       => [
+            'ActionResult' => [
                 'name'          => 'test',
                 'key_result_id' => 0,
-            ],
-            'ActionResult' => [
-                [
-                    'note' => 'test'
-                ]
+                'note'          => 'test',
             ]
         ];
         $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
@@ -384,13 +399,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $data = [
-            'Action'       => [
-                'name' => 'test',
-            ],
             'ActionResult' => [
-                [
-                    'note' => 'test'
-                ]
+                'name' => 'test',
+                'note' => 'test'
             ]
         ];
         $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
@@ -401,14 +412,10 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $data = [
-            'Action'       => [
+            'ActionResult' => [
                 'name'          => 'test',
                 'key_result_id' => 0,
-            ],
-            'ActionResult' => [
-                [
-                    'note' => 'test'
-                ]
+                'note'          => 'test'
             ]
         ];
         $this->testAction('/goals/add_completed_action/99999999', ['method' => 'POST', 'data' => $data]);
@@ -493,6 +500,77 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testEditActionFailNoArId()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+                'note'          => 'test',
+            ]
+        ];
+        $this->testAction('/goals/edit_action/99999999999999', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testEditActionFailEmpty()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+        ];
+        $this->testAction('/goals/edit_action/1', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testEditActionSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'id'     => 1,
+                'name'   => 'test',
+                'photo1' => null,
+            ],
+            'photo_delete' => [
+                1 => 1
+            ]
+        ];
+        $this->testAction('/goals/edit_action/1', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testDeleteActionFailNotExists()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/delete_action/9999999', ['method' => 'POST']);
+    }
+
+    function testDeleteActionFailNotCollabo()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'    => 'test',
+                'team_id' => 1,
+                'user_id' => 1,
+                'goal_id' => 99,
+            ],
+        ];
+        $Goals->Goal->ActionResult->save($data);
+        $ar_id = $Goals->Goal->ActionResult->getLastInsertID();
+        $this->testAction('/goals/delete_action/' . $ar_id, ['method' => 'POST']);
+    }
+
+    function testDeleteActionSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/delete_action/1', ['method' => 'POST']);
+    }
+
     function testAddKeyResultFail()
     {
         $this->_getGoalsCommonMock();
@@ -502,7 +580,8 @@ class GoalsControllerTest extends ControllerTestCase
 
     function testAddKeyResultSuccess()
     {
-        $this->_getGoalsCommonMock();
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
         $data = ['KeyResult' =>
                      [
                          'name'        => 'test',
@@ -510,7 +589,40 @@ class GoalsControllerTest extends ControllerTestCase
                          'start_value' => 1
                      ]
         ];
-        $this->testAction('/goals/add_key_result/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add_key_result/{$this->goal_id}/{$this->kr_id}",
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddKeyResultFailPermit()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = ['KeyResult' =>
+                     [
+                         'name'        => 'test',
+                         'value_unit'  => 0,
+                         'start_value' => 1
+                     ]
+        ];
+        $this->testAction("/goals/add_key_result/{$this->goal_id}/99999", ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAjaxGetEditActionModalSuccess()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_action_modal/' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditActionModalFail()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_edit_action_modal/' . 9999999, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetAddKeyResultModalSuccess()
@@ -536,29 +648,47 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $kr = [
-            'id'        => $this->goal_id,
-            'completed' => time(),
+            'goal_id' => $this->goal_id,
+            'user_id' => 1,
+            'team_id' => 1,
         ];
         $Goals->Goal->KeyResult->save($kr);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_key_results/' . 1, ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_key_results/' . $this->goal_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testEditKeyResult()
+    function testEditKeyResultFailEmpty()
     {
         $Goals = $this->_getGoalsCommonMock();
 
         $data = [];
         $this->_setDefault($Goals);
         $this->testAction('/goals/edit_key_result/' . $this->kr_id, ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testEditKeyResultFailNotCollabo()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+
         $this->_setDefault($Goals);
-        $Goals->Goal->KeyResult->id = $this->kr_id;
-        $Goals->Goal->KeyResult->saveField('value_unit', 2);
-        $this->testAction('/goals/edit_key_result/' . $this->kr_id, ['method' => 'PUT', 'data' => $data]);
+        $this->testAction('/goals/edit_key_result/' . 99999, ['method' => 'PUT', 'data' => []]);
+    }
+
+    function testEditKeyResultSuccess()
+    {
+        $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $Goals->Goal->KeyResult->id = $this->kr_id;
-        $Goals->Goal->KeyResult->saveField('user_id', 2);
+        $data = [
+            'KeyResult' => [
+                'id'         => $this->kr_id,
+                'name'       => 'test',
+                'value_unit' => 2,
+                'start_date' => 1,
+                'end_date'   => 1,
+                'goal_id'    => $this->goal_id,
+            ]
+        ];
         $this->testAction('/goals/edit_key_result/' . $this->kr_id, ['method' => 'PUT', 'data' => $data]);
     }
 
@@ -571,8 +701,7 @@ class GoalsControllerTest extends ControllerTestCase
     function testDeleteKeyResultFail()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $Goals->Goal->KeyResult->id = 1;
-        $Goals->Goal->KeyResult->saveField('user_id', 2);
+        $Goals->Goal->Collaborator->my_uid = 999;
         $this->testAction('/goals/delete_key_result/' . 1, ['method' => 'POST']);
     }
 
@@ -601,34 +730,34 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testCompleteSuccess()
+    function testCompleteKrSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $this->testAction('/goals/complete_kr/' . $this->kr_id, ['method' => 'POST']);
     }
 
-    function testCompleteSuccessWithGoal()
+    function testCompleteKrSuccessWithGoal()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $this->testAction('/goals/complete_kr/' . $this->kr_id . "/1", ['method' => 'POST']);
     }
 
-    function testIncompleteSuccess()
+    function testIncompleteKrSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $this->testAction('/goals/incomplete_kr/' . $this->kr_id, ['method' => 'POST']);
     }
 
-    function testCompleteFail()
+    function testCompleteKrFail()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/complete_kr/9999999', ['method' => 'POST']);
     }
 
-    function testIncompleteFail()
+    function testIncompleteKrFail()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/incomplete_kr/9999999999', ['method' => 'POST']);
@@ -658,6 +787,144 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 
+    function testGetTeamIdFromRequest()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+
+        $request_params = [];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'pages',
+            'action'     => 'home',
+            'circle_id'  => 1,
+            'post_id'    => 1,
+            'team_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'circle_id'  => 1,
+            'post_id'    => 1,
+            'team_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'circle_id'  => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+        $request_params = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'team_id'    => 1,
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+
+        $request_params = [
+            'controller' => 'users',
+            'action'     => 'add',
+            'pass'       => [
+                0 => 1,
+            ]
+        ];
+        $Goals->_getTeamIdFromRequest($request_params);
+    }
+
+    function testIsIsaoUser()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $user = [
+            'PrimaryEmail' => [
+                'email' => 'test@isao.co.jp'
+            ]
+        ];
+        $Goals->_isIsaoUser($user, 999);
+        $user = [
+            'PrimaryEmail' => [
+                'email' => 'test@aaa.com'
+            ]
+        ];
+        $Goals->_isIsaoUser($user, 999);
+    }
+
+    function testForceSSL()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $Goals->forceSSL();
+    }
+
+    function testSwitchTeamBeforeCheckFalse()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $Goals->request->params['controller'] = 'teams';
+        $res = $Goals->_switchTeamBeforeCheck();
+        $this->assertFalse($res);
+    }
+
+    function testSwitchTeamBeforeCheckNotBelongTeam()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        //所属していないチームのゴールをあらかじめ保存
+        $goal = [
+            'name'       => 'test',
+            'purpose_id' => 1,
+            'user_id'    => 1,
+            'team_id'    => 999,
+        ];
+        $Goals->Goal->save($goal);
+
+        $Goals->request->params = [
+            'controller' => 'goals',
+            'action'     => 'add',
+            'pass'       => [
+                0 => $Goals->Goal->getLastInsertID(),
+            ]
+        ];
+        $Goals->_switchTeamBeforeCheck();
+    }
+    function testSwitchTeamBeforeCheckBelongTeam()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        //所属していないチームのゴールをあらかじめ保存
+        $goal = [
+            'name'       => 'test',
+            'purpose_id' => 1,
+            'user_id'    => 1,
+            'team_id'    => 2,
+        ];
+        $Goals->Goal->save($goal);
+
+        $team_member = [
+            'user_id'=>1,
+            'team_id'=>2,
+        ];
+        $Goals->User->TeamMember->save($team_member);
+
+        $Goals->request->params = [
+            'controller' => 'goals',
+            'action'     => 'add',
+            'pass'       => [
+                0 => $Goals->Goal->getLastInsertID(),
+            ]
+        ];
+        $Goals->_switchTeamBeforeCheck();
+    }
+
+    var $current_date;
+    var $start_date;
+    var $end_date;
+
     /**
      * @param $Goals
      */
@@ -676,8 +943,8 @@ class GoalsControllerTest extends ControllerTestCase
             'team_id'    => 1,
             'purpose_id' => $this->purpose_id,
             'name'       => 'test',
-            'start_date' => time(),
-            'end_date'   => time(),
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $Goals->Goal->create();
         $Goals->Goal->save($goal);
@@ -687,8 +954,8 @@ class GoalsControllerTest extends ControllerTestCase
             'team_id'    => 1,
             'goal_id'    => $this->goal_id,
             'name'       => 'test',
-            'start_date' => time(),
-            'end_date'   => time(),
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $Goals->Goal->KeyResult->create();
         $Goals->Goal->KeyResult->save($kr);
@@ -748,6 +1015,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
         $Goals->Goal->Team->my_uid = 1;
         $Goals->Goal->Team->current_team_id = 1;
         $Goals->Goal->Team->current_team = [
@@ -765,9 +1035,9 @@ class GoalsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Team->TeamMember->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->Action->my_uid = '1';
+        $Goals->Goal->ActionResult->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
-        $Goals->Goal->Action->current_team_id = '1';
+        $Goals->Goal->ActionResult->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->GoalCategory->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
@@ -784,6 +1054,16 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->Follower->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->Follower->current_team_id = '1';
+        $Goals->Goal->Post->my_uid = '1';
+        $Goals->Goal->Post->current_team_id = '1';
+
+        $this->current_date = strtotime('2015/7/1');
+        $this->start_date = strtotime('2015/7/1');
+        $this->end_date = strtotime('2015/10/1');
+
+        $Goals->Goal->Team->current_term_start_date = strtotime('2015/1/1');
+        $Goals->Goal->Team->current_term_end_date = strtotime('2015/12/1');
+
         return $Goals;
     }
 }

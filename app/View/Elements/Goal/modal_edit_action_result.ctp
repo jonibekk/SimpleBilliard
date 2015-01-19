@@ -30,18 +30,17 @@ $action = $this->request->data;
             'type'          => 'file',
         ]); ?>
         <?= $this->Form->hidden('ActionResult.id') ?>
-        <?= $this->Form->hidden('Action.id') ?>
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
                 <?=
-                $this->Form->input('Action.name', [
-                                                    'label'       => false,
-                                                    'rows'        => 1,
-                                                    'placeholder' => __d('gl', "アクションをいれる"),
-                                                    'class'       => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px',
-                                                    'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
-                                                    'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
-                                                ]
+                $this->Form->input('ActionResult.name', [
+                                                          'label'       => false,
+                                                          'rows'        => 1,
+                                                          'placeholder' => __d('gl', "アクションをいれる"),
+                                                          'class'       => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px',
+                                                          'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
+                                                          'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
+                                                      ]
                 )
                 ?>
                 <div class="form-group">
@@ -64,12 +63,12 @@ $action = $this->request->data;
                     <i class="fa fa-key mr_2px"></i><?= __d('gl', "成果") ?>
                 </label>
                 <?=
-                $this->Form->input('Action.key_result_id', [
-                                                             'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
-                                                             'options' => [null => __d('gl', "選択なし")] + $kr_list,
-                                                             'class'   => 'form-control col-xxs-8 selectKrForAction',
-                                                             'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],
-                                                         ]
+                $this->Form->input('ActionResult.key_result_id', [
+                                                                   'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
+                                                                   'options' => [null => __d('gl', "選択なし")] + $kr_list,
+                                                                   'class'   => 'form-control col-xxs-8 selectKrForAction',
+                                                                   'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],
+                                                               ]
                 )
                 ?>
 
@@ -79,7 +78,7 @@ $action = $this->request->data;
             <?=
             $this->Form->submit(__d('gl', "アクションを変更"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'id' => "ActionEditFormSubmit_" . $action['ActionResult']['id']]) ?>
-            <?=$this->Form->end()?>
+            <?= $this->Form->end() ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
             <?=

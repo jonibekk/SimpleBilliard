@@ -16,7 +16,7 @@ class GoalTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.action',
+
         'app.purpose',
         'app.goal',
         'app.key_result',
@@ -81,18 +81,49 @@ class GoalTest extends CakeTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id' => 1,
-            'team_id' => 1
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
         $key_results = [
             'goal_id'    => $goal_id,
             'team_id'    => 1,
-            'start_date' => time(),
-            'end_date'   => time(),
+            'user_id'    => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->KeyResult->save($key_results);
+        $this->Goal->getMyGoals();
+    }
+
+    function testGetMyGoalsWithNoGoalPurpose()
+    {
+        $this->setDefault();
+        $goal_data = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+        $key_results = [
+            'goal_id'    => $goal_id,
+            'team_id'    => 1,
+            'user_id'    => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
+        ];
+        $this->Goal->KeyResult->save($key_results);
+        $purpose = [
+            'name'    => 'test',
+            'user_id' => 1,
+            'team_id' => 1,
+        ];
+        $this->Goal->Purpose->save($purpose);
         $this->Goal->getMyGoals();
     }
 
@@ -100,9 +131,11 @@ class GoalTest extends CakeTestCase
     {
         $this->setDefault();
         $goal_data = [
-            'user_id' => 1,
-            'team_id' => 1,
-            'purpose' => "test",
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'purpose_id' => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -111,12 +144,29 @@ class GoalTest extends CakeTestCase
             'team_id'     => 1,
             'user_id'     => 1,
             'special_flg' => true,
-            'start_date'  => time(),
-            'end_date'    => time(),
+            'start_date'  => $this->start_date,
+            'end_date'    => $this->end_date,
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($key_results);
-        $this->Goal->getAllGoals();
+        $res = $this->Goal->getAllGoals();
+        $this->assertTrue(!empty($res));
+    }
+
+    function testGetByGoalId()
+    {
+        $this->setDefault();
+        $goal_data = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'purpose_id' => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+        $res = $this->Goal->getByGoalId($goal_id);
+        $this->assertTrue(!empty($res));
     }
 
     function testGetProgress()
@@ -283,8 +333,26 @@ class GoalTest extends CakeTestCase
                 'value_unit'       => 0,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'end_date'         => '2015/03/31',
-                'start_date'       => '2014/11/13',
+                'start_date'       => $this->start_date,
+                'end_date'         => $this->end_date,
+            ]
+        ];
+        $this->Goal->add($data);
+    }
+
+    function testAddNewSuccessUnitValue()
+    {
+        $this->setDefault();
+        $data = [
+            'Goal' => [
+                'purpose_id'       => 1,
+                'goal_category_id' => 1,
+                'name'             => 'test',
+                'value_unit'       => 2,
+                'target_value'     => 100,
+                'start_value'      => 0,
+                'start_date'       => $this->start_date,
+                'end_date'         => $this->end_date,
             ]
         ];
         $this->Goal->add($data);
@@ -296,8 +364,8 @@ class GoalTest extends CakeTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'name'       => 'test',
-            'start_date' => time(),
-            'end_date'   => time(),
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->create();
         $this->Goal->save($goal);
@@ -307,8 +375,8 @@ class GoalTest extends CakeTestCase
             'team_id'    => 1,
             'goal_id'    => $goal_id,
             'name'       => 'test',
-            'start_date' => time(),
-            'end_date'   => time(),
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($kr);
@@ -322,10 +390,31 @@ class GoalTest extends CakeTestCase
         return $goal_id;
     }
 
+    function testIncompleteFail()
+    {
+        try {
+            $this->Goal->incomplete(null);
+        } catch (Exception $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    var $current_date;
+    var $start_date;
+    var $end_date;
+
     function setDefault()
     {
+        $this->current_date = strtotime('2015/7/1');
+        $this->start_date = strtotime('2015/7/1');
+        $this->end_date = strtotime('2015/10/1');
+
+        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
+        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
         $this->Goal->my_uid = 1;
         $this->Goal->current_team_id = 1;
+        $this->Goal->Purpose->my_uid = 1;
+        $this->Goal->Purpose->current_team_id = 1;
         $this->Goal->Team->my_uid = 1;
         $this->Goal->Team->current_team_id = 1;
         $this->Goal->KeyResult->my_uid = 1;
