@@ -69,6 +69,8 @@ class AppModel extends Model
     public function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
+        //クエリキャッシュの有効化
+        $this->cacheQueries = true;
         $this->_setSessionVariable();
     }
 
@@ -300,7 +302,7 @@ class AppModel extends Model
                 $this->alias . '.' . $this->primaryKey => $id
             ),
             'recursive'  => -1,
-            'callbacks' => false
+            'callbacks'  => false
         ));
     }
 
