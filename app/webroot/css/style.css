@@ -4,23 +4,24 @@ ul {
 
 /*==== CSS Animation ====*/
 /*回転するメニューボタン*/
-.toggle-icon{
+.toggle-icon {
     font-size: 20px;
     transition: 0.3s ease-in-out;
     -webkit-transition: 0.3s ease-in-out;
 }
 
-.rotate{
+.rotate {
     -ms-transform: rotate(180deg);
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
 }
 
-.rotate-reverse{
+.rotate-reverse {
     -ms-transform: rotate(0deg);
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
 }
+
 /*/回転するメニューボタン*/
 /* 画像のスライド */
 
@@ -28,6 +29,9 @@ ul {
 
 /*/=== CSS Animation ====*/
 
+.pointer{
+    cursor: pointer;
+}
 
 /*=== Header部のリファクタリング ===*/
 .nav-icons > a {
@@ -61,7 +65,6 @@ ul {
     padding: 6px 0 !important;
     line-height: 30px;
 }
-
 
 /*=== headerの設定 ===*/
 
@@ -150,7 +153,6 @@ ul {
 .navbar-default .header-toggle-icon:target {
     background-color: #fff;
 }
-
 
 /*==/ headerの設定 ===*/
 
@@ -423,11 +425,11 @@ textarea{
     margin-top: 32px;
 }
 
-.mr_1px{
+.mr_1px {
     margin-right: 1px;
 }
 
-.mr_2px{
+.mr_2px {
     margin-right: 2px;
 }
 
@@ -519,7 +521,7 @@ textarea{
     padding-right: 1px;
 }
 
-.plr_2px{
+.plr_2px {
     padding-right: 2px;
     padding-left: 2px;
 }
@@ -554,12 +556,12 @@ textarea{
     margin-bottom: 3px;
 }
 
-.mtb_5px{
+.mtb_5px {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.mtb_8px{
+.mtb_8px {
     margin-top: 8px;
     margin-bottom: 8px;
 }
@@ -649,7 +651,7 @@ textarea{
     margin: 4px 0 4px 10px;
 }
 
-.top_50px{
+.top_50px {
     top: 50px;
 }
 
@@ -662,7 +664,7 @@ textarea{
 
 /*noinspection CssUnknownProperty*/
 
-.ln_contain{
+.ln_contain {
     overflow: hidden;
     word-break: break-all;
 }
@@ -672,39 +674,40 @@ textarea{
     font-weight: bold;
 }
 
-.ln_1,.ln_1-f {
+.ln_1, .ln_1-f {
     display: block;
     overflow: hidden;
     white-space: nowrap;
     position: relative;
 }
 
-.ln_1:before{
-    content:"...";
-    color: rgba(0,0,0,0);
+.ln_1:before {
+    content: "...";
+    color: rgba(0, 0, 0, 0);
     display: block;
     position: absolute;
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
     background: #f5f5f5;
-    background: -webkit-linear-gradient(left, rgba(245,245,245,0), #f5f5f5);
-    background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -webkit-linear-gradient(left, rgba(245, 245, 245, 0), #f5f5f5);
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
     width: 30%;
     height: 20px;
     padding-bottom: 4px;
 }
-.ln_1-f:before{
-    content:"...";
-    color: rgba(0,0,0,0);
+
+.ln_1-f:before {
+    content: "...";
+    color: rgba(0, 0, 0, 0);
     display: block;
     position: absolute;
-    top:0;
-    right:0;
+    top: 0;
+    right: 0;
     background: #fff;
-    background: -webkit-linear-gradient(left, rgba(245,245,245,0), #fff);
-    background: linear-gradient(to right, rgba(245,245,245,0), #fff);
-    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #fff);
+    background: -webkit-linear-gradient(left, rgba(245, 245, 245, 0), #fff);
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
+    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
     width: 30%;
     height: 20px;
     padding-bottom: 4px;
@@ -720,15 +723,15 @@ textarea{
 
 .ln_2:before, .ln_2:after {
     background: #f5f5f5;
-    background: -webkit-linear-gradient(left, rgba(245,245,245,0), #f5f5f5);
-    background: linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
-    background: -webkit-linear-gradient(to right, rgba(245,245,245,0), #f5f5f5);
+    background: -webkit-linear-gradient(left, rgba(245, 245, 245, 0), #f5f5f5);
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
+    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #f5f5f5);
     position: absolute;
 }
 
 .ln_2:before {
     content: "...";
-    color: rgba(0,0,0,0);
+    color: rgba(0, 0, 0, 0);
     top: 18px;
     width: 30%;
     height: 20px;
@@ -738,7 +741,7 @@ textarea{
 
 .ln_2-f:before {
     content: "...";
-    color: rgba(0,0,0,0);
+    color: rgba(0, 0, 0, 0);
     top: 18px;
     width: 30%;
     height: 20px;
@@ -748,9 +751,9 @@ textarea{
 
 .ln_2-f:before, .ln_2-f:after {
     background: #fff;
-    background: -webkit-linear-gradient(left, rgba(255,255,255,0), #fff);
-    background: linear-gradient(to right, rgba(255,255,255,0), #fff);
-    background: -webkit-linear-gradient(to right, rgba(255,255,255,0), #fff);
+    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), #fff);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+    background: -webkit-linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
     position: absolute;
 }
 
@@ -848,7 +851,7 @@ textarea{
 }
 
 /*Fontの指定*/
-.font_10px{
+.font_10px {
     font-size: 10px;
 }
 
@@ -944,6 +947,16 @@ textarea{
     color: #ea5e5b;
 }
 
+.font_gray-brownRed {
+    color: #808080;
+}
+
+.font_gray-brownRed:hover,
+.font_gray-brownRed:active,
+.font_gray-brownRed:focus {
+    color: #ae2f2f;
+}
+
 .font_rougeOrange {
     color: #ea5e5b;
 }
@@ -996,8 +1009,8 @@ textarea{
     color: #231814;
 }
 
-.font_seagreen{
-    color : #00ca54;
+.font_seagreen {
+    color: #00ca54;
 }
 
 .link-dark-gray {
@@ -1087,6 +1100,7 @@ textarea{
 .lh_18px {
     line-height: 18px;
 }
+
 /*アイコンを揃える*/
 .lh_20px {
     line-height: 20px;
@@ -1473,7 +1487,7 @@ textarea{
     padding-bottom: 9px;
 }
 
-.navbar-default .navbar-nav>li>a{
+.navbar-default .navbar-nav > li > a {
     padding: 2px 0;
     margin: auto;
     width: 180px;
@@ -2128,7 +2142,7 @@ textarea.comment-post-form {
 }
 
 .header-logo-img {
-    margin:1px;
+    margin: 1px;
 }
 
 .header-circle {
@@ -2166,9 +2180,9 @@ textarea.comment-post-form {
     text-align: center;
 }
 
-.nav-xxs-icon{
-    width:22px;
-    height:22px;
+.nav-xxs-icon {
+    width: 22px;
+    height: 22px;
 }
 
 .header-profile-icon {
@@ -2194,7 +2208,7 @@ textarea.comment-post-form {
     padding-bottom: 10px;
 }
 
-.va_bl{
+.va_bl {
     vertical-align: baseline;
     line-height: 1px;
 }
@@ -2203,13 +2217,14 @@ textarea.comment-post-form {
     display: inline-block;
 }
 
-.disp_bx{
+.disp_bx {
     display: box;
     display: -webkit-box;
     display: -ms-box;
     display: -o-box;
 }
-.disp_blk{
+
+.disp_blk {
     display: block;
 }
 
@@ -2886,12 +2901,12 @@ textarea.comment-post-form {
         padding-left: 12px;
     }
 
-    .mtb-sm_0{
+    .mtb-sm_0 {
         margin-top: 0;
         margin-bottom: 0;
     }
 
-    .ta-sm_c{
+    .ta-sm_c {
         text-align: center;
     }
 
@@ -2906,6 +2921,7 @@ textarea.comment-post-form {
     .header-search-group {
         margin-left: 20px;
     }
+
     /*
         .nav > li > a {
             padding: 9px 0 0;
@@ -2918,14 +2934,12 @@ textarea.comment-post-form {
         .navbar-nav > li > .header-team {
         }
     */
-
     /*Pluginの修正なので、階層構造を使わない形に書き換え予定*/
-    .navbar-default .navbar-nav>li>a{
+    .navbar-default .navbar-nav > li > a {
         width: 56px;
         padding-left: 10px;
         padding: 9px 0 0;
     }
-
 
     .header-logo-img {
         margin: 0;
@@ -3376,19 +3390,19 @@ Temporary Properties - YOU MUST FIX
     border-color: rgba(0, 0, 0, 0);
 }
 
-.edit-box-align{
+.edit-box-align {
 
 }
 
-.feed-box-align{
+.feed-box-align {
 
 }
 
-.post-box-align{
+.post-box-align {
 
 }
 
-.comment-box-align{
+.comment-box-align {
 
 }
 
@@ -3407,12 +3421,13 @@ Temporary Properties - YOU MUST FIX
 
 .post-edit-form {
 }
+
 .comment-edit-form {
 }
 
 .edit-form,
 .edit-form:focus,
-.edit-form:target{
+.edit-form:target {
     border-top: 1px solid #999;
     border-right: 1px solid #999;
     border-bottom: 1px solid #999;
@@ -3427,17 +3442,17 @@ Temporary Properties - YOU MUST FIX
     letter-spacing: -0.04rem;
 }
 
-@media (min-width: 520px){
-    .ls_title{
+@media (min-width: 520px) {
+    .ls_title {
         letter-spacing: -0.08rem;
     }
 }
 
-.modal-close-base{
+.modal-close-base {
     position: relative;
 }
 
-.modal-close-wrap{
+.modal-close-wrap {
     border-radius: 50%;
     background: #fff;
     position: absolute;
@@ -3452,6 +3467,7 @@ Temporary Properties - YOU MUST FIX
     width: 598px;
     height: 448px;
 }
+
 .tutorial-box2 {
     background-image: url(../img/homepage/home-slider/slide2.jpg);
     background-size: 100%;
@@ -3459,6 +3475,7 @@ Temporary Properties - YOU MUST FIX
     width: 598px;
     height: 448px;
 }
+
 .tutorial-box3 {
     background-image: url(../img/homepage/home-slider/slide3.jpg);
     background-size: 100%;
@@ -3466,6 +3483,7 @@ Temporary Properties - YOU MUST FIX
     width: 598px;
     height: 448px;
 }
+
 .tutorial-box4 {
     background-image: url(../img/homepage/home-slider/slide4.jpg);
     background-size: 100%;
@@ -3474,7 +3492,7 @@ Temporary Properties - YOU MUST FIX
     height: 448px;
 }
 
-#tutorialText2, #tutorialText3, #tutorialText4{
+#tutorialText2, #tutorialText3, #tutorialText4 {
     display: none;
 }
 

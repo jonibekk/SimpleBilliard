@@ -150,8 +150,10 @@
                                     class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
                             </a>
                         <? else: ?>
-                            <i class="fa fa-check-circle mr_1px"></i><span
-                                class="ls_number">0</span>
+                            <div class="font_gray-brownRed pointer">
+                                <i class="fa fa-check-circle mr_1px"></i><span
+                                    class="ls_number">0</span>
+                            </div>
                         <? endif; ?>
                     </div>
                     <div class="none" id="ActionFormDetail_<?= $goal['Goal']['id'] ?>">
