@@ -376,10 +376,12 @@ input::-moz-focus-inner {
     border: none;
 }
 
+/*
+コメントアウトの理由はコピペのスペース増加の原因だから
 textarea{
     white-space: normal;
 }
-
+*/
 /*==/ normalize css ===/
 
 /*=== 全体的な設定 ===*/
