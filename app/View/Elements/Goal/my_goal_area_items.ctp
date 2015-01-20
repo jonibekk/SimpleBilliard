@@ -119,7 +119,6 @@
             </div>
             <? if ($type != 'follow'): ?>
                 <div class="col col-xxs-12 goalsCard-actionResult">
-
                     <form action="#" id="" method="post" accept-charset="utf-8">
                         <div class="form-group mb_5px develop--font_normal">
                             <textarea
