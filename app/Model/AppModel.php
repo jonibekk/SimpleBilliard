@@ -204,6 +204,30 @@ class AppModel extends Model
         ));
     }
 
+    public function isBelongTeam($id = null, $team_id = null)
+    {
+        if ($id === null) {
+            $id = $this->getID();
+        }
+
+        if ($id === false) {
+            return false;
+        }
+
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+
+        return (bool)$this->find('count', array(
+            'conditions' => array(
+                $this->alias . '.' . $this->primaryKey => $id,
+                $this->alias . '.' . 'team_id'         => $team_id,
+            ),
+            'recursive'  => -1,
+            'callbacks'  => false
+        ));
+    }
+
     /**
      * Generate token used by the user registration system
      *

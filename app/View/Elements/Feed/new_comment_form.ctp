@@ -33,7 +33,6 @@ $this->Form->input('body', [
     'required'                 => true,
     'placeholder'              => __d('gl', "コメントする"),
     'class'                    => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
-    'target_show_id'           => "Comment_{$post_id}",
     'target-id'                => "CommentSubmit_{$post_id}",
     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
 ])
@@ -51,7 +50,7 @@ $this->Form->input('body', [
     </ul>
 </div>
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
-<div class="comment-btn" style="display: none" id="Comment_<?= $post_id ?>">
+<div class="comment-btn" id="Comment_<?= $post_id ?>">
     <a href="#" class="target-show-target-click font_12px comment-add-pic"
        target-id="CommentFormImage_<?= $post_id ?>"
        click-target-id="Comment__Post_<?= $post_id ?>_Photo_1">

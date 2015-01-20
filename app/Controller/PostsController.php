@@ -268,6 +268,27 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_new_comment_form($post_id)
+    {
+        $result = [
+            'error' => false,
+            'msg'   => null,
+            'html'  => null
+        ];
+        $this->_ajaxPreProcess();
+        if ($this->Post->isBelongTeam($post_id)) {
+            $this->set(compact('post_id'));
+            $response = $this->render('Feed/new_comment_form');
+            $html = $response->__toString();
+            $result['html'] = $html;
+        }
+        else {
+            $result['error'] = true;
+            $result['msg'] = __d('gl', "エラーが発生しました。");
+        }
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_post_like($post_id)
     {
         $this->_ajaxPreProcess();

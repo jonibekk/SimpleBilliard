@@ -133,6 +133,7 @@ $(document).ready(function () {
     $(document).on("click", ".click-show-post-modal", getModalPostList);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
+    $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
     });
@@ -327,6 +328,32 @@ function evToggleAjaxGet() {
     $('#' + target_id).toggle();
     return false;
 }
+
+function getAjaxFormReplaceElm() {
+    attrUndefinedCheck(this, 'replace-elm-parent-id');
+    attrUndefinedCheck(this, 'click-target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var $obj = $(this);
+    var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
+    var click_target_id = $obj.attr("click-target-id");
+    var ajax_url = $obj.attr("ajax-url");
+    $('#' + replace_elm_parent_id).children().remove();
+    //noinspection JSJQueryEfficiency
+    $.get(ajax_url, function (data) {
+        //noinspection JSUnresolvedVariable
+        if (data.error) {
+            //noinspection JSUnresolvedVariable
+            alert(data.msg);
+        }
+        else {
+            $('#' + replace_elm_parent_id).append(data.html);
+            $('#' + click_target_id).focus().trigger('click');
+        }
+    });
+    return false;
+}
+
+
 function evTargetToggle() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
