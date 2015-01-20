@@ -73,9 +73,9 @@ $(document).ready(function () {
     });
     //autosize
     //noinspection JSJQueryEfficiency
-    $('textarea').autosize();
+    $('textarea:not(.not-autosize)').autosize();
     //noinspection JSJQueryEfficiency
-    $('textarea').show().trigger('autosize.resize');
+    $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 
     //noinspection JSJQueryEfficiency,JSUnresolvedFunction
     imageLazyOn();
@@ -264,13 +264,6 @@ $(document).ready(function () {
     });
 
 });
-$(function () {
-    $('textarea').bind('load', function () {
-        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
-        var h = $('textarea').css('height');
-    });
-});
-
 function imageLazyOn($elm_obj) {
     if ($elm_obj === undefined) {
         $("img.lazy").lazy({
@@ -791,8 +784,8 @@ function ajaxAppendCount(id, url) {
 }
 
 $(function () {
-    var tutorialNum=1;
-    if (tutorialNum==1){
+    var tutorialNum = 1;
+    if (tutorialNum == 1) {
         $("#modalTutorialPrev").hide();
     }
     $("#modalTutorialNext").on("click", function () {
@@ -844,14 +837,14 @@ $(function () {
         }
     );
     $("#modalTutorialGo").on("click", function () {
-            $(this).fadeOut(function(){
+            $(this).fadeOut(function () {
                 $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box4");
                 $("#tutorialText4").hide();
                 $("#tutorialText1").show();
                 $("#modalTutorialNext").show();
                 $("#modalTutorialPrev").hide();
             });
-            tutorialNum=1;
+            tutorialNum = 1;
         }
     );
 

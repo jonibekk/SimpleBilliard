@@ -352,64 +352,16 @@
                                        ]
                     )
                     ?>
-                    <div class="comment-body">
-                        <?=
-                        $this->Form->create('Comment', [
-                            'url'           => ['controller' => 'posts', 'action' => 'comment_add'],
-                            'inputDefaults' => [
-                                'div'       => 'form-group mlr_-1px',
-                                'label'     => false,
-                                'wrapInput' => '',
-                                'class'     => 'form-control'
-                            ],
-                            'class'         => '',
-                            'type'          => 'file',
-                            'novalidate'    => true,
-                        ]); ?>
-                        <?=
-                        $this->Form->input('body', [
-                            'id'                       => "CommentFormBody_{$post['Post']['id']}",
-                            'label'                    => false,
-                            'type'                     => 'textarea',
-                            'wrap'                     => 'soft',
-                            'rows'                     => 1,
-                            'required'                 => true,
-                            'placeholder'              => __d('gl', "コメントする"),
-                            'class'                    => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
-                            'target_show_id'           => "Comment_{$post['Post']['id']}",
-                            'target-id'                => "CommentSubmit_{$post['Post']['id']}",
-                            "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
-                        ])
-                        ?>
-                        <div class="form-group" id="CommentFormImage_<?= $post['Post']['id'] ?>"
-                             style="display: none">
-                            <ul class="input-images">
-                                <? for ($i = 1; $i <= 5; $i++): ?>
-                                    <li>
-                                        <?=
-                                        $this->element('Feed/photo_upload',
-                                                       ['type' => 'comment', 'index' => $i, 'submit_id' => "CommentSubmit_{$post['Post']['id']}", 'post_id' => $post['Post']['id']]) ?>
-                                    </li>
-                                <? endfor ?>
-                            </ul>
-                        </div>
-                        <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
-                        <div class="comment-btn" style="display: none" id="Comment_<?= $post['Post']['id'] ?>">
-                            <a href="#" class="target-show-target-click font_12px comment-add-pic"
-                               target-id="CommentFormImage_<?= $post['Post']['id'] ?>"
-                               click-target-id="Comment__Post_<?= $post['Post']['id'] ?>_Photo_1">
-                                <button type="button" class="btn pull-left photo-up-btn">
-                                    <i class="fa fa-camera post-camera-icon"></i>
-                                </button>
-
-                            </a>
-
-                            <?=
-                            $this->Form->submit(__d('gl', "コメントする"),
-                                                ['class' => 'btn btn-primary pull-right submit-btn', 'id' => "CommentSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
-                            <div class="clearfix"></div>
-                        </div>
-                        <?= $this->Form->end() ?>
+                    <div class="comment-body" id="PostNewCommentForm_<?= $post['Post']['id'] ?>">
+                        <form action="#" id="" method="post" accept-charset="utf-8">
+                            <div class="form-group mlr_-1px">
+                                <textarea class="form-control font_12px comment-post-form box-align not-autosize"
+                                          wrap="soft" rows="1"
+                                          placeholder="<?= __d('gl', "コメントする") ?>"
+                                          cols="30"
+                                          init-height="15"></textarea>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
