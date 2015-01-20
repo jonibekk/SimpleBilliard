@@ -20,8 +20,17 @@
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
                         <div class="circle-icon_box">
                             <?=
-                            $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                                                       ['width' => '16px', 'height' => '16px']) ?>
+                            $this->Html->image('ajax-loader.gif',
+                                               [
+                                                   'class'         => 'lazy',
+                                                   'data-original' => $this->Upload->uploadUrl($circle, 'Circle.photo',
+                                                                                               ['style' => 'small']),
+                                                   'width'         => '16px',
+                                                   'height'        => '16px',
+                                                   'error-img'     => "/img/no-image-circle.jpg",
+                                               ]
+                            )
+                            ?>
                         </div>
                         <div class="circle-name_box">
                             <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
