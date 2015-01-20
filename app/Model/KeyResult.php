@@ -220,7 +220,7 @@ class KeyResult extends AppModel
         $this->id = $kr_id;
         $this->saveField('current_value', $current_kr['KeyResult']['target_value']);
         $this->saveField('progress', 100);
-        $this->saveField('completed', time());
+        $this->saveField('completed', REQUEST_TIMESTAMP);
         return true;
     }
 

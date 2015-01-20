@@ -82,23 +82,23 @@ class TimeExHelper extends AppHelper
     public function elapsedTime($unixtime)
     {
         $elapsed = null;
-        //「たった今」 $date > time() - 60sec
+        //「たった今」 $date > REQUEST_TIMESTAMP - 60sec
         if ($unixtime > strtotime("-1 minute")) {
             $elapsed = __d('time', "たった今");
         }
-        //「１分前」 $date > time() - 120sec
+        //「１分前」 $date > REQUEST_TIMESTAMP - 120sec
         elseif ($unixtime > strtotime("-2 minutes")) {
             $elapsed = __d('time', "1分前");
         }
-        //「2分前」〜「59分前」 $date > time() - 1h
+        //「2分前」〜「59分前」 $date > REQUEST_TIMESTAMP - 1h
         elseif ($unixtime > strtotime("-1 hour")) {
             $elapsed = $this->elapsedMinutes($unixtime);
         }
-        //「1時間前」〜「23時間前」 $date > time() - 1d
+        //「1時間前」〜「23時間前」 $date > REQUEST_TIMESTAMP - 1d
         elseif ($unixtime > strtotime("-1 day")) {
             $elapsed = $this->elapsedHours($unixtime);
         }
-        //「７月１３日 15:10」$date > time() - 1y
+        //「７月１３日 15:10」$date > REQUEST_TIMESTAMP - 1y
         elseif ($unixtime > strtotime("-1 year")) {
             $elapsed = $this->datetimeLocalFormat($unixtime);
         }
@@ -112,13 +112,13 @@ class TimeExHelper extends AppHelper
 
     public function elapsedMinutes($unixtime)
     {
-        $minutes = floor((time() - $unixtime) / 60);
+        $minutes = floor((REQUEST_TIMESTAMP - $unixtime) / 60);
         return __d('time', "%s分前", $minutes);
     }
 
     public function elapsedHours($unixtime)
     {
-        $hours = floor((time() - $unixtime) / 60 / 60);
+        $hours = floor((REQUEST_TIMESTAMP - $unixtime) / 60 / 60);
         return __d('time', "%s時間前", $hours);
     }
 

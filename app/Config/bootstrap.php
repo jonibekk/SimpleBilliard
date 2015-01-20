@@ -146,6 +146,8 @@ define('MODE_VIEW_TUTORIAL', 1);
 //aws s3のurl
 define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
 define('S3_TRIM_PATH', '/upload/');
+//リクエストされた時点のタイムスタンプ
+define('REQUEST_TIMESTAMP', time());
 
 /**
  * 共通関数

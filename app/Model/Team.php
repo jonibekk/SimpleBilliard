@@ -254,14 +254,14 @@ class Team extends AppModel
 
         $border_months = $this->current_team['Team']['border_months'];
 
-        $now = time();
+        $now = REQUEST_TIMESTAMP;
         return $this->setCurrentTermStartEndFromParam($start_term_month, $border_months, $now);
     }
 
     function setCurrentTermStartEndFromParam($start_term_month, $border_months, $target_date = null)
     {
         if (!$target_date) {
-            $target_date = time();
+            $target_date = REQUEST_TIMESTAMP;
         }
 
         if ($this->current_term_start_date) {

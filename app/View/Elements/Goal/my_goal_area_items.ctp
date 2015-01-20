@@ -200,7 +200,7 @@
             <div class="col col-xxs-12 goalsCard-krSeek">
                 <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
                     <div class="pull-right font_12px">
-                        <? if (($limit_day = ($goal['Goal']['end_date'] - time()) / (60 * 60 * 24)) < 0): ?>
+                        <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
                             <?= __d('gl', "%d日経過", $limit_day * -1) ?>
                         <? else: ?>
                             <?= __d('gl', "残り%d日", $limit_day) ?>

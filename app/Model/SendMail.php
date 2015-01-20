@@ -206,7 +206,7 @@ class SendMail extends AppModel
         $options = [
             'conditions' => [
                 'notification_id' => $notification_id,
-                'modified >'      => time() - (60 * 60 * $before_hours),
+                'modified >'      => REQUEST_TIMESTAMP - (60 * 60 * $before_hours),
             ],
         ];
         $res = $this->find('first', $options);

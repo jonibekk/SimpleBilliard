@@ -530,7 +530,7 @@ class User extends AppModel
 
         $this->id = $data['User']['id'];
         $this->saveField('password', $this->generateHash($data['User']['password']));
-        $this->saveField('password_modified', time());
+        $this->saveField('password_modified', REQUEST_TIMESTAMP);
         return true;
     }
 
@@ -582,7 +582,7 @@ class User extends AppModel
             throw new RuntimeException(
                 __d('exception', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
         }
-        if ($user['Email']['email_token_expires'] < time()) {
+        if ($user['Email']['email_token_expires'] < REQUEST_TIMESTAMP) {
             throw new RuntimeException(__d('exception', 'トークンの期限が切れています。'));
         }
 
@@ -654,7 +654,7 @@ class User extends AppModel
         $options = [
             'conditions' => [
                 'User.password_token'          => $token,
-                'Email.email_token_expires >=' => time(),
+                'Email.email_token_expires >=' => REQUEST_TIMESTAMP,
                 'User.active_flg'              => true,
             ],
             'contain'    => ['User']
@@ -687,7 +687,7 @@ class User extends AppModel
 
         $user_email['User']['password'] = $this->generateHash($postData['User']['password']);
         $user_email['User']['password_token'] = null;
-        $user_email['User']['password_modified'] = time();
+        $user_email['User']['password_modified'] = REQUEST_TIMESTAMP;
         $user_email['Email']['email_token_expires'] = null;
         $res = $this->Email->saveAll($user_email);
         return $res;

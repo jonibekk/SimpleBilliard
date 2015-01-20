@@ -617,7 +617,7 @@ class UsersController extends AppController
     public function _setAfterLogin()
     {
         $this->User->id = $this->Auth->user('id');
-        $this->User->saveField('last_login', time());
+        $this->User->saveField('last_login', REQUEST_TIMESTAMP);
         $this->_setDefaultTeam($this->Auth->user('default_team_id'));
         if ($this->Auth->user('default_team_id')) {
             $this->User->TeamMember->updateLastLogin($this->Auth->user('default_team_id'), $this->Auth->user('id'));
