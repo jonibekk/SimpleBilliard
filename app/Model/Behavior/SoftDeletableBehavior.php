@@ -84,7 +84,7 @@ class SoftDeletableBehavior extends ModelBehavior
             );
 
             if (isset($attributes['field_date']) && $Model->hasField($attributes['field_date'])) {
-                $data[$Model->alias][$attributes['field_date']] = time();
+                $data[$Model->alias][$attributes['field_date']] = REQUEST_TIMESTAMP;
             }
 
             foreach (am(array_keys($data[$Model->alias]),
@@ -159,9 +159,9 @@ class SoftDeletableBehavior extends ModelBehavior
 
             $purged = $Model
                 ->deleteAll(
-                array(
-                    $this->__settings[$Model->alias]['field'] => true
-                ), $cascade);
+                    array(
+                        $this->__settings[$Model->alias]['field'] => true
+                    ), $cascade);
 
             $this->enableSoftDeletable($Model, 'delete', $onDelete);
             $this->enableSoftDeletable($Model, 'find', $onFind);

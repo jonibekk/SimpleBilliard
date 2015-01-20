@@ -357,13 +357,13 @@ class Post extends AppModel
     {
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
-            $start = time() - $one_month;
+            $start = REQUEST_TIMESTAMP - $one_month;
         }
         elseif (is_string($start)) {
             $start = strtotime($start);
         }
         if (!$end) {
-            $end = time();
+            $end = REQUEST_TIMESTAMP;
         }
         elseif (is_string($end)) {
             $end = strtotime($end);

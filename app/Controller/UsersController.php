@@ -397,7 +397,9 @@ class UsersController extends AppController
                 $this->_autoLogin($this->Auth->user('id'));
                 //言語設定
                 $this->_setAppLanguage();
+                $this->User->cacheQueries = false;
                 $me = $this->_getMyUserDataForSetting();
+                $this->User->cacheQueries = true;
                 $this->request->data = $me;
 
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
@@ -615,7 +617,7 @@ class UsersController extends AppController
     public function _setAfterLogin()
     {
         $this->User->id = $this->Auth->user('id');
-        $this->User->saveField('last_login', time());
+        $this->User->saveField('last_login', REQUEST_TIMESTAMP);
         $this->_setDefaultTeam($this->Auth->user('default_team_id'));
         if ($this->Auth->user('default_team_id')) {
             $this->User->TeamMember->updateLastLogin($this->Auth->user('default_team_id'), $this->Auth->user('id'));

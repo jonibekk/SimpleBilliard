@@ -195,8 +195,8 @@ class PostsController extends AppController
         if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
             $end_month_offset = $param_named['month_index'];
             $start_month_offset = $end_month_offset + 1;
-            $end = strtotime("-{$end_month_offset} months", time());
-            $start = strtotime("-{$start_month_offset} months", time());
+            $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
+            $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
         }
         $posts = $this->Post->get($page_num, 20, $start, $end, $this->request->params);
         $this->set(compact('posts'));

@@ -708,7 +708,7 @@ class Goal extends AppModel
         $this->id = $goal_id;
         $this->saveField('current_value', $goal['Goal']['target_value']);
         $this->saveField('progress', 100);
-        $this->saveField('completed', time());
+        $this->saveField('completed', REQUEST_TIMESTAMP);
         return true;
     }
 

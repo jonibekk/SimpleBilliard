@@ -193,7 +193,7 @@ class ActionResult extends AppModel
         else {
             $data['ActionResult']['type'] = ActionResult::TYPE_GOAL;
         }
-        $data['ActionResult']['completed'] = time();
+        $data['ActionResult']['completed'] = REQUEST_TIMESTAMP;
         $res = $this->save($data);
         return $res;
     }
