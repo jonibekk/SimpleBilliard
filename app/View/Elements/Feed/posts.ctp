@@ -65,6 +65,7 @@
                                            closed-text="<?= __d('gl', "投稿を編集") ?>"
                                            click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
                                            hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
+                                           ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', $post['Post']['id']]) ?>"
                                             ><?= __d('gl', "投稿を編集") ?></a>
                                     </li>
                                 <? endif ?>

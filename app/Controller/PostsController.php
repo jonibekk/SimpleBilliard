@@ -289,6 +289,50 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_edit_comment_form($comment_id)
+    {
+        $result = [
+            'error' => false,
+            'msg'   => null,
+            'html'  => null
+        ];
+        $this->_ajaxPreProcess();
+        if ($this->Post->Comment->isOwner($this->Auth->user('id'), $comment_id)) {
+            $comment = $this->Post->Comment->findById($comment_id);
+            $this->set('comment', $comment['Comment']);
+            $response = $this->render('Feed/comment_edit_form');
+            $html = $response->__toString();
+            $result['html'] = $html;
+        }
+        else {
+            $result['error'] = true;
+            $result['msg'] = __d('gl', "エラーが発生しました。");
+        }
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_get_edit_post_form($post_id)
+    {
+        $result = [
+            'error' => false,
+            'msg'   => null,
+            'html'  => null
+        ];
+        $this->_ajaxPreProcess();
+        if ($this->Post->isOwner($this->Auth->user('id'), $post_id)) {
+            $post = $this->Post->findById($post_id);
+            $this->set(compact('post'));
+            $response = $this->render('Feed/post_edit_form');
+            $html = $response->__toString();
+            $result['html'] = $html;
+        }
+        else {
+            $result['error'] = true;
+            $result['msg'] = __d('gl', "エラーが発生しました。");
+        }
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_post_like($post_id)
     {
         $this->_ajaxPreProcess();

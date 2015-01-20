@@ -384,6 +384,23 @@ function evTargetToggleClick() {
             $obj.text($obj.attr("opend-text"));
         }
     }
+    if (0 == $("#" + target_id).size() && $obj.attr("ajax-url") != undefined) {
+        $.ajax({
+            url: $obj.attr("ajax-url"),
+            async: false,
+            success: function (data) {
+                //noinspection JSUnresolvedVariable
+                if (data.error) {
+                    //noinspection JSUnresolvedVariable
+                    alert(data.msg);
+                }
+                else {
+                    $("#" + $obj.attr("hidden-target-id")).after(data.html);
+                }
+            }
+        });
+    }
+
     //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
     //noinspection JSJQueryEfficiency
