@@ -3033,10 +3033,6 @@ textarea.comment-post-form {
         box-shadow: none;
     }
 
-    .navbar {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
-    }
-
     .nav-search {
         width: 200px;
     }
