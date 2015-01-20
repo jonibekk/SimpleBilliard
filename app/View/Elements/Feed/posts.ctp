@@ -127,11 +127,6 @@
                         <? endif; ?>
                     </div>
                 </div>
-                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                    <div class="col col-xxs-12 p_0px">
-                        <?= $this->element('Feed/post_edit_form', compact('post')) ?>
-                    </div>
-                <? endif; ?>
                 <div class="col col-xxs-12 feed-contents post-contents showmore font_14px font_verydark box-align"
                      id="PostTextBody_<?= $post['Post']['id'] ?>">
                     <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
