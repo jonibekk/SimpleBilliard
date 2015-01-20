@@ -132,7 +132,7 @@
                     $this->Form->input('ActionResult.name', [
                                                               'label'          => false,
                                                               'rows'           => 1,
-                                                              'placeholder'    => __d('gl', "アクションをいれる"),
+                                                              'placeholder'    => __d('gl', "今日やったアクションを共有しよう！"),
                                                               'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px add-select-options',
                                                               'id'             => "ActionFormName_" . $goal['Goal']['id'],
                                                               'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
