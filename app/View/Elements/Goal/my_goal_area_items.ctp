@@ -118,13 +118,16 @@
                 </div>
             </div>
             <? if ($type != 'follow'): ?>
-                <div class="col col-xxs-12 goalsCard-actionResult">
+                <div class="col col-xxs-12 goalsCard-actionResult" id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>">
                     <form action="#" id="" method="post" accept-charset="utf-8">
                         <div class="form-group mb_5px develop--font_normal">
                             <textarea
-                                class="form-control col-xxs-10 goalsCard-actionInput mb_12px add-select-options not-autosize"
+                                class="form-control col-xxs-10 goalsCard-actionInput mb_12px add-select-options not-autosize click-get-ajax-form-replace"
                                 rows="1" placeholder="<?= __d('gl', "今日やったアクションを共有しよう！") ?>" id="ActionFormName_1"
                                 cols="30" init-height="20"
+                                replace-elm-parent-id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>"
+                                click-target-id="ActionFormName_<?= $goal['Goal']['id'] ?>"
+                                ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
                                 ></textarea>
                         </div>
                         <div class="goalsCard-activity inline-block col-xxs-2">

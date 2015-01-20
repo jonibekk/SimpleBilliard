@@ -791,4 +791,27 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
 
     }
+
+    public function ajax_get_new_action_form($goal_id)
+    {
+        $result = [
+            'error' => true,
+            'msg'   => __d('gl', "エラーが発生しました。"),
+            'html'  => null
+        ];
+        $this->_ajaxPreProcess();
+        if (isset($this->request->params['named']['ar_count'])
+            && $this->Post->isBelongTeam($goal_id)
+        ) {
+            $this->set('ar_count', $this->request->params['named']['ar_count']);
+            $this->set(compact('goal_id'));
+            $response = $this->render('Goal/add_new_action_form');
+            $html = $response->__toString();
+            $result['html'] = $html;
+            $result['error'] = false;
+            $result['msg'] = null;
+        }
+        return $this->_ajaxGetResponse($result);
+    }
+
 }
