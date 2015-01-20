@@ -292,12 +292,6 @@
                         <i class="fa fa-key">&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?></i>
                     </div>
                 <? endif; ?>
-                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                    <div class="col col-xxs-12 p_0px">
-                        <?= $this->element('Feed/post_edit_form', compact('post')) ?>
-                    </div>
-                <? endif; ?>
-
                 <div class="col col-xxs-12 font_12px pt_8px">
                     <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
