@@ -204,28 +204,21 @@ class AppModel extends Model
         ));
     }
 
-    public function isBelongTeam($id = null, $team_id = null)
+    public function isBelongCurrentTeam($id)
     {
-        if ($id === null) {
-            $id = $this->getID();
-        }
-
-        if ($id === false) {
-            return false;
-        }
-
-        if (!$team_id) {
-            $team_id = $this->current_team_id;
-        }
-
-        return (bool)$this->find('count', array(
-            'conditions' => array(
+        $options = [
+            'conditions' => [
                 $this->alias . '.' . $this->primaryKey => $id,
-                $this->alias . '.' . 'team_id'         => $team_id,
-            ),
-            'recursive'  => -1,
-            'callbacks'  => false
-        ));
+                $this->alias . '.' . 'team_id'         => $this->current_team_id,
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
     }
 
     /**

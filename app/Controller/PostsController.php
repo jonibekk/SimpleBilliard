@@ -276,7 +276,7 @@ class PostsController extends AppController
             'html'  => null
         ];
         $this->_ajaxPreProcess();
-        if ($this->Post->isBelongTeam($post_id)) {
+        if ($this->Post->isBelongCurrentTeam($post_id)) {
             $this->set(compact('post_id'));
             $response = $this->render('Feed/new_comment_form');
             $html = $response->__toString();

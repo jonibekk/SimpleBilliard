@@ -801,7 +801,7 @@ class GoalsController extends AppController
         ];
         $this->_ajaxPreProcess();
         if (isset($this->request->params['named']['ar_count'])
-            && $this->Post->isBelongTeam($goal_id)
+            && $this->Post->isBelongCurrentTeam($goal_id)
         ) {
             $this->set('ar_count', $this->request->params['named']['ar_count']);
             $this->set(compact('goal_id'));
