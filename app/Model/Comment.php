@@ -138,7 +138,6 @@ class Comment extends AppModel
      * @param null $uid
      * @param null $team_id
      *
-     * @internal param int $type
      * @return bool|mixed
      */
     public function add($postData, $uid = null, $team_id = null)

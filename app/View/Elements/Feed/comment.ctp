@@ -41,6 +41,7 @@ if (!isset($id_prefix)) {
                                    target-id="<?= $id_prefix ?>CommentEditForm_<?= $comment['id'] ?>"
                                    opend-text="<?= __d('gl', "編集をやめる") ?>"
                                    closed-text="<?= __d('gl', "コメントを編集") ?>"
+                                   ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_comment_form', $comment['id']]) ?>"
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
@@ -61,9 +62,6 @@ if (!isset($id_prefix)) {
                 <? endif; ?>
                 <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
             </div>
-            <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-                <?= $this->element('Feed/comment_edit_form', ['comment' => $comment, 'id_prefix' => $id_prefix]) ?>
-            <? endif; ?>
             <div
                 class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= $this->TextEx->autoLink($comment['body']) ?></div>

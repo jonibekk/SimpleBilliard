@@ -751,30 +751,6 @@ class Goal extends AppModel
         return $res;
     }
 
-    /**
-     * ゴールが現在のチームで有効かどうか
-     *
-     * @param $id
-     *
-     * @return bool
-     */
-    function isBelongCurrentTeam($id)
-    {
-        $options = [
-            'conditions' => [
-                'id'      => $id,
-                'team_id' => $this->current_team_id
-            ],
-            'fields'     => [
-                'id'
-            ]
-        ];
-        if ($this->find('first', $options)) {
-            return true;
-        }
-        return false;
-    }
-
     function getAllUserGoal($start_date = null, $end_date = null)
     {
         if (!$start_date) {
