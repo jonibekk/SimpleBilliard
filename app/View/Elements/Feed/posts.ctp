@@ -349,6 +349,7 @@
                                     class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
                                     replace-elm-parent-id="PostNewCommentForm_<?= $post['Post']['id'] ?>"
                                     click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                                    tmp-target-height="32"
                                     ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', $post['Post']['id']]) ?>"
                                     wrap="soft" rows="1"
                                     placeholder="<?= __d('gl', "コメントする") ?>"

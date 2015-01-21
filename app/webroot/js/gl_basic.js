@@ -332,12 +332,15 @@ function evToggleAjaxGet() {
 function getAjaxFormReplaceElm() {
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
+    attrUndefinedCheck(this, 'tmp-target-height');
     attrUndefinedCheck(this, 'ajax-url');
     var $obj = $(this);
     var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
     var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
+    var tmp_target_height = $obj.attr("tmp-target-height");
     $('#' + replace_elm_parent_id).children().remove();
+    $('#' + replace_elm_parent_id).height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
     $.get(ajax_url, function (data) {
         //noinspection JSUnresolvedVariable
@@ -346,6 +349,7 @@ function getAjaxFormReplaceElm() {
             alert(data.msg);
         }
         else {
+            $('#' + replace_elm_parent_id).css("height", "");
             $('#' + replace_elm_parent_id).append(data.html);
             $('#' + click_target_id).focus().trigger('click');
         }
