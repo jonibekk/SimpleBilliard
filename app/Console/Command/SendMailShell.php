@@ -123,7 +123,7 @@ class SendMailShell extends AppShell
                 }
                 $this->_sendMailItem($options, $viewVars);
                 $this->SendMail->id = $data['SendMail']['id'];
-                $this->SendMail->save(['sent_datetime' => time()]);
+                $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
             }
         }
         else {
@@ -141,7 +141,7 @@ class SendMailShell extends AppShell
             }
             $this->_sendMailItem($options, $viewVars);
             $this->SendMail->id = $data['SendMail']['id'];
-            $this->SendMail->save(['sent_datetime' => time()]);
+            $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
         }
     }
 
@@ -189,7 +189,7 @@ class SendMailShell extends AppShell
 
         }
         $this->SendMail->id = $data['SendMail']['id'];
-        $this->SendMail->save(['sent_datetime' => time()]);
+        $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
     }
 
     private function _getDataAndProcessPreSend()

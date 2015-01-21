@@ -132,7 +132,7 @@
                     $this->Form->input('ActionResult.name', [
                                                               'label'          => false,
                                                               'rows'           => 1,
-                                                              'placeholder'    => __d('gl', "アクションをいれる"),
+                                                              'placeholder'    => __d('gl', "今日やったアクションを共有しよう！"),
                                                               'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px add-select-options',
                                                               'id'             => "ActionFormName_" . $goal['Goal']['id'],
                                                               'target_show_id' => "ActionFormDetail_" . $goal['Goal']['id'],
@@ -144,7 +144,8 @@
                     ?>
                     <div class="goalsCard-activity inline-block col-xxs-2">
                         <? if ($goal['Goal']['action_result_count'] > 0): ?>
-                            <a class="click-show-post-modal font_gray" id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
+                            <a class="click-show-post-modal font_gray-brownRed pointer"
+                               id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
                                 <i class="fa fa-check-circle mr_1px"></i><span
                                     class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
@@ -200,7 +201,7 @@
             <div class="col col-xxs-12 goalsCard-krSeek">
                 <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
                     <div class="pull-right font_12px">
-                        <? if (($limit_day = ($goal['Goal']['end_date'] - time()) / (60 * 60 * 24)) < 0): ?>
+                        <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
                             <?= __d('gl', "%d日経過", $limit_day * -1) ?>
                         <? else: ?>
                             <?= __d('gl', "残り%d日", $limit_day) ?>

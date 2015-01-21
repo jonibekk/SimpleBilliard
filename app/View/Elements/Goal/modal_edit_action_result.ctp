@@ -36,7 +36,7 @@ $action = $this->request->data;
                 $this->Form->input('ActionResult.name', [
                                                           'label'       => false,
                                                           'rows'        => 1,
-                                                          'placeholder' => __d('gl', "アクションをいれる"),
+                                                          'placeholder' => __d('gl', "今日やったアクションを共有しよう！"),
                                                           'class'       => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px',
                                                           'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
                                                           'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],

@@ -127,9 +127,9 @@ class GoalsController extends AppController
             $goal_end_date_format = $goal_end_date_limit_format;
         }
         else {
-            $goal_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
             //TODO 将来的には期間をまたぐ当日+6ヶ月を期限にするが、現状期間末日にする
-            //$goal_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateTime());
+            //$goal_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateREQUEST_TIMESTAMP);
             $goal_end_date_format = $goal_end_date_limit_format;
         }
         $this->set(compact('goal_category_list',
@@ -239,11 +239,11 @@ class GoalsController extends AppController
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
 
-        $kr_start_date_format = date('Y/m/d', time() + ($this->Auth->user('timezone') * 60 * 60));
+        $kr_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
 
         //期限は現在+2週間にする
         //もしそれがゴールの期限を超える場合はゴールの期限にする
-        $end_date = strtotime('+2 weeks', time());
+        $end_date = strtotime('+2 weeks', REQUEST_TIMESTAMP);
         if ($end_date > $goal['Goal']['end_date']) {
             $end_date = $goal['Goal']['end_date'];
         }

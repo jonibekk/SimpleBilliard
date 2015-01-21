@@ -149,7 +149,7 @@ class Comment extends AppModel
         $res = $this->save($postData);
         //投稿データのmodifiedを更新
         $this->Post->id = $postData['Comment']['post_id'];
-        $this->Post->saveField('modified', time());
+        $this->Post->saveField('modified', REQUEST_TIMESTAMP);
 
         return $res;
     }

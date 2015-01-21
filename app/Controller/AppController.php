@@ -329,7 +329,8 @@ class AppController extends Controller
             return null;
         }
         $month_count++;
-        $add_date = strtotime("{$symbol}{$month_count} month", time() + ($this->Auth->user('timezone') * 60 * 60));
+        $add_date = strtotime("{$symbol}{$month_count} month",
+                              REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
         $year = date("Y", $add_date);
         $month = date("m", $add_date);
         $first_day = $year . "-" . $month . "-01";
