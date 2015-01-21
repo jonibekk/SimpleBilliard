@@ -342,21 +342,23 @@ function getAjaxFormReplaceElm() {
     $('#' + replace_elm_parent_id).children().remove();
     $('#' + replace_elm_parent_id).height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
-    $.get(ajax_url, function (data) {
-        //noinspection JSUnresolvedVariable
-        if (data.error) {
+    $.ajax({
+        url: ajax_url,
+        async: false,
+        success: function (data) {
             //noinspection JSUnresolvedVariable
-            alert(data.msg);
-        }
-        else {
-            $('#' + replace_elm_parent_id).css("height", "");
-            $('#' + replace_elm_parent_id).append(data.html);
-            $('#' + click_target_id).focus().trigger('click');
+            if (data.error) {
+                //noinspection JSUnresolvedVariable
+                alert(data.msg);
+            }
+            else {
+                $('#' + replace_elm_parent_id).css("height", "");
+                $('#' + replace_elm_parent_id).append(data.html);
+                $('#' + click_target_id).trigger('click').focus();
+            }
         }
     });
-    return false;
 }
-
 
 function evTargetToggle() {
     attrUndefinedCheck(this, 'target-id');
