@@ -730,6 +730,14 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetNewActionFormSuccess()
+    {
+        $this->_getGoalsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_new_action_form/1/ar_count:9', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testCompleteKrSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -893,6 +901,7 @@ class GoalsControllerTest extends ControllerTestCase
         ];
         $Goals->_switchTeamBeforeCheck();
     }
+
     function testSwitchTeamBeforeCheckBelongTeam()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -906,8 +915,8 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->save($goal);
 
         $team_member = [
-            'user_id'=>1,
-            'team_id'=>2,
+            'user_id' => 1,
+            'team_id' => 2,
         ];
         $Goals->User->TeamMember->save($team_member);
 
