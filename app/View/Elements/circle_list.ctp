@@ -16,8 +16,7 @@
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix circleListMore">
-                <div class="circle-link">
-                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
+                    <a class="circle-link" href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
                         <div class="circle-icon_box">
                             <?=
                             $this->Html->image('ajax-loader.gif',
@@ -35,18 +34,16 @@
                         <div class="circle-name_box">
                             <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
                         </div>
+                        <div class="circle-count_box">
+                            <p class="count-value">
+                                <? if ($circle['CircleMember']['unread_count'] > 9): ?>
+                                    9+
+                                <? elseif ($circle['CircleMember']['unread_count'] > 0): ?>
+                                    <?= $circle['CircleMember']['unread_count'] ?>
+                                <? endif; ?>
+                            </p>
+                        </div>
                     </a>
-
-                    <div class="circle-count_box">
-                        <p class="count-value">
-                            <? if ($circle['CircleMember']['unread_count'] > 9): ?>
-                                9+
-                            <? elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                                <?= $circle['CircleMember']['unread_count'] ?>
-                            <? endif; ?>
-                        </p>
-                    </div>
-                </div>
                 <div class="circle-function_box clearfix">
                     <? if ($circle['CircleMember']['admin_flg']): ?>
                         <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', $circle['Circle']['id']]) ?>"
