@@ -610,22 +610,20 @@ $(function () {
 });
 
 // Workaround for buggy header/footer fixed position when virtual keyboard is on/off
-$('input, textarea')
-    .on('focus', function () {
-        $('.navbar').css('position', 'absolute');
-    })
-    .on('blur', function () {
-        $('.navbar').css('position', 'fixed');
-        //force page redraw to fix incorrectly positioned fixed elements
-        setTimeout(function () {
+$(document).on('focus', 'input, textarea', function () {
+    $('.navbar').css('position', 'absolute');
+});
+$(document).on('blur', 'input, textarea', function () {
+    $('.navbar').css('position', 'fixed');
+    //force page redraw to fix incorrectly positioned fixed elements
+    setTimeout(function () {
+        //noinspection JSUnresolvedVariable
+        if (typeof $.mobile != "undefined") {
             //noinspection JSUnresolvedVariable
-            if (typeof $.mobile != "undefined") {
-                //noinspection JSUnresolvedVariable
-                window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
-            }
-        }, 20);
-    });
-
+            window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+        }
+    }, 20);
+});
 
 // goTop
 $(function () {
