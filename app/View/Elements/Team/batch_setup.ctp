@@ -13,10 +13,37 @@
 <div class="panel panel-default">
     <div class="panel-heading"><?= __d('gl', "一括登録") ?></div>
     <div class="panel-body">
+        <div class="form-group">
+            <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
+
+            <div class="col col-sm-6">
+                <p class="form-control-static"><?= __d('gl', "チームメンバーの登録や更新をCSVで一括処理します。") ?></p>
+
+                <p class="form-control-static"><?= __d('gl',
+                                                       "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファイルをアップロードしてください。") ?></p>
+
+                <p class="form-control-static"><?= __d('gl', "すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待メールが送信されます。") ?></p>
+
+                <p class="form-control-static"><?= __d('gl', "") ?></p>
+
+                <p class="form-control-static"><?= __d('gl', "") ?></p>
+
+                <p class="form-control-static"><?= __d('gl', "") ?></p>
+
+                <p class="form-control-static"><?= __d('gl', "") ?></p>
+            </div>
+        </div>
     </div>
     <div class="panel-footer">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
+                <?=
+                $this->Html->link(__d('gl', "ダウンロード"), "/",
+                                  ['class' => 'btn btn-default', 'div' => false]) ?>
+                <?=
+                $this->Html->link(__d('gl', "アップロード"), "/",
+                                  ['class' => 'btn btn-primary', 'div' => false]) ?>
+
             </div>
         </div>
     </div>
