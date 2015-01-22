@@ -51,12 +51,12 @@ Goalousで素早く開発を始められるよう心がけております。
 ## A Development Routine
 ターミナルでコマンドを実行  
 
-1. vagrantを起動  
-`cd goalous2`  
-`vagrant up`  
 1. アプリケーションをアップデート   
+goalousのディレクトリに移動  
 ターミナルを起動し、以下を実行   
-`sudo sh ../etc/local/update_app.sh`
+`sh ./etc/local/update_app.sh`
+1. vagrantを起動  
+`vagrant up`  
 1. 作業用ブランチを作成   
 `git branch topic-xxxx`   
 1. 作業ブランチにチェックアウト   
@@ -67,7 +67,7 @@ Goalousで素早く開発を始められるよう心がけております。
 1. GitHubにプッシュ   
 `git push origin topic-xxx`   
 1. hubコマンドでIssueに関連付けたPull Requestを発行する   
-`hub pull-request [ブランチ名] -i [issue番号]`   
+`hub pull-request [ブランチ名] -m [message #issue番号]`   
 1. 第三者にレビューをしてもらいマージしてもらう   
 
 ## Contributing

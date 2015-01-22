@@ -204,6 +204,23 @@ class AppModel extends Model
         ));
     }
 
+    public function isBelongCurrentTeam($id)
+    {
+        $options = [
+            'conditions' => [
+                $this->alias . '.' . $this->primaryKey => $id,
+                $this->alias . '.' . 'team_id'         => $this->current_team_id,
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Generate token used by the user registration system
      *

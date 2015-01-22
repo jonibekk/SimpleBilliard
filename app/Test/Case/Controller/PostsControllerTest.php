@@ -261,6 +261,96 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetNewCommentFormSuccess()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_new_comment_form/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetNewCommentFormFail()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_new_comment_form/9999', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditPostFormSuccess()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $user_id = 1;
+        $team_id = 1;
+        $post_data = [
+            'Post'    => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+            'Comment' => [
+                [
+                    'user_id' => $user_id,
+                    'team_id' => $team_id,
+                    'body'    => 'test'
+                ]
+            ]
+        ];
+        $Posts->Post->saveAll($post_data);
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_edit_post_form/' . $Posts->Post->getLastInsertID(),
+                          ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditPostFormFail()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_edit_post_form/9999', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditCommentFormSuccess()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $user_id = 1;
+        $team_id = 1;
+        $post_data = [
+            'Post'    => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+            'Comment' => [
+                [
+                    'user_id' => $user_id,
+                    'team_id' => $team_id,
+                    'body'    => 'test'
+                ]
+            ]
+        ];
+        $Posts->Post->saveAll($post_data);
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_edit_comment_form/' . $Posts->Post->Comment->getLastInsertID(),
+                          ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetEditCommentFormFail()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_edit_comment_form/9999', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxGetComment()
     {
         /**

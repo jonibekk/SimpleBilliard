@@ -407,8 +407,6 @@ class NotifyBizComponent extends Component
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
-     *
-     * @internal param $id
      */
     public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
     {

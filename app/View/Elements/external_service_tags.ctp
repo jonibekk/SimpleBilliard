@@ -95,9 +95,9 @@
                          echo USERVOICE_FORUM_ID_PUBLIC;
                      }
                      ?>',
-        tab_label: '<?php echo __d('global', 'Goalousはどうしたらもっとよくなりますか？') ?>',
+        tab_label: '<?php echo __d('global', 'Feedback') ?>',
         tab_color: '#f0636f',
-        tab_position: 'bottom-left',
+        tab_position: 'bottom-right',
         tab_inverted: false
     }]);
 </script>

@@ -73,9 +73,9 @@ $(document).ready(function () {
     });
     //autosize
     //noinspection JSJQueryEfficiency
-    $('textarea').autosize();
+    $('textarea:not(.not-autosize)').autosize();
     //noinspection JSJQueryEfficiency
-    $('textarea').show().trigger('autosize.resize');
+    $('textarea:not(.not-autosize)').show().trigger('autosize.resize');
 
     //noinspection JSJQueryEfficiency,JSUnresolvedFunction
     imageLazyOn();
@@ -133,6 +133,7 @@ $(document).ready(function () {
     $(document).on("click", ".click-show-post-modal", getModalPostList);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
+    $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
     });
@@ -264,13 +265,6 @@ $(document).ready(function () {
     });
 
 });
-$(function () {
-    $('textarea').bind('load', function () {
-        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
-        var h = $('textarea').css('height');
-    });
-});
-
 function imageLazyOn($elm_obj) {
     if ($elm_obj === undefined) {
         $("img.lazy").lazy({
@@ -334,6 +328,38 @@ function evToggleAjaxGet() {
     $('#' + target_id).toggle();
     return false;
 }
+
+function getAjaxFormReplaceElm() {
+    attrUndefinedCheck(this, 'replace-elm-parent-id');
+    attrUndefinedCheck(this, 'click-target-id');
+    attrUndefinedCheck(this, 'tmp-target-height');
+    attrUndefinedCheck(this, 'ajax-url');
+    var $obj = $(this);
+    var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
+    var click_target_id = $obj.attr("click-target-id");
+    var ajax_url = $obj.attr("ajax-url");
+    var tmp_target_height = $obj.attr("tmp-target-height");
+    $('#' + replace_elm_parent_id).children().remove();
+    $('#' + replace_elm_parent_id).height(tmp_target_height + "px");
+    //noinspection JSJQueryEfficiency
+    $.ajax({
+        url: ajax_url,
+        async: false,
+        success: function (data) {
+            //noinspection JSUnresolvedVariable
+            if (data.error) {
+                //noinspection JSUnresolvedVariable
+                alert(data.msg);
+            }
+            else {
+                $('#' + replace_elm_parent_id).css("height", "");
+                $('#' + replace_elm_parent_id).append(data.html);
+                $('#' + click_target_id).trigger('click').focus();
+            }
+        }
+    });
+}
+
 function evTargetToggle() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
@@ -364,6 +390,23 @@ function evTargetToggleClick() {
             $obj.text($obj.attr("opend-text"));
         }
     }
+    if (0 == $("#" + target_id).size() && $obj.attr("ajax-url") != undefined) {
+        $.ajax({
+            url: $obj.attr("ajax-url"),
+            async: false,
+            success: function (data) {
+                //noinspection JSUnresolvedVariable
+                if (data.error) {
+                    //noinspection JSUnresolvedVariable
+                    alert(data.msg);
+                }
+                else {
+                    $("#" + $obj.attr("hidden-target-id")).after(data.html);
+                }
+            }
+        });
+    }
+
     //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
     //noinspection JSJQueryEfficiency
@@ -569,22 +612,20 @@ $(function () {
 });
 
 // Workaround for buggy header/footer fixed position when virtual keyboard is on/off
-$('input, textarea')
-    .on('focus', function () {
-        $('.navbar').css('position', 'absolute');
-    })
-    .on('blur', function () {
-        $('.navbar').css('position', 'fixed');
-        //force page redraw to fix incorrectly positioned fixed elements
-        setTimeout(function () {
+$(document).on('focus', 'input, textarea', function () {
+    $('.navbar').css('position', 'absolute');
+});
+$(document).on('blur', 'input, textarea', function () {
+    $('.navbar').css('position', 'fixed');
+    //force page redraw to fix incorrectly positioned fixed elements
+    setTimeout(function () {
+        //noinspection JSUnresolvedVariable
+        if (typeof $.mobile != "undefined") {
             //noinspection JSUnresolvedVariable
-            if (typeof $.mobile != "undefined") {
-                //noinspection JSUnresolvedVariable
-                window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
-            }
-        }, 20);
-    });
-
+            window.scrollTo($.mobile.window.scrollLeft(), $.mobile.window.scrollTop());
+        }
+    }, 20);
+});
 
 // goTop
 $(function () {
@@ -791,8 +832,8 @@ function ajaxAppendCount(id, url) {
 }
 
 $(function () {
-    var tutorialNum=1;
-    if (tutorialNum==1){
+    var tutorialNum = 1;
+    if (tutorialNum == 1) {
         $("#modalTutorialPrev").hide();
     }
     $("#modalTutorialNext").on("click", function () {
@@ -844,14 +885,14 @@ $(function () {
         }
     );
     $("#modalTutorialGo").on("click", function () {
-            $(this).fadeOut(function(){
+            $(this).fadeOut(function () {
                 $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box4");
                 $("#tutorialText4").hide();
                 $("#tutorialText1").show();
                 $("#modalTutorialNext").show();
                 $("#modalTutorialPrev").hide();
             });
-            tutorialNum=1;
+            tutorialNum = 1;
         }
     );
 
