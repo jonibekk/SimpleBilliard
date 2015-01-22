@@ -29,9 +29,26 @@ class TeamsController extends AppController
         }
     }
 
+    public function settings()
+    {
+        $this->layout = LAYOUT_SETTING;
+        $team_id = $this->Session->read('current_team_id');
+        try {
+            $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e);
+            $this->redirect($this->referer());
+        }
+    }
+
     public function invite()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
+        $from_setting = false;
+        if (strstr($this->referer(), "/settings")) {
+            $from_setting = true;
+        }
+        $this->set(compact('from_setting'));
+
         $team_id = $this->Session->read('current_team_id');
         $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         if ($this->request->is('post') && !empty($this->request->data)) {
@@ -49,10 +66,10 @@ class TeamsController extends AppController
                     }
                     //招待メールデータの登録
                     $invite = $this->Team->Invite->saveInvite(
-                                                 $email,
-                                                 $team_id,
-                                                 $this->Auth->user('id'),
-                                                 !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
+                        $email,
+                        $team_id,
+                        $this->Auth->user('id'),
+                        !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
                     );
                     //招待メール送信
                     $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
@@ -66,14 +83,26 @@ class TeamsController extends AppController
                         $msg .= __d('gl', "%s人は既にチームに参加しているユーザの為、メール送信をキャンセルしました。", count($allReadyBelongTeamEmails));
                     }
                     $this->Pnotify->outSuccess($msg);
-                    /** @noinspection PhpVoidFunctionResultUsedInspection */
-                    $this->redirect('/');
+                    if ($from_setting) {
+                        $this->redirect($this->referer());
+                    }
+                    else {
+                        /** @noinspection PhpVoidFunctionResultUsedInspection */
+                        $this->redirect('/');
+                    }
                 }
                 else {
                     //１件も送信していない場合は既にチームに参加済みのユーザの為、再入力
                     $this->Pnotify->outError(__d('gl', "入力した全てのメールアドレスのユーザは既にチームに参加している為、メール送信をキャンセルしました。"));
                 }
             }
+            else {
+                $this->Pnotify->outError(__d('gl', "メールアドレスが正しくありません。"));
+            }
+            $this->redirect($this->referer());
+        }
+        else {
+            $this->layout = LAYOUT_ONE_COLUMN;
         }
     }
 
