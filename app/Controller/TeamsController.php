@@ -106,6 +106,55 @@ class TeamsController extends AppController
         }
     }
 
+    function download_team_members()
+    {
+        $this->request->allowMethod('post');
+        $this->layout = false;
+        $filename = 'team_members_' . date('YmdHis');
+
+        //見出し
+        $th = [
+            __d('gl', "メール(*, 変更できません)"),
+            __d('gl', "メンバーID(*)"),
+            __d('gl', "ローマ字名(*)"),
+            __d('gl', "ローマ字姓(*)"),
+            __d('gl', "アクティブ(*)"),
+            __d('gl', "管理者(*)"),
+            __d('gl', "メンバー種別(*)"),
+            __d('gl', "評価(*)"),
+            __d('gl', "所属"),
+            __d('gl', "言語コード"),
+            __d('gl', "ローカル名"),
+            __d('gl', "ローカル姓"),
+            __d('gl', "電話番号"),
+            __d('gl', "性別"),
+            __d('gl', "誕生年"),
+            __d('gl', "誕生月"),
+            __d('gl', "誕生日"),
+            __d('gl', "コーチメンバーID"),
+            __d('gl', "評価者1"),
+            __d('gl', "評価者2"),
+            __d('gl', "評価者3"),
+        ];
+        $dummy_datas = [
+            0 => [
+                'a' => 'abc',
+                'b' => 'abc',
+            ],
+        ];
+        $td = [];
+        foreach ($dummy_datas as $k => $v) {
+            $record = [];
+            $record['last_name'] = $v['a'];
+
+            $td[] = $record;
+        }
+
+        $this->set(compact('filename', 'th', 'td'));
+        $this->render('/Csv/default');
+
+    }
+
     public function ajax_switch_team($team_id = null)
     {
         $this->layout = 'ajax';

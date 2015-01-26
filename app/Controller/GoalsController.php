@@ -755,6 +755,7 @@ class GoalsController extends AppController
         }
 
         $this->set(compact('filename', 'th', 'td'));
+        $this->render('/Csv/default');
 
     }
 
