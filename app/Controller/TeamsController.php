@@ -106,7 +106,7 @@ class TeamsController extends AppController
         }
     }
 
-    function download_team_members()
+    function download_team_members_csv()
     {
         $this->request->allowMethod('post');
         $this->layout = false;

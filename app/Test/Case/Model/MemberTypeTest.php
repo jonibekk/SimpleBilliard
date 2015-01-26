@@ -77,4 +77,9 @@ class MemberTypeTest extends CakeTestCase
         parent::tearDown();
     }
 
+    public function testDummy()
+    {
+
+    }
+
 }
