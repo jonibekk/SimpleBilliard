@@ -7,19 +7,21 @@ blu="\033[34m"  #青
 
 TIME_A=`date +%s`
 
+error_exit(){ echo "${red}*** Error!!${whit}" ; exit 1 ; }
+
 echo "${blu}### Update Application. ###${whit}"
 echo "Please wait a minute..."
 echo "*** Updating all git submodules."
-git submodule update --init --recursive || { echo "${red}*** Error!!${whit}" ; exit 1 ; }
+git submodule update --init --recursive || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** git fetch"
-git fetch || { echo "${red}*** Error!!${whit}" ; exit 1 ; }
+git fetch || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** git pull"
-git pull || { echo "${red}*** Error!!${whit}" ; exit 1 ; }
+git pull || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** Updating an environment by chef.(include DB schema, using library and more.)"
-vagrant provision || { echo "${red}*** Error!!${whit}" ; exit 1 ; }
+vagrant provision || error_exit
 
 TIME_B=`date +%s`   #B
 PT=`expr ${TIME_B} - ${TIME_A}`
