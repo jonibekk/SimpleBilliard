@@ -191,9 +191,6 @@ if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
         'cookie'        => 'SID',
         //セッションの保持時間（分）
         'timeout'       => 60 * 24 * 30, //30days
-        'cookieTimeout' => 0,
-        'start'         => true,
-        'checkAgent'    => false,
         'handler'       => array(
             'config' => 'session'
         ),
