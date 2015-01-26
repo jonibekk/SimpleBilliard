@@ -10,6 +10,4 @@
  * @var                    $td
  * @var                    $filename
  */
-$this->Csv->addRow($th);
-$this->Csv->setFilename($filename);
-echo $this->Csv->render(true, 'SJIS-win', 'UTF-8');
+echo $this->Csv->defaultRender($th, $td, $filename);

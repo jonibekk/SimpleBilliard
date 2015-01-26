@@ -135,7 +135,8 @@ class TeamsController extends AppController
             __d('gl', "評価者2"),
             __d('gl', "評価者3"),
         ];
-        $this->set(compact('filename', 'th'));
+        $td = [];
+        $this->set(compact('filename', 'th', 'td'));
     }
 
     function download_team_members_csv()
