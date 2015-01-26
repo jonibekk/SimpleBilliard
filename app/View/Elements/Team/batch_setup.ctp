@@ -38,11 +38,25 @@
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
                 <?=
-                $this->Html->link(__d('gl', "ダウンロード"), "/",
-                                  ['class' => 'btn btn-default', 'div' => false]) ?>
+                $this->Form->postLink(__d('gl', "新規ダウンロード"), ['action' => 'download_add_members_csv_format'],
+                                      ['class' => 'btn btn-default', 'div' => false])
+                ?>
                 <?=
-                $this->Html->link(__d('gl', "アップロード"), "/",
-                                  ['class' => 'btn btn-primary', 'div' => false]) ?>
+                $this->Form->postLink(__d('gl', "新規アップロード"), ['action' => 'download_add_members_csv_format'],
+                                      ['class' => 'btn btn-primary', 'div' => false])
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-3">
+                <?=
+                $this->Form->postLink(__d('gl', "ダウンロード"), ['action' => 'download_team_members_csv'],
+                                      ['class' => 'btn btn-default', 'div' => false]) ?>
+                <?=
+                $this->Form->postLink(__d('gl', "アップロード"), "/",
+                                      ['class' => 'btn btn-primary', 'div' => false]) ?>
 
             </div>
         </div>

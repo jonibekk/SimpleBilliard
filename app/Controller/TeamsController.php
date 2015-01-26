@@ -106,6 +106,38 @@ class TeamsController extends AppController
         }
     }
 
+    function download_add_members_csv_format()
+    {
+        $this->request->allowMethod('post');
+        $this->layout = false;
+        $filename = 'add_member_csv_format';
+        //見出し
+        $th = [
+            __d('gl', "メール(*)"),
+            __d('gl', "メンバーID(*)"),
+            __d('gl', "ローマ字名(*)"),
+            __d('gl', "ローマ字姓(*)"),
+            __d('gl', "メンバーのアクティブ状態(*)"),
+            __d('gl', "管理者(*)"),
+            __d('gl', "メンバータイプ(*)"),
+            __d('gl', "評価対象(*)"),
+            __d('gl', "グループ"),
+            __d('gl', "ローカル姓名の言語コード"),
+            __d('gl', "ローカル名"),
+            __d('gl', "ローカル姓"),
+            __d('gl', "電話"),
+            __d('gl', "性別"),
+            __d('gl', "誕生年"),
+            __d('gl', "誕生月"),
+            __d('gl', "誕生日"),
+            __d('gl', "コーチID"),
+            __d('gl', "評価者1"),
+            __d('gl', "評価者2"),
+            __d('gl', "評価者3"),
+        ];
+        $this->set(compact('filename', 'th'));
+    }
+
     function download_team_members_csv()
     {
         $this->request->allowMethod('post');
@@ -114,24 +146,15 @@ class TeamsController extends AppController
 
         //見出し
         $th = [
-            __d('gl', "メール(*, 変更できません)"),
             __d('gl', "メンバーID(*)"),
-            __d('gl', "ローマ字名(*)"),
-            __d('gl', "ローマ字姓(*)"),
-            __d('gl', "メンバーのアクティブ状態(*)"),
+            __d('gl', "メール(*, 変更できません)"),
+            __d('gl', "ローマ字名(*, 変更できません)"),
+            __d('gl', "ローマ字姓(*, 変更できません)"),
             __d('gl', "管理者(*)"),
-            __d('gl', "メンバー種別(*)"),
-            __d('gl', "評価(*)"),
+            __d('gl', "メンバータイプ(*)"),
+            __d('gl', "評価対象(*)"),
             __d('gl', "グループ"),
-            __d('gl', "言語コード"),
-            __d('gl', "ローカル名"),
-            __d('gl', "ローカル姓"),
-            __d('gl', "電話番号"),
-            __d('gl', "性別"),
-            __d('gl', "誕生年"),
-            __d('gl', "誕生月"),
-            __d('gl', "誕生日"),
-            __d('gl', "コーチメンバーID"),
+            __d('gl', "コーチID"),
             __d('gl', "評価者1"),
             __d('gl', "評価者2"),
             __d('gl', "評価者3"),
@@ -151,8 +174,6 @@ class TeamsController extends AppController
         }
 
         $this->set(compact('filename', 'th', 'td'));
-        $this->render('/Csv/default');
-
     }
 
     public function ajax_switch_team($team_id = null)
