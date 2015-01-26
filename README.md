@@ -51,12 +51,11 @@ Goalousで素早く開発を始められるよう心がけております。
 ## A Development Routine
 ターミナルでコマンドを実行  
 
-1. アプリケーションをアップデート   
-goalousのディレクトリに移動  
-ターミナルを起動し、以下を実行   
-`sh ./etc/local/update_app.sh`
+1. goalousのディレクトリに移動  
 1. vagrantを起動  
 `vagrant up`  
+1. アプリケーションをアップデート   
+`sh ./etc/local/update_app.sh`   
 1. 作業用ブランチを作成   
 `git branch topic-xxxx`   
 1. 作業ブランチにチェックアウト   
