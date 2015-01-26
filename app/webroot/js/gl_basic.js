@@ -94,7 +94,11 @@ $(document).ready(function () {
         selector: '[data-toggle="tooltip"]'
     });
     //form二重送信防止
-    $('form').on('submit', function () {
+    //$('form').on('submit', function () {
+    //    $(this).find('input:submit').attr('disabled', 'disabled');
+    //});
+
+    $(document).on('submit','form',function(){
         $(this).find('input:submit').attr('disabled', 'disabled');
     });
     /**
