@@ -48,44 +48,45 @@ class PagesController extends AppController
 //        if (!empty($path[1])) {
 //            $subpage = $path[1];
 //        }
+
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
-        //ログインしている場合とそうでない場合の切り分け
-        if ($this->Auth->user()) {
-            if ($path[0] == 'home') {
-                if ($this->Session->read('add_new_mode') === MODE_NEW_PROFILE) {
-                    $this->Session->delete('add_new_mode');
-                    $this->set('mode_view', MODE_VIEW_TUTORIAL);
-                }
-                $this->_setMyCircle();
-                $this->_setFeedMoreReadUrl();
-                $select2_default = $this->User->getAllUsersCirclesSelect2();
-                $my_goals = $this->Goal->getMyGoals();
-                $collabo_goals = $this->Goal->getMyCollaboGoals();
-                $follow_goals = $this->Goal->getMyFollowedGoals();
-                $current_global_menu = "home";
-                $feed_filter = 'all';
-                $this->set(compact('feed_filter', 'select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
-                                   'current_global_menu'));
-                $this->set('avail_sub_menu', true);
-                try {
-                    $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
-                } catch (RuntimeException $e) {
-                    $this->Pnotify->outError($e->getMessage());
-                    $this->redirect($this->referer());
-                }
-                return $this->render('logged_in_home');
-            }
-            else {
-                $this->layout = LAYOUT_ONE_COLUMN;
-                return $this->render(implode('/', $path));
-            }
-        }
-        else {
+        //ログインしていない場合
+        if (!$this->Auth->user()) {
             $this->layout = 'homepage';
             return $this->render(implode('/', $path));
         }
+
+        // 1カラムレイアウト
+        if ($path[0] != 'home') {
+            $this->layout = LAYOUT_ONE_COLUMN;
+            return $this->render(implode('/', $path));
+        }
+
+        if ($this->Session->read('add_new_mode') === MODE_NEW_PROFILE) {
+            $this->Session->delete('add_new_mode');
+            $this->set('mode_view', MODE_VIEW_TUTORIAL);
+        }
+
+        $this->_setMyCircle();
+        $this->_setFeedMoreReadUrl();
+        $select2_default = $this->User->getAllUsersCirclesSelect2();
+        $my_goals = $this->Goal->getMyGoals();
+        $collabo_goals = $this->Goal->getMyCollaboGoals();
+        $follow_goals = $this->Goal->getMyFollowedGoals();
+        $current_global_menu = "home";
+        $feed_filter = 'all';
+        $this->set(compact('feed_filter', 'select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
+                           'current_global_menu'));
+        $this->set('avail_sub_menu', true);
+        try {
+            $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+        }
+        return $this->render('logged_in_home');
     }
 
     public function beforeFilter()
