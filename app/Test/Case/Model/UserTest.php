@@ -17,6 +17,7 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.rater',
         'app.goal',
         'app.local_name',
         'app.user', 'app.notify_setting',
@@ -125,56 +126,56 @@ class UserTest extends CakeTestCase
     public function testUserValidations()
     {
         $this->assertTrue(
-             $this->getValidationRes(['first_name' => 'daiki']),
-             "[正常系]英名はアルファベットのみ"
+            $this->getValidationRes(['first_name' => 'daiki']),
+            "[正常系]英名はアルファベットのみ"
         );
         $this->assertFalse(
-             $this->getValidationRes(['first_name' => '']),
-             "[異常系]英名は空を認めない"
+            $this->getValidationRes(['first_name' => '']),
+            "[異常系]英名は空を認めない"
         );
         $this->assertFalse(
-             $this->getValidationRes(['first_name' => 'だいき']),
-             "[異常系]英名はアルファベットのみ"
+            $this->getValidationRes(['first_name' => 'だいき']),
+            "[異常系]英名はアルファベットのみ"
         );
         $this->assertTrue(
-             $this->getValidationRes(['last_name' => 'hirakata']),
-             "[正常系]英姓はアルファベットのみ"
+            $this->getValidationRes(['last_name' => 'hirakata']),
+            "[正常系]英姓はアルファベットのみ"
         );
         $this->assertFalse(
-             $this->getValidationRes(['last_name' => '']),
-             "[異常系]英姓は空を認めない"
+            $this->getValidationRes(['last_name' => '']),
+            "[異常系]英姓は空を認めない"
         );
         $this->assertFalse(
-             $this->getValidationRes(['last_name' => 'ひらかた']),
-             "[異常系]英姓はアルファベットのみ"
+            $this->getValidationRes(['last_name' => 'ひらかた']),
+            "[異常系]英姓はアルファベットのみ"
         );
         $this->assertTrue(
-             $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => 'goalous1234']),
-             "[正常系]パスワードは確認パスワードと一致"
+            $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => 'goalous1234']),
+            "[正常系]パスワードは確認パスワードと一致"
         );
         $this->assertFalse(
-             $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
-             "[異常系]パスワードは確認パスワードと一致"
+            $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
+            "[異常系]パスワードは確認パスワードと一致"
         );
         $this->assertTrue(
-             $this->getValidationRes(['password' => '12345678']),
-             "[正常系]パスワードは8文字以上"
+            $this->getValidationRes(['password' => '12345678']),
+            "[正常系]パスワードは8文字以上"
         );
         $this->assertFalse(
-             $this->getValidationRes(['password' => '1234567']),
-             "[異常系]パスワードは8文字以上"
+            $this->getValidationRes(['password' => '1234567']),
+            "[異常系]パスワードは8文字以上"
         );
         $this->assertFalse(
-             $this->getValidationRes(['password' => '',]),
-             "[異常系]パスワードは空を認めない"
+            $this->getValidationRes(['password' => '',]),
+            "[異常系]パスワードは空を認めない"
         );
         $this->assertTrue(
-             $this->getValidationRes(['agree_tos' => true,]),
-             "[正常系]利用規約に同意は必須"
+            $this->getValidationRes(['agree_tos' => true,]),
+            "[正常系]利用規約に同意は必須"
         );
         $this->assertFalse(
-             $this->getValidationRes(['agree_tos' => false,]),
-             "[異常系]利用規約に同意は必須"
+            $this->getValidationRes(['agree_tos' => false,]),
+            "[異常系]利用規約に同意は必須"
         );
     }
 

@@ -232,6 +232,7 @@ class User extends AppModel
         'CircleMember',
         'Goal',
         'Collaborator',
+        'Rater',
     ];
 
     /**
