@@ -47,12 +47,12 @@ class GoalsController extends AppController
     {
         $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
+
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
             $this->request->data['Goal']['id'] = $id;
             try {
                 $this->Goal->isPermittedAdmin($id);
-
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -60,60 +60,62 @@ class GoalsController extends AppController
             }
         }
 
-        if (($this->request->is('post') || $this->request->is('put')) && !empty($this->request->data)) {
-            if (isset($this->request->params['named']['mode'])) {
-                if ($this->Goal->add($this->request->data)) {
-                    switch ($this->request->params['named']['mode']) {
-                        case 2:
-                            $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
-                            //「ゴールを定める」に進む
-                            $this->redirect([$this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
-                            break;
-                        case 3:
-                            //完了
-                            $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
-                            //TODO 一旦、トップにリダイレクト
-                            $this->redirect("/");
-                            break;
-                    }
-                }
-                else {
-                    $this->Pnotify->outError(__d('gl', "ゴールの保存に失敗しました。"));
-                    $this->redirect($this->referer());
-                }
-            }
-            else {
-                if ($this->Goal->Purpose->add($this->request->data)) {
-                    $this->Pnotify->outSuccess(__d('gl', "ゴールの目的を保存しました。"));
-                    //「ゴールを定める」に進む
-                    $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
-                    $url = $id ? array_merge([$id], $url) : $url;
-                    $this->redirect($url);
-                }
-                else {
-                    $this->Pnotify->outError(__d('gl', "ゴールの目的の保存に失敗しました。"));
-                    $this->redirect($this->referer());
-                }
-            }
-        }
-        else {
-            //新規作成時以外はデータをセット
+        //新規作成以外のケース
+        $isNotNewAdd = (!$this->request->is('post') && !$this->request->is('put')) || empty($this->request->data);
+        if ($isNotNewAdd) {
+            // ゴールの編集
             if ($id) {
                 $this->request->data = $this->Goal->getAddData($id);
             }
+            // 基準の登録
             elseif ($purpose_id) {
-                //目的ID指定の場合はpurposeをセット
-                if ($this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
-                    $this->request->data = $this->Goal->Purpose->findById($purpose_id);
-                }
-                else {
+                $isNotOrner = !$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
+                if ($isNotOrner) {
                     $this->Pnotify->outError(__d('gl', "権限がありません。"));
                     $this->redirect($this->referer());
                 }
+                $this->request->data = $this->Goal->Purpose->findById($purpose_id);
+            }
+            $this->_setGoalAddViewVals();
+            return $this->render();
+        }
+
+        // 新規作成時、モードの指定が無い場合(目的の保存のみ)
+        if (!isset($this->request->params['named']['mode'])) {
+            // 目的の保存実行
+            $isSavedSuccess = $this->Goal->Purpose->add($this->request->data);
+            // 成功
+            if ($isSavedSuccess) {
+                $this->Pnotify->outSuccess(__d('gl', "ゴールの目的を保存しました。"));
+                //「ゴールを定める」に進む
+                $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
+                $url = $id ? array_merge([$id], $url) : $url;
+                $this->redirect($url);
+            }
+            // 失敗
+            $this->Pnotify->outError(__d('gl', "ゴールの目的の保存に失敗しました。"));
+            $this->redirect($this->referer());
+        }
+
+        // 新規作成時、モードの指定がある場合
+        if ($this->Goal->add($this->request->data)) {
+            switch ($this->request->params['named']['mode']) {
+                case 2:
+                    $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
+                    //「ゴールを定める」に進む
+                    $this->redirect([$this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
+                    break;
+                case 3:
+                    //完了
+                    $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
+                    //TODO 一旦、トップにリダイレクト
+                    $this->redirect("/");
+                    break;
             }
         }
-        $this->_setGoalAddViewVals();
-        return $this->render();
+
+        $this->Pnotify->outError(__d('gl', "ゴールの保存に失敗しました。"));
+        $this->redirect($this->referer());
     }
 
     /**
