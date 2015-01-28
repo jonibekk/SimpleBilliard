@@ -170,7 +170,7 @@ function del_line_break($str)
  *
  * @return $val or null
  */
-function viaIsSet($val)
+function viaIsSet(&$val)
 {
     return isset($val) ? $val : null;
 }
