@@ -164,3 +164,13 @@ function del_line_break($str)
 {
     return str_replace(array("\r\n", "\n", "\r"), '', $str);
 }
+
+/**
+ * @param $val
+ *
+ * @return $val or null
+ */
+function viaIsSet($val)
+{
+    return isset($val) ? $val : null;
+}
