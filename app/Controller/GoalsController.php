@@ -69,8 +69,8 @@ class GoalsController extends AppController
             }
             // 基準の登録
             elseif ($purpose_id) {
-                $isNotOrner = !$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
-                if ($isNotOrner) {
+                $isNotOwner = !$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
+                if ($isNotOwner) {
                     $this->Pnotify->outError(__d('gl', "権限がありません。"));
                     $this->redirect($this->referer());
                 }
