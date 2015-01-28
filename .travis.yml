@@ -84,7 +84,7 @@ before_script:
 script:
   - mkdir -p build/logs
   - cd ./app
-  - ./Console/cake migrations.migration run all
+  - echo -ne '\n\n' | ./Console/cake schema create
   - ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
   - cd ../
 
