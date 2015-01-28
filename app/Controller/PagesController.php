@@ -33,21 +33,11 @@ class PagesController extends AppController
     public function display()
     {
         $path = func_get_args();
-//TODO 現状これが必要になるケースが無いため、一旦コメントアウト
-//        $count = count($path);
-//        if (!$count) {
-//            /** @noinspection PhpVoidFunctionResultUsedInspection */
-//            return $this->redirect('/');
-//        }
         $page = $subpage = null;
 
         if (!empty($path[0])) {
             $page = $path[0];
         }
-//TODO 現状これが必要になるケースが無いため、一旦コメントアウト
-//        if (!empty($path[1])) {
-//            $subpage = $path[1];
-//        }
 
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
