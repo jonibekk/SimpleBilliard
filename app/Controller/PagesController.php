@@ -54,11 +54,13 @@ class PagesController extends AppController
             return $this->render(implode('/', $path));
         }
 
+        // プロフィール作成モードの場合、ビューモードに切り替え
         if ($this->Session->read('add_new_mode') === MODE_NEW_PROFILE) {
             $this->Session->delete('add_new_mode');
             $this->set('mode_view', MODE_VIEW_TUTORIAL);
         }
 
+        // ビュー変数のセット
         $this->_setMyCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
