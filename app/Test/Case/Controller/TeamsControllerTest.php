@@ -220,6 +220,20 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testSettingsSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/settings', ['method' => 'GET']);
+
+    }
+
+    function testSettingsFail()
+    {
+        $this->_getTeamsCommonMock(null, true, false);
+        $this->testAction('/teams/settings', ['method' => 'GET']);
+
+    }
+
     function testDownloadAddMembersCsvFormat()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -232,7 +246,7 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/download_team_members_csv', ['method' => 'POST']);
     }
 
-    function _getTeamsCommonMock($value_map = null, $insert_team_data = false)
+    function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true)
     {
         $Teams = $this->generate('Teams', [
             'components' => [
@@ -273,7 +287,7 @@ class TeamsControllerTest extends ControllerTestCase
                 'TeamMember' => [
                     [
                         'user_id'    => 1,
-                        'active_flg' => true,
+                        'active_flg' => $is_admin,
                         'admin_flg'  => true,
                     ]
                 ],
