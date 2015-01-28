@@ -49,7 +49,7 @@ class PagesController extends AppController
         }
 
         // 1カラムレイアウト
-        if ($path[0] != 'home') {
+        if ($path[0] !== 'home') {
             $this->layout = LAYOUT_ONE_COLUMN;
             return $this->render(implode('/', $path));
         }
