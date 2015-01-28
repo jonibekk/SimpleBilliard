@@ -114,75 +114,16 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testInvite()
     {
-        $Teams = $this->_getTeamsCommonMock();
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->TeamMember->myStatusWithTeam = null;
-        $data = [
-            'TeamMember' => [
-                [
-                    'user_id'    => 1,
-                    'active_flg' => true,
-                    'admin_flg'  => true,
-                ]
-            ],
-            'Team'       => [
-                'name' => 'test'
-            ]
-        ];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->saveAll($data);
-        /** @noinspection PhpUndefinedFieldInspection */
-        $session_value_map = [
-            ['current_team_id', $Teams->Team->getLastInsertId()]
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap([['id', '1']])
-                    );
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Session->expects($this->any())->method('read')
-                       ->will($this->returnValueMap($session_value_map)
-                       );
+        $this->_getTeamsCommonMock(null, true);
+
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'GET']);
     }
 
     function testInvitePost()
     {
-        $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['id', 1],
-        ];
-        $Teams = $this->_getTeamsCommonMock($value_map);
+        $this->_getTeamsCommonMock(null, true);
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->TeamMember->myStatusWithTeam = null;
-        $data = [
-            'TeamMember' => [
-                [
-                    'user_id'    => 1,
-                    'active_flg' => true,
-                    'admin_flg'  => true,
-                ]
-            ],
-            'Team'       => [
-                'name' => 'test'
-            ]
-        ];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->saveAll($data);
-        /** @noinspection PhpUndefinedFieldInspection */
-        $session_value_map = [
-            ['current_team_id', $Teams->Team->getLastInsertId()]
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Session->expects($this->any())->method('read')
-                       ->will($this->returnValueMap($session_value_map)
-                       );
         $emails = "aaa@example.com";
         $data = ['Team' => ['emails' => $emails]];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -279,7 +220,19 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
     }
 
-    function _getTeamsCommonMock($value_map = [['id', '1']])
+    function testDownloadAddMembersCsvFormat()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/download_add_members_csv_format', ['method' => 'POST']);
+    }
+
+    function testDownloadTeamMembersCsv()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/download_team_members_csv', ['method' => 'POST']);
+    }
+
+    function _getTeamsCommonMock($value_map = null, $insert_team_data = false)
     {
         $Teams = $this->generate('Teams', [
             'components' => [
@@ -298,10 +251,52 @@ class TeamsControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        if (!$value_map) {
+            $value_map = [
+                [null, [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]],
+                ['id', 1],
+            ];
+        }
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+
+        if ($insert_team_data) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $Teams->Team->TeamMember->myStatusWithTeam = null;
+            $data = [
+                'TeamMember' => [
+                    [
+                        'user_id'    => 1,
+                        'active_flg' => true,
+                        'admin_flg'  => true,
+                    ]
+                ],
+                'Team'       => [
+                    'name' => 'test'
+                ]
+            ];
+            /** @noinspection PhpUndefinedFieldInspection */
+            $Teams->Team->saveAll($data);
+            /** @noinspection PhpUndefinedFieldInspection */
+            $session_value_map = [
+                ['current_team_id', $Teams->Team->getLastInsertId()]
+            ];
+            /** @noinspection PhpUndefinedMethodInspection */
+            $Teams->Auth->staticExpects($this->any())->method('user')
+                        ->will($this->returnValueMap([['id', '1']])
+                        );
+            /** @noinspection PhpUndefinedMethodInspection */
+            $Teams->Session->expects($this->any())->method('read')
+                           ->will($this->returnValueMap($session_value_map)
+                           );
+
+        }
 
         return $Teams;
     }

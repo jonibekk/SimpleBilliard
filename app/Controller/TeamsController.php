@@ -109,6 +109,9 @@ class TeamsController extends AppController
     function download_add_members_csv_format()
     {
         $this->request->allowMethod('post');
+        $team_id = $this->Session->read('current_team_id');
+        $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
+
         $this->layout = false;
         $filename = 'add_member_csv_format';
         //見出し
@@ -142,6 +145,8 @@ class TeamsController extends AppController
     function download_team_members_csv()
     {
         $this->request->allowMethod('post');
+        $team_id = $this->Session->read('current_team_id');
+        $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         $this->layout = false;
         $filename = 'team_members_' . date('YmdHis');
 
