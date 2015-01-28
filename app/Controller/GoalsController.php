@@ -26,13 +26,11 @@ class GoalsController extends AppController
         $collabo_goals = $this->Goal->getMyCollaboGoals();
         $follow_goals = $this->Goal->getMyFollowedGoals();
         $current_global_menu = "goal";
+
         //アドミン権限チェック
-        $is_admin = false;
-        if (isset($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'])
-            && $this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']
-        ) {
-            $is_admin = true;
-        }
+        $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
+        $is_admin = ($isExistAdminFlg) ? true : false;
+
         $this->set(compact('is_admin', 'goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu'));
     }
 
@@ -47,7 +45,7 @@ class GoalsController extends AppController
      */
     public function add($id = null)
     {
-        $purpose_id = isset($this->request->params['named']['purpose_id']) ? $this->request->params['named']['purpose_id'] : null;
+        $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
