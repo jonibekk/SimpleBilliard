@@ -57,29 +57,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     public function testAddPostSuccess()
     {
-        $Teams = $this->generate('Teams', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'Auth'
-            ],
-        ]);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        $value_map = [
-            ['id', '1'],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
+        $this->_getTeamsCommonMock();
 
         $data = [
             'Team' => [
@@ -91,29 +69,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     public function testAddPostFail()
     {
-        $Teams = $this->generate('Teams', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'Auth'
-            ],
-        ]);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        $value_map = [
-            ['id', '1'],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
+        $this->_getTeamsCommonMock();
 
         $data = [
             'Team' => [
@@ -139,29 +95,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testAjaxSwitchTeamSuccess()
     {
-        $Teams = $this->generate('Teams', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'Auth'
-            ],
-        ]);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        $value_map = [
-            ['id', '1'],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
+        $Teams = $this->_getTeamsCommonMock();
         $postData = [
             'Team' => [
                 'name' => "test",
@@ -180,118 +114,16 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testInvite()
     {
-        $Teams = $this->generate('Teams', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'Auth',
-                'Session'
-            ],
-        ]);
-        $uid = '1';
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        $value_map = [
-            ['id', $uid],
-        ];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->TeamMember->myStatusWithTeam = null;
-        $data = [
-            'TeamMember' => [
-                [
-                    'user_id'    => $uid,
-                    'active_flg' => true,
-                    'admin_flg'  => true,
-                ]
-            ],
-            'Team'       => [
-                'name' => 'test'
-            ]
-        ];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->saveAll($data);
-        /** @noinspection PhpUndefinedFieldInspection */
-        $session_value_map = [
-            ['current_team_id', $Teams->Team->getLastInsertId()]
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Session->expects($this->any())->method('read')
-                       ->will($this->returnValueMap($session_value_map)
-                       );
+        $this->_getTeamsCommonMock(null, true);
+
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'GET']);
     }
 
     function testInvitePost()
     {
-        $Teams = $this->generate('Teams', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'Auth',
-                'Session'
-            ],
-        ]);
-        $uid = '1';
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['id', $uid],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->expects($this->any())->method('loggedIn')
-                    ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->TeamMember->myStatusWithTeam = null;
-        $data = [
-            'TeamMember' => [
-                [
-                    'user_id'    => $uid,
-                    'active_flg' => true,
-                    'admin_flg'  => true,
-                ]
-            ],
-            'Team'       => [
-                'name' => 'test'
-            ]
-        ];
-        /** @noinspection PhpUndefinedFieldInspection */
-        $Teams->Team->saveAll($data);
-        /** @noinspection PhpUndefinedFieldInspection */
-        $session_value_map = [
-            ['current_team_id', $Teams->Team->getLastInsertId()]
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Session->expects($this->any())->method('read')
-                       ->will($this->returnValueMap($session_value_map)
-                       );
+        $this->_getTeamsCommonMock(null, true);
+
         $emails = "aaa@example.com";
         $data = ['Team' => ['emails' => $emails]];
         /** @noinspection PhpUndefinedFieldInspection */
@@ -300,32 +132,16 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testInvitePostAllReadyInTeam()
     {
-        $Teams = $this->generate('Teams', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'Auth',
-                'Session'
-            ],
-        ]);
-        $uid = '2';
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
         $value_map = [
             [null, [
                 'id'         => '1',
                 'last_first' => true,
                 'language'   => 'jpn'
             ]],
-            ['id', $uid],
+            ['id', 2],
         ];
+
+        $Teams = $this->_getTeamsCommonMock($value_map);
         /** @noinspection PhpUndefinedFieldInspection */
         $Teams->Team->TeamMember->myStatusWithTeam = null;
 
@@ -335,7 +151,7 @@ class TeamsControllerTest extends ControllerTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
+                    'user_id'    => 2,
                     'active_flg' => true,
                     'admin_flg'  => true,
                 ]
@@ -350,10 +166,6 @@ class TeamsControllerTest extends ControllerTestCase
         $session_value_map = [
             ['current_team_id', $team_id]
         ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($session_value_map)
@@ -365,32 +177,16 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testInvitePostAllReadyInTeamAndNot()
     {
-        $Teams = $this->generate('Teams', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'Auth',
-                'Session'
-            ],
-        ]);
-        $uid = '2';
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
         $value_map = [
             [null, [
-                'id'         => $uid,
+                'id'         => 2,
                 'last_first' => true,
                 'language'   => 'jpn'
             ]],
-            ['id', $uid],
+            ['id', 2],
         ];
+
+        $Teams = $this->_getTeamsCommonMock($value_map);
         /** @noinspection PhpUndefinedFieldInspection */
         $Teams->Team->TeamMember->myStatusWithTeam = null;
 
@@ -400,7 +196,7 @@ class TeamsControllerTest extends ControllerTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
+                    'user_id'    => 2,
                     'active_flg' => true,
                     'admin_flg'  => true,
                 ]
@@ -416,15 +212,106 @@ class TeamsControllerTest extends ControllerTestCase
             ['current_team_id', $team_id]
         ];
         /** @noinspection PhpUndefinedMethodInspection */
-        $Teams->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
-        /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap($session_value_map)
                        );
         $data = ['Team' => ['emails' => $email]];
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testSettingsSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/settings', ['method' => 'GET']);
+
+    }
+
+    function testSettingsFail()
+    {
+        $this->_getTeamsCommonMock(null, true, false);
+        $this->testAction('/teams/settings', ['method' => 'GET']);
+
+    }
+
+    function testDownloadAddMembersCsvFormat()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/download_add_members_csv_format', ['method' => 'GET']);
+    }
+
+    function testDownloadTeamMembersCsv()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/download_team_members_csv', ['method' => 'GET']);
+    }
+
+    function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true)
+    {
+        $Teams = $this->generate('Teams', [
+            'components' => [
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Auth',
+                'Session'
+            ],
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+        if (!$value_map) {
+            $value_map = [
+                [null, [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]],
+                ['id', 1],
+            ];
+        }
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+                    );
+
+        if ($insert_team_data) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $Teams->Team->TeamMember->myStatusWithTeam = null;
+            $data = [
+                'TeamMember' => [
+                    [
+                        'user_id'    => 1,
+                        'active_flg' => $is_admin,
+                        'admin_flg'  => true,
+                    ]
+                ],
+                'Team'       => [
+                    'name' => 'test'
+                ]
+            ];
+            /** @noinspection PhpUndefinedFieldInspection */
+            $Teams->Team->saveAll($data);
+            /** @noinspection PhpUndefinedFieldInspection */
+            $session_value_map = [
+                ['current_team_id', $Teams->Team->getLastInsertId()]
+            ];
+            /** @noinspection PhpUndefinedMethodInspection */
+            $Teams->Auth->staticExpects($this->any())->method('user')
+                        ->will($this->returnValueMap([['id', '1']])
+                        );
+            /** @noinspection PhpUndefinedMethodInspection */
+            $Teams->Session->expects($this->any())->method('read')
+                           ->will($this->returnValueMap($session_value_map)
+                           );
+
+        }
+
+        return $Teams;
     }
 }

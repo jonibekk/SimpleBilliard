@@ -4,11 +4,12 @@ App::uses('AppModel', 'Model');
 /**
  * TeamMember Model
  *
- * @property User        $User
- * @property Team        $Team
- * @property User        $CoachUser
- * @property Group       $Group
- * @property JobCategory $JobCategory
+ * @property User              $User
+ * @property Team              $Team
+ * @property MemberType        $MemberType
+ * @property User              $CoachUser
+ * @property Group             $Group
+ * @property JobCategory       $JobCategory
  */
 class TeamMember extends AppModel
 {
@@ -40,6 +41,7 @@ class TeamMember extends AppModel
         'CoachUser' => ['className' => 'User', 'foreignKey' => 'coach_user_id',],
         'Group',
         'JobCategory',
+        'MemberType',
     ];
 
     public $myStatusWithTeam = [];
