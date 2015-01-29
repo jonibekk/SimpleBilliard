@@ -86,6 +86,20 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
+    public function testAddFalseBodyEmpty()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $postData = [
+            'Post' => [
+                'body'       => '',
+                'public_flg' => 1
+            ]
+        ];
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $this->assertFalse($res, "[異常]投稿(本文が空)");
+    }
+
     public function testGetNormal()
     {
         $this->_setDefault();
