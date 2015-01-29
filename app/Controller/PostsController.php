@@ -18,27 +18,24 @@ class PostsController extends AppController
     public function add()
     {
         $this->request->allowMethod('post');
-        if (isset($this->request->data['Post']['body']) && !empty($this->request->data['Post']['body'])) {
-            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
-            if (isset($ogp['title']) && isset($ogp['description'])) {
-                $this->request->data['Post']['site_info'] = json_encode($ogp);
-                if (isset($ogp['image'])) {
-                    $this->request->data['Post']['site_photo'] = $ogp['image'];
-                }
-            }
-        }
-        if ($this->Post->add($this->request->data)) {
+
+        // ogbをインサートデータに追加
+        $insertData = $this->_addOgpIndexes($this->request->data, viaIsSet($this->request->data['Post']['body']));
+
+        // 投稿を保存
+        if ($this->Post->add($insertData)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+            $this->redirect($this->referer());
+        }
+
+        // バリデーションエラー
+        if (!empty($this->Post->validationErrors)) {
+            $error_msg = array_shift($this->Post->validationErrors);
+            $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
         }
         else {
-            if (!empty($this->Post->validationErrors)) {
-                $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
-            }
-            else {
-                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
-            }
+            $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
         }
         $this->redirect($this->referer());
     }
@@ -518,6 +515,27 @@ class PostsController extends AppController
         }
         $total_share_user_count = count($all_share_user_list);
         return $total_share_user_count;
+    }
+
+    /**
+     * @param array $requestData
+     * @param string $body
+     *
+     * @return $requestData
+     */
+    function _addOgpIndexes($requestData, $body)
+    {
+        if (!$body) {
+            return $requestData;
+        }
+        $ogp = $this->Ogp->getOgpByUrlInText($body);
+        if (isset($ogp['title']) && isset($ogp['description'])) {
+            $requestData['Post']['site_info'] = json_encode($ogp);
+            if (isset($ogp['image'])) {
+                $requestData['Post']['site_photo'] = $ogp['image'];
+            }
+        }
+        return $requestData;
     }
 
 }
