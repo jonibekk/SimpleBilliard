@@ -79,6 +79,8 @@ class PostsController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Post->id = $id;
+
+        // 例外チェック
         if (!$this->Post->exists()) {
             throw new NotFoundException(__('gl', "この投稿は存在しません。"));
         }
@@ -89,6 +91,7 @@ class PostsController extends AppController
         // ogbをインサートデータに追加
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
 
+        // 投稿を保存
         if ($this->Post->postEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
         }
@@ -142,6 +145,8 @@ class PostsController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Post->Comment->id = $comment_id;
+
+        // 例外チェック
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
         }
@@ -152,6 +157,7 @@ class PostsController extends AppController
         // ogbをインサートデータに追加
         $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), viaIsSet($this->request->data['Comment']['body']));
 
+        // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コメントの変更を保存しました。"));
         }
@@ -400,6 +406,7 @@ class PostsController extends AppController
             // ogbをインサートデータに追加
             $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), viaIsSet($this->request->data['Comment']['body']));
 
+            // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
                                                  $this->Post->Comment->id);
