@@ -20,10 +20,10 @@ class PostsController extends AppController
         $this->request->allowMethod('post');
 
         // ogbをインサートデータに追加
-        $insertData = $this->_addOgpIndexes($this->request->data, viaIsSet($this->request->data['Post']['body']));
+        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
 
         // 投稿を保存
-        if ($this->Post->add($insertData)) {
+        if ($this->Post->add($this->request->data)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             $this->redirect($this->referer());
@@ -530,9 +530,9 @@ class PostsController extends AppController
         }
         $ogp = $this->Ogp->getOgpByUrlInText($body);
         if (isset($ogp['title']) && isset($ogp['description'])) {
-            $requestData['Post']['site_info'] = json_encode($ogp);
+            $requestData['site_info'] = json_encode($ogp);
             if (isset($ogp['image'])) {
-                $requestData['Post']['site_photo'] = $ogp['image'];
+                $requestData['site_photo'] = $ogp['image'];
             }
         }
         return $requestData;
