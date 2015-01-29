@@ -76,13 +76,13 @@ class PostTest extends CakeTestCase
                 'public_flg' => 1
             ]
         ];
-        $res = $this->Post->add($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
 
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $this->Post->create();
-        $res = $this->Post->add($postData);
+        $res = $this->Post->addNormal($postData);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 

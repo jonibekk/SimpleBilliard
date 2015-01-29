@@ -210,7 +210,7 @@ class Post extends AppModel
      *
      * @return bool|mixed
      */
-    public function add($postData, $type = self::TYPE_NORMAL, $uid = null, $team_id = null)
+    public function addNormal($postData, $type = self::TYPE_NORMAL, $uid = null, $team_id = null)
     {
         if (!isset($postData['Post']) || empty($postData['Post'])) {
             return false;

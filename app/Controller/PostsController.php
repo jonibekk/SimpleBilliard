@@ -23,7 +23,7 @@ class PostsController extends AppController
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
 
         // 投稿を保存
-        if ($this->Post->add($this->request->data)) {
+        if ($this->Post->addNormal($this->request->data)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             $this->redirect($this->referer());
