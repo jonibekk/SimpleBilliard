@@ -19,8 +19,59 @@
                 <h4 class="modal-title"><?= __d('gl', "メンバーの情報を変更") ?></h4>
             </div>
             <div class="modal-body">
+                <?=
+                $this->Form->create('Team', [
+                    'url'           => ['controller' => 'teams', 'action' => 'xxxxxxx'],
+                    'inputDefaults' => [
+                        'div'       => 'form-group',
+                        'label'     => [
+                            'class' => ''
+                        ],
+                        'wrapInput' => '',
+                        'class'     => 'form-control'
+                    ],
+                    'novalidate'    => true,
+                    'type'          => 'file',
+                    'id'            => 'EditMembersForm',
+                ]); ?>
+                <div class="form-group">
+                    <label class=""><?= __d('gl', "1.ユーザ情報をダウンロード") ?></label>
 
+                    <p><?= __d('gl', "CSVフォーマットのユーザ情報をダウンロードしてください。テンプレートのヘッダーは変更しないでください。") ?></p>
 
+                    <div class="">
+                        <?=
+                        $this->Html->link(__d('gl', "ユーザ情報をダウンロード"), ['action' => 'download_team_members_csv'],
+                                          ['class' => 'btn btn-default', 'div' => false])
+                        ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class=""><?= __d('gl', '2.ファイルのアップロード') ?></label>
+
+                    <p><?= __d('gl', "変更したユーザ情報のファイルをアップロードしてください。") ?></p>
+
+                    <div class="">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                            <span class="btn btn-default btn-file">
+                                <span class="fileinput-new"><?= __d('gl', "ファイルを選択") ?></span>
+                                <span class="fileinput-exists"><?= __d('gl', "別のファイルに変更する") ?></span>
+                                <?=
+                                $this->Form->input('csv_file',
+                                                   ['type'         => 'file',
+                                                    'label'        => false,
+                                                    'div'          => false,
+                                                    'css'          => false,
+                                                    'wrapInput'    => false,
+                                                    'errorMessage' => false,
+                                                   ]) ?>
+                            </span>
+                            <span class="fileinput-filename"></span>
+                            <a href="#" class="close fileinput-exists" data-dismiss="fileinput"
+                               style="float: none">&times;</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="row">
@@ -35,6 +86,7 @@
                     </div>
                 </div>
             </div>
+            <?= $this->Form->end() ?>
         </div>
     </div>
 </div>

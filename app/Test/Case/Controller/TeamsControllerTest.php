@@ -237,13 +237,13 @@ class TeamsControllerTest extends ControllerTestCase
     function testDownloadAddMembersCsvFormat()
     {
         $this->_getTeamsCommonMock(null, true);
-        $this->testAction('/teams/download_add_members_csv_format', ['method' => 'POST']);
+        $this->testAction('/teams/download_add_members_csv_format', ['method' => 'GET']);
     }
 
     function testDownloadTeamMembersCsv()
     {
         $this->_getTeamsCommonMock(null, true);
-        $this->testAction('/teams/download_team_members_csv', ['method' => 'POST']);
+        $this->testAction('/teams/download_team_members_csv', ['method' => 'GET']);
     }
 
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true)
