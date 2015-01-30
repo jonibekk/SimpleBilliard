@@ -209,45 +209,58 @@ class UsersController extends AppController
     public function add_profile()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+
         //新規ユーザ登録モードじゃない場合は４０４
         if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
             throw new NotFoundException;
         }
         $me = $this->Auth->user();
+
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
-        if ($this->request->is('put') && !empty($this->request->data)) {
-            //ローカル名の入力が無い場合は除去
-            if (isset($this->request->data['LocalName'])) {
-                $local_name = $this->request->data['LocalName'][0];
-                if (!$local_name['first_name'] || !$local_name['last_name']) {
-                    unset($this->request->data['LocalName']);
-                }
-            }
-            //プロフィールを保存
-            $this->User->id = $me['id'];
-            if ($this->User->saveAll($this->request->data)) {
-                $this->_refreshAuth($me['id']);
 
-                //トークン付きの場合は招待のため、ホームへ
-                if (isset($this->request->params['named']['invite_token'])) {
-                    /** @noinspection PhpVoidFunctionResultUsedInspection */
-                    return $this->redirect("/");
-                }
-                else {
-                    //チーム作成ページへリダイレクト
-                    /** @noinspection PhpVoidFunctionResultUsedInspection */
-                    return $this->redirect(['controller' => 'teams', 'action' => 'add']);
-                }
+        // リクエストデータが無い場合は入力画面を表示
+        if (!$this->request->is('put') || empty($this->request->data)) {
+            $this->request->data = ['User' => $me];
+            $language_name = $this->Lang->availableLanguages[$me['language']];
+            $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
+            return $this->render();
+        }
+
+        //ローカル名の入力が無い場合は除去
+        if (isset($this->request->data['LocalName'])) {
+            $local_name = $this->request->data['LocalName'][0];
+            if (!$local_name['first_name'] || !$local_name['last_name']) {
+                unset($this->request->data['LocalName']);
             }
+        }
+
+        // プロフィールを保存
+        $this->User->id = $me['id'];
+        $isSavedSuccess = $this->User->saveAll($this->request->data);
+
+        // 保存失敗
+        if(!$isSavedSuccess) {
+            $language_name = $this->Lang->availableLanguages[$me['language']];
+
+            $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
+            return $this->render();
+        }
+
+        // 保存成功
+        $this->_refreshAuth($me['id']);
+
+        //トークン付きの場合は招待のため、ホームへ
+        if (isset($this->request->params['named']['invite_token'])) {
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect("/");
         }
         else {
-            $this->request->data = ['User' => $me];
+            //チーム作成ページへリダイレクト
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect(['controller' => 'teams', 'action' => 'add']);
         }
-        $language_name = $this->Lang->availableLanguages[$me['language']];
 
-        $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
-        return $this->render();
     }
 
     /**
