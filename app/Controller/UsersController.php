@@ -63,31 +63,31 @@ class UsersController extends AppController
      */
     public function login()
     {
-        //uservoiceから渡ってきた時用
         $this->_uservoiceSetSession();
-        //リダイレクト先
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
-        //ログイン済の場合はトップへ
+
         if ($this->Auth->user()) {
             /** @noinspection PhpInconsistentReturnPointsInspection */
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect('/');
         }
-        if ($this->request->is('post') && isset($this->request->data['User'])) {
-            if ($this->Auth->login()) {
 
-                $this->_refreshAuth();
-                $this->_setAfterLogin();
-                $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
-                                           ['title' => __d('notify', "ログイン成功")]);
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($redirect_url);
-            }
-            else {
-                $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
-            }
+        if (!$this->_isExistPostData()) {
+            return $this->render();
+        }
+
+        if ($this->Auth->login()) {
+            $this->_refreshAuth();
+            $this->_setAfterLogin();
+            $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
+                                       ['title' => __d('notify', "ログイン成功")]);
+            /** @noinspection PhpInconsistentReturnPointsInspection */
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($redirect_url);
+        }
+        else {
+            $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
         }
     }
 
