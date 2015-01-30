@@ -353,7 +353,6 @@ class UsersController extends AppController
      */
     public function password_reset($token = null)
     {
-
         if ($this->Auth->user()) {
             throw new NotFoundException();
         }
