@@ -21,18 +21,22 @@
             <div class="modal-body">
                 <?=
                 $this->Form->create('Team', [
-                    'url'           => ['controller' => 'teams', 'action' => 'xxxxxxx'],
+                    'url'           => ['controller' => 'teams', 'action' => 'ajax_upload_new_members_csv'],
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
                             'class' => ''
                         ],
                         'wrapInput' => '',
-                        'class'     => 'form-control'
+                        'class'     => 'form-control',
                     ],
                     'novalidate'    => true,
                     'type'          => 'file',
                     'id'            => 'AddMembersForm',
+                    'loader-id'     => 'AddMembersLoader',
+                    'result-msg-id' => 'AddMembersResultMsg',
+                    'submit-id'     => 'AddMembersSubmit',
+                    'class'         => 'ajax-csv-upload',
                 ]); ?>
                 <div class="form-group">
                     <label class=""><?= __d('gl', "1.テンプレートをダウンロード") ?></label>
@@ -74,10 +78,20 @@
                         </div>
                     </div>
                 </div>
+                <div id="AddMembersResultMsg" class="none">
+                    <div class="alert" role="alert">
+                        <h4 class="alert-heading"></h4>
+                        <span class="alert-msg"></span>
+                    </div>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
+                        <div id="AddMembersLoader" class="pull-right none">
+                            &nbsp;<i class="fa fa-refresh fa-spin"></i>
+                        </div>
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
                                 data-dismiss="modal"><?= __d('gl',
                                                              "キャンセル") ?></button>

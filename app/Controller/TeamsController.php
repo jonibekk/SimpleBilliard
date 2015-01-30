@@ -11,6 +11,7 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->Security->unlockedActions = ['ajax_upload_new_members_csv'];
     }
 
     public function add()
@@ -139,6 +140,18 @@ class TeamsController extends AppController
         ];
         $td = [];
         $this->set(compact('filename', 'th', 'td'));
+    }
+
+    function ajax_upload_new_members_csv()
+    {
+        $result = [
+            'error' => false,
+            'css'   => 'alert-success',
+            'title' => __d('gl', "正常に登録が完了しました。"),
+            'msg'   => '',
+        ];
+        $this->_ajaxPreProcess('post');
+        return $this->_ajaxGetResponse($result);
     }
 
     function download_team_members_csv()
