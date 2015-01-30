@@ -141,7 +141,7 @@ class UsersController extends AppController
         }
 
         // リクエストデータが無い場合は登録画面を表示
-        if (!$this->request->is('post') && empty($this->request->data)) {
+        if (!$this->request->is('post') || empty($this->request->data)) {
             $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
             return;
