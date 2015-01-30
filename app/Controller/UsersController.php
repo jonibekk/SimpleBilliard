@@ -485,21 +485,21 @@ class UsersController extends AppController
      */
     public function change_password()
     {
-        if ($this->request->is('put') && !empty($this->request->data)) {
-            try {
-                $this->User->changePassword($this->request->data);
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "パスワードの変更に失敗しました")]);
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($this->referer());
-            }
-            $this->Pnotify->outSuccess(__d('gl', "パスワードを変更しました。"));
+        if (!$this->_isExistPutData()) {
+            throw new NotFoundException();
+        }
+
+        try {
+            $this->User->changePassword($this->request->data);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "パスワードの変更に失敗しました")]);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        else {
-            throw new NotFoundException();
-        }
+        $this->Pnotify->outSuccess(__d('gl', "パスワードを変更しました。"));
+
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -507,25 +507,24 @@ class UsersController extends AppController
      */
     public function change_email()
     {
-        if ($this->request->is('put') && !empty($this->request->data)) {
-            try {
-                $email_data = $this->User->addEmail($this->request->data, $this->Auth->user('id'));
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage());
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($this->referer());
-            }
+        if (!$this->_isExistPutData()) {
+            throw new NotFoundException();
+        }
 
-            $this->Pnotify->outInfo(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
-            $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
-                                                      $email_data['Email']['email_token']);
-
+        try {
+            $email_data = $this->User->addEmail($this->request->data, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        else {
-            throw new NotFoundException();
-        }
+
+        $this->Pnotify->outInfo(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
+        $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
+                                                  $email_data['Email']['email_token']);
+
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     /**
