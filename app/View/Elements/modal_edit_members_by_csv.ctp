@@ -64,6 +64,7 @@
                                                     'css'          => false,
                                                     'wrapInput'    => false,
                                                     'errorMessage' => false,
+                                                    'accept'       => ".csv",
                                                    ]) ?>
                             </span>
                             <span class="fileinput-filename"></span>
