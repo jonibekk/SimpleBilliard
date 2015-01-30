@@ -101,6 +101,7 @@ if (!isset($id_prefix)) {
                                          'wrapInput'    => false,
                                          'errorMessage' => false,
                                          'required'     => false,
+                                         'accept'       => 'image/*',
                                          'id'           => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index
                                         ]) ?>
             </span>
