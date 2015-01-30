@@ -141,7 +141,7 @@ class UsersController extends AppController
         }
 
         // リクエストデータが無い場合は登録画面を表示
-        if (!$this->request->is('post') || empty($this->request->data)) {
+        if (!$this->_isExistPostData()) {
             $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
             return $this->render();
@@ -220,7 +220,7 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
 
         // リクエストデータが無い場合は入力画面を表示
-        if (!$this->request->is('put') || empty($this->request->data)) {
+        if (!$this->_isExistPutData()) {
             $this->request->data = ['User' => $me];
             $language_name = $this->Lang->availableLanguages[$me['language']];
             $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
@@ -358,10 +358,9 @@ class UsersController extends AppController
         }
 
         $this->layout = LAYOUT_ONE_COLUMN;
-        $notExistRequestData = !$this->request->is('post') || empty($this->request->data);
 
         if (!$token) {
-            if ($notExistRequestData) {
+            if (!$this->_isExistPostData()) {
                 return $this->render('password_reset_request');
             }
 
@@ -385,7 +384,7 @@ class UsersController extends AppController
             return $this->redirect(['action' => 'password_reset']);
         }
 
-        if ($notExistRequestData) {
+        if (!$this->_isExistPostData()) {
             return $this->render('password_reset');
         }
 
