@@ -349,50 +349,57 @@ class UsersController extends AppController
     }
 
     /**
-     * パスワードリセット
+     * Password reset
      */
     public function password_reset($token = null)
     {
+
         if ($this->Auth->user()) {
             throw new NotFoundException();
         }
+
         $this->layout = LAYOUT_ONE_COLUMN;
-        //トークンがある場合はパスワードリセット画面
-        if ($token) {
-            //トークンが正しく期限内の場合
-            if ($user_email = $this->User->checkPasswordToken($token)) {
-                if ($this->request->is('post') && !empty($this->request->data)) {
-                    //パスワードリセット完了した場合
-                    if ($this->User->passwordReset($user_email, $this->request->data)) {
-                        //パスワードリセット完了の旨をユーザに通知
-                        $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
-                        $this->Pnotify->outSuccess(__d('gl', "新しいパスワードでログインしてください。"),
-                                                   ['title' => __d('gl', 'パスワードを設定しました')]);
-                        return $this->redirect(['action' => 'login']);
-                    }
-                }
-                return $this->render('password_reset');
+        $notExistRequestData = !$this->request->is('post') || empty($this->request->data);
+
+        if (!$token) {
+            if ($notExistRequestData) {
+                return $this->render('password_reset_request');
             }
-            //トークンが正しくないor期限外
-            else {
-                $this->Pnotify->outError(__d('gl', "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"),
-                                         ['title' => __d('gl', "トークンの認証に失敗しました。")]);
-                return $this->redirect(['action' => 'password_reset']);
+
+            // Search user
+            $user = $this->User->passwordResetPre($this->request->data);
+            if ($user) {
+                // Send mail containing token
+                $this->GlEmail->sendMailPasswordReset($user['User']['id'], $user['User']['password_token']);
+                $this->Pnotify->outSuccess(__d('gl', "パスワード再設定のメールを送信しました。ご確認ください。"),
+                                           ['title' => __d('gl', "メールを送信しました")]);
             }
+            return $this->render('password_reset_request');
         }
-        //トークンがない場合はメールアドレス入力画面
-        else {
-            if ($this->request->is('post') && !empty($this->request->data)) {
-                //パスワード認証情報登録成功した場合
-                if ($user = $this->User->passwordResetPre($this->request->data)) {
-                    //メールでトークンを送信
-                    $this->GlEmail->sendMailPasswordReset($user['User']['id'], $user['User']['password_token']);
-                    $this->Pnotify->outSuccess(__d('gl', "パスワード再設定のメールを送信しました。ご確認ください。"),
-                                               ['title' => __d('gl', "メールを送信しました")]);
-                }
-            }
+
+        // Token existing case
+        $user_email = $this->User->checkPasswordToken($token);
+
+        if (!$user_email) {
+            $this->Pnotify->outError(__d('gl', "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"),
+                                     ['title' => __d('gl', "トークンの認証に失敗しました。")]);
+            return $this->redirect(['action' => 'password_reset']);
         }
-        return $this->render('password_reset_request');
+
+        if ($notExistRequestData) {
+            return $this->render('password_reset');
+        }
+
+        $successPasswordReset = $this->User->passwordReset($user_email, $this->request->data);
+        if ($successPasswordReset) {
+            // Notify to user reset password
+            $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
+            $this->Pnotify->outSuccess(__d('gl', "新しいパスワードでログインしてください。"),
+                                       ['title' => __d('gl', 'パスワードを設定しました')]);
+            return $this->redirect(['action' => 'login']);
+        }
+        return $this->render('password_reset');
+
     }
 
     public function token_resend()
