@@ -537,32 +537,26 @@ class UsersController extends AppController
     public function accept_invite($token)
     {
         try {
-            //トークンが有効かチェック
+            // Check token available
             $this->Invite->confirmToken($token);
-            //登録ユーザ宛の場合
-            if ($this->Invite->isUser($token)) {
-                //ログイン済みじゃない場合はログイン画面
-                if (!$this->Auth->user()) {
-                    $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
-                    return $this->redirect(['action' => 'login']);
-                }
-                //ログイン済みの場合は、TeamMember保存でチーム切り替えてホームへ
-                else {
-                    //自分宛かチェック
-                    if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
-                        throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
-                    }
-                    //チーム参加
-                    $team = $this->_joinTeam($token);
-                    $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
-                    //ホームへリダイレクト
-                    return $this->redirect("/");
-                }
-            }
-            else {
-                //新規ユーザ登録
+
+            if (!$this->Invite->isUser($token)) {
                 return $this->redirect(['action' => 'register', 'invite_token' => $token]);
             }
+
+            if (!$this->Auth->user()) {
+                $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
+                return $this->redirect(['action' => 'login']);
+            }
+
+            // Not allow invite me
+            if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
+                throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
+            }
+
+            $team = $this->_joinTeam($token);
+            $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
+            return $this->redirect("/");
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect("/");
