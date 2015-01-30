@@ -468,4 +468,12 @@ class AppController extends Controller
         $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
     }
 
+    public function _isExistPostData() {
+        return $this->request->is('post') && !empty($this->request->data);
+    }
+
+    public function _isExistPutData() {
+        return $this->request->is('put') && !empty($this->request->data);
+    }
+
 }
