@@ -53,6 +53,21 @@ $(document).ready(function () {
     $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
     });
+
+    $('.fileinput-enabled-submit').fileinput()
+        //ファイル選択時にsubmitボタンを有効化する
+        .on('change.bs.fileinput', function () {
+            attrUndefinedCheck(this, 'submit-id');
+            var id = $(this).attr('submit-id');
+            $("#" + id).removeAttr('disabled');
+        })
+        //リセット時にsubmitボタンを無効化する
+        .on('clear.bs.fileinput', function () {
+            attrUndefinedCheck(this, 'submit-id');
+            var id = $(this).attr('submit-id');
+            $("#" + id).attr('disabled', 'disabled');
+        });
+
     //チーム切り換え
     $('#SwitchTeam').change(function () {
         var val = $(this).val();
@@ -94,7 +109,7 @@ $(document).ready(function () {
         selector: '[data-toggle="tooltip"]'
     });
     //form二重送信防止
-    $(document).on('submit','form',function(){
+    $(document).on('submit', 'form', function () {
         $(this).find('input:submit').attr('disabled', 'disabled');
     });
     /**

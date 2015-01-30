@@ -52,7 +52,8 @@
                     <p><?= __d('gl', "新しいメンバーを追加したファイルをアップロードしてください。") ?></p>
 
                     <div class="">
-                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput fileinput-new fileinput-enabled-submit" data-provides="fileinput"
+                             submit-id="AddMembersSubmit">
                             <span class="btn btn-default btn-file">
                                 <span class="fileinput-new"><?= __d('gl', "ファイルを選択") ?></span>
                                 <span class="fileinput-exists"><?= __d('gl', "別のファイルに変更する") ?></span>
@@ -82,7 +83,7 @@
                                                              "キャンセル") ?></button>
                         <?=
                         $this->Form->submit(__d('gl', "追加する"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => 'AddMembersSubmit']) ?>
 
                     </div>
                 </div>
