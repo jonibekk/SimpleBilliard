@@ -140,46 +140,67 @@ class UsersController extends AppController
             }
         }
 
-        if ($this->request->is('post') && !empty($this->request->data)) {
-            //タイムゾーンをセット
-            if (isset($this->request->data['User']['local_date'])) {
-                //ユーザのローカル環境から取得したタイムゾーンをセット
-                $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
-                $this->request->data['User']['timezone'] = $timezone;
-                //自動タイムゾーン設定フラグをoff
-                $this->request->data['User']['auto_timezone_flg'] = false;
-            }
-            //言語を保存
-            $this->request->data['User']['language'] = $this->Lang->getLanguage();
-            //トークン付きは本登録
-            if (isset($this->request->params['named']['invite_token'])) {
-                //ユーザ登録成功
-                if ($this->User->userRegistration($this->request->data, false)) {
-                    //ログイン
-                    $this->_autoLogin($this->User->getLastInsertID());
-                    //チーム参加
-                    $this->_joinTeam($this->request->params['named']['invite_token']);
-                    //ホーム画面でモーダル表示
-                    $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
-                    //プロフィール画面に遷移
-                    $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
-                }
-            }
-            else {
-                //ユーザ仮登録成功
-                if ($this->User->userRegistration($this->request->data)) {
-                    //ユーザにメール送信
-                    $this->GlEmail->sendMailUserVerify($this->User->id,
-                                                       $this->User->Email->data['Email']['email_token']);
-                    $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
-                    $this->redirect(['action' => 'sent_mail']);
-                }
-            }
+        // リクエストデータが無い場合は登録画面を表示
+        if (!$this->request->is('post') && empty($this->request->data)) {
+            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $this->set(compact('last_first'));
+            return;
         }
 
-        //姓名の並び順をセット
-        $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-        $this->set(compact('last_first'));
+        //タイムゾーンをセット
+        if (isset($this->request->data['User']['local_date'])) {
+            //ユーザのローカル環境から取得したタイムゾーンをセット
+            $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
+            $this->request->data['User']['timezone'] = $timezone;
+            //自動タイムゾーン設定フラグをoff
+            $this->request->data['User']['auto_timezone_flg'] = false;
+        }
+
+        //言語を保存
+        $this->request->data['User']['language'] = $this->Lang->getLanguage();
+
+        // トークンが存在しない場合はユーザ仮登録
+        if (!isset($this->request->params['named']['invite_token'])) {
+            // 仮登録実行
+            $isSuccessTmpReg = $this->User->userRegistration($this->request->data);
+
+            // 仮登録失敗
+            if (!$isSuccessTmpReg) {
+                //姓名の並び順をセット
+                $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+                $this->set(compact('last_first'));
+                return;
+            }
+
+            // 仮登録成功
+            // ユーザにメール送信
+            $this->GlEmail->sendMailUserVerify($this->User->id,
+                                               $this->User->Email->data['Email']['email_token']);
+            $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
+            $this->redirect(['action' => 'sent_mail']);
+        }
+
+        // ユーザ本登録
+        $isSuccessMainReg = $this->User->userRegistration($this->request->data, false);
+
+        // 本登録失敗
+        if (!$isSuccessMainReg) {
+            //姓名の並び順をセット
+            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $this->set(compact('last_first'));
+            return;
+        }
+
+        // 本登録成功
+        //ログイン
+        $this->_autoLogin($this->User->getLastInsertID());
+        //チーム参加
+        $this->_joinTeam($this->request->params['named']['invite_token']);
+        //ホーム画面でモーダル表示
+        $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+        //プロフィール画面に遷移
+        $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
+
     }
 
     /**
