@@ -123,7 +123,7 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         //ログイン済の場合はトップへ
         if ($this->Auth->user()) {
-            $this->redirect('/');
+            return $this->redirect('/');
         }
         //トークン付きの場合はメアドデータを取得
         if (isset($this->request->params['named']['invite_token'])) {
@@ -132,7 +132,7 @@ class UsersController extends AppController
                 $this->Invite->confirmToken($this->request->params['named']['invite_token']);
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
-                $this->redirect('/');
+                return $this->redirect('/');
             }
             $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
             if (isset($invite['Invite']['email'])) {
@@ -144,7 +144,7 @@ class UsersController extends AppController
         if (!$this->request->is('post') || empty($this->request->data)) {
             $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
-            return;
+            return $this->render();
         }
 
         //タイムゾーンをセット
@@ -169,7 +169,7 @@ class UsersController extends AppController
                 //姓名の並び順をセット
                 $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
                 $this->set(compact('last_first'));
-                return;
+                return $this->render();
             }
 
             // 仮登録成功
@@ -177,7 +177,7 @@ class UsersController extends AppController
             $this->GlEmail->sendMailUserVerify($this->User->id,
                                                $this->User->Email->data['Email']['email_token']);
             $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
-            $this->redirect(['action' => 'sent_mail']);
+            return $this->redirect(['action' => 'sent_mail']);
         }
 
         // ユーザ本登録
@@ -188,7 +188,7 @@ class UsersController extends AppController
             //姓名の並び順をセット
             $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
-            return;
+            return $this->render();
         }
 
         // 本登録成功
@@ -199,7 +199,7 @@ class UsersController extends AppController
         //ホーム画面でモーダル表示
         $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
         //プロフィール画面に遷移
-        $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
+        return $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
 
     }
 
@@ -318,7 +318,7 @@ class UsersController extends AppController
             //例外の場合は、トークン再送信画面へ
             $this->Pnotify->outError($e->getMessage());
             //トークン再送メージへ
-            $this->redirect(['action' => 'token_resend']);
+            return $this->redirect(['action' => 'token_resend']);
         }
     }
 
@@ -368,7 +368,7 @@ class UsersController extends AppController
                         $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
                         $this->Pnotify->outSuccess(__d('gl', "新しいパスワードでログインしてください。"),
                                                    ['title' => __d('gl', 'パスワードを設定しました')]);
-                        $this->redirect(['action' => 'login']);
+                        return $this->redirect(['action' => 'login']);
                     }
                 }
                 return $this->render('password_reset');
@@ -377,7 +377,7 @@ class UsersController extends AppController
             else {
                 $this->Pnotify->outError(__d('gl', "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"),
                                          ['title' => __d('gl', "トークンの認証に失敗しました。")]);
-                $this->redirect(['action' => 'password_reset']);
+                return $this->redirect(['action' => 'password_reset']);
             }
         }
         //トークンがない場合はメールアドレス入力画面
@@ -540,7 +540,7 @@ class UsersController extends AppController
                 //ログイン済みじゃない場合はログイン画面
                 if (!$this->Auth->user()) {
                     $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
-                    $this->redirect(['action' => 'login']);
+                    return $this->redirect(['action' => 'login']);
                 }
                 //ログイン済みの場合は、TeamMember保存でチーム切り替えてホームへ
                 else {
@@ -552,16 +552,16 @@ class UsersController extends AppController
                     $team = $this->_joinTeam($token);
                     $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
                     //ホームへリダイレクト
-                    $this->redirect("/");
+                    return $this->redirect("/");
                 }
             }
             else {
                 //新規ユーザ登録
-                $this->redirect(['action' => 'register', 'invite_token' => $token]);
+                return $this->redirect(['action' => 'register', 'invite_token' => $token]);
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
-            $this->redirect("/");
+            return $this->redirect("/");
         }
     }
 
