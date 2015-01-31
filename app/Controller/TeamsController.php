@@ -114,30 +114,8 @@ class TeamsController extends AppController
 
         $this->layout = false;
         $filename = 'add_member_csv_format';
-        //見出し
-        $th = [
-            __d('gl', "メール(*)"),
-            __d('gl', "メンバーID(*)"),
-            __d('gl', "ローマ字名(*)"),
-            __d('gl', "ローマ字姓(*)"),
-            __d('gl', "メンバーのアクティブ状態(*)"),
-            __d('gl', "管理者(*)"),
-            __d('gl', "メンバータイプ(*)"),
-            __d('gl', "評価対象(*)"),
-            __d('gl', "グループ"),
-            __d('gl', "ローカル姓名の言語コード"),
-            __d('gl', "ローカル名"),
-            __d('gl', "ローカル姓"),
-            __d('gl', "電話"),
-            __d('gl', "性別"),
-            __d('gl', "誕生年"),
-            __d('gl', "誕生月"),
-            __d('gl', "誕生日"),
-            __d('gl', "コーチID"),
-            __d('gl', "評価者1"),
-            __d('gl', "評価者2"),
-            __d('gl', "評価者3"),
-        ];
+        //heading
+        $th = $this->_getCsvHeading(true);
         $td = [];
         $this->set(compact('filename', 'th', 'td'));
     }
@@ -162,20 +140,8 @@ class TeamsController extends AppController
         $filename = 'team_members_' . date('YmdHis');
 
         //見出し
-        $th = [
-            __d('gl', "メンバーID(*)"),
-            __d('gl', "メール(*, 変更できません)"),
-            __d('gl', "ローマ字名(*, 変更できません)"),
-            __d('gl', "ローマ字姓(*, 変更できません)"),
-            __d('gl', "管理者(*)"),
-            __d('gl', "メンバータイプ(*)"),
-            __d('gl', "評価対象(*)"),
-            __d('gl', "グループ"),
-            __d('gl', "コーチID"),
-            __d('gl', "評価者1"),
-            __d('gl', "評価者2"),
-            __d('gl', "評価者3"),
-        ];
+        $th = $this->_getCsvHeading(false);
+
         $dummy_datas = [
             0 => [
                 'a' => 'abc',
@@ -212,6 +178,57 @@ class TeamsController extends AppController
         $this->_switchTeam($team_id, $this->Auth->user('id'));
         $this->Pnotify->outSuccess(__d('gl', "チームを「%s」に切り換えました。", $my_teams[$team_id]));
         return $this->render();
+    }
+
+    /**
+     * get CSV heading
+     *
+     * @param bool $new
+     *
+     * @return array
+     */
+    function _getCsvHeading($new = true)
+    {
+        if ($new) {
+            return [
+                __d('gl', "メール(*)"),
+                __d('gl', "メンバーID(*)"),
+                __d('gl', "ローマ字名(*)"),
+                __d('gl', "ローマ字姓(*)"),
+                __d('gl', "メンバーのアクティブ状態(*)"),
+                __d('gl', "管理者(*)"),
+                __d('gl', "メンバータイプ(*)"),
+                __d('gl', "評価対象(*)"),
+                __d('gl', "グループ"),
+                __d('gl', "ローカル姓名の言語コード"),
+                __d('gl', "ローカル名"),
+                __d('gl', "ローカル姓"),
+                __d('gl', "電話"),
+                __d('gl', "性別"),
+                __d('gl', "誕生年"),
+                __d('gl', "誕生月"),
+                __d('gl', "誕生日"),
+                __d('gl', "コーチID"),
+                __d('gl', "評価者1"),
+                __d('gl', "評価者2"),
+                __d('gl', "評価者3"),
+            ];
+        }
+        return [
+            __d('gl', "メンバーID(*)"),
+            __d('gl', "メール(*, 変更できません)"),
+            __d('gl', "ローマ字名(*, 変更できません)"),
+            __d('gl', "ローマ字姓(*, 変更できません)"),
+            __d('gl', "管理者(*)"),
+            __d('gl', "メンバータイプ(*)"),
+            __d('gl', "評価対象(*)"),
+            __d('gl', "グループ"),
+            __d('gl', "コーチID"),
+            __d('gl', "評価者1"),
+            __d('gl', "評価者2"),
+            __d('gl', "評価者3"),
+        ];
+
     }
 
 }
