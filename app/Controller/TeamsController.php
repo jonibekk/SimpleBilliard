@@ -18,7 +18,7 @@ class TeamsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        if(!$this->request->is('post')){
+        if (!$this->request->is('post')) {
             return $this->render();
         }
 
@@ -56,59 +56,63 @@ class TeamsController extends AppController
 
         $team_id = $this->Session->read('current_team_id');
         $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
-        if ($this->request->is('post') && !empty($this->request->data)) {
-            $data = $this->request->data;
-            //複数のメールアドレスを配列に抜き出す
-            if ($email_list = $this->Team->getEmailListFromPost($data)) {
-                $allReadyBelongTeamEmails = [];
-                $sentEmails = [];
-                //１件ずつtokenを発行し、メール送信
-                foreach ($email_list as $email) {
-                    //既にチームに所属している場合は処理しない
-                    if ($this->User->Email->isBelongTeamByEmail($email, $team_id)) {
-                        $allReadyBelongTeamEmails[] = $email;
-                        continue;
-                    }
-                    //招待メールデータの登録
-                    $invite = $this->Team->Invite->saveInvite(
-                        $email,
-                        $team_id,
-                        $this->Auth->user('id'),
-                        !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
-                    );
-                    //招待メール送信
-                    $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
-                    $this->GlEmail->sendMailInvite($invite, $team_name);
-                    $sentEmails[] = $email;
-                }
-                if (!empty($sentEmails)) {
-                    //１件以上メール送信している場合はホームリダイレクト
-                    $msg = __d('gl', "%s人に招待メールを送信しました。", count($sentEmails)) . "\n";
-                    if (!empty($allReadyBelongTeamEmails)) {
-                        $msg .= __d('gl', "%s人は既にチームに参加しているユーザの為、メール送信をキャンセルしました。", count($allReadyBelongTeamEmails));
-                    }
-                    $this->Pnotify->outSuccess($msg);
-                    if ($from_setting) {
-                        $this->redirect($this->referer());
-                    }
-                    else {
-                        /** @noinspection PhpVoidFunctionResultUsedInspection */
-                        $this->redirect('/');
-                    }
-                }
-                else {
-                    //１件も送信していない場合は既にチームに参加済みのユーザの為、再入力
-                    $this->Pnotify->outError(__d('gl', "入力した全てのメールアドレスのユーザは既にチームに参加している為、メール送信をキャンセルしました。"));
-                }
-            }
-            else {
-                $this->Pnotify->outError(__d('gl', "メールアドレスが正しくありません。"));
-            }
-            $this->redirect($this->referer());
-        }
-        else {
+
+        if (!$this->request->is('post')) {
             $this->layout = LAYOUT_ONE_COLUMN;
+            return $this->render();
         }
+
+        $data = $this->request->data;
+        //convert mail-address to array
+        $email_list = $this->Team->getEmailListFromPost($data);
+
+        //not exists correct email address.
+        if (!$email_list) {
+            $this->Pnotify->outError(__d('gl', "メールアドレスが正しくありません。"));
+            return $this->redirect($this->referer());
+        }
+
+        $alreadyBelongTeamEmails = [];
+        $sentEmails = [];
+        //generate token and send mail one by one.
+        foreach ($email_list as $email) {
+            //don't process in case of exists in team.
+            if ($this->User->Email->isBelongTeamByEmail($email, $team_id)) {
+                $alreadyBelongTeamEmails[] = $email;
+                continue;
+            }
+            //save invite mail data
+            $invite = $this->Team->Invite->saveInvite(
+                $email,
+                $team_id,
+                $this->Auth->user('id'),
+                !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
+            );
+            //send invite mail
+            $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
+            $this->GlEmail->sendMailInvite($invite, $team_name);
+            $sentEmails[] = $email;
+        }
+
+        $already_joined_usr_msg = null;
+        if (!empty($alreadyBelongTeamEmails)) {
+            $already_joined_usr_msg .= __d('gl', "%s人は既にチームに参加しているユーザの為、メール送信をキャンセルしました。",
+                                           count($alreadyBelongTeamEmails));
+        }
+
+        if (empty($sentEmails)) {
+            $this->Pnotify->outError($already_joined_usr_msg);
+            return $this->redirect($this->referer());
+        }
+
+        $msg = __d('gl', "%s人に招待メールを送信しました。", count($sentEmails)) . "\n" . $already_joined_usr_msg;
+        $this->Pnotify->outSuccess($msg);
+
+        if (!$from_setting) {
+            return $this->redirect('/');
+        }
+
+        return $this->redirect($this->referer());
     }
 
     function download_add_members_csv_format()
