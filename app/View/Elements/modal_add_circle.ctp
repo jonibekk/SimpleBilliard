@@ -104,10 +104,11 @@
                                                 'css'          => false,
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
+                                                'accept'       => 'image/*',
                                                ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __d('gl',
-                                                                                   '10MB以下') ?></span>
+                                                                                        '10MB以下') ?></span>
                             </div>
                         </div>
 

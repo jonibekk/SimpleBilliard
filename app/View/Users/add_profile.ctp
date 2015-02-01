@@ -32,14 +32,14 @@
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('LocalName.0.last_name', [
-                        'label'    => __d('gl', "姓(%s)", $language_name),
+                        'label'       => __d('gl', "姓(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 鈴木"),
-                        'required' => false,
+                        'required'    => false,
                     ]);
                     $local_first_name = $this->Form->input('LocalName.0.first_name', [
-                        'label'    => __d('gl', "名(%s)", $language_name),
+                        'label'       => __d('gl', "名(%s)", $language_name),
                         'placeholder' => __d('gl', "例) 太郎"),
-                        'required' => false,
+                        'required'    => false,
                     ]);
                     if ($me['last_first']) {
                         echo $local_last_name;
@@ -83,11 +83,11 @@
                 $this->Form->input('gender_type',
                                    [
                                        'type'    => 'radio',
-                                       'before' => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
+                                       'before'  => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
                                            . __d('gl', '性別') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
-                                       'class'  => 'radio-inline profile-radio-inline'
+                                       'class'   => 'radio-inline profile-radio-inline'
                                    ])
                 ?>
                 <hr>
@@ -116,7 +116,7 @@
                                 'separator'  => ' / ',
                                 'maxYear'    => date('Y'),
                                 'minYear'    => '1910',
-                                'wrapInput' => 'col col-sm-6 form-inline',
+                                'wrapInput'  => 'col col-sm-6 form-inline',
                             ]);
                 ?>
                 <?=
@@ -159,9 +159,10 @@
                                                 'label'        => false,
                                                 'div'          => false,
                                                 'css'          => false,
-                                                'style' => 'x_large',
+                                                'style'        => 'x_large',
                                                 'wrapInput'    => false,
-                                                'errorMessage' => false
+                                                'errorMessage' => false,
+                                                'accept'       => 'image/*',
                                                ]) ?>
                         </span>
                             </div>
