@@ -44,6 +44,10 @@ class TeamsController extends AppController
             $this->Pnotify->outError($e);
             $this->redirect($this->referer());
         }
+        $team = $this->Team->findById($team_id);
+        $this->set(compact('team'));
+
+        return $this->render();
     }
 
     public function invite()
@@ -56,6 +60,8 @@ class TeamsController extends AppController
 
         $team_id = $this->Session->read('current_team_id');
         $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
+        $team = $this->Team->findById($team_id);
+        $this->set(compact('team'));
 
         if (!$this->request->is('post')) {
             $this->layout = LAYOUT_ONE_COLUMN;
