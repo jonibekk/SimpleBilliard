@@ -136,6 +136,7 @@ class TeamsController extends AppController
 
     function ajax_upload_new_members_csv()
     {
+        $this->request->allowMethod('post');
         $result = [
             'error' => false,
             'css'   => 'alert-success',
