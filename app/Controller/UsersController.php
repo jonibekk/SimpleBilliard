@@ -73,7 +73,7 @@ class UsersController extends AppController
             return $this->redirect('/');
         }
 
-        if (!$this->_isExistPostData()) {
+        if (!$this->request->is('post')) {
             return $this->render();
         }
 
@@ -141,7 +141,7 @@ class UsersController extends AppController
         }
 
         // リクエストデータが無い場合は登録画面を表示
-        if (!$this->_isExistPostData()) {
+        if (!$this->request->is('post')) {
             $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
             $this->set(compact('last_first'));
             return $this->render();
@@ -220,7 +220,7 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
 
         // リクエストデータが無い場合は入力画面を表示
-        if (!$this->_isExistPutData()) {
+        if (!$this->request->is('put')) {
             $this->request->data = ['User' => $me];
             $language_name = $this->Lang->availableLanguages[$me['language']];
             $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
@@ -360,7 +360,7 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if (!$token) {
-            if (!$this->_isExistPostData()) {
+            if (!$this->request->is('post')) {
                 return $this->render('password_reset_request');
             }
 
@@ -384,7 +384,7 @@ class UsersController extends AppController
             return $this->redirect(['action' => 'password_reset']);
         }
 
-        if (!$this->_isExistPostData()) {
+        if (!$this->request->is('post')) {
             return $this->render('password_reset');
         }
 
@@ -425,7 +425,7 @@ class UsersController extends AppController
     {
         //ユーザデータ取得
         $me = $this->_getMyUserDataForSetting();
-        if ($this->request->is('put') && !empty($this->request->data)) {
+        if ($this->request->is('put')) {
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
@@ -485,7 +485,7 @@ class UsersController extends AppController
      */
     public function change_password()
     {
-        if (!$this->_isExistPutData()) {
+        if (!$this->request->is('put')) {
             throw new NotFoundException();
         }
 
@@ -507,7 +507,7 @@ class UsersController extends AppController
      */
     public function change_email()
     {
-        if (!$this->_isExistPutData()) {
+        if (!$this->request->is('put')) {
             throw new NotFoundException();
         }
 
