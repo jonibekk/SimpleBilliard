@@ -120,12 +120,31 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/invite', ['method' => 'GET']);
     }
 
+    function testInviteFromSetting()
+    {
+        $this->_getTeamsCommonMock(null, true, true, '/teams/settings');
+
+        $emails = "aaa@example.com";
+        $data = ['Team' => ['emails' => $emails]];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
+    }
+
     function testInvitePost()
     {
         $this->_getTeamsCommonMock(null, true);
 
         $emails = "aaa@example.com";
         $data = ['Team' => ['emails' => $emails]];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testInviteNoEmails()
+    {
+        $this->_getTeamsCommonMock(null, true);
+
+        $data = ['Team' => ['emails' => 'abc']];
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/invite', ['method' => 'POST', 'data' => $data]);
     }
@@ -255,7 +274,7 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/download_team_members_csv', ['method' => 'GET']);
     }
 
-    function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true)
+    function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         $Teams = $this->generate('Teams', [
             'components' => [
@@ -263,6 +282,9 @@ class TeamsControllerTest extends ControllerTestCase
                 'Auth',
                 'Session'
             ],
+            'methods'    => [
+                'referer'
+            ]
         ]);
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Security
@@ -274,6 +296,7 @@ class TeamsControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        $Teams->expects($this->any())->method('referer')->will($this->returnValue($referer));
         if (!$value_map) {
             $value_map = [
                 [null, [
