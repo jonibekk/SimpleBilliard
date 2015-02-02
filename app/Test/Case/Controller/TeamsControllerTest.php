@@ -52,7 +52,7 @@ class TeamsControllerTest extends ControllerTestCase
      */
     public function testAdd()
     {
-        $this->testAction('/teams/add');
+        $this->testAction('/teams/add', ['method' => 'get']);
     }
 
     public function testAddPostSuccess()
