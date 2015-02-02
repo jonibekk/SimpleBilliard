@@ -6,7 +6,7 @@
  * Time: 9:59 AM
  *
  * @var CodeCompletionView $this
- * @var array              $my_teams
+ * @var array              $team
  * @var                    $from_setting
  */
 ?>
@@ -33,7 +33,7 @@
             <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __d('gl', "チーム名") ?></label>
 
             <div class="col col-sm-6">
-                <p class="form-control-static"><?= h($my_teams[$this->Session->read('current_team_id')]) ?></p>
+                <p class="form-control-static"><?= h($team['Team']['name']) ?></p>
             </div>
         </div>
         <hr>
