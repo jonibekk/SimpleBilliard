@@ -468,4 +468,5 @@ class AppController extends Controller
         $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
     }
 
+
 }
