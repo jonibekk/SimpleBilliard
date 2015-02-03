@@ -77,6 +77,7 @@ $(document).ready(function () {
         });
     });
     //投稿の共有範囲切り替え
+    /*
     $('#ChangeShareSelect2').click(function () {
         attrUndefinedCheck(this, 'show-target-id');
         attrUndefinedCheck(this, 'target-id');
@@ -86,6 +87,7 @@ $(document).ready(function () {
         $("#" + target_id).find('ul.select2-choices').click();
         return false;
     });
+    */
     //autosize
     //noinspection JSJQueryEfficiency
     $('textarea:not(.not-autosize)').autosize();
