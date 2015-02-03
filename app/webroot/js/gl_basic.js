@@ -394,19 +394,19 @@ function uploadCsvFileByForm(e) {
     //set display none for loader and result message elm
 
     $loader.removeClass('none');
-    $result_msg
-        .addClass('none')
-        .children('.alert').removeClass('alert-success')
-        .children('.alert').removeClass('alert-danger');
+    $result_msg.addClass('none');
+    $result_msg.children('.alert').removeClass('alert-success');
+    $result_msg.children('.alert').removeClass('alert-danger');
     $submit.attr('disabled', 'disabled');
 
-    var f = $(this);
+    var $f = $(this);
     $.ajax({
-        url: f.prop('action'),
+        url: $f.prop('action'),
         method: 'post',
         dataType: 'json',
         processData: false,
-        data: f.serialize(),
+        contentType: false,
+        data: new FormData(this),
         timeout: 10000
     })
         .done(function (data) {

@@ -200,4 +200,114 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    /**
+     * save new members from csv
+     * return data as:
+     * $res = [
+     * 'error'         => false,
+     * 'success_count' => 0,
+     * 'error_line_no' => 0,
+     * 'error_msg'     => null,
+     * ];
+     *
+     * @param array $request_data from Controller
+     *
+     * @return array
+     */
+    function saveNewMembersFromCsv($request_data)
+    {
+        $res = [
+            'error'         => false,
+            'success_count' => 0,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+        $csv_array = convertCsvToArray($request_data['Team']['csv_file']['tmp_name']);
+        $validate = $this->validateNewMemberCsvData($csv_array);
+        if ($validate['error']) {
+            return array_merge($res, $validate);
+        }
+        //save process
+
+        return $res;
+    }
+
+    /**
+     * validate new member csv data
+     *
+     * @param array $csv_data
+     *
+     * @return array
+     */
+    function validateNewMemberCsvData($csv_data)
+    {
+        $res = [
+            'error'         => true,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+
+        foreach ($csv_data as $key => $record) {
+            //first record check
+            if ($key == 0 && !empty(array_diff($record, $this->_getCsvHeading()))) {
+                $res['error_msg'] = __d('gl', "見出しが一致しません。");
+                return $res;
+            }
+        }
+
+        $res['error'] = false;
+        return $res;
+    }
+
+    /**
+     * get CSV heading
+     *
+     * @param bool $new
+     *
+     * @return array
+     */
+    function _getCsvHeading($new = true)
+    {
+        if ($new) {
+            return [
+                __d('gl', "メール(*)"),
+                __d('gl', "メンバーID(*)"),
+                __d('gl', "ローマ字名(*)"),
+                __d('gl', "ローマ字姓(*)"),
+                __d('gl', "メンバーのアクティブ状態(*)"),
+                __d('gl', "管理者(*)"),
+                __d('gl', "メンバータイプ(*)"),
+                __d('gl', "評価対象(*)"),
+                __d('gl', "グループ"),
+                __d('gl', "ローカル姓名の言語コード"),
+                __d('gl', "ローカル名"),
+                __d('gl', "ローカル姓"),
+                __d('gl', "電話"),
+                __d('gl', "性別"),
+                __d('gl', "誕生年"),
+                __d('gl', "誕生月"),
+                __d('gl', "誕生日"),
+                __d('gl', "コーチID"),
+                __d('gl', "評価者1"),
+                __d('gl', "評価者2"),
+                __d('gl', "評価者3"),
+            ];
+        }
+        return [
+            __d('gl', "メンバーID(*)"),
+            __d('gl', "メール(*, 変更できません)"),
+            __d('gl', "ローマ字名(*, 変更できません)"),
+            __d('gl', "ローマ字姓(*, 変更できません)"),
+            __d('gl', "管理者(*)"),
+            __d('gl', "メンバータイプ(*)"),
+            __d('gl', "評価対象(*)"),
+            __d('gl', "グループ"),
+            __d('gl', "コーチID"),
+            __d('gl', "評価者1"),
+            __d('gl', "評価者2"),
+            __d('gl', "評価者3"),
+        ];
+
+    }
+
 }

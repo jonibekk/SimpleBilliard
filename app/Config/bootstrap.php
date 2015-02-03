@@ -174,3 +174,38 @@ function viaIsSet(&$val)
 {
     return isset($val) ? $val : null;
 }
+
+/**
+ * convert csv to array
+ *
+ * @param $tmp_file_name
+ *
+ * @return array
+ */
+function convertCsvToArray($tmp_file_name)
+{
+    //Stores CSV to array
+    $res = [];
+    $fileName = CACHE . 'new_add_member_' . md5(microtime()) . '.csv';
+    if (is_uploaded_file($tmp_file_name)) {
+        move_uploaded_file($tmp_file_name, $fileName);
+        $pre_data = file_get_contents($fileName);
+        file_put_contents($fileName, mb_convert_encoding($pre_data, "UTF-8", "SJIS-win"));
+        // during empty data,read csv every one line.
+        $fp = fopen($fileName, 'r');
+        //Japanese disappears when read the multi-byte string using fgetcsv in PHP5,
+        // or because some disappear phenomenon occurs the measures.
+        setlocale(LC_ALL, 'ja_JP.UTF-8');
+        $l_no = 0;
+        while ($ret_csv = fgetcsv($fp)) {
+            for ($i = 0; $i < count($ret_csv); ++$i) {
+                $res[$l_no][] = $ret_csv[$i];
+            }
+            $l_no++;
+        }
+        fclose($fp);
+        unlink($fileName);
+    }
+
+    return $res;
+}
