@@ -250,17 +250,27 @@ class TeamMember extends AppModel
         //validation each line of csv data.
         foreach ($csv_data as $key => $row) {
             //first record check
-            if ($key == 0 && !empty(array_diff($row, $this->_getCsvHeading()))) {
-                $res['error_msg'] = __d('gl', "見出しが一致しません。");
-                return $res;
+            if ($key == 0) {
+                if (!empty(array_diff($row, $this->_getCsvHeading()))) {
+                    $res['error_msg'] = __d('gl', "見出しが一致しません。");
+                    return $res;
+                }
+                continue;
             }
+            //set line no
             $res['error_line_no'] = $key + 1;
+
             //Mail(*)
             if (!viaIsSet($row[0])) {
                 $res['error_msg'] = __d('gl', "メールアドレスは必須項目です。");
-
                 return $res;
             }
+            $this->User->Email->set(['email' => $row[0]]);
+            if (!$this->User->Email->validates()) {
+                $res['error_msg'] = __d('gl', "メールアドレスが正しくありません。");
+                return $res;
+            }
+            //already joined team check
 
             //Member ID(*)
             if (!viaIsSet($row[1])) {
