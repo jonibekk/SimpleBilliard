@@ -190,7 +190,10 @@ function convertCsvToArray($tmp_file_name)
     if (is_uploaded_file($tmp_file_name)) {
         move_uploaded_file($tmp_file_name, $fileName);
         $pre_data = file_get_contents($fileName);
-        file_put_contents($fileName, mb_convert_encoding($pre_data, "UTF-8", "SJIS-win"));
+        //unify the new line code
+        //convert encoding
+        file_put_contents($fileName,
+                          mb_convert_encoding(preg_replace("/\r\n|\r|\n/", "\n", $pre_data), "UTF-8", "SJIS-win"));
         // during empty data,read csv every one line.
         $fp = fopen($fileName, 'r');
         //Japanese disappears when read the multi-byte string using fgetcsv in PHP5,
