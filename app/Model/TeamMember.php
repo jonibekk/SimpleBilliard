@@ -247,12 +247,70 @@ class TeamMember extends AppModel
             'error_msg'     => null,
         ];
 
-        foreach ($csv_data as $key => $record) {
+        //validation each line of csv data.
+        foreach ($csv_data as $key => $row) {
             //first record check
-            if ($key == 0 && !empty(array_diff($record, $this->_getCsvHeading()))) {
+            if ($key == 0 && !empty(array_diff($row, $this->_getCsvHeading()))) {
                 $res['error_msg'] = __d('gl', "見出しが一致しません。");
                 return $res;
             }
+            $res['error_line_no'] = $key + 1;
+            //Mail(*)
+            if (!viaIsSet($row[0])) {
+                $res['error_msg'] = __d('gl', "メールアドレスは必須項目です。");
+
+                return $res;
+            }
+
+            //Member ID(*)
+            if (!viaIsSet($row[1])) {
+                $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
+                return $res;
+            }
+            //First Name(*)
+            if (!viaIsSet($row[2])) {
+                $res['error_msg'] = __d('gl', "ローマ字名は必須項目です。");
+                return $res;
+            }
+            //Last Name(*)
+            if (!viaIsSet($row[3])) {
+                $res['error_msg'] = __d('gl', "ローマ字姓は必須項目です。");
+                return $res;
+            }
+            //Member Active State(*)
+            if (!viaIsSet($row[4])) {
+                $res['error_msg'] = __d('gl', "メンバーのアクティブ状態は必須項目です。");
+                return $res;
+            }
+            //Administrator(*)
+            if (!viaIsSet($row[5])) {
+                $res['error_msg'] = __d('gl', "管理者は必須項目です。");
+                return $res;
+            }
+            //Member Type(*)
+            if (!viaIsSet($row[6])) {
+                $res['error_msg'] = __d('gl', "メンバータイプは必須項目です。");
+                return $res;
+            }
+            //Evaluated(*)
+            if (!viaIsSet($row[7])) {
+                $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
+                return $res;
+            }
+            //Group
+            //Local Name Language Code
+            //Local First Name
+            //Local Last Name
+            //Phone
+            //Gender
+            //Birth Year
+            //Birth Month
+            //Birth Day
+            //Coach Member ID
+            //Rater1 Member ID
+            //Rater2 Member ID
+            //Rater3 Member ID
+
         }
 
         $res['error'] = false;

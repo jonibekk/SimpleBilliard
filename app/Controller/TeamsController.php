@@ -152,7 +152,7 @@ class TeamsController extends AppController
                 $result['title'] = __d('gl', "エラーがあります。");
             }
             else {
-                $result['title'] = __d('gl', "%s行目でエラーがあります。", $save_res['error_line_no']);
+                $result['title'] = __d('gl', "%s行目でエラーがあります(行番号は見出し含む)。", $save_res['error_line_no']);
             }
             $result['msg'] = $save_res['error_msg'];
         }
