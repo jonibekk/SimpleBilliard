@@ -277,49 +277,90 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
                 return $res;
             }
+            //exists member id check
+
             //First Name(*)
             if (!viaIsSet($row[2])) {
                 $res['error_msg'] = __d('gl', "ローマ字名は必須項目です。");
                 return $res;
             }
+            //user validation
+
             //Last Name(*)
             if (!viaIsSet($row[3])) {
                 $res['error_msg'] = __d('gl', "ローマ字姓は必須項目です。");
                 return $res;
             }
+            //user validation
+
             //Member Active State(*)
             if (!viaIsSet($row[4])) {
                 $res['error_msg'] = __d('gl', "メンバーのアクティブ状態は必須項目です。");
                 return $res;
             }
+            // ON or OFF check
+
             //Administrator(*)
             if (!viaIsSet($row[5])) {
                 $res['error_msg'] = __d('gl', "管理者は必須項目です。");
                 return $res;
             }
+            // ON or OFF check
+
             //Member Type(*)
             if (!viaIsSet($row[6])) {
                 $res['error_msg'] = __d('gl', "メンバータイプは必須項目です。");
                 return $res;
             }
+
             //Evaluated(*)
             if (!viaIsSet($row[7])) {
                 $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
                 return $res;
             }
+            // ON or OFF check
+
             //Group
+            //no check
+
             //Local Name Language Code
+            //available language code check
+
             //Local First Name
+            //no check
+
             //Local Last Name
+            //no check
+
             //Phone
+            //validation check
+
             //Gender
+            //validation check
+
             //Birth Year
+            //validation check
+            //no data or all year month day data check
+
             //Birth Month
+            //validation check
+            //no data or all year month day data check
+
             //Birth Day
+            //validation check
+            //no data or all year month day data check
+
             //Coach Member ID
+            //exists in team or in csv file check
+
             //Rater1 Member ID
+            //exists in team or in csv file check
+
             //Rater2 Member ID
+            //exists in team or in csv file check
+
             //Rater3 Member ID
+            //exists in team or in csv file check
 
         }
 
