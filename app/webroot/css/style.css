@@ -3298,6 +3298,12 @@ Temporary Properties - YOU MUST FIX
     margin-left: 1.6667%;
     width: 15%;
 }
+.goalsCard-activity:hover,
+.goalsCard-activity:active,
+.goalsCard-activity:focus {
+    border-color: #ae2f2f;
+}
+
 .goalsCard-activity0 {
     padding: 1px;
     text-align: center;
