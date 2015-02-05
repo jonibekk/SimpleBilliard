@@ -32,7 +32,7 @@ class TextExHelper extends AppHelper
 
     function replaceUrl($text, $replacement = "[URL]")
     {
-        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-_:]+(?:[/?][^\s\’`^”<>(){}[\]]*)?)#ui';
+        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-_:]+(?:[/?][^\s\\\'`^\"<>(){}[\]]*)?)#ui';
         return preg_replace($pattern, $replacement, $text);
     }
 
@@ -52,8 +52,7 @@ class TextExHelper extends AppHelper
     {
         $this->_placeholders = array();
         $options += array('escape' => true);
-
-        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-_:]+(?:[/?][^\s\’`^”<>(){}[\]]*)?)#ui';
+        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-_:]+(?:[/?][^\s\\\`^(&quot;)<>(){}[\]]*)?)#ui';
         $text = preg_replace_callback(
             $pattern,
             array(&$this, '_insertPlaceHolder'),
