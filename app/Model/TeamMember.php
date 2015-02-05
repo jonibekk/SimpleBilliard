@@ -376,21 +376,30 @@ class TeamMember extends AppModel
             }
 
             //[14]Birth Year
-            //validation check
-
             //all or nothing check
             if (!isAllOrNothing([$row[14], $row[15], $row[16]])) {
                 $res['error_msg'] = __d('gl', "誕生日を記入する場合は年月日のすべての項目を記入してください。");
                 return $res;
             }
+            //validation check
+            if (viaIsSet($row[14]) && !preg_match('/^\d{4}$/', $row[14])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生年として正しくありません。", $row[14]);
+                return $res;
+            }
 
             //[15]Birth Month
             //validation check
-            //all or nothing check
+            if (viaIsSet($row[15]) && !preg_match('/^\d{1,2}$/', $row[15])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row[15]);
+                return $res;
+            }
 
             //[16]Birth Day
             //validation check
-            //all or nothing check
+            if (viaIsSet($row[16]) && !preg_match('/^\d{1,2}$/', $row[16])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row[16]);
+                return $res;
+            }
 
             //[17]Coach Member ID
             //exists in team or in csv file check
