@@ -61,6 +61,11 @@ class AppModel extends Model
      */
     public $team_id = null;
 
+    public $support_lang_codes = [
+        'jpn',
+        'eng',
+    ];
+
     /**
      * @param bool $id
      * @param null $table

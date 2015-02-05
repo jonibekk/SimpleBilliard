@@ -337,6 +337,10 @@ class TeamMember extends AppModel
 
             //Local Name Language Code
             //available language code check
+            if (!array_search($row[9], $this->support_lang_codes)) {
+                $res['error_msg'] = __d('gl', "%sはサポートされていないローカル姓名の言語コードです。", $row[9]);
+                return $res;
+            }
 
             //Local First Name
             //no check
