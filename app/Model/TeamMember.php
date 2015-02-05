@@ -274,7 +274,7 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "メールアドレスが正しくありません。");
                 return $res;
             }
-            //already joined team check
+            //already joined team check(after check)
 
             //[1]Member ID(*)
             if (!viaIsSet($row[1])) {
@@ -350,7 +350,7 @@ class TeamMember extends AppModel
 
             //[9]Local Name Language Code
             //available language code check
-            if (array_search($row[9], $this->support_lang_codes) === false) {
+            if (viaIsSet($row[9]) && array_search($row[9], $this->support_lang_codes) === false) {
                 $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row[9]);
                 return $res;
             }
@@ -363,10 +363,14 @@ class TeamMember extends AppModel
 
             //[12]Phone
             //validation check
+            if (viaIsSet($row[12]) && !preg_match('/^[0-9-\(\)]+$/', $row[12])) {
+                $res['error_msg'] = __d('gl', "'%s'の電話番号は正しくありません。使用できる文字は半角数字、'-()'です。", $row[12]);
+                return $res;
+            }
 
             //[13]Gender
             //validation check
-            if (array_search($row[13], ['male', 'female']) === false) {
+            if (viaIsSet($row[13]) && array_search($row[13], ['male', 'female']) === false) {
                 $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row[13]);
                 return $res;
             }
