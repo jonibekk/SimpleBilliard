@@ -337,8 +337,8 @@ class TeamMember extends AppModel
 
             //[9]Local Name Language Code
             //available language code check
-            if (!array_search($row[9], $this->support_lang_codes)) {
-                $res['error_msg'] = __d('gl', "%sはサポートされていないローカル姓名の言語コードです。", $row[9]);
+            if (array_search($row[9], $this->support_lang_codes) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row[9]);
                 return $res;
             }
 
@@ -353,6 +353,10 @@ class TeamMember extends AppModel
 
             //[13]Gender
             //validation check
+            if (array_search($row[13], ['male', 'female']) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row[13]);
+                return $res;
+            }
 
             //[14]Birth Year
             //validation check
