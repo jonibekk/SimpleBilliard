@@ -35,12 +35,80 @@ echo $this->Html->script('moment.min');
 echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
+    var cake = {};
+    cake.message = {
+        "a": "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
+        "b": "<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>",
+        "c": "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
+        "d": "<?=__d('validate', "パスワードが一致しません。")?>",
+        "e": "<?=__d('gl',"スペルを入力してください。")?>",
+        "f": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+        "g": "<?=__d('gl',"自分のみ")?>",
+        "h": "<?=__d('gl',"参加")?>",
+        "i": "<?=__d('gl',"不参加")?>",
+        "j": "<?=__d('gl',"該当なし")?>",
+        "k": "<?=__d('gl',"あと")?>",
+        "l": "<?=__d('gl',"文字入れてください")?>",
+        "m": "<?=__d('gl',"検索文字列が")?>",
+        "n": "<?=__d('gl',"文字長すぎます")?>",
+        "o": "<?=__d('gl',"最多で")?>",
+        "p": "<?=__d('gl',"項目までしか選択できません")?>",
+        "q": "<?=__d('gl',"読込中･･･")?>",
+        "r": "<?=__d('gl',"検索中･･･")?>",
+        "s": "<?=__d('gl',"フォロー中")?>",
+        "t": "<?=__d('gl',"フォロー")?>",
+        "u": "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>",
+        "v": "<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>",
+        "w": "<?=__d('gl', "もっと見る ▼") ?>",
+        "x": "<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>",
+        "y": "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>",
+        "z": "<?=__d('gl','これ以上のコメントがありません。')?>",
+        "aa": "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>",
+        "bb": "<?=__d('gl',"エラーが発生しました。")?>",
+        "cc": "<?=__d('gl',"もっと見る")?>",
+        "dd": "<?=__d('gl',"閉じる")?>",
+        "ee": "<?=__d('validate',"開始日が期限を過ぎています。")?>",
+        "ff": "<?=__d('validate',"期限が開始日以前になっています。")?>"
+    };
+    cake.data = {
+        "a": <?=isset($select2_default)?$select2_default:"[]"?>,
+        "b": function (element, callback) {
+            <?if(isset($current_circle)&&!empty($current_circle)):?>
+                var data = [
+                    {
+                        id: "circle_<?=$current_circle['Circle']['id']?>",
+                        text: "<?=h($current_circle['Circle']['name'])?>",
+                        image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
+                    }
+                ];
+            <?else:?>
+                var data = [
+                    {
+                        'id': 'public',
+                        'text': "<?=__d('gl',"チーム全体")?>",
+                        'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
+                    }
+                ];
+            <?endif;?>
+                callback(data);
+            }
+    };
+    cake.url = {
+        "a": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+        "b": "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
+        "c": "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
+        "d": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
+        "e": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
+    };
+
+
+
     $(document).ready(function () {
         //入力途中での警告表示
         $("input,select,textarea").change(function () {
             if (!$(this).hasClass('disable-change-warning')) {
                 $(window).on('beforeunload', function () {
-                    return "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>";
+                    return cake.message.a;
                 });
             }
         });
@@ -53,7 +121,7 @@ echo $this->Html->script('gl_basic');
         //noinspection JSUnusedLocalSymbols
         client.on("ready", function (readyEvent) {
             client.on("aftercopy", function (event) {
-                alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
+                alert(cake.message.b + ": " + event.data["text/plain"]);
             });
         });
 
@@ -71,7 +139,7 @@ echo $this->Html->script('gl_basic');
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
+                            message: cake.message.c
                         }
                     }
                 },
@@ -79,7 +147,7 @@ echo $this->Html->script('gl_basic');
                     validators: {
                         identical: {
                             field: "data[User][password]",
-                            message: "<?=__d('validate', "パスワードが一致しません。")?>"
+                            message: cake.message.d
                         }
                     }
                 }
@@ -95,9 +163,9 @@ echo $this->Html->script('gl_basic');
         $('#select2Member').select2({
             multiple: true,
             minimumInputLength: 2,
-            placeholder: "<?=__d('gl',"スペルを入力してください。")?>",
+            placeholder: cake.message.e,
             ajax: {
-                url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+                url: cake.message.f,
                 dataType: 'json',
                 quietMillis: 100,
                 cache: true,
@@ -121,31 +189,9 @@ echo $this->Html->script('gl_basic');
         //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
         $('#select2PostCircleMember').select2({
             multiple: true,
-            placeholder: "<?=__d('gl',"自分のみ")?>",
-            data: <?=isset($select2_default)?$select2_default:"[]"?>,
-            <?if(isset($current_circle)&&!empty($current_circle)):?>
-            initSelection: function (element, callback) {
-                var data = [
-                    {
-                        id: "circle_<?=$current_circle['Circle']['id']?>",
-                        text: "<?=h($current_circle['Circle']['name'])?>",
-                        image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    }
-                ];
-                callback(data);
-            },
-            <?else:?>
-            initSelection: function (element, callback) {
-                var data = [
-                    {
-                        'id': 'public',
-                        'text': "<?=__d('gl',"チーム全体")?>",
-                        'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
-                    }
-                ];
-                callback(data);
-            },
-            <?endif;?>
+            placeholder: cake.message.g,
+            data: cake.data.a,
+            initSelection: cake.data.b,
             formatSelection: format,
             formatResult: format,
             dropdownCssClass: 's2-post-dropdown',
@@ -169,8 +215,8 @@ echo $this->Html->script('gl_basic');
                     $modal_elm.append(data);
                     $modal_elm.find(".bt-switch").bootstrapSwitch({
                         size: "small",
-                        onText: "<?=__d('gl',"参加")?>",
-                        offText: "<?=__d('gl',"不参加")?>"
+                        onText: cake.message.h,
+                        offText: cake.message.i
                     });
                 }).success(function () {
                     $('body').addClass('modal-open');
@@ -188,9 +234,9 @@ echo $this->Html->script('gl_basic');
             'val': null,
             multiple: true,
             minimumInputLength: 2,
-            placeholder: "<?=__d('gl',"スペルを入力してください。")?>",
+            placeholder: cake.message.e,
             ajax: {
-                url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+                url: cake.url.a,
                 dataType: 'json',
                 quietMillis: 100,
                 cache: true,
@@ -207,7 +253,7 @@ echo $this->Html->script('gl_basic');
             initSelection: function (element, callback) {
                 var circle_id = $(element).attr('circle_id');
                 if (circle_id !== "") {
-                    $.ajax("<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/" + circle_id, {
+                    $.ajax(cake.url.b + circle_id, {
                         dataType: 'json'
                     }).done(function (data) {
                         callback(data.results);
@@ -231,24 +277,24 @@ echo $this->Html->script('gl_basic');
         //noinspection JSUnusedLocalSymbols
         $.fn.select2.locales['en'] = {
             formatNoMatches: function () {
-                return "<?=__d('gl',"該当なし")?>";
+                return cake.message.j;
             },
             formatInputTooShort: function (input, min) {
                 var n = min - input.length;
-                return "<?=__d('gl',"あと")?>" + n + "<?=__d('gl',"文字入れてください")?>";
+                return cake.message.k + n + cake.message.l;
             },
             formatInputTooLong: function (input, max) {
                 var n = input.length - max;
-                return "<?=__d('gl',"検索文字列が")?>" + n + "<?=__d('gl',"文字長すぎます")?>";
+                return cake.message.m + n + cake.message.n;
             },
             formatSelectionTooBig: function (limit) {
-                return "<?=__d('gl',"最多で")?>" + limit + "<?=__d('gl',"項目までしか選択できません")?>";
+                return cake.message.o + limit + cake.message.p;
             },
             formatLoadMore: function (pageNumber) {
-                return "<?=__d('gl',"読込中･･･")?>";
+                return cake.message.q;
             },
             formatSearching: function () {
-                return "<?=__d('gl',"検索中･･･")?>";
+                return cake.message.r;
             }
         };
 
@@ -261,7 +307,7 @@ echo $this->Html->script('gl_basic');
         var $obj = $(this);
         var kr_id = $obj.attr('goal-id');
         var data_class = $obj.attr('data-class');
-        var url = "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>";
+        var url = cake.url.c;
         $.ajax({
             type: 'GET',
             url: url + '/' + kr_id,
@@ -277,7 +323,7 @@ echo $this->Html->script('gl_basic');
                 else {
                     if (data.add) {
                         $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
-                            $(this).children('span').text("<?=__d('gl',"フォロー中")?>");
+                            $(this).children('span').text(cake.message.s);
                             $(this).children('i').hide();
                             $(this).removeClass('follow-off');
                             $(this).addClass('follow-on');
@@ -285,7 +331,7 @@ echo $this->Html->script('gl_basic');
                     }
                     else {
                         $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
-                            $(this).children('span').text("<?=__d('gl',"フォロー")?>");
+                            $(this).children('span').text(cake.message.s);
                             $(this).children('i').show();
                             $(this).removeClass('follow-on');
                             $(this).addClass('follow-off');
@@ -296,7 +342,7 @@ echo $this->Html->script('gl_basic');
             error: function () {
                 new PNotify({
                     type: 'error',
-                    text: "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>"
+                    text: cake.message.u
                 });
             }
         });
@@ -324,7 +370,7 @@ echo $this->Html->script('gl_basic');
                 //noinspection JSUnusedLocalSymbols
                 client.on("ready", function (readyEvent) {
                     client.on("aftercopy", function (event) {
-                        alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
+                        alert(cake.message.v + ": " + event.data["text/plain"]);
                     });
                 });
                 //画像をレイジーロード
@@ -389,7 +435,7 @@ echo $this->Html->script('gl_basic');
                     //noinspection JSUnusedLocalSymbols
                     client.on("ready", function (readyEvent) {
                         client.on("aftercopy", function (event) {
-                            alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
+                            alert(cake.message.v + ": " + event.data["text/plain"]);
                         });
                     });
 
@@ -400,7 +446,7 @@ echo $this->Html->script('gl_basic');
                     //ローダーを削除
                     $loader_html.remove();
                     //リンクを有効化
-                    $obj.text("<?=__d('gl', "もっと見る ▼") ?>");
+                    $obj.text(cake.message.w);
                     $obj.removeAttr('disabled');
                     $("#ShowMoreNoData").hide();
                     //画像をレイジーロード
@@ -428,7 +474,7 @@ echo $this->Html->script('gl_basic');
                         $obj.attr('month-index', month_index);
                         //次のページ番号をセット
                         $obj.attr('next-page-num', 1);
-                        $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
+                        $obj.text(cake.message.x);
                         $("#" + no_data_text_id).show();
                     }
                     else {
@@ -441,7 +487,7 @@ echo $this->Html->script('gl_basic');
                 }
             },
             error: function () {
-                alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
+                alert(cake.message.y);
             }
         });
         return false;
@@ -503,11 +549,11 @@ echo $this->Html->script('gl_basic');
                     //「もっと読む」リンクを削除
                     $obj.remove();
                     //データが無かった場合はデータ無いよ。を表示
-                    $parent.append("<?=__d('gl','これ以上のコメントがありません。')?>");
+                    $parent.append(cake.message.z);
                 }
             },
             error: function () {
-                alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
+                alert(cake.message.aa);
             }
         });
         return false;
@@ -524,10 +570,10 @@ echo $this->Html->script('gl_basic');
         var url = null;
         var model_id = $obj.attr('model_id');
         if (like_type == "post") {
-            url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>" + "/" + model_id;
+            url = cake.url.d + "/" + model_id;
         }
         else {
-            url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>" + "/" + model_id;
+            url = cake.message.e + "/" + model_id;
         }
 
         $.ajax({
@@ -537,7 +583,7 @@ echo $this->Html->script('gl_basic');
             dataType: 'json',
             success: function (data) {
                 if (data.error) {
-                    alert("<?=__d('gl',"エラーが発生しました。")?>");
+                    alert(cake.message.bb);
                 }
                 else {
                     //「いいね」した場合は「いいね取り消し」表示に
@@ -553,7 +599,7 @@ echo $this->Html->script('gl_basic');
                 }
             },
             error: function () {
-                alert("<?=__d('gl',"エラーが発生しました。")?>");
+                alert(cake.message.bb);
             }
         });
         return false;
@@ -569,15 +615,15 @@ echo $this->Html->script('gl_basic');
                 speedDown: 300,
                 speedUp: 300,
                 height: '128px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+                showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+                hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
             });
             $(obj).find('.showmore-comment').showMore({
                 speedDown: 300,
                 speedUp: 300,
                 height: '105px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+                showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+                hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
             });
         }
         else {
@@ -585,15 +631,15 @@ echo $this->Html->script('gl_basic');
                 speedDown: 300,
                 speedUp: 300,
                 height: '128px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+                showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+                hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
             });
             $('.showmore-comment').showMore({
                 speedDown: 300,
                 speedUp: 300,
                 height: '105px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
+                showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+                hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
             });
         }
     }
@@ -633,7 +679,7 @@ echo $this->Html->script('gl_basic');
                         "data[KeyResult][start_date]": {
                             validators: {
                                 callback: {
-                                    message: "<?=__d('validate',"開始日が期限を過ぎています。")?>",
+                                    message: cake.message.ee,
                                     callback: function (value, validator) {
                                         var m = new moment(value, 'YYYY/MM/DD', true);
                                         return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
@@ -644,7 +690,7 @@ echo $this->Html->script('gl_basic');
                         "data[KeyResult][end_date]": {
                             validators: {
                                 callback: {
-                                    message: "<?=__d('validate',"期限が開始日以前になっています。")?>",
+                                    message: cake.message.ff,
                                     callback: function (value, validator) {
                                         var m = new moment(value, 'YYYY/MM/DD', true);
                                         return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
