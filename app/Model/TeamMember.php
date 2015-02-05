@@ -247,7 +247,7 @@ class TeamMember extends AppModel
             'error_msg'     => null,
         ];
 
-        if (count($csv_data) >= 1) {
+        if (count($csv_data) <= 1) {
             $res['error_msg'] = __d('gl', "データが１件もありません。");
             return $res;
         }
