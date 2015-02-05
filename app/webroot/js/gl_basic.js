@@ -407,10 +407,7 @@ function uploadCsvFileByForm(e) {
             //noinspection JSUnresolvedVariable
             $result_msg.find('.alert-msg').text(data.msg);
 
-            //エラーじゃなければsubmitボタンを有効化
-            if (!data.error) {
-                $submit.removeAttr('disabled');
-            }
+            $submit.removeAttr('disabled');
         })
         .fail(function (data) {
             // 通信が失敗したときの処理
