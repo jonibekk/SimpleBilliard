@@ -260,7 +260,7 @@ class TeamMember extends AppModel
             //set line no
             $res['error_line_no'] = $key + 1;
 
-            //Mail(*)
+            //[0]Mail(*)
             if (!viaIsSet($row[0])) {
                 $res['error_msg'] = __d('gl', "メールアドレスは必須項目です。");
                 return $res;
@@ -272,28 +272,28 @@ class TeamMember extends AppModel
             }
             //already joined team check
 
-            //Member ID(*)
+            //[1]Member ID(*)
             if (!viaIsSet($row[1])) {
                 $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
                 return $res;
             }
             //exists member id check
 
-            //First Name(*)
+            //[2]First Name(*)
             if (!viaIsSet($row[2])) {
                 $res['error_msg'] = __d('gl', "ローマ字名は必須項目です。");
                 return $res;
             }
             //user validation
 
-            //Last Name(*)
+            //[3]Last Name(*)
             if (!viaIsSet($row[3])) {
                 $res['error_msg'] = __d('gl', "ローマ字姓は必須項目です。");
                 return $res;
             }
             //user validation
 
-            //Member Active State(*)
+            //[4]Member Active State(*)
             if (!viaIsSet($row[4])) {
                 $res['error_msg'] = __d('gl', "メンバーのアクティブ状態は必須項目です。");
                 return $res;
@@ -304,7 +304,7 @@ class TeamMember extends AppModel
                 return $res;
             }
 
-            //Administrator(*)
+            //[5]Administrator(*)
             if (!viaIsSet($row[5])) {
                 $res['error_msg'] = __d('gl', "管理者は必須項目です。");
                 return $res;
@@ -315,13 +315,13 @@ class TeamMember extends AppModel
                 return $res;
             }
 
-            //Member Type(*)
+            //[6]Member Type(*)
             if (!viaIsSet($row[6])) {
                 $res['error_msg'] = __d('gl', "メンバータイプは必須項目です。");
                 return $res;
             }
 
-            //Evaluated(*)
+            //[7]Evaluated(*)
             if (!viaIsSet($row[7])) {
                 $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
                 return $res;
@@ -332,50 +332,50 @@ class TeamMember extends AppModel
                 return $res;
             }
 
-            //Group
+            //[8]Group
             //no check
 
-            //Local Name Language Code
+            //[9]Local Name Language Code
             //available language code check
             if (!array_search($row[9], $this->support_lang_codes)) {
                 $res['error_msg'] = __d('gl', "%sはサポートされていないローカル姓名の言語コードです。", $row[9]);
                 return $res;
             }
 
-            //Local First Name
+            //[10]Local First Name
             //no check
 
-            //Local Last Name
+            //[11]Local Last Name
             //no check
 
-            //Phone
+            //[12]Phone
             //validation check
 
-            //Gender
+            //[13]Gender
             //validation check
 
-            //Birth Year
-            //validation check
-            //no data or all year month day data check
-
-            //Birth Month
+            //[14]Birth Year
             //validation check
             //no data or all year month day data check
 
-            //Birth Day
+            //[15]Birth Month
             //validation check
             //no data or all year month day data check
 
-            //Coach Member ID
+            //[16]Birth Day
+            //validation check
+            //no data or all year month day data check
+
+            //[17]Coach Member ID
             //exists in team or in csv file check
 
-            //Rater1 Member ID
+            //[18]Rater1 Member ID
             //exists in team or in csv file check
 
-            //Rater2 Member ID
+            //[19]Rater2 Member ID
             //exists in team or in csv file check
 
-            //Rater3 Member ID
+            //[20]Rater3 Member ID
             //exists in team or in csv file check
 
         }
