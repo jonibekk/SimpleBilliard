@@ -360,15 +360,20 @@ class TeamMember extends AppModel
 
             //[14]Birth Year
             //validation check
-            //no data or all year month day data check
+
+            //all or nothing check
+            if (!isAllOrNothing([$row[14], $row[15], $row[16]])) {
+                $res['error_msg'] = __d('gl', "誕生日を記入する場合は年月日のすべての項目を記入してください。");
+                return $res;
+            }
 
             //[15]Birth Month
             //validation check
-            //no data or all year month day data check
+            //all or nothing check
 
             //[16]Birth Day
             //validation check
-            //no data or all year month day data check
+            //all or nothing check
 
             //[17]Coach Member ID
             //exists in team or in csv file check

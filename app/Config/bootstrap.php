@@ -224,3 +224,25 @@ function isOnOrOff($data)
 {
     return strtolower($data) == 'on' || strtolower($data) == 'off';
 }
+
+/**
+ * all or nothing check
+ *
+ * @param array $array
+ *
+ * @return bool
+ */
+function isAllOrNothing($array)
+{
+    $exists = false;
+    $not_exists = false;
+    foreach ($array as $v) {
+        if (empty($v)) {
+            $not_exists = true;
+        }
+        else {
+            $exists = true;
+        }
+    }
+    return $exists !== $not_exists;
+}
