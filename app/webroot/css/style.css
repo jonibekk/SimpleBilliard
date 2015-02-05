@@ -3293,6 +3293,18 @@ Temporary Properties - YOU MUST FIX
     text-align: center;
     line-height: 40px;
     height: 40px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-left: 1.6667%;
+    width: 15%;
+}
+.goalsCard-activity0 {
+    padding: 1px;
+    text-align: center;
+    line-height: 40px;
+    height: 40px;
+    margin-left: 1.6667%;
+    width: 15%;
 }
 
 .goalsCard-actionInput {
@@ -3556,3 +3568,5 @@ Temporary Properties - YOU MUST FIX
 .selectKrForAction {
     font-size: 10px;
 }
+
+/* コメント太郎 */

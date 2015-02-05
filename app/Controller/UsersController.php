@@ -63,31 +63,31 @@ class UsersController extends AppController
      */
     public function login()
     {
-        //uservoiceから渡ってきた時用
         $this->_uservoiceSetSession();
-        //リダイレクト先
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
-        //ログイン済の場合はトップへ
+
         if ($this->Auth->user()) {
             /** @noinspection PhpInconsistentReturnPointsInspection */
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect('/');
         }
-        if ($this->request->is('post') && isset($this->request->data['User'])) {
-            if ($this->Auth->login()) {
 
-                $this->_refreshAuth();
-                $this->_setAfterLogin();
-                $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
-                                           ['title' => __d('notify', "ログイン成功")]);
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($redirect_url);
-            }
-            else {
-                $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
-            }
+        if (!$this->request->is('post')) {
+            return $this->render();
+        }
+
+        if ($this->Auth->login()) {
+            $this->_refreshAuth();
+            $this->_setAfterLogin();
+            $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
+                                       ['title' => __d('notify', "ログイン成功")]);
+            /** @noinspection PhpInconsistentReturnPointsInspection */
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($redirect_url);
+        }
+        else {
+            $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
         }
     }
 
@@ -123,7 +123,7 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         //ログイン済の場合はトップへ
         if ($this->Auth->user()) {
-            $this->redirect('/');
+            return $this->redirect('/');
         }
         //トークン付きの場合はメアドデータを取得
         if (isset($this->request->params['named']['invite_token'])) {
@@ -132,7 +132,7 @@ class UsersController extends AppController
                 $this->Invite->confirmToken($this->request->params['named']['invite_token']);
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
-                $this->redirect('/');
+                return $this->redirect('/');
             }
             $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
             if (isset($invite['Invite']['email'])) {
@@ -140,46 +140,67 @@ class UsersController extends AppController
             }
         }
 
-        if ($this->request->is('post') && !empty($this->request->data)) {
-            //タイムゾーンをセット
-            if (isset($this->request->data['User']['local_date'])) {
-                //ユーザのローカル環境から取得したタイムゾーンをセット
-                $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
-                $this->request->data['User']['timezone'] = $timezone;
-                //自動タイムゾーン設定フラグをoff
-                $this->request->data['User']['auto_timezone_flg'] = false;
-            }
-            //言語を保存
-            $this->request->data['User']['language'] = $this->Lang->getLanguage();
-            //トークン付きは本登録
-            if (isset($this->request->params['named']['invite_token'])) {
-                //ユーザ登録成功
-                if ($this->User->userRegistration($this->request->data, false)) {
-                    //ログイン
-                    $this->_autoLogin($this->User->getLastInsertID());
-                    //チーム参加
-                    $this->_joinTeam($this->request->params['named']['invite_token']);
-                    //ホーム画面でモーダル表示
-                    $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
-                    //プロフィール画面に遷移
-                    $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
-                }
-            }
-            else {
-                //ユーザ仮登録成功
-                if ($this->User->userRegistration($this->request->data)) {
-                    //ユーザにメール送信
-                    $this->GlEmail->sendMailUserVerify($this->User->id,
-                                                       $this->User->Email->data['Email']['email_token']);
-                    $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
-                    $this->redirect(['action' => 'sent_mail']);
-                }
-            }
+        // リクエストデータが無い場合は登録画面を表示
+        if (!$this->request->is('post')) {
+            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $this->set(compact('last_first'));
+            return $this->render();
         }
 
-        //姓名の並び順をセット
-        $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
-        $this->set(compact('last_first'));
+        //タイムゾーンをセット
+        if (isset($this->request->data['User']['local_date'])) {
+            //ユーザのローカル環境から取得したタイムゾーンをセット
+            $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
+            $this->request->data['User']['timezone'] = $timezone;
+            //自動タイムゾーン設定フラグをoff
+            $this->request->data['User']['auto_timezone_flg'] = false;
+        }
+
+        //言語を保存
+        $this->request->data['User']['language'] = $this->Lang->getLanguage();
+
+        // トークンが存在しない場合はユーザ仮登録
+        if (!isset($this->request->params['named']['invite_token'])) {
+            // 仮登録実行
+            $isSuccessTmpReg = $this->User->userRegistration($this->request->data);
+
+            // 仮登録失敗
+            if (!$isSuccessTmpReg) {
+                //姓名の並び順をセット
+                $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+                $this->set(compact('last_first'));
+                return $this->render();
+            }
+
+            // 仮登録成功
+            // ユーザにメール送信
+            $this->GlEmail->sendMailUserVerify($this->User->id,
+                                               $this->User->Email->data['Email']['email_token']);
+            $this->Session->write('tmp_email', $this->User->Email->data['Email']['email']);
+            return $this->redirect(['action' => 'sent_mail']);
+        }
+
+        // ユーザ本登録
+        $isSuccessMainReg = $this->User->userRegistration($this->request->data, false);
+
+        // 本登録失敗
+        if (!$isSuccessMainReg) {
+            //姓名の並び順をセット
+            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $this->set(compact('last_first'));
+            return $this->render();
+        }
+
+        // 本登録成功
+        //ログイン
+        $this->_autoLogin($this->User->getLastInsertID());
+        //チーム参加
+        $this->_joinTeam($this->request->params['named']['invite_token']);
+        //ホーム画面でモーダル表示
+        $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+        //プロフィール画面に遷移
+        return $this->redirect(['action' => 'add_profile', 'invite_token' => $this->request->params['named']['invite_token']]);
+
     }
 
     /**
@@ -188,45 +209,58 @@ class UsersController extends AppController
     public function add_profile()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+
         //新規ユーザ登録モードじゃない場合は４０４
         if ($this->Session->read('add_new_mode') !== MODE_NEW_PROFILE) {
             throw new NotFoundException;
         }
         $me = $this->Auth->user();
+
         //ローカル名を利用している国かどうか？
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['language']);
-        if ($this->request->is('put') && !empty($this->request->data)) {
-            //ローカル名の入力が無い場合は除去
-            if (isset($this->request->data['LocalName'])) {
-                $local_name = $this->request->data['LocalName'][0];
-                if (!$local_name['first_name'] || !$local_name['last_name']) {
-                    unset($this->request->data['LocalName']);
-                }
-            }
-            //プロフィールを保存
-            $this->User->id = $me['id'];
-            if ($this->User->saveAll($this->request->data)) {
-                $this->_refreshAuth($me['id']);
 
-                //トークン付きの場合は招待のため、ホームへ
-                if (isset($this->request->params['named']['invite_token'])) {
-                    /** @noinspection PhpVoidFunctionResultUsedInspection */
-                    return $this->redirect("/");
-                }
-                else {
-                    //チーム作成ページへリダイレクト
-                    /** @noinspection PhpVoidFunctionResultUsedInspection */
-                    return $this->redirect(['controller' => 'teams', 'action' => 'add']);
-                }
+        // リクエストデータが無い場合は入力画面を表示
+        if (!$this->request->is('put')) {
+            $this->request->data = ['User' => $me];
+            $language_name = $this->Lang->availableLanguages[$me['language']];
+            $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
+            return $this->render();
+        }
+
+        //ローカル名の入力が無い場合は除去
+        if (isset($this->request->data['LocalName'])) {
+            $local_name = $this->request->data['LocalName'][0];
+            if (!$local_name['first_name'] || !$local_name['last_name']) {
+                unset($this->request->data['LocalName']);
             }
+        }
+
+        // プロフィールを保存
+        $this->User->id = $me['id'];
+        $isSavedSuccess = $this->User->saveAll($this->request->data);
+
+        // 保存失敗
+        if(!$isSavedSuccess) {
+            $language_name = $this->Lang->availableLanguages[$me['language']];
+
+            $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
+            return $this->render();
+        }
+
+        // 保存成功
+        $this->_refreshAuth($me['id']);
+
+        //トークン付きの場合は招待のため、ホームへ
+        if (isset($this->request->params['named']['invite_token'])) {
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect("/");
         }
         else {
-            $this->request->data = ['User' => $me];
+            //チーム作成ページへリダイレクト
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect(['controller' => 'teams', 'action' => 'add']);
         }
-        $language_name = $this->Lang->availableLanguages[$me['language']];
 
-        $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
-        return $this->render();
     }
 
     /**
@@ -284,7 +318,7 @@ class UsersController extends AppController
             //例外の場合は、トークン再送信画面へ
             $this->Pnotify->outError($e->getMessage());
             //トークン再送メージへ
-            $this->redirect(['action' => 'token_resend']);
+            return $this->redirect(['action' => 'token_resend']);
         }
     }
 
@@ -315,50 +349,55 @@ class UsersController extends AppController
     }
 
     /**
-     * パスワードリセット
+     * Password reset
      */
     public function password_reset($token = null)
     {
         if ($this->Auth->user()) {
             throw new NotFoundException();
         }
+
         $this->layout = LAYOUT_ONE_COLUMN;
-        //トークンがある場合はパスワードリセット画面
-        if ($token) {
-            //トークンが正しく期限内の場合
-            if ($user_email = $this->User->checkPasswordToken($token)) {
-                if ($this->request->is('post') && !empty($this->request->data)) {
-                    //パスワードリセット完了した場合
-                    if ($this->User->passwordReset($user_email, $this->request->data)) {
-                        //パスワードリセット完了の旨をユーザに通知
-                        $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
-                        $this->Pnotify->outSuccess(__d('gl', "新しいパスワードでログインしてください。"),
-                                                   ['title' => __d('gl', 'パスワードを設定しました')]);
-                        $this->redirect(['action' => 'login']);
-                    }
-                }
-                return $this->render('password_reset');
+
+        if (!$token) {
+            if (!$this->request->is('post')) {
+                return $this->render('password_reset_request');
             }
-            //トークンが正しくないor期限外
-            else {
-                $this->Pnotify->outError(__d('gl', "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"),
-                                         ['title' => __d('gl', "トークンの認証に失敗しました。")]);
-                $this->redirect(['action' => 'password_reset']);
+
+            // Search user
+            $user = $this->User->passwordResetPre($this->request->data);
+            if ($user) {
+                // Send mail containing token
+                $this->GlEmail->sendMailPasswordReset($user['User']['id'], $user['User']['password_token']);
+                $this->Pnotify->outSuccess(__d('gl', "パスワード再設定のメールを送信しました。ご確認ください。"),
+                                           ['title' => __d('gl', "メールを送信しました")]);
             }
+            return $this->render('password_reset_request');
         }
-        //トークンがない場合はメールアドレス入力画面
-        else {
-            if ($this->request->is('post') && !empty($this->request->data)) {
-                //パスワード認証情報登録成功した場合
-                if ($user = $this->User->passwordResetPre($this->request->data)) {
-                    //メールでトークンを送信
-                    $this->GlEmail->sendMailPasswordReset($user['User']['id'], $user['User']['password_token']);
-                    $this->Pnotify->outSuccess(__d('gl', "パスワード再設定のメールを送信しました。ご確認ください。"),
-                                               ['title' => __d('gl', "メールを送信しました")]);
-                }
-            }
+
+        // Token existing case
+        $user_email = $this->User->checkPasswordToken($token);
+
+        if (!$user_email) {
+            $this->Pnotify->outError(__d('gl', "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"),
+                                     ['title' => __d('gl', "トークンの認証に失敗しました。")]);
+            return $this->redirect(['action' => 'password_reset']);
         }
-        return $this->render('password_reset_request');
+
+        if (!$this->request->is('post')) {
+            return $this->render('password_reset');
+        }
+
+        $successPasswordReset = $this->User->passwordReset($user_email, $this->request->data);
+        if ($successPasswordReset) {
+            // Notify to user reset password
+            $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
+            $this->Pnotify->outSuccess(__d('gl', "新しいパスワードでログインしてください。"),
+                                       ['title' => __d('gl', 'パスワードを設定しました')]);
+            return $this->redirect(['action' => 'login']);
+        }
+        return $this->render('password_reset');
+
     }
 
     public function token_resend()
@@ -386,7 +425,7 @@ class UsersController extends AppController
     {
         //ユーザデータ取得
         $me = $this->_getMyUserDataForSetting();
-        if ($this->request->is('put') && !empty($this->request->data)) {
+        if ($this->request->is('put')) {
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
@@ -446,21 +485,21 @@ class UsersController extends AppController
      */
     public function change_password()
     {
-        if ($this->request->is('put') && !empty($this->request->data)) {
-            try {
-                $this->User->changePassword($this->request->data);
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "パスワードの変更に失敗しました")]);
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($this->referer());
-            }
-            $this->Pnotify->outSuccess(__d('gl', "パスワードを変更しました。"));
+        if (!$this->request->is('put')) {
+            throw new NotFoundException();
+        }
+
+        try {
+            $this->User->changePassword($this->request->data);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "パスワードの変更に失敗しました")]);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        else {
-            throw new NotFoundException();
-        }
+        $this->Pnotify->outSuccess(__d('gl', "パスワードを変更しました。"));
+
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -468,25 +507,24 @@ class UsersController extends AppController
      */
     public function change_email()
     {
-        if ($this->request->is('put') && !empty($this->request->data)) {
-            try {
-                $email_data = $this->User->addEmail($this->request->data, $this->Auth->user('id'));
-            } catch (RuntimeException $e) {
-                $this->Pnotify->outError($e->getMessage());
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->redirect($this->referer());
-            }
+        if (!$this->request->is('put')) {
+            throw new NotFoundException();
+        }
 
-            $this->Pnotify->outInfo(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
-            $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
-                                                      $email_data['Email']['email_token']);
-
+        try {
+            $email_data = $this->User->addEmail($this->request->data, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        else {
-            throw new NotFoundException();
-        }
+
+        $this->Pnotify->outInfo(__d('gl', "認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
+        $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
+                                                  $email_data['Email']['email_token']);
+
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -499,35 +537,29 @@ class UsersController extends AppController
     public function accept_invite($token)
     {
         try {
-            //トークンが有効かチェック
+            // Check token available
             $this->Invite->confirmToken($token);
-            //登録ユーザ宛の場合
-            if ($this->Invite->isUser($token)) {
-                //ログイン済みじゃない場合はログイン画面
-                if (!$this->Auth->user()) {
-                    $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
-                    $this->redirect(['action' => 'login']);
-                }
-                //ログイン済みの場合は、TeamMember保存でチーム切り替えてホームへ
-                else {
-                    //自分宛かチェック
-                    if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
-                        throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
-                    }
-                    //チーム参加
-                    $team = $this->_joinTeam($token);
-                    $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
-                    //ホームへリダイレクト
-                    $this->redirect("/");
-                }
+
+            if (!$this->Invite->isUser($token)) {
+                return $this->redirect(['action' => 'register', 'invite_token' => $token]);
             }
-            else {
-                //新規ユーザ登録
-                $this->redirect(['action' => 'register', 'invite_token' => $token]);
+
+            if (!$this->Auth->user()) {
+                $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
+                return $this->redirect(['action' => 'login']);
             }
+
+            // Not allow invite me
+            if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
+                throw new RuntimeException(__d('exception', "別のユーザ宛のチーム招待です。"));
+            }
+
+            $team = $this->_joinTeam($token);
+            $this->Pnotify->outSuccess(__d('gl', "チーム「%s」に参加しました。", $team['Team']['name']));
+            return $this->redirect("/");
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
-            $this->redirect("/");
+            return $this->redirect("/");
         }
     }
 

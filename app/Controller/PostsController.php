@@ -18,27 +18,24 @@ class PostsController extends AppController
     public function add()
     {
         $this->request->allowMethod('post');
-        if (isset($this->request->data['Post']['body']) && !empty($this->request->data['Post']['body'])) {
-            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
-            if (isset($ogp['title']) && isset($ogp['description'])) {
-                $this->request->data['Post']['site_info'] = json_encode($ogp);
-                if (isset($ogp['image'])) {
-                    $this->request->data['Post']['site_photo'] = $ogp['image'];
-                }
-            }
-        }
-        if ($this->Post->add($this->request->data)) {
+
+        // ogbをインサートデータに追加
+        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
+
+        // 投稿を保存
+        if ($this->Post->addNormal($this->request->data)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+            $this->redirect($this->referer());
+        }
+
+        // バリデーションエラー
+        if (!empty($this->Post->validationErrors)) {
+            $error_msg = array_shift($this->Post->validationErrors);
+            $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
         }
         else {
-            if (!empty($this->Post->validationErrors)) {
-                $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
-            }
-            else {
-                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
-            }
+            $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
         }
         $this->redirect($this->referer());
     }
@@ -82,22 +79,19 @@ class PostsController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Post->id = $id;
+
+        // 例外チェック
         if (!$this->Post->exists()) {
             throw new NotFoundException(__('gl', "この投稿は存在しません。"));
         }
         if (!$this->Post->isOwner($this->Auth->user('id'))) {
             throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
         }
-        if (isset($this->request->data['Post']['body']) && !empty($this->request->data['Post']['body'])) {
-            $this->request->data['Post']['site_info'] = null;
-            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Post']['body']);
-            if (isset($ogp['title']) && isset($ogp['description'])) {
-                $this->request->data['Post']['site_info'] = json_encode($ogp);
-                if (isset($ogp['image'])) {
-                    $this->request->data['Post']['site_photo'] = $ogp['image'];
-                }
-            }
-        }
+
+        // ogbをインサートデータに追加
+        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
+
+        // 投稿を保存
         if ($this->Post->postEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
         }
@@ -151,22 +145,19 @@ class PostsController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Post->Comment->id = $comment_id;
+
+        // 例外チェック
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
         }
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
             throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
         }
-        if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
-            $this->request->data['Comment']['site_info'] = null;
-            $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
-            if (isset($ogp['title']) && isset($ogp['description'])) {
-                $this->request->data['Comment']['site_info'] = json_encode($ogp);
-                if (isset($ogp['image'])) {
-                    $this->request->data['Comment']['site_photo'] = $ogp['image'];
-                }
-            }
-        }
+
+        // ogbをインサートデータに追加
+        $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), viaIsSet($this->request->data['Comment']['body']));
+
+        // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コメントの変更を保存しました。"));
         }
@@ -412,15 +403,10 @@ class PostsController extends AppController
                 throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
             }
 
-            if (isset($this->request->data['Comment']['body']) && !empty($this->request->data['Comment']['body'])) {
-                $ogp = $this->Ogp->getOgpByUrlInText($this->request->data['Comment']['body']);
-                if (isset($ogp['title']) && isset($ogp['description'])) {
-                    $this->request->data['Comment']['site_info'] = json_encode($ogp);
-                    if (isset($ogp['image'])) {
-                        $this->request->data['Comment']['site_photo'] = $ogp['image'];
-                    }
-                }
-            }
+            // ogbをインサートデータに追加
+            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), viaIsSet($this->request->data['Comment']['body']));
+
+            // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
                                                  $this->Post->Comment->id);
@@ -518,6 +504,38 @@ class PostsController extends AppController
         }
         $total_share_user_count = count($all_share_user_list);
         return $total_share_user_count;
+    }
+
+    /**
+     * @param array $requestData
+     * @param string $body
+     *
+     * @return $requestData
+     */
+    function _addOgpIndexes($requestData, $body)
+    {
+        // テキストが空の場合
+        if (!$body) {
+            return $requestData;
+        }
+
+        // ogp取得
+        $ogp = $this->Ogp->getOgpByUrlInText($body);
+
+        // ogpが取得できない場合
+        $notExistOgp = !isset($ogp['title']) || !isset($ogp['description']);
+        if ($notExistOgp) {
+            $requestData['site_info']  = null;
+            $requestData['site_photo'] = null;
+            return $requestData;
+        }
+
+        // ogpが取得できた場合
+        $requestData['site_info'] = json_encode($ogp);
+        if (isset($ogp['image'])) {
+            $requestData['site_photo'] = $ogp['image'];
+        }
+        return $requestData;
     }
 
 }

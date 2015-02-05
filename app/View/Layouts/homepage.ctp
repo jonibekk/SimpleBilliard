@@ -28,10 +28,10 @@
     echo $this->Html->meta('icon');
     echo $this->Html
         ->meta(
-        array(
-            'name'    => 'viewport',
-            'content' => "width=device-width, initial-scale=1, maximum-scale=1"
-        ));
+            array(
+                'name'    => 'viewport',
+                'content' => "width=device-width, initial-scale=1, maximum-scale=1"
+            ));
     echo $this->fetch('meta');
     //TODO botの拒否。一般公開前に必ず外す。
     echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
@@ -125,10 +125,10 @@
                 </a> <a class="btn btn-navbar"
                         href="<?=
                         $this->Html->url(
-                                   [
-                                       'controller' => 'users',
-                                       'action'     => 'login'
-                                   ])
+                            [
+                                'controller' => 'users',
+                                'action'     => 'login'
+                            ])
                         ?>"><i
                         class="icon-signin"></i></a> <a class="brand"
                                                         href="<?= ($top_lang) ? $this->Html->url('/' . $top_lang . "/") : $this->Html->url('/') ?>"><span><i
@@ -155,7 +155,7 @@
                             $this->Html->link(__d('home', 'Sign UP'),
                                               [
                                                   'controller' => 'users',
-                                                  'action' => 'register'
+                                                  'action'     => 'register'
                                               ],
                                               [
                                                   'class' => 'top-sign-up'
@@ -253,13 +253,6 @@
             </div>
         </div>
     </div>
-    <!--NewRelic Footer-->
-    <? if (extension_loaded('newrelic')) {
-        /** @noinspection PhpUndefinedFunctionInspection */
-        echo newrelic_get_browser_timing_footer();
-    } ?>
-    <!--/NewRelic Footer-->
-
 </footer>
 <!-- end: footer -->
 
@@ -271,6 +264,12 @@
 <!--[if lt IE 9]>
 <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+<!--NewRelic Footer-->
+<? if (extension_loaded('newrelic')) {
+    /** @noinspection PhpUndefinedFunctionInspection */
+    echo newrelic_get_browser_timing_footer();
+} ?>
+<!--/NewRelic Footer-->
 </body>
 </html>
 <!-- END app/View/Layouts/homepage.ctp -->

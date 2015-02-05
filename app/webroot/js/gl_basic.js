@@ -53,6 +53,21 @@ $(document).ready(function () {
     $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
     });
+
+    $('.fileinput-enabled-submit').fileinput()
+        //ファイル選択時にsubmitボタンを有効化する
+        .on('change.bs.fileinput', function () {
+            attrUndefinedCheck(this, 'submit-id');
+            var id = $(this).attr('submit-id');
+            $("#" + id).removeAttr('disabled');
+        })
+        //リセット時にsubmitボタンを無効化する
+        .on('clear.bs.fileinput', function () {
+            attrUndefinedCheck(this, 'submit-id');
+            var id = $(this).attr('submit-id');
+            $("#" + id).attr('disabled', 'disabled');
+        });
+
     //チーム切り換え
     $('#SwitchTeam').change(function () {
         var val = $(this).val();
@@ -60,16 +75,6 @@ $(document).ready(function () {
         $.get(url, function (data) {
             location.href = data;
         });
-    });
-    //投稿の共有範囲切り替え
-    $('#ChangeShareSelect2').click(function () {
-        attrUndefinedCheck(this, 'show-target-id');
-        attrUndefinedCheck(this, 'target-id');
-        var show_target_id = $(this).attr('show-target-id');
-        var target_id = $(this).attr('target-id');
-        $("#" + show_target_id).show();
-        $("#" + target_id).find('ul.select2-choices').click();
-        return false;
     });
     //autosize
     //noinspection JSJQueryEfficiency
@@ -94,7 +99,7 @@ $(document).ready(function () {
         selector: '[data-toggle="tooltip"]'
     });
     //form二重送信防止
-    $(document).on('submit','form',function(){
+    $(document).on('submit', 'form', function () {
         $(this).find('input:submit').attr('disabled', 'disabled');
     });
     /**
@@ -134,6 +139,7 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
+    $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
     });
@@ -358,6 +364,67 @@ function getAjaxFormReplaceElm() {
             }
         }
     });
+}
+
+/**
+ * uploading csv file from form.
+ */
+function uploadCsvFileByForm(e) {
+    e.preventDefault();
+
+    attrUndefinedCheck(this, 'loader-id');
+    var loader_id = $(this).attr('loader-id');
+    var $loader = $('#' + loader_id);
+    attrUndefinedCheck(this, 'result-msg-id');
+    var result_msg_id = $(this).attr('result-msg-id');
+    var $result_msg = $('#' + result_msg_id);
+    attrUndefinedCheck(this, 'submit-id');
+    var submit_id = $(this).attr('submit-id');
+    var $submit = $('#' + submit_id);
+    //set display none for loader and result message elm
+
+    $loader.removeClass('none');
+    $result_msg
+        .addClass('none')
+        .children('.alert').removeClass('alert-success')
+        .children('.alert').removeClass('alert-danger');
+    $submit.attr('disabled', 'disabled');
+
+    var f = $(this);
+    $.ajax({
+        url: f.prop('action'),
+        method: 'post',
+        dataType: 'json',
+        processData: false,
+        data: f.serialize(),
+        timeout: 10000
+    })
+        .done(function (data) {
+            // 通信が成功したときの処理
+            $result_msg
+                .children('.alert').addClass(data.css)
+                .children('.alert-heading').text(data.title);
+            //noinspection JSUnresolvedVariable
+            $result_msg.find('.alert-msg').text(data.msg);
+
+            //エラーじゃなければsubmitボタンを有効化
+            if (!data.error) {
+                $submit.removeAttr('disabled');
+            }
+        })
+        .fail(function (data) {
+            // 通信が失敗したときの処理
+            $result_msg
+                .children('.alert').addClass('alert-danger')
+                .children('.alert-heading').text('Connection Error');
+            //noinspection JSUnresolvedVariable
+            $result_msg.find('.alert-msg').empty();
+        })
+        .always(function (data) {
+            // 通信が完了したとき
+            $result_msg.removeClass('none');
+            $loader.addClass('none');
+        });
 }
 
 function evTargetToggle() {

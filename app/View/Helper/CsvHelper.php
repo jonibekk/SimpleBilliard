@@ -85,4 +85,19 @@ class CsvHelper extends AppHelper
         }
         return $this->output($output);
     }
+
+    function defaultRender($th = [], $td = [], $filename)
+    {
+        $this->addRow($th);
+        if (!empty($td)) {
+            foreach ($td as $td_v) {
+                foreach ($td_v as $v) {
+                    $this->addField($v);
+                }
+                $this->endRow();
+            }
+        }
+        $this->setFilename($filename);
+        return $this->render(true, 'SJIS-win', 'UTF-8');
+    }
 }

@@ -11,8 +11,8 @@ error_exit(){ echo "${red}*** Error!!${whit}" ; exit 1 ; }
 
 echo "${blu}### Update Application. ###${whit}"
 echo "Please wait a minute..."
-echo "*** git fetch"
-git fetch || error_exit
+echo "*** git fetch --all --prune"
+git fetch --all --prune || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** git pull"
 git pull || error_exit

@@ -273,9 +273,12 @@ class AppController extends Controller
         $this->Session->write('current_team_id', $team_id);
     }
 
-    public function _ajaxPreProcess()
+    /**
+     * @param string $method
+     */
+    public function _ajaxPreProcess($method = 'ajax')
     {
-        if (!$this->request->is('ajax')) {
+        if (!$this->request->is($method)) {
             throw new RuntimeException(__d('exception', '不正なアクセスです。'));
         }
         Configure::write('debug', 0);
@@ -467,5 +470,6 @@ class AppController extends Controller
     {
         $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
     }
+
 
 }

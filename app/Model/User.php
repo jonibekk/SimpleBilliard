@@ -232,6 +232,7 @@ class User extends AppModel
         'CircleMember',
         'Goal',
         'Collaborator',
+        'Rater',
     ];
 
     /**
@@ -676,7 +677,7 @@ class User extends AppModel
      */
     public function passwordReset($user_email, $postData)
     {
-        if (!isset($user_email['User']) || !isset($user_email['Email']) || !$postData['User']) {
+        if (!isset($user_email['User']) || !isset($user_email['Email']) || !isset($postData['User'])) {
             return false;
         }
         $this->id = $user_email['User']['id'];

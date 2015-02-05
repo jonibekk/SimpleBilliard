@@ -44,14 +44,19 @@ else {
 
     <?= $this->element('footer') ?>
 </div>
+
+<?= $this->element('modals') ?>
+<!-- START fetch modal -->
+<?= $this->fetch('modal') ?>
+<!-- END fetch modal -->
+<?= $this->element('gl_common_js') ?>
+<!-- START fetch script -->
+<?= $this->fetch('script') ?>
+<!-- END fetch script -->
 <? if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_footer();
 } ?>
-<?= $this->element('modals') ?>
-<?= $this->fetch('modal') ?>
-<?= $this->element('gl_common_js') ?>
-<?= $this->fetch('script') ?>
 </body>
 </html>
 <!-- END app/View/Layouts/default.ctp -->
