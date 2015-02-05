@@ -212,3 +212,15 @@ function convertCsvToArray($tmp_file_name)
 
     return $res;
 }
+
+/**
+ * string 'ON' or 'OFF' check
+ *
+ * @param $data
+ *
+ * @return bool
+ */
+function isOnOrOff($data)
+{
+    return strtolower($data) == 'on' || strtolower($data) == 'off';
+}

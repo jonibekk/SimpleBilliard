@@ -299,6 +299,10 @@ class TeamMember extends AppModel
                 return $res;
             }
             // ON or OFF check
+            if (!isOnOrOff($row[4])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', 'メンバーアクティブ状態'));
+                return $res;
+            }
 
             //Administrator(*)
             if (!viaIsSet($row[5])) {
@@ -306,6 +310,10 @@ class TeamMember extends AppModel
                 return $res;
             }
             // ON or OFF check
+            if (!isOnOrOff($row[5])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
+                return $res;
+            }
 
             //Member Type(*)
             if (!viaIsSet($row[6])) {
@@ -319,6 +327,10 @@ class TeamMember extends AppModel
                 return $res;
             }
             // ON or OFF check
+            if (!isOnOrOff($row[7])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
+                return $res;
+            }
 
             //Group
             //no check
