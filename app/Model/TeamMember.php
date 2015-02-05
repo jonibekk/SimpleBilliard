@@ -289,13 +289,22 @@ class TeamMember extends AppModel
                 return $res;
             }
             //user validation
-
+            $this->User->set(['first_name' => $row[2]]);
+            if (!$this->User->validates()) {
+                $res['error_msg'] = __d('gl', "ローマ字名はローマ字のみで入力してください。");
+                return $res;
+            }
             //[3]Last Name(*)
             if (!viaIsSet($row[3])) {
                 $res['error_msg'] = __d('gl', "ローマ字姓は必須項目です。");
                 return $res;
             }
             //user validation
+            $this->User->set(['last_name' => $row[3]]);
+            if (!$this->User->validates()) {
+                $res['error_msg'] = __d('gl', "ローマ字姓はローマ字のみで入力してください。");
+                return $res;
+            }
 
             //[4]Member Active State(*)
             if (!viaIsSet($row[4])) {
