@@ -1232,7 +1232,7 @@ function getModalPostList(e) {
             //noinspection JSUnusedLocalSymbols
             client.on("ready", function (readyEvent) {
                 client.on("aftercopy", function (event) {
-                    alert(cake.message.v + ": " + event.data["text/plain"]);
+                    alert(cake.message.b + ": " + event.data["text/plain"]);
                 });
             });
             //画像をレイジーロード
@@ -1297,7 +1297,7 @@ function evFeedMoreView() {
                 //noinspection JSUnusedLocalSymbols
                 client.on("ready", function (readyEvent) {
                     client.on("aftercopy", function (event) {
-                        alert(cake.message.v + ": " + event.data["text/plain"]);
+                        alert(cake.message.b + ": " + event.data["text/plain"]);
                     });
                 });
 
@@ -1349,7 +1349,7 @@ function evFeedMoreView() {
             }
         },
         error: function () {
-            alert(cake.message.y);
+            alert(cake.message.u);
         }
     });
     return false;
@@ -1415,7 +1415,7 @@ function evCommentAllView() {
             }
         },
         error: function () {
-            alert(cake.message.aa);
+            alert(cake.message.u);
         }
     });
     return false;
@@ -1477,14 +1477,14 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '128px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.w + '</i>',
             hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
         });
         $(obj).find('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.w + '</i>',
             hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
         });
     }
@@ -1493,14 +1493,14 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '128px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.w + '</i>',
             hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
         });
         $('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.cc + '</i>',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.w + '</i>',
             hideText: '<i class="fa fa-angle-double-up">' + cake.message.dd + '</i>'
         });
     }
