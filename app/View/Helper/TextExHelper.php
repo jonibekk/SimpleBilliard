@@ -52,7 +52,7 @@ class TextExHelper extends AppHelper
     {
         $this->_placeholders = array();
         $options += array('escape' => true);
-        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[a-zA-Z0-9.\-_:]+(?:[/?][^\s\\\`^(&quot;)\p{Han}\p{Hiragana}\p{Katakana}\p{P}\p{N}<>(){}[\]]*)?)#ui';
+        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[a-zA-Z0-9;/?:@&=+$,\%\#._-]+)#ui';
         $text = preg_replace_callback(
             $pattern,
             array(&$this, '_insertPlaceHolder'),
