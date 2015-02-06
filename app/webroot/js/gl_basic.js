@@ -1027,7 +1027,7 @@ $(document).ready(function () {
         minimumInputLength: 2,
         placeholder: cake.message.e,
         ajax: {
-            url: cake.message.f,
+            url: cake.url.a,
             dataType: 'json',
             quietMillis: 100,
             cache: true,

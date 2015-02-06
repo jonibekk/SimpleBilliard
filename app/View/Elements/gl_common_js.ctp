@@ -42,7 +42,6 @@ echo $this->Html->script('gl_basic');
         "c": "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
         "d": "<?=__d('validate', "パスワードが一致しません。")?>",
         "e": "<?=__d('gl',"スペルを入力してください。")?>",
-        "f": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
         "g": "<?=__d('gl',"自分のみ")?>",
         "h": "<?=__d('gl',"参加")?>",
         "i": "<?=__d('gl',"不参加")?>",
