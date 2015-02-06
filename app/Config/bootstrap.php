@@ -246,3 +246,32 @@ function isAllOrNothing($array)
     }
     return $exists !== $not_exists;
 }
+
+/**
+ * @param array $array
+ *
+ * @return bool
+ */
+function isAlignLeft($array)
+{
+    //first remove empty data
+    foreach ($array as $k => $v) {
+        if (!$v) {
+            unset($array[$k]);
+        }
+    }
+
+    if (empty($array)) {
+        return true;
+    }
+
+    //if toothless then return false
+    $expect_k = 0;
+    foreach ($array as $k => $v) {
+        if ($k !== $expect_k) {
+            return false;
+        }
+        $expect_k++;
+    }
+    return true;
+}

@@ -382,7 +382,23 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row[14]);
                 return $res;
             }
+            //[15]-[21]Group
+            if (!isAlignLeft([$row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21]])) {
+                $res['error_msg'] = __d('gl', "グループ名は左詰めで記入してください。");
+                return $res;
+            }
+
+            //[22]Coach ID
+
+            //[23]-[29]Rater ID
+            if (!isAlignLeft([$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]])) {
+                $res['error_msg'] = __d('gl', "評価者IDは左詰めで記入してください。");
+                return $res;
+            }
+
         }
+
+        //email exists check
 
         $res['error'] = false;
         return $res;
