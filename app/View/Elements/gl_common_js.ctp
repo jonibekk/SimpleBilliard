@@ -35,40 +35,54 @@ echo $this->Html->script('moment.min');
 echo $this->Html->script('gl_basic');
 ?>
 <script type="text/javascript">
-    var cake = {};
-    cake.message = {
-        "a": "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
-        "b": "<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>",
-        "c": "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
-        "d": "<?=__d('validate', "パスワードが一致しません。")?>",
-        "e": "<?=__d('gl',"スペルを入力してください。")?>",
-        "g": "<?=__d('gl',"自分のみ")?>",
-        "h": "<?=__d('gl',"参加")?>",
-        "i": "<?=__d('gl',"不参加")?>",
-        "j": "<?=__d('gl',"該当なし")?>",
-        "k": "<?=__d('gl',"あと")?>",
-        "l": "<?=__d('gl',"文字入れてください")?>",
-        "m": "<?=__d('gl',"検索文字列が")?>",
-        "n": "<?=__d('gl',"文字長すぎます")?>",
-        "o": "<?=__d('gl',"最多で")?>",
-        "p": "<?=__d('gl',"項目までしか選択できません")?>",
-        "q": "<?=__d('gl',"読込中･･･")?>",
-        "r": "<?=__d('gl',"検索中･･･")?>",
-        "s": "<?=__d('gl',"フォロー中")?>",
-        "t": "<?=__d('gl',"フォロー")?>",
-        "u": "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>",
-        "w": "<?=__d('gl', "もっと見る ▼") ?>",
-        "x": "<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>",
-        "z": "<?=__d('gl','これ以上のコメントがありません。')?>",
-        "bb": "<?=__d('gl',"エラーが発生しました。")?>",
-        "dd": "<?=__d('gl',"閉じる")?>",
-        "ee": "<?=__d('validate',"開始日が期限を過ぎています。")?>",
-        "ff": "<?=__d('validate',"期限が開始日以前になっています。")?>"
-    };
-    cake.data = {
-        "a": <?=isset($select2_default)?$select2_default:"[]"?>,
-        "b": function (element, callback) {
-            <?if(isset($current_circle)&&!empty($current_circle)):?>
+    var cake = {
+        message : {
+            validate: {
+                a: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
+                b: "<?=__d('validate', "パスワードが一致しません。")?>"
+            },
+            notice: {
+                a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
+                b: "<?=__d('gl',"スペルを入力してください。")?>",
+                c: "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>",
+                d: "<?=__d('gl',"エラーが発生しました。")?>",
+                e: "<?=__d('validate',"開始日が期限を過ぎています。")?>",
+                f: "<?=__d('validate',"期限が開始日以前になっています。")?>"
+            },
+            info: {
+                a: "<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>",
+                b: "<?=__d('gl',"読込中･･･")?>",
+                c: "<?=__d('gl',"検索中･･･")?>",
+                d: "<?=__d('gl',"フォロー中")?>",
+                e: "<?=__d('gl', "もっと見る ▼") ?>",
+                d: "<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>",
+                e: "<?=__d('gl','これ以上のコメントがありません。')?>",
+                f: "<?=__d('gl',"閉じる")?>"
+            }
+        },
+        word: {
+            a: "<?=__d('gl',"自分のみ")?>",
+            b: "<?=__d('gl',"参加")?>",
+            c: "<?=__d('gl',"不参加")?>",
+            d: "<?=__d('gl',"該当なし")?>",
+            e: "<?=__d('gl',"あと")?>",
+            f: "<?=__d('gl',"文字入れてください")?>",
+            g: "<?=__d('gl',"検索文字列が")?>",
+            h: "<?=__d('gl',"文字長すぎます")?>",
+            i: "<?=__d('gl',"最多で")?>",
+            j: "<?=__d('gl',"項目までしか選択できません")?>"
+        },
+        url : {
+            "a": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+            "b": "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
+            "c": "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
+            "d": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
+            "e": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
+        },
+        data : {
+            "a": <?=isset($select2_default)?$select2_default:"[]"?>,
+            "b": function (element, callback) {
+                <?if(isset($current_circle)&&!empty($current_circle)):?>
                 var data = [
                     {
                         id: "circle_<?=$current_circle['Circle']['id']?>",
@@ -76,7 +90,7 @@ echo $this->Html->script('gl_basic');
                         image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
                     }
                 ];
-            <?else:?>
+                <?else:?>
                 var data = [
                     {
                         'id': 'public',
@@ -84,16 +98,10 @@ echo $this->Html->script('gl_basic');
                         'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
                     }
                 ];
-            <?endif;?>
+                <?endif;?>
                 callback(data);
             }
-    };
-    cake.url = {
-        "a": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
-        "b": "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
-        "c": "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
-        "d": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
-        "e": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
+        }
     };
 
 
