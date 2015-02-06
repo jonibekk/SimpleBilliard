@@ -27,7 +27,7 @@ class TextExHelper extends AppHelper
 
     function autoLink($text)
     {
-        return nl2br($this->autoLinkUrlsEx(h($text), ['target' => 'blank', 'escape' => false]));
+        return nl2br($this->autoLinkUrlsEx($text, ['target' => 'blank']));
     }
 
     function replaceUrl($text, $replacement = "[URL]")
