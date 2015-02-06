@@ -3291,8 +3291,27 @@ Temporary Properties - YOU MUST FIX
 .goalsCard-activity {
     padding: 1px;
     text-align: center;
+    line-height: 34px;
+    height: 38px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-left: 1.6667%;
+    width: 15%;
+}
+.goalsCard-activity:hover,
+.goalsCard-activity:active,
+.goalsCard-activity:focus {
+    border-color: #ae2f2f;
+    text-decoration: none ;
+}
+
+.goalsCard-activity0 {
+    padding: 1px;
+    text-align: center;
     line-height: 40px;
     height: 40px;
+    margin-left: 1.6667%;
+    width: 15%;
 }
 
 .goalsCard-actionInput {
@@ -3556,3 +3575,5 @@ Temporary Properties - YOU MUST FIX
 .selectKrForAction {
     font-size: 10px;
 }
+
+/* コメント太郎 */

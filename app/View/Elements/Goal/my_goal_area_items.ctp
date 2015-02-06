@@ -131,19 +131,19 @@
                                 ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
                                 ></textarea>
                         </div>
-                        <div class="goalsCard-activity inline-block col-xxs-2">
-                            <? if ($goal['Goal']['action_result_count'] > 0): ?>
-                                <a class="click-show-post-modal font_gray-brownRed pointer"
-                                   id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
-                                   href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
-                                    <i class="fa fa-check-circle mr_1px"></i><span
-                                        class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
-                                </a>
-                            <? else: ?>
+                        <? if ($goal['Goal']['action_result_count'] > 0): ?>
+                            <a class="goalsCard-activity inline-block col-xxs-2 click-show-post-modal font_gray-brownRed pointer"
+                               id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                                <i class="fa fa-check-circle mr_1px"></i><span
+                                    class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
+                            </a>
+                        <? else: ?>
+                            <div class="goalsCard-activity0 inline-block col-xxs-2">
                                 <i class="fa fa-check-circle mr_1px"></i><span
                                     class="ls_number">0</span>
-                            <? endif; ?>
-                        </div>
+                            </div>
+                        <? endif; ?>
                     </form>
                 </div>
             <? endif; ?>

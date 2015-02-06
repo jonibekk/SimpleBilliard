@@ -342,11 +342,12 @@ function getAjaxFormReplaceElm() {
     attrUndefinedCheck(this, 'ajax-url');
     var $obj = $(this);
     var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
+    var replace_elm = $('#' + replace_elm_parent_id);
     var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
     var tmp_target_height = $obj.attr("tmp-target-height");
-    $('#' + replace_elm_parent_id).children().remove();
-    $('#' + replace_elm_parent_id).height(tmp_target_height + "px");
+    replace_elm.children().remove();
+    replace_elm.height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
     $.ajax({
         url: ajax_url,
@@ -358,8 +359,8 @@ function getAjaxFormReplaceElm() {
                 alert(data.msg);
             }
             else {
-                $('#' + replace_elm_parent_id).css("height", "");
-                $('#' + replace_elm_parent_id).append(data.html);
+                replace_elm.css("height", "");
+                replace_elm.append(data.html);
                 $('#' + click_target_id).trigger('click').focus();
             }
         }
@@ -961,3 +962,606 @@ $(function () {
     );
 
 });
+
+$(document).ready(function () {
+    //入力途中での警告表示
+    $("input,select,textarea").change(function () {
+        if (!$(this).hasClass('disable-change-warning')) {
+            $(window).on('beforeunload', function () {
+                return cake.message.notice.a;
+            });
+        }
+    });
+    $("input[type=submit]").click(function () {
+        $(window).off('beforeunload');
+    });
+
+    //noinspection JSUnresolvedFunction
+    var client = new ZeroClipboard($('.copy_me'));
+    //noinspection JSUnusedLocalSymbols
+    client.on("ready", function (readyEvent) {
+        client.on("aftercopy", function (event) {
+            alert(cake.message.info.a + ": " + event.data["text/plain"]);
+        });
+    });
+
+    $('[rel="tooltip"]').tooltip();
+
+    $('.validate').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields: {
+            "data[User][password]": {
+                validators: {
+                    stringLength: {
+                        min: 8,
+                        message: cake.message.validate.a
+                    }
+                }
+            },
+            "data[User][password_confirm]": {
+                validators: {
+                    identical: {
+                        field: "data[User][password]",
+                        message: cake.message.validate.b
+                    }
+                }
+            }
+        }
+    });
+    $('#PostDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
+
+    //noinspection JSUnusedLocalSymbols
+    $('#select2Member').select2({
+        multiple: true,
+        minimumInputLength: 2,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    });
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    $('#select2PostCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.a,
+        data: cake.data.a,
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    });
+    $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.modal();
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                $modal_elm.find(".bt-switch").bootstrapSwitch({
+                    size: "small",
+                    onText: cake.word.b,
+                    offText: cake.word.c
+                });
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    });
+
+});
+function format(item) {
+    return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
+}
+function bindSelect2Members($this) {
+    //noinspection JSUnusedLocalSymbols
+    $this.find(".ajax_add_select2_members").select2({
+        'val': null,
+        multiple: true,
+        minimumInputLength: 2,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        initSelection: function (element, callback) {
+            var circle_id = $(element).attr('circle_id');
+            if (circle_id !== "") {
+                $.ajax(cake.url.b + circle_id, {
+                    dataType: 'json'
+                }).done(function (data) {
+                    callback(data.results);
+                });
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    });
+}
+/**
+ * Select2 translation.
+ */
+(function ($) {
+    "use strict";
+
+    //noinspection JSUnusedLocalSymbols
+    $.fn.select2.locales['en'] = {
+        formatNoMatches: function () {
+            return cake.word.d;
+        },
+        formatInputTooShort: function (input, min) {
+            var n = min - input.length;
+            return cake.word.e + n + cake.word.f;
+        },
+        formatInputTooLong: function (input, max) {
+            var n = input.length - max;
+            return cake.word.g + n + cake.word.h;
+        },
+        formatSelectionTooBig: function (limit) {
+            return cake.word.i + limit + cake.word.j;
+        },
+        formatLoadMore: function (pageNumber) {
+            return cake.message.info.b;
+        },
+        formatSearching: function () {
+            return cake.message.info.c;
+        }
+    };
+
+    $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
+})(jQuery);
+
+function evFollowGoal() {
+    attrUndefinedCheck(this, 'goal-id');
+    attrUndefinedCheck(this, 'data-class');
+    var $obj = $(this);
+    var kr_id = $obj.attr('goal-id');
+    var data_class = $obj.attr('data-class');
+    var url = cake.url.c;
+    $.ajax({
+        type: 'GET',
+        url: url + '/' + kr_id,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    text: data.msg
+                });
+            }
+            else {
+                if (data.add) {
+                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
+                        $(this).children('span').text(cake.message.info.d);
+                        $(this).children('i').hide();
+                        $(this).removeClass('follow-off');
+                        $(this).addClass('follow-on');
+                    });
+                }
+                else {
+                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
+                        $(this).children('span').text(cake.message.info.d);
+                        $(this).children('i').show();
+                        $(this).removeClass('follow-on');
+                        $(this).addClass('follow-off');
+                    });
+                }
+            }
+        },
+        error: function () {
+            new PNotify({
+                type: 'error',
+                text: cake.message.notice.c
+            });
+        }
+    });
+    return false;
+}
+
+function getModalPostList(e) {
+    e.preventDefault();
+
+    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).remove();
+    });
+    $modal_elm.modal();
+    var url = $(this).attr('href');
+    if (url.indexOf('#') == 0) {
+        $(url).modal('open');
+    } else {
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            //クリップボードコピーの処理を追加
+            //noinspection JSUnresolvedFunction
+            var client = new ZeroClipboard($modal_elm.find('.copy_me'));
+            //noinspection JSUnusedLocalSymbols
+            client.on("ready", function (readyEvent) {
+                client.on("aftercopy", function (event) {
+                    alert(cake.message.info.a + ": " + event.data["text/plain"]);
+                });
+            });
+            //画像をレイジーロード
+            imageLazyOn();
+            //画像リサイズ
+            $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                $(this).children('.nailthumb-container').nailthumb({
+                    width: 50,
+                    height: 50,
+                    fitDirection: 'center center'
+                });
+            });
+
+            $modal_elm.find('.custom-radio-check').customRadioCheck();
+
+        }).success(function () {
+            $('body').addClass('modal-open');
+        });
+    }
+}
+function evFeedMoreView() {
+    attrUndefinedCheck(this, 'parent-id');
+    attrUndefinedCheck(this, 'next-page-num');
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var parent_id = $obj.attr('parent-id');
+    var next_page_num = $obj.attr('next-page-num');
+    var get_url = $obj.attr('get-url');
+    var month_index = $obj.attr('month-index');
+    var no_data_text_id = $obj.attr('no-data-text-id');
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    //ローダー表示
+    $obj.after($loader_html);
+    //url生成
+    var url = get_url + '/page:' + next_page_num;
+    if (month_index != undefined && month_index > 1) {
+        url = url + '/month_index:' + month_index;
+    }
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //一旦非表示
+                $posts.hide();
+                $("#" + parent_id).before($posts);
+                //html表示
+                $posts.show("slow", function () {
+                    //もっと見る
+                    showMore(this);
+                });
+                //クリップボードコピーの処理を追加
+                //noinspection JSUnresolvedFunction
+                var client = new ZeroClipboard($posts.find('.copy_me'));
+                //noinspection JSUnusedLocalSymbols
+                client.on("ready", function (readyEvent) {
+                    client.on("aftercopy", function (event) {
+                        alert(cake.message.info.a + ": " + event.data["text/plain"]);
+                    });
+                });
+
+                //ページ番号をインクリメント
+                next_page_num++;
+                //次のページ番号をセット
+                $obj.attr('next-page-num', next_page_num);
+                //ローダーを削除
+                $loader_html.remove();
+                //リンクを有効化
+                $obj.text(cake.message.info.e);
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                //画像をレイジーロード
+                imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $('.custom-radio-check').customRadioCheck();
+
+            }
+
+            if (data.count < 20) {
+                if (month_index != undefined) {
+                    //ローダーを削除
+                    $loader_html.remove();
+                    //リンクを有効化
+                    $obj.removeAttr('disabled');
+                    month_index++;
+                    $obj.attr('month-index', month_index);
+                    //次のページ番号をセット
+                    $obj.attr('next-page-num', 1);
+                    $obj.text(cake.message.info.f);
+                    $("#" + no_data_text_id).show();
+                }
+                else {
+                    //ローダーを削除
+                    $loader_html.remove();
+                    $("#" + no_data_text_id).show();
+                    //もっと読む表示をやめる
+                    $obj.remove();
+                }
+            }
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+function evCommentAllView() {
+    attrUndefinedCheck(this, 'parent-id');
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var parent_id = $obj.attr('parent-id');
+    var get_url = $obj.attr('get-url');
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    //ローダー表示
+    $obj.after($loader_html);
+    $.ajax({
+        type: 'GET',
+        url: get_url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //一旦非表示
+                $posts.hide();
+                $("#" + parent_id).before($posts);
+                //html表示
+                $posts.show("slow", function () {
+                    //もっと見る
+                    showMore(this);
+                });
+                //ローダーを削除
+                $loader_html.remove();
+                //リンクを削除
+                $obj.remove();
+                //画像をレイジーロード
+                imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $('.custom-radio-check').customRadioCheck();
+
+            }
+            else {
+                //ローダーを削除
+                $loader_html.remove();
+                //親を取得
+                //noinspection JSCheckFunctionSignatures
+                var $parent = $obj.parent();
+                //「もっと読む」リンクを削除
+                $obj.remove();
+                //データが無かった場合はデータ無いよ。を表示
+                $parent.append(cake.message.info.e);
+            }
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+function evLike() {
+    attrUndefinedCheck(this, 'like_count_id');
+    attrUndefinedCheck(this, 'model_id');
+    attrUndefinedCheck(this, 'like_type');
+
+    var $obj = $(this);
+    var like_count_id = $obj.attr('like_count_id');
+
+    var like_type = $obj.attr('like_type');
+    var url = null;
+    var model_id = $obj.attr('model_id');
+    if (like_type == "post") {
+        url = cake.url.d + "/" + model_id;
+    }
+    else {
+        url = cake.url.e + "/" + model_id;
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (data.error) {
+                alert(cake.message.notice.d);
+            }
+            else {
+                //「いいね」した場合は「いいね取り消し」表示に
+                //noinspection JSUnresolvedVariable
+                if (data.created == true) {
+                    $obj.addClass("liked");
+                }
+                //「いいね取り消し」した場合は「いいね」表示に
+                else {
+                    $obj.removeClass("liked");
+                }
+                $("#" + like_count_id).text(data.count);
+            }
+        },
+        error: function () {
+            alert(cake.message.notice.d);
+        }
+    });
+    return false;
+}
+/**
+ *
+ * @param obj
+ */
+function showMore(obj) {
+    obj = obj || null;
+    if (obj) {
+        $(obj).find('.showmore').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '128px',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
+        });
+        $(obj).find('.showmore-comment').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '105px',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.g + '</i>',
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.f + '</i>'
+        });
+    }
+    else {
+        $('.showmore').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '128px',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
+        });
+        $('.showmore-comment').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '105px',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.g + '</i>',
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
+        });
+    }
+}
+function getModalFormFromUrl(e) {
+    e.preventDefault();
+    var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).remove();
+    });
+    $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).find('textarea').each(function () {
+            $(this).autosize();
+        });
+        $(this).find('.input-group.date').datepicker({
+            format: "yyyy/mm/dd",
+            todayBtn: 'linked',
+            language: "ja",
+            autoclose: true,
+            todayHighlight: true
+            //endDate:"2015/11/30"
+        })
+            .on('hide', function (e) {
+                $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
+                $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
+            });
+    });
+    var url = $(this).attr('href');
+    if (url.indexOf('#') == 0) {
+        $(url).modal('open');
+    } else {
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.find('form').bootstrapValidator({
+                live: 'enabled',
+                feedbackIcons: {},
+                fields: {
+                    "data[KeyResult][start_date]": {
+                        validators: {
+                            callback: {
+                                message: cake.message.notice.e,
+                                callback: function (value, validator) {
+                                    var m = new moment(value, 'YYYY/MM/DD', true);
+                                    return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
+                                }
+                            }
+                        }
+                    },
+                    "data[KeyResult][end_date]": {
+                        validators: {
+                            callback: {
+                                message: cake.message.notice.f,
+                                callback: function (value, validator) {
+                                    var m = new moment(value, 'YYYY/MM/DD', true);
+                                    return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            $modal_elm.modal();
+            $('body').addClass('modal-open');
+        });
+    }
+}
