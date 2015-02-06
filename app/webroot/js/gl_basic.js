@@ -342,11 +342,12 @@ function getAjaxFormReplaceElm() {
     attrUndefinedCheck(this, 'ajax-url');
     var $obj = $(this);
     var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
+    var replace_elm = $('#' + replace_elm_parent_id);
     var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
     var tmp_target_height = $obj.attr("tmp-target-height");
-    $('#' + replace_elm_parent_id).children().remove();
-    $('#' + replace_elm_parent_id).height(tmp_target_height + "px");
+    replace_elm.children().remove();
+    replace_elm.height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
     $.ajax({
         url: ajax_url,
@@ -358,8 +359,8 @@ function getAjaxFormReplaceElm() {
                 alert(data.msg);
             }
             else {
-                $('#' + replace_elm_parent_id).css("height", "");
-                $('#' + replace_elm_parent_id).append(data.html);
+                replace_elm.css("height", "");
+                replace_elm.append(data.html);
                 $('#' + click_target_id).trigger('click').focus();
             }
         }
@@ -1336,7 +1337,7 @@ function evFeedMoreView() {
                     $obj.attr('month-index', month_index);
                     //次のページ番号をセット
                     $obj.attr('next-page-num', 1);
-                    $obj.text(cake.message.info.d);
+                    $obj.text(cake.message.info.f);
                     $("#" + no_data_text_id).show();
                 }
                 else {
@@ -1478,13 +1479,13 @@ function showMore(obj) {
             speedUp: 300,
             height: '128px',
             showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.f + '</i>'
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
         });
         $(obj).find('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.g + '</i>',
             hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.f + '</i>'
         });
     }
@@ -1494,14 +1495,14 @@ function showMore(obj) {
             speedUp: 300,
             height: '128px',
             showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.f + '</i>'
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
         });
         $('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.f + '</i>'
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.g + '</i>',
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
         });
     }
 }

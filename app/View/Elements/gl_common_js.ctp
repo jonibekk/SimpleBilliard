@@ -34,6 +34,7 @@ echo $this->Html->script('locales/bootstrap-datepicker.ja');
 echo $this->Html->script('moment.min');
 echo $this->Html->script('gl_basic');
 ?>
+<!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
     var cake = {
         message : {
@@ -55,9 +56,9 @@ echo $this->Html->script('gl_basic');
                 c: "<?=__d('gl',"検索中･･･")?>",
                 d: "<?=__d('gl',"フォロー中")?>",
                 e: "<?=__d('gl', "もっと見る ▼") ?>",
-                d: "<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>",
-                e: "<?=__d('gl','これ以上のコメントがありません。')?>",
-                f: "<?=__d('gl',"閉じる")?>"
+                f: "<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>",
+                g: "<?=__d('gl','これ以上のコメントがありません。')?>",
+                h: "<?=__d('gl',"閉じる")?>"
             }
         },
         word: {
@@ -82,23 +83,17 @@ echo $this->Html->script('gl_basic');
         data : {
             "a": <?=isset($select2_default)?$select2_default:"[]"?>,
             "b": function (element, callback) {
-                <?if(isset($current_circle)&&!empty($current_circle)):?>
-                var data = [
-                    {
-                        id: "circle_<?=$current_circle['Circle']['id']?>",
-                        text: "<?=h($current_circle['Circle']['name'])?>",
-                        image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    }
-                ];
-                <?else:?>
-                var data = [
-                    {
-                        'id': 'public',
-                        'text': "<?=__d('gl',"チーム全体")?>",
-                        'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
-                    }
-                ];
-                <?endif;?>
+                var data = [{
+                    <?if(isset($current_circle)&&!empty($current_circle)):?>
+                    id: "circle_<?=$current_circle['Circle']['id']?>",
+                    text: "<?=h($current_circle['Circle']['name'])?>",
+                    image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
+                    <?else:?>
+                    id: 'public',
+                    text: "<?=__d('gl',"チーム全体")?>",
+                    image: "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
+                    <?endif;?>
+                }];
                 callback(data);
             }
         }
