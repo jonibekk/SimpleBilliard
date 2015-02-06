@@ -1086,8 +1086,11 @@ $(document).ready(function () {
             });
         }
     });
-
+    $(document).on("click", ".dashboardProfileCard-avatarImage", function() {
+        notifyNewFeed();
+    });
 });
+
 function format(item) {
     return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
 }
@@ -1567,4 +1570,23 @@ function getModalFormFromUrl(e) {
             $('body').addClass('modal-open');
         });
     }
+}
+function notifyNewFeed() {
+    var numArea = $("#newFeedNotify .num");
+    var num = parseInt(numArea.html());
+
+    // インクリメント
+    numArea.html(num + 1);
+
+    if(num > 1) return;
+
+    // 未読が0の場合
+    $("#newFeedNotify").css("display", function () {
+        return "block";
+    });
+    var i = 0.2;
+    setInterval(function () {
+        $("#newFeedNotify").css("opacity", i);
+        i = i + 0.2;
+    }, 100);
 }
