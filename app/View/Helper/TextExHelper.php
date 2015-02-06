@@ -52,6 +52,7 @@ class TextExHelper extends AppHelper
     {
         $this->_placeholders = array();
         $options += array('escape' => true);
+        # URLに使用可能な文字列のみ抽出
         $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[a-zA-Z0-9;/?:@&=+$,\%\#._-]+)#ui';
         $text = preg_replace_callback(
             $pattern,
