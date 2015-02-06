@@ -306,113 +306,82 @@ class TeamMember extends AppModel
                 return $res;
             }
 
-            //[4]Member Active State(*)
+            //[4]Administrator(*)
             if (!viaIsSet($row[4])) {
-                $res['error_msg'] = __d('gl', "メンバーのアクティブ状態は必須項目です。");
-                return $res;
-            }
-            // ON or OFF check
-            if (!isOnOrOff($row[4])) {
-                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', 'メンバーアクティブ状態'));
-                return $res;
-            }
-
-            //[5]Administrator(*)
-            if (!viaIsSet($row[5])) {
                 $res['error_msg'] = __d('gl', "管理者は必須項目です。");
                 return $res;
             }
             // ON or OFF check
-            if (!isOnOrOff($row[5])) {
+            if (!isOnOrOff($row[4])) {
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
                 return $res;
             }
 
-            //[6]Member Type(*)
-            if (!viaIsSet($row[6])) {
-                $res['error_msg'] = __d('gl', "メンバータイプは必須項目です。");
-                return $res;
-            }
-
-            //[7]Evaluated(*)
-            if (!viaIsSet($row[7])) {
+            //[5]Evaluated(*)
+            if (!viaIsSet($row[5])) {
                 $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
                 return $res;
             }
             // ON or OFF check
-            if (!isOnOrOff($row[7])) {
+            if (!isOnOrOff($row[5])) {
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
                 return $res;
             }
-
-            //[8]Group
+            //[6]Member Type
             //no check
 
-            //[9]Local Name Language Code
+            //[7]Local Name Language Code
             //available language code check
-            if (viaIsSet($row[9]) && array_search($row[9], $this->support_lang_codes) === false) {
-                $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row[9]);
+            if (viaIsSet($row[7]) && array_search($row[7], $this->support_lang_codes) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row[7]);
                 return $res;
             }
 
-            //[10]Local First Name
+            //[8]Local First Name
             //no check
 
-            //[11]Local Last Name
+            //[9]Local Last Name
             //no check
 
-            //[12]Phone
+            //[10]Phone
             //validation check
-            if (viaIsSet($row[12]) && !preg_match('/^[0-9-\(\)]+$/', $row[12])) {
-                $res['error_msg'] = __d('gl', "'%s'の電話番号は正しくありません。使用できる文字は半角数字、'-()'です。", $row[12]);
+            if (viaIsSet($row[10]) && !preg_match('/^[0-9-\(\)]+$/', $row[10])) {
+                $res['error_msg'] = __d('gl', "'%s'の電話番号は正しくありません。使用できる文字は半角数字、'-()'です。", $row[10]);
                 return $res;
             }
 
-            //[13]Gender
+            //[11]Gender
             //validation check
-            if (viaIsSet($row[13]) && array_search($row[13], ['male', 'female']) === false) {
-                $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row[13]);
+            if (viaIsSet($row[11]) && array_search($row[11], ['male', 'female']) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row[11]);
                 return $res;
             }
 
-            //[14]Birth Year
+            //[12]Birth Year
             //all or nothing check
-            if (!isAllOrNothing([$row[14], $row[15], $row[16]])) {
+            if (!isAllOrNothing([$row[12], $row[13], $row[14]])) {
                 $res['error_msg'] = __d('gl', "誕生日を記入する場合は年月日のすべての項目を記入してください。");
                 return $res;
             }
             //validation check
-            if (viaIsSet($row[14]) && !preg_match('/^\d{4}$/', $row[14])) {
-                $res['error_msg'] = __d('gl', "'%s'は誕生年として正しくありません。", $row[14]);
+            if (viaIsSet($row[12]) && !preg_match('/^\d{4}$/', $row[12])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生年として正しくありません。", $row[12]);
                 return $res;
             }
 
-            //[15]Birth Month
+            //[13]Birth Month
             //validation check
-            if (viaIsSet($row[15]) && !preg_match('/^\d{1,2}$/', $row[15])) {
-                $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row[15]);
+            if (viaIsSet($row[13]) && !preg_match('/^\d{1,2}$/', $row[13])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row[13]);
                 return $res;
             }
 
-            //[16]Birth Day
+            //[14]Birth Day
             //validation check
-            if (viaIsSet($row[16]) && !preg_match('/^\d{1,2}$/', $row[16])) {
-                $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row[16]);
+            if (viaIsSet($row[14]) && !preg_match('/^\d{1,2}$/', $row[14])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row[14]);
                 return $res;
             }
-
-            //[17]Coach Member ID
-            //exists in team or in csv file check
-
-            //[18]Rater1 Member ID
-            //exists in team or in csv file check
-
-            //[19]Rater2 Member ID
-            //exists in team or in csv file check
-
-            //[20]Rater3 Member ID
-            //exists in team or in csv file check
-
         }
 
         $res['error'] = false;
@@ -436,7 +405,7 @@ class TeamMember extends AppModel
                 __d('gl', "ローマ字姓(*)"),
                 __d('gl', "管理者(*)"),
                 __d('gl', "評価対象(*)"),
-                __d('gl', "メンバータイプ(*)"),
+                __d('gl', "メンバータイプ"),
                 __d('gl', "ローカル姓名の言語コード"),
                 __d('gl', "ローカル名"),
                 __d('gl', "ローカル姓"),
