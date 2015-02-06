@@ -389,16 +389,30 @@ class TeamMember extends AppModel
             }
 
             //[22]Coach ID
+            //not allow include own member ID
+            if (!empty($row[1]) && $row[1] == $row[22]) {
+                $res['error_msg'] = __d('gl', "コーチIDに本人のIDを指定する事はできません。");
+                return $res;
+            }
 
             //[23]-[29]Rater ID
             if (!isAlignLeft([$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]])) {
                 $res['error_msg'] = __d('gl', "評価者IDは左詰めで記入してください。");
                 return $res;
             }
+            //not allow include own member ID
+            if (!empty($row[1]) && in_array($row[1],
+                                            [$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]])
+            ) {
+                $res['error_msg'] = __d('gl', "評価者IDに本人のIDを指定する事はできません。");
+                return $res;
+            }
 
         }
 
         //email exists check
+
+        //coach id check
 
         $res['error'] = false;
         return $res;
