@@ -1411,7 +1411,7 @@ function evCommentAllView() {
                 var $parent = $obj.parent();
                 //「もっと読む」リンクを削除
                 $obj.remove();
-                //データが無かった場合はデータ無いよ。を表示
+                //「データが無かった場合はデータ無いよ」を表示
                 $parent.append(cake.message.info.g);
             }
         },
