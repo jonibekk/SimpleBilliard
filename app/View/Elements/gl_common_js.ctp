@@ -34,631 +34,71 @@ echo $this->Html->script('locales/bootstrap-datepicker.ja');
 echo $this->Html->script('moment.min');
 echo $this->Html->script('gl_basic');
 ?>
+<!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        //入力途中での警告表示
-        $("input,select,textarea").change(function () {
-            if (!$(this).hasClass('disable-change-warning')) {
-                $(window).on('beforeunload', function () {
-                    return "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>";
-                });
+    var cake = {
+        message : {
+            validate: {
+                a: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
+                b: "<?=__d('validate', "パスワードが一致しません。")?>"
+            },
+            notice: {
+                a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
+                b: "<?=__d('gl',"スペルを入力してください。")?>",
+                c: "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>",
+                d: "<?=__d('gl',"エラーが発生しました。")?>",
+                e: "<?=__d('validate',"開始日が期限を過ぎています。")?>",
+                f: "<?=__d('validate',"期限が開始日以前になっています。")?>"
+            },
+            info: {
+                a: "<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>",
+                b: "<?=__d('gl',"読込中･･･")?>",
+                c: "<?=__d('gl',"検索中･･･")?>",
+                d: "<?=__d('gl',"フォロー中")?>",
+                e: "<?=__d('gl', "もっと見る ▼") ?>",
+                f: "<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>",
+                g: "<?=__d('gl','これ以上のコメントがありません。')?>",
+                h: "<?=__d('gl',"閉じる")?>"
             }
-        });
-        $("input[type=submit]").click(function () {
-            $(window).off('beforeunload');
-        });
-
-        //noinspection JSUnresolvedFunction
-        var client = new ZeroClipboard($('.copy_me'));
-        //noinspection JSUnusedLocalSymbols
-        client.on("ready", function (readyEvent) {
-            client.on("aftercopy", function (event) {
-                alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
-            });
-        });
-
-        $('[rel="tooltip"]').tooltip();
-
-        $('.validate').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
-            fields: {
-                "data[User][password]": {
-                    validators: {
-                        stringLength: {
-                            min: 8,
-                            message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
-                        }
-                    }
-                },
-                "data[User][password_confirm]": {
-                    validators: {
-                        identical: {
-                            field: "data[User][password]",
-                            message: "<?=__d('validate', "パスワードが一致しません。")?>"
-                        }
-                    }
-                }
-            }
-        });
-        $('#PostDisplayForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {},
-            fields: {}
-        });
-
-        //noinspection JSUnusedLocalSymbols
-        $('#select2Member').select2({
-            multiple: true,
-            minimumInputLength: 2,
-            placeholder: "<?=__d('gl',"スペルを入力してください。")?>",
-            ajax: {
-                url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
-                dataType: 'json',
-                quietMillis: 100,
-                cache: true,
-                data: function (term, page) {
-                    return {
-                        term: term, //search term
-                        page_limit: 10 // page size
-                    };
-                },
-                results: function (data, page) {
-                    return {results: data.results};
-                }
-            },
-            formatSelection: format,
-            formatResult: format,
-            escapeMarkup: function (m) {
-                return m;
-            },
-            containerCssClass: "select2Member"
-        });
-        //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-        $('#select2PostCircleMember').select2({
-            multiple: true,
-            placeholder: "<?=__d('gl',"自分のみ")?>",
-            data: <?=isset($select2_default)?$select2_default:"[]"?>,
-            <?if(isset($current_circle)&&!empty($current_circle)):?>
-            initSelection: function (element, callback) {
-                var data = [
-                    {
-                        id: "circle_<?=$current_circle['Circle']['id']?>",
-                        text: "<?=h($current_circle['Circle']['name'])?>",
-                        image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    }
-                ];
+        },
+        word: {
+            a: "<?=__d('gl',"自分のみ")?>",
+            b: "<?=__d('gl',"参加")?>",
+            c: "<?=__d('gl',"不参加")?>",
+            d: "<?=__d('gl',"該当なし")?>",
+            e: "<?=__d('gl',"あと")?>",
+            f: "<?=__d('gl',"文字入れてください")?>",
+            g: "<?=__d('gl',"検索文字列が")?>",
+            h: "<?=__d('gl',"文字長すぎます")?>",
+            i: "<?=__d('gl',"最多で")?>",
+            j: "<?=__d('gl',"項目までしか選択できません")?>"
+        },
+        url : {
+            "a": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+            "b": "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
+            "c": "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
+            "d": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
+            "e": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
+        },
+        data : {
+            "a": <?=isset($select2_default)?$select2_default:"[]"?>,
+            "b": function (element, callback) {
+                var data = [{
+                    <?if(isset($current_circle)&&!empty($current_circle)):?>
+                    id: "circle_<?=$current_circle['Circle']['id']?>",
+                    text: "<?=h($current_circle['Circle']['name'])?>",
+                    image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
+                    <?else:?>
+                    id: 'public',
+                    text: "<?=__d('gl',"チーム全体")?>",
+                    image: "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
+                    <?endif;?>
+                }];
                 callback(data);
-            },
-            <?else:?>
-            initSelection: function (element, callback) {
-                var data = [
-                    {
-                        'id': 'public',
-                        'text': "<?=__d('gl',"チーム全体")?>",
-                        'image': "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
-                    }
-                ];
-                callback(data);
-            },
-            <?endif;?>
-            formatSelection: format,
-            formatResult: format,
-            dropdownCssClass: 's2-post-dropdown',
-            escapeMarkup: function (m) {
-                return m;
-            },
-            containerCssClass: "select2PostCircleMember"
-        });
-        $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
-            e.preventDefault();
-            var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-            $modal_elm.on('hidden.bs.modal', function (e) {
-                $(this).remove();
-            });
-            $modal_elm.modal();
-            var url = $(this).attr('href');
-            if (url.indexOf('#') == 0) {
-                $(url).modal('open');
-            } else {
-                $.get(url, function (data) {
-                    $modal_elm.append(data);
-                    $modal_elm.find(".bt-switch").bootstrapSwitch({
-                        size: "small",
-                        onText: "<?=__d('gl',"参加")?>",
-                        offText: "<?=__d('gl',"不参加")?>"
-                    });
-                }).success(function () {
-                    $('body').addClass('modal-open');
-                });
             }
-        });
-
-    });
-    function format(item) {
-        return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
-    }
-    function bindSelect2Members($this) {
-        //noinspection JSUnusedLocalSymbols
-        $this.find(".ajax_add_select2_members").select2({
-            'val': null,
-            multiple: true,
-            minimumInputLength: 2,
-            placeholder: "<?=__d('gl',"スペルを入力してください。")?>",
-            ajax: {
-                url: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
-                dataType: 'json',
-                quietMillis: 100,
-                cache: true,
-                data: function (term, page) {
-                    return {
-                        term: term, //search term
-                        page_limit: 10 // page size
-                    };
-                },
-                results: function (data, page) {
-                    return {results: data.results};
-                }
-            },
-            initSelection: function (element, callback) {
-                var circle_id = $(element).attr('circle_id');
-                if (circle_id !== "") {
-                    $.ajax("<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/" + circle_id, {
-                        dataType: 'json'
-                    }).done(function (data) {
-                        callback(data.results);
-                    });
-                }
-            },
-            formatSelection: format,
-            formatResult: format,
-            escapeMarkup: function (m) {
-                return m;
-            },
-            containerCssClass: "select2Member"
-        });
-    }
-    /**
-     * Select2 translation.
-     */
-    (function ($) {
-        "use strict";
-
-        //noinspection JSUnusedLocalSymbols
-        $.fn.select2.locales['en'] = {
-            formatNoMatches: function () {
-                return "<?=__d('gl',"該当なし")?>";
-            },
-            formatInputTooShort: function (input, min) {
-                var n = min - input.length;
-                return "<?=__d('gl',"あと")?>" + n + "<?=__d('gl',"文字入れてください")?>";
-            },
-            formatInputTooLong: function (input, max) {
-                var n = input.length - max;
-                return "<?=__d('gl',"検索文字列が")?>" + n + "<?=__d('gl',"文字長すぎます")?>";
-            },
-            formatSelectionTooBig: function (limit) {
-                return "<?=__d('gl',"最多で")?>" + limit + "<?=__d('gl',"項目までしか選択できません")?>";
-            },
-            formatLoadMore: function (pageNumber) {
-                return "<?=__d('gl',"読込中･･･")?>";
-            },
-            formatSearching: function () {
-                return "<?=__d('gl',"検索中･･･")?>";
-            }
-        };
-
-        $.extend($.fn.select2.defaults, $.fn.select2.locales['en']);
-    })(jQuery);
-
-    function evFollowGoal() {
-        attrUndefinedCheck(this, 'goal-id');
-        attrUndefinedCheck(this, 'data-class');
-        var $obj = $(this);
-        var kr_id = $obj.attr('goal-id');
-        var data_class = $obj.attr('data-class');
-        var url = "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>";
-        $.ajax({
-            type: 'GET',
-            url: url + '/' + kr_id,
-            async: true,
-            dataType: 'json',
-            success: function (data) {
-                if (data.error) {
-                    new PNotify({
-                        type: 'error',
-                        text: data.msg
-                    });
-                }
-                else {
-                    if (data.add) {
-                        $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
-                            $(this).children('span').text("<?=__d('gl',"フォロー中")?>");
-                            $(this).children('i').hide();
-                            $(this).removeClass('follow-off');
-                            $(this).addClass('follow-on');
-                        });
-                    }
-                    else {
-                        $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
-                            $(this).children('span').text("<?=__d('gl',"フォロー")?>");
-                            $(this).children('i').show();
-                            $(this).removeClass('follow-on');
-                            $(this).addClass('follow-off');
-                        });
-                    }
-                }
-            },
-            error: function () {
-                new PNotify({
-                    type: 'error',
-                    text: "<?=__d('gl',"エラーが発生しました。データ取得できません。")?>"
-                });
-            }
-        });
-        return false;
-    }
-
-    function getModalPostList(e) {
-        e.preventDefault();
-
-        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $(this).remove();
-        });
-        $modal_elm.modal();
-        var url = $(this).attr('href');
-        if (url.indexOf('#') == 0) {
-            $(url).modal('open');
-        } else {
-            $.get(url, function (data) {
-                $modal_elm.append(data);
-                //クリップボードコピーの処理を追加
-                //noinspection JSUnresolvedFunction
-                var client = new ZeroClipboard($modal_elm.find('.copy_me'));
-                //noinspection JSUnusedLocalSymbols
-                client.on("ready", function (readyEvent) {
-                    client.on("aftercopy", function (event) {
-                        alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
-                    });
-                });
-                //画像をレイジーロード
-                imageLazyOn();
-                //画像リサイズ
-                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
-                    });
-                });
-
-                $modal_elm.find('.custom-radio-check').customRadioCheck();
-
-            }).success(function () {
-                $('body').addClass('modal-open');
-            });
         }
-    }
-    function evFeedMoreView() {
-        attrUndefinedCheck(this, 'parent-id');
-        attrUndefinedCheck(this, 'next-page-num');
-        attrUndefinedCheck(this, 'get-url');
+    };
 
-        var $obj = $(this);
-        var parent_id = $obj.attr('parent-id');
-        var next_page_num = $obj.attr('next-page-num');
-        var get_url = $obj.attr('get-url');
-        var month_index = $obj.attr('month-index');
-        var no_data_text_id = $obj.attr('no-data-text-id');
-        //リンクを無効化
-        $obj.attr('disabled', 'disabled');
-        var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-        //ローダー表示
-        $obj.after($loader_html);
-        //url生成
-        var url = get_url + '/page:' + next_page_num;
-        if (month_index != undefined && month_index > 1) {
-            url = url + '/month_index:' + month_index;
-        }
-        $.ajax({
-            type: 'GET',
-            url: url,
-            async: true,
-            dataType: 'json',
-            success: function (data) {
-                if (!$.isEmptyObject(data.html)) {
-                    //取得したhtmlをオブジェクト化
-                    var $posts = $(data.html);
-                    //一旦非表示
-                    $posts.hide();
-                    $("#" + parent_id).before($posts);
-                    //html表示
-                    $posts.show("slow", function () {
-                        //もっと見る
-                        showMore(this);
-                    });
-                    //クリップボードコピーの処理を追加
-                    //noinspection JSUnresolvedFunction
-                    var client = new ZeroClipboard($posts.find('.copy_me'));
-                    //noinspection JSUnusedLocalSymbols
-                    client.on("ready", function (readyEvent) {
-                        client.on("aftercopy", function (event) {
-                            alert("<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>: " + event.data["text/plain"]);
-                        });
-                    });
-
-                    //ページ番号をインクリメント
-                    next_page_num++;
-                    //次のページ番号をセット
-                    $obj.attr('next-page-num', next_page_num);
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //リンクを有効化
-                    $obj.text("<?=__d('gl', "もっと見る ▼") ?>");
-                    $obj.removeAttr('disabled');
-                    $("#ShowMoreNoData").hide();
-                    //画像をレイジーロード
-                    imageLazyOn();
-                    //画像リサイズ
-                    $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                        $(this).children('.nailthumb-container').nailthumb({
-                            width: 50,
-                            height: 50,
-                            fitDirection: 'center center'
-                        });
-                    });
-
-                    $('.custom-radio-check').customRadioCheck();
-
-                }
-
-                if (data.count < 20) {
-                    if (month_index != undefined) {
-                        //ローダーを削除
-                        $loader_html.remove();
-                        //リンクを有効化
-                        $obj.removeAttr('disabled');
-                        month_index++;
-                        $obj.attr('month-index', month_index);
-                        //次のページ番号をセット
-                        $obj.attr('next-page-num', 1);
-                        $obj.text("<?=__d('gl', "さらに以前の投稿を読み込む ▼") ?>");
-                        $("#" + no_data_text_id).show();
-                    }
-                    else {
-                        //ローダーを削除
-                        $loader_html.remove();
-                        $("#" + no_data_text_id).show();
-                        //もっと読む表示をやめる
-                        $obj.remove();
-                    }
-                }
-            },
-            error: function () {
-                alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
-            }
-        });
-        return false;
-    }
-
-    function evCommentAllView() {
-        attrUndefinedCheck(this, 'parent-id');
-        attrUndefinedCheck(this, 'get-url');
-
-        var $obj = $(this);
-        var parent_id = $obj.attr('parent-id');
-        var get_url = $obj.attr('get-url');
-        //リンクを無効化
-        $obj.attr('disabled', 'disabled');
-        var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-        //ローダー表示
-        $obj.after($loader_html);
-        $.ajax({
-            type: 'GET',
-            url: get_url,
-            async: true,
-            dataType: 'json',
-            success: function (data) {
-                if (!$.isEmptyObject(data.html)) {
-                    //取得したhtmlをオブジェクト化
-                    var $posts = $(data.html);
-                    //一旦非表示
-                    $posts.hide();
-                    $("#" + parent_id).before($posts);
-                    //html表示
-                    $posts.show("slow", function () {
-                        //もっと見る
-                        showMore(this);
-                    });
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //リンクを削除
-                    $obj.remove();
-                    //画像をレイジーロード
-                    imageLazyOn();
-                    //画像リサイズ
-                    $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                        $(this).children('.nailthumb-container').nailthumb({
-                            width: 50,
-                            height: 50,
-                            fitDirection: 'center center'
-                        });
-                    });
-
-                    $('.custom-radio-check').customRadioCheck();
-
-                }
-                else {
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //親を取得
-                    //noinspection JSCheckFunctionSignatures
-                    var $parent = $obj.parent();
-                    //「もっと読む」リンクを削除
-                    $obj.remove();
-                    //データが無かった場合はデータ無いよ。を表示
-                    $parent.append("<?=__d('gl','これ以上のコメントがありません。')?>");
-                }
-            },
-            error: function () {
-                alert("<?=__d('gl',"エラーが発生しました。データ取得できません。")?>");
-            }
-        });
-        return false;
-    }
-    function evLike() {
-        attrUndefinedCheck(this, 'like_count_id');
-        attrUndefinedCheck(this, 'model_id');
-        attrUndefinedCheck(this, 'like_type');
-
-        var $obj = $(this);
-        var like_count_id = $obj.attr('like_count_id');
-
-        var like_type = $obj.attr('like_type');
-        var url = null;
-        var model_id = $obj.attr('model_id');
-        if (like_type == "post") {
-            url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>" + "/" + model_id;
-        }
-        else {
-            url = "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>" + "/" + model_id;
-        }
-
-        $.ajax({
-            type: 'GET',
-            url: url,
-            async: true,
-            dataType: 'json',
-            success: function (data) {
-                if (data.error) {
-                    alert("<?=__d('gl',"エラーが発生しました。")?>");
-                }
-                else {
-                    //「いいね」した場合は「いいね取り消し」表示に
-                    //noinspection JSUnresolvedVariable
-                    if (data.created == true) {
-                        $obj.addClass("liked");
-                    }
-                    //「いいね取り消し」した場合は「いいね」表示に
-                    else {
-                        $obj.removeClass("liked");
-                    }
-                    $("#" + like_count_id).text(data.count);
-                }
-            },
-            error: function () {
-                alert("<?=__d('gl',"エラーが発生しました。")?>");
-            }
-        });
-        return false;
-    }
-    /**
-     *
-     * @param obj
-     */
-    function showMore(obj) {
-        obj = obj || null;
-        if (obj) {
-            $(obj).find('.showmore').showMore({
-                speedDown: 300,
-                speedUp: 300,
-                height: '128px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
-            });
-            $(obj).find('.showmore-comment').showMore({
-                speedDown: 300,
-                speedUp: 300,
-                height: '105px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
-            });
-        }
-        else {
-            $('.showmore').showMore({
-                speedDown: 300,
-                speedUp: 300,
-                height: '128px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
-            });
-            $('.showmore-comment').showMore({
-                speedDown: 300,
-                speedUp: 300,
-                height: '105px',
-                showText: '<i class="fa fa-angle-double-down"></i><?=__d('gl',"もっと見る")?>',
-                hideText: '<i class="fa fa-angle-double-up"></i><?=__d('gl',"閉じる")?>'
-            });
-        }
-    }
-    function getModalFormFromUrl(e) {
-        e.preventDefault();
-        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $(this).remove();
-        });
-        $modal_elm.on('shown.bs.modal', function (e) {
-            $(this).find('textarea').each(function () {
-                $(this).autosize();
-            });
-            $(this).find('.input-group.date').datepicker({
-                format: "yyyy/mm/dd",
-                todayBtn: 'linked',
-                language: "ja",
-                autoclose: true,
-                todayHighlight: true
-                //endDate:"2015/11/30"
-            })
-                .on('hide', function (e) {
-                    $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
-                    $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
-                });
-        });
-        var url = $(this).attr('href');
-        if (url.indexOf('#') == 0) {
-            $(url).modal('open');
-        } else {
-            $.get(url, function (data) {
-                $modal_elm.append(data);
-                $modal_elm.find('form').bootstrapValidator({
-                    live: 'enabled',
-                    feedbackIcons: {},
-                    fields: {
-                        "data[KeyResult][start_date]": {
-                            validators: {
-                                callback: {
-                                    message: "<?=__d('validate',"開始日が期限を過ぎています。")?>",
-                                    callback: function (value, validator) {
-                                        var m = new moment(value, 'YYYY/MM/DD', true);
-                                        return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
-                                    }
-                                }
-                            }
-                        },
-                        "data[KeyResult][end_date]": {
-                            validators: {
-                                callback: {
-                                    message: "<?=__d('validate',"期限が開始日以前になっています。")?>",
-                                    callback: function (value, validator) {
-                                        var m = new moment(value, 'YYYY/MM/DD', true);
-                                        return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-                $modal_elm.modal();
-                $('body').addClass('modal-open');
-            });
-        }
-    }
 
     <?if(isset($mode_view)):?>
     <?if($mode_view == MODE_VIEW_TUTORIAL):?>
