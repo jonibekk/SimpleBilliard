@@ -32,6 +32,7 @@ echo $this->Html->script('select2.min');
 echo $this->Html->script('bootstrap-datepicker.min');
 echo $this->Html->script('locales/bootstrap-datepicker.ja');
 echo $this->Html->script('moment.min');
+echo $this->Html->script('pusher.min');
 echo $this->Html->script('gl_basic');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
@@ -95,7 +96,8 @@ echo $this->Html->script('gl_basic');
                     <?endif;?>
                 }];
                 callback(data);
-            }
+            },
+            "c": <?=$my_channels_json?>
         }
     };
 

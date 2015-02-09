@@ -17,6 +17,7 @@ class PostsController extends AppController
      */
     public function add()
     {
+        did("test");
         $this->request->allowMethod('post');
 
         // ogbをインサートデータに追加
@@ -25,6 +26,12 @@ class PostsController extends AppController
         // 投稿を保存
         if ($this->Post->addNormal($this->request->data)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+            // pusherに通知
+            if (viaisSet($this->Post->data['socket_id'])) {
+                $data = array('is_postfeed' => true);
+                $channel_name = "team_all_" . $this->Session->read('current_team_id');
+                $this->NotifyBiz->push($channel_name, $this->Post->data['Post']['socket_id'], $data);
+            }
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             $this->redirect($this->referer());
         }

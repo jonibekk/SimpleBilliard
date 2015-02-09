@@ -969,4 +969,17 @@ class User extends AppModel
         }
         return null;
     }
+
+    function getMyChannelsJson()
+    {
+        $my_channels = [];
+        $my_channels[] = 'team_all_' . $this->current_team_id;
+        $my_channels[] = 'user_' . $this->my_uid . '_team_' . $this->current_team_id;
+        $my_circles = $this->CircleMember->getMyCircleList();
+        foreach ($my_circles as $val) {
+            $my_channels[] = 'circle_' . $val;
+        }
+        return json_encode($my_channels);
+    }
+
 }
