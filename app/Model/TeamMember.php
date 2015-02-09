@@ -273,8 +273,7 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "メールアドレスは必須項目です。");
                 return $res;
             }
-            $this->User->Email->set(['email' => $row[0]]);
-            if (!$this->User->Email->validates()) {
+            if (!Validation::email($row[0])) {
                 $res['error_msg'] = __d('gl', "メールアドレスが正しくありません。");
                 return $res;
             }
@@ -439,19 +438,25 @@ class TeamMember extends AppModel
 //        $this->log($coach_ids);
 //        $this->log($rater_ids);
 
-        //メールアドレスは重複してはいけない
+        //email exists check
+        //E-mail address should not be duplicated
         if (count($emails) != count(array_unique($emails))) {
             $duplicate_emails = array_filter(array_count_values($emails), 'isOver2');
             $duplicate_email = key($duplicate_emails);
             //set line no
-            $res['error_line_no'] = array_search($duplicate_email, $emails) + 1;
+            $res['error_line_no'] = array_search($duplicate_email, $emails) + 2;
             $res['error_msg'] = __d('gl', "重複したメールアドレスが含まれています。");
             return $res;
         }
 
-        //email exists check
-
         //already joined team check
+        $joined_emails = $this->User->Email->getEmailsBelongTeamByEmail($emails);
+        foreach ($joined_emails as $email) {
+            //set line no
+            $res['error_line_no'] = array_search($email['Email']['email'], $emails) + 2;
+            $res['error_msg'] = __d('gl', "既にチームに参加しているメールアドレスです。");
+            return $res;
+        }
 
         //exists member id check
 
