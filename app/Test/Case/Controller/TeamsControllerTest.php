@@ -253,12 +253,13 @@ class TeamsControllerTest extends ControllerTestCase
 
     }
 
-    function testAjaxUploadNewMembersCsv()
+    function testAjaxUploadNewMembersCsvEmpty()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock(null, true);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'add_member_csv_format_only_title.csv';
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/ajax_upload_new_members_csv/', ['method' => 'POST']);
+        $this->testAction('/teams/ajax_upload_new_members_csv/', ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

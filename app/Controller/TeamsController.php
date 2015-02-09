@@ -148,13 +148,13 @@ class TeamsController extends AppController
         if ($save_res['error']) {
             $result['error'] = true;
             $result['css'] = 'alert-danger';
+            $result['msg'] = $save_res['error_msg'];
             if ($save_res['error_line_no'] == 0) {
                 $result['title'] = __d('gl', "エラーがあります。");
             }
             else {
                 $result['title'] = __d('gl', "%s行目でエラーがあります(行番号は見出し含む)。", $save_res['error_line_no']);
             }
-            $result['msg'] = $save_res['error_msg'];
         }
         else {
             $result['msg'] = __d('gl', "%s人のメンバーを追加しました。", $save_res['success_count']);
