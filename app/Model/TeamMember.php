@@ -251,6 +251,10 @@ class TeamMember extends AppModel
             $res['error_msg'] = __d('gl', "データが１件もありません。");
             return $res;
         }
+        $emails = [];
+        $member_ids = [];
+        $coach_ids = [];
+        $rater_ids = [];
         //validation each line of csv data.
         foreach ($csv_data as $key => $row) {
             //first record check
@@ -275,13 +279,15 @@ class TeamMember extends AppModel
                 return $res;
             }
             //already joined team check(after check)
+            $emails[] = $row[0];
 
             //[1]Member ID(*)
             if (!viaIsSet($row[1])) {
                 $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
                 return $res;
             }
-            //exists member id check
+            //exists member id check(after check)
+            $member_ids[] = $row[1];
 
             //[2]First Name(*)
             if (!viaIsSet($row[2])) {
@@ -402,6 +408,8 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "コーチIDに本人のIDを指定する事はできません。");
                 return $res;
             }
+            //exists check (after check)
+            $coach_ids[] = $row[22];
 
             //[23]-[29]Rater ID
             $raters = [$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]];
@@ -422,12 +430,24 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "評価者IDが重複しています。");
                 return $res;
             }
-
+            //rater id check(after check)
+            $rater_ids[] = $raters;
+            $rater_ids = array_merge($rater_ids, $raters);
         }
+
+        //メールアドレスは重複してはいけない
 
         //email exists check
 
+        //already joined team check
+
+        //exists member id check
+
         //coach id check
+        //コーチIDが既に登録されているか、メンバーIDに含まれている必要があり
+
+        //rater id check
+        //評価者IDが既に登録されているIDか、メンバーIDに含まれている必要があり
 
         $res['error'] = false;
         return $res;
