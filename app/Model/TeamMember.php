@@ -478,15 +478,15 @@ class TeamMember extends AppModel
 
         //coach id check
         $coach_ids = array_filter($coach_ids, "strlen");
-        //コーチIDが既に登録されているか、メンバーIDに含まれている必要があり
-        //まずコーチIDが登録済かチェック
+        //Coach ID must be already been registered or must be included in the member ID
+        //First check coach ID whether registered
         $exists_coach_ids = $this->find('all',
                                         [
                                             'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $coach_ids],
                                             'fields'     => ['member_no']
                                         ]
         );
-        //登録済コーチを除去
+        //remove the registered coach
         foreach ($exists_coach_ids as $k => $v) {
             $member_no = $v['TeamMember']['member_no'];
             $key = array_search($member_no, $coach_ids);
@@ -494,7 +494,7 @@ class TeamMember extends AppModel
                 unset($coach_ids[$key]);
             }
         }
-        //未登録コーチがメンバーIDに含まれていない場合はエラー
+        //Error if the unregistered coach is not included in the member ID
         foreach ($coach_ids as $k => $v) {
             $key = array_search($v, $member_ids);
             if ($key === false) {
@@ -505,25 +505,25 @@ class TeamMember extends AppModel
         }
 
         //rater id check
-        //評価者IDが既に登録されているIDか、メンバーIDに含まれている必要があり
-        //空を削除
+        //Rater ID must be already been registered or must be included in the member ID
+        //remove empty elements
         foreach ($rater_ids as $k => $v) {
             $rater_ids[$k] = array_filter($v, "strlen");
         }
 
-        //一旦、全評価者IDをマージ
+        //Merge all rater ID
         $merged_rater_ids = [];
         foreach ($rater_ids as $v) {
             $merged_rater_ids = array_merge($merged_rater_ids, $v);
         }
-        //まず評価者IDが登録済かチェック
+        //Check for rater ID registered
         $exists_rater_ids = $this->find('all',
                                         [
                                             'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_rater_ids],
                                             'fields'     => ['member_no']
                                         ]
         );
-        //登録済評価IDを除去
+        //remove the rater ID of the registered
         foreach ($exists_rater_ids as $er_k => $er_v) {
             $member_no = $er_v['TeamMember']['member_no'];
             foreach ($rater_ids as $r_k => $r_v) {
@@ -533,7 +533,7 @@ class TeamMember extends AppModel
                 }
             }
         }
-        //未登録評価者IDがメンバーIDに含まれていない場合はエラー
+        //Error if the unregistered rater ID is not included in the member ID
         foreach ($rater_ids as $r_k => $r_v) {
             foreach ($r_v as $k => $v) {
                 $key = array_search($v, $member_ids);
