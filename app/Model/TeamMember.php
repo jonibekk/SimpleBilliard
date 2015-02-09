@@ -383,8 +383,16 @@ class TeamMember extends AppModel
                 return $res;
             }
             //[15]-[21]Group
-            if (!isAlignLeft([$row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21]])) {
+            $groups = [$row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21]];
+            if (!isAlignLeft($groups)) {
                 $res['error_msg'] = __d('gl', "グループ名は左詰めで記入してください。");
+                return $res;
+            }
+            //duplicate group check.
+            $filtered_groups = array_filter($groups, "strlen");
+            if (count(array_unique($filtered_groups)) != count($filtered_groups)
+            ) {
+                $res['error_msg'] = __d('gl', "グループ名が重複しています。");
                 return $res;
             }
 
@@ -396,15 +404,22 @@ class TeamMember extends AppModel
             }
 
             //[23]-[29]Rater ID
-            if (!isAlignLeft([$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]])) {
+            $raters = [$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]];
+            if (!isAlignLeft($raters)) {
                 $res['error_msg'] = __d('gl', "評価者IDは左詰めで記入してください。");
                 return $res;
             }
             //not allow include own member ID
-            if (!empty($row[1]) && in_array($row[1],
-                                            [$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]])
+            if (!empty($row[1]) && in_array($row[1], $raters)
             ) {
                 $res['error_msg'] = __d('gl', "評価者IDに本人のIDを指定する事はできません。");
+                return $res;
+            }
+            //duplicate rater check.
+            $filtered_raters = array_filter($raters, "strlen");
+            if (count(array_unique($filtered_raters)) != count($filtered_raters)
+            ) {
+                $res['error_msg'] = __d('gl', "評価者IDが重複しています。");
                 return $res;
             }
 
