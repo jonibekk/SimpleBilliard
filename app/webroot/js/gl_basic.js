@@ -1089,21 +1089,6 @@ $(document).ready(function () {
     $(document).on("click", ".dashboardProfileCard-avatarImage", function() {
         notifyNewFeed();
     });
-    // ソケットidの埋め込み
-    var pusher = new Pusher('cfa05829683ced581f02');
-    pusher.connection.bind('connected', function () {
-        var socketId = pusher.connection.socket_id;
-        $("input[name*='socket_id']").val(socketId);
-    });
-
-    // connectionをはる
-    for (var i in cake.data.c) {
-        pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
-            if (data.is_postfeed) {
-                notifyNewFeed();
-            }
-        });
-    }
 });
 
 function format(item) {
@@ -1607,3 +1592,22 @@ function notifyNewFeed() {
         i = i + 0.2;
     }, 100);
 }
+
+$(document).ready(function () {
+
+    // ソケットidの埋め込み
+    var pusher = new Pusher('cfa05829683ced581f02');
+    pusher.connection.bind('connected', function () {
+        var socketId = pusher.connection.socket_id;
+        $(".socketId").val(socketId);
+    });
+
+    // connectionをはる
+    for (var i in cake.data.c) {
+        pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
+            if (data.is_postfeed) {
+                notifyNewFeed();
+            }
+        });
+    }
+});

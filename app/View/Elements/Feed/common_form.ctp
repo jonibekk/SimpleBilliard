@@ -56,7 +56,7 @@
                     "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
                 ])
                 ?>
-                <?= $this->Form->hidden('socket_id', ['value' => ""]) ?>
+                <?= $this->Form->input('socket_id', ['type' => 'text', 'style' => 'display:none', 'class' => 'socketId']) ?>
                 <div class="row form-group m_0px none" id="PostFormImage">
                     <ul class="col input-images post-images">
                         <? for ($i = 1; $i <= 5; $i++): ?>
