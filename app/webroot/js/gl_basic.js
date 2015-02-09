@@ -1412,7 +1412,7 @@ function evCommentAllView() {
                 //「もっと読む」リンクを削除
                 $obj.remove();
                 //データが無かった場合はデータ無いよ。を表示
-                $parent.append(cake.message.info.e);
+                $parent.append(cake.message.info.g);
             }
         },
         error: function () {
