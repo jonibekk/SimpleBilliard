@@ -440,6 +440,14 @@ class TeamMember extends AppModel
 //        $this->log($rater_ids);
 
         //メールアドレスは重複してはいけない
+        if (count($emails) != count(array_unique($emails))) {
+            $duplicate_emails = array_filter(array_count_values($emails), 'isOver2');
+            $duplicate_email = key($duplicate_emails);
+            //set line no
+            $res['error_line_no'] = array_search($duplicate_email, $emails) + 1;
+            $res['error_msg'] = __d('gl', "重複したメールアドレスが含まれています。");
+            return $res;
+        }
 
         //email exists check
 

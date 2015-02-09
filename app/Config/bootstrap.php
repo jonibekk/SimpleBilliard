@@ -275,3 +275,16 @@ function isAlignLeft($array)
     }
     return true;
 }
+
+/**
+ * @param int $val
+ *
+ * @return bool
+ */
+function isOver2($val)
+{
+    if ($val >= 2) {
+        return true;
+    }
+    return false;
+}
