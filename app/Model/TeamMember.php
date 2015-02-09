@@ -458,6 +458,16 @@ class TeamMember extends AppModel
             return $res;
         }
 
+        //member id duplicate check
+        if (count($member_ids) != count(array_unique($member_ids))) {
+            $duplicate_member_ids = array_filter(array_count_values($member_ids), 'isOver2');
+            $duplicate_member_id = key($duplicate_member_ids);
+            //set line no
+            $res['error_line_no'] = array_search($duplicate_member_id, $member_ids) + 2;
+            $res['error_msg'] = __d('gl', "重複したメンバーIDが含まれています。");
+            return $res;
+        }
+
         //exists member id check
 
         //coach id check
