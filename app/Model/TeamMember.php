@@ -433,11 +433,6 @@ class TeamMember extends AppModel
             $rater_ids[] = $filtered_raters;
         }
 
-//        $this->log($emails);
-//        $this->log($member_ids);
-//        $this->log($coach_ids);
-//        $this->log($rater_ids);
-
         //email exists check
         //E-mail address should not be duplicated
         if (count($emails) != count(array_unique($emails))) {
@@ -483,6 +478,31 @@ class TeamMember extends AppModel
 
         //coach id check
         //コーチIDが既に登録されているか、メンバーIDに含まれている必要があり
+        //まずコーチIDが登録済かチェック
+        $exists_coach_ids = $this->find('all',
+                                        [
+                                            'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $coach_ids],
+                                            'fields'     => ['member_no']
+                                        ]
+        );
+        //登録済コーチを除去
+        foreach ($exists_coach_ids as $k => $v) {
+            $member_no = $v['TeamMember']['member_no'];
+            $key = array_search($member_no, $coach_ids);
+            if ($key !== false) {
+                unset($coach_ids[$key]);
+            }
+        }
+
+        //未登録コーチがメンバーIDに含まれていない場合はエラー
+        foreach ($coach_ids as $k => $v) {
+            $key = array_search($v, $member_ids);
+            if ($key === false) {
+                $res['error_line_no'] = $k + 2;
+                $res['error_msg'] = __d('gl', "存在しないメンバーIDがコーチIDに含まれています。");
+                return $res;
+            }
+        }
 
         //rater id check
         //評価者IDが既に登録されているIDか、メンバーIDに含まれている必要があり
