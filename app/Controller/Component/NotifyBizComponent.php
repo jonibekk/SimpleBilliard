@@ -101,6 +101,12 @@ class NotifyBizComponent extends Component
         }
     }
 
+    public function push($channel_name, $socket_id, $data)
+    {
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $pusher->trigger($channel_name, 'post_feed', $data, $socket_id);
+    }
+
     private function _setModelProperty($user_id, $team_id)
     {
         $this->Post->my_uid
