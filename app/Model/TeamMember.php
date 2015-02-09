@@ -469,6 +469,17 @@ class TeamMember extends AppModel
         }
 
         //exists member id check
+        $members = $this->find('all',
+                               [
+                                   'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $member_ids],
+                                   'fields'     => ['member_no']
+                               ]
+        );
+        if (viaIsSet($members[0]['TeamMember']['member_no'])) {
+            $res['error_line_no'] = array_search($members[0]['TeamMember']['member_no'], $member_ids) + 2;
+            $res['error_msg'] = __d('gl', "既に存在するメンバーIDです。");
+            return $res;
+        }
 
         //coach id check
         //コーチIDが既に登録されているか、メンバーIDに含まれている必要があり
