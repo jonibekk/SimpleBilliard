@@ -346,6 +346,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                  ['value' => $this->request->data['Collaborator'][0]['id']]);
                     }
                     ?>
+                    <?= $this->Form->input('socket_id', ['type' => 'text', 'style' => 'display:none', 'class' => 'socketId']) ?>
                     <?=
                     $this->Form->input('Collaborator.0.priority', [
                         'before'   => '<div class="col col-sm-3 control-label set-importance">' .

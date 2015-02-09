@@ -108,6 +108,13 @@ class GoalsController extends AppController
                 case 3:
                     //完了
                     $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
+                    // pusherに通知
+                    $socket_id = viaIsSet($this->request->data['Goal']['socket_id']);
+                    if ($socket_id) {
+                        $data = array('is_postfeed' => true);
+                        $channel_name = "team_all_" . $this->Session->read('current_team_id');
+                        $this->NotifyBiz->push($channel_name, $socket_id, $data);
+                    }
                     //TODO 一旦、トップにリダイレクト
                     $this->redirect("/");
                     break;
