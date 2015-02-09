@@ -1486,7 +1486,7 @@ function showMore(obj) {
             speedUp: 300,
             height: '105px',
             showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.f + '</i>'
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
         });
     }
     else {
