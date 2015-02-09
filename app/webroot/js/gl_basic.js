@@ -1485,8 +1485,8 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.g + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.f + '</i>'
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
+            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
         });
     }
     else {
@@ -1501,7 +1501,7 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.g + '</i>',
+            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
             hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
         });
     }
