@@ -431,9 +431,13 @@ class TeamMember extends AppModel
                 return $res;
             }
             //rater id check(after check)
-            $rater_ids[] = $raters;
-            $rater_ids = array_merge($rater_ids, $raters);
+            $rater_ids[] = $filtered_raters;
         }
+
+//        $this->log($emails);
+//        $this->log($member_ids);
+//        $this->log($coach_ids);
+//        $this->log($rater_ids);
 
         //メールアドレスは重複してはいけない
 
