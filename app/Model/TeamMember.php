@@ -477,6 +477,7 @@ class TeamMember extends AppModel
         }
 
         //coach id check
+        $coach_ids = array_filter($coach_ids, "strlen");
         //コーチIDが既に登録されているか、メンバーIDに含まれている必要があり
         //まずコーチIDが登録済かチェック
         $exists_coach_ids = $this->find('all',
@@ -493,7 +494,6 @@ class TeamMember extends AppModel
                 unset($coach_ids[$key]);
             }
         }
-
         //未登録コーチがメンバーIDに含まれていない場合はエラー
         foreach ($coach_ids as $k => $v) {
             $key = array_search($v, $member_ids);
@@ -506,6 +506,44 @@ class TeamMember extends AppModel
 
         //rater id check
         //評価者IDが既に登録されているIDか、メンバーIDに含まれている必要があり
+        //空を削除
+        foreach ($rater_ids as $k => $v) {
+            $rater_ids[$k] = array_filter($v, "strlen");
+        }
+
+        //一旦、全評価者IDをマージ
+        $merged_rater_ids = [];
+        foreach ($rater_ids as $v) {
+            $merged_rater_ids = array_merge($merged_rater_ids, $v);
+        }
+        //まず評価者IDが登録済かチェック
+        $exists_rater_ids = $this->find('all',
+                                        [
+                                            'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_rater_ids],
+                                            'fields'     => ['member_no']
+                                        ]
+        );
+        //登録済評価IDを除去
+        foreach ($exists_rater_ids as $er_k => $er_v) {
+            $member_no = $er_v['TeamMember']['member_no'];
+            foreach ($rater_ids as $r_k => $r_v) {
+                $key = array_search($member_no, $r_v);
+                if ($key !== false) {
+                    unset($rater_ids[$r_k][$key]);
+                }
+            }
+        }
+        //未登録評価者IDがメンバーIDに含まれていない場合はエラー
+        foreach ($rater_ids as $r_k => $r_v) {
+            foreach ($r_v as $k => $v) {
+                $key = array_search($v, $member_ids);
+                if ($key === false) {
+                    $res['error_line_no'] = $r_k + 2;
+                    $res['error_msg'] = __d('gl', "存在しないメンバーIDが評価者IDに含まれています。");
+                    return $res;
+                }
+            }
+        }
 
         $res['error'] = false;
         return $res;
