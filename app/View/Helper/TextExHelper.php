@@ -27,7 +27,7 @@ class TextExHelper extends AppHelper
 
     function autoLink($text)
     {
-        return nl2br($this->autoLinkUrlsEx(h($text), ['target' => 'blank', 'escape' => false]));
+        return nl2br($this->autoLinkUrlsEx($text, ['target' => 'blank']));
     }
 
     function replaceUrl($text, $replacement = "[URL]")
@@ -52,7 +52,8 @@ class TextExHelper extends AppHelper
     {
         $this->_placeholders = array();
         $options += array('escape' => true);
-        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[a-zA-Z0-9.\-_:]+(?:[/?][^\s\\\`^(&quot;)\p{Han}\p{Hiragana}\p{Katakana}\p{P}\p{N}<>(){}[\]]*)?)#ui';
+        # URLに使用可能な文字列のみ抽出
+        $pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[a-zA-Z0-9;/?:@&=+$,\%\#._-]+)#ui';
         $text = preg_replace_callback(
             $pattern,
             array(&$this, '_insertPlaceHolder'),
