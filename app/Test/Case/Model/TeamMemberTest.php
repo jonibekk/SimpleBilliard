@@ -236,4 +236,79 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->incrementNotifyUnreadCount([1]);
         $this->TeamMember->incrementNotifyUnreadCount([]);
     }
+
+    function testValidateNewMemberCsvDataNoTitle()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->getEmptyRowOnCsv();
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 0
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataEmpty()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 0
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataEmptyEmail()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1][1] = 'aaa';
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function setDefault()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->TeamMember->current_team_id = $team_id;
+        $this->TeamMember->my_uid = $uid;
+        $this->TeamMember->User->Email->current_team_id = $team_id;
+        $this->TeamMember->User->Email->my_uid = $uid;
+    }
+
+    function getEmptyRowOnCsv($colum_count = 29)
+    {
+        $row = [];
+        for ($i = 0; $i >= $colum_count; $i++) {
+            $row[] = null;
+        }
+        return $row;
+    }
 }
