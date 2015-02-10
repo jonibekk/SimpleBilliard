@@ -979,6 +979,14 @@ class User extends AppModel
         foreach ($my_circles as $val) {
             $my_channels[] = 'circle_' . $val;
         }
+        // ゴール
+        $followList  = $this->Goal->Follower->getFollowList($this->my_uid);
+        $collaboList = $this->Goal->Collaborator->getCollaboGoalList($this->my_uid);
+        $goals = array_unique(array_merge($followList, $collaboList));
+        foreach ($goals as $val) {
+            $my_channels[] = 'goal_' . $val;
+        }
+
         return json_encode($my_channels);
     }
 
