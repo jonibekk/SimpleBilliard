@@ -210,11 +210,11 @@ class TeamMember extends AppModel
      * 'error_msg'     => null,
      * ];
      *
-     * @param array $request_data from Controller
+     * @param array $csv
      *
      * @return array
      */
-    function saveNewMembersFromCsv($request_data)
+    function saveNewMembersFromCsv($csv)
     {
         $res = [
             'error'         => false,
@@ -222,8 +222,7 @@ class TeamMember extends AppModel
             'error_line_no' => 0,
             'error_msg'     => null,
         ];
-        $csv_array = convertCsvToArray($request_data['Team']['csv_file']['tmp_name']);
-        $validate = $this->validateNewMemberCsvData($csv_array);
+        $validate = $this->validateNewMemberCsvData($csv);
         if ($validate['error']) {
             return array_merge($res, $validate);
         }

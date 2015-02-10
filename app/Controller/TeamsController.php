@@ -144,7 +144,8 @@ class TeamsController extends AppController
             'msg'   => '',
         ];
         $this->_ajaxPreProcess('post');
-        $save_res = $this->Team->TeamMember->saveNewMembersFromCsv($this->request->data);
+        $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
+        $save_res = $this->Team->TeamMember->saveNewMembersFromCsv($csv);
         if ($save_res['error']) {
             $result['error'] = true;
             $result['css'] = 'alert-danger';
