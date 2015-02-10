@@ -109,7 +109,7 @@ class GoalsController extends AppController
                     //完了
                     $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
                     // pusherに通知
-                    $socket_id = viaIsSet($this->request->data['Goal']['socket_id']);
+                    $socket_id = viaIsSet($this->request->data['socket_id']);
                     if ($socket_id) {
                         $data = array('is_postfeed' => true);
                         $channel_name = "team_all_" . $this->Session->read('current_team_id');
@@ -768,7 +768,7 @@ class GoalsController extends AppController
 
         $this->Goal->commit();
         // pusherに通知
-        $socket_id = viaIsSet($this->request->data['ActionResult']['socket_id']);
+        $socket_id = viaIsSet($this->request->data['socket_id']);
         if ($socket_id) {
             $data = array('is_postfeed' => true);
             $channel_name = "goal_" . $goal_id;

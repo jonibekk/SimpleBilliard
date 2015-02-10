@@ -26,7 +26,7 @@ class PostsController extends AppController
         if ($this->Post->addNormal($this->request->data)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             // pusherに通知
-            $socket_id = viaIsSet($this->request->data['Post']['socket_id']);
+            $socket_id = viaIsSet($this->request->data['socket_id']);
             if ($socket_id) {
                 $data = array('is_postfeed' => true);
                 $channel_name = "team_all_" . $this->Session->read('current_team_id');
