@@ -301,7 +301,8 @@ class TeamsControllerTest extends ControllerTestCase
             'components' => [
                 'Security' => ['_validateCsrf', '_validatePost'],
                 'Auth',
-                'Session'
+                'Session',
+                'Csv'      => ['is_uploaded_file', 'move_uploaded_file'],
             ],
             'methods'    => [
                 'referer'
@@ -317,6 +318,15 @@ class TeamsControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedFieldInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Csv->expects($this->any())
+                   ->method('is_uploaded_file')
+                   ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Teams->Csv->expects($this->any())
+                   ->method('move_uploaded_file')
+                   ->will($this->returnCallback('copy'));
         $Teams->expects($this->any())->method('referer')->will($this->returnValue($referer));
         if (!$value_map) {
             $value_map = [
