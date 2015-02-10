@@ -293,6 +293,568 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+    function testValidateNewMemberCsvDataValidateEmail()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1][0] = 'aaa@aaa.com';
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataMemberIdEmpty()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataFirstNameEmpty()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'aaa',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataFirstNameOnlyRoman()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'aaa',
+            'ああああ',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataLastNameEmpty()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataLastNameOnlyRoman()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'あああ',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataAdminEmpty()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataAdminNotOnOrOff()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'aaaa',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataEvaluateEmpty()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            ''
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataEvaluateNotOnOrOff()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'aaaa'
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataLangCodeNotSupport()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'aaaaa',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataValidatePhone()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            'aaaaaaa',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataValidateGender()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'aaaa',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataBirthDayAllOrNothing()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataBirthYearValidate()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            'aaaaa',
+            '',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataBirthMonthValidate()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            'aaaa',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataBirthDayValidate()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            'aaaa',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataGroupAlignLeft()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            '',
+            'group3',
+            '',
+            '',
+            '',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataGroupDuplicate()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group1',
+            '',
+            '',
+            '',
+            '',
+            '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
     function setDefault()
     {
         $uid = 1;
