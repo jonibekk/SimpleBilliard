@@ -21,16 +21,29 @@ class PostsController extends AppController
 
         // ogbをインサートデータに追加
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
-
         // 投稿を保存
         if ($this->Post->addNormal($this->request->data)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             // pusherに通知
-            $socket_id = viaIsSet($this->request->data['socket_id']);
-            if ($socket_id) {
-                $data = array('is_postfeed' => true);
-                $channel_name = "team_all_" . $this->Session->read('current_team_id');
-                $this->NotifyBiz->push($channel_name, $socket_id, $data);
+            $share = explode(",", $this->request->data['Post']['share']);
+            if ($share[0] === '') {
+
+            } else {
+                $socket_id = viaIsSet($this->request->data['socket_id']);
+                if ($socket_id) {
+                    if(in_array('public', $share)) {
+                        $data = array('is_postfeed' => true);
+                        $channel_name = "team_all_" . $this->Session->read('current_team_id');
+                        $this->NotifyBiz->push($channel_name, $socket_id, $data);
+                    }
+                    else {
+                        foreach ($share as $val) {
+                            $data = array('is_postfeed' => true);
+                            $channel_name = $val . '_team_' . $this->Session->read('current_team_id');
+                            $this->NotifyBiz->push($channel_name, $socket_id, $data);
+                        }
+                    }
+                }
             }
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             $this->redirect($this->referer());
