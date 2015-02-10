@@ -1602,7 +1602,7 @@ $(document).ready(function () {
     });
 
     // フォームがsubmitされた際にsocket_idを埋め込む
-    $(document).on('submit', 'form', function () {
+    $(document).on('submit', 'form.form-feed-notify', function () {
         appendSocketId($(this), socketId);
     });
 
