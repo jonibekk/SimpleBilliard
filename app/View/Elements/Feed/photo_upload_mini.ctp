@@ -92,7 +92,6 @@ if (isset($type)) {
                                          'wrapInput'    => false,
                                          'errorMessage' => false,
                                          'required'     => false,
-                                         'accept'       => 'image/*',
                                          'id'           => $model . "_" . $model_id . '_Photo_' . $index
                                         ]) ?>
             </span>

@@ -162,7 +162,6 @@
                                                 'style'        => 'x_large',
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
-                                                'accept'       => 'image/*',
                                                ]) ?>
                         </span>
                             </div>

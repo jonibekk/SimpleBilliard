@@ -63,7 +63,6 @@
                                                 'css'          => false,
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
-                                                'accept'       => 'image/*',
                                                 ''
                                                ]) ?>
                         </span>
