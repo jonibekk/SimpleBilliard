@@ -74,7 +74,6 @@ $this->Form->input('ActionResult.name', [
                                                    ]
     )
     ?>
-    <?= $this->Form->hidden('socket_id', ['class' => 'socketId']) ?>
     <div class="form-group col-xxs-12 mt_12px">
         <a href="#" target-id="ActionFormName_<?= $goal_id ?>"
            class="btn btn-white tiny-form-text-close font_verydark"><?= __d('gl',

@@ -1595,11 +1595,15 @@ function notifyNewFeed() {
 
 $(document).ready(function () {
 
-    // ソケットidの埋め込み
     var pusher = new Pusher('cfa05829683ced581f02');
+    var socketId = "";
     pusher.connection.bind('connected', function () {
-        var socketId = pusher.connection.socket_id;
-        $(".socketId").val(socketId);
+        socketId = pusher.connection.socket_id;
+    });
+
+    // フォームがsubmitされた際にsocket_idを埋め込む
+    $(document).on('submit', 'form', function () {
+        appendSocketId($(this), socketId);
     });
 
     // connectionをはる
@@ -1611,3 +1615,11 @@ $(document).ready(function () {
         });
     }
 });
+
+function appendSocketId(form, socketId) {
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'socket_id',
+        value: socketId
+    }).appendTo(form);
+}
