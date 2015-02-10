@@ -767,6 +767,13 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
+        // pusherに通知
+        $socket_id = viaIsSet($this->request->data['ActionResult']['socket_id']);
+        if ($socket_id) {
+            $data = array('is_postfeed' => true);
+            $channel_name = "goal_" . $goal_id;
+            $this->NotifyBiz->push($channel_name, $socket_id, $data);
+        }
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));
         $this->redirect($this->referer());
 
