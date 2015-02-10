@@ -975,14 +975,16 @@ class User extends AppModel
         $my_channels = [];
         $my_channels[] = 'team_all_' . $this->current_team_id;
         $my_channels[] = 'user_' . $this->my_uid . '_team_' . $this->current_team_id;
+        // サークル
         $my_circles = $this->CircleMember->getMyCircleList();
         foreach ($my_circles as $val) {
-            $my_channels[] = 'circle_' . $val;
+            $my_channels[] = 'circle_' . $val . '_team_' . $this->current_team_id;
         }
         // ゴール
         $followList  = $this->Goal->Follower->getFollowList($this->my_uid);
         $collaboList = $this->Goal->Collaborator->getCollaboGoalList($this->my_uid);
-        $goals = array_unique(array_merge($followList, $collaboList));
+        $myList      = $this->Goal->getMyCreateGoals($this->my_uid);
+        $goals = array_unique(array_merge($followList, $collaboList, $myList));
         foreach ($goals as $val) {
             $my_channels[] = 'goal_' . $val;
         }
