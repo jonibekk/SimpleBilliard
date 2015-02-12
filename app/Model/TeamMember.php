@@ -8,7 +8,6 @@ App::uses('AppModel', 'Model');
  * @property Team              $Team
  * @property MemberType        $MemberType
  * @property User              $CoachUser
- * @property Group             $Group
  * @property JobCategory       $JobCategory
  */
 class TeamMember extends AppModel
@@ -238,7 +237,18 @@ class TeamMember extends AppModel
          * グループ登録処理
          * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
          */
-
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (viaIsSet($row_v['Group'])) {
+                foreach ($row_v['Group'] as $k => $v) {
+                    $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
+                    $this->csv_datas[$row_k]['MemberGroup'][] = [
+                        'group_id' => $group['Group']['id'],
+                        'index'    => $k
+                    ];
+                }
+                unset($this->csv_datas[$row_k]['Group']);
+            }
+        }
         /**
          * メンバータイプ
          * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
