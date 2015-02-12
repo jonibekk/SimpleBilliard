@@ -93,4 +93,45 @@ class MemberType extends AppModel
         )
     );
 
+    function getByName($name, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'name'    => $name
+            ]
+        ];
+        return $this->find('first', $options);
+    }
+
+    function saveNewType($name, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $data = [
+            'name'    => $name,
+            'team_id' => $team_id
+        ];
+        $this->create();
+        return $this->save($data);
+    }
+
+    function getByNameIfNotExistsSave($name, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        if (!empty($member_type = $this->getByName($name, $team_id))) {
+            return $member_type;
+        }
+        $this->cacheQueries = false;
+        $this->saveNewType($name);
+        $member_type = $this->getByName($name, $team_id);
+        $this->cacheQueries = true;
+        return $member_type;
+    }
 }

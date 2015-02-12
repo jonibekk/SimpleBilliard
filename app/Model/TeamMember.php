@@ -253,6 +253,13 @@ class TeamMember extends AppModel
          * メンバータイプ
          * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
          */
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (viaIsSet($row_v['MemberType']['name'])) {
+                $member_type = $this->MemberType->getByNameIfNotExistsSave($row_v['MemberType']['name']);
+                $this->csv_datas[$row_k]['TeamMember']['member_type_id'] = $member_type['MemberType']['id'];
+                unset($this->csv_datas[$row_k]['MemberType']);
+            }
+        }
 
         /**
          * ユーザ登録
