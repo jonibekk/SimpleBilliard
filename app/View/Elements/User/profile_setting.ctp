@@ -253,7 +253,15 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
             },
             fields: {
                 "data[User][photo]": {
-                    enabled: false
+                    feedbackIcons: 'false',
+                    validators: {
+                        file: {
+                            extension: 'jpeg,jpg,png,gif',
+                            type: 'image/jpeg,image/png,image/gif',
+                            maxSize: 10485760,   // 10mb
+                            message: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
+                        }
+                    }
                 },
                 "data[User][password]": {
                     validators: {

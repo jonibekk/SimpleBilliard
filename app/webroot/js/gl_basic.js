@@ -242,7 +242,15 @@ $(document).ready(function () {
                     },
                     fields: {
                         "data[Circle][photo]": {
-                            enabled: false
+                            feedbackIcons: 'false',
+                            validators: {
+                                file: {
+                                    extension: 'jpeg,jpg,png,gif',
+                                    type: 'image/jpeg,image/png,image/gif',
+                                    maxSize: 10485760,   // 10mb
+                                    message: cake.message.validate.c
+                                }
+                            }
                         }
                     }
                 });
@@ -361,6 +369,7 @@ function getAjaxFormReplaceElm() {
             else {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
+                replace_elm.children("form").bootstrapValidator();
                 $('#' + click_target_id).trigger('click').focus();
             }
         }
