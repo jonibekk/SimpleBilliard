@@ -39,7 +39,6 @@ class TeamMember extends AppModel
         'User',
         'Team',
         'CoachUser' => ['className' => 'User', 'foreignKey' => 'coach_user_id',],
-        'Group',
         'JobCategory',
         'MemberType',
     ];

@@ -395,7 +395,6 @@ class AppSchema extends CakeSchema
     public $groups = array(
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '部署ID'),
         'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
-        'parent_id'       => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '上位部署ID(belongsToで同モデルに関連)'),
         'name'            => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '部署名', 'charset' => 'utf8'),
         'description'     => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '部署の説明', 'charset' => 'utf8'),
         'active_flg'      => array('type' => 'boolean', 'null' => false, 'default' => '1', 'key' => 'index', 'comment' => 'アクティブフラグ(Offの場合は選択が不可能。古いものを無効にする場合に使用)'),
@@ -406,7 +405,6 @@ class AppSchema extends CakeSchema
         'indexes'         => array(
             'PRIMARY'    => array('column' => 'id', 'unique' => 1),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
-            'parent_id'  => array('column' => 'parent_id', 'unique' => 0),
             'del_flg'    => array('column' => 'del_flg', 'unique' => 0),
             'active_flg' => array('column' => 'active_flg', 'unique' => 0)
         ),
@@ -505,6 +503,26 @@ class AppSchema extends CakeSchema
             'user_id'  => array('column' => 'user_id', 'unique' => 0),
             'del_flg'  => array('column' => 'del_flg', 'unique' => 0),
             'language' => array('column' => 'language', 'unique' => 0)
+        ),
+        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+    );
+
+    public $member_groups = array(
+        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
+        'group_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'グループID(belongsToでGroupモデルに関連)'),
+        'index'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'グループの順序'),
+        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
+        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
+        'indexes'         => array(
+            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
+            'team_id'  => array('column' => 'team_id', 'unique' => 0),
+            'user_id'  => array('column' => 'user_id', 'unique' => 0),
+            'group_id' => array('column' => 'group_id', 'unique' => 0),
+            'del_flg'  => array('column' => 'del_flg', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -896,7 +914,6 @@ class AppSchema extends CakeSchema
         'coach_user_id'         => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コーチのユーザID(belongsToでUserモデルに関連)'),
         'member_no'             => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => 'メンバーナンバー(組織内でメンバーを識別する為のナンバー。exp社員番号)', 'charset' => 'utf8'),
         'member_type_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'メンバータイプID(belongsToでmember_typesモデルに関連)'),
-        'group_id'              => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '部署ID(belongsToでgroupモデルに関連)'),
         'job_category_id'       => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '職種ID(belongsToでJobCategoryモデルに関連)'),
         'active_flg'            => array('type' => 'boolean', 'null' => false, 'default' => '1', 'key' => 'index', 'comment' => '有効フラグ(Offの場合はチームにログイン不可。チームメンバーによる当該メンバーのチーム内のコンテンツへのアクセスは可能。当該メンバーへの如何なる発信は不可)'),
         'invitation_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '招待中フラグ(招待済みで非アクティブユーザの管理用途)'),
@@ -914,7 +931,6 @@ class AppSchema extends CakeSchema
             'user_id'         => array('column' => 'user_id', 'unique' => 0),
             'team_id'         => array('column' => 'team_id', 'unique' => 0),
             'coach_user_id'   => array('column' => 'coach_user_id', 'unique' => 0),
-            'group_id'        => array('column' => 'group_id', 'unique' => 0),
             'job_category_id' => array('column' => 'job_category_id', 'unique' => 0),
             'del_flg'         => array('column' => 'del_flg', 'unique' => 0),
             'active_flg'      => array('column' => 'active_flg', 'unique' => 0),

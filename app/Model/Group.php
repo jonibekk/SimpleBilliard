@@ -4,10 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * Group Model
  *
- * @property Team       $Team
- * @property Group      $ParentGroup
- * @property Group      $ChildGroup
- * @property TeamMember $TeamMember
+ * @property Team        $Team
+ * @property MemberGroup $MemberGroup
  */
 class Group extends AppModel
 {
@@ -30,7 +28,6 @@ class Group extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'ParentGroup' => ['className' => 'Group', 'foreignKey' => 'parent_id',]
     ];
 
     /**
@@ -39,8 +36,7 @@ class Group extends AppModel
      * @var array
      */
     public $hasMany = [
-        'ChildGroup' => ['className' => 'Group', 'foreignKey' => 'parent_id',],
-        'TeamMember',
+        'MemberGroup'
     ];
 
 }

@@ -26,6 +26,7 @@ App::uses('AppModel', 'Model');
  * @property CircleMember         $CircleMember
  * @property LocalName            $LocalName
  * @property Collaborator         $Collaborator
+ * @property MemberGroup          $MemberGroup
  */
 class User extends AppModel
 {
@@ -231,6 +232,7 @@ class User extends AppModel
         'LocalName',
         'CircleMember',
         'Goal',
+        'MemberGroup',
         'Collaborator',
         'Rater',
     ];
