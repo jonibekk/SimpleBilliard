@@ -46,6 +46,12 @@ class TeamMember extends AppModel
 
     public $myStatusWithTeam = [];
 
+    private $csv_datas = [];
+    private $csv_emails = [];
+    private $csv_member_ids = [];
+    private $csv_coach_ids = [];
+    private $csv_rater_ids = [];
+
     /**
      * 現在有効なチーム一覧を取得
      */
@@ -227,76 +233,8 @@ class TeamMember extends AppModel
             return array_merge($res, $validate);
         }
         //save process
-        $data = $this->getReformatFromCsvBeforeSave();
 
         return $res;
-    }
-
-    function getReformatFromCsvBeforeSave()
-    {
-//        return [
-        //Email
-//            __d('gl', "メール(*)"),
-        //User
-//            __d('gl', "メンバーID(*)"),
-        //User
-//            __d('gl', "ローマ字名(*)"),
-        //User
-//            __d('gl', "ローマ字姓(*)"),
-        //TeamMember
-//            __d('gl', "管理者(*)"),
-        //TeamMember
-//            __d('gl', "評価対象(*)"),
-        //MemberType
-//            __d('gl', "メンバータイプ"),
-        //LocalName
-//            __d('gl', "ローカル姓名の言語コード"),
-        //LocalName
-//            __d('gl', "ローカル名"),
-        //LocalName
-//            __d('gl', "ローカル姓"),
-        //User
-//            __d('gl', "電話"),
-        //User
-//            __d('gl', "性別"),
-        //User
-//            __d('gl', "誕生年"),
-        //User
-//            __d('gl', "誕生月"),
-        //User
-//            __d('gl', "誕生日"),
-        //Group
-//            __d('gl', "グループ1"),
-        //Group
-//            __d('gl', "グループ2"),
-        //Group
-//            __d('gl', "グループ3"),
-        //Group
-//            __d('gl', "グループ4"),
-        //Group
-//            __d('gl', "グループ5"),
-        //Group
-//            __d('gl', "グループ6"),
-        //Group
-//            __d('gl', "グループ7"),
-        //TeamMember
-//            __d('gl', "コーチID"),
-        //Group
-//            __d('gl', "評価者1"),
-        //Group
-//            __d('gl', "評価者2"),
-        //Group
-//            __d('gl', "評価者3"),
-        //Group
-//            __d('gl', "評価者4"),
-        //Group
-//            __d('gl', "評価者5"),
-        //Group
-//            __d('gl', "評価者6"),
-        //Group
-//            __d('gl', "評価者7"),
-//        ];
-
     }
 
     /**
@@ -318,10 +256,6 @@ class TeamMember extends AppModel
             $res['error_msg'] = __d('gl', "データが１件もありません。");
             return $res;
         }
-        $emails = [];
-        $member_ids = [];
-        $coach_ids = [];
-        $rater_ids = [];
         //validation each line of csv data.
         foreach ($csv_data as $key => $row) {
             //first record check
@@ -345,7 +279,9 @@ class TeamMember extends AppModel
                 return $res;
             }
             //already joined team check(after check)
-            $emails[] = $row[0];
+
+            $this->csv_emails[] = $row[0];
+            $this->csv_datas[$key]['Email'] = ['email' => $row[0]];
 
             //[1]Member ID(*)
             if (!viaIsSet($row[1])) {
@@ -353,7 +289,8 @@ class TeamMember extends AppModel
                 return $res;
             }
             //exists member id check(after check)
-            $member_ids[] = $row[1];
+            $this->csv_member_ids[] = $row[1];
+            $this->csv_datas[$key]['User']['member_no'] = $row[1];
 
             //[2]First Name(*)
             if (!viaIsSet($row[2])) {
@@ -366,6 +303,8 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "ローマ字名はローマ字のみで入力してください。");
                 return $res;
             }
+            $this->csv_datas[$key]['User']['first_name'] = $row[2];
+
             //[3]Last Name(*)
             if (!viaIsSet($row[3])) {
                 $res['error_msg'] = __d('gl', "ローマ字姓は必須項目です。");
@@ -377,6 +316,7 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "ローマ字姓はローマ字のみで入力してください。");
                 return $res;
             }
+            $this->csv_datas[$key]['User']['last_name'] = $row[3];
 
             //[4]Administrator(*)
             if (!viaIsSet($row[4])) {
@@ -388,25 +328,36 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
                 return $res;
             }
+            $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row[4]) === 'on' ? true : false;
 
             //[5]Evaluated(*)
             if (!viaIsSet($row[5])) {
                 $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
                 return $res;
             }
+
             // ON or OFF check
             if (!isOnOrOff($row[5])) {
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
                 return $res;
             }
+            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row[5]) === 'on' ? true : false;
             //[6]Member Type
             //no check
+            if (viaIsSet($row[6])) {
+                $this->csv_datas[$key]['MemberType']['name'] = $row[6];
+            }
 
             //[7]Local Name Language Code
             //available language code check
             if (viaIsSet($row[7]) && array_search($row[7], $this->support_lang_codes) === false) {
                 $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row[7]);
                 return $res;
+            }
+            if (viaIsSet($row[7]) && viaIsSet($row[8]) && viaIsSet($row[9])) {
+                $this->csv_datas[$key]['LocalName']['language'] = $row[7];
+                $this->csv_datas[$key]['LocalName']['first_name'] = $row[8];
+                $this->csv_datas[$key]['LocalName']['last_name'] = $row[9];
             }
 
             //[8]Local First Name
@@ -421,12 +372,18 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "'%s'の電話番号は正しくありません。使用できる文字は半角数字、'-()'です。", $row[10]);
                 return $res;
             }
+            if (viaIsSet($row[10])) {
+                $this->csv_datas[$key]['User']['phone_no'] = str_replace(["-", "(", ")"], '', $row[10]);
+            }
 
             //[11]Gender
             //validation check
             if (viaIsSet($row[11]) && array_search($row[11], ['male', 'female']) === false) {
                 $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row[11]);
                 return $res;
+            }
+            if (viaIsSet($row[11])) {
+                $this->csv_datas[$key]['User']['gender_type'] = $row[11] === 'male' ? User::TYPE_GENDER_MALE : User::TYPE_GENDER_FEMALE;
             }
 
             //[12]Birth Year
@@ -454,6 +411,10 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row[14]);
                 return $res;
             }
+            if (viaIsSet($row[12]) && viaIsSet($row[13]) && viaIsSet($row[14])) {
+                $this->csv_datas[$key]['User']['birth_day'] = $row[12] . '/' . $row[13] . '/' . $row[14];
+            }
+
             //[15]-[21]Group
             $groups = [$row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21]];
             if (!isAlignLeft($groups)) {
@@ -467,6 +428,11 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "グループ名が重複しています。");
                 return $res;
             }
+            foreach ($groups as $v) {
+                if (viaIsSet($v)) {
+                    $this->csv_datas[$key]['Group'][] = $v;
+                }
+            }
 
             //[22]Coach ID
             //not allow include own member ID
@@ -475,7 +441,10 @@ class TeamMember extends AppModel
                 return $res;
             }
             //exists check (after check)
-            $coach_ids[] = $row[22];
+            $this->csv_coach_ids[] = $row[22];
+            if (viaIsSet($row[22])) {
+                $this->csv_datas[$key]['Coach'] = $row[22];
+            }
 
             //[23]-[29]Rater ID
             $raters = [$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]];
@@ -496,36 +465,42 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "評価者IDが重複しています。");
                 return $res;
             }
+            foreach ($raters as $v) {
+                if (viaIsSet($v)) {
+                    $this->csv_datas[$key]['Rater'][] = $v;
+                }
+            }
+
             //rater id check(after check)
-            $rater_ids[] = $filtered_raters;
+            $this->csv_rater_ids[] = $filtered_raters;
         }
 
         //email exists check
         //E-mail address should not be duplicated
-        if (count($emails) != count(array_unique($emails))) {
-            $duplicate_emails = array_filter(array_count_values($emails), 'isOver2');
+        if (count($this->csv_emails) != count(array_unique($this->csv_emails))) {
+            $duplicate_emails = array_filter(array_count_values($this->csv_emails), 'isOver2');
             $duplicate_email = key($duplicate_emails);
             //set line no
-            $res['error_line_no'] = array_search($duplicate_email, $emails) + 2;
+            $res['error_line_no'] = array_search($duplicate_email, $this->csv_emails) + 2;
             $res['error_msg'] = __d('gl', "重複したメールアドレスが含まれています。");
             return $res;
         }
 
         //already joined team check
-        $joined_emails = $this->User->Email->getEmailsBelongTeamByEmail($emails);
+        $joined_emails = $this->User->Email->getEmailsBelongTeamByEmail($this->csv_emails);
         foreach ($joined_emails as $email) {
             //set line no
-            $res['error_line_no'] = array_search($email['Email']['email'], $emails) + 2;
+            $res['error_line_no'] = array_search($email['Email']['email'], $this->csv_emails) + 2;
             $res['error_msg'] = __d('gl', "既にチームに参加しているメールアドレスです。");
             return $res;
         }
 
         //member id duplicate check
-        if (count($member_ids) != count(array_unique($member_ids))) {
-            $duplicate_member_ids = array_filter(array_count_values($member_ids), 'isOver2');
+        if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
+            $duplicate_member_ids = array_filter(array_count_values($this->csv_member_ids), 'isOver2');
             $duplicate_member_id = key($duplicate_member_ids);
             //set line no
-            $res['error_line_no'] = array_search($duplicate_member_id, $member_ids) + 2;
+            $res['error_line_no'] = array_search($duplicate_member_id, $this->csv_member_ids) + 2;
             $res['error_msg'] = __d('gl', "重複したメンバーIDが含まれています。");
             return $res;
         }
@@ -533,37 +508,37 @@ class TeamMember extends AppModel
         //exists member id check
         $members = $this->find('all',
                                [
-                                   'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $member_ids],
+                                   'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $this->csv_member_ids],
                                    'fields'     => ['member_no']
                                ]
         );
         if (viaIsSet($members[0]['TeamMember']['member_no'])) {
-            $res['error_line_no'] = array_search($members[0]['TeamMember']['member_no'], $member_ids) + 2;
+            $res['error_line_no'] = array_search($members[0]['TeamMember']['member_no'], $this->csv_member_ids) + 2;
             $res['error_msg'] = __d('gl', "既に存在するメンバーIDです。");
             return $res;
         }
 
         //coach id check
-        $coach_ids = array_filter($coach_ids, "strlen");
+        $this->csv_coach_ids = array_filter($this->csv_coach_ids, "strlen");
         //Coach ID must be already been registered or must be included in the member ID
         //First check coach ID whether registered
         $exists_coach_ids = $this->find('all',
                                         [
-                                            'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $coach_ids],
+                                            'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $this->csv_coach_ids],
                                             'fields'     => ['member_no']
                                         ]
         );
         //remove the registered coach
         foreach ($exists_coach_ids as $k => $v) {
             $member_no = $v['TeamMember']['member_no'];
-            $key = array_search($member_no, $coach_ids);
+            $key = array_search($member_no, $this->csv_coach_ids);
             if ($key !== false) {
-                unset($coach_ids[$key]);
+                unset($this->csv_coach_ids[$key]);
             }
         }
         //Error if the unregistered coach is not included in the member ID
-        foreach ($coach_ids as $k => $v) {
-            $key = array_search($v, $member_ids);
+        foreach ($this->csv_coach_ids as $k => $v) {
+            $key = array_search($v, $this->csv_member_ids);
             if ($key === false) {
                 $res['error_line_no'] = $k + 2;
                 $res['error_msg'] = __d('gl', "存在しないメンバーIDがコーチIDに含まれています。");
@@ -574,13 +549,13 @@ class TeamMember extends AppModel
         //rater id check
         //Rater ID must be already been registered or must be included in the member ID
         //remove empty elements
-        foreach ($rater_ids as $k => $v) {
-            $rater_ids[$k] = array_filter($v, "strlen");
+        foreach ($this->csv_rater_ids as $k => $v) {
+            $this->csv_rater_ids[$k] = array_filter($v, "strlen");
         }
 
         //Merge all rater ID
         $merged_rater_ids = [];
-        foreach ($rater_ids as $v) {
+        foreach ($this->csv_rater_ids as $v) {
             $merged_rater_ids = array_merge($merged_rater_ids, $v);
         }
         //Check for rater ID registered
@@ -593,17 +568,17 @@ class TeamMember extends AppModel
         //remove the rater ID of the registered
         foreach ($exists_rater_ids as $er_k => $er_v) {
             $member_no = $er_v['TeamMember']['member_no'];
-            foreach ($rater_ids as $r_k => $r_v) {
+            foreach ($this->csv_rater_ids as $r_k => $r_v) {
                 $key = array_search($member_no, $r_v);
                 if ($key !== false) {
-                    unset($rater_ids[$r_k][$key]);
+                    unset($this->csv_rater_ids[$r_k][$key]);
                 }
             }
         }
         //Error if the unregistered rater ID is not included in the member ID
-        foreach ($rater_ids as $r_k => $r_v) {
+        foreach ($this->csv_rater_ids as $r_k => $r_v) {
             foreach ($r_v as $k => $v) {
-                $key = array_search($v, $member_ids);
+                $key = array_search($v, $this->csv_member_ids);
                 if ($key === false) {
                     $res['error_line_no'] = $r_k + 2;
                     $res['error_msg'] = __d('gl', "存在しないメンバーIDが評価者IDに含まれています。");
@@ -687,5 +662,4 @@ class TeamMember extends AppModel
         ];
 
     }
-
 }
