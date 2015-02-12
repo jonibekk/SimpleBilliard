@@ -232,8 +232,38 @@ class TeamMember extends AppModel
         if ($validate['error']) {
             return array_merge($res, $validate);
         }
+        $this->begin();
         //save process
 
+        /**
+         * グループ登録処理
+         * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
+         */
+
+        /**
+         * メンバータイプ
+         * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
+         */
+
+        /**
+         * ユーザ登録
+         */
+
+        /**
+         * コーチは最後に登録
+         * コーチIDはメンバーIDを検索し、セット
+         */
+
+        /**
+         * 評価者は最後に登録
+         * 評価者IDはメンバーIDを検索し、セット
+         */
+
+        /**
+         * 招待メールの送信
+         */
+
+        $this->commit();
         return $res;
     }
 
