@@ -24,6 +24,7 @@ App::uses('HelpsController', 'Controller');
  * @property SecurityComponent            $Security
  * @property TimezoneComponent            $Timezone
  * @property CookieComponent              $Cookie
+ * @property CsvComponent                 $Csv
  * @property GlEmailComponent             $GlEmail
  * @property PnotifyComponent             $Pnotify
  * @property MixpanelComponent            $Mixpanel
@@ -59,6 +60,7 @@ class AppController extends Controller
         'Ogp',
         'NotifyBiz',
         'Uservoice',
+        'Csv',
     ];
     public $helpers = [
         'Session',
@@ -470,6 +472,5 @@ class AppController extends Controller
     {
         $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
     }
-
 
 }

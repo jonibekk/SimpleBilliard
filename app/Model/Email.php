@@ -100,4 +100,33 @@ class Email extends AppModel
         }
         return false;
     }
+
+    function getEmailsBelongTeamByEmail($emails, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'Email.email' => $emails,
+            ],
+            'fields'     => ['user_id', 'email'],
+            'contain'    => [
+                'User' => [
+                    'TeamMember' => [
+                        'conditions' => ['TeamMember.team_id' => $team_id],
+                        'fields'     => ['id']
+                    ]
+                ]
+            ]
+        ];
+        $email_team_members = $this->find('all', $options);
+
+        foreach ($email_team_members as $k => $v) {
+            if (!viaIsSet($v['User']['TeamMember'])) {
+                unset($email_team_members[$k]);
+            }
+        }
+        return $email_team_members;
+    }
 }
