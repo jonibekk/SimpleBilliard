@@ -302,7 +302,7 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1][0] = 'aaa@aaa.com';
+        $csv_data[1][0] = 'aaa';
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
