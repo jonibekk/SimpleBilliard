@@ -297,6 +297,8 @@ class TeamsControllerTest extends ControllerTestCase
 
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
+        Configure::write('Config.language', 'jpn');
+
         $Teams = $this->generate('Teams', [
             'components' => [
                 'Security' => ['_validateCsrf', '_validatePost'],
