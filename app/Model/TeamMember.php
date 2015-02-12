@@ -227,8 +227,76 @@ class TeamMember extends AppModel
             return array_merge($res, $validate);
         }
         //save process
+        $data = $this->getReformatFromCsvBeforeSave();
 
         return $res;
+    }
+
+    function getReformatFromCsvBeforeSave()
+    {
+//        return [
+        //Email
+//            __d('gl', "メール(*)"),
+        //User
+//            __d('gl', "メンバーID(*)"),
+        //User
+//            __d('gl', "ローマ字名(*)"),
+        //User
+//            __d('gl', "ローマ字姓(*)"),
+        //TeamMember
+//            __d('gl', "管理者(*)"),
+        //TeamMember
+//            __d('gl', "評価対象(*)"),
+        //MemberType
+//            __d('gl', "メンバータイプ"),
+        //LocalName
+//            __d('gl', "ローカル姓名の言語コード"),
+        //LocalName
+//            __d('gl', "ローカル名"),
+        //LocalName
+//            __d('gl', "ローカル姓"),
+        //User
+//            __d('gl', "電話"),
+        //User
+//            __d('gl', "性別"),
+        //User
+//            __d('gl', "誕生年"),
+        //User
+//            __d('gl', "誕生月"),
+        //User
+//            __d('gl', "誕生日"),
+        //Group
+//            __d('gl', "グループ1"),
+        //Group
+//            __d('gl', "グループ2"),
+        //Group
+//            __d('gl', "グループ3"),
+        //Group
+//            __d('gl', "グループ4"),
+        //Group
+//            __d('gl', "グループ5"),
+        //Group
+//            __d('gl', "グループ6"),
+        //Group
+//            __d('gl', "グループ7"),
+        //TeamMember
+//            __d('gl', "コーチID"),
+        //Group
+//            __d('gl', "評価者1"),
+        //Group
+//            __d('gl', "評価者2"),
+        //Group
+//            __d('gl', "評価者3"),
+        //Group
+//            __d('gl', "評価者4"),
+        //Group
+//            __d('gl', "評価者5"),
+        //Group
+//            __d('gl', "評価者6"),
+        //Group
+//            __d('gl', "評価者7"),
+//        ];
+
     }
 
     /**
