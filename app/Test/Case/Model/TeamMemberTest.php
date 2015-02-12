@@ -16,6 +16,8 @@ class TeamMemberTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.team_member',
+        'app.email',
+        'app.local_name',
         'app.member_type',
         'app.user', 'app.notify_setting',
         'app.team',
@@ -1050,6 +1052,266 @@ class TeamMemberTest extends CakeTestCase
             'rater7',
         ];
 
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataEmailDuplicate()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        ];
+        $csv_data[2] = [
+            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataEmailAlreadyJoined()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'from@email.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataMemberIdDuplicate()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        ];
+        $csv_data[2] = [
+            'bbb@bbb.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataMemberIdExists()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[1] = [
+            'aaa@aaa.com', 'member_1', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        ];
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataCoachIdExists()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'member_1',
+            'rater1',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
+        $csv_data[2] = [
+            'aaax@aaa.com',
+            'member_2',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'not_exists_coach_id',
+            'rater1',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 3
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataRaterIdExists()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->TeamMember->_getCsvHeading();
+        $csv_data[] = $this->getEmptyRowOnCsv();
+
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'abc',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            '',
+            'member_1',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
+        $csv_data[2] = [
+            'aaax@aaa.com',
+            'member_2',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            '',
+            'abc',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
