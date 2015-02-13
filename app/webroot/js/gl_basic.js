@@ -1568,7 +1568,6 @@ function getModalFormFromUrl(e) {
         });
     }
 }
-<<<<<<< HEAD
 
 $(document).ready(function () {
 
@@ -1647,5 +1646,4 @@ function getPageType() {
     if (!boxId) return "";
     return boxId.replace("_feed_notify", "");
 }
-=======
->>>>>>> develop
+
