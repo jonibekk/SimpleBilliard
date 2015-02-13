@@ -253,12 +253,33 @@ class TeamsControllerTest extends ControllerTestCase
 
     }
 
-    function testAjaxUploadNewMembersCsv()
+    function testAjaxUploadNewMembersCsvEmpty()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock(null, true);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'add_member_csv_format_only_title.csv';
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/ajax_upload_new_members_csv/', ['method' => 'POST']);
+        $this->testAction('/teams/ajax_upload_new_members_csv/', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadNewMembersCsvError()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'add_member_csv_format_error.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_new_members_csv/', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadNewMembersCsvNoError()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'add_member_csv_format_no_error.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_new_members_csv/', ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -276,11 +297,14 @@ class TeamsControllerTest extends ControllerTestCase
 
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
+        Configure::write('Config.language', 'jpn');
+
         $Teams = $this->generate('Teams', [
             'components' => [
                 'Security' => ['_validateCsrf', '_validatePost'],
                 'Auth',
-                'Session'
+                'Session',
+                'Csv'      => ['is_uploaded_file', 'move_uploaded_file'],
             ],
             'methods'    => [
                 'referer'
@@ -296,6 +320,15 @@ class TeamsControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedFieldInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Csv->expects($this->any())
+                   ->method('is_uploaded_file')
+                   ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Teams->Csv->expects($this->any())
+                   ->method('move_uploaded_file')
+                   ->will($this->returnCallback('copy'));
         $Teams->expects($this->any())->method('referer')->will($this->returnValue($referer));
         if (!$value_map) {
             $value_map = [

@@ -200,4 +200,424 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    /**
+     * save new members from csv
+     * return data as:
+     * $res = [
+     * 'error'         => false,
+     * 'success_count' => 0,
+     * 'error_line_no' => 0,
+     * 'error_msg'     => null,
+     * ];
+     *
+     * @param array $csv
+     *
+     * @return array
+     */
+    function saveNewMembersFromCsv($csv)
+    {
+        $res = [
+            'error'         => false,
+            'success_count' => 0,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+        $validate = $this->validateNewMemberCsvData($csv);
+        if ($validate['error']) {
+            return array_merge($res, $validate);
+        }
+        //save process
+
+        return $res;
+    }
+
+    /**
+     * validate new member csv data
+     *
+     * @param array $csv_data
+     *
+     * @return array
+     */
+    function validateNewMemberCsvData($csv_data)
+    {
+        $res = [
+            'error'         => true,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+
+        if (count($csv_data) <= 1) {
+            $res['error_msg'] = __d('gl', "データが１件もありません。");
+            return $res;
+        }
+        $emails = [];
+        $member_ids = [];
+        $coach_ids = [];
+        $rater_ids = [];
+        //validation each line of csv data.
+        foreach ($csv_data as $key => $row) {
+            //first record check
+            if ($key == 0) {
+                if (!empty(array_diff($row, $this->_getCsvHeading()))) {
+                    $res['error_msg'] = __d('gl', "見出しが一致しません。");
+                    return $res;
+                }
+                continue;
+            }
+            //set line no
+            $res['error_line_no'] = $key + 1;
+
+            //[0]Mail(*)
+            if (!viaIsSet($row[0])) {
+                $res['error_msg'] = __d('gl', "メールアドレスは必須項目です。");
+                return $res;
+            }
+            if (!Validation::email($row[0])) {
+                $res['error_msg'] = __d('gl', "メールアドレスが正しくありません。");
+                return $res;
+            }
+            //already joined team check(after check)
+            $emails[] = $row[0];
+
+            //[1]Member ID(*)
+            if (!viaIsSet($row[1])) {
+                $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
+                return $res;
+            }
+            //exists member id check(after check)
+            $member_ids[] = $row[1];
+
+            //[2]First Name(*)
+            if (!viaIsSet($row[2])) {
+                $res['error_msg'] = __d('gl', "ローマ字名は必須項目です。");
+                return $res;
+            }
+            //user validation
+            $this->User->set(['first_name' => $row[2]]);
+            if (!$this->User->validates()) {
+                $res['error_msg'] = __d('gl', "ローマ字名はローマ字のみで入力してください。");
+                return $res;
+            }
+            //[3]Last Name(*)
+            if (!viaIsSet($row[3])) {
+                $res['error_msg'] = __d('gl', "ローマ字姓は必須項目です。");
+                return $res;
+            }
+            //user validation
+            $this->User->set(['last_name' => $row[3]]);
+            if (!$this->User->validates()) {
+                $res['error_msg'] = __d('gl', "ローマ字姓はローマ字のみで入力してください。");
+                return $res;
+            }
+
+            //[4]Administrator(*)
+            if (!viaIsSet($row[4])) {
+                $res['error_msg'] = __d('gl', "管理者は必須項目です。");
+                return $res;
+            }
+            // ON or OFF check
+            if (!isOnOrOff($row[4])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
+                return $res;
+            }
+
+            //[5]Evaluated(*)
+            if (!viaIsSet($row[5])) {
+                $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
+                return $res;
+            }
+            // ON or OFF check
+            if (!isOnOrOff($row[5])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
+                return $res;
+            }
+            //[6]Member Type
+            //no check
+
+            //[7]Local Name Language Code
+            //available language code check
+            if (viaIsSet($row[7]) && array_search($row[7], $this->support_lang_codes) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row[7]);
+                return $res;
+            }
+
+            //[8]Local First Name
+            //no check
+
+            //[9]Local Last Name
+            //no check
+
+            //[10]Phone
+            //validation check
+            if (viaIsSet($row[10]) && !preg_match('/^[0-9-\(\)]+$/', $row[10])) {
+                $res['error_msg'] = __d('gl', "'%s'の電話番号は正しくありません。使用できる文字は半角数字、'-()'です。", $row[10]);
+                return $res;
+            }
+
+            //[11]Gender
+            //validation check
+            if (viaIsSet($row[11]) && array_search($row[11], ['male', 'female']) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row[11]);
+                return $res;
+            }
+
+            //[12]Birth Year
+            //all or nothing check
+            if (!isAllOrNothing([$row[12], $row[13], $row[14]])) {
+                $res['error_msg'] = __d('gl', "誕生日を記入する場合は年月日のすべての項目を記入してください。");
+                return $res;
+            }
+            //validation check
+            if (viaIsSet($row[12]) && !preg_match('/^\d{4}$/', $row[12])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生年として正しくありません。", $row[12]);
+                return $res;
+            }
+
+            //[13]Birth Month
+            //validation check
+            if (viaIsSet($row[13]) && !preg_match('/^\d{1,2}$/', $row[13])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row[13]);
+                return $res;
+            }
+
+            //[14]Birth Day
+            //validation check
+            if (viaIsSet($row[14]) && !preg_match('/^\d{1,2}$/', $row[14])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row[14]);
+                return $res;
+            }
+            //[15]-[21]Group
+            $groups = [$row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21]];
+            if (!isAlignLeft($groups)) {
+                $res['error_msg'] = __d('gl', "グループ名は左詰めで記入してください。");
+                return $res;
+            }
+            //duplicate group check.
+            $filtered_groups = array_filter($groups, "strlen");
+            if (count(array_unique($filtered_groups)) != count($filtered_groups)
+            ) {
+                $res['error_msg'] = __d('gl', "グループ名が重複しています。");
+                return $res;
+            }
+
+            //[22]Coach ID
+            //not allow include own member ID
+            if (!empty($row[1]) && $row[1] == $row[22]) {
+                $res['error_msg'] = __d('gl', "コーチIDに本人のIDを指定する事はできません。");
+                return $res;
+            }
+            //exists check (after check)
+            $coach_ids[] = $row[22];
+
+            //[23]-[29]Rater ID
+            $raters = [$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]];
+            if (!isAlignLeft($raters)) {
+                $res['error_msg'] = __d('gl', "評価者IDは左詰めで記入してください。");
+                return $res;
+            }
+            //not allow include own member ID
+            if (!empty($row[1]) && in_array($row[1], $raters)
+            ) {
+                $res['error_msg'] = __d('gl', "評価者IDに本人のIDを指定する事はできません。");
+                return $res;
+            }
+            //duplicate rater check.
+            $filtered_raters = array_filter($raters, "strlen");
+            if (count(array_unique($filtered_raters)) != count($filtered_raters)
+            ) {
+                $res['error_msg'] = __d('gl', "評価者IDが重複しています。");
+                return $res;
+            }
+            //rater id check(after check)
+            $rater_ids[] = $filtered_raters;
+        }
+
+        //email exists check
+        //E-mail address should not be duplicated
+        if (count($emails) != count(array_unique($emails))) {
+            $duplicate_emails = array_filter(array_count_values($emails), 'isOver2');
+            $duplicate_email = key($duplicate_emails);
+            //set line no
+            $res['error_line_no'] = array_search($duplicate_email, $emails) + 2;
+            $res['error_msg'] = __d('gl', "重複したメールアドレスが含まれています。");
+            return $res;
+        }
+
+        //already joined team check
+        $joined_emails = $this->User->Email->getEmailsBelongTeamByEmail($emails);
+        foreach ($joined_emails as $email) {
+            //set line no
+            $res['error_line_no'] = array_search($email['Email']['email'], $emails) + 2;
+            $res['error_msg'] = __d('gl', "既にチームに参加しているメールアドレスです。");
+            return $res;
+        }
+
+        //member id duplicate check
+        if (count($member_ids) != count(array_unique($member_ids))) {
+            $duplicate_member_ids = array_filter(array_count_values($member_ids), 'isOver2');
+            $duplicate_member_id = key($duplicate_member_ids);
+            //set line no
+            $res['error_line_no'] = array_search($duplicate_member_id, $member_ids) + 2;
+            $res['error_msg'] = __d('gl', "重複したメンバーIDが含まれています。");
+            return $res;
+        }
+
+        //exists member id check
+        $members = $this->find('all',
+                               [
+                                   'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $member_ids],
+                                   'fields'     => ['member_no']
+                               ]
+        );
+        if (viaIsSet($members[0]['TeamMember']['member_no'])) {
+            $res['error_line_no'] = array_search($members[0]['TeamMember']['member_no'], $member_ids) + 2;
+            $res['error_msg'] = __d('gl', "既に存在するメンバーIDです。");
+            return $res;
+        }
+
+        //coach id check
+        $coach_ids = array_filter($coach_ids, "strlen");
+        //Coach ID must be already been registered or must be included in the member ID
+        //First check coach ID whether registered
+        $exists_coach_ids = $this->find('all',
+                                        [
+                                            'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $coach_ids],
+                                            'fields'     => ['member_no']
+                                        ]
+        );
+        //remove the registered coach
+        foreach ($exists_coach_ids as $k => $v) {
+            $member_no = $v['TeamMember']['member_no'];
+            $key = array_search($member_no, $coach_ids);
+            if ($key !== false) {
+                unset($coach_ids[$key]);
+            }
+        }
+        //Error if the unregistered coach is not included in the member ID
+        foreach ($coach_ids as $k => $v) {
+            $key = array_search($v, $member_ids);
+            if ($key === false) {
+                $res['error_line_no'] = $k + 2;
+                $res['error_msg'] = __d('gl', "存在しないメンバーIDがコーチIDに含まれています。");
+                return $res;
+            }
+        }
+
+        //rater id check
+        //Rater ID must be already been registered or must be included in the member ID
+        //remove empty elements
+        foreach ($rater_ids as $k => $v) {
+            $rater_ids[$k] = array_filter($v, "strlen");
+        }
+
+        //Merge all rater ID
+        $merged_rater_ids = [];
+        foreach ($rater_ids as $v) {
+            $merged_rater_ids = array_merge($merged_rater_ids, $v);
+        }
+        //Check for rater ID registered
+        $exists_rater_ids = $this->find('all',
+                                        [
+                                            'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_rater_ids],
+                                            'fields'     => ['member_no']
+                                        ]
+        );
+        //remove the rater ID of the registered
+        foreach ($exists_rater_ids as $er_k => $er_v) {
+            $member_no = $er_v['TeamMember']['member_no'];
+            foreach ($rater_ids as $r_k => $r_v) {
+                $key = array_search($member_no, $r_v);
+                if ($key !== false) {
+                    unset($rater_ids[$r_k][$key]);
+                }
+            }
+        }
+        //Error if the unregistered rater ID is not included in the member ID
+        foreach ($rater_ids as $r_k => $r_v) {
+            foreach ($r_v as $k => $v) {
+                $key = array_search($v, $member_ids);
+                if ($key === false) {
+                    $res['error_line_no'] = $r_k + 2;
+                    $res['error_msg'] = __d('gl', "存在しないメンバーIDが評価者IDに含まれています。");
+                    return $res;
+                }
+            }
+        }
+
+        $res['error'] = false;
+        return $res;
+    }
+
+    /**
+     * get CSV heading
+     *
+     * @param bool $new
+     *
+     * @return array
+     */
+    function _getCsvHeading($new = true)
+    {
+        if ($new) {
+            return [
+                __d('gl', "メール(*)"),
+                __d('gl', "メンバーID(*)"),
+                __d('gl', "ローマ字名(*)"),
+                __d('gl', "ローマ字姓(*)"),
+                __d('gl', "管理者(*)"),
+                __d('gl', "評価対象(*)"),
+                __d('gl', "メンバータイプ"),
+                __d('gl', "ローカル姓名の言語コード"),
+                __d('gl', "ローカル名"),
+                __d('gl', "ローカル姓"),
+                __d('gl', "電話"),
+                __d('gl', "性別"),
+                __d('gl', "誕生年"),
+                __d('gl', "誕生月"),
+                __d('gl', "誕生日"),
+                __d('gl', "グループ1"),
+                __d('gl', "グループ2"),
+                __d('gl', "グループ3"),
+                __d('gl', "グループ4"),
+                __d('gl', "グループ5"),
+                __d('gl', "グループ6"),
+                __d('gl', "グループ7"),
+                __d('gl', "コーチID"),
+                __d('gl', "評価者1"),
+                __d('gl', "評価者2"),
+                __d('gl', "評価者3"),
+                __d('gl', "評価者4"),
+                __d('gl', "評価者5"),
+                __d('gl', "評価者6"),
+                __d('gl', "評価者7"),
+            ];
+        }
+
+        return [
+            __d('gl', "メール(*, 変更できません)"),
+            __d('gl', "ローマ字名(*, 変更できません)"),
+            __d('gl', "ローマ字姓(*, 変更できません)"),
+            __d('gl', "メンバーID(*)"),
+            __d('gl', "メンバーアクティブ状態(*)"),
+            __d('gl', "管理者(*)"),
+            __d('gl', "評価対象(*)"),
+            __d('gl', "メンバータイプ"),
+            __d('gl', "グループ1"),
+            __d('gl', "グループ2"),
+            __d('gl', "グループ3"),
+            __d('gl', "グループ4"),
+            __d('gl', "グループ5"),
+            __d('gl', "グループ6"),
+            __d('gl', "グループ7"),
+            __d('gl', "コーチID"),
+            __d('gl', "評価者1"),
+            __d('gl', "評価者2"),
+            __d('gl', "評価者3"),
+            __d('gl', "評価者4"),
+            __d('gl', "評価者5"),
+            __d('gl', "評価者6"),
+            __d('gl', "評価者7"),
+        ];
+
+    }
+
 }

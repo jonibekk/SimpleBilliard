@@ -385,19 +385,19 @@ function uploadCsvFileByForm(e) {
     //set display none for loader and result message elm
 
     $loader.removeClass('none');
-    $result_msg
-        .addClass('none')
-        .children('.alert').removeClass('alert-success')
-        .children('.alert').removeClass('alert-danger');
+    $result_msg.addClass('none');
+    $result_msg.children('.alert').removeClass('alert-success');
+    $result_msg.children('.alert').removeClass('alert-danger');
     $submit.attr('disabled', 'disabled');
 
-    var f = $(this);
+    var $f = $(this);
     $.ajax({
-        url: f.prop('action'),
+        url: $f.prop('action'),
         method: 'post',
         dataType: 'json',
         processData: false,
-        data: f.serialize(),
+        contentType: false,
+        data: new FormData(this),
         timeout: 10000
     })
         .done(function (data) {
@@ -408,10 +408,7 @@ function uploadCsvFileByForm(e) {
             //noinspection JSUnresolvedVariable
             $result_msg.find('.alert-msg').text(data.msg);
 
-            //エラーじゃなければsubmitボタンを有効化
-            if (!data.error) {
-                $submit.removeAttr('disabled');
-            }
+            $submit.removeAttr('disabled');
         })
         .fail(function (data) {
             // 通信が失敗したときの処理
@@ -1571,6 +1568,7 @@ function getModalFormFromUrl(e) {
         });
     }
 }
+<<<<<<< HEAD
 
 $(document).ready(function () {
 
@@ -1649,3 +1647,5 @@ function getPageType() {
     if (!boxId) return "";
     return boxId.replace("_feed_notify", "");
 }
+=======
+>>>>>>> develop
