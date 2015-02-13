@@ -1571,7 +1571,7 @@ function getModalFormFromUrl(e) {
 
 $(document).ready(function () {
 
-    var pusher = new Pusher('cfa05829683ced581f02');
+    var pusher = new Pusher(cake.pusher.key);
     var socketId = "";
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
