@@ -123,10 +123,10 @@ class NotifyBizComponent extends Component
         }
 
         // レスポンスデータの定義
-        $data = array(
+        $data = [
             'is_postfeed' => true,
             'feed_type'   => $feedType
-        );
+        ];
 
         // push
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);

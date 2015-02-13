@@ -427,12 +427,12 @@ class Goal extends AppModel
         return $this->find(
             'list',
             [
-                'conditions' => array(
+                'conditions' => [
                     'Goal.user_id' => $uid
-                ),
-                'fields' => array(
+                ],
+                'fields' => [
                     'id'
-                )
+                ]
             ]
         );
     }
