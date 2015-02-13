@@ -1590,8 +1590,8 @@ $(document).ready(function () {
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
             var pageType = getPageType();
             var feedType = data.feed_type;
-            var canPush = data.is_postfeed && (pageType === feedType || pageType === "all");
-            if (canPush) {
+            var canNotify = data.is_postfeed && (pageType === feedType || pageType === "all");
+            if (canNotify) {
                 notifyNewFeed();
             }
         });

@@ -21,51 +21,42 @@ class PostsController extends AppController
 
         // ogbをインサートデータに追加
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
+
         // 投稿を保存
-        if ($this->Post->addNormal($this->request->data)) {
-            $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
-            // pusherに通知
-            // 公開範囲取得
-            $share = explode(",", $this->request->data['Post']['share']);
-            if ($share[0] !== "") {
-                $socket_id = viaIsSet($this->request->data['socket_id']);
-                if ($socket_id) {
-                    $data = array('is_postfeed' => true);
-                    foreach ($share as $val) {
-                        // channel_name
-                        if ($val === "public") {
-                            $channel_name = "team_all_" . $this->Session->read('current_team_id');
-                        }
-                        else {
-                            $channel_name = $val . '_team_' . $this->Session->read('current_team_id');
-                        }
+        $successSavedPost = $this->Post->addNormal($this->request->data);
 
-                        // feed_type
-                        if (strpos($val, "circle") !== false) {
-                            $feedType = "circle";
-                        }
-                        else {
-                            $feedType = "all";
-                        }
-                        $data["feed_type"] = $feedType;
-
-                        // push
-                        $this->NotifyBiz->push($channel_name, $socket_id, $data);
-                    }
-                }
+        // 保存に失敗
+        if (!$successSavedPost) {
+            // バリデーションエラーのケース
+            if (!empty($this->Post->validationErrors)) {
+                $error_msg = array_shift($this->Post->validationErrors);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
             }
+            else {
+                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
+            }
+            $this->redirect($this->referer());
+        }
+
+        $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $share = explode(",", $this->request->data['Post']['share']);
+
+        // リクエストデータが正しくないケース
+        if (!$socketId || $share[0] === "") {
+            $this->redirect($this->referer());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             $this->redirect($this->referer());
         }
 
-        // バリデーションエラー
-        if (!empty($this->Post->validationErrors)) {
-            $error_msg = array_shift($this->Post->validationErrors);
-            $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
+        // 公開範囲で回してpush
+        foreach ($share as $val) {
+            $this->NotifyBiz->push($socketId, $val);
         }
-        else {
-            $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
-        }
+
+        $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+
         $this->redirect($this->referer());
     }
 

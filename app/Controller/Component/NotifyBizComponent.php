@@ -101,10 +101,36 @@ class NotifyBizComponent extends Component
         }
     }
 
-    public function push($channel_name, $socket_id, $data)
+    public function push($socketId, $share)
     {
+        if (!$socketId) return;
+
+        $teamId = $this->Session->read('current_team_id');
+        $channelName = $share . "_team_" . $teamId;
+
+        // アクション投稿のケース
+        if (strpos($share, "goal") !== false ) {
+            $feedType = "goal";
+        }
+        // サークル投稿のケース
+        else if (strpos($share, "circle") !== false) {
+            $feedType = "circle";
+        }
+        // その他
+        else {
+            $channelName = "team_all_" . $teamId;
+            $feedType    = "all";
+        }
+
+        // レスポンスデータの定義
+        $data = array(
+            'is_postfeed' => true,
+            'feed_type'   => $feedType
+        );
+
+        // push
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger($channel_name, 'post_feed', $data, $socket_id);
+        $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
     private function _setModelProperty($user_id, $team_id)
