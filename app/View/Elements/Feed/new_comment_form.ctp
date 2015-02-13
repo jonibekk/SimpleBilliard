@@ -48,6 +48,7 @@ $this->Form->input('body', [
             </li>
         <? endfor ?>
     </ul>
+    <span class="help-block" id="Comment__Post_<?= $post_id ?>_Photo_ValidateMessage"></span>
 </div>
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
 <div class="comment-btn" id="Comment_<?= $post_id ?>">

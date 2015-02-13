@@ -171,6 +171,8 @@ $(document).ready(function () {
                     });
                 });
 
+                $modal_elm.find("form").bootstrapValidator();
+
                 $modal_elm.find('.custom-radio-check').customRadioCheck();
 
             }).success(function () {
@@ -483,6 +485,8 @@ function evTargetToggleClick() {
             }
         });
     }
+
+    $("form#" + target_id).bootstrapValidator();
 
     //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
