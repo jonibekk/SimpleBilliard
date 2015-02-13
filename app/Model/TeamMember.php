@@ -311,7 +311,24 @@ class TeamMember extends AppModel
                     $this->User->LocalName->save($row_v['LocalName']);
                 }
             }
-            //TeamMemberに登録
+            //MemberGroupの登録
+            if (viaIsSet($row_v['MemberGroup'])) {
+                foreach ($row_v['MemberGroup'] as $k => $v) {
+                    $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
+                    $row_v['MemberGroup'][$k]['user_id']['team_id'] = $this->current_team_id;
+                }
+                $this->User->MemberGroup->create();
+                $this->User->MemberGroup->saveAll($row_v['MemberGroup']);
+            }
+            /**
+             * TeamMemberに登録
+             */
+            if (viaIsSet($row_v['TeamMember'])) {
+                $row_v['TeamMember']['user_id'] = $user['User']['id'];
+                $row_v['TeamMember']['team_id'] = $this->current_team_id;
+                $this->create();
+                $this->save($row_v['TeamMember']);
+            }
 
             //test
 //            $this->User->cacheQueries = false;
