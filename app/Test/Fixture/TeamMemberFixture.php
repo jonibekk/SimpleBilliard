@@ -61,6 +61,7 @@ class TeamMemberFixture extends CakeTestFixture
             'member_no'             => 'Lorem ipsum dolor sit amet',
             'group_id'              => 'Lorem ipsum dolor sit amet',
             'job_category_id'       => 'Lorem ipsum dolor sit amet',
+            'member_no'             => 'member_1',
             'active_flg'            => 1,
             'invitation_flg'        => 1,
             'evaluation_enable_flg' => 1,
