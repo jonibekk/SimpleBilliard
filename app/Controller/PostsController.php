@@ -25,23 +25,32 @@ class PostsController extends AppController
         if ($this->Post->addNormal($this->request->data)) {
             $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
             // pusherに通知
+            // 公開範囲取得
             $share = explode(",", $this->request->data['Post']['share']);
-            if ($share[0] === '') {
-
-            } else {
+            if ($share[0] !== "") {
                 $socket_id = viaIsSet($this->request->data['socket_id']);
                 if ($socket_id) {
-                    if(in_array('public', $share)) {
-                        $data = array('is_postfeed' => true);
-                        $channel_name = "team_all_" . $this->Session->read('current_team_id');
-                        $this->NotifyBiz->push($channel_name, $socket_id, $data);
-                    }
-                    else {
-                        foreach ($share as $val) {
-                            $data = array('is_postfeed' => true);
-                            $channel_name = $val . '_team_' . $this->Session->read('current_team_id');
-                            $this->NotifyBiz->push($channel_name, $socket_id, $data);
+                    $data = array('is_postfeed' => true);
+                    foreach ($share as $val) {
+                        // channel_name
+                        if ($val === "public") {
+                            $channel_name = "team_all_" . $this->Session->read('current_team_id');
                         }
+                        else {
+                            $channel_name = $val . '_team_' . $this->Session->read('current_team_id');
+                        }
+
+                        // feed_type
+                        if (strpos($val, "circle") !== false) {
+                            $feedType = "circle";
+                        }
+                        else {
+                            $feedType = "all";
+                        }
+                        $data["feed_type"] = $feedType;
+
+                        // push
+                        $this->NotifyBiz->push($channel_name, $socket_id, $data);
                     }
                 }
             }

@@ -111,7 +111,7 @@ class GoalsController extends AppController
                     // pusherに通知
                     $socket_id = viaIsSet($this->request->data['socket_id']);
                     if ($socket_id) {
-                        $data = array('is_postfeed' => true);
+                        $data = array('is_postfeed' => true, 'feed_type' => 'goal');
                         $channel_name = "team_all_" . $this->Session->read('current_team_id');
                         $this->NotifyBiz->push($channel_name, $socket_id, $data);
                     }
@@ -770,7 +770,7 @@ class GoalsController extends AppController
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
         if ($socket_id) {
-            $data = array('is_postfeed' => true);
+            $data = array('is_postfeed' => true, 'feed_type' => "goal");
             $channel_name = "goal_" . $goal_id;
             $this->NotifyBiz->push($channel_name, $socket_id, $data);
         }

@@ -1571,27 +1571,6 @@ function getModalFormFromUrl(e) {
         });
     }
 }
-function notifyNewFeed() {
-    var numArea = $("#newFeedNotify .num");
-    var num = parseInt(numArea.html());
-
-    // インクリメント
-    numArea.html(num + 1);
-
-    if(num > 1) return;
-
-    // 未読件数が0の場合
-    $("#newFeedNotify").css("display", function () {
-        return "block";
-    });
-
-    // 通知をふんわり出す
-    var i = 0.2;
-    setInterval(function () {
-        $("#newFeedNotify").css("opacity", i);
-        i = i + 0.2;
-    }, 100);
-}
 
 $(document).ready(function () {
 
@@ -1606,15 +1585,45 @@ $(document).ready(function () {
         appendSocketId($(this), socketId);
     });
 
+    // page type idをセットする
+    setPageTypeId();
+
     // connectionをはる
     for (var i in cake.data.c) {
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
-            if (data.is_postfeed) {
+            var pageType = getPageType();
+            var feedType = data.feed_type;
+            var canPush = data.is_postfeed && (pageType === feedType || pageType === "all");
+            if (canPush) {
                 notifyNewFeed();
             }
         });
     }
+
 });
+
+function notifyNewFeed() {
+    var notifyBox = $(".feed-notify-box");
+    var numArea = notifyBox.find(".num");
+    var num = parseInt(numArea.html());
+
+    // インクリメント
+    numArea.html(num + 1);
+
+    if(num > 1) return;
+
+    // 未読件数が0の場合
+    notifyBox.css("display", function () {
+        return "block";
+    });
+
+    // 通知をふんわり出す
+    var i = 0.2;
+    setInterval(function () {
+        notifyBox.css("opacity", i);
+        i = i + 0.2;
+    }, 100);
+}
 
 function appendSocketId(form, socketId) {
     $('<input>').attr({
@@ -1622,4 +1631,21 @@ function appendSocketId(form, socketId) {
         name: 'socket_id',
         value: socketId
     }).appendTo(form);
+}
+
+// notify boxにpage idをセット
+function setPageTypeId() {
+    var notifyBox = $(".feed-notify-box");
+    var pageId = cake.data.d;
+    if (pageId === "null") {
+        return;
+    }
+    notifyBox.attr("id", pageId + "_feed_notify");
+}
+
+// notify boxのpage idをゲット
+function getPageType() {
+    var boxId = $(".feed-notify-box").attr("id");
+    if (!boxId) return "";
+    return boxId.replace("_feed_notify", "");
 }

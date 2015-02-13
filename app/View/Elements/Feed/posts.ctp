@@ -11,7 +11,7 @@
  */
 ?>
 <? if (!empty($posts)): ?>
-    <a href="/" class="alert alert-info" id="newFeedNotify" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span class="num">0</span>件の新しい投稿があります。</a>
+    <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span class="num">0</span>件の新しい投稿があります。</a>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">

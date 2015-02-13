@@ -75,15 +75,15 @@ echo $this->Html->script('gl_basic');
             j: "<?=__d('gl',"項目までしか選択できません")?>"
         },
         url : {
-            "a": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
-            "b": "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
-            "c": "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
-            "d": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
-            "e": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
+            a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+            b: "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
+            c: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
+            d: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
+            e: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
         },
         data : {
-            "a": <?=isset($select2_default)?$select2_default:"[]"?>,
-            "b": function (element, callback) {
+            a: <?=isset($select2_default)?$select2_default:"[]"?>,
+            b: function (element, callback) {
                 var data = [{
                     <?if(isset($current_circle)&&!empty($current_circle)):?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
@@ -97,7 +97,8 @@ echo $this->Html->script('gl_basic');
                 }];
                 callback(data);
             },
-            "c": <?=$my_channels_json?>
+            c: <?=$my_channels_json?>,
+            d: "<?=viaIsSet($feed_filter)?>"
         }
     };
 
