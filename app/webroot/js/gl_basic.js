@@ -1083,9 +1083,6 @@ $(document).ready(function () {
             });
         }
     });
-    $(document).on("click", ".dashboardProfileCard-avatarImage", function() {
-        notifyNewFeed();
-    });
 });
 
 function format(item) {
