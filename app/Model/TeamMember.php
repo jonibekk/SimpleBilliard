@@ -230,7 +230,6 @@ class TeamMember extends AppModel
         if ($validate['error']) {
             return array_merge($res, $validate);
         }
-        $this->begin();
         //save process
 
         /**
@@ -263,7 +262,76 @@ class TeamMember extends AppModel
 
         /**
          * ユーザ登録
+         * 1.メアドが存在する場合は、既存ユーザの情報を書き換える。
+         * なければ、まずEmail、LocalNameを登録し、ユーザ情報を登録した上でTeamMemberを登録する。
          */
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            //メアド存在確認
+            $user = $this->User->getUserByEmail($row_v['Email']['email']);
+            if (viaIsSet($user['User'])) {
+                //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
+                $user['User'] = array_merge($user['User'], $row_v['User']);
+                $this->User->save($user['User']);
+                //save LocalName
+                $options = [
+                    'conditions' => [
+                        'user_id'  => $user['User']['id'],
+                        'language' => $row_v['LocalName']['language']
+                    ]
+                ];
+                $local_name = $this->User->LocalName->find('first', $options);
+                if (viaIsSet($local_name['LocalName'])) {
+                    $local_name['LocalName'] = array_merge($local_name['LocalName'], $row_v['LocalName']);
+                    $this->User->LocalName->save($local_name);
+                }
+                else {
+                    $row_v['LocalName']['user_id'] = $user['User']['id'];
+                    $this->User->LocalName->create();
+                    $this->User->LocalName->save($row_v['LocalName']);
+                }
+
+            }
+            else {
+                //なければ、ユーザ情報を登録。User,Email,LocalName
+                //create User
+                $this->User->create();
+                $user = $this->User->save($row_v['User']);
+                $uid = $this->User->getLastInsertID();
+                $row_v['Email']['user_id'] = $uid;
+                //create Email
+                $this->User->Email->create();
+                $this->User->Email->save($row_v['Email']);
+                $email_id = $this->User->Email->getLastInsertID();
+                $user['User']['primary_email_id'] = $email_id;
+                $this->User->save($user);
+                if (viaIsSet($row_v['LocalName'])) {
+                    //update User
+                    $row_v['LocalName']['user_id'] = $uid;
+                    $this->User->LocalName->create();
+                    $this->User->LocalName->save($row_v['LocalName']);
+                }
+            }
+            //TeamMemberに登録
+
+            //test
+//            $this->User->cacheQueries = false;
+//            $this->User->Email->cacheQueries = false;
+//            $this->User->LocalName->cacheQueries = false;
+//            $options = [
+//                'conditions' => [
+//                    'User.id' => $user['User']['id']
+//                ],
+//                'contain'    => [
+//                    'Email',
+//                    'LocalName',
+//                ]
+//            ];
+//            $this->log($this->User->find('first',$options));
+//            $this->User->cacheQueries = true;
+//            $this->User->Email->cacheQueries = true;
+//            $this->User->LocalName->cacheQueries = true;
+
+        }
 
         /**
          * コーチは最後に登録
@@ -278,8 +346,6 @@ class TeamMember extends AppModel
         /**
          * 招待メールの送信
          */
-
-        $this->commit();
         return $res;
     }
 
@@ -341,7 +407,7 @@ class TeamMember extends AppModel
             }
             //exists member id check(after check)
             $this->csv_member_ids[] = $row['member_no'];
-            $this->csv_datas[$key]['User']['member_no'] = $row['member_no'];
+            $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
 
             //[2]First Name(*)
             if (!viaIsSet($row['first_name'])) {
