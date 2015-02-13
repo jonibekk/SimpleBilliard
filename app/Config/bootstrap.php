@@ -250,3 +250,11 @@ function isOver2($val)
     }
     return false;
 }
+
+function copyKeyName(array $from, array $to)
+{
+    if (count($from) !== count($to)) {
+        return false;
+    }
+    return array_combine(array_keys($from), $to);
+}

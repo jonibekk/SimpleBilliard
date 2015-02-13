@@ -314,96 +314,101 @@ class TeamMember extends AppModel
             }
             //set line no
             $res['error_line_no'] = $key + 1;
+            //key name set
+            if (!($row = copyKeyName($this->_getCsvHeading(), $row))) {
+                $res['error_msg'] = __d('gl', "項目数が一致しません。");
+                return $res;
+            }
 
             //[0]Mail(*)
-            if (!viaIsSet($row[0])) {
+            if (!viaIsSet($row['email'])) {
                 $res['error_msg'] = __d('gl', "メールアドレスは必須項目です。");
                 return $res;
             }
-            if (!Validation::email($row[0])) {
+            if (!Validation::email($row['email'])) {
                 $res['error_msg'] = __d('gl', "メールアドレスが正しくありません。");
                 return $res;
             }
             //already joined team check(after check)
 
-            $this->csv_emails[] = $row[0];
-            $this->csv_datas[$key]['Email'] = ['email' => $row[0]];
+            $this->csv_emails[] = $row['email'];
+            $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
 
             //[1]Member ID(*)
-            if (!viaIsSet($row[1])) {
+            if (!viaIsSet($row['member_no'])) {
                 $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
                 return $res;
             }
             //exists member id check(after check)
-            $this->csv_member_ids[] = $row[1];
-            $this->csv_datas[$key]['User']['member_no'] = $row[1];
+            $this->csv_member_ids[] = $row['member_no'];
+            $this->csv_datas[$key]['User']['member_no'] = $row['member_no'];
 
             //[2]First Name(*)
-            if (!viaIsSet($row[2])) {
+            if (!viaIsSet($row['first_name'])) {
                 $res['error_msg'] = __d('gl', "ローマ字名は必須項目です。");
                 return $res;
             }
             //user validation
-            $this->User->set(['first_name' => $row[2]]);
+            $this->User->set(['first_name' => $row['first_name']]);
             if (!$this->User->validates()) {
                 $res['error_msg'] = __d('gl', "ローマ字名はローマ字のみで入力してください。");
                 return $res;
             }
-            $this->csv_datas[$key]['User']['first_name'] = $row[2];
+            $this->csv_datas[$key]['User']['first_name'] = $row['first_name'];
 
             //[3]Last Name(*)
-            if (!viaIsSet($row[3])) {
+            if (!viaIsSet($row['last_name'])) {
                 $res['error_msg'] = __d('gl', "ローマ字姓は必須項目です。");
                 return $res;
             }
             //user validation
-            $this->User->set(['last_name' => $row[3]]);
+            $this->User->set(['last_name' => $row['last_name']]);
             if (!$this->User->validates()) {
                 $res['error_msg'] = __d('gl', "ローマ字姓はローマ字のみで入力してください。");
                 return $res;
             }
-            $this->csv_datas[$key]['User']['last_name'] = $row[3];
+            $this->csv_datas[$key]['User']['last_name'] = $row['last_name'];
 
             //[4]Administrator(*)
-            if (!viaIsSet($row[4])) {
+            if (!viaIsSet($row['admin_flg'])) {
                 $res['error_msg'] = __d('gl', "管理者は必須項目です。");
                 return $res;
             }
             // ON or OFF check
-            if (!isOnOrOff($row[4])) {
+            if (!isOnOrOff($row['admin_flg'])) {
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
                 return $res;
             }
-            $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row[4]) === 'on' ? true : false;
+            $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) === 'on' ? true : false;
 
             //[5]Evaluated(*)
-            if (!viaIsSet($row[5])) {
+            if (!viaIsSet($row['evaluation_enable_flg'])) {
                 $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
                 return $res;
             }
 
             // ON or OFF check
-            if (!isOnOrOff($row[5])) {
+            if (!isOnOrOff($row['evaluation_enable_flg'])) {
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
                 return $res;
             }
-            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row[5]) === 'on' ? true : false;
+            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) === 'on' ? true : false;
             //[6]Member Type
             //no check
-            if (viaIsSet($row[6])) {
-                $this->csv_datas[$key]['MemberType']['name'] = $row[6];
+            if (viaIsSet($row['member_type'])) {
+                $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             }
 
             //[7]Local Name Language Code
             //available language code check
-            if (viaIsSet($row[7]) && array_search($row[7], $this->support_lang_codes) === false) {
-                $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row[7]);
+            if (viaIsSet($row['language']) && array_search($row['language'], $this->support_lang_codes) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていないローカル姓名の言語コードです。", $row['language']);
                 return $res;
             }
-            if (viaIsSet($row[7]) && viaIsSet($row[8]) && viaIsSet($row[9])) {
-                $this->csv_datas[$key]['LocalName']['language'] = $row[7];
-                $this->csv_datas[$key]['LocalName']['first_name'] = $row[8];
-                $this->csv_datas[$key]['LocalName']['last_name'] = $row[9];
+            if (viaIsSet($row['language']) && viaIsSet($row['local_first_name']) && viaIsSet($row['local_last_name'])) {
+                $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
+                $this->csv_datas[$key]['LocalName']['first_name'] = $row['local_first_name'];
+                $this->csv_datas[$key]['LocalName']['last_name'] = $row['local_last_name'];
             }
 
             //[8]Local First Name
@@ -414,55 +419,58 @@ class TeamMember extends AppModel
 
             //[10]Phone
             //validation check
-            if (viaIsSet($row[10]) && !preg_match('/^[0-9-\(\)]+$/', $row[10])) {
-                $res['error_msg'] = __d('gl', "'%s'の電話番号は正しくありません。使用できる文字は半角数字、'-()'です。", $row[10]);
+            if (viaIsSet($row['phone_no']) && !preg_match('/^[0-9-\(\)]+$/', $row['phone_no'])) {
+                $res['error_msg'] = __d('gl', "'%s'の電話番号は正しくありません。使用できる文字は半角数字、'-()'です。", $row['phone_no']);
                 return $res;
             }
-            if (viaIsSet($row[10])) {
-                $this->csv_datas[$key]['User']['phone_no'] = str_replace(["-", "(", ")"], '', $row[10]);
+            if (viaIsSet($row['phone_no'])) {
+                $this->csv_datas[$key]['User']['phone_no'] = str_replace(["-", "(", ")"], '', $row['phone_no']);
             }
 
             //[11]Gender
             //validation check
-            if (viaIsSet($row[11]) && array_search($row[11], ['male', 'female']) === false) {
-                $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row[11]);
+            if (viaIsSet($row['gender']) && array_search($row['gender'], ['male', 'female']) === false) {
+                $res['error_msg'] = __d('gl', "'%s'はサポートされていない性別表記です。'male'もしくは'female'で記入してください。", $row['gender']);
                 return $res;
             }
-            if (viaIsSet($row[11])) {
-                $this->csv_datas[$key]['User']['gender_type'] = $row[11] === 'male' ? User::TYPE_GENDER_MALE : User::TYPE_GENDER_FEMALE;
+            if (viaIsSet($row['gender'])) {
+                $this->csv_datas[$key]['User']['gender_type'] = $row['gender'] === 'male' ? User::TYPE_GENDER_MALE : User::TYPE_GENDER_FEMALE;
             }
 
             //[12]Birth Year
             //all or nothing check
-            if (!isAllOrNothing([$row[12], $row[13], $row[14]])) {
+            if (!isAllOrNothing([$row['birth_year'], $row['birth_month'], $row['birth_day']])) {
                 $res['error_msg'] = __d('gl', "誕生日を記入する場合は年月日のすべての項目を記入してください。");
                 return $res;
             }
             //validation check
-            if (viaIsSet($row[12]) && !preg_match('/^\d{4}$/', $row[12])) {
-                $res['error_msg'] = __d('gl', "'%s'は誕生年として正しくありません。", $row[12]);
+            if (viaIsSet($row['birth_year']) && !preg_match('/^\d{4}$/', $row['birth_year'])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生年として正しくありません。", $row['birth_year']);
                 return $res;
             }
 
             //[13]Birth Month
             //validation check
-            if (viaIsSet($row[13]) && !preg_match('/^\d{1,2}$/', $row[13])) {
-                $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row[13]);
+            if (viaIsSet($row['birth_month']) && !preg_match('/^\d{1,2}$/', $row['birth_month'])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row['birth_month']);
                 return $res;
             }
 
             //[14]Birth Day
             //validation check
-            if (viaIsSet($row[14]) && !preg_match('/^\d{1,2}$/', $row[14])) {
-                $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row[14]);
+            if (viaIsSet($row['birth_day']) && !preg_match('/^\d{1,2}$/', $row['birth_day'])) {
+                $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row['birth_day']);
                 return $res;
             }
-            if (viaIsSet($row[12]) && viaIsSet($row[13]) && viaIsSet($row[14])) {
-                $this->csv_datas[$key]['User']['birth_day'] = $row[12] . '/' . $row[13] . '/' . $row[14];
+            if (viaIsSet($row['birth_year']) && viaIsSet($row['birth_month']) && viaIsSet($row['birth_day'])) {
+                $this->csv_datas[$key]['User']['birth_day'] = $row['birth_year'] . '/' . $row['birth_month'] . '/' . $row['birth_day'];
             }
 
             //[15]-[21]Group
-            $groups = [$row[15], $row[16], $row[17], $row[18], $row[19], $row[20], $row[21]];
+            $groups = [];
+            for ($i = 1; $i <= 7; $i++) {
+                $groups[] = $row["group_{$i}"];
+            }
             if (!isAlignLeft($groups)) {
                 $res['error_msg'] = __d('gl', "グループ名は左詰めで記入してください。");
                 return $res;
@@ -493,13 +501,16 @@ class TeamMember extends AppModel
             }
 
             //[23]-[29]Rater ID
-            $raters = [$row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29]];
+            $raters = [];
+            for ($i = 1; $i <= 7; $i++) {
+                $raters[] = $row["rater_member_no_{$i}"];
+            }
             if (!isAlignLeft($raters)) {
                 $res['error_msg'] = __d('gl', "評価者IDは左詰めで記入してください。");
                 return $res;
             }
             //not allow include own member ID
-            if (!empty($row[1]) && in_array($row[1], $raters)
+            if (!empty($row['member_no']) && in_array($row['member_no'], $raters)
             ) {
                 $res['error_msg'] = __d('gl', "評価者IDに本人のIDを指定する事はできません。");
                 return $res;
@@ -637,6 +648,11 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    function copyKeyName($from, $to)
+    {
+
+    }
+
     /**
      * get CSV heading
      *
@@ -648,63 +664,63 @@ class TeamMember extends AppModel
     {
         if ($new) {
             return [
-                __d('gl', "メール(*)"),
-                __d('gl', "メンバーID(*)"),
-                __d('gl', "ローマ字名(*)"),
-                __d('gl', "ローマ字姓(*)"),
-                __d('gl', "管理者(*)"),
-                __d('gl', "評価対象(*)"),
-                __d('gl', "メンバータイプ"),
-                __d('gl', "ローカル姓名の言語コード"),
-                __d('gl', "ローカル名"),
-                __d('gl', "ローカル姓"),
-                __d('gl', "電話"),
-                __d('gl', "性別"),
-                __d('gl', "誕生年"),
-                __d('gl', "誕生月"),
-                __d('gl', "誕生日"),
-                __d('gl', "グループ1"),
-                __d('gl', "グループ2"),
-                __d('gl', "グループ3"),
-                __d('gl', "グループ4"),
-                __d('gl', "グループ5"),
-                __d('gl', "グループ6"),
-                __d('gl', "グループ7"),
-                __d('gl', "コーチID"),
-                __d('gl', "評価者1"),
-                __d('gl', "評価者2"),
-                __d('gl', "評価者3"),
-                __d('gl', "評価者4"),
-                __d('gl', "評価者5"),
-                __d('gl', "評価者6"),
-                __d('gl', "評価者7"),
+                'email'                 => __d('gl', "メール(*)"),
+                'member_no'             => __d('gl', "メンバーID(*)"),
+                'first_name'            => __d('gl', "ローマ字名(*)"),
+                'last_name'             => __d('gl', "ローマ字姓(*)"),
+                'admin_flg'             => __d('gl', "管理者(*)"),
+                'evaluation_enable_flg' => __d('gl', "評価対象(*)"),
+                'member_type'           => __d('gl', "メンバータイプ"),
+                'language'              => __d('gl', "ローカル姓名の言語コード"),
+                'local_first_name'      => __d('gl', "ローカル名"),
+                'local_last_name'       => __d('gl', "ローカル姓"),
+                'phone_no'              => __d('gl', "電話"),
+                'gender'                => __d('gl', "性別"),
+                'birth_year'            => __d('gl', "誕生年"),
+                'birth_month'           => __d('gl', "誕生月"),
+                'birth_day'             => __d('gl', "誕生日"),
+                'group_1'               => __d('gl', "グループ1"),
+                'group_2'               => __d('gl', "グループ2"),
+                'group_3'               => __d('gl', "グループ3"),
+                'group_4'               => __d('gl', "グループ4"),
+                'group_5'               => __d('gl', "グループ5"),
+                'group_6'               => __d('gl', "グループ6"),
+                'group_7'               => __d('gl', "グループ7"),
+                'coach_member_no'       => __d('gl', "コーチID"),
+                'rater_member_no_1'     => __d('gl', "評価者1"),
+                'rater_member_no_2'     => __d('gl', "評価者2"),
+                'rater_member_no_3'     => __d('gl', "評価者3"),
+                'rater_member_no_4'     => __d('gl', "評価者4"),
+                'rater_member_no_5'     => __d('gl', "評価者5"),
+                'rater_member_no_6'     => __d('gl', "評価者6"),
+                'rater_member_no_7'     => __d('gl', "評価者7"),
             ];
         }
 
         return [
-            __d('gl', "メール(*, 変更できません)"),
-            __d('gl', "ローマ字名(*, 変更できません)"),
-            __d('gl', "ローマ字姓(*, 変更できません)"),
-            __d('gl', "メンバーID(*)"),
-            __d('gl', "メンバーアクティブ状態(*)"),
-            __d('gl', "管理者(*)"),
-            __d('gl', "評価対象(*)"),
-            __d('gl', "メンバータイプ"),
-            __d('gl', "グループ1"),
-            __d('gl', "グループ2"),
-            __d('gl', "グループ3"),
-            __d('gl', "グループ4"),
-            __d('gl', "グループ5"),
-            __d('gl', "グループ6"),
-            __d('gl', "グループ7"),
-            __d('gl', "コーチID"),
-            __d('gl', "評価者1"),
-            __d('gl', "評価者2"),
-            __d('gl', "評価者3"),
-            __d('gl', "評価者4"),
-            __d('gl', "評価者5"),
-            __d('gl', "評価者6"),
-            __d('gl', "評価者7"),
+            'email'                 => __d('gl', "メール(*, 変更できません)"),
+            'first_name'            => __d('gl', "ローマ字名(*, 変更できません)"),
+            'last_name'             => __d('gl', "ローマ字姓(*, 変更できません)"),
+            'member_no'             => __d('gl', "メンバーID(*)"),
+            'active_flg'            => __d('gl', "メンバーアクティブ状態(*)"),
+            'admin_flg'             => __d('gl', "管理者(*)"),
+            'evaluation_enable_flg' => __d('gl', "評価対象(*)"),
+            'member_type'           => __d('gl', "メンバータイプ"),
+            'group_1'               => __d('gl', "グループ1"),
+            'group_2'               => __d('gl', "グループ2"),
+            'group_3'               => __d('gl', "グループ3"),
+            'group_4'               => __d('gl', "グループ4"),
+            'group_5'               => __d('gl', "グループ5"),
+            'group_6'               => __d('gl', "グループ6"),
+            'group_7'               => __d('gl', "グループ7"),
+            'coach_member_no'       => __d('gl', "コーチID"),
+            'rater_member_no_1'     => __d('gl', "評価者1"),
+            'rater_member_no_2'     => __d('gl', "評価者2"),
+            'rater_member_no_3'     => __d('gl', "評価者3"),
+            'rater_member_no_4'     => __d('gl', "評価者4"),
+            'rater_member_no_5'     => __d('gl', "評価者5"),
+            'rater_member_no_6'     => __d('gl', "評価者6"),
+            'rater_member_no_7'     => __d('gl', "評価者7"),
         ];
 
     }
