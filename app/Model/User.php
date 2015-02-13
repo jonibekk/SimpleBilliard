@@ -983,7 +983,7 @@ class User extends AppModel
         // ゴール
         $followList  = $this->Goal->Follower->getFollowList($this->my_uid);
         $collaboList = $this->Goal->Collaborator->getCollaboGoalList($this->my_uid);
-        $myList      = $this->Goal->getMyCreateGoals($this->my_uid);
+        $myList      = $this->Goal->getMyCreateGoalsList($this->my_uid);
         $goals = array_unique(array_merge($followList, $collaboList, $myList));
         foreach ($goals as $val) {
             $my_channels[] = 'goal_' . $val . '_team_' . $this->current_team_id;

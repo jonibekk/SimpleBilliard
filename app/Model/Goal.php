@@ -422,18 +422,18 @@ class Goal extends AppModel
         return $goals;
     }
 
-    function getMyCreateGoals($uid)
+    function getMyCreateGoalsList($uid)
     {
         return $this->find(
             'list',
-            array(
+            [
                 'conditions' => array(
                     'Goal.user_id' => $uid
                 ),
                 'fields' => array(
                     'id'
                 )
-            )
+            ]
         );
     }
 
