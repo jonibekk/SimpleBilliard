@@ -490,14 +490,14 @@ class TeamMember extends AppModel
 
             //[22]Coach ID
             //not allow include own member ID
-            if (!empty($row[1]) && $row[1] == $row[22]) {
+            if (!empty($row['member_no']) && $row['member_no'] == $row['coach_member_no']) {
                 $res['error_msg'] = __d('gl', "コーチIDに本人のIDを指定する事はできません。");
                 return $res;
             }
             //exists check (after check)
-            $this->csv_coach_ids[] = $row[22];
-            if (viaIsSet($row[22])) {
-                $this->csv_datas[$key]['Coach'] = $row[22];
+            $this->csv_coach_ids[] = $row['coach_member_no'];
+            if (viaIsSet($row['coach_member_no'])) {
+                $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
             }
 
             //[23]-[29]Rater ID
