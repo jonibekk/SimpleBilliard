@@ -271,7 +271,26 @@ class TeamMember extends AppModel
             if (viaIsSet($user['User'])) {
                 //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
                 $user['User'] = array_merge($user['User'], $row_v['User']);
-                $this->User->save($user['User']);
+                $user = $this->User->save($user['User']);
+                $this->csv_datas[$row_k]['Email'] = $user['Email'];
+            }
+            else {
+                //なければ、ユーザ情報(User,Email)を登録。
+                //create User
+                $this->User->create();
+                $user = $this->User->save($row_v['User']);
+                $row_v['Email']['user_id'] = $user['User']['id'];
+                //create Email
+                $this->User->Email->create();
+                $email = $this->User->Email->save($row_v['Email']);
+                $this->csv_datas[$row_k]['Email'] = $email['Email'];
+                $user['User']['primary_email_id'] = $email['Email']['email'];
+                $user = $this->User->save($user);
+            }
+            $this->csv_datas[$row_k]['User'] = $user['User'];
+
+            //LocalName
+            if (viaIsSet($row_v['LocalName'])) {
                 //save LocalName
                 $options = [
                     'conditions' => [
@@ -282,40 +301,22 @@ class TeamMember extends AppModel
                 $local_name = $this->User->LocalName->find('first', $options);
                 if (viaIsSet($local_name['LocalName'])) {
                     $local_name['LocalName'] = array_merge($local_name['LocalName'], $row_v['LocalName']);
-                    $this->User->LocalName->save($local_name);
+                    $local_name = $this->User->LocalName->save($local_name);
                 }
                 else {
                     $row_v['LocalName']['user_id'] = $user['User']['id'];
                     $this->User->LocalName->create();
-                    $this->User->LocalName->save($row_v['LocalName']);
+                    $local_name = $this->User->LocalName->save($row_v['LocalName']);
                 }
 
+                $this->csv_datas[$row_k]['LocalName'] = $local_name['LocalName'];
             }
-            else {
-                //なければ、ユーザ情報を登録。User,Email,LocalName
-                //create User
-                $this->User->create();
-                $user = $this->User->save($row_v['User']);
-                $uid = $this->User->getLastInsertID();
-                $row_v['Email']['user_id'] = $uid;
-                //create Email
-                $this->User->Email->create();
-                $this->User->Email->save($row_v['Email']);
-                $email_id = $this->User->Email->getLastInsertID();
-                $user['User']['primary_email_id'] = $email_id;
-                $this->User->save($user);
-                if (viaIsSet($row_v['LocalName'])) {
-                    //update User
-                    $row_v['LocalName']['user_id'] = $uid;
-                    $this->User->LocalName->create();
-                    $this->User->LocalName->save($row_v['LocalName']);
-                }
-            }
+
             //MemberGroupの登録
             if (viaIsSet($row_v['MemberGroup'])) {
                 foreach ($row_v['MemberGroup'] as $k => $v) {
                     $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
-                    $row_v['MemberGroup'][$k]['user_id']['team_id'] = $this->current_team_id;
+                    $row_v['MemberGroup'][$k]['team_id'] = $this->current_team_id;
                 }
                 $this->User->MemberGroup->create();
                 $this->User->MemberGroup->saveAll($row_v['MemberGroup']);
@@ -326,10 +327,12 @@ class TeamMember extends AppModel
             if (viaIsSet($row_v['TeamMember'])) {
                 $row_v['TeamMember']['user_id'] = $user['User']['id'];
                 $row_v['TeamMember']['team_id'] = $this->current_team_id;
+                $row_v['TeamMember']['active_flg'] = false;
                 $this->create();
-                $this->save($row_v['TeamMember']);
+                $team_member = $this->save($row_v['TeamMember']);
+                $this->csv_datas[$row_k]['TeamMember'] = $team_member['TeamMember'];
             }
-
+//            $this->log($this->csv_datas[$row_k]);
             //test
 //            $this->User->cacheQueries = false;
 //            $this->User->Email->cacheQueries = false;
