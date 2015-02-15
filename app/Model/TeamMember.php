@@ -327,6 +327,7 @@ class TeamMember extends AppModel
             if (viaIsSet($row_v['TeamMember'])) {
                 $row_v['TeamMember']['user_id'] = $user['User']['id'];
                 $row_v['TeamMember']['team_id'] = $this->current_team_id;
+                $row_v['TeamMember']['invitation_flg'] = true;
                 $row_v['TeamMember']['active_flg'] = false;
                 $this->create();
                 $team_member = $this->save($row_v['TeamMember']);
@@ -393,9 +394,6 @@ class TeamMember extends AppModel
             $this->Team->Rater->saveAll($save_rater_data);
         }
 
-        /**
-         * 招待メールの送信
-         */
         return $res;
     }
 
