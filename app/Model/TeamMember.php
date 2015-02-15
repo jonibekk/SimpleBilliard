@@ -372,20 +372,25 @@ class TeamMember extends AppModel
          * 評価者は最後に登録
          * 評価者IDはメンバーIDを検索し、セット
          */
+        $save_rater_data = [];
         foreach ($this->csv_datas as $row_k => $row_v) {
             if (!viaIsSet($row_v['Rater'])) {
                 continue;
             }
-            $save_rater_data = [];
             foreach ($row_v['Rater'] as $r_k => $r_v) {
                 if ($rater_team_member = $this->getByMemberNo($r_v)) {
-                    $save_rater_data[$r_k]['index'] = $r_k;
-                    $save_rater_data[$r_k]['team_id'] = $this->current_team_id;
-                    $save_rater_data[$r_k]['ratee_user_id'] = $row_v['User']['id'];
-                    $save_rater_data[$r_k]['rater_user_id'] = $rater_team_member['TeamMember']['user_id'];
+                    $save_rater_data[] = [
+                        'index'         => $r_k,
+                        'team_id'       => $this->current_team_id,
+                        'ratee_user_id' => $row_v['User']['id'],
+                        'rater_user_id' => $rater_team_member['TeamMember']['user_id'],
+                    ];
                 }
             }
-
+        }
+        if (viaIsSet($save_rater_data)) {
+            $this->Team->Rater->create();
+            $this->Team->Rater->saveAll($save_rater_data);
         }
 
         /**
