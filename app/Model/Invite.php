@@ -10,6 +10,8 @@ App::uses('AppModel', 'Model');
  */
 class Invite extends AppModel
 {
+    const TYPE_NORMAL = 0;
+    const TYPE_BATCH = 1;
 
     public $tokenData = [];
     /**
