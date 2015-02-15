@@ -398,7 +398,7 @@ function uploadCsvFileByForm(e) {
         processData: false,
         contentType: false,
         data: new FormData(this),
-        timeout: 10000
+        timeout: 300000 //5min
     })
         .done(function (data) {
             // 通信が成功したときの処理

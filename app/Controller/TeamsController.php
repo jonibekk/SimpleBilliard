@@ -160,6 +160,20 @@ class TeamsController extends AppController
             }
         }
         else {
+            //send invite mail
+            foreach ($this->Team->TeamMember->csv_datas as $data) {
+                //save invite mail data
+                $invite = $this->Team->Invite->saveInvite(
+                    $data['Email']['email'],
+                    $this->Team->current_team_id,
+                    $this->Auth->user('id'),
+                    null
+                );
+                //send invite mail
+                $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
+                $this->GlEmail->sendMailInvite($invite, $team_name);
+            }
+
 //            $this->Team->TeamMember->commit();
             $result['msg'] = __d('gl', "%s人のメンバーを追加しました。", $save_res['success_count']);
         }

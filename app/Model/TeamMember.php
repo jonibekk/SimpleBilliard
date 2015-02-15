@@ -44,7 +44,7 @@ class TeamMember extends AppModel
 
     public $myStatusWithTeam = [];
 
-    private $csv_datas = [];
+    public $csv_datas = [];
     private $csv_emails = [];
     private $csv_member_ids = [];
     private $csv_coach_ids = [];
