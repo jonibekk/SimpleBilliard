@@ -357,11 +357,24 @@ class TeamMember extends AppModel
          * コーチは最後に登録
          * コーチIDはメンバーIDを検索し、セット
          */
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (!viaIsSet($row_v['Coach'])) {
+                continue;
+            }
+            if ($coach_team_member = $this->getByMemberNo($row_v['Coach'])) {
+                $this->id = $row_v['TeamMember']['id'];
+                $team_member = $this->saveField('coach_user_id', $coach_team_member['TeamMember']['user_id']);
+                $this->csv_datas[$row_k]['TeamMember']['coach_user_id'] = $team_member['TeamMember']['coach_user_id'];
+            }
+        }
 
         /**
          * 評価者は最後に登録
          * 評価者IDはメンバーIDを検索し、セット
          */
+        foreach ($this->csv_datas as $row_k => $row_v) {
+
+        }
 
         /**
          * 招待メールの送信
@@ -734,9 +747,19 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    function copyKeyName($from, $to)
+    function getByMemberNo($member_no, $team_id = null)
     {
-
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id'   => $team_id,
+                'member_no' => $member_no
+            ],
+        ];
+        $res = $this->find('first', $options);
+        return $res;
     }
 
     /**
