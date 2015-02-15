@@ -278,6 +278,9 @@ class TeamMember extends AppModel
                 //なければ、ユーザ情報(User,Email)を登録。
                 //create User
                 $this->User->create();
+                $row_v['User']['no_pass_flg'] = true;
+                $row_v['User']['default_team_id'] = $this->current_team_id;
+                $row_v['User']['language'] = viaIsSet($row_v['LocalName']['language']) ? $row_v['LocalName']['language'] : 'eng';
                 $user = $this->User->save($row_v['User']);
                 $row_v['Email']['user_id'] = $user['User']['id'];
                 //create Email
