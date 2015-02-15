@@ -318,6 +318,7 @@ class TeamMember extends AppModel
             //MemberGroupの登録
             if (viaIsSet($row_v['MemberGroup'])) {
                 foreach ($row_v['MemberGroup'] as $k => $v) {
+                    $row_v['MemberGroup'][$k]['index'] = $k;
                     $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
                     $row_v['MemberGroup'][$k]['team_id'] = $this->current_team_id;
                 }
