@@ -104,6 +104,7 @@
                                                 'css'          => false,
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
+                                                'required'     => false
                                                ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __d('gl',
