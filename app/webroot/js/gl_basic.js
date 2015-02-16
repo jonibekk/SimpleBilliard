@@ -1598,12 +1598,14 @@ $(document).ready(function () {
 
     // connectionをはる
     for (var i in cake.data.c) {
+
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
             var pageType = getPageType();
             var feedType = data.feed_type;
             var feedId   = data.feed_id;
-            var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageType === feedType || pageType === "post");
+            var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageType === feedType || pageType === "all");
             if (canNotify) {
+                feedUniqueId = feedId;
                 notifyNewFeed();
             }
         });
