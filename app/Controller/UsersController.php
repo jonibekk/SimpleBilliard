@@ -437,8 +437,10 @@ class UsersController extends AppController
                 //言語設定
                 $this->_setAppLanguage();
                 $this->User->cacheQueries = false;
+                $this->User->LocalName->cacheQueries = false;
                 $me = $this->_getMyUserDataForSetting();
                 $this->User->cacheQueries = true;
+                $this->User->LocalName->cacheQueries = true;
                 $this->request->data = $me;
 
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
