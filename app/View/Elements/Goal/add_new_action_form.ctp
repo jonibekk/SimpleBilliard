@@ -18,6 +18,7 @@
     ],
     'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', $goal_id],
     'type'          => 'file',
+    'class'         => 'form-feed-notify'
 ]); ?>
 <?=
 $this->Form->input('ActionResult.name', [
@@ -56,10 +57,11 @@ $this->Form->input('ActionResult.name', [
                 <? for ($i = 1; $i <= 5; $i++): ?>
                     <li>
                         <?= $this->element('Feed/photo_upload_mini',
-                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => false]) ?>
+                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => false, 'id_prefix' => 'Goal_' . $goal_id . '_']) ?>
                     </li>
                 <? endfor ?>
             </ul>
+            <span class="help-block" id="Goal_<?= $goal_id ?>_ActionResult__Photo_ValidateMessage">
         </div>
     </div>
     <label class="font_normal col-xxs-4 lh_40px" for="KeyResults_<?= $goal_id ?>">
@@ -74,6 +76,7 @@ $this->Form->input('ActionResult.name', [
                                                    ]
     )
     ?>
+    <? $this->Form->unlockField('socket_id') ?>
     <div class="form-group col-xxs-12 mt_12px">
         <a href="#" target-id="ActionFormName_<?= $goal_id ?>"
            class="btn btn-white tiny-form-text-close font_verydark"><?= __d('gl',

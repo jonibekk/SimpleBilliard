@@ -15,6 +15,7 @@
         "slywalker/boost_cake": "*",
         "ichikaway/cakeplus": "2.0.*@dev",
         "satooshi/php-coveralls": "dev-master",
+        "pusher/pusher-php-server": "dev-master",
         "mixpanel/mixpanel-php": "2.*",
         "aws/aws-sdk-php": "2.6.*",
         "uservoice/uservoice": "dev-master"

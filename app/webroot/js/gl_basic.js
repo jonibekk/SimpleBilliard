@@ -171,6 +171,8 @@ $(document).ready(function () {
                     });
                 });
 
+                $modal_elm.find("form").bootstrapValidator();
+
                 $modal_elm.find('.custom-radio-check').customRadioCheck();
 
             }).success(function () {
@@ -242,7 +244,15 @@ $(document).ready(function () {
                     },
                     fields: {
                         "data[Circle][photo]": {
-                            enabled: false
+                            feedbackIcons: 'false',
+                            validators: {
+                                file: {
+                                    extension: 'jpeg,jpg,png,gif',
+                                    type: 'image/jpeg,image/png,image/gif',
+                                    maxSize: 10485760,   // 10mb
+                                    message: cake.message.validate.c
+                                }
+                            }
                         }
                     }
                 });
@@ -361,6 +371,7 @@ function getAjaxFormReplaceElm() {
             else {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
+                replace_elm.children("form").bootstrapValidator();
                 $('#' + click_target_id).trigger('click').focus();
             }
         }
@@ -471,6 +482,8 @@ function evTargetToggleClick() {
             }
         });
     }
+
+    $("form#" + target_id).bootstrapValidator();
 
     //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
@@ -1083,8 +1096,8 @@ $(document).ready(function () {
             });
         }
     });
-
 });
+
 function format(item) {
     return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
 }
@@ -1565,3 +1578,86 @@ function getModalFormFromUrl(e) {
         });
     }
 }
+
+$(document).ready(function () {
+
+    var pusher = new Pusher(cake.pusher.key);
+    var socketId = "";
+    var feedUniqueId = "";
+    pusher.connection.bind('connected', function () {
+        socketId = pusher.connection.socket_id;
+    });
+
+    // フォームがsubmitされた際にsocket_idを埋め込む
+    $(document).on('submit', 'form.form-feed-notify', function () {
+        appendSocketId($(this), socketId);
+    });
+
+    // page type idをセットする
+    setPageTypeId();
+
+    // connectionをはる
+    for (var i in cake.data.c) {
+
+        pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
+            var pageType = getPageType();
+            var feedType = data.feed_type;
+            var feedId   = data.feed_id;
+            var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageType === feedType || pageType === "all");
+            if (canNotify) {
+                feedUniqueId = feedId;
+                notifyNewFeed();
+            }
+        });
+    }
+
+});
+
+function notifyNewFeed() {
+    var notifyBox = $(".feed-notify-box");
+    var numArea = notifyBox.find(".num");
+    var num = parseInt(numArea.html());
+
+    // インクリメント
+    numArea.html(num + 1);
+
+    if(num > 1) return;
+
+    // 未読件数が0の場合
+    notifyBox.css("display", function () {
+        return "block";
+    });
+
+    // 通知をふんわり出す
+    var i = 0.2;
+    setInterval(function () {
+        notifyBox.css("opacity", i);
+        i = i + 0.2;
+    }, 100);
+}
+
+function appendSocketId(form, socketId) {
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'socket_id',
+        value: socketId
+    }).appendTo(form);
+}
+
+// notify boxにpage idをセット
+function setPageTypeId() {
+    var notifyBox = $(".feed-notify-box");
+    var pageId = cake.data.d;
+    if (pageId === "null") {
+        return;
+    }
+    notifyBox.attr("id", pageId + "_feed_notify");
+}
+
+// notify boxのpage idをゲット
+function getPageType() {
+    var boxId = $(".feed-notify-box").attr("id");
+    if (!boxId) return "";
+    return boxId.replace("_feed_notify", "");
+}
+
