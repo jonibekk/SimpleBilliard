@@ -41,7 +41,8 @@ echo $this->Html->script('gl_basic');
         message: {
             validate: {
                 a: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
-                b: "<?=__d('validate', "パスワードが一致しません。")?>"
+                b: "<?=__d('validate', "パスワードが一致しません。")?>",
+                c: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",

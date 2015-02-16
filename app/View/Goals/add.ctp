@@ -395,7 +395,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                         'css'          => false,
                                                         'wrapInput'    => false,
                                                         'errorMessage' => false,
-                                                        'accept'       => 'image/*',
                                                        ]) ?>
                                 </span>
                                     <span class="help-block inline-block font_11px"><?= __d('gl', '10MB以下') ?></span>
@@ -480,7 +479,15 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         },
         fields: {
             "data[Goal][photo]": {
-                enabled: false
+                feedbackIcons: 'false',
+                validators: {
+                    file: {
+                        extension: 'jpeg,jpg,png,gif',
+                        type: 'image/jpeg,image/png,image/gif',
+                        maxSize: 10485760,   // 10mb
+                        message: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
+                    }
+                }
             }
         }
     });

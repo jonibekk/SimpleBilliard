@@ -57,10 +57,11 @@ $this->Form->input('ActionResult.name', [
                 <? for ($i = 1; $i <= 5; $i++): ?>
                     <li>
                         <?= $this->element('Feed/photo_upload_mini',
-                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => false]) ?>
+                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => false, 'id_prefix' => 'Goal_' . $goal_id . '_']) ?>
                     </li>
                 <? endfor ?>
             </ul>
+            <span class="help-block" id="Goal_<?= $goal_id ?>_ActionResult__Photo_ValidateMessage">
         </div>
     </div>
     <label class="font_normal col-xxs-4 lh_40px" for="KeyResults_<?= $goal_id ?>">

@@ -65,6 +65,7 @@
                                                ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
                             </li><? endfor ?>
                     </ul>
+                    <span class="help-block" id="Post__Photo_ValidateMessage"></span>
                 </div>
             </div>
             <?

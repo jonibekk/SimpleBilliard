@@ -18,26 +18,26 @@ $this->Form->create('Post', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class' => 'pt_10px',
+    'class'         => 'pt_10px',
     'style'         => 'display: none',
     'novalidate'    => true,
     'type'          => 'file',
     'id'            => "PostEditForm_{$post['Post']['id']}",
 ]); ?>
 <div class="mlr_-1px">
-<?=
-$this->Form->input('body', [
-    'id'             => "PostEditFormBody_{$post['Post']['id']}",
-    'label'          => false,
-    'type'           => 'textarea',
-    'wrap'           => 'soft',
-    'rows'           => 1,
-    'class' => 'form-control tiny-form-text blank-disable edit-form post-edit-form box-align',
-    'target_show_id' => "PostEdit_{$post['Post']['id']}",
-    'target-id'      => "PostEditSubmit_{$post['Post']['id']}",
-    'value'          => $post['Post']['body'],
-])
-?>
+    <?=
+    $this->Form->input('body', [
+        'id'             => "PostEditFormBody_{$post['Post']['id']}",
+        'label'          => false,
+        'type'           => 'textarea',
+        'wrap'           => 'soft',
+        'rows'           => 1,
+        'class'          => 'form-control tiny-form-text blank-disable edit-form post-edit-form box-align',
+        'target_show_id' => "PostEdit_{$post['Post']['id']}",
+        'target-id'      => "PostEditSubmit_{$post['Post']['id']}",
+        'value'          => $post['Post']['body'],
+    ])
+    ?>
 </div>
 <div class="row form-group m_0px none" id="PostFormImage_<?= $post['Post']['id'] ?>">
     <ul class="col input-images">
@@ -49,6 +49,7 @@ $this->Form->input('body', [
             </li>
         <? endfor ?>
     </ul>
+    <span class="help-block" id="Post_<?= $post['Post']['id'] ?>_Photo_ValidateMessage">
 </div>
 
 <div class="none" id="PostEdit_<?= $post['Post']['id'] ?>">
