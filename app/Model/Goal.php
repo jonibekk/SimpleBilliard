@@ -422,6 +422,21 @@ class Goal extends AppModel
         return $goals;
     }
 
+    function getMyCreateGoalsList($uid)
+    {
+        return $this->find(
+            'list',
+            [
+                'conditions' => [
+                    'Goal.user_id' => $uid
+                ],
+                'fields' => [
+                    'id'
+                ]
+            ]
+        );
+    }
+
     /**
      * 自分がこらぼったゴール取得
      *

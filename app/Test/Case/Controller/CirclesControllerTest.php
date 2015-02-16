@@ -44,6 +44,9 @@ class CirclesControllerTest extends ControllerTestCase
         'app.circle_member',
         'app.post_share_user',
         'app.post_share_circle',
+        'app.follower',
+        'app.collaborator',
+        'app.goal'
     );
 
     function testAddSuccess()

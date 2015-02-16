@@ -32,6 +32,7 @@ echo $this->Html->script('select2.min');
 echo $this->Html->script('bootstrap-datepicker.min');
 echo $this->Html->script('locales/bootstrap-datepicker.ja');
 echo $this->Html->script('moment.min');
+echo $this->Html->script('pusher.min');
 echo $this->Html->script('gl_basic');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
@@ -74,16 +75,16 @@ echo $this->Html->script('gl_basic');
             i: "<?=__d('gl',"最多で")?>",
             j: "<?=__d('gl',"項目までしか選択できません")?>"
         },
-        url : {
-            "a": "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
-            "b": "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
-            "c": "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
-            "d": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
-            "e": "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
+        url: {
+            a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
+            b: "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
+            c: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
+            d: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
+            e: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
         },
-        data : {
-            "a": <?=isset($select2_default)?$select2_default:"[]"?>,
-            "b": function (element, callback) {
+        data: {
+            a: <?=isset($select2_default)?$select2_default:"[]"?>,
+            b: function (element, callback) {
                 var data = [{
                     <?if(isset($current_circle)&&!empty($current_circle)):?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
@@ -96,7 +97,12 @@ echo $this->Html->script('gl_basic');
                     <?endif;?>
                 }];
                 callback(data);
-            }
+            },
+            c: <?=$my_channels_json?>,
+            d: "<?=viaIsSet($feed_filter)?>"
+        },
+        pusher: {
+            key: "<?=PUSHER_KEY?>"
         }
     };
 

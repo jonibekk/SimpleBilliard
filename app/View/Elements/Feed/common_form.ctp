@@ -40,6 +40,7 @@
                 'id'            => 'PostDisplayForm',
                 'type'          => 'file',
                 'novalidate'    => true,
+                'class'         => 'form-feed-notify'
             ]); ?>
             <div class="post-panel-body plr_11px ptb_7px">
                 <?=
@@ -81,6 +82,7 @@
                     $this->Form->hidden('share',
                                         ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
                     <? $this->Form->unlockField('Post.share') ?>
+                    <? $this->Form->unlockField('socket_id') ?>
                 </div>
             </div>
             <div class="post-panel-footer">

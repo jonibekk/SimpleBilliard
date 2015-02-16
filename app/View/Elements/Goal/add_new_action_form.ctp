@@ -18,6 +18,7 @@
     ],
     'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', $goal_id],
     'type'          => 'file',
+    'class'         => 'form-feed-notify'
 ]); ?>
 <?=
 $this->Form->input('ActionResult.name', [
@@ -75,6 +76,7 @@ $this->Form->input('ActionResult.name', [
                                                    ]
     )
     ?>
+    <? $this->Form->unlockField('socket_id') ?>
     <div class="form-group col-xxs-12 mt_12px">
         <a href="#" target-id="ActionFormName_<?= $goal_id ?>"
            class="btn btn-white tiny-form-text-close font_verydark"><?= __d('gl',

@@ -112,6 +112,8 @@ class AppController extends Controller
         $this->set('title_for_layout', SERVICE_NAME);
         $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
         $this->set(compact('is_isao_user'));
+        $my_channels_json = $this->User->getMyChannelsJson();
+        $this->set(compact('my_channels_json'));
     }
 
     public function _setSecurity()

@@ -389,6 +389,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'name'          => 'test',
                 'key_result_id' => 0,
                 'note'          => 'test',
+                'socket_id' => 'hogehage'
             ]
         ];
         $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
