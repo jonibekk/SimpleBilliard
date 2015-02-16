@@ -123,7 +123,7 @@
                         <div class="form-group mb_5px develop--font_normal">
                             <textarea
                                 class="form-control col-xxs-10 goalsCard-actionInput mb_12px add-select-options not-autosize click-get-ajax-form-replace"
-                                rows="1" placeholder="<?= __d('gl', "今日やったアクションを共有しよう！") ?>" id="ActionFormName_1"
+                                rows="1" placeholder="<?= __d('gl', "今日やったアクションを共有しよう！") ?>" id="ActionFormName_<?=$goal['Goal']['id']?>"
                                 cols="30" init-height="20"
                                 tmp-target-height="53"
                                 replace-elm-parent-id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>"

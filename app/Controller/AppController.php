@@ -24,6 +24,7 @@ App::uses('HelpsController', 'Controller');
  * @property SecurityComponent            $Security
  * @property TimezoneComponent            $Timezone
  * @property CookieComponent              $Cookie
+ * @property CsvComponent                 $Csv
  * @property GlEmailComponent             $GlEmail
  * @property PnotifyComponent             $Pnotify
  * @property MixpanelComponent            $Mixpanel
@@ -59,6 +60,7 @@ class AppController extends Controller
         'Ogp',
         'NotifyBiz',
         'Uservoice',
+        'Csv',
     ];
     public $helpers = [
         'Session',
@@ -110,6 +112,8 @@ class AppController extends Controller
         $this->set('title_for_layout', SERVICE_NAME);
         $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
         $this->set(compact('is_isao_user'));
+        $my_channels_json = $this->User->getMyChannelsJson();
+        $this->set(compact('my_channels_json'));
     }
 
     public function _setSecurity()
@@ -470,6 +474,5 @@ class AppController extends Controller
     {
         $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
     }
-
 
 }

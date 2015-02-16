@@ -57,6 +57,7 @@ $action = $this->request->data;
                                 </li>
                             <? endfor ?>
                         </ul>
+                        <span class="help-block" id="ActionResult_<?= $action['ActionResult']['id'] ?>_Photo_ValidateMessage"></span>
                     </div>
                 </div>
                 <label class="font_normal col-xxs-4 lh_40px" for="KeyResults_<?= $action['ActionResult']['id'] ?>">

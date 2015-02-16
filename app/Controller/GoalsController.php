@@ -108,6 +108,10 @@ class GoalsController extends AppController
                 case 3:
                     //完了
                     $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
+                    // pusherに通知
+                    $socketId = viaIsSet($this->request->data['socket_id']);
+                    $feedId   = Security::hash(time());
+                    $this->NotifyBiz->push($socketId, "all", $feedId);
                     //TODO 一旦、トップにリダイレクト
                     $this->redirect("/");
                     break;
@@ -760,6 +764,14 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
+
+        // pusherに通知
+        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $feedId   = Security::hash(time());
+        $channelName = "goal_" . $goal_id;
+        $this->NotifyBiz->push($socket_id, $channelName, $feedId);
+
+        // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));
         $this->redirect($this->referer());
 

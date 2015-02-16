@@ -23,20 +23,46 @@ class PostsController extends AppController
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
 
         // 投稿を保存
-        if ($this->Post->addNormal($this->request->data)) {
-            $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+        $successSavedPost = $this->Post->addNormal($this->request->data);
+
+        // 保存に失敗
+        if (!$successSavedPost) {
+            // バリデーションエラーのケース
+            if (!empty($this->Post->validationErrors)) {
+                $error_msg = array_shift($this->Post->validationErrors);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
+            }
+            $this->redirect($this->referer());
+        }
+
+        $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $feedId   = Security::hash(time());
+        $share    = explode(",", viaIsSet($this->request->data['Post']['share']));
+
+        // リクエストデータが正しくないケース
+        if (!$socketId || $share[0] === "") {
+            $this->redirect($this->referer());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             $this->redirect($this->referer());
         }
 
-        // バリデーションエラー
-        if (!empty($this->Post->validationErrors)) {
-            $error_msg = array_shift($this->Post->validationErrors);
-            $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
+        // チーム全体公開が含まれている場合はチーム全体にのみpush
+        if (in_array("public", $share)) {
+            $this->NotifyBiz->push($socketId, "public", $feedId);
+        } else {
+            // それ以外の場合は共有先の数だけ回す
+            foreach ($share as $val) {
+                $this->NotifyBiz->push($socketId, $val, $feedId);
+            }
         }
-        else {
-            $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
-        }
+
+        $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+
         $this->redirect($this->referer());
     }
 

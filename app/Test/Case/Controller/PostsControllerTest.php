@@ -88,7 +88,8 @@ class PostsControllerTest extends ControllerTestCase
         $data = [
             'Post' => [
                 'body'  => 'test',
-                'share' => 'public,circle_1,user_12'
+                'share' => 'public,circle_1,user_12',
+                'socket_id' => 'hogehage'
             ],
         ];
         $this->testAction('/posts/add',

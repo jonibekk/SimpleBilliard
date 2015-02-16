@@ -79,7 +79,7 @@ if (!isset($id_prefix)) {
             </div>
         <? endif; ?>
         <div>
-            <span class="btn-file">
+            <span class="hideFileInput">
                 <?
                 $model_id = null;
                 if (isset($data[$model]['id'])) {
@@ -94,15 +94,20 @@ if (!isset($id_prefix)) {
                 }
 
                 echo $this->Form->input($field_prefix . '.photo' . $index,
-                                        ['type'         => 'file',
-                                         'label'        => false,
-                                         'div'          => false,
-                                         'class'        => false,
-                                         'wrapInput'    => false,
-                                         'errorMessage' => false,
-                                         'required'     => false,
-                                         'accept'       => 'image/*',
-                                         'id'           => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index
+                                        ['type'                   => 'file',
+                                         'label'                  => false,
+                                         'div'                    => false,
+                                         'class'                  => false,
+                                         'wrapInput'              => false,
+                                         'errorMessage'           => false,
+                                         'required'               => false,
+                                         'id'                     => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index,
+                                         'data-bv-container'      => '#' . $id_prefix . $model . "_" . $model_id . '_Photo_ValidateMessage',
+                                         'data-bv-file'           => 'true',
+                                         'data-bv-file-extension' => 'jpeg,jpg,png,gif',
+                                         'data-bv-file-type'      => 'image/jpeg,image/png,image/gif',
+                                         'data-bv-file-maxsize'   => 10485760,   // 10mb
+                                         'data-bv-message'        => __d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")
                                         ]) ?>
             </span>
         </div>
