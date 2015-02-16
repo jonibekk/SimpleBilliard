@@ -1583,6 +1583,7 @@ $(document).ready(function () {
 
     var pusher = new Pusher(cake.pusher.key);
     var socketId = "";
+    var feedUniqueId = "";
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
     });
@@ -1600,7 +1601,8 @@ $(document).ready(function () {
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
             var pageType = getPageType();
             var feedType = data.feed_type;
-            var canNotify = data.is_postfeed && (pageType === feedType || pageType === "all");
+            var feedId   = data.feed_id;
+            var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageType === feedType || pageType === "post");
             if (canNotify) {
                 notifyNewFeed();
             }

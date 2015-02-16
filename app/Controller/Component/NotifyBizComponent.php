@@ -101,9 +101,9 @@ class NotifyBizComponent extends Component
         }
     }
 
-    public function push($socketId, $share)
+    public function push($socketId, $share, $feedId)
     {
-        if (!$socketId) return;
+        if (!$socketId || !$feedId) return;
 
         $teamId = $this->Session->read('current_team_id');
         $channelName = $share . "_team_" . $teamId;
@@ -115,6 +115,9 @@ class NotifyBizComponent extends Component
         // サークル投稿のケース
         else if (strpos($share, "circle") !== false) {
             $feedType = "circle";
+        // ユーザー向け投稿のケース
+        } else if (strpos($share, "user") !== false ) {
+            $feedType = "all";
         }
         // その他
         else {
@@ -125,7 +128,8 @@ class NotifyBizComponent extends Component
         // レスポンスデータの定義
         $data = [
             'is_postfeed' => true,
-            'feed_type'   => $feedType
+            'feed_type'   => $feedType,
+            'feed_id'     => $feedId
         ];
 
         // push

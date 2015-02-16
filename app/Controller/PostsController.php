@@ -41,7 +41,8 @@ class PostsController extends AppController
         $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
-        $share = explode(",", $this->request->data['Post']['share']);
+        $feedId   = Security::hash(time());
+        $share    = explode(",", viaIsSet($this->request->data['Post']['share']));
 
         // リクエストデータが正しくないケース
         if (!$socketId || $share[0] === "") {
@@ -50,9 +51,14 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
-        // 公開範囲で回してpush
-        foreach ($share as $val) {
-            $this->NotifyBiz->push($socketId, $val);
+        // チーム全体公開が含まれている場合はチーム全体にのみpush
+        if (in_array("public", $share)) {
+            $this->NotifyBiz->push($socketId, "public", $feedId);
+        } else {
+            // それ以外の場合は共有先の数だけ回す
+            foreach ($share as $val) {
+                $this->NotifyBiz->push($socketId, $val, $feedId);
+            }
         }
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
