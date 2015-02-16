@@ -1617,16 +1617,24 @@ function notifyNewFeed() {
     var notifyBox = $(".feed-notify-box");
     var numArea = notifyBox.find(".num");
     var num = parseInt(numArea.html());
+    var title = $("title");
 
-    // インクリメント
-    numArea.html(num + 1);
+    // Increment unread number
+    if(num >= 1) {
+        // top of feed
+        numArea.html(num + 1);
+        // titles
+        var titleStr = title.text().replace(/^\(\d+\)/, "(" + String(num+1) + ")");
+        title.text(titleStr);
+        return;
+    }
 
-    if(num > 1) return;
-
-    // 未読件数が0の場合
+    // Case of not existing unread post yet
+    numArea.html("1");
     notifyBox.css("display", function () {
         return "block";
     });
+    title.prepend("(1)");
 
     // 通知をふんわり出す
     var i = 0.2;
