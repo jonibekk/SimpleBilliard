@@ -55,6 +55,7 @@ $this->Form->create('Comment', [
             </li>
         <? endfor ?>
     </ul>
+    <span class="help-block" id="Comment_<?= $comment['id'] ?>_Photo_ValidateMessage"></span>
 </div>
 
 <div class="none" id="<?= $id_prefix ?>CommentEdit_<?= $comment['id'] ?>">

@@ -3576,4 +3576,25 @@ Temporary Properties - YOU MUST FIX
     font-size: 10px;
 }
 
+/*==== Hide File Input ====*/
+/* Replacing bnt-file (Jasny-Bootstrap.css) */
+.hideFileInput {
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.hideFileInput > input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    font-size: 23px;
+    cursor: pointer;
+    filter: alpha(opacity=0);
+    opacity: 0;
+
+    direction: ltr;
+}
+
 /* コメント太郎 */
