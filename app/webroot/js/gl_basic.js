@@ -1624,7 +1624,7 @@ function notifyNewFeed() {
         // top of feed
         numArea.html(num + 1);
         // titles
-        var titleStr = title.text().replace(/\d+/, function(n){ return ++n; });
+        var titleStr = title.text().replace(/^\(\d+\)/, "(" + String(num+1) + ")");
         title.text(titleStr);
         return;
     }
