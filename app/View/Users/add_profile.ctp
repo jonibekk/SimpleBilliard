@@ -162,6 +162,7 @@
                                                 'style'        => 'x_large',
                                                 'wrapInput'    => false,
                                                 'errorMessage' => false,
+                                                'required'     => false
                                                ]) ?>
                         </span>
                             </div>

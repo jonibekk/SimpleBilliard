@@ -393,6 +393,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                         'css'          => false,
                                                         'wrapInput'    => false,
                                                         'errorMessage' => false,
+                                                        'required'     => false
                                                        ]) ?>
                                 </span>
                                     <span class="help-block inline-block font_11px"><?= __d('gl', '10MB以下') ?></span>
