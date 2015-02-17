@@ -484,6 +484,7 @@ function evTargetToggleClick() {
     }
 
     $("form#" + target_id).bootstrapValidator();
+    $("#" + target_id).find('.custom-radio-check').customRadioCheck();
 
     //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
@@ -1602,7 +1603,7 @@ $(document).ready(function () {
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
             var pageType = getPageType();
             var feedType = data.feed_type;
-            var feedId   = data.feed_id;
+            var feedId = data.feed_id;
             var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageType === feedType || pageType === "all");
             if (canNotify) {
                 feedUniqueId = feedId;
@@ -1620,11 +1621,11 @@ function notifyNewFeed() {
     var title = $("title");
 
     // Increment unread number
-    if(num >= 1) {
+    if (num >= 1) {
         // top of feed
         numArea.html(num + 1);
         // titles
-        var titleStr = title.text().replace(/^\(\d+\)/, "(" + String(num+1) + ")");
+        var titleStr = title.text().replace(/^\(\d+\)/, "(" + String(num + 1) + ")");
         title.text(titleStr);
         return;
     }
@@ -1640,7 +1641,9 @@ function notifyNewFeed() {
     var i = 0.2;
     setInterval(function () {
         notifyBox.css("opacity", i);
-        i = i + 0.2;
+        if (i < 1) {
+            i = i + 0.2;
+        }
     }, 100);
 }
 

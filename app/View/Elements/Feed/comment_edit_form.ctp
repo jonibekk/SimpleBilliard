@@ -24,7 +24,7 @@ $this->Form->create('Comment', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class'         => '',
+    'class'         => 'col col-xxs-12',
     'style'         => 'display: none',
     'novalidate'    => true,
     'type'          => 'file',
