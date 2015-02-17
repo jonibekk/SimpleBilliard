@@ -13,26 +13,16 @@
 ?>
 <!-- START app/View/Elements/my_goals_area.ctp -->
 <div class="col col-xxs-12 goals-column-head">
-    <span class="font_18px mt_5px font_gargoyleGray goals-column-title"><?= __d('gl', 'あなたのゴール') ?>
-        (<?= count($my_goals) + count($collabo_goals) ?>)</span>
+    <span class="font_18px mt_5px font_gargoyleGray goals-column-title">
+        <?= __d('gl', 'あなたのゴール') ?>(<?= count($my_goals) + count($collabo_goals) ?>)
+    </span>
+        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
+           class="font_gargoyleGray-brownRed pull-right col-xxs-4 btn-goals-column-plus">
+            <i class="fa fa-plus-circle">
+                <?= __d('gl', 'ゴールを作成') ?>
+            </i>
+        </a>
 
-    <div class="pull-right">
-        <div class="dropdown">
-            <a href="#" class="font_gargoyleGray-gray font_11px" data-toggle="dropdown" id="download">
-                <span class="lh_20px"><?= __d('gl', "全て") ?></span><i
-                    class="fa fa-caret-down feed-arrow lh_20px"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
-                aria-labelledby="dropdownMenu1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?=
-                        __d('gl',
-                            "完了しているゴール") ?></a>
-                </li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?= __d('gl', "今期のゴール") ?></a>
-                </li>
-            </ul>
-        </div>
-    </div>
 </div>
 <div id="LeaderGoals">
     <div class="col col-xxs-12 mt_16px font_gargoyleGray">
@@ -49,12 +39,6 @@
         </div>
     <? else: ?>
         <?= $this->element('Goal/my_goal_area_items', ['goals' => $my_goals, 'type' => 'leader']) ?>
-        <div class="col col-xxs-12 goals-column-plus-box">
-            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
-               class="font_gargoyleGray-gray pull-right"> <i class="fa fa-plus-circle">
-                    <?= __d('gl', '新しいゴールをつくる') ?>            </i>
-            </a>
-        </div>
     <? endif ?>
 </div>
 <div id="CollaboGoals">
@@ -69,21 +53,9 @@
             (<?= count($follow_goals) ?>)</span>
 
         <div class="pull-right">
-            <div class="dropdown">
-                <a href="#" class="font_gargoyleGray-gray font_11px" data-toggle="dropdown" id="download">
-                    <span class="lh_20px"><?= __d('gl', "全て") ?></span><i
-                        class="fa fa-caret-down feed-arrow lh_20px"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
-                    aria-labelledby="dropdownMenu1">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?=
-                            __d('gl',
-                                "完了しているゴール") ?></a>
-                    </li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?= __d('gl', "今期のゴール") ?></a>
-                    </li>
-                </ul>
-            </div>
+            <a href="#" class="font_gargoyleGray-gray font_11px">
+                <span class="lh_20px"><?= __d('gl', "ゴールを探す") ?></span>
+            </a>
         </div>
     </div>
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $follow_goals, 'type' => 'follow']) ?>
