@@ -119,6 +119,20 @@ class Invite extends AppModel
         }
     }
 
+    function isByBatchSetup($token)
+    {
+        $invite = $this->getByToken($token);
+        if (!viaIsSet($invite['Invite']['email'])) {
+            return false;
+        }
+
+        $user = $this->FromUser->getUserByEmail($invite['Invite']['email']);
+        if (viaIsSet($user['User']) && $user['User']['active_flg'] === false && $user['User']['no_pass_flg'] === true) {
+            return true;
+        }
+        return false;
+    }
+
     function isForMe($token, $uid)
     {
         $invite = $this->getByToken($token);

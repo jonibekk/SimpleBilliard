@@ -28,7 +28,7 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite');
+                           'accept_invite', 'registration_with_set_password');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -204,6 +204,47 @@ class UsersController extends AppController
     }
 
     /**
+     * User Registration by batch set up.
+
+     */
+    public function registration_with_set_password()
+    {
+        if ($this->Auth->user()) {
+            throw new NotFoundException();
+        }
+        if (!viaIsSet($this->request->params['named']['invite_token'])) {
+            throw new NotFoundException();
+        }
+
+        try {
+            //トークンが有効かチェック
+            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            if (!$this->Invite->isByBatchSetup($this->request->params['named']['invite_token'])) {
+                throw new RuntimeException(__d('gl', "トークンが正しくありません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect('/');
+        }
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        if ($this->request->is('post')) {
+            //tokenチェック
+            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
+
+            //Email match check
+            if (!viaIsSet($invite['Invite']['email']) || $this->request->data['Email']['email'] != $invite['Invite']['email']) {
+                $this->Pnotify->outError(__d('gl', "メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"));
+                return $this->render();
+            }
+            //save password & activation
+
+        }
+
+    }
+
+    /**
      * 新規プロフィール入力
      */
     public function add_profile()
@@ -350,6 +391,10 @@ class UsersController extends AppController
 
     /**
      * Password reset
+     *
+     * @param null $token
+     *
+     * @return CakeResponse|void
      */
     public function password_reset($token = null)
     {
@@ -544,6 +589,11 @@ class UsersController extends AppController
 
             if (!$this->Invite->isUser($token)) {
                 return $this->redirect(['action' => 'register', 'invite_token' => $token]);
+            }
+
+            //By batch setup
+            if ($this->Invite->isByBatchSetup($token)) {
+                return $this->redirect(['action' => 'registration_with_set_password', 'invite_token' => $token]);
             }
 
             if (!$this->Auth->user()) {
