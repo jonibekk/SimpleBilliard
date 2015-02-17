@@ -52,6 +52,10 @@ class TeamMember extends AppModel
 
     /**
      * 現在有効なチーム一覧を取得
+     *
+     * @param $uid
+     *
+     * @return array
      */
     function getActiveTeamList($uid)
     {
@@ -269,10 +273,10 @@ class TeamMember extends AppModel
             //メアド存在確認
             $user = $this->User->getUserByEmail($row_v['Email']['email']);
             if (viaIsSet($user['User'])) {
+                $this->csv_datas[$row_k]['Email'] = $user['Email'];
                 //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
                 $user['User'] = array_merge($user['User'], $row_v['User']);
                 $user = $this->User->save($user['User']);
-                $this->csv_datas[$row_k]['Email'] = $user['Email'];
             }
             else {
                 //なければ、ユーザ情報(User,Email)を登録。
