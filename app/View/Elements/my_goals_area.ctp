@@ -17,7 +17,7 @@
         <?= __d('gl', 'あなたのゴール') ?>(<?= count($my_goals) + count($collabo_goals) ?>)
     </span>
         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
-           class="font_gargoyleGray-brownRed pull-right col-xxs-4 btn-goals-column-plus">
+           class="font_gargoyleGray-brownRed pull-right col-xxs-5 btn-goals-column-plus">
             <i class="fa fa-plus-circle font_brownRed">
             </i>
             <?= __d('gl', 'ゴールを作成') ?>
