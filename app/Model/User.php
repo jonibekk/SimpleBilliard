@@ -690,8 +690,11 @@ class User extends AppModel
 
         $user_email['User']['password'] = $this->generateHash($postData['User']['password']);
         $user_email['User']['password_token'] = null;
+        $user_email['User']['no_path_flg'] = false;
+        $user_email['User']['active_flg'] = true;
         $user_email['User']['password_modified'] = REQUEST_TIMESTAMP;
         $user_email['Email']['email_token_expires'] = null;
+        $user_email['Email']['email_verified'] = true;
         $res = $this->Email->saveAll($user_email);
         return $res;
     }
@@ -983,9 +986,9 @@ class User extends AppModel
             $my_channels[] = 'circle_' . $val . '_team_' . $this->current_team_id;
         }
         // ゴール
-        $followList  = $this->Goal->Follower->getFollowList($this->my_uid);
+        $followList = $this->Goal->Follower->getFollowList($this->my_uid);
         $collaboList = $this->Goal->Collaborator->getCollaboGoalList($this->my_uid);
-        $myList      = $this->Goal->getMyCreateGoalsList($this->my_uid);
+        $myList = $this->Goal->getMyCreateGoalsList($this->my_uid);
         $goals = array_unique(array_merge($followList, $collaboList, $myList));
         foreach ($goals as $val) {
             $my_channels[] = 'goal_' . $val . '_team_' . $this->current_team_id;

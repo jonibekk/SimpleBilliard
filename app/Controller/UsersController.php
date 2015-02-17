@@ -238,10 +238,22 @@ class UsersController extends AppController
                 $this->Pnotify->outError(__d('gl', "メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"));
                 return $this->render();
             }
+            $user = $this->User->getUserByEmail($this->request->data['Email']['email']);
+            if (!viaIsSet($user['User'])) {
+                $this->Pnotify->outError(__d('gl', "問題が発生しました。"));
+                return $this->redirect('/');
+            }
+
+            $this->Invite->verify($this->request->params['named']['invite_token']);
             //save password & activation
+            $this->User->passwordReset($user, ['User' => $this->request->data['User']]);
 
+            $this->_autoLogin($user['User']['id']);
+            //Display modal on home.
+            $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+            return $this->redirect('/');
         }
-
+        return $this->render();
     }
 
     /**
