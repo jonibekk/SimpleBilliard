@@ -98,7 +98,6 @@ class Invite extends AppModel
      *
      * @param string $token The token that wa sent to the user
      *
-     * @internal param $uid
      * @return array On success it returns the user data record
      */
     public function verify($token)

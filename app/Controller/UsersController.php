@@ -240,7 +240,7 @@ class UsersController extends AppController
         $isSavedSuccess = $this->User->saveAll($this->request->data);
 
         // 保存失敗
-        if(!$isSavedSuccess) {
+        if (!$isSavedSuccess) {
             $language_name = $this->Lang->availableLanguages[$me['language']];
 
             $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
@@ -602,6 +602,7 @@ class UsersController extends AppController
     {
         //トークン認証
         $invite = $this->Invite->verify($token);
+
         //チーム参加
         $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
         //デフォルトチーム設定
