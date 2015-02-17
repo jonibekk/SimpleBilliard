@@ -484,6 +484,7 @@ function evTargetToggleClick() {
     }
 
     $("form#" + target_id).bootstrapValidator();
+    $("#" + target_id).find('.custom-radio-check').customRadioCheck();
 
     //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();

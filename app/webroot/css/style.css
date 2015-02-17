@@ -3581,6 +3581,8 @@ Temporary Properties - YOU MUST FIX
 }
 
 .hideFileInput > input {
+    width: 0;
+    height: 0;
     position: absolute;
     top: 0;
     right: 0;
