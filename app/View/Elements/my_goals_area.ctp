@@ -18,9 +18,9 @@
     </span>
         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
            class="font_gargoyleGray-brownRed pull-right col-xxs-4 btn-goals-column-plus">
-            <i class="fa fa-plus-circle">
-                <?= __d('gl', 'ゴールを作成') ?>
+            <i class="fa fa-plus-circle font_brownRed">
             </i>
+            <?= __d('gl', 'ゴールを作成') ?>
         </a>
 
 </div>

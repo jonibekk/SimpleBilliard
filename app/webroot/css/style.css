@@ -943,6 +943,10 @@ textarea{
     color: #ae2f2f;
 }
 
+.font_brownRed{
+    color: #ae2f2f;
+}
+
 .font_gray-rougeOrange {
     color: #808080;
 }
@@ -2706,6 +2710,13 @@ textarea.comment-post-form {
     border-radius: 4px;
     text-align: center;
     padding: 2px;
+}
+
+.btn-goals-column-plus:hover,
+.btn-goals-column-plus:target,
+.btn-goals-column-plus:active{
+    text-decoration: none;
+    border-color: #ae2f2f;
 }
 
 .goals-column-add-box {
