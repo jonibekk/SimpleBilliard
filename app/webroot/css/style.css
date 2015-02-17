@@ -1351,6 +1351,22 @@ textarea{
     vertical-align: top;
 }
 
+.feed-notify-box{
+    background-color: #f4edf2;
+    border-color: #ddd;
+    color: #b36e6f;
+    text-align: center;
+}
+
+.feed-notify-box:hover,
+.feed-notify-box:target,
+.feed-notify-box:focus{
+    background-color: #e8c8cc;
+    border-color: #ddd;
+    color: #b36e6f;
+    text-decoration: none;
+}
+
 .comment-user {
     height: 12px;
     margin-bottom: 2px;
@@ -1623,6 +1639,14 @@ ul.example-indent {
     text-align: center;
 }
 
+.panel-read-more-body:hover,
+.panel-read-more-body:target,
+.panel-read-more-body:focus{
+    background-color: #e8c8cc;
+    border-color: #ddd;
+}
+
+
 .feed-read-more {
     margin-top: 20px;
     background: #f4edf2;
@@ -1634,6 +1658,12 @@ ul.example-indent {
     color: #b36e6f;
     width: 100%;
     height: 100%;
+}
+
+.click-feed-read-more:hover,
+.click-feed-read-more:active,
+.click-feed-read-more:target {
+    text-decoration: none;
 }
 
 .post-contents .btn-link {
