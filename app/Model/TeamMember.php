@@ -304,8 +304,9 @@ class TeamMember extends AppModel
                 $this->User->Email->create();
                 $email = $this->User->Email->save($row_v['Email']);
                 $this->csv_datas[$row_k]['Email'] = $email['Email'];
-                $user['User']['primary_email_id'] = $email['Email']['email'];
-                $user = $this->User->save($user);
+                $user['User']['primary_email_id'] = $email['Email']['id'];
+                $this->User->id = $user['User']['id'];
+                $this->User->saveField('primary_email_id', $email['Email']['id']);
             }
             $this->csv_datas[$row_k]['User'] = $user['User'];
 
