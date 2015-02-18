@@ -247,6 +247,8 @@ class UsersController extends AppController
             $this->Invite->verify($this->request->params['named']['invite_token']);
             //save password & activation
             $this->User->passwordReset($user, ['User' => $this->request->data['User']]);
+            //team member activate
+            $this->User->TeamMember->activateMembers($user['User']['id'], $invite['Invite']['team_id']);
 
             $this->_autoLogin($user['User']['id']);
             //Display modal on home.

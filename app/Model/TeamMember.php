@@ -198,6 +198,13 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    public function activateMembers($user_ids, $team_id = null)
+    {
+        $team_id = !$team_id ? $this->current_team_id : $team_id;
+        return $this->updateAll(['TeamMember.active_flg' => true],
+                                ['TeamMember.team_id' => $team_id, 'TeamMember.user_id' => $user_ids]);
+    }
+
     function incrementNotifyUnreadCount($user_ids)
     {
         if (empty($user_ids)) {
