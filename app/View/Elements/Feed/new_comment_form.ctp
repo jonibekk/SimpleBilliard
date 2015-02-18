@@ -34,7 +34,7 @@ $this->Form->input('body', [
     'placeholder'              => __d('gl', "コメントする"),
     'class'                    => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
     'target-id'                => "CommentSubmit_{$post_id}",
-    "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
+    'required'                 => 'false'
 ])
 ?>
 <div class="form-group" id="CommentFormImage_<?= $post_id ?>"
