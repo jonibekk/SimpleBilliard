@@ -161,6 +161,7 @@ class TeamsController extends AppController
         }
         else {
             $this->Team->TeamMember->commit();
+            $team = $this->Team->findById($this->Session->read('current_team_id'));
             //send invite mail
             foreach ($this->Team->TeamMember->csv_datas as $data) {
                 //save invite mail data
@@ -171,7 +172,6 @@ class TeamsController extends AppController
                     null
                 );
                 //send invite mail
-                $team = $this->Team->findById($this->Session->read('current_team_id'));
                 $this->GlEmail->sendMailInvite($invite, $team['Team']['name']);
             }
 

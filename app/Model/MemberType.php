@@ -125,14 +125,11 @@ class MemberType extends AppModel
         if (!$team_id) {
             $team_id = $this->current_team_id;
         }
-        $this->cacheQueries = false;
         $member_type = $this->getByName($name, $team_id);
         if (!empty($member_type)) {
-            $this->cacheQueries = true;
             return $member_type;
         }
         $res = $this->saveNewType($name);
-        $this->cacheQueries = true;
         return $res;
     }
 }
