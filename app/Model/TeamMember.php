@@ -81,9 +81,7 @@ class TeamMember extends AppModel
 
     function updateLastLogin($team_id, $uid)
     {
-        $this->cacheQueries = false;
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
-        $this->cacheQueries = true;
         $team_member['TeamMember']['last_login'] = REQUEST_TIMESTAMP;
         $res = $this->save($team_member);
         return $res;
@@ -171,9 +169,7 @@ class TeamMember extends AppModel
     public function add($uid, $team_id)
     {
         //if exists update
-        $this->cacheQueries = false;
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
-        $this->cacheQueries = true;
         if (viaIsSet($team_member['TeamMember']['id'])) {
             $team_member['TeamMember']['active_flg'] = true;
             return $this->save($team_member);
@@ -351,23 +347,6 @@ class TeamMember extends AppModel
                 $team_member = $this->save($row_v['TeamMember']);
                 $this->csv_datas[$row_k]['TeamMember'] = $team_member['TeamMember'];
             }
-            //test
-//            $this->User->cacheQueries = false;
-//            $this->User->Email->cacheQueries = false;
-//            $this->User->LocalName->cacheQueries = false;
-//            $options = [
-//                'conditions' => [
-//                    'User.id' => $user['User']['id']
-//                ],
-//                'contain'    => [
-//                    'Email',
-//                    'LocalName',
-//                ]
-//            ];
-//            $this->User->cacheQueries = true;
-//            $this->User->Email->cacheQueries = true;
-//            $this->User->LocalName->cacheQueries = true;
-
         }
 
         /**

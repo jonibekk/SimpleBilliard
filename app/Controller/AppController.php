@@ -236,9 +236,7 @@ class AppController extends Controller
             $uid = $this->Auth->user('id');
         }
         //言語設定を退避
-        $this->User->cacheQueries = false;
         $user_lang = $this->User->findById($uid);
-        $this->User->cacheQueries = true;
         $lang = null;
         if (!empty($user_lang)) {
             $lang = $user_lang['User']['language'];
@@ -247,9 +245,7 @@ class AppController extends Controller
         $this->User->resetLocalNames();
         $this->User->me['language'] = $lang;
         $this->User->recursive = 0;
-        $this->User->cacheQueries = false;
         $user_buff = $this->User->findById($uid);
-        $this->User->cacheQueries = true;
         $this->User->recursive = -1;
         unset($user_buff['User']['password']);
         $user_buff = array_merge(['User' => []], $user_buff);

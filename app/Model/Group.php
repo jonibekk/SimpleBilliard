@@ -74,10 +74,8 @@ class Group extends AppModel
         if (!empty($group = $this->getByName($name, $team_id))) {
             return $group;
         }
-        $this->cacheQueries = false;
         $this->saveNewGroup($name);
         $group = $this->getByName($name, $team_id);
-        $this->cacheQueries = true;
         return $group;
     }
 }
