@@ -453,9 +453,9 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getMyFollowedGoals()
+    function getMyFollowedGoals($limit=null, $page=1)
     {
-        $goal_ids = $this->Follower->getFollowList($this->my_uid);
+        $goal_ids = $this->Follower->getFollowList($this->my_uid, $limit, $page);
         $res = $this->getByGoalId($goal_ids);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);

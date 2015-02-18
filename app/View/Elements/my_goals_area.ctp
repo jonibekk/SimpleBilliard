@@ -50,8 +50,7 @@
 <div id="FollowGoals">
     <div class="col col-xxs-12 goals-column-head mt_32px">
         <span class="font_18px font_gargoyleGray goals-column-title"><?= __d('gl', 'フォロー中のゴール') ?>
-            (<?= count($follow_goals) ?>)</span>
-
+            (<?= $follow_goals_count ?>)</span>
         <div class="pull-right">
             <a href="#" class="font_gargoyleGray-gray font_11px">
                 <span class="lh_20px"><?= __d('gl', "ゴールを探す") ?></span>
@@ -60,5 +59,10 @@
     </div>
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $follow_goals, 'type' => 'follow']) ?>
 </div>
+<? if (count($follow_goals) < $follow_goals_count):?>
+<a href="#" class="click-my-follow-read-more" next-page-num="2" get-url="/goals/ajax_get_my_goals">
+    <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
+</a>
+<? endif; ?>
 
 <!-- END app/View/Elements/my_goals_area.ctp -->

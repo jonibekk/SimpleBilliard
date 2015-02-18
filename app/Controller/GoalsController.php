@@ -799,6 +799,31 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_my_goals()
+    {
+        $param_named = $this->request->params['named'];
+        $this->_ajaxPreProcess();
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        else {
+            $page_num = 1;
+        }
+
+        $goals = $this->Goal->getMyFollowedGoals(20, $page_num);
+        $type = 'follow';
+        $this->set(compact('goals', 'type'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Goal/my_goal_area_items');
+        $html = $response->__toString();
+        $result = array(
+            'html'  => $html,
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
     function _setGoalAddViewVals()
     {
         $goal_category_list = $this->Goal->GoalCategory->getCategoryList();

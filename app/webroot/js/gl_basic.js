@@ -1672,3 +1672,74 @@ function getPageType() {
     return boxId.replace("_feed_notify", "");
 }
 
+$(document).ready(function(){
+    $(document).on("click", ".click-my-follow-read-more", evGoalsMoreView);
+});
+
+function evGoalsMoreView() {
+    attrUndefinedCheck(this, 'next-page-num');
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var next_page_num = $obj.attr('next-page-num');
+    var get_url = $obj.attr('get-url');
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    //ローダー表示
+    $obj.after($loader_html);
+    //url生成
+    var url = get_url + '/page:' + next_page_num;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $goals = $(data.html);
+                //一旦非表示
+                $goals.hide();
+                $("#" + "FollowGoals").append($goals);
+                //html表示
+                // もっと見るボタン非表示
+                $('.click-my-follow-read-more').hide();
+                $goals.show();
+                //ページ番号をインクリメント
+                next_page_num++;
+                //次のページ番号をセット
+                $obj.attr('next-page-num', next_page_num);
+                //ローダーを削除
+                $loader_html.remove();
+                //もっと見るボタン表示
+                $('.click-my-follow-read-more').show();
+                //リンクを有効化
+                $obj.text(cake.message.info.e);
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                //画像をレイジーロード
+                imageLazyOn();
+                //画像リサイズ
+                $goals.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $('.custom-radio-check').customRadioCheck();
+
+            } else {
+                // もっと見るボタンの削除
+
+            }
+
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
