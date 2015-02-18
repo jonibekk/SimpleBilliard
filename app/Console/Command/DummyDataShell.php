@@ -58,7 +58,6 @@ class DummyDataShell extends AppShell
 
     function main()
     {
-        $this->User->cacheQueries = false;
         if (isset($this->params['config'])) {
             $this->User->useDbConfig = $this->params['config'];
         }
