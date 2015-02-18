@@ -35,12 +35,11 @@
                                 ?>
                             </a>
                         </div>
-                        <div class="ln_contain w_88per h_28px">
+                        <div class="ln_contain w_88per">
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
                                class="no-line font_verydark modal-ajax-get">
                                 <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($post['Goal']['name']) ?>
                             </a>
-
                         </div>
                     </div>
                 </div>
@@ -133,11 +132,11 @@
                     <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                         <?= $this->TextEx->autoLink($post['Post']['body']) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-                        <i class="fa fa-check-circle"></i>&nbsp;<?= $this->TextEx->autoLink(h($post['ActionResult']['name'])) ?>
+                        <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= $this->TextEx->autoLink(h($post['ActionResult']['name'])) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
-                        <i class="fa fa-key"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['KeyResult']['name'])) ?>
+                        <i class="fa fa-key disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['KeyResult']['name'])) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
-                        <i class="fa fa-flag"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['Goal']['name'])) ?>
+                        <i class="fa fa-flag disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['Goal']['name'])) ?>
                     <? else: ?>
                         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
                     <? endif; ?>
@@ -290,7 +289,7 @@
                 <? endif; ?>
                 <? if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
-                        <i class="fa fa-key"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
+                        <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
                     </div>
                 <? endif; ?>
                 <div class="col col-xxs-12 font_12px pt_8px">
