@@ -55,6 +55,16 @@
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
                 ]) ?>
+                <?=
+                //タイムゾーン設定の為のローカル時刻をセット
+                $this->Form->input('local_date', [
+                    'label' => false,
+                    'div'   => false,
+                    'style' => 'display:none;',
+                    'id'    => 'InitLocalDate',
+                ]);
+
+                ?>
             </div>
             <div class="panel-footer">
                 <div class="form-group">
@@ -67,4 +77,12 @@
         </div>
     </div>
 </div>
+<? $this->append('script'); ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //ユーザ登録時にローカル時間をセットする
+        $('input#InitLocalDate').val(getLocalDate());
+    });
+</script>
+<? $this->end(); ?>
 <!-- END app/View/Users/registration_with_set_password.ctp -->

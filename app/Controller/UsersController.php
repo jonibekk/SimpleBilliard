@@ -245,6 +245,12 @@ class UsersController extends AppController
             }
 
             $this->Invite->verify($this->request->params['named']['invite_token']);
+            //タイムゾーン設定
+            //ユーザのローカル環境から取得したタイムゾーンをセット
+            $this->User->id = $user['User']['id'];
+            $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
+            $this->User->saveField('timezone', $timezone);
+
             //save password & activation
             $this->User->passwordReset($user, ['User' => $this->request->data['User']]);
             //team member activate
