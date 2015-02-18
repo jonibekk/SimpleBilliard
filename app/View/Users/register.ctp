@@ -101,13 +101,11 @@
                 $ppLink = $this->Html->link(__d('gl', 'プライバシーポリシー'), '#modal-pp',
                                             ['class' => 'link', 'data-toggle' => "modal"]);
                 echo $this->Form->input('agree_tos', [
-                    'wrapInput'                => 'col col-sm-9 col-sm-offset-3',
-                    'type'                     => 'checkbox',
-                    'label'                    => ['class' => null,
-                                                   'text'  => __d('gl', "Goalousの%sと%sに同意します。", $tosLink, $ppLink)],
-                    'data-bv-notempty'         => true,
-                    "data-bv-notempty-message" => __d('validate', "利用規約に同意してください。"),
-                    'class'                    => false,
+                    'wrapInput' => 'col col-sm-9 col-sm-offset-3',
+                    'type'      => 'checkbox',
+                    'label'     => ['class' => null,
+                                    'text'  => __d('gl', "Goalousの%sと%sに同意します。", $tosLink, $ppLink)],
+                    'class'     => 'validate-checkbox'
                 ]);
                 //タイムゾーン設定の為のローカル時刻をセット
                 echo $this->Form->input('local_date', [
