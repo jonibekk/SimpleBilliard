@@ -74,10 +74,6 @@ class AppModel extends Model
     public function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
-        //テスト以外の場合はクエリキャッシュの有効化
-        if ($this->useDbConfig == "default") {
-            $this->cacheQueries = true;
-        }
         $this->_setSessionVariable();
     }
 
