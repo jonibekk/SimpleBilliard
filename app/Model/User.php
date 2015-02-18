@@ -690,7 +690,7 @@ class User extends AppModel
 
         $user_email['User']['password'] = $this->generateHash($postData['User']['password']);
         $user_email['User']['password_token'] = null;
-        $user_email['User']['no_path_flg'] = false;
+        $user_email['User']['no_pass_flg'] = false;
         $user_email['User']['active_flg'] = true;
         $user_email['User']['password_modified'] = REQUEST_TIMESTAMP;
         $user_email['Email']['email_token_expires'] = null;
