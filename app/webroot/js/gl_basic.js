@@ -1715,9 +1715,7 @@ function evGoalsMoreView() {
                 //もっと見るボタン表示
                 $('.click-my-follow-read-more').show();
                 //リンクを有効化
-                $obj.text(cake.message.info.e);
                 $obj.removeAttr('disabled');
-                $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
                 //画像リサイズ
@@ -1728,12 +1726,15 @@ function evGoalsMoreView() {
                         fitDirection: 'center center'
                     });
                 });
+                if (data.count < 20) {
+                    $('.click-my-follow-read-more').hide();
+                }
 
                 $('.custom-radio-check').customRadioCheck();
 
             } else {
                 // もっと見るボタンの削除
-
+                $('.click-my-follow-read-more').hide();
             }
 
         },
