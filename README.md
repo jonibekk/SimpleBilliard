@@ -3,12 +3,10 @@ Goalous 2.0のリポジトリです。
 旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)  
 当プロジェクトで管理しているソース、ドキュメント、その他のツールのすべてはここから辿れるようになっています。  
 ## Health
-- Travis
- - master [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
- - develop [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
-- Coveralls
- - master [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=master)](https://coveralls.io/r/IsaoCorp/goalous2?branch=master)
- - develop [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=develop)](https://coveralls.io/r/IsaoCorp/goalous2?branch=develop)
+- master   
+[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2) [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=master)](https://coveralls.io/r/IsaoCorp/goalous2?branch=master)   
+- develop   
+[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=develop)](https://coveralls.io/r/IsaoCorp/goalous2?branch=develop)   
 
 ## What's Goalous ?
 GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目標達成ツールです。
