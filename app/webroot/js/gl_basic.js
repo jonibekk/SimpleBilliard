@@ -1683,23 +1683,40 @@ function getPageType() {
 }
 
 $(document).ready(function(){
-    $(document).on("click", ".click-my-follow-read-more", evGoalsMoreView);
+    $(document).on("click", ".click-my-goals-read-more", evGoalsMoreView);
+    $(document).on("click", ".click-collabo-goals-read-more", evGoalsMoreView);
+    $(document).on("click", ".click-follow-goals-read-more", evGoalsMoreView);
 });
 
 function evGoalsMoreView() {
     attrUndefinedCheck(this, 'next-page-num');
     attrUndefinedCheck(this, 'get-url');
+    attrUndefinedCheck(this, 'goal-type');
 
     var $obj = $(this);
     var next_page_num = $obj.attr('next-page-num');
     var get_url = $obj.attr('get-url');
+    var type = $obj.attr('goal-type');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     //ローダー表示
     $obj.after($loader_html);
     //url生成
-    var url = get_url + '/page:' + next_page_num;
+    var url = get_url + '/page:' + next_page_num + '/type:' + type;
+    var listBox;
+    var moreViewButton = $obj;
+    var limitNumber;
+    if (type === "leader") {
+        listBox = $("#LeaderGoals");
+        limitNumber = cake.data.e;
+    } else if (type === "collabo") {
+        listBox = $("#CollaboGoals");
+        limitNumber = cake.data.f;
+    } else if (type === "follow") {
+        listBox = $("#FollowGoals");
+        limitNumber = cake.data.g;
+    }
     $.ajax({
         type: 'GET',
         url: url,
@@ -1711,10 +1728,10 @@ function evGoalsMoreView() {
                 var $goals = $(data.html);
                 //一旦非表示
                 $goals.hide();
-                $("#" + "FollowGoals").append($goals);
+                listBox.append($goals);
                 //html表示
                 // もっと見るボタン非表示
-                $('.click-my-follow-read-more').hide();
+                moreViewButton.hide();
                 $goals.show();
                 //ページ番号をインクリメント
                 next_page_num++;
@@ -1723,7 +1740,7 @@ function evGoalsMoreView() {
                 //ローダーを削除
                 $loader_html.remove();
                 //もっと見るボタン表示
-                $('.click-my-follow-read-more').show();
+                moreViewButton.show();
                 //リンクを有効化
                 $obj.removeAttr('disabled');
                 //画像をレイジーロード
@@ -1736,15 +1753,15 @@ function evGoalsMoreView() {
                         fitDirection: 'center center'
                     });
                 });
-                if (data.count < cake.data.e) {
-                    $('.click-my-follow-read-more').hide();
+                if (data.count < limitNumber) {
+                    moreViewButton.hide();
                 }
 
                 $('.custom-radio-check').customRadioCheck();
 
             } else {
                 // もっと見るボタンの削除
-                $('.click-my-follow-read-more').hide();
+                moreViewButton.hide();
             }
 
         },
