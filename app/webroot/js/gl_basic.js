@@ -1736,7 +1736,7 @@ function evGoalsMoreView() {
                         fitDirection: 'center center'
                     });
                 });
-                if (data.count < 20) {
+                if (data.count < cake.data.e) {
                     $('.click-my-follow-read-more').hide();
                 }
 

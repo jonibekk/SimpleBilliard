@@ -810,7 +810,7 @@ class GoalsController extends AppController
             $page_num = 1;
         }
 
-        $goals = $this->Goal->getMyFollowedGoals(20, $page_num);
+        $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
         $type = 'follow';
         $this->set(compact('goals', 'type'));
 

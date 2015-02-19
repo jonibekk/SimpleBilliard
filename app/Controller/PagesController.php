@@ -66,7 +66,7 @@ class PagesController extends AppController
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $my_goals = $this->Goal->getMyGoals();
         $collabo_goals = $this->Goal->getMyCollaboGoals();
-        $follow_goals = $this->Goal->getMyFollowedGoals(20);
+        $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER);
         $follow_goals_count = count($this->Goal->getMyFollowedGoals());
         $current_global_menu = "home";
         $feed_filter = 'all';
