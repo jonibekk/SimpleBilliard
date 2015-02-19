@@ -1339,6 +1339,10 @@ textarea{
 
 .comment-contents a {
     color: #c5c5c5;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post-contents a:hover,
