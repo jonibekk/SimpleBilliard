@@ -927,7 +927,7 @@ textarea{
     color: #808080;
 }
 
-.font_gargoyleGray, .font_gargoyleGray-gray {
+.font_gargoyleGray, .font_gargoyleGray-gray, .font_gargoyleGray-brownRed {
     color: #4c4c4c;
 }
 
@@ -935,6 +935,16 @@ textarea{
 .font_gargoyleGray-gray:active,
 .font_gargoyleGray-gray:target {
     color: #808080;
+}
+
+.font_gargoyleGray-brownRed:hover,
+.font_gargoyleGray-brownRed:active,
+.font_gargoyleGray-brownRed:target {
+    color: #ae2f2f;
+}
+
+.font_brownRed{
+    color: #ae2f2f;
 }
 
 .font_gray-rougeOrange {
@@ -2694,8 +2704,19 @@ textarea.comment-post-form {
 / / margin : 0 0 4 px;
 }
 
-.goals-column-plus-box {
-    margin: 4px 0 0;
+.btn-goals-column-plus {
+    margin: 0 0 4px;
+    border: 1px solid #808080;
+    border-radius: 4px;
+    text-align: center;
+    padding: 2px;
+}
+
+.btn-goals-column-plus:hover,
+.btn-goals-column-plus:target,
+.btn-goals-column-plus:active{
+    text-decoration: none;
+    border-color: #ae2f2f;
 }
 
 .goals-column-add-box {
@@ -3611,8 +3632,8 @@ Temporary Properties - YOU MUST FIX
 }
 
 .hideFileInput > input {
-    width: 0;
-    height: 0;
+    width: 1px;
+    height: 1px;
     position: absolute;
     top: 0;
     right: 0;
