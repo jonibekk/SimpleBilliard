@@ -2265,6 +2265,10 @@ textarea.comment-post-form {
     display: inline-block;
 }
 
+.disp_i {
+    display: inline;
+}
+
 .disp_bx {
     display: box;
     display: -webkit-box;
