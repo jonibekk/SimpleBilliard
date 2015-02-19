@@ -820,6 +820,7 @@ class GoalsController extends AppController
         $html = $response->__toString();
         $result = array(
             'html'  => $html,
+            'count' => count($goals)
         );
         return $this->_ajaxGetResponse($result);
     }
