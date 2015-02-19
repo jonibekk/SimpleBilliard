@@ -23,15 +23,16 @@ class GoalsController extends AppController
         $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals(300);//TODO 暫定的に300、将来的に20に戻す
         $my_goals = $this->Goal->getMyGoals();
-        $collabo_goals = $this->Goal->getMyCollaboGoals();
+        $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER);
         $follow_goals = $this->Goal->getMyFollowedGoals();
         $current_global_menu = "goal";
+        $follow_goals_count = count($this->Goal->getMyFollowedGoals());
 
         //アドミン権限チェック
         $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
         $is_admin = ($isExistAdminFlg) ? true : false;
 
-        $this->set(compact('is_admin', 'goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu'));
+        $this->set(compact('is_admin', 'goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu', '$follow_goals_count'));
     }
 
     /**
@@ -810,8 +811,17 @@ class GoalsController extends AppController
             $page_num = 1;
         }
 
-        $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
-        $type = 'follow';
+        $type = viaIsSet($param_named['type']);
+        if (!$type) return;
+
+        if ($type === 'leader') {
+            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num);
+        } elseif ($type === 'collabo') {
+            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num);
+        } elseif ($type === 'follow') {
+            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
+        }
+
         $this->set(compact('goals', 'type'));
 
         //エレメントの出力を変数に格納する
