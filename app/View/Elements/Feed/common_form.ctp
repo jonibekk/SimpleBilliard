@@ -54,7 +54,7 @@
                     'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
                     'target_show_id'           => "PostFormFooter",
                     'target-id'                => "PostSubmit",
-                    "data-bv-notempty-message" => __d('validate', "何も入力されていません。"),
+                    "required"                 => false
                 ])
                 ?>
                 <div class="row form-group m_0px none" id="PostFormImage">

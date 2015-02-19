@@ -1024,6 +1024,16 @@ $(document).ready(function () {
                         message: cake.message.validate.b
                     }
                 }
+            },
+            "validate-checkbox": {
+                selector: '.validate-checkbox',
+                validators: {
+                    choice: {
+                        min: 1,
+                        max: 1,
+                        message: cake.message.validate.d
+                    }
+                }
             }
         }
     });
