@@ -14,6 +14,7 @@ class TeamsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.circle_member',
         'app.action_result',
         'app.goal',
         'app.local_name',
@@ -299,6 +300,9 @@ class TeamsControllerTest extends ControllerTestCase
     {
         Configure::write('Config.language', 'jpn');
 
+        /**
+         * @var TeamsController $Teams
+         */
         $Teams = $this->generate('Teams', [
             'components' => [
                 'Security' => ['_validateCsrf', '_validatePost'],
@@ -374,9 +378,17 @@ class TeamsControllerTest extends ControllerTestCase
             $Teams->Session->expects($this->any())->method('read')
                            ->will($this->returnValueMap($session_value_map)
                            );
-
         }
-
+        $Teams->Team->current_team_id = 1;
+        $Teams->Team->uid = 1;
+        $Teams->Team->TeamMember->current_team_id = 1;
+        $Teams->Team->TeamMember->uid = 1;
+        $Teams->Team->TeamMember->User->MemberGroup->Group->current_team_id = 1;
+        $Teams->Team->TeamMember->User->MemberGroup->Group->uid = 1;
+        $Teams->Team->TeamMember->MemberType->current_team_id = 1;
+        $Teams->Team->TeamMember->MemberType->uid = 1;
+        $Teams->Team->TeamMember->User->Email->current_team_id = 1;
+        $Teams->Team->TeamMember->User->Email->uid = 1;
         return $Teams;
     }
 }
