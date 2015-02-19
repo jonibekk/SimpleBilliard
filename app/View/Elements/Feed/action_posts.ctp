@@ -86,7 +86,7 @@
                     <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                         <?= $this->TextEx->autoLink($post['Post']['body']) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-                        <i class="fa fa-check-circle disp_i">&nbsp;<?= h($post['ActionResult']['name']) ?></i>
+                        <i class="fa fa-check-circle disp_i">&nbsp;<?= $this->TextEx->autoLink(h($post['ActionResult']['name'])) ?></i>
                     <? elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
                         <i class="fa fa-key">&nbsp;<?= __d('gl', "%s を達成しました！", h($post['KeyResult']['name'])) ?></i>
                     <? elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
