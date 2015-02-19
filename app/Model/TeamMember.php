@@ -397,6 +397,7 @@ class TeamMember extends AppModel
             $this->Team->Rater->saveAll($save_rater_data);
         }
 
+        $res['success_count'] = count($this->csv_datas);
         return $res;
     }
 
