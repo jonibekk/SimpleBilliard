@@ -15,6 +15,7 @@ class TeamsControllerTest extends ControllerTestCase
      */
     public $fixtures = array(
         'app.circle_member',
+        'app.member_type',
         'app.action_result',
         'app.goal',
         'app.local_name',
@@ -38,6 +39,8 @@ class TeamsControllerTest extends ControllerTestCase
         'app.oauth_token',
         'app.team_member',
         'app.group',
+        'app.rater',
+        'app.member_group',
         'app.job_category',
         'app.invite',
         'app.thread',
