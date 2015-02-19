@@ -1331,6 +1331,10 @@ textarea{
 
 .post-contents a {
     color: #ddd;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .comment-contents a {
