@@ -4,7 +4,7 @@ App::uses('Group', 'Model');
 /**
  * Group Test Case
  *
- * @property mixed Group
+ * @property Group $Group
  */
 class GroupTest extends CakeTestCase
 {
@@ -43,9 +43,9 @@ class GroupTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
+    function testGetByName()
     {
+        $this->Group->current_team_id = 1;
+        $this->assertEmpty($this->Group->getByName('test', null));
     }
-
 }

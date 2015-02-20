@@ -77,9 +77,10 @@ class MemberTypeTest extends CakeTestCase
         parent::tearDown();
     }
 
-    public function testDummy()
+    function testGetByName()
     {
-
+        $this->MemberType->current_team_id = 1;
+        $this->assertEmpty($this->MemberType->getByName('test', null));
     }
 
 }
