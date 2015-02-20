@@ -261,6 +261,9 @@ class Post extends AppModel
             $this->PostShareCircle->add($this->getLastInsertID(), $circles);
             //共有サークル指定されてた場合の未読件数更新
             $this->User->CircleMember->incrementUnreadCount($circles);
+            //共有サークル指定されてた場合、更新日時更新
+            $this->User->CircleMember->updateModified($circles);
+
         }
         return $res;
     }
