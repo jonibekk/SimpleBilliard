@@ -2257,6 +2257,10 @@ textarea.comment-post-form {
     display: inline-block;
 }
 
+.disp_i {
+    display: inline;
+}
+
 .disp_bx {
     display: box;
     display: -webkit-box;
@@ -3632,8 +3636,8 @@ Temporary Properties - YOU MUST FIX
 }
 
 .hideFileInput > input {
-    width: 0;
-    height: 0;
+    width: 1px;
+    height: 1px;
     position: absolute;
     top: 0;
     right: 0;
