@@ -362,6 +362,17 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Goal->commit();
+
+        // pusherに通知
+        $socket_id = viaIsSet($this->request->data['socket_id']);
+        $feedId   = Security::hash(time());
+        $goal = viaIsSet($goal);
+        if(!$goal) {
+            $goal = $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
+        }
+        $channelName = "goal_" . $goal['Goal']['id'];
+        $this->NotifyBiz->push($socket_id, $channelName, $feedId);
+
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
