@@ -1682,7 +1682,7 @@ function getPageType() {
     return boxId.replace("_feed_notify", "");
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
     $(document).on("click", ".click-my-goals-read-more", evGoalsMoreView);
     $(document).on("click", ".click-collabo-goals-read-more", evGoalsMoreView);
     $(document).on("click", ".click-follow-goals-read-more", evGoalsMoreView);
@@ -1750,7 +1750,7 @@ function evGoalsMoreView() {
                     $(this).children('.nailthumb-container').nailthumb({
                         width: 50,
                         height: 50,
-                        fitDirection: 'center center'
+                        fitDirection: 'center cgenter'
                     });
                 });
                 if (data.count < limitNumber) {

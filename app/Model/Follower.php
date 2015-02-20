@@ -60,7 +60,7 @@ class Follower extends AppModel
         return true;
     }
 
-    function getFollowList($user_id, $limit=null, $page=1)
+    function getFollowList($user_id, $limit = null, $page = 1)
     {
         $options = [
             'conditions' => [
@@ -70,8 +70,8 @@ class Follower extends AppModel
             'fields'     => [
                 'goal_id'
             ],
-            'page'  => $page,
-            'limit' => $limit
+            'page'       => $page,
+            'limit'      => $limit
         ];
         $res = $this->find('list', $options);
         return $res;

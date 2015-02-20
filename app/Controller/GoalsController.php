@@ -108,7 +108,7 @@ class GoalsController extends AppController
                     $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
                     // pusherに通知
                     $socketId = viaIsSet($this->request->data['socket_id']);
-                    $feedId   = Security::hash(time());
+                    $feedId = Security::hash(time());
                     $this->NotifyBiz->push($socketId, "all", $feedId);
                     //TODO 一旦、トップにリダイレクト
                     $this->redirect("/");
@@ -765,7 +765,7 @@ class GoalsController extends AppController
 
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
-        $feedId   = Security::hash(time());
+        $feedId = Security::hash(time());
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName, $feedId);
 
@@ -809,14 +809,20 @@ class GoalsController extends AppController
         }
 
         $type = viaIsSet($param_named['type']);
-        if (!$type) return;
+        if (!$type) {
+            return;
+        }
 
         if ($type === 'leader') {
             $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num);
-        } elseif ($type === 'collabo') {
+        }
+        elseif ($type === 'collabo') {
             $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num);
-        } elseif ($type === 'follow') {
+        }
+        elseif ($type === 'follow') {
             $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
+        } else {
+            $goals = [];
         }
 
         $this->set(compact('goals', 'type'));

@@ -97,7 +97,7 @@ class Collaborator extends AppModel
         return $res;
     }
 
-    function getCollaboGoalList($user_id, $with_owner = false, $limit=null, $page=1)
+    function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1)
     {
         $options = [
             'conditions' => [

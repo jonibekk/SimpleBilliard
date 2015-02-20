@@ -389,7 +389,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'name'          => 'test',
                 'key_result_id' => 0,
                 'note'          => 'test',
-                'socket_id' => 'hogehage'
+                'socket_id'     => 'hogehage'
             ]
         ];
         $this->testAction('/goals/add_completed_action/1', ['method' => 'POST', 'data' => $data]);
@@ -931,28 +931,32 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->_switchTeamBeforeCheck();
     }
 
-    function testAjaxGetMyGoalsTypeLeader() {
+    function testAjaxGetMyGoalsTypeLeader()
+    {
         $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_my_goals/page:1/type:leader', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetMyGoalsTypeCollabo() {
+    function testAjaxGetMyGoalsTypeCollabo()
+    {
         $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_my_goals/page:1/type:collabo', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetMyGoalsTypeFollow() {
+    function testAjaxGetMyGoalsTypeFollow()
+    {
         $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_my_goals/page:1/type:follow', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetMyGoalsNotExistPage() {
+    function testAjaxGetMyGoalsNotExistPage()
+    {
         $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_my_goals/type:follow', ['method' => 'GET']);
