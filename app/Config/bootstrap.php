@@ -150,7 +150,7 @@ define('S3_TRIM_PATH', '/upload/');
 define('REQUEST_TIMESTAMP', time());
 define('MY_GOALS_DISPLAY_NUMBER', 10);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 10);
-define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 10);
+define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 20);
 
 /**
  * 共通関数
