@@ -66,7 +66,7 @@
             </div>
             <? if (isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                 <div class="col col-xxs-12 font_11px">
-                    <i class="fa fa-folder"><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span></i>
+                    <i class="fa fa-folder"></i><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span>
                 </div>
                 <div class="col col-xxs-12">
                     <b class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></b>
@@ -75,7 +75,7 @@
                     <?= h($goal['Purpose']['name']) ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <i class="fa fa-bullseye"><span class="pl_2px"><?= __d('gl', '程度') ?></span></i>
+                    <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __d('gl', '程度') ?></span>
 
                     <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
                     <? if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
@@ -87,7 +87,7 @@
                     <!-- アクション、フォロワー -->
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-sun-o"><span class="pl_2px"><?= __d('gl', "リーダー") ?></span></i></div>
+                    <div><i class="fa fa-sun-o"></i><span class="pl_2px"><?= __d('gl', "リーダー") ?></span></div>
                     <? if (isset($goal['Leader'][0]['User'])): ?>
                         <img src="<?=
                         $this->Upload->uploadUrl($goal['Leader'][0]['User'],
@@ -97,8 +97,8 @@
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"><span class="pl_2px"><?= __d('gl', "コラボレータ") ?>
-                                &nbsp;(<?= count($goal['Collaborator']) ?>)</span></i></div>
+                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __d('gl', "コラボレータ") ?>
+                                &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
                     <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <? foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
@@ -112,8 +112,8 @@
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-heart"><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
-                                &nbsp;(<?= count($goal['Follower']) ?>)</span></i></div>
+                    <div><i class="fa fa-heart"></i><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
+                                &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
                     <? if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
                         <? foreach ($goal['Follower'] as $follower): ?>
                             <img src="<?=
@@ -127,7 +127,7 @@
                     <? endif; ?>
                 </div>
                 <div class="col col-xxs-12">
-                    <div><i class="fa fa-ellipsis-h"><span class="pl_2px"><?= __d('gl', '詳細') ?></span></i></div>
+                    <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __d('gl', '詳細') ?></span></div>
                     <div>
                         <?= $this->TextEx->autoLink($goal['Goal']['description']) ?>
                     </div>

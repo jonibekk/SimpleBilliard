@@ -1499,15 +1499,15 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '128px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
         $(obj).find('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
     }
     else {
@@ -1515,15 +1515,15 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '128px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
         $('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
-            showText: '<i class="fa fa-angle-double-down">' + cake.message.info.e + '</i>',
-            hideText: '<i class="fa fa-angle-double-up">' + cake.message.info.h + '</i>'
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
     }
 }

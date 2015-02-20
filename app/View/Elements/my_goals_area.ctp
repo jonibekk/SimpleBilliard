@@ -26,7 +26,11 @@
 </div>
 <div id="LeaderGoals">
     <div class="col col-xxs-12 mt_16px font_gargoyleGray">
+<<<<<<< HEAD
         <i class="fa fa-sun-o"><?= __d('gl', 'リーダー') ?>(<?= $my_goals_count ?>)</i>
+=======
+        <i class="fa fa-sun-o"></i><?= __d('gl', 'リーダー') ?>(<?= count($my_goals) ?>)
+>>>>>>> develop
     </div>
 
     <? if (empty($my_goals)): ?>
@@ -48,7 +52,7 @@
 <? endif; ?>
 <div id="CollaboGoals">
     <div class="col col-xxs-12 mt_16px font_gargoyleGray">
-        <i class="fa fa-child"><?= __d('gl', 'コラボレータ') ?>(<?= $collabo_goals_count ?>)</i>
+        <i class="fa fa-child"></i><?= __d('gl', 'コラボレータ') ?>(<?= $collabo_goals_count ?>)
     </div>
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $collabo_goals, 'type' => 'collabo']) ?>
 </div>

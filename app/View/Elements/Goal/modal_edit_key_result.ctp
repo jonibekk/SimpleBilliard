@@ -28,20 +28,18 @@
     <h4 class="modal-title"><?= __d('gl', "成果を更新") ?></h4>
     <ul class="fa-ul">
         <li>
-            <i class="fa fa-flag"><?= h($goal['Goal']['name']) ?></i>
+            <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
         </li>
         <li>
-            <i class="fa fa-bullseye">
+            <i class="fa fa-bullseye"></i>
                 <?= h($goal['Goal']['target_value']) ?>
                 (← <?= h($goal['Goal']['start_value']) ?>)<?= $kr_value_unit_list[$goal['Goal']['value_unit']] ?>
-            </i>
         </li>
         <li>
-            <i class="fa fa-calendar">
+            <i class="fa fa-calendar"></i>
                 <?= date('Y/m/d', h($goal['Goal']['end_date']) + ($this->Session->read('timezone') * 3600)) ?>
                 (← <?= date('Y/m/d',
                             h($goal['Goal']['start_date']) + ($this->Session->read('timezone') * 3600)) ?> - )
-            </i>
         </li>
     </ul>
 </div>
