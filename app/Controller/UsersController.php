@@ -228,7 +228,6 @@ class UsersController extends AppController
         }
 
         $this->layout = LAYOUT_ONE_COLUMN;
-
         if ($this->request->is('post')) {
             //tokenチェック
             $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
@@ -239,11 +238,6 @@ class UsersController extends AppController
                 return $this->render();
             }
             $user = $this->User->getUserByEmail($this->request->data['Email']['email']);
-            if (!viaIsSet($user['User'])) {
-                $this->Pnotify->outError(__d('gl', "問題が発生しました。"));
-                return $this->redirect('/');
-            }
-
             $this->Invite->verify($this->request->params['named']['invite_token']);
             //タイムゾーン設定
             //ユーザのローカル環境から取得したタイムゾーンをセット
