@@ -239,6 +239,31 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->incrementNotifyUnreadCount([]);
     }
 
+    function testSaveNewMembersFromCsvSuccessChangeLocalName()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = [
+            'csv_test@email.com', 'aaa', 'first', 'last', 'on', 'off', null, 'jpn', 'ふぁーすと', 'ラスト'
+        ];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
+
+        $actual = $this->TeamMember->saveNewMembersFromCsv($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => false,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+            'success_count' => 1,
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
     function testValidateNewMemberCsvDataDifferenceTitle()
     {
         $this->setDefault();
