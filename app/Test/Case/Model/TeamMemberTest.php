@@ -239,11 +239,13 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->incrementNotifyUnreadCount([]);
     }
 
-    function testValidateNewMemberCsvDataNoTitle()
+    function testValidateNewMemberCsvDataDifferenceTitle()
     {
         $this->setDefault();
 
         $csv_data = [];
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[0]['name'] = 'xxx';
         $csv_data[] = $this->getEmptyRowOnCsv();
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -282,7 +284,7 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1][1] = 'aaa';
+        $csv_data[1][0] = 'aaa';
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -322,11 +324,7 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            '',
-        ];
-
+        $csv_data[1][0] = 'aaa@aaa.com';
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
@@ -343,13 +341,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'aaa',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $csv_data[1][0] = 'aaa@aaa.com';
+        $csv_data[1][1] = 'aaa';
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1336,7 +1331,7 @@ class TeamMemberTest extends CakeTestCase
     function getEmptyRowOnCsv($colum_count = 29)
     {
         $row = [];
-        for ($i = 0; $i >= $colum_count; $i++) {
+        for ($i = 0; $i <= $colum_count; $i++) {
             $row[] = null;
         }
         return $row;
@@ -1346,6 +1341,5 @@ class TeamMemberTest extends CakeTestCase
     {
         $res = $this->TeamMember->activateMembers('1000', 100000);
         $this->asserttrue($res);
-
     }
 }
