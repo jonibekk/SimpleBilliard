@@ -1341,4 +1341,11 @@ class TeamMemberTest extends CakeTestCase
         }
         return $row;
     }
+
+    function testActivateMembers()
+    {
+        $res = $this->TeamMember->activateMembers('1000', 100000);
+        $this->asserttrue($res);
+
+    }
 }
