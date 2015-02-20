@@ -467,6 +467,18 @@ class AppController extends Controller
         }
     }
 
+    public function _setViewValOnRightColumn()
+    {
+        $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER);
+        $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER);
+        $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER);
+        $my_goals_count = count($this->Goal->getMyGoals());
+        $collabo_goals_count = count($this->Goal->getMyCollaboGoals());
+        $follow_goals_count = count($this->Goal->getMyFollowedGoals());
+        $this->set(compact('my_goals', 'collabo_goals', 'follow_goals',
+                           'my_goals_count', 'collabo_goals_count', 'follow_goals_count'));
+    }
+
     /**
      * @param $id
      */

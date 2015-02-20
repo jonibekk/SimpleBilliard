@@ -64,13 +64,10 @@ class PagesController extends AppController
         $this->_setMyCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
-        $my_goals = $this->Goal->getMyGoals();
-        $collabo_goals = $this->Goal->getMyCollaboGoals();
-        $follow_goals = $this->Goal->getMyFollowedGoals();
+        $this->_setViewValOnRightColumn();
         $current_global_menu = "home";
         $feed_filter = 'all';
-        $this->set(compact('feed_filter', 'select2_default', 'my_goals', 'collabo_goals', 'follow_goals',
-                           'current_global_menu'));
+        $this->set(compact('feed_filter', 'select2_default', 'current_global_menu'));
         $this->set('avail_sub_menu', true);
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
