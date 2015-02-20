@@ -284,6 +284,26 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+    function testValidateNewMemberCsvDataDifferenceColumnCount()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        unset($csv_data[1][0]);
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
     function testValidateNewMemberCsvDataEmpty()
     {
         $this->setDefault();
