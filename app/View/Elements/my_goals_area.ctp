@@ -42,7 +42,7 @@
     <? endif ?>
 </div>
 <? if (count($my_goals) < $my_goals_count):?>
-    <a href="#" class="click-my-goals-read-more" next-page-num="2" get-url="/goals/ajax_get_my_goals" goal-type="leader">
+    <a href="#" class="click-my-goals-read-more btn btn-link" next-page-num="2" get-url="/goals/ajax_get_my_goals" goal-type="leader">
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
     </a>
 <? endif; ?>
@@ -53,7 +53,7 @@
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $collabo_goals, 'type' => 'collabo']) ?>
 </div>
 <? if (count($collabo_goals) < $collabo_goals_count):?>
-    <a href="#" class="click-collabo-goals-read-more" next-page-num="2" get-url="/goals/ajax_get_my_goals" goal-type="collabo">
+    <a href="#" class="click-collabo-goals-read-more btn btn-link" next-page-num="2" get-url="/goals/ajax_get_my_goals" goal-type="collabo">
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
     </a>
 <? endif; ?>
@@ -70,7 +70,7 @@
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $follow_goals, 'type' => 'follow']) ?>
 </div>
 <? if (count($follow_goals) < $follow_goals_count):?>
-<a href="#" class="click-follow-goals-read-more" next-page-num="2" get-url="/goals/ajax_get_my_goals" goal-type="follow">
+<a href="#" class="click-follow-goals-read-more btn btn-link" next-page-num="2" get-url="/goals/ajax_get_my_goals" goal-type="follow">
     <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
 </a>
 <? endif; ?>
