@@ -781,6 +781,103 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    function getAllMembersCsvData($team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => ['TeamMember.team_id' => $team_id,],
+            'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
+            'contain'    => [
+                'User'       => [
+                    'fields'       => ['first_name', 'last_name'],
+                    'MemberGroup'  => [
+                        'conditions' => ['MemberGroup.team_id' => $team_id],
+                        'fields'     => ['group_id'],
+                        'Group'      => [
+                            'fields' => ['name']
+                        ]
+                    ],
+                    'PrimaryEmail' => [
+                        'fields' => ['email'],
+                    ],
+                ],
+                'MemberType' => [
+                    'fields' => ['name']
+                ],
+            ]
+        ];
+        $all_users = $this->find('all', $options);
+
+        //convert csv data
+        $csv_data = [];
+        foreach ($all_users as $k => $v) {
+            $csv_data[$k]['email'] = viaIsSet($v['User']['PrimaryEmail']['email']) ? $v['User']['PrimaryEmail']['email'] : null;
+            $csv_data[$k]['first_name'] = viaIsSet($v['User']['first_name']) ? $v['User']['first_name'] : null;
+            $csv_data[$k]['last_name'] = viaIsSet($v['User']['last_name']) ? $v['User']['last_name'] : null;
+            $csv_data[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
+            $csv_data[$k]['active_flg'] = viaIsSet($v['TeamMember']['active_flg']) && $v['TeamMember']['active_flg'] ? 'ON' : 'OFF';
+            $csv_data[$k]['admin_flg'] = viaIsSet($v['TeamMember']['admin_flg']) && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
+            $csv_data[$k]['evaluation_enable_flg'] = viaIsSet($v['TeamMember']['evaluation_enable_flg']) && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
+            $csv_data[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
+            //group
+            foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
+                $key_index = $g_k + 1;
+                $csv_data[$k]['group_' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
+            }
+            //coach after
+
+            //rater after
+        }
+
+        //set coach member #
+        foreach ($all_users as $k => $v) {
+            if (!viaIsSet($v['TeamMember']['coach_user_id'])) {
+                continue;
+            }
+            $options = [
+                'conditions' => ['team_id' => $team_id, 'user_id' => $v['TeamMember']['coach_user_id']],
+                'fields'     => ['member_no']
+            ];
+            $coach_member = $this->find('first', $options);
+            $csv_data[$k]['coach_member_no'] = viaIsSet($coach_member['TeamMember']['member_no']) ? $coach_member['TeamMember']['member_no'] : null;
+        }
+        //set rater member #
+        foreach ($all_users as $k => $v) {
+            $options = [
+                'conditions' => ['team_id' => $team_id, 'ratee_user_id' => $v['User']['id']],
+                'fields'     => ['rater_user_id'],
+                'contain'    => [
+                    'RaterUser' => [
+                        'fields'     => ['id'],
+                        'TeamMember' => [
+                            'conditions' => ['team_id' => $team_id],
+                            'fields'     => ['member_no']
+                        ],
+                    ]
+                ]
+            ];
+            $raters = $this->Team->Rater->find('all', $options);
+            foreach ($raters as $r_k => $r_v) {
+                $key_index = $r_k + 1;
+                if (viaIsSet($r_v['RaterUser']['TeamMember'][0]['member_no'])) {
+                    $csv_data[$k]['rater_member_no_' . $key_index] = $r_v['RaterUser']['TeamMember'][0]['member_no'];
+                }
+            }
+        }
+        //add all colum
+        $default_csv = $this->_getCsvHeading(false);
+        foreach ($default_csv as $k => $v) {
+            $default_csv[$k] = null;
+        }
+        foreach ($csv_data as $k => $v) {
+            $csv_data[$k] = Hash::merge($default_csv, $v);
+        }
+
+        return $csv_data;
+    }
+
     /**
      * get CSV heading
      *
