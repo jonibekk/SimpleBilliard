@@ -144,6 +144,26 @@ class TeamsController extends AppController
             'msg'   => '',
         ];
         $this->_ajaxPreProcess('post');
+        $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
+        $this->Team->TeamMember->begin();
+        $save_res = $this->Team->TeamMember->updateMembersFromCsv($csv);
+        if ($save_res['error']) {
+            $this->Team->TeamMember->rollback();
+            $result['error'] = true;
+            $result['css'] = 'alert-danger';
+            $result['msg'] = $save_res['error_msg'];
+            if ($save_res['error_line_no'] == 0) {
+                $result['title'] = __d('gl', "更新データに誤りがあります。");
+            }
+            else {
+                $result['title'] = __d('gl', "%s行目でエラーがあります(行番号は見出し含む)。", $save_res['error_line_no']);
+            }
+        }
+        else {
+            $this->Team->TeamMember->commit();
+
+            $result['msg'] = __d('gl', "%s人のメンバーを追加しました。", $save_res['success_count']);
+        }
         return $this->_ajaxGetResponse($result);
     }
 

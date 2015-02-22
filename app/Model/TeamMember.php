@@ -222,6 +222,35 @@ class TeamMember extends AppModel
     }
 
     /**
+     * update members from csv
+     * return data as:
+     * $res = [
+     * 'error'         => false,
+     * 'success_count' => 0,
+     * 'error_line_no' => 0,
+     * 'error_msg'     => null,
+     * ];
+     *
+     * @param array $csv
+     *
+     * @return array
+     */
+    function updateMembersFromCsv($csv)
+    {
+        $res = [
+            'error'         => false,
+            'success_count' => 0,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+        $validate = $this->validateUpdateMemberCsvData($csv);
+        if ($validate['error']) {
+            return array_merge($res, $validate);
+        }
+        return $res;
+    }
+
+    /**
      * save new members from csv
      * return data as:
      * $res = [
@@ -398,6 +427,165 @@ class TeamMember extends AppModel
         }
 
         $res['success_count'] = count($this->csv_datas);
+        return $res;
+    }
+
+    function validateUpdateMemberCsvData($csv_data)
+    {
+        $res = [
+            'error'         => true,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+
+        $before_csv_data = $this->getAllMembersCsvData();
+
+        //emails
+        $before_emails = array_column($before_csv_data, 'email');
+
+        //レコード数が同一である事を確認
+        if (count($csv_data) - 1 !== count($before_csv_data)) {
+            $res['error_msg'] = __d('validate', "レコード数が一致しません。");
+        }
+        //set key
+        foreach ($csv_data as $k => $v) {
+            $csv_data[$k] = copyKeyName($this->_getCsvHeading(false), $v);
+        }
+
+        //row validation
+        foreach ($csv_data as $key => $row) {
+            if ($key === 0) {
+                if (!empty(array_diff($row, $this->_getCsvHeading(false)))) {
+                    $res['error_msg'] = __d('gl', "見出しが一致しません。");
+                    return $res;
+                }
+                continue;
+            }
+            //set line no
+            $res['error_line_no'] = $key + 1;
+
+            //key name set
+            if (!($row = copyKeyName($this->_getCsvHeading(false), $row))) {
+                $res['error_msg'] = __d('gl', "項目数が一致しません。");
+                return $res;
+            }
+
+            //email exists
+            if (!in_array($row['email'], $before_emails)) {
+                $res['error_msg'] = __d('validate', "存在しないメールアドレスが含まれています。");
+                return $res;
+            }
+            $this->csv_emails[] = $row['email'];
+            $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
+
+            //Member ID(*)
+            if (!viaIsSet($row['member_no'])) {
+                $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
+                return $res;
+            }
+            $this->csv_member_ids[] = $row['member_no'];
+            $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
+            //Active(*)
+            if (!viaIsSet($row['active_flg'])) {
+                $res['error_msg'] = __d('gl', "メンバーアクティブ状態は必須項目です。");
+                return $res;
+            }
+            // ON or OFF check
+            if (!isOnOrOff($row['active_flg'])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', 'メンバーアクティブ状態'));
+                return $res;
+            }
+            $this->csv_datas[$key]['TeamMember']['active_flg'] = $row['active_flg'];
+            //Administrator(*)
+            if (!viaIsSet($row['admin_flg'])) {
+                $res['error_msg'] = __d('gl', "管理者は必須項目です。");
+                return $res;
+            }
+            // ON or OFF check
+            if (!isOnOrOff($row['admin_flg'])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
+                return $res;
+            }
+            $this->csv_datas[$key]['TeamMember']['admin_flg'] = $row['admin_flg'];
+            //Evaluated(*)
+            if (!viaIsSet($row['evaluation_enable_flg'])) {
+                $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
+                return $res;
+            }
+
+            // ON or OFF check
+            if (!isOnOrOff($row['evaluation_enable_flg'])) {
+                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
+                return $res;
+            }
+            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = $row['evaluation_enable_flg'];
+            if (viaIsSet($row['member_type'])) {
+                $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
+            }
+            //Group
+            $groups = [];
+            for ($i = 1; $i <= 7; $i++) {
+                $groups[] = $row["group_{$i}"];
+            }
+            if (!isAlignLeft($groups)) {
+                $res['error_msg'] = __d('gl', "グループ名は左詰めで記入してください。");
+                return $res;
+            }
+            //duplicate group check.
+            $filtered_groups = array_filter($groups, "strlen");
+            if (count(array_unique($filtered_groups)) != count($filtered_groups)
+            ) {
+                $res['error_msg'] = __d('gl', "グループ名が重複しています。");
+                return $res;
+            }
+            foreach ($groups as $v) {
+                if (viaIsSet($v)) {
+                    $this->csv_datas[$key]['Group'][] = $v;
+                }
+            }
+            //Coach ID
+            //not allow include own member ID
+            if (!empty($row['member_no']) && $row['member_no'] == $row['coach_member_no']) {
+                $res['error_msg'] = __d('gl', "コーチIDに本人のIDを指定する事はできません。");
+                return $res;
+            }
+            //exists check (after check)
+            $this->csv_coach_ids[] = $row['coach_member_no'];
+            if (viaIsSet($row['coach_member_no'])) {
+                $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
+            }
+
+            //Rater ID
+            $raters = [];
+            for ($i = 1; $i <= 7; $i++) {
+                $raters[] = $row["rater_member_no_{$i}"];
+            }
+            if (!isAlignLeft($raters)) {
+                $res['error_msg'] = __d('gl', "評価者IDは左詰めで記入してください。");
+                return $res;
+            }
+            //not allow include own member ID
+            if (!empty($row['member_no']) && in_array($row['member_no'], $raters)
+            ) {
+                $res['error_msg'] = __d('gl', "評価者IDに本人のIDを指定する事はできません。");
+                return $res;
+            }
+            //duplicate rater check.
+            $filtered_raters = array_filter($raters, "strlen");
+            if (count(array_unique($filtered_raters)) != count($filtered_raters)
+            ) {
+                $res['error_msg'] = __d('gl', "評価者IDが重複しています。");
+                return $res;
+            }
+            foreach ($raters as $v) {
+                if (viaIsSet($v)) {
+                    $this->csv_datas[$key]['Rater'][] = $v;
+                }
+            }
+            //rater id check(after check)
+            $this->csv_rater_ids[] = $filtered_raters;
+        }
+        $res['error'] = false;
         return $res;
     }
 
