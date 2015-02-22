@@ -585,6 +585,60 @@ class TeamMember extends AppModel
             //rater id check(after check)
             $this->csv_rater_ids[] = $filtered_raters;
         }
+        //email exists check
+        //E-mail address should not be duplicated
+        if (count($this->csv_emails) != count(array_unique($this->csv_emails))) {
+            $duplicate_emails = array_filter(array_count_values($this->csv_emails), 'isOver2');
+            $duplicate_email = key($duplicate_emails);
+            //set line no
+            $res['error_line_no'] = array_search($duplicate_email, $this->csv_emails) + 2;
+            $res['error_msg'] = __d('gl', "重複したメールアドレスが含まれています。");
+            return $res;
+        }
+        //member id duplicate check
+        if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
+            $duplicate_member_ids = array_filter(array_count_values($this->csv_member_ids), 'isOver2');
+            $duplicate_member_id = key($duplicate_member_ids);
+            //set line no
+            $res['error_line_no'] = array_search($duplicate_member_id, $this->csv_member_ids) + 2;
+            $res['error_msg'] = __d('gl', "重複したメンバーIDが含まれています。");
+            return $res;
+        }
+        //coach id check
+        $this->csv_coach_ids = array_filter($this->csv_coach_ids, "strlen");
+        //Error if the unregistered coach is not included in the member ID
+        foreach ($this->csv_coach_ids as $k => $v) {
+            $key = array_search($v, $this->csv_member_ids);
+            if ($key === false) {
+                $res['error_line_no'] = $k + 2;
+                $res['error_msg'] = __d('gl', "存在しないメンバーIDがコーチIDに含まれています。");
+                return $res;
+            }
+        }
+        //rater id check
+        //Rater ID must be already been registered or must be included in the member ID
+        //remove empty elements
+        foreach ($this->csv_rater_ids as $k => $v) {
+            $this->csv_rater_ids[$k] = array_filter($v, "strlen");
+        }
+
+        //Merge all rater ID
+        $merged_rater_ids = [];
+        foreach ($this->csv_rater_ids as $v) {
+            $merged_rater_ids = array_merge($merged_rater_ids, $v);
+        }
+        //Error if the unregistered rater ID is not included in the member ID
+        foreach ($this->csv_rater_ids as $r_k => $r_v) {
+            foreach ($r_v as $k => $v) {
+                $key = array_search($v, $this->csv_member_ids);
+                if ($key === false) {
+                    $res['error_line_no'] = $r_k + 2;
+                    $res['error_msg'] = __d('gl', "存在しないメンバーIDが評価者IDに含まれています。");
+                    return $res;
+                }
+            }
+        }
+
         $res['error'] = false;
         return $res;
     }
