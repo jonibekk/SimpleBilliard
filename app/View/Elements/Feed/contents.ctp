@@ -55,7 +55,8 @@
         </div>
     </div>
 </div>
-<a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span class="num"></span>件の新しい投稿があります。</a>
+<a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span
+        class="num"></span>件の新しい投稿があります。</a>
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
     <div class="panel panel-default">
@@ -71,11 +72,11 @@ if (!isset($this->request->params['post_id']) || empty($this->request->params['p
     ?>
     <?
     $next_page_num = 2;
-    $month_index = 1;
+    $month_index = 0;
     $more_read_text = __d('gl', "もっと読む ▼");
     if ((count($posts) != 20)) {
         $next_page_num = 1;
-        $month_index = 2;
+        $month_index = 1;
         $more_read_text = __d('gl', "さらに以前の投稿を読み込む ▼");
     }
     ?>
