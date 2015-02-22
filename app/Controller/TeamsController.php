@@ -134,6 +134,19 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
     }
 
+    function ajax_upload_update_members_csv()
+    {
+        $this->request->allowMethod('post');
+        $result = [
+            'error' => false,
+            'css'   => 'alert-success',
+            'title' => __d('gl', "正常に更新が完了しました。"),
+            'msg'   => '',
+        ];
+        $this->_ajaxPreProcess('post');
+        return $this->_ajaxGetResponse($result);
+    }
+
     function ajax_upload_new_members_csv()
     {
         $this->request->allowMethod('post');
