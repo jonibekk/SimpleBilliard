@@ -250,6 +250,30 @@ class TeamMember extends AppModel
         //update process
 
         //First update TeamMember
+        foreach ($this->csv_datas as $k => $v) {
+            //set TeamMember id
+            $options = [
+                'conditions' => ['email' => $v['Email']['email']],
+                'fields'     => ['email'],
+                'contain'    => [
+                    'User' => [
+                        'fields'     => ['id'],
+                        'TeamMember' => [
+                            'conditions' => ['team_id' => $this->current_team_id],
+                            'fields'     => ['id']
+                        ]
+                    ]
+                ]
+            ];
+            $user = $this->User->Email->find('first', $options);
+            if (viaIsSet($user['User']['TeamMember'][0]['id'])) {
+                $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
+            }
+            //save
+            $this->create();
+            $this->save($this->csv_datas[$k]['TeamMember']);
+        }
+        //update coach_id
 
         return $res;
     }
