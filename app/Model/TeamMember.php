@@ -273,8 +273,15 @@ class TeamMember extends AppModel
             $this->create();
             $this->save($this->csv_datas[$k]['TeamMember']);
         }
+        //update member type
+
+        //update groups
+
         //update coach_id
 
+        //update raters
+
+        $res['success_count'] = count($this->csv_datas);
         return $res;
     }
 
