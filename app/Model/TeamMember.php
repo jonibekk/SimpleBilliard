@@ -247,6 +247,10 @@ class TeamMember extends AppModel
         if ($validate['error']) {
             return array_merge($res, $validate);
         }
+        //update process
+
+        //First update TeamMember
+
         return $res;
     }
 
@@ -495,7 +499,7 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', 'メンバーアクティブ状態'));
                 return $res;
             }
-            $this->csv_datas[$key]['TeamMember']['active_flg'] = $row['active_flg'];
+            $this->csv_datas[$key]['TeamMember']['active_flg'] = strtolower($row['active_flg']) == "on" ? true : false;
             //Administrator(*)
             if (!viaIsSet($row['admin_flg'])) {
                 $res['error_msg'] = __d('gl', "管理者は必須項目です。");
@@ -506,7 +510,7 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
                 return $res;
             }
-            $this->csv_datas[$key]['TeamMember']['admin_flg'] = $row['admin_flg'];
+            $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) == 'on' ? true : false;
             //Evaluated(*)
             if (!viaIsSet($row['evaluation_enable_flg'])) {
                 $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
@@ -518,7 +522,7 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
                 return $res;
             }
-            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = $row['evaluation_enable_flg'];
+            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'on' ? true : false;
             if (viaIsSet($row['member_type'])) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             }
@@ -638,7 +642,6 @@ class TeamMember extends AppModel
                 }
             }
         }
-
         $res['error'] = false;
         return $res;
     }
