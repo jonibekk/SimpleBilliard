@@ -18,6 +18,8 @@ class TeamsControllerTest extends ControllerTestCase
         'app.member_type',
         'app.action_result',
         'app.goal',
+        'app.follower',
+        'app.collaborator',
         'app.local_name',
         'app.cake_session',
         'app.team',

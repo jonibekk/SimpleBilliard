@@ -40,13 +40,13 @@ class RaterFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'            => '',
-            'ratee_user_id' => '',
-            'rater_user_id' => '',
-            'team_id'       => '',
-            'index'         => 1,
-            'del_flg'       => 1,
-            'deleted'       => 1,
+            'id'            => '1',
+            'ratee_user_id' => '1',
+            'rater_user_id' => '2',
+            'team_id'       => '1',
+            'index'         => 0,
+            'del_flg'       => false,
+            'deleted'       => null,
             'created'       => 1,
             'modified'      => 1
         ),

@@ -39,13 +39,13 @@ class MemberGroupFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'       => '',
-            'team_id'  => '',
-            'user_id'  => '',
-            'group_id' => '',
-            'index'    => 1,
-            'del_flg'  => 1,
-            'deleted'  => 1,
+            'id'       => '1',
+            'team_id'  => '1',
+            'user_id'  => '1',
+            'group_id' => '1',
+            'index'    => 0,
+            'del_flg'  => false,
+            'deleted'  => null,
             'created'  => 1,
             'modified' => 1
         ),
