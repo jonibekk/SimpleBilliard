@@ -248,8 +248,19 @@ class TeamMember extends AppModel
             return array_merge($res, $validate);
         }
         //update process
+        /**
+         * メンバータイプ
+         * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
+         */
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (viaIsSet($row_v['MemberType']['name'])) {
+                $member_type = $this->MemberType->getByNameIfNotExistsSave($row_v['MemberType']['name']);
+                $this->csv_datas[$row_k]['TeamMember']['member_type_id'] = $member_type['MemberType']['id'];
+                unset($this->csv_datas[$row_k]['MemberType']);
+            }
+        }
 
-        //First update TeamMember
+        //update TeamMember
         foreach ($this->csv_datas as $k => $v) {
             //set TeamMember id
             $options = [
@@ -269,17 +280,82 @@ class TeamMember extends AppModel
             if (viaIsSet($user['User']['TeamMember'][0]['id'])) {
                 $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
             }
+            if (viaIsSet($user['User'])) {
+                $this->csv_datas[$k]['User'] = $user['User'];
+            }
             //save
             $this->create();
             $this->save($this->csv_datas[$k]['TeamMember']);
         }
-        //update member type
 
-        //update groups
+        /**
+         * グループ登録処理
+         * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
+         */
+        //一旦グループ紐付けを解除
+        $this->User->MemberGroup->deleteAll(['MemberGroup.team_id' => $this->current_team_id]);
 
-        //update coach_id
+        $member_groups = [];
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (viaIsSet($row_v['Group'])) {
+                foreach ($row_v['Group'] as $k => $v) {
+                    $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
+                    $member_groups[] = [
+                        'group_id' => $group['Group']['id'],
+                        'index'    => $k,
+                        'team_id'  => $this->current_team_id,
+                        'user_id'  => $row_v['User']['id'],
+                    ];
+                }
+                unset($this->csv_datas[$row_k]['Group']);
+            }
+        }
 
-        //update raters
+        $this->User->MemberGroup->create();
+        $this->User->MemberGroup->saveAll($member_groups);
+
+        /**
+         * コーチは最後に登録
+         * コーチIDはメンバーIDを検索し、セット
+         */
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (!viaIsSet($row_v['Coach'])) {
+                continue;
+            }
+            if ($coach_team_member = $this->getByMemberNo($row_v['Coach'])) {
+                $this->id = $row_v['TeamMember']['id'];
+                $team_member = $this->saveField('coach_user_id', $coach_team_member['TeamMember']['user_id']);
+                $this->csv_datas[$row_k]['TeamMember']['coach_user_id'] = $team_member['TeamMember']['coach_user_id'];
+            }
+        }
+
+        /**
+         * 評価者は最後に登録
+         * 評価者IDはメンバーIDを検索し、セット
+         */
+        //評価者紐付けを解除
+        $this->Team->Rater->deleteAll(['Rater.team_id' => $this->current_team_id]);
+
+        $save_rater_data = [];
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (!viaIsSet($row_v['Rater'])) {
+                continue;
+            }
+            foreach ($row_v['Rater'] as $r_k => $r_v) {
+                if ($rater_team_member = $this->getByMemberNo($r_v)) {
+                    $save_rater_data[] = [
+                        'index'         => $r_k,
+                        'team_id'       => $this->current_team_id,
+                        'ratee_user_id' => $row_v['User']['id'],
+                        'rater_user_id' => $rater_team_member['TeamMember']['user_id'],
+                    ];
+                }
+            }
+        }
+        if (viaIsSet($save_rater_data)) {
+            $this->Team->Rater->create();
+            $this->Team->Rater->saveAll($save_rater_data);
+        }
 
         $res['success_count'] = count($this->csv_datas);
         return $res;
