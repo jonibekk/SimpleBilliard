@@ -559,20 +559,9 @@ class TeamMember extends AppModel
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
             return $res;
         }
-        //set key
-        foreach ($csv_data as $k => $v) {
-            $csv_data[$k] = copyKeyName($this->_getCsvHeading(false), $v);
-        }
 
         //row validation
         foreach ($csv_data as $key => $row) {
-            if ($key === 0) {
-                if (!empty(array_diff($row, $this->_getCsvHeading(false)))) {
-                    $res['error_msg'] = __d('gl', "見出しが一致しません。");
-                    return $res;
-                }
-                continue;
-            }
             //set line no
             $res['error_line_no'] = $key + 1;
 
@@ -580,6 +569,14 @@ class TeamMember extends AppModel
             if (!($row = copyKeyName($this->_getCsvHeading(false), $row))) {
                 $res['error_msg'] = __d('gl', "項目数が一致しません。");
                 return $res;
+            }
+
+            if ($key === 0) {
+                if (!empty(array_diff($row, $this->_getCsvHeading(false)))) {
+                    $res['error_msg'] = __d('gl', "見出しが一致しません。");
+                    return $res;
+                }
+                continue;
             }
 
             //email exists
