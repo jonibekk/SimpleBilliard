@@ -189,20 +189,7 @@ class TeamsController extends AppController
 
         //見出し
         $th = $this->Team->TeamMember->_getCsvHeading(false);
-
-        $dummy_datas = [
-            0 => [
-                'a' => 'abc',
-                'b' => 'abc',
-            ],
-        ];
-        $td = [];
-        foreach ($dummy_datas as $k => $v) {
-            $record = [];
-            $record['last_name'] = $v['a'];
-
-            $td[] = $record;
-        }
+        $td = $this->Team->TeamMember->getAllMembersCsvData();
 
         $this->set(compact('filename', 'th', 'td'));
     }

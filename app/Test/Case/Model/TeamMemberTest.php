@@ -16,6 +16,8 @@ class TeamMemberTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.team_member',
+        'app.member_group',
+        'app.rater',
         'app.email',
         'app.local_name',
         'app.member_type',
