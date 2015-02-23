@@ -20,8 +20,8 @@
                 <div class="inline-block responsive-goal-title-width">
                     <span class="ln_1 tap-btn-text font_verydark fin-kr">
                         <?= h($kr['KeyResult']['name']) ?></span>
-                    <i class="fa fa-check-circle"><span
-                            class="ml_2px"><?= h($kr['KeyResult']['action_result_count']) ?></span></i>
+                    <i class="fa fa-check-circle"></i>
+                    <span class="ml_2px"><?= h($kr['KeyResult']['action_result_count']) ?></span>
                 </div>
             </div>
             <? if ($kr_can_edit): ?>
@@ -36,12 +36,12 @@
                         <li role="presentation">
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', $kr['KeyResult']['id']]) ?>"
                                class="modal-ajax-get-add-key-result">
-                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "出したい成果を編集する") ?></span></i></a>
+                                <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "出したい成果を編集する") ?></span></a>
                         </li>
                         <li role="presentation">
                             <? if ($kr['KeyResult']['completed']): ?>
-                                <?= $this->Form->postLink('<i class="fa fa-reply"><span class="ml_2px">' .
-                                                          __d('gl', "出したい成果を未完了にする") . '</span></i>',
+                                <?= $this->Form->postLink('<i class="fa fa-reply"></i><span class="ml_2px">' .
+                                                          __d('gl', "出したい成果を未完了にする") . '</span>',
                                                           ['controller' => 'goals', 'action' => 'incomplete_kr', $kr['KeyResult']['id']],
                                                           ['escape' => false]) ?>
                             <? else: ?>
@@ -50,12 +50,12 @@
                                 if ($incomplete_kr_count === 1):?>
                                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', $kr['KeyResult']['id']]) ?>"
                                        class="modal-ajax-get">
-                                        <i class="fa fa-check"><span class="ml_2px"><?= __d('gl',
-                                                                                            "出したい成果を完了にする") ?></span></i>
+                                        <i class="fa fa-check"></i><span class="ml_2px"><?= __d('gl',
+                                                                                                "出したい成果を完了にする") ?></span>
                                     </a>
                                 <? else: ?>
-                                    <?= $this->Form->postLink('<i class="fa fa-check"><span class="ml_2px">' .
-                                                              __d('gl', "出したい成果を完了にする") . '</span></i>',
+                                    <?= $this->Form->postLink('<i class="fa fa-check"></i><span class="ml_2px">' .
+                                                              __d('gl', "出したい成果を完了にする") . '</span>',
                                                               ['controller' => 'goals', 'action' => 'complete_kr', $kr['KeyResult']['id']],
                                                               ['escape' => false]) ?>
                                 <? endif; ?>
@@ -65,8 +65,8 @@
                         <? if (count($key_results) !== 1): ?>
                             <li role="presentation">
                                 <?=
-                                $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' .
-                                                      __d('gl', "出したい成果を削除する") . '</span></i>',
+                                $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
+                                                      __d('gl', "出したい成果を削除する") . '</span>',
                                                       ['controller' => 'goals', 'action' => 'delete_key_result', $kr['KeyResult']['id']],
                                                       ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
                             </li>
@@ -80,9 +80,8 @@
         <div class="bd-t pt_8px">
             <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal_id]) ?>">
-                <i class="fa fa-plus-circle"><span class="ml_2px">
-                                    <?= __d('gl', "出したい成果を追加") ?></span>
-                </i>
+                <i class="fa fa-plus-circle"></i>
+                <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
             </a>
         </div>
     <? endif; ?>

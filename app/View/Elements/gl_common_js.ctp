@@ -100,7 +100,10 @@ echo $this->Html->script('gl_basic');
                 callback(data);
             },
             c: <?=$my_channels_json?>,
-            d: "<?=viaIsSet($feed_filter)?>"
+            d: "<?=viaIsSet($feed_filter)?>",
+            e: <?=MY_GOALS_DISPLAY_NUMBER?>,
+            f: <?=MY_COLLABO_GOALS_DISPLAY_NUMBER?>,
+            g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>"

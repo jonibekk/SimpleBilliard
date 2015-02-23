@@ -19,7 +19,7 @@
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
+                        <i class="fa fa-cog"></i><i class="fa fa-caret-down goals-column-fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
@@ -36,21 +36,20 @@
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
-                                    <i class="fa fa-plus-circle"><span class="ml_2px">
-                                            <?= __d('gl', "出したい成果を追加") ?></span></i>
+                                    <i class="fa fa-plus-circle"></i><span class="ml_2px">
+                                            <?= __d('gl', "出したい成果を追加") ?></span>
                                 </a>
                             </li>
                         <? endif; ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                                                    href="<?= $this->Html->url($edit_url) ?>">
-                                <i class="fa fa-pencil"><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
-                                </i>
+                                <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
                             </a>
                         </li>
                         <li role="presentation">
                             <?=
-                            $this->Form->postLink('<i class="fa fa-trash"><span class="ml_5px">' .
-                                                  __d('gl', "ゴールを削除") . '</span></i>',
+                            $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
+                                                  __d('gl', "ゴールを削除") . '</span>',
                                                   $del_url,
                                                   ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
                         </li>
@@ -61,7 +60,7 @@
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog"><i class="fa fa-caret-down goals-column-fa-caret-down"></i></i>
+                        <i class="fa fa-cog"></i><i class="fa fa-caret-down goals-column-fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
@@ -69,9 +68,8 @@
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result"
-                                    ><i class="fa fa-plus-circle"><span class="ml_2px">
-                                    <?= __d('gl', "出したい成果を追加") ?></span></i></a>
-
+                                    ><i class="fa fa-plus-circle"></i><span class="ml_2px">
+                                    <?= __d('gl', "出したい成果を追加") ?></span></a>
                                 <a class="modal-ajax-get-collabo"
                                    data-toggle="modal"
                                    data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"

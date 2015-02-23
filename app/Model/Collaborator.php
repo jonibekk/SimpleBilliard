@@ -97,7 +97,7 @@ class Collaborator extends AppModel
         return $res;
     }
 
-    function getCollaboGoalList($user_id, $with_owner = false)
+    function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1)
     {
         $options = [
             'conditions' => [
@@ -110,6 +110,8 @@ class Collaborator extends AppModel
             'fields'     => [
                 'goal_id'
             ],
+            'page'       => $page,
+            'limit'      => $limit
         ];
         if ($with_owner) {
             unset($options['conditions']['type']);
