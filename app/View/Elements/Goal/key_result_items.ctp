@@ -54,10 +54,25 @@
                                                                                                 "出したい成果を完了にする") ?></span>
                                     </a>
                                 <? else: ?>
-                                    <?= $this->Form->postLink('<i class="fa fa-check"></i><span class="ml_2px">' .
-                                                              __d('gl', "出したい成果を完了にする") . '</span>',
-                                                              ['controller' => 'goals', 'action' => 'complete_kr', $kr['KeyResult']['id']],
-                                                              ['escape' => false]) ?>
+                                    <?=
+                                    $this->Form->create('Goal', [
+                                        'url'           => ['controller' => 'goals', 'action' => 'complete_kr', $kr['KeyResult']['id']],
+                                        'inputDefaults' => [
+                                            'div'       => 'form-group',
+                                            'label'     => false,
+                                            'wrapInput' => '',
+                                        ],
+                                        'class' => 'form-feed-notify',
+                                        'name'  => 'kr_achieve_' . $kr['KeyResult']['id'],
+                                        'id'    => 'kr_achieve_' . $kr['KeyResult']['id']
+                                    ]); ?>
+                                    <? $this->Form->unlockField('socket_id') ?>
+                                    <?= $this->Form->end() ?>
+                                    <a href="#" form-id="kr_achieve_<?=$kr['KeyResult']['id']?>" class="kr_achieve_button">
+                                        <i class="fa fa-check"></i><span class="ml_2px">
+                                            <?= __d('gl', "出したい成果を完了にする");?>
+                                        </span>
+                                    </a>
                                 <? endif; ?>
                             <? endif; ?>
                         </li>
