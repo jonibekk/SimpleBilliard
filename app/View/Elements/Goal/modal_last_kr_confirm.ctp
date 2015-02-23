@@ -31,7 +31,7 @@
             <div class="text-align_l font_12px font_rouge mb_12px">※どちらを選択しても、このゴールに紐づいた出したい成果は「すべて完了」となります。</div>
             <?=
             $this->Form->create('Post', [
-                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', $kr_id],
+                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', $kr_id, true],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -45,7 +45,7 @@
                                                                                                   "出したい成果を追加") ?></a>
             <?=
             $this->Form->submit(__d('gl', "ゴール達成"),
-                                ['class' => 'btn btn-default']) ?>
+                                ['class' => 'btn btn-default', 'div' => false]) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>
