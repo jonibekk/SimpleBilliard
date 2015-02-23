@@ -71,7 +71,7 @@ class CircleMember extends AppModel
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ],
-            'order'      => ['CircleMember.unread_count desc', 'Circle.name asc'],
+            'order'      => ['CircleMember.modified desc'],
             'contain'    => [
                 'Circle' => [
                     'fields' => [
@@ -280,6 +280,20 @@ class CircleMember extends AppModel
             }
         }
         return true;
+    }
+
+    function updateModified($circle_list)
+    {
+        if (empty($circle_list)) {
+            return false;
+        }
+        $conditions = [
+            'CircleMember.circle_id' => $circle_list,
+            'CircleMember.team_id'   => $this->current_team_id,
+        ];
+
+        $res = $this->updateAll(['modified' => "'" . time() . "'"], $conditions);
+        return $res;
     }
 
 }

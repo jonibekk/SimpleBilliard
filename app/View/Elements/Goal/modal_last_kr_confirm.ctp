@@ -29,12 +29,24 @@
         </div>
         <div class="modal-footer">
             <div class="text-align_l font_12px font_rouge mb_12px">※どちらを選択しても、このゴールに紐づいた出したい成果は「すべて完了」となります。</div>
+            <?=
+            $this->Form->create('Post', [
+                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', $kr_id, true],
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => false,
+                    'wrapInput' => '',
+                ],
+                'class' => 'form-feed-notify'
+            ]); ?>
+            <? $this->Form->unlockField('socket_id') ?>
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id'], $kr_id]) ?>"
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __d('gl',
                                                                                                   "出したい成果を追加") ?></a>
-            <?= $this->Form->postLink(__d('gl', "ゴール達成"),
-                                      ['controller' => 'goals', 'action' => 'complete_kr', $kr_id, true],
-                                      ['escape' => false, 'class' => 'btn btn-default']) ?>
+            <?=
+            $this->Form->submit(__d('gl', "ゴール達成"),
+                                ['class' => 'btn btn-default', 'div' => false]) ?>
+            <?= $this->Form->end() ?>
         </div>
     </div>
 </div>
