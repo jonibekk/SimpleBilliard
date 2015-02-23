@@ -557,6 +557,7 @@ class TeamMember extends AppModel
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
+            return $res;
         }
         //set key
         foreach ($csv_data as $k => $v) {
