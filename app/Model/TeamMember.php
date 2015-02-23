@@ -696,6 +696,20 @@ class TeamMember extends AppModel
             //rater id check(after check)
             $this->csv_rater_ids[] = $filtered_raters;
         }
+
+        //require least 1 or more admin and active check
+        $exists_admin_active = false;
+        foreach ($this->csv_datas as $k => $v) {
+            if ($v['TeamMember']['admin_flg'] && $v['TeamMember']['active_flg']) {
+                $exists_admin_active = true;
+            }
+        }
+        if (!$exists_admin_active) {
+            $res['error_line_no'] = 0;
+            $res['error_msg'] = __d('gl', "最低１人は管理者かつアクティブにしてください。");
+            return $res;
+        }
+
         //email exists check
         //E-mail address should not be duplicated
         if (count($this->csv_emails) != count(array_unique($this->csv_emails))) {
