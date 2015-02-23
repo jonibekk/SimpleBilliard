@@ -119,10 +119,8 @@ class CircleMemberTest extends CakeTestCase
         $circle_list = [1, 2];
         $this->CircleMember->current_team_id = 1;
         $now = time();
-
         $this->CircleMember->updateModified($circle_list);
         $res = $this->CircleMember->find('all', ['conditions' => ['CircleMember.circle_id' => $circle_list]]);
-
         $this->assertGreaterThanOrEqual($now * 2,
                                         $res[0]['CircleMember']['modified'] + $res[1]['CircleMember']['modified']);
     }
@@ -130,9 +128,7 @@ class CircleMemberTest extends CakeTestCase
     public function testUpdateModifiedIfEmpty()
     {
         $circle_list = [];
-
         $res = $this->CircleMember->updateModified($circle_list);
-
         $this->assertFalse($res);
     }
 

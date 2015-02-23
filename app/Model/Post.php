@@ -230,13 +230,7 @@ class Post extends AppModel
         $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
 
-        // bodyのバリデーションを一時的に追加
-        $this->addValidateCondBodyNotEmpty();
-
         $res = $this->save($postData);
-
-        // bodyのバリデーションを削除
-        $this->removeValidateCond('body');
 
         if (empty($res)) {
             return false;
@@ -891,21 +885,4 @@ class Post extends AppModel
         return $res;
     }
 
-    function addValidateCondBodyNotEmpty()
-    {
-        $bodyNotEmptyCond = [
-            'body' => [
-                'rule' => ['notEmpty']
-            ]
-        ];
-
-        $this->validate = array_merge($this->validate, $bodyNotEmptyCond);
-    }
-
-    function removeValidateCond($column)
-    {
-        if (array_key_exists($column, $this->validate)) {
-            unset($this->validate[$column]);
-        }
-    }
 }

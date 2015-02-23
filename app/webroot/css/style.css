@@ -1331,10 +1331,18 @@ textarea{
 
 .post-contents a {
     color: #ddd;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .comment-contents a {
     color: #c5c5c5;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post-contents a:hover,
@@ -2255,6 +2263,10 @@ textarea.comment-post-form {
 
 .disp_ib {
     display: inline-block;
+}
+
+.disp_i {
+    display: inline;
 }
 
 .disp_bx {
@@ -3632,8 +3644,8 @@ Temporary Properties - YOU MUST FIX
 }
 
 .hideFileInput > input {
-    width: 0;
-    height: 0;
+    width: 1px;
+    height: 1px;
     position: absolute;
     top: 0;
     right: 0;
