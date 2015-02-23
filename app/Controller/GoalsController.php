@@ -22,16 +22,14 @@ class GoalsController extends AppController
     {
         $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals(300);//TODO 暫定的に300、将来的に20に戻す
-        $my_goals = $this->Goal->getMyGoals();
-        $collabo_goals = $this->Goal->getMyCollaboGoals();
-        $follow_goals = $this->Goal->getMyFollowedGoals();
+        $this->_setViewValOnRightColumn();
         $current_global_menu = "goal";
 
         //アドミン権限チェック
         $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
         $is_admin = ($isExistAdminFlg) ? true : false;
 
-        $this->set(compact('is_admin', 'goals', 'my_goals', 'collabo_goals', 'follow_goals', 'current_global_menu'));
+        $this->set(compact('is_admin', 'goals', 'current_global_menu'));
     }
 
     /**
@@ -110,7 +108,7 @@ class GoalsController extends AppController
                     $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
                     // pusherに通知
                     $socketId = viaIsSet($this->request->data['socket_id']);
-                    $feedId   = Security::hash(time());
+                    $feedId = Security::hash(time());
                     $this->NotifyBiz->push($socketId, "all", $feedId);
                     //TODO 一旦、トップにリダイレクト
                     $this->redirect("/");
@@ -778,7 +776,7 @@ class GoalsController extends AppController
 
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
-        $feedId   = Security::hash(time());
+        $feedId = Security::hash(time());
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName, $feedId);
 
@@ -807,6 +805,47 @@ class GoalsController extends AppController
             $result['error'] = false;
             $result['msg'] = null;
         }
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_get_my_goals()
+    {
+        $param_named = $this->request->params['named'];
+        $this->_ajaxPreProcess();
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        else {
+            $page_num = 1;
+        }
+
+        $type = viaIsSet($param_named['type']);
+        if (!$type) {
+            return;
+        }
+
+        if ($type === 'leader') {
+            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num);
+        }
+        elseif ($type === 'collabo') {
+            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num);
+        }
+        elseif ($type === 'follow') {
+            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
+        } else {
+            $goals = [];
+        }
+
+        $this->set(compact('goals', 'type'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Goal/my_goal_area_items');
+        $html = $response->__toString();
+        $result = array(
+            'html'  => $html,
+            'count' => count($goals)
+        );
         return $this->_ajaxGetResponse($result);
     }
 

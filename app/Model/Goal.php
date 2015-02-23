@@ -295,7 +295,7 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function getMyGoals()
+    function getMyGoals($limit = null, $page = 1)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -320,7 +320,9 @@ class Goal extends AppModel
                     ]
                 ],
                 'Purpose',
-            ]
+            ],
+            'limit'      => $limit,
+            'page'       => $page
         ];
         $res = $this->find('all', $options);
         //進捗を計算
@@ -430,7 +432,7 @@ class Goal extends AppModel
                 'conditions' => [
                     'Goal.user_id' => $uid
                 ],
-                'fields' => [
+                'fields'     => [
                     'id'
                 ]
             ]
@@ -442,9 +444,9 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function getMyCollaboGoals()
+    function getMyCollaboGoals($limit = null, $page = 1)
     {
-        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid);
+        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, false, $limit, $page);
         $res = $this->getByGoalId($goal_ids);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
@@ -453,9 +455,9 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getMyFollowedGoals()
+    function getMyFollowedGoals($limit = null, $page = 1)
     {
-        $goal_ids = $this->Follower->getFollowList($this->my_uid);
+        $goal_ids = $this->Follower->getFollowList($this->my_uid, $limit, $page);
         $res = $this->getByGoalId($goal_ids);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
