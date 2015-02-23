@@ -159,6 +159,18 @@ class EmailFixture extends CakeTestFixture
             'created'             => 1400725683,
             'modified'            => 1400725683
         ),
+        array(
+            'id'                  => '11',
+            'user_id'             => '14',
+            'email'               => 'csv_test@email.com',
+            'email_verified'      => 1,
+            'email_token'         => 'Lorem ipsum dolor sit amet',
+            'email_token_expires' => 1400725683,
+            'del_flg'             => 0,
+            'deleted'             => 1400725683,
+            'created'             => 1400725683,
+            'modified'            => 1400725683
+        ),
     );
 
 }

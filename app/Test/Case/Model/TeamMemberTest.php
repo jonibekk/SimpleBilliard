@@ -239,11 +239,38 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->incrementNotifyUnreadCount([]);
     }
 
-    function testValidateNewMemberCsvDataNoTitle()
+    function testSaveNewMembersFromCsvSuccessChangeLocalName()
     {
         $this->setDefault();
 
         $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = [
+            'csv_test@email.com', 'aaa', 'first', 'last', 'on', 'off', null, 'jpn', 'ふぁーすと', 'ラスト'
+        ];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
+
+        $actual = $this->TeamMember->saveNewMembersFromCsv($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => false,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+            'success_count' => 1,
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataDifferenceTitle()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[] = $this->getEmptyRowOnCsv();
+        $csv_data[0]['name'] = 'xxx';
         $csv_data[] = $this->getEmptyRowOnCsv();
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -253,6 +280,26 @@ class TeamMemberTest extends CakeTestCase
         $excepted = [
             'error'         => true,
             'error_line_no' => 0
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateNewMemberCsvDataDifferenceColumnCount()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        unset($csv_data[1][0]);
+
+        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
     }
@@ -280,9 +327,8 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1][1] = 'aaa';
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -322,11 +368,7 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            '',
-        ];
-
+        $csv_data[1][0] = 'aaa@aaa.com';
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
@@ -343,13 +385,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'aaa',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $csv_data[1][0] = 'aaa@aaa.com';
+        $csv_data[1][1] = 'aaa';
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -369,11 +408,8 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'aaa',
-            'ああああ',
-        ];
+        $test_data = ['aaa@aaa.com', 'aaa', 'ああああ',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -391,14 +427,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', '',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -416,14 +448,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'あああ',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'あああ',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -441,15 +469,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', '',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -467,15 +490,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'aaaa',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'aaaa',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -493,16 +511,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            ''
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', ''];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -520,16 +532,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'aaaa'
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'aaaa'];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -547,18 +553,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'aaaaa',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'aaaaa',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -576,21 +574,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            'aaaaaaa',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', 'aaaaaaa',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -608,22 +595,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'aaaa',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'aaaa',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -641,25 +616,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '', '',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -677,25 +637,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            'aaaaa',
-            '',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', 'aaaaa', '1', '1',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -713,25 +658,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            'aaaa',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', 'aaaa', '1',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -749,25 +679,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            'aaaa',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', 'aaaa',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -785,32 +700,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            '',
-            'group3',
-            '',
-            '',
-            '',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', '', 'group3', '', '', '', '',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -828,32 +721,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group1',
-            '',
-            '',
-            '',
-            '',
-            '',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group1', '', '', '', '', '',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -871,33 +742,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'member_id',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_id',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -915,40 +763,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'coach_id',
-            'rater1',
-            '',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'coach_id', 'rater1', '', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -966,40 +784,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'coach_id',
-            'member_id',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'coach_id', 'member_id', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1017,40 +805,10 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'coach_id',
-            'rater2',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'coach_id', 'rater2', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1068,14 +826,18 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $csv_data[2] = $this->getEmptyRowOnCsv();
+        $test_data_a = [
+            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
         ];
-        $csv_data[2] = [
-            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
+
+        $test_data_b = [
+            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
         ];
+        $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1093,11 +855,13 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'from@email.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+
+        $test_data_a = [
+            'from@email.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
         ];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1115,14 +879,19 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $csv_data[2] = $this->getEmptyRowOnCsv();
+
+        $test_data_a = [
+            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
         ];
-        $csv_data[2] = [
-            'bbb@bbb.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
+
+        $test_data_b = [
+            'bbb@bbb.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
         ];
+        $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1140,11 +909,12 @@ class TeamMemberTest extends CakeTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1] = [
-            'aaa@aaa.com', 'member_1', 'firstname', 'lastname', 'ON', 'ON', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+        $csv_data[0] = $this->TeamMember->_getCsvHeading();
+        $csv_data[1] = $this->getEmptyRowOnCsv();
+        $test_data_a = [
+            'aaa@aaa.com', 'member_1', 'firstname', 'lastname', 'ON', 'ON',
         ];
+        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1165,70 +935,8 @@ class TeamMemberTest extends CakeTestCase
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
 
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'member_1',
-            'rater1',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $csv_data[2] = [
-            'aaax@aaa.com',
-            'member_2',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'not_exists_coach_id',
-            'rater1',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
+        $csv_data[1] = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_1', 'rater1', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[2] = ['aaax@aaa.com', 'member_2', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'not_exists_coach_id', 'rater1', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
@@ -1248,70 +956,8 @@ class TeamMemberTest extends CakeTestCase
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
 
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'abc',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            '',
-            'member_1',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $csv_data[2] = [
-            'aaax@aaa.com',
-            'member_2',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            '',
-            'abc',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
+        $csv_data[1] = ['aaa@aaa.com', 'abc', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', '', 'member_1', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[2] = ['aaax@aaa.com', 'member_2', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', '', 'abc', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
@@ -1336,9 +982,15 @@ class TeamMemberTest extends CakeTestCase
     function getEmptyRowOnCsv($colum_count = 29)
     {
         $row = [];
-        for ($i = 0; $i >= $colum_count; $i++) {
+        for ($i = 0; $i <= $colum_count; $i++) {
             $row[] = null;
         }
         return $row;
+    }
+
+    function testActivateMembers()
+    {
+        $res = $this->TeamMember->activateMembers('1000', 100000);
+        $this->asserttrue($res);
     }
 }

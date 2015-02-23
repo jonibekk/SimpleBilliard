@@ -145,8 +145,10 @@ class TeamsController extends AppController
         ];
         $this->_ajaxPreProcess('post');
         $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
+        $this->Team->TeamMember->begin();
         $save_res = $this->Team->TeamMember->saveNewMembersFromCsv($csv);
         if ($save_res['error']) {
+            $this->Team->TeamMember->rollback();
             $result['error'] = true;
             $result['css'] = 'alert-danger';
             $result['msg'] = $save_res['error_msg'];
@@ -158,6 +160,21 @@ class TeamsController extends AppController
             }
         }
         else {
+            $this->Team->TeamMember->commit();
+            $team = $this->Team->findById($this->Session->read('current_team_id'));
+            //send invite mail
+            foreach ($this->Team->TeamMember->csv_datas as $data) {
+                //save invite mail data
+                $invite = $this->Team->Invite->saveInvite(
+                    $data['Email']['email'],
+                    $this->Team->current_team_id,
+                    $this->Auth->user('id'),
+                    null
+                );
+                //send invite mail
+                $this->GlEmail->sendMailInvite($invite, $team['Team']['name']);
+            }
+
             $result['msg'] = __d('gl', "%s人のメンバーを追加しました。", $save_res['success_count']);
         }
         return $this->_ajaxGetResponse($result);

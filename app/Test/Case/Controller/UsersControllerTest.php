@@ -17,7 +17,10 @@ class UsersControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.action_result',
         'app.rater',
+        'app.member_type',
         'app.goal',
+        'app.follower',
+        'app.collaborator',
         'app.local_name',
         'app.cake_session',
         'app.user', 'app.notify_setting',
@@ -1523,6 +1526,7 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/ajax_get_post_count/', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxGetActionCount()
     {
         $this->_getUsersCommonMock();
@@ -1530,6 +1534,140 @@ class UsersControllerTest extends ControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_get_action_count/', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testRegistrationWithSetPasswordAuthenticated()
+    {
+        $Users = $this->_getUsersCommonMock();
+        $value_map = [
+            ['id', "1"],
+            [null, true]
+        ];
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map));
+        try {
+            $this->testAction('/users/registration_with_set_password/', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testRegistrationWithSetPasswordNoParam()
+    {
+        $this->_getUsersMockNotAuthenticated();
+        try {
+            $this->testAction('/users/registration_with_set_password/', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testRegistrationWithSetPasswordTokenValidateFail()
+    {
+        $this->_getUsersMockNotAuthenticated();
+        $this->testAction('/users/registration_with_set_password/invite_token:test', ['method' => 'GET']);
+    }
+
+    function testRegistrationWithSetPasswordGetSuccess()
+    {
+        $Users = $this->_getUsersMockNotAuthenticated();
+        $save_user = [
+            'first_name'  => 'test',
+            'last_name'   => 'tarou',
+            'no_pass_flg' => true,
+        ];
+        $Users->User->save($save_user);
+        $save_email = [
+            'email'   => 'test_invite@aaaaa.com',
+            'user_id' => $Users->User->getLastInsertID(),
+        ];
+        $Users->User->Email->save($save_email);
+        $save_invite = [
+            'from_user_id'        => 1,
+            'to_user_id'          => 2,
+            'team_id'             => 1,
+            'email'               => 'test_invite@aaaaa.com',
+            'email_token'         => 'test_token_csv',
+            'email_token_expires' => time() + 60 * 60 * 24,
+            'type'                => 1,
+        ];
+        $Users->Invite->save($save_invite);
+        $this->testAction('/users/registration_with_set_password/invite_token:test_token_csv', ['method' => 'GET']);
+    }
+
+    function testRegistrationWithSetPasswordPostEmailNotMatch()
+    {
+        $Users = $this->_getUsersMockNotAuthenticated();
+        $save_user = [
+            'first_name'  => 'test',
+            'last_name'   => 'tarou',
+            'no_pass_flg' => true,
+        ];
+        $Users->User->save($save_user);
+        $save_email = [
+            'email'   => 'test_invite@aaaaa.com',
+            'user_id' => $Users->User->getLastInsertID(),
+        ];
+        $Users->User->Email->save($save_email);
+        $save_invite = [
+            'from_user_id'        => 1,
+            'to_user_id'          => 2,
+            'team_id'             => 1,
+            'email'               => 'test_invite@aaaaa.com',
+            'email_token'         => 'test_token_csv',
+            'email_token_expires' => time() + 60 * 60 * 24,
+            'type'                => 1,
+        ];
+        $Users->Invite->save($save_invite);
+        $post_data = [
+            'Email' =>
+                ['email' => 'test@aaa.com']
+        ];
+        $this->testAction('/users/registration_with_set_password/invite_token:test_token_csv',
+                          ['method' => 'POST', 'data' => $post_data]);
+    }
+
+    function testRegistrationWithSetPasswordPostEmailSuccess()
+    {
+        $Users = $this->_getUsersMockNotAuthenticated();
+        $save_user = [
+            'first_name'  => 'test',
+            'last_name'   => 'tarou',
+            'no_pass_flg' => true,
+        ];
+        $Users->User->save($save_user);
+        $save_email = [
+            'email'   => 'test_invite@aaaaa.com',
+            'user_id' => $Users->User->getLastInsertID(),
+        ];
+        $Users->User->Email->save($save_email);
+        $save_invite = [
+            'from_user_id'        => 1,
+            'to_user_id'          => 2,
+            'team_id'             => 1,
+            'email'               => 'test_invite@aaaaa.com',
+            'email_token'         => 'test_token_csv',
+            'email_token_expires' => time() + 60 * 60 * 24,
+            'type'                => 1,
+        ];
+        $Users->Invite->save($save_invite);
+        $post_data = [
+            'User'  => [
+                'password'         => 'testtesttest',
+                'password_confirm' => 'testtesttest',
+                'local_date'       => '2014/11/11',
+            ],
+            'Email' =>
+                ['email' => 'test_invite@aaaaa.com']
+        ];
+        $this->testAction('/users/registration_with_set_password/invite_token:test_token_csv',
+                          ['method' => 'POST', 'data' => $post_data]);
     }
 
     function _getUsersCommonMock()
@@ -1587,4 +1725,41 @@ class UsersControllerTest extends ControllerTestCase
         return $Users;
     }
 
+    function _getUsersMockNotAuthenticated()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session',
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Ogp',
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['id', '1'],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        return $Users;
+    }
 }

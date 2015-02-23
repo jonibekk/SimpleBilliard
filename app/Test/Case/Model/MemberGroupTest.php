@@ -1,12 +1,12 @@
 <?php
-App::uses('MemberType', 'Model');
+App::uses('MemberGroup', 'Model');
 
 /**
- * MemberType Test Case
+ * MemberGroup Test Case
  *
- * @property MemberType $MemberType
+ * @property MemberGroup $MemberGroup
  */
-class MemberTypeTest extends CakeTestCase
+class MemberGroupTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class MemberTypeTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.member_type',
+        'app.member_group',
         'app.team',
         'app.badge',
         'app.user',
@@ -46,9 +46,11 @@ class MemberTypeTest extends CakeTestCase
         'app.notify_from_user',
         'app.oauth_token',
         'app.team_member',
-        'app.group',
         'app.job_category',
+        'app.member_type',
         'app.local_name',
+        'app.rater',
+        'app.group',
         'app.invite',
         'app.thread',
         'app.message'
@@ -62,7 +64,7 @@ class MemberTypeTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->MemberType = ClassRegistry::init('MemberType');
+        $this->MemberGroup = ClassRegistry::init('MemberGroup');
     }
 
     /**
@@ -72,15 +74,14 @@ class MemberTypeTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->MemberType);
+        unset($this->MemberGroup);
 
         parent::tearDown();
     }
 
-    function testGetByName()
+    function testDummy()
     {
-        $this->MemberType->current_team_id = 1;
-        $this->assertEmpty($this->MemberType->getByName('test', null));
+
     }
 
 }
