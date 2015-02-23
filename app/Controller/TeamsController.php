@@ -161,7 +161,6 @@ class TeamsController extends AppController
         }
         else {
             $this->Team->TeamMember->commit();
-
             $result['msg'] = __d('gl', "%s人のメンバーを更新しました。", $save_res['success_count']);
         }
         return $this->_ajaxGetResponse($result);
