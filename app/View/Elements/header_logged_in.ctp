@@ -145,15 +145,64 @@
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
-                <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o header-link header-icon"></i></a>
+                <div class="btn btn-danger btn-xs"
+                     id="bellNum"
+                     style="position: absolute;
+                            margin-top: 2px;
+                            margin-left: 20px;
+                            color: #fff;
+                            font-size: 10px;">
+                    1</div>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-bell-o header-link header-icon"></i>
+                </a>
+                <ul class="dropdown-menu" role="menu" style="margin-top: -2px;position: absolute;margin-right: 244px;">
+                    <li>
+                        <a href="http://192.168.50.4/post_permanent/485" class="col col-xxs-12 pt_4px" style="display:block">
+                            <img src="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" class="lazy comment-img" data-original="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" alt="" style="display: block;">
+                            <div class="comment-body">
+                                <div class="col col-xxs-12 comment-text comment-user">
+                                    <div class="mb_2px lh_12px font_bold font_verydark">Two A</div>
+                                </div>
+                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_67">コメント</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider" style="clear:both"></li>
+                    <li>
+                        <a href="http://192.168.50.4/post_permanent/479" class="col col-xxs-12 pt_4px" style="display:block">
+                            <img src="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" class="lazy comment-img" data-original="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" alt="" style="display: block;">
+                            <div class="comment-body">
+                                <div class="col col-xxs-12 comment-text comment-user">
+                                    <div class="mb_2px lh_12px font_bold font_verydark">Two A</div>
+                                </div>
+                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_67">コメント</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider" style="clear:both"></li>
+                    <li>
+                        <a href="http://192.168.50.4/post_permanent/476" class="col col-xxs-12 pt_4px" style="display:block">
+                            <img src="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" class="lazy comment-img" data-original="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" alt="" style="display: block;">
+                            <div class="comment-body">
+                                <div class="col col-xxs-12 comment-text comment-user">
+                                    <div class="mb_2px lh_12px font_bold font_verydark">Two A</div>
+                                </div>
+                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_67">
+                                    あああああああああああああああああああああああコメント
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
 
                 <div class="pull-right header-function dropdown">
                     <a href="#"
                        class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog header-function-icon"></i><i
-                            class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
+                        <i class="fa fa-cog header-function-icon"></i>
+                        <i class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">

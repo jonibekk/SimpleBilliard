@@ -1771,3 +1771,9 @@ function evGoalsMoreView() {
     });
     return false;
 }
+
+$(document).on("click", ".dashboardProfileCard-avatarImage", function(){
+    $bellNum = parseInt($("#bellNum").text());
+    $bellNum++;
+    $("#bellNum").text($bellNum);
+});
