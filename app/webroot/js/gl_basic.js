@@ -1676,8 +1676,9 @@ function notifyNewFeed() {
 
     // 通知をふんわり出す
     var i = 0.2;
-    setInterval(function () {
+    var roop = setInterval(function () {
         notifyBox.css("opacity", i);
+        i = i + 0.2;
         if (i > 1) {
             clearInterval(roop);
         }
