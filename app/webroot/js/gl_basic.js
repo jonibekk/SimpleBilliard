@@ -1604,6 +1604,15 @@ $(document).ready(function () {
         appendSocketId($(this), socketId);
     });
 
+    // keyResultの完了送信時にsocket_idを埋め込む
+    $(document).on("click", ".kr_achieve_button", function() {
+        var formId = $(this).attr("form-id");
+        var $form  = $("form#" + formId);
+        appendSocketId($form, socketId);
+        $form.submit();
+        return false;
+    });
+
     // page type idをセットする
     setPageTypeId();
 
