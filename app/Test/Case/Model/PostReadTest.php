@@ -18,7 +18,10 @@ class PostReadTest extends CakeTestCase
         'app.post_read',
         'app.post',
         'app.user', 'app.notify_setting',
-        'app.team'
+        'app.team',
+        'app.goal',
+        'app.action_result',
+        'app.key_result'
     );
 
     /**
@@ -48,11 +51,12 @@ class PostReadTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
+        $post_uid = '2';
         $this->PostRead->my_uid = $uid;
         $this->PostRead->current_team_id = $team_id;
         $test_save_data = [
             'Post' => [
-                'user_id' => $uid,
+                'user_id' => $post_uid,
                 'team_id' => $team_id,
                 'body'    => 'test',
             ],
@@ -75,4 +79,24 @@ class PostReadTest extends CakeTestCase
         $this->PostRead->red($post_list);
     }
 
+    public function testRedIfPoster()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->PostRead->my_uid = $uid;
+        $this->PostRead->current_team_id = $team_id;
+        $test_save_data = [
+            'Post' => [
+                'user_id' => $uid,
+                'team_id' => $team_id,
+                'body'    => 'test',
+
+            ],
+        ];
+        $this->PostRead->Post->save($test_save_data);
+        $before_data = $this->PostRead->read();
+        $this->PostRead->red($this->PostRead->Post->getLastInsertID());
+        $after_data = $this->PostRead->read();
+        $this->assertEquals($before_data, $after_data);
+    }
 }
