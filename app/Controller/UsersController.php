@@ -724,6 +724,19 @@ class UsersController extends AppController
 
     public function _setDefaultTeam($team_id)
     {
+        try {
+            $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
+            if (!empty($team_list)) {
+                $this->Session->write('current_team_id', key($team_list));
+            }
+            else {
+                $this->Session->write('current_team_id', null);
+            }
+            return false;
+        }
         $this->Session->write('current_team_id', $team_id);
     }
 

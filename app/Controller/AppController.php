@@ -441,8 +441,9 @@ class AppController extends Controller
                     //相手が現在のチームに所属しているか確認
                     $options = array(
                         'conditions' => array(
-                            'user_id' => $id,
-                            'team_id' => $this->Session->read('current_team_id'),
+                            'user_id'    => $id,
+                            'team_id'    => $this->Session->read('current_team_id'),
+                            'active_flg' => true,
                         ),
                     );
                     $team = $this->User->TeamMember->find('first', $options);
