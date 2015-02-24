@@ -137,6 +137,13 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
+    private function bellPush($socketId, $channelName, $data) {
+
+        // push
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $pusher->trigger($channelName, 'post_feed', $data, $socketId);
+    }
+
     private function _setModelProperty($user_id, $team_id)
     {
         $this->Post->my_uid

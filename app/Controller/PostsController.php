@@ -449,6 +449,14 @@ class PostsController extends AppController
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "コメントに失敗しました。")]);
         }
+
+        //pusherに通知
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $data = $this->request->data;
+        var_ådump($data);
+        die;
+        //$this->NotifyBiz->bellPush($socketId, $channelName, $data);
+
         $this->redirect($this->referer());
     }
 
