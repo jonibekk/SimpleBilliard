@@ -971,6 +971,570 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+    function testValidateUpdateMemberCsvDataNotMatchRecordCount()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 0
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNotMatchColumnCount()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+
+        unset($csv_data[0]['email']);
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 1
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNotMatchTitle()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+
+        $csv_data[0]['email'] = 'test';
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 1
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNotExistsEmail()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNotMemberId()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', '', 'ON', 'ON', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNotActiveFlg()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', '', 'ON', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataActiveFlgOnOrOffError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'aaa', 'ON', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNoAdminFlg()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', '', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataAdminFlgOnOrOffError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'aa', 'ON']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNoEvaluate()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', '']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataEvaluateOnOrOffError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'aaa']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataGroupAlignLeftError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', '', 'group2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataGroupDuplicateError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group1']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataCoachIdEqualMemberIdError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_1']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataRaterAlignLeftError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', '', 'rater2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataRaterMemberIdError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'member_1', 'rater2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataRaterDuplicateError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater1']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataRequireAdminAndActive()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'OFF', 'OFF', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'OFF', 'OFF', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'OFF', 'OFF', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'OFF', 'OFF', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 0
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataDuplicateEmail()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNotExistsCoach()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'xxxxxxxxxx', 'rater1', 'rater2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateMemberCsvDataNotExistsRater()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2', 'xxxxxxxxxx']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
     function setDefault()
     {
         $uid = 1;
@@ -981,10 +1545,10 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->User->Email->my_uid = $uid;
     }
 
-    function getEmptyRowOnCsv($colum_count = 29)
+    function getEmptyRowOnCsv($colum_count = 30)
     {
         $row = [];
-        for ($i = 0; $i <= $colum_count; $i++) {
+        for ($i = 0; $i < $colum_count; $i++) {
             $row[] = null;
         }
         return $row;
