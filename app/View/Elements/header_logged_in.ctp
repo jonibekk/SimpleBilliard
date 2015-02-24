@@ -145,14 +145,14 @@
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
-                <div class="btn btn-danger btn-xs"
+                <div class="btn btn-danger btn-xs bell-notify-box"
                      id="bellNum"
                      style="position: absolute;
                             margin-top: 2px;
                             margin-left: 20px;
                             color: #fff;
-                            font-size: 10px;">
-                    1</div>
+                            font-size: 10px;
+                            display:none"></div>
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-bell-o header-link header-icon"></i>
                 </a>

@@ -101,9 +101,9 @@ class NotifyBizComponent extends Component
         }
     }
 
-    public function push($socketId, $share, $feedId)
+    public function push($socketId, $share)
     {
-        if (!$socketId || !$feedId) return;
+        if (!$socketId) return;
 
         $teamId = $this->Session->read('current_team_id');
         $channelName = $share . "_team_" . $teamId;
@@ -126,10 +126,11 @@ class NotifyBizComponent extends Component
         }
 
         // レスポンスデータの定義
+        $notifyId = Security::hash(time());
         $data = [
-            'is_postfeed' => true,
-            'feed_type'   => $feedType,
-            'feed_id'     => $feedId
+            'is_feed_notify' => true,
+            'feed_type'      => $feedType,
+            'notify_id'      => $notifyId
         ];
 
         // push
@@ -137,9 +138,14 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
-    private function bellPush($socketId, $channelName, $data) {
+    public function bellPush($socketId, $channelName, $data) {
 
         // push
+        $notifyId = Security::hash(time());
+        $data = array(
+            'notify_id'      => $notifyId,
+            'is_bell_notify' => true
+        );
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
