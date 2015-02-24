@@ -38,6 +38,33 @@ class PostRead extends AppModel
 
     public function red($post_list)
     {
+        //既読投稿を除外
+        $post_list = $this->pickUnreadPosts($post_list);
+        //自分の投稿を除外
+        $post_list = $this->pickUnMyPosts($post_list);
+        $common_data = [
+            'user_id' => $this->my_uid,
+            'team_id' => $this->current_team_id
+        ];
+        $post_data = [];
+        if (is_array($post_list)) {
+            foreach ($post_list as $post_id) {
+                $data = array_merge($common_data, ['post_id' => $post_id]);
+                $post_data[] = $data;
+            }
+        }
+        else {
+            $data = array_merge($common_data, ['post_id' => $post_list]);
+            $post_data[] = $data;
+        }
+        if (empty($post_data)) {
+            return;
+        }
+        $this->saveAll($post_data);
+    }
+
+    private function pickUnreadPosts($post_list)
+    {
         //既読済みのリスト取得
         $options = [
             'conditions' => [
@@ -51,29 +78,42 @@ class PostRead extends AppModel
 
         /** @noinspection PhpDeprecationInspection */
         $read_list = Set::combine($read, '{n}.PostRead.post_id', '{n}.PostRead.post_id');
-        $common_data = [
-            'user_id' => $this->my_uid,
-            'team_id' => $this->current_team_id
-        ];
-        $post_data = [];
+        $unread_posts = [];
         if (is_array($post_list)) {
             foreach ($post_list as $post_id) {
                 //既読をスキップ
                 if (in_array($post_id, $read_list)) {
                     continue;
                 }
-                $data = array_merge($common_data, ['post_id' => $post_id]);
-                $post_data[] = $data;
+                $unread_posts[$post_id] = $post_id;
             }
         }
         elseif (!in_array($post_list, $read_list)) {
-            $data = array_merge($common_data, ['post_id' => $post_list]);
-            $post_data[] = $data;
+            $unread_posts[$post_list] = $post_list;
         }
-        if (empty($post_data)) {
-            return;
+        return $unread_posts;
+    }
+
+    private function pickUnMyPosts($post_list)
+    {
+        if (empty($post_list)) {
+            return ;
         }
-        $this->saveAll($post_data);
+        //自分以外の投稿を取得
+        $options = [
+            'conditions' => [
+                'id' => $post_list,
+                'team_id' => $this->current_team_id,
+                'NOT'     => [
+                    'user_id' => $this->my_uid,
+                ]
+            ],
+            'fields'     => ['id']
+        ];
+        $un_my_posts = $this->Post->find('all', $options);
+        /** @noinspection PhpDeprecationInspection */
+        $un_my_posts = Set::combine($un_my_posts, '{n}.Post.id', '{n}.Post.id');
+        return $un_my_posts;
     }
 
     public function getRedUsers($post_id)
