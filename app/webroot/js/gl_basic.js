@@ -1293,7 +1293,7 @@ function evFeedMoreView() {
     $obj.after($loader_html);
     //url生成
     var url = get_url + '/page:' + next_page_num;
-    if (month_index != undefined && month_index > 1) {
+    if (month_index != undefined && month_index > 0) {
         url = url + '/month_index:' + month_index;
     }
     $.ajax({
