@@ -139,13 +139,7 @@ class NotifyBizComponent extends Component
     }
 
     public function bellPush($socketId, $channelName, $data) {
-
         // push
-        $notifyId = Security::hash(time());
-        $data = array(
-            'notify_id'      => $notifyId,
-            'is_bell_notify' => true
-        );
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }

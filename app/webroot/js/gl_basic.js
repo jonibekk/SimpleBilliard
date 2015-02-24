@@ -1641,6 +1641,8 @@ $(document).ready(function () {
             } else if(isBellNotify) {
                 notifyNewBell();
                 prevNotifyId = notifyId;
+                $("#bell-dropdown").prepend(data.html);
+                console.log(data);
             } else {
                 alert("else");
             }
@@ -1676,8 +1678,8 @@ function notifyNewFeed() {
     var i = 0.2;
     setInterval(function () {
         notifyBox.css("opacity", i);
-        if (i < 1) {
-            i = i + 0.2;
+        if (i > 1) {
+            clearInterval(roop);
         }
     }, 100);
 }
@@ -1696,16 +1698,15 @@ function notifyNewBell() {
 
     // Case of not existing unread post yet
     notifyBox.html("1");
-    notifyBox.css("display", function () {
-        return "block";
-    });
 
     // 通知をふんわり出す
     var i = 0.2;
-    setInterval(function () {
+    var roop = setInterval(function () {
         notifyBox.css("opacity", i);
         i = i + 0.2;
-        if (i < 1) return;
+        if (i > 1) {
+            clearInterval(roop);
+        }
     }, 100);
 }
 
@@ -1825,9 +1826,7 @@ function evGoalsMoreView() {
 }
 
 $(document).on("click", ".dashboardProfileCard-avatarImage", function(){
-    $bellNum = parseInt($("#bellNum").text());
-    $bellNum++;
-    $("#bellNum").text($bellNum);
+    notifyNewBell();
 });
 
 function viaIsSet( data ){

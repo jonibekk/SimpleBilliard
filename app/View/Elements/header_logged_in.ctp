@@ -152,49 +152,17 @@
                             margin-left: 20px;
                             color: #fff;
                             font-size: 10px;
-                            display:none"></div>
+                            opacity: 0;
+                            background-color:red!important;">0</div>
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-bell-o header-link header-icon"></i>
                 </a>
-                <ul class="dropdown-menu" role="menu" style="margin-top: -2px;position: absolute;margin-right: 244px;">
-                    <li>
-                        <a href="http://192.168.50.4/post_permanent/485" class="col col-xxs-12 pt_4px" style="display:block">
-                            <img src="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" class="lazy comment-img" data-original="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" alt="" style="display: block;">
-                            <div class="comment-body">
-                                <div class="col col-xxs-12 comment-text comment-user">
-                                    <div class="mb_2px lh_12px font_bold font_verydark">Two A</div>
-                                </div>
-                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_67">コメント</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider" style="clear:both"></li>
-                    <li>
-                        <a href="http://192.168.50.4/post_permanent/479" class="col col-xxs-12 pt_4px" style="display:block">
-                            <img src="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" class="lazy comment-img" data-original="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" alt="" style="display: block;">
-                            <div class="comment-body">
-                                <div class="col col-xxs-12 comment-text comment-user">
-                                    <div class="mb_2px lh_12px font_bold font_verydark">Two A</div>
-                                </div>
-                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_67">コメント</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider" style="clear:both"></li>
-                    <li>
-                        <a href="http://192.168.50.4/post_permanent/476" class="col col-xxs-12 pt_4px" style="display:block">
-                            <img src="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" class="lazy comment-img" data-original="/upload/users/2/765d0c0c7bbdea5afda903baa4512c61_small.jpg" alt="" style="display: block;">
-                            <div class="comment-body">
-                                <div class="col col-xxs-12 comment-text comment-user">
-                                    <div class="mb_2px lh_12px font_bold font_verydark">Two A</div>
-                                </div>
-                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_67">
-                                    あああああああああああああああああああああああコメント
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <ul class="dropdown-menu" id="bell-dropdown" role="menu" style="
+                    margin-top: -2px;
+                    position: absolute;
+                    margin-right: 244px;
+                    width: 450px;
+                "></ul>
 
                 <div class="pull-right header-function dropdown">
                     <a href="#"

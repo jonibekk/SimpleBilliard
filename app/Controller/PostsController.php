@@ -453,7 +453,19 @@ class PostsController extends AppController
         //pusherに通知
         $socketId = viaIsSet($this->request->data['socket_id']);
         $teamId   = $this->Session->read('current_team_id');
-        $data = $this->request->data;
+
+        $view = new View();
+        $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
+        $comment = $this->request->data['Comment']['body'];
+        $postUrl = "/post_permanent/" . $this->Post->id;
+        $html = $view->element('bell_notification_item', compact('userName', 'comment', 'postUrl'));
+        $notifyId = Security::hash(time());
+        $data = array(
+            'notify_id'      => $notifyId,
+            'is_bell_notify' => true,
+            'html' => $html,
+        );
+
         foreach($userList as $user) {
             $channelName = "user_" . $user . "_team_" . $teamId;
             $this->NotifyBiz->bellPush($socketId, $channelName, $data);
