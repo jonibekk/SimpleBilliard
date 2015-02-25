@@ -447,17 +447,21 @@ class PostsController extends AppController
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "コメントに失敗しました。")]);
+            $this->redirect($this->referer());
         }
 
         $userList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id, true);
 
         //pusherに通知
-        $socketId = viaIsSet($this->request->data['socket_id']);
         $teamId   = $this->Session->read('current_team_id');
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $comment = viaIsSet($this->request->data['Comment']['body']);
+        if(!$socketId || !$comment) {
+            $this->redirect($this->referer());
+        }
 
         $view = new View();
         $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
-        $comment = $this->request->data['Comment']['body'];
         $postUrl = "/post_permanent/" . $this->Post->id;
         $html = $view->element('bell_notification_item', compact('userName', 'comment', 'postUrl'));
         $notifyId = Security::hash(time());

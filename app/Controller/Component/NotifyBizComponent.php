@@ -140,6 +140,9 @@ class NotifyBizComponent extends Component
 
     public function bellPush($socketId, $channelName, $data) {
         // push
+        if(!$socketId || !$channelName || !$data) {
+            return;
+        }
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
