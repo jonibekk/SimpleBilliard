@@ -450,16 +450,22 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
-        $userList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id, true);
+        //push通知するユーザーを定義
+        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id, true);
+        $findRes = $this->Post->findById($this->Post->id, array('user_id'));
+        $postUserId = $findRes['Post']['user_id'];
+        if(!in_array($postUserId, $pushUserList)) {
+            $pushUserList[] = $postUserId;
+        }
 
-        //pusherに通知
+        // pusherに渡すデータを定義
         $teamId   = $this->Session->read('current_team_id');
         $socketId = viaIsSet($this->request->data['socket_id']);
-        $comment = viaIsSet($this->request->data['Comment']['body']);
+        $comment  = viaIsSet($this->request->data['Comment']['body']);
         if(!$socketId || !$comment) {
             $this->redirect($this->referer());
         }
-
+        // コメントテンプレートのレンダリング
         $view = new View();
         $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
         $postUrl = "/post_permanent/" . $this->Post->id;
@@ -470,7 +476,9 @@ class PostsController extends AppController
             'is_bell_notify' => true,
             'html' => $html,
         );
-        foreach($userList as $user) {
+
+        // Pusherへ送信
+        foreach($pushUserList as $user) {
             $channelName = "user_" . $user . "_team_" . $teamId;
             $this->NotifyBiz->bellPush($socketId, $channelName, $data);
         }
