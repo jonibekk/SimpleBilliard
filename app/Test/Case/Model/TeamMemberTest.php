@@ -1481,6 +1481,32 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+    function testValidateUpdateMemberCsvDataDuplicateMemberId()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
     function testValidateUpdateMemberCsvDataNotExistsCoach()
     {
         $this->setDefault();
@@ -1556,11 +1582,19 @@ class TeamMemberTest extends CakeTestCase
         $uid = 1;
         $this->assertTrue($this->TeamMember->isActive($uid));
     }
+
     function testIsActiveFalse()
     {
         $this->TeamMember->current_team_id = 1;
         $uid = 1;
-        $this->assertFalse($this->TeamMember->isActive($uid,10000));
+        $this->assertFalse($this->TeamMember->isActive($uid, 10000));
+    }
+
+    function testIsActiveFalseCurrentTeamIdNull()
+    {
+        $this->TeamMember->current_team_id = null;
+        $uid = 1;
+        $this->assertFalse($this->TeamMember->isActive($uid));
     }
 
     function setDefault()
@@ -1572,6 +1606,5 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->User->Email->current_team_id = $team_id;
         $this->TeamMember->User->Email->my_uid = $uid;
     }
-
 
 }
