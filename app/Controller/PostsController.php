@@ -450,6 +450,7 @@ class PostsController extends AppController
         }
 
         $userList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id, true);
+
         //pusherに通知
         $socketId = viaIsSet($this->request->data['socket_id']);
         $teamId   = $this->Session->read('current_team_id');
@@ -465,7 +466,6 @@ class PostsController extends AppController
             'is_bell_notify' => true,
             'html' => $html,
         );
-
         foreach($userList as $user) {
             $channelName = "user_" . $user . "_team_" . $teamId;
             $this->NotifyBiz->bellPush($socketId, $channelName, $data);
