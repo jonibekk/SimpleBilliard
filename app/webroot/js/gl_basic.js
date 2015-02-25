@@ -1620,7 +1620,7 @@ $(document).ready(function () {
     for (var i in cake.data.c) {
 
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
-            var pageType = getPageType();
+            var pageType = getPageTypeId();
             var feedType = data.feed_type;
             var feedId = data.feed_id;
             var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageType === feedType || pageType === "all");
@@ -1681,11 +1681,14 @@ function setPageTypeId() {
     if (pageId === "null") {
         return;
     }
+    if (pageId === "circle") {
+        pageId += "_" + cake.data.h;
+    }
     notifyBox.attr("id", pageId + "_feed_notify");
 }
 
 // notify boxのpage idをゲット
-function getPageType() {
+function getPageTypeId() {
     var boxId = $(".feed-notify-box").attr("id");
     if (!boxId) return "";
     return boxId.replace("_feed_notify", "");
