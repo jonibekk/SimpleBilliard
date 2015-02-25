@@ -1620,10 +1620,10 @@ $(document).ready(function () {
     for (var i in cake.data.c) {
 
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
-            var pageType = getPageTypeId();
-            var feedType = data.feed_type;
+            var pageTypeId = getPageTypeId();
+            var feedTypeId = data.feed_type;
             var feedId = data.feed_id;
-            var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageType === feedType || pageType === "all");
+            var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageTypeId === feedTypeId || pageTypeId === "all");
             if (canNotify) {
                 feedUniqueId = feedId;
                 notifyNewFeed();
@@ -1677,21 +1677,21 @@ function appendSocketId(form, socketId) {
 // notify boxにpage idをセット
 function setPageTypeId() {
     var notifyBox = $(".feed-notify-box");
-    var pageId = cake.data.d;
-    if (pageId === "null") {
+    var pageTypeId = cake.data.d;
+    if (pageTypeId === "null") {
         return;
     }
-    if (pageId === "circle") {
-        pageId += "_" + cake.data.h;
+    if (pageTypeId === "circle") {
+        pageTypeId += "_" + cake.data.h;
     }
-    notifyBox.attr("id", pageId + "_feed_notify");
+    notifyBox.attr("id", pageTypeId + "_feed_notify");
 }
 
 // notify boxのpage idをゲット
 function getPageTypeId() {
-    var boxId = $(".feed-notify-box").attr("id");
-    if (!boxId) return "";
-    return boxId.replace("_feed_notify", "");
+    var pageTypeId = $(".feed-notify-box").attr("id");
+    if (!pageTypeId) return "";
+    return pageTypeId.replace("_feed_notify", "");
 }
 
 $(document).ready(function () {
