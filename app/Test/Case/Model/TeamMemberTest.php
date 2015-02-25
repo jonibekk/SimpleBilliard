@@ -1535,16 +1535,6 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function setDefault()
-    {
-        $uid = 1;
-        $team_id = 1;
-        $this->TeamMember->current_team_id = $team_id;
-        $this->TeamMember->my_uid = $uid;
-        $this->TeamMember->User->Email->current_team_id = $team_id;
-        $this->TeamMember->User->Email->my_uid = $uid;
-    }
-
     function getEmptyRowOnCsv($colum_count = 30)
     {
         $row = [];
@@ -1559,4 +1549,29 @@ class TeamMemberTest extends CakeTestCase
         $res = $this->TeamMember->activateMembers('1000', 100000);
         $this->asserttrue($res);
     }
+
+    function testIsActiveTrue()
+    {
+        $this->TeamMember->current_team_id = 1;
+        $uid = 1;
+        $this->assertTrue($this->TeamMember->isActive($uid));
+    }
+    function testIsActiveFalse()
+    {
+        $this->TeamMember->current_team_id = 1;
+        $uid = 1;
+        $this->assertFalse($this->TeamMember->isActive($uid,10000));
+    }
+
+    function setDefault()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->TeamMember->current_team_id = $team_id;
+        $this->TeamMember->my_uid = $uid;
+        $this->TeamMember->User->Email->current_team_id = $team_id;
+        $this->TeamMember->User->Email->my_uid = $uid;
+    }
+
+
 }
