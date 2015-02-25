@@ -1,4 +1,4 @@
-<li>
+<li style="clear:both">
     <a href="<?= $postUrl ?>" class="col col-xxs-12 pt_4px" style="display:block;padding-top:10px;">
         <?=
         $this->Html->image(
@@ -8,7 +8,7 @@
                ['style' => 'small']
             ),
             array(
-                'class' => array('img-circle', 'pull-left')
+                'class' => array('pull-left')
             )
         );
         ?>
@@ -24,7 +24,8 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 width: 100%;">
-                <i class="fa fa-comment-o"></i>「<?= $comment ?>」
+                <i class="fa fa-comment-o"></i>
+                「<?= $comment ?>」
             </div>
         </div>
     </a>
