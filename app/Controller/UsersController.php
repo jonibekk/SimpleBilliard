@@ -713,8 +713,8 @@ class UsersController extends AppController
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('last_login', REQUEST_TIMESTAMP);
         $this->_setDefaultTeam($this->Auth->user('default_team_id'));
-        if ($this->Auth->user('default_team_id')) {
-            $this->User->TeamMember->updateLastLogin($this->Auth->user('default_team_id'), $this->Auth->user('id'));
+        if ($this->Session->read('current_team_id')) {
+            $this->User->TeamMember->updateLastLogin($this->Session->read('current_team_id'), $this->Auth->user('id'));
         }
         $this->User->_setSessionVariable();
         $this->Mixpanel->setUser($this->User->id);
@@ -729,12 +729,9 @@ class UsersController extends AppController
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
-            if (!empty($team_list)) {
-                $this->Session->write('current_team_id', key($team_list));
-            }
-            else {
-                $this->Session->write('current_team_id', null);
-            }
+            $set_team_id = !empty($team_list) ? key($team_list) : null;
+            $this->Session->write('current_team_id', $set_team_id);
+            $this->User->updateDefaultTeam($set_team_id, true, $this->Auth->user('id'));
             return false;
         }
         $this->Session->write('current_team_id', $team_id);
