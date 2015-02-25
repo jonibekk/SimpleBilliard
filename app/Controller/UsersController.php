@@ -28,7 +28,7 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite');
+                           'accept_invite', 'registration_with_set_password');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -204,6 +204,60 @@ class UsersController extends AppController
     }
 
     /**
+     * User Registration by batch set up.
+
+     */
+    public function registration_with_set_password()
+    {
+        if ($this->Auth->user()) {
+            throw new NotFoundException();
+        }
+        if (!viaIsSet($this->request->params['named']['invite_token'])) {
+            throw new NotFoundException();
+        }
+
+        try {
+            //トークンが有効かチェック
+            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+            if (!$this->Invite->isByBatchSetup($this->request->params['named']['invite_token'])) {
+                throw new RuntimeException(__d('gl', "トークンが正しくありません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect('/');
+        }
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+        if ($this->request->is('post')) {
+            //tokenチェック
+            $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
+
+            //Email match check
+            if (!viaIsSet($invite['Invite']['email']) || $this->request->data['Email']['email'] != $invite['Invite']['email']) {
+                $this->Pnotify->outError(__d('gl', "メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"));
+                return $this->render();
+            }
+            $user = $this->User->getUserByEmail($this->request->data['Email']['email']);
+            $this->Invite->verify($this->request->params['named']['invite_token']);
+            //タイムゾーン設定
+            //ユーザのローカル環境から取得したタイムゾーンをセット
+            $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
+            $user['User']['timezone'] = $timezone;
+
+            //save password & activation
+            $this->User->passwordReset($user, ['User' => $this->request->data['User']]);
+            //team member activate
+            $this->User->TeamMember->activateMembers($user['User']['id'], $invite['Invite']['team_id']);
+
+            $this->_autoLogin($user['User']['id']);
+            //Display modal on home.
+            $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+            return $this->redirect('/');
+        }
+        return $this->render();
+    }
+
+    /**
      * 新規プロフィール入力
      */
     public function add_profile()
@@ -240,7 +294,7 @@ class UsersController extends AppController
         $isSavedSuccess = $this->User->saveAll($this->request->data);
 
         // 保存失敗
-        if(!$isSavedSuccess) {
+        if (!$isSavedSuccess) {
             $language_name = $this->Lang->availableLanguages[$me['language']];
 
             $this->set(compact('me', 'is_not_use_local_name', 'language_name'));
@@ -350,6 +404,10 @@ class UsersController extends AppController
 
     /**
      * Password reset
+     *
+     * @param null $token
+     *
+     * @return CakeResponse|void
      */
     public function password_reset($token = null)
     {
@@ -542,6 +600,11 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'register', 'invite_token' => $token]);
             }
 
+            //By batch setup
+            if ($this->Invite->isByBatchSetup($token)) {
+                return $this->redirect(['action' => 'registration_with_set_password', 'invite_token' => $token]);
+            }
+
             if (!$this->Auth->user()) {
                 $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
                 return $this->redirect(['action' => 'login']);
@@ -598,6 +661,7 @@ class UsersController extends AppController
     {
         //トークン認証
         $invite = $this->Invite->verify($token);
+
         //チーム参加
         $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
         //デフォルトチーム設定

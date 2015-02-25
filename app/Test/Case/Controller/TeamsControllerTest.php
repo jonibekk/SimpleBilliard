@@ -14,8 +14,12 @@ class TeamsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.circle_member',
+        'app.member_type',
         'app.action_result',
         'app.goal',
+        'app.follower',
+        'app.collaborator',
         'app.local_name',
         'app.cake_session',
         'app.team',
@@ -37,6 +41,8 @@ class TeamsControllerTest extends ControllerTestCase
         'app.oauth_token',
         'app.team_member',
         'app.group',
+        'app.rater',
+        'app.member_group',
         'app.job_category',
         'app.invite',
         'app.thread',
@@ -283,6 +289,36 @@ class TeamsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxUploadUpdateMembersCsvEmpty()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'update_member_csv_format_only_title.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_update_members_csv/', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadUpdateMembersCsvError()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'update_member_csv_format_error.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_update_members_csv/', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadUpdateMembersCsvNoError()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'update_member_csv_format_no_error.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_update_members_csv/', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testDownloadAddMembersCsvFormat()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -299,6 +335,9 @@ class TeamsControllerTest extends ControllerTestCase
     {
         Configure::write('Config.language', 'jpn');
 
+        /**
+         * @var TeamsController $Teams
+         */
         $Teams = $this->generate('Teams', [
             'components' => [
                 'Security' => ['_validateCsrf', '_validatePost'],
@@ -374,9 +413,17 @@ class TeamsControllerTest extends ControllerTestCase
             $Teams->Session->expects($this->any())->method('read')
                            ->will($this->returnValueMap($session_value_map)
                            );
-
         }
-
+        $Teams->Team->current_team_id = 1;
+        $Teams->Team->uid = 1;
+        $Teams->Team->TeamMember->current_team_id = 1;
+        $Teams->Team->TeamMember->uid = 1;
+        $Teams->Team->TeamMember->User->MemberGroup->Group->current_team_id = 1;
+        $Teams->Team->TeamMember->User->MemberGroup->Group->uid = 1;
+        $Teams->Team->TeamMember->MemberType->current_team_id = 1;
+        $Teams->Team->TeamMember->MemberType->uid = 1;
+        $Teams->Team->TeamMember->User->Email->current_team_id = 1;
+        $Teams->Team->TeamMember->User->Email->uid = 1;
         return $Teams;
     }
 }

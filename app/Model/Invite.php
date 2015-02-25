@@ -10,6 +10,8 @@ App::uses('AppModel', 'Model');
  */
 class Invite extends AppModel
 {
+    const TYPE_NORMAL = 0;
+    const TYPE_BATCH = 1;
 
     public $tokenData = [];
     /**
@@ -96,7 +98,6 @@ class Invite extends AppModel
      *
      * @param string $token The token that wa sent to the user
      *
-     * @internal param $uid
      * @return array On success it returns the user data record
      */
     public function verify($token)
@@ -116,6 +117,20 @@ class Invite extends AppModel
         else {
             return $this->tokenData;
         }
+    }
+
+    function isByBatchSetup($token)
+    {
+        $invite = $this->getByToken($token);
+        if (!viaIsSet($invite['Invite']['email'])) {
+            return false;
+        }
+
+        $user = $this->FromUser->getUserByEmail($invite['Invite']['email']);
+        if (viaIsSet($user['User']) && $user['User']['active_flg'] === false && $user['User']['no_pass_flg'] === true) {
+            return true;
+        }
+        return false;
     }
 
     function isForMe($token, $uid)

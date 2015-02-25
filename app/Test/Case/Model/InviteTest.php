@@ -183,4 +183,8 @@ class InviteTest extends CakeTestCase
         $this->assertArrayHasKey('id', $res['Invite']);
     }
 
+    function testIsByBatchSetupFail()
+    {
+        $this->assertFalse($this->Invite->isByBatchSetup('not_exists_token'));
+    }
 }

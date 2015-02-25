@@ -4,10 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * Group Model
  *
- * @property Team       $Team
- * @property Group      $ParentGroup
- * @property Group      $ChildGroup
- * @property TeamMember $TeamMember
+ * @property Team        $Team
+ * @property MemberGroup $MemberGroup
  */
 class Group extends AppModel
 {
@@ -30,7 +28,6 @@ class Group extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'ParentGroup' => ['className' => 'Group', 'foreignKey' => 'parent_id',]
     ];
 
     /**
@@ -39,8 +36,46 @@ class Group extends AppModel
      * @var array
      */
     public $hasMany = [
-        'ChildGroup' => ['className' => 'Group', 'foreignKey' => 'parent_id',],
-        'TeamMember',
+        'MemberGroup'
     ];
 
+    function getByName($name, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'name'    => $name
+            ]
+        ];
+        return $this->find('first', $options);
+    }
+
+    function saveNewGroup($name, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $data = [
+            'name'    => $name,
+            'team_id' => $team_id
+        ];
+        $this->create();
+        return $this->save($data);
+    }
+
+    function getByNameIfNotExistsSave($name, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        if (!empty($group = $this->getByName($name, $team_id))) {
+            return $group;
+        }
+        $this->saveNewGroup($name);
+        $group = $this->getByName($name, $team_id);
+        return $group;
+    }
 }

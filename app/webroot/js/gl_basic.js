@@ -409,7 +409,7 @@ function uploadCsvFileByForm(e) {
         processData: false,
         contentType: false,
         data: new FormData(this),
-        timeout: 10000
+        timeout: 600000 //10min
     })
         .done(function (data) {
             // 通信が成功したときの処理
@@ -1602,6 +1602,15 @@ $(document).ready(function () {
     // フォームがsubmitされた際にsocket_idを埋め込む
     $(document).on('submit', 'form.form-feed-notify', function () {
         appendSocketId($(this), socketId);
+    });
+
+    // keyResultの完了送信時にsocket_idを埋め込む
+    $(document).on("click", ".kr_achieve_button", function() {
+        var formId = $(this).attr("form-id");
+        var $form  = $("form#" + formId);
+        appendSocketId($form, socketId);
+        $form.submit();
+        return false;
     });
 
     // page type idをセットする
