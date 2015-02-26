@@ -15,8 +15,7 @@
         <div class="comment-body">
             <div class="col col-xxs-12 comment-text comment-user">
                 <div class="mb_2px lh_12px">
-                    <span class="font_bold font_verydark"><?= $userName ?></span>
-                    からコメントがありました。
+                    <?= __d('notify',"%sからコメントがありました。",'<span class="font_bold font_verydark">' . $userName . '</span>')?>
                 </div>
             </div>
             <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="CommentTextBody_67" style="
