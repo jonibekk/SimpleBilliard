@@ -145,15 +145,34 @@
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
-                <a class="develop--forbiddenLink" href="#"><i class="fa fa-bell-o header-link header-icon"></i></a>
-
+                <div class="dropdown dropdown-menu-right navbar-nav-fix header-circle">
+                    <div class="btn btn-danger btn-xs bell-notify-box"
+                         id="bellNum"
+                         style="position: absolute;
+                                margin: 5px 0 0 20px;
+                                color: #fff;
+                                font-size: 10px;
+                                opacity: 0;
+                                background-color:red!important;
+                                display:block">0</div>
+                    <a class="font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link" data-toggle="dropdown" href="#">
+                        <i class="fa fa-flag fa-bell-o header-icon header-drop-icons"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" id="bell-dropdown" role="menu" style="
+                        min-width: 450px;
+                        max-width: 450px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    "></ul>
+                </div>
                 <div class="pull-right header-function dropdown">
                     <a href="#"
                        class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog header-function-icon"></i><i
-                            class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
+                        <i class="fa fa-cog header-function-icon"></i>
+                        <i class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">

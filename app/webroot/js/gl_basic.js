@@ -1594,7 +1594,7 @@ $(document).ready(function () {
 
     var pusher = new Pusher(cake.pusher.key);
     var socketId = "";
-    var feedUniqueId = "";
+    var prevNotifyId = "";
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
     });
@@ -1618,15 +1618,33 @@ $(document).ready(function () {
 
     // connectionをはる
     for (var i in cake.data.c) {
-
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
-            var pageTypeId = getPageTypeId();
-            var feedTypeId = data.feed_type;
-            var feedId = data.feed_id;
-            var canNotify = data.is_postfeed && feedId !== feedUniqueId && (pageTypeId === feedTypeId || pageTypeId === "all");
-            if (canNotify) {
-                feedUniqueId = feedId;
-                notifyNewFeed();
+            var isFeedNotify = viaIsSet(data.is_feed_notify);
+            var isBellNotify = viaIsSet(data.is_bell_notify);
+            var notifyId = data.notify_id;
+
+            // not allowed multple notify
+            if (notifyId === prevNotifyId) {
+                return;
+            }
+
+            // フィード通知の場合
+            if (isFeedNotify) {
+                var pageTypeId = getPageTypeId();
+                var feedTypeId = data.feed_type;
+                var canNotify = pageTypeId === feedTypeId || pageTypeId === "all";
+                if (canNotify) {
+                    prevNotifyId = notifyId;
+                    notifyNewFeed();
+                }
+                // ベル通知の場合
+            } else if(isBellNotify) {
+                notifyNewBell();
+                prevNotifyId = notifyId;
+                $("#bell-dropdown").prepend(data.html);
+                console.log(data);
+            } else {
+
             }
         });
     }
@@ -1658,10 +1676,37 @@ function notifyNewFeed() {
 
     // 通知をふんわり出す
     var i = 0.2;
-    setInterval(function () {
+    var roop = setInterval(function () {
         notifyBox.css("opacity", i);
-        if (i < 1) {
-            i = i + 0.2;
+        i = i + 0.2;
+        if (i > 1) {
+            clearInterval(roop);
+        }
+    }, 100);
+}
+
+function notifyNewBell() {
+    var notifyBox = $(".bell-notify-box");
+    var num = parseInt(notifyBox.html());
+    var title = $("title");
+
+    // Increment unread number
+    if (num >= 1) {
+        // top of feed
+        notifyBox.html(num + 1);
+        return;
+    }
+
+    // Case of not existing unread post yet
+    notifyBox.html("1");
+
+    // 通知をふんわり出す
+    var i = 0.2;
+    var roop = setInterval(function () {
+        notifyBox.css("opacity", i);
+        i = i + 0.2;
+        if (i > 1) {
+            clearInterval(roop);
         }
     }, 100);
 }
@@ -1782,4 +1827,14 @@ function evGoalsMoreView() {
         }
     });
     return false;
+}
+
+$(document).on("click", ".dashboardProfileCard-avatarImage", function(){
+    notifyNewBell();
+});
+
+function viaIsSet( data ){
+    var isExist = typeof( data ) !== 'undefined';
+    if (!isExist) return false;
+    return data;
 }
