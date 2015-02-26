@@ -492,13 +492,14 @@ class PostsController extends AppController
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
+        $circle_id = viaIsSet($this->request->params['circle_id']);
         $this->_setViewValOnRightColumn();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
             $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
         }
         //抽出条件
-        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+        if ($circle_id) {
             $feed_filter = 'circle';
         }
         elseif (isset($this->request->params['named']['filter_goal'])) {
@@ -506,7 +507,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {

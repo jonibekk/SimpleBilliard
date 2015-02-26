@@ -1293,7 +1293,7 @@ function evFeedMoreView() {
     $obj.after($loader_html);
     //url生成
     var url = get_url + '/page:' + next_page_num;
-    if (month_index != undefined && month_index > 1) {
+    if (month_index != undefined && month_index > 0) {
         url = url + '/month_index:' + month_index;
     }
     $.ajax({
@@ -1630,9 +1630,9 @@ $(document).ready(function () {
 
             // フィード通知の場合
             if (isFeedNotify) {
-                var feedType = data.feed_type;
-                var pageType = getPageType();
-                var canNotify = (pageType === feedType || pageType === "all");
+                var pageTypeId = getPageTypeId();
+                var feedTypeId = data.feed_type;
+                var canNotify = pageTypeId === feedTypeId || pageTypeId === "all";
                 if (canNotify) {
                     prevNotifyId = notifyId;
                     notifyNewFeed();
@@ -1644,7 +1644,7 @@ $(document).ready(function () {
                 $("#bell-dropdown").prepend(data.html);
                 console.log(data);
             } else {
-                alert("else");
+
             }
         });
     }
@@ -1722,18 +1722,21 @@ function appendSocketId(form, socketId) {
 // notify boxにpage idをセット
 function setPageTypeId() {
     var notifyBox = $(".feed-notify-box");
-    var pageId = cake.data.d;
-    if (pageId === "null") {
+    var pageTypeId = cake.data.d;
+    if (pageTypeId === "null") {
         return;
     }
-    notifyBox.attr("id", pageId + "_feed_notify");
+    if (pageTypeId === "circle") {
+        pageTypeId += "_" + cake.data.h;
+    }
+    notifyBox.attr("id", pageTypeId + "_feed_notify");
 }
 
 // notify boxのpage idをゲット
-function getPageType() {
-    var boxId = $(".feed-notify-box").attr("id");
-    if (!boxId) return "";
-    return boxId.replace("_feed_notify", "");
+function getPageTypeId() {
+    var pageTypeId = $(".feed-notify-box").attr("id");
+    if (!pageTypeId) return "";
+    return pageTypeId.replace("_feed_notify", "");
 }
 
 $(document).ready(function () {

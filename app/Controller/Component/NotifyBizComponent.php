@@ -114,7 +114,7 @@ class NotifyBizComponent extends Component
         }
         // サークル投稿のケース
         else if (strpos($share, "circle") !== false) {
-            $feedType = "circle";
+            $feedType = $share;
         // ユーザー向け投稿のケース
         } else if (strpos($share, "user") !== false ) {
             $feedType = "all";
