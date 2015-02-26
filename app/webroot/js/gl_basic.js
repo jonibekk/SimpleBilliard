@@ -1642,7 +1642,6 @@ $(document).ready(function () {
                 notifyNewBell();
                 prevNotifyId = notifyId;
                 $("#bell-dropdown").prepend(data.html);
-                console.log(data);
             } else {
 
             }
@@ -1828,10 +1827,6 @@ function evGoalsMoreView() {
     });
     return false;
 }
-
-$(document).on("click", ".dashboardProfileCard-avatarImage", function(){
-    notifyNewBell();
-});
 
 function viaIsSet( data ){
     var isExist = typeof( data ) !== 'undefined';
