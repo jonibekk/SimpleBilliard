@@ -454,7 +454,7 @@ class PostsController extends AppController
         $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id);
         $findRes = $this->Post->findById($this->Post->id, array('user_id'));
         $postUserId = viaIsSet($findRes['Post']['user_id']);
-        if($postUserId && !in_array($postUserId, $pushUserList) && $postUserId !== $this->Session->read('Auth.User.first_name')) {
+        if($postUserId && !in_array($postUserId, $pushUserList) && $postUserId !== $this->Session->read('Auth.User.id')) {
             $pushUserList[] = $postUserId;
         }
 
