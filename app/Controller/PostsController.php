@@ -453,8 +453,8 @@ class PostsController extends AppController
         //push通知するユーザーを定義
         $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id, true);
         $findRes = $this->Post->findById($this->Post->id, array('user_id'));
-        $postUserId = $findRes['Post']['user_id'];
-        if(!in_array($postUserId, $pushUserList)) {
+        $postUserId = viaIsSet($findRes['Post']['user_id']);
+        if($postUserId && !in_array($postUserId, $pushUserList)) {
             $pushUserList[] = $postUserId;
         }
 
@@ -465,7 +465,7 @@ class PostsController extends AppController
         if(!$socketId || !$comment) {
             $this->redirect($this->referer());
         }
-        // コメントテンプレートのレンダリング
+        // 通知テンプレートのレンダリング
         $view = new View();
         $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
         $postUrl = "/post_permanent/" . $this->Post->id;
