@@ -1833,3 +1833,36 @@ function viaIsSet( data ){
     if (!isExist) return false;
     return data;
 }
+
+$(document).ready(function(){
+    $(document).on("click",".dashboardProfileCard-avatarImage", function(){
+        notifyNewComment();
+    });
+});
+
+function notifyNewComment() {
+    var notifyBox = $(".new-comment-read");
+    var numInBox  = notifyBox.children(".num");
+    var num = parseInt(numInBox.html());
+
+    // Increment unread number
+    if (num >= 1) {
+        // top of feed
+        numInBox.html(num + 1);
+        return;
+    }
+
+    // Case of not existing unread post yet
+    numInBox.html("1");
+    notifyBox.css("display", "block");
+
+    // 通知をふんわり出す
+    var i = 0.2;
+    var roop = setInterval(function () {
+        notifyBox.css("opacity", i);
+        i = i + 0.2;
+        if (i > 1) {
+            clearInterval(roop);
+        }
+    }, 100);
+}
