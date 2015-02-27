@@ -1,6 +1,5 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('AppModel',      'Model');
 App::uses('Collaborator',  'Model');
 
 /**
@@ -11,28 +10,32 @@ App::uses('Collaborator',  'Model');
  * @property SessionComponent $Session
  */
 class GoalApprovalController extends AppController {
-
 	/*
 	 * コーチ判定フラグ
 	 * true: コーチがいる false: コーチがいない
 	 */
-	//private $coach_flag = false;
+	private $coach_flag = FALSE;
 
 	/*
 	 * メンバー判定フラグ
 	 * true: メンバーがいる false: メンバーがいない
 	 */
-	private $member_flag = false;
+	private $member_flag = FALSE;
 
 	/*
-	 *  ログイン中のuser_id
+	 * ログインしているユーザータイプ
 	 */
-	private $user_id = null;
+	private $user_type = 0;
 
 	/*
-	 * ログインメンバーのteam_id
+	 * ログインユーザーのuser_id
 	 */
-	private $team_id = null;
+	private $user_id = NULL;
+
+	/*
+	 * ログインユーザーのteam_id
+	 */
+	private $team_id = NULL;
 
 	/*
 	 * オーバーライド
@@ -41,26 +44,43 @@ class GoalApprovalController extends AppController {
 
 		parent::beforeFilter();
 
-		$this->layout = LAYOUT_ONE_COLUMN;
-
 		$Session = new CakeSession();
 		$this->user_id = $Session->read('Auth.User.id');
 		$this->team_id = $Session->read('current_team_id');
 
+		$this->setCoachFlag($this->user_id, $this->team_id);
+		$this->setMemberFlag($this->user_id, $this->team_id);
+
 		// コーチ認定機能が使えるユーザーはトップページ
-		if ($this->check_valid_user() === FALSE) {
+		if ($this->user_type = $this->getUserType() === 0) {
 		}
+
+		// test code
+		$this->user_type = 1;
+
+		$this->layout = LAYOUT_ONE_COLUMN;
 	}
 
 	/*
 	 * 処理待ちページ
 	 */
 	public function index() {
-		// 自分のゴールを取得
-		$this->Goal->getMyGoals();
-		// メンバーがいればのメンバーのゴールも取得
-		if ($this->member_flag === TRUE) {
+
+		$result_data = array();
+
+		if ($this->user_type === 1) {
+			$a = $this->Goal->getMyApprovalGoal(0);
+			//var_dump($a[0]['MyCollabo']);
+
+		} elseif ($this->user_type === 2) {
+			$this->Goal->getMyGoals();
+			// + メンバーのゴールを取得
+
+		} elseif ($this->user_type === 3) {
+			// + メンバーのゴールのみ取得
 		}
+
+		$this->set($result_data);
 	}
 
 	/*
@@ -91,10 +111,62 @@ class GoalApprovalController extends AppController {
 	}
 
 	/*
-	 * コーチ認定機能を使えるユーザーか判定
+	 * ログインしているユーザーはコーチが存在するのか
 	 */
-	private function check_valid_user() {
-		return true;
+	private function setCoachFlag ($user_id, $team_id) {
+		$this->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
+		$this->coach_flag = TRUE;
+	}
+
+	/*
+	 * ログインしているユーザーのコーチIDを取得する
+	 * TODO: Model/TeamMemberに定義するのが正しい
+	 */
+	private function selectCoachUserIdFromTeamMembersTB ($user_id, $team_id) {
+		// 検索テーブル: team_members
+		// 取得カラム: coach_user_id
+		// 条件: user_id, team_id
+	}
+
+	/*
+	 * ログインしているユーザーは管理するメンバー存在するのか
+	 */
+	private function setMemberFlag ($user_id, $team_id) {
+		$this->selectUserIdFromTeamMembersTB($user_id, $team_id);
+		$this->member_flag = TRUE;
+	}
+
+	/*
+	 * ログインしているユーザーが管理するのメンバーIDを取得する
+	 * TODO: Model/TeamMemberに定義するのが正しい
+	 */
+	private function selectUserIdFromTeamMembersTB ($user_id, $team_id) {
+		// 検索テーブル: team_members
+		// 取得カラム: user_id
+		// 条件: coach_user_id = パラメータ1 team_id = パラメータ2
+	}
+
+	/*
+	 * コーチ認定機能を使えるユーザーか判定
+	 * 1: コーチがいる、メンバーいない
+	 * 2: コーチいる、メンバーがいる
+	 * 3: コーチがいない、メンバーがいる
+	 */
+	private function getUserType() {
+
+		if ($this->coach_flag === TRUE && $this->member_flag === FALSE) {
+			return 1;
+		}
+
+		if ($this->coach_flag === TRUE && $this->member_flag === TRUE) {
+			return 2;
+		}
+
+		if ($this->coach_flag === FALSE && $this->member_flag === TRUE) {
+			return 3;
+		}
+
+		return 0;
 	}
 
 }
