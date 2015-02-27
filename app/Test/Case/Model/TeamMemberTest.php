@@ -1346,7 +1346,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateUpdateMemberCsvDataCoachIdEqualMemberIdError()
+    function testValidateUpdateMemberCsvDataCoachIdEqualSError()
     {
         $this->setDefault();
 
