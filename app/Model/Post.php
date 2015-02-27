@@ -579,11 +579,12 @@ class Post extends AppModel
             }
         }
         //コメントを既読に
-        /** @noinspection PhpDeprecationInspection */
-        $comment_list = Set::classicExtract(Set::flatten(Set::classicExtract($res, '{n}.Comment.{n}.id')), '{s}');
-        $this->log($comment_list);
-        $this->Comment->CommentRead->red($comment_list);
-
+        if (!empty($res)) {
+            /** @noinspection PhpDeprecationInspection */
+            $comment_list = Set::classicExtract(Set::flatten(Set::classicExtract($res, '{n}.Comment.{n}.id')), '{s}');
+            $this->log($comment_list);
+            $this->Comment->CommentRead->red($comment_list);
+        }
 
         //１件のサークル名をランダムで取得
         $res = $this->getRandomShareCircleNames($res);
