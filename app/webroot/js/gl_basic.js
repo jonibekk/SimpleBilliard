@@ -1621,6 +1621,7 @@ $(document).ready(function () {
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
             var isFeedNotify = viaIsSet(data.is_feed_notify);
             var isBellNotify = viaIsSet(data.is_bell_notify);
+            var isNewCommentNotify = viaIsSet(data.is_comment_notify);
             var notifyId = data.notify_id;
 
             // not allowed multple notify
@@ -1642,8 +1643,12 @@ $(document).ready(function () {
                 notifyNewBell();
                 prevNotifyId = notifyId;
                 $("#bell-dropdown").prepend(data.html);
-            } else {
-
+                // 新しいコメント通知の場合
+            } else if(isNewCommentNotify){
+                var postId = data.post_id;
+                var notifyBox = $("#Comments_new_" + String(postId));
+                alert(notifyBox);
+                notifyNewComment(notifyBox);
             }
         });
     }
@@ -1834,15 +1839,8 @@ function viaIsSet( data ){
     return data;
 }
 
-$(document).ready(function(){
-    $(document).on("click",".dashboardProfileCard-avatarImage", function(){
-        notifyNewComment();
-    });
-});
-
-function notifyNewComment() {
-    var notifyBox = $(".new-comment-read");
-    var numInBox  = notifyBox.children(".num");
+function notifyNewComment(notifyBox) {
+    var numInBox  = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
 
     // Increment unread number
@@ -1865,4 +1863,75 @@ function notifyNewComment() {
             clearInterval(roop);
         }
     }, 100);
+}
+
+$(document).ready(function(){
+    $(document).on("click", ".click-comment-new", evCommentLatestView);
+})
+
+function evCommentLatestView() {
+    attrUndefinedCheck(this, 'parent-id');
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var parent_id = $obj.attr('parent-id');
+    var unreadNum = $(".new-comment-read .num").children(".num").html();
+    var get_url = $obj.attr('get-url') + "/" + unreadNum;
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    //ローダー表示
+    $obj.after($loader_html);
+    $.ajax({
+        type: 'GET',
+        url: get_url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //一旦非表示
+                $posts.hide();
+                $("#" + parent_id).after($posts);
+                //html表示
+                $posts.show("slow", function () {
+                    //もっと見る
+                    showMore(this);
+                });
+                //ローダーを削除
+                $loader_html.remove();
+                //リンクを削除
+                $obj.remove();
+                //画像をレイジーロード
+                imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $('.custom-radio-check').customRadioCheck();
+
+            }
+            else {
+                //ローダーを削除
+                $loader_html.remove();
+                //親を取得
+                //noinspection JSCheckFunctionSignatures
+                var $parent = $obj.parent();
+                //「もっと読む」リンクを削除
+                $obj.remove();
+                //「データが無かった場合はデータ無いよ」を表示
+                $parent.append(cake.message.info.g);
+            }
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
 }

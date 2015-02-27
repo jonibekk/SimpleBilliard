@@ -147,6 +147,15 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
+    public function commentPush($socketId, $data) {
+        // push
+        if(!$socketId || !$data) {
+            return;
+        }
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $pusher->trigger("team_all_" . $this->Session->read('current_team_id'), 'post_feed', $data, $socketId);
+    }
+
     private function _setModelProperty($user_id, $team_id)
     {
         $this->Post->my_uid
