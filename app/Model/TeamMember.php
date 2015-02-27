@@ -609,7 +609,7 @@ class TeamMember extends AppModel
 
             //email exists
             if (!in_array($row['email'], $before_emails)) {
-                $res['error_msg'] = __d('validate', "存在しないメールアドレスが含まれています。");
+                $res['error_msg'] = __d('validate', "メールアドレスは変更できません。");
                 return $res;
             }
             $this->csv_emails[] = $row['email'];
@@ -1181,6 +1181,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => ['TeamMember.team_id' => $team_id,],
             'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
+            'order'      => ['TeamMember.member_no ASC'],
             'contain'    => [
                 'User'       => [
                     'fields'       => ['first_name', 'last_name'],
