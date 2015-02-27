@@ -33,3 +33,6 @@ composer.lock
 # Copied for min files
 /app/webroot/css/goalous.min.css
 /app/webroot/js/goalous.min.js
+# Docs of CSS & JS
+/docs/docco
+/docs/styledocco

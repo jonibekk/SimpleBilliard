@@ -4,10 +4,10 @@ module.exports = (grunt) ->
 
     watch:
       coffee:
-        files: ['coffee/*.coffee']
+        files: ['coffee/**/*.coffee']
         tasks: ['jstask']
       less:
-        files: ['less/*.less']
+        files: ['less/**/*.less']
         tasks: ['csstask']
 
     coffeelint:
@@ -34,8 +34,8 @@ module.exports = (grunt) ->
     concat:
       options:
         separator: ';'
-      dist:
-        src: ['jssrc/**/*.js']
+      cat:
+        src: ['dest/jssrc/**/*.js']
         dest: 'dest/jscat/concat.js'
 
     uglify:
