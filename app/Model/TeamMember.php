@@ -578,7 +578,6 @@ class TeamMember extends AppModel
         ];
 
         $before_csv_data = $this->getAllMembersCsvData();
-
         //emails
         $before_emails = array_column($before_csv_data, 'email');
 
@@ -614,6 +613,19 @@ class TeamMember extends AppModel
             }
             $this->csv_emails[] = $row['email'];
             $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
+
+            $before_record = $before_csv_data[array_search($row['email'], $before_emails)];
+
+            //first name check
+            if ($row['first_name'] != $before_record['first_name']) {
+                $res['error_msg'] = __d('gl', "ファーストネームは変更できません。");
+                return $res;
+            }
+            //last name check
+            if ($row['last_name'] != $before_record['last_name']) {
+                $res['error_msg'] = __d('gl', "ラストネームは変更できません。");
+                return $res;
+            }
 
             //Member ID(*)
             if (!viaIsSet($row['member_no'])) {
