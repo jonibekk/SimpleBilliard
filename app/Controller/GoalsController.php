@@ -108,8 +108,7 @@ class GoalsController extends AppController
                     $this->Pnotify->outSuccess(__d('gl', "ゴールの作成が完了しました。"));
                     // pusherに通知
                     $socketId = viaIsSet($this->request->data['socket_id']);
-                    $feedId = Security::hash(time());
-                    $this->NotifyBiz->push($socketId, "all", $feedId);
+                    $this->NotifyBiz->push($socketId, "all");
                     //TODO 一旦、トップにリダイレクト
                     $this->redirect("/");
                     break;
@@ -363,13 +362,12 @@ class GoalsController extends AppController
 
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
-        $feedId   = Security::hash(time());
         $goal = viaIsSet($goal);
         if(!$goal) {
             $goal = $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
         }
         $channelName = "goal_" . $goal['Goal']['id'];
-        $this->NotifyBiz->push($socket_id, $channelName, $feedId);
+        $this->NotifyBiz->push($socket_id, $channelName);
 
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -776,9 +774,8 @@ class GoalsController extends AppController
 
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
-        $feedId = Security::hash(time());
         $channelName = "goal_" . $goal_id;
-        $this->NotifyBiz->push($socket_id, $channelName, $feedId);
+        $this->NotifyBiz->push($socket_id, $channelName);
 
         // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));

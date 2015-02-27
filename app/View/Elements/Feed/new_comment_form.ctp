@@ -19,10 +19,11 @@ $this->Form->create('Comment', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class'         => '',
+    'class'         => 'form-feed-notify',
     'type'          => 'file',
     'novalidate'    => true,
 ]); ?>
+<? $this->Form->unlockField('socket_id') ?>
 <?=
 $this->Form->input('body', [
     'id'                       => "CommentFormBody_{$post_id}",

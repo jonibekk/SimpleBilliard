@@ -41,7 +41,6 @@ class PostsController extends AppController
         $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
-        $feedId   = Security::hash(time());
         $share    = explode(",", viaIsSet($this->request->data['Post']['share']));
 
         // リクエストデータが正しくないケース
@@ -53,11 +52,11 @@ class PostsController extends AppController
 
         // チーム全体公開が含まれている場合はチーム全体にのみpush
         if (in_array("public", $share)) {
-            $this->NotifyBiz->push($socketId, "public", $feedId);
+            $this->NotifyBiz->push($socketId, "public");
         } else {
             // それ以外の場合は共有先の数だけ回す
             foreach ($share as $val) {
-                $this->NotifyBiz->push($socketId, $val, $feedId);
+                $this->NotifyBiz->push($socketId, $val);
             }
         }
 
@@ -423,7 +422,7 @@ class PostsController extends AppController
     public function comment_add()
     {
         $this->request->allowMethod('post');
-        $this->Post->id = isset($this->request->data['Comment']['post_id']) ? $this->request->data['Comment']['post_id'] : null;
+        $this->Post->id = viaIsSet($this->request->data['Comment']['post_id']);
         try {
             if (!$this->Post->exists()) {
                 throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
@@ -448,7 +447,42 @@ class PostsController extends AppController
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "コメントに失敗しました。")]);
+            $this->redirect($this->referer());
         }
+
+        //push通知するユーザーを定義
+        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id);
+        $findRes = $this->Post->findById($this->Post->id, array('user_id'));
+        $postUserId = viaIsSet($findRes['Post']['user_id']);
+        if($postUserId && !in_array($postUserId, $pushUserList) && $postUserId !== $this->Session->read('Auth.User.id')) {
+            $pushUserList[] = $postUserId;
+        }
+
+        // pusherに渡すデータを定義
+        $teamId   = $this->Session->read('current_team_id');
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $comment  = viaIsSet($this->request->data['Comment']['body']);
+        if(!$socketId || !$comment) {
+            $this->redirect($this->referer());
+        }
+        // 通知テンプレートのレンダリング
+        $view = new View();
+        $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
+        $postUrl = "/post_permanent/" . $this->Post->id;
+        $html = $view->element('bell_notification_item', compact('userName', 'comment', 'postUrl'));
+        $notifyId = Security::hash(time());
+        $data = array(
+            'notify_id'      => $notifyId,
+            'is_bell_notify' => true,
+            'html' => $html,
+        );
+
+        // Pusherへ送信
+        foreach($pushUserList as $user) {
+            $channelName = "user_" . $user . "_team_" . $teamId;
+            $this->NotifyBiz->bellPush($socketId, $channelName, $data);
+        }
+
         $this->redirect($this->referer());
     }
 
