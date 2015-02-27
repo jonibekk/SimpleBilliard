@@ -1319,6 +1319,33 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+    function testValidateUpdateMemberCsvDataGroupDuplicateMemberId()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON',]);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
     function testValidateUpdateMemberCsvDataCoachIdEqualMemberIdError()
     {
         $this->setDefault();
@@ -1533,6 +1560,15 @@ class TeamMemberTest extends CakeTestCase
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
+    }
+
+    function testGetAllMembersCsvDataNoUser()
+    {
+        $data = [
+            'team_id' => 1
+        ];
+        $this->TeamMember->save($data);
+        $this->TeamMember->getAllMembersCsvData(1);
     }
 
     function setDefault()
