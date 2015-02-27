@@ -659,6 +659,9 @@ class TeamMember extends AppModel
             if (viaIsSet($row['member_type'])) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             }
+            else {
+                $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
+            }
             //Group
             $groups = [];
             for ($i = 1; $i <= 7; $i++) {
