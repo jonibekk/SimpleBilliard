@@ -451,10 +451,10 @@ class PostsController extends AppController
         }
 
         //push通知するユーザーを定義
-        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id, true);
+        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id);
         $findRes = $this->Post->findById($this->Post->id, array('user_id'));
         $postUserId = viaIsSet($findRes['Post']['user_id']);
-        if($postUserId && !in_array($postUserId, $pushUserList)) {
+        if($postUserId && !in_array($postUserId, $pushUserList) && $postUserId !== $this->Session->read('Auth.User.id')) {
             $pushUserList[] = $postUserId;
         }
 
