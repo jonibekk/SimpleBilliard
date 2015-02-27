@@ -1181,6 +1181,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => ['TeamMember.team_id' => $team_id,],
             'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
+            'order'      => ['TeamMember.member_no ASC'],
             'contain'    => [
                 'User'       => [
                     'fields'       => ['first_name', 'last_name'],
