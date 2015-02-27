@@ -148,6 +148,34 @@ class TeamMember extends AppModel
     }
 
     /**
+     * @param $uid
+     * @param $team_id
+     *
+     * @return bool
+     */
+    public function isActive($uid, $team_id = null)
+    {
+        if (!$team_id) {
+            if (!$this->current_team_id) {
+                return false;
+            }
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id'    => $team_id,
+                'user_id'    => $uid,
+                'active_flg' => true,
+            ],
+            'fields'     => ['id']
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * アクセス権限の確認
      *
      * @param $team_id

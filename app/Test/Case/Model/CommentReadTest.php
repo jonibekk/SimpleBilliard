@@ -21,6 +21,8 @@ class CommentReadTest extends CakeTestCase
         'app.team',
         'app.post',
         'app.goal',
+        'app.action_result',
+        'app.key_result',
     );
 
     /**

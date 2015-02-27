@@ -104,6 +104,22 @@ class AppController extends Controller
                     $this->_switchTeamBeforeCheck();
                 }
             }
+            //permission check
+            $active_team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
+            $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
+
+            //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
+            if (!$this->Auth->user('default_team_id')) {
+                $this->User->updateDefaultTeam($set_default_team_id, true, $this->Auth->user('id'));
+                $this->Session->write('current_team_id', $set_default_team_id);
+            }
+            //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
+            elseif (!$this->User->TeamMember->isActive($this->Auth->user('id'))) {
+                $this->User->updateDefaultTeam($set_default_team_id, true, $this->Auth->user('id'));
+                //ログアウト
+                $this->Pnotify->outError(__d('gl', "アクセスしたチームのアクセス権限がありません"));
+                $this->Auth->logout();
+            }
             $this->_setMyMemberStatus();
         }
         $this->set('current_global_menu', null);
@@ -441,8 +457,9 @@ class AppController extends Controller
                     //相手が現在のチームに所属しているか確認
                     $options = array(
                         'conditions' => array(
-                            'user_id' => $id,
-                            'team_id' => $this->Session->read('current_team_id'),
+                            'user_id'    => $id,
+                            'team_id'    => $this->Session->read('current_team_id'),
+                            'active_flg' => true,
                         ),
                     );
                     $team = $this->User->TeamMember->find('first', $options);
