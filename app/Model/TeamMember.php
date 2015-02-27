@@ -694,6 +694,9 @@ class TeamMember extends AppModel
             if (viaIsSet($row['coach_member_no'])) {
                 $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
             }
+            else {
+                $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
+            }
 
             //Rater ID
             $raters = [];
