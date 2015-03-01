@@ -979,14 +979,18 @@ class TeamMember extends AppModel
 
             //[13]Birth Month
             //validation check
-            if (viaIsSet($row['birth_month']) && !preg_match('/^\d{1,2}$/', $row['birth_month'])) {
+            if (viaIsSet($row['birth_month']) && !preg_match('/^(0[1-9]{1}|1[0-2]{1}|[1-9]{1})$/',
+                                                             $row['birth_month'])
+            ) {
                 $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row['birth_month']);
                 return $res;
             }
 
             //[14]Birth Day
             //validation check
-            if (viaIsSet($row['birth_day']) && !preg_match('/^\d{1,2}$/', $row['birth_day'])) {
+            if (viaIsSet($row['birth_day']) && !preg_match('/^(0[1-9]{1}|[1-9]{1}|[1-2]{1}[0-9]{1}|3[0-1]{1})$/',
+                                                           $row['birth_day'])
+            ) {
                 $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row['birth_day']);
                 return $res;
             }
