@@ -578,7 +578,6 @@ class TeamMember extends AppModel
         ];
 
         $before_csv_data = $this->getAllMembersCsvData();
-
         //emails
         $before_emails = array_column($before_csv_data, 'email');
 
@@ -614,6 +613,19 @@ class TeamMember extends AppModel
             }
             $this->csv_emails[] = $row['email'];
             $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
+
+            $before_record = $before_csv_data[array_search($row['email'], $before_emails)];
+
+            //first name check
+            if ($row['first_name'] != $before_record['first_name']) {
+                $res['error_msg'] = __d('gl', "ファーストネームは変更できません。");
+                return $res;
+            }
+            //last name check
+            if ($row['last_name'] != $before_record['last_name']) {
+                $res['error_msg'] = __d('gl', "ラストネームは変更できません。");
+                return $res;
+            }
 
             //Member ID(*)
             if (!viaIsSet($row['member_no'])) {
@@ -659,6 +671,9 @@ class TeamMember extends AppModel
             if (viaIsSet($row['member_type'])) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             }
+            else {
+                $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
+            }
             //Group
             $groups = [];
             for ($i = 1; $i <= 7; $i++) {
@@ -690,6 +705,9 @@ class TeamMember extends AppModel
             $this->csv_coach_ids[] = $row['coach_member_no'];
             if (viaIsSet($row['coach_member_no'])) {
                 $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
+            }
+            else {
+                $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
             }
 
             //Rater ID
