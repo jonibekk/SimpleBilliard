@@ -369,7 +369,7 @@ class UserTest extends CakeTestCase
         $user_id = "5";
         $res = $this->User->findById($user_id);
         $actual = $res['User']['display_username'];
-        $expected = "English user Last name";
+        $expected = "firstname lastname";
         $this->assertEquals($expected, $actual, "[正常]英語ユーザの場合は表示ユーザ名が`first_name last_name`になる");
 
         $user_id = "6";
@@ -382,7 +382,7 @@ class UserTest extends CakeTestCase
         $user_id = "7";
         $res = $this->User->findById($user_id);
         $actual = $res['User']['display_username'];
-        $expected = "first last";
+        $expected = "firstname lastname";
         $this->assertEquals($expected, $actual, "[正常]日本語ユーザの場合で且つローカル名が入っていない場合は`first_name last_name`になる");
     }
 
