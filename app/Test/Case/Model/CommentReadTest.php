@@ -22,7 +22,7 @@ class CommentReadTest extends CakeTestCase
         'app.post',
         'app.goal',
         'app.action_result',
-        'app.key_result',
+        'app.key_result'
     );
 
     /**
@@ -48,10 +48,10 @@ class CommentReadTest extends CakeTestCase
         parent::tearDown();
     }
 
-    public function testRed()
-    {
+    function testRed(){
         $uid = '1';
         $team_id = '1';
+        $comment_uid = '2';
         $this->CommentRead->my_uid = $uid;
         $this->CommentRead->current_team_id = $team_id;
         $test_save_data = [
@@ -62,22 +62,30 @@ class CommentReadTest extends CakeTestCase
             ],
             'Comment' => [
                 [
-                    'user_id' => $uid,
+                    'user_id' => $comment_uid,
                     'team_id' => $team_id,
                     'body'    => 'test',
                 ]
             ]
         ];
         $this->CommentRead->Comment->Post->saveAll($test_save_data);
-        $this->CommentRead->red($this->CommentRead->Comment->Post->getLastInsertID());
+        $this->CommentRead->red($this->CommentRead->Comment->getLastInsertID());
         $comment_read = $this->CommentRead->read();
         $this->assertEquals($uid, $comment_read['CommentRead']['user_id']);
 
         $before_data = $comment_read;
-        $this->CommentRead->red($this->CommentRead->Comment->Post->getLastInsertID());
+        $this->CommentRead->red($this->CommentRead->Comment->getLastInsertID());
         $after_data = $this->CommentRead->read();
         $this->assertEquals($before_data, $after_data);
 
+        //自分のコメントは既読にならない
+        $before_data = $this->CommentRead->read();
+        $my_comment = $test_save_data;
+        $my_comment['Comment']['user_id'] = $uid;
+        $this->CommentRead->Comment->Post->saveAll($my_comment);
+        $this->CommentRead->red($this->CommentRead->Comment->getLastInsertID());
+        $after_data = $this->CommentRead->read();
+        $this->assertEquals($before_data, $after_data);
     }
 
 }
