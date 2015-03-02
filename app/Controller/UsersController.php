@@ -68,8 +68,7 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if ($this->Auth->user()) {
-            /** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            $this->_ifFromUservoiceRedirect();
             return $this->redirect('/');
         }
 
@@ -82,8 +81,6 @@ class UsersController extends AppController
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
                                        ['title' => __d('notify', "ログイン成功")]);
-            /** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($redirect_url);
         }
         else {
@@ -103,8 +100,6 @@ class UsersController extends AppController
         $this->Cookie->destroy();
         $this->Pnotify->outInfo(__d('notify', "%sさん、またお会いしましょう。", $user['display_username']),
                                 ['title' => __d('notify', "ログアウトしました")]);
-        /** @noinspection PhpInconsistentReturnPointsInspection */
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->Auth->logout());
     }
 
@@ -718,8 +713,27 @@ class UsersController extends AppController
         }
         $this->User->_setSessionVariable();
         $this->Mixpanel->setUser($this->User->id);
+
+        $this->_ifFromUservoiceRedirect();
+
+    }
+
+    public function _ifFromUservoiceRedirect()
+    {
         $uservoice_token = $this->Uservoice->getToken();
-        $this->Session->write(compact('uservoice_token'));
+        //uservoiceのメールから来た場合はリダイレクト
+        if ($this->Session->read('uv_status')) {
+            if ($this->Session->read('uv_status.uv_ssl')) {
+                $protocol = "https://";
+            }
+            else {
+                $protocol = "http://";
+            }
+            $redirect_url = $protocol . USERVOICE_SUBDOMAIN . ".uservoice.com/login_success?sso=" . $uservoice_token;
+            $this->Session->delete('uv_status');
+            $this->redirect($redirect_url);
+        }
+
     }
 
     public function _setDefaultTeam($team_id)
