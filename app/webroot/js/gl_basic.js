@@ -1925,7 +1925,7 @@ function evCommentLatestView() {
                 $('.custom-radio-check').customRadioCheck();
                 $obj.removeAttr("disabled");
                 initUnreadCommentNum($obj);
-
+                initUnreadBellNumber();
             }
             else {
                 //ローダーを削除
@@ -1952,7 +1952,12 @@ function initUnreadCommentNum(notifyBox) {
 }
 
 $(document).ready(function(){
-    $(document).on("click", "#click-header-bell", function(){
-
+    $(document).on("click", "#click-header-bell", function() {
+        initUnreadBellNumber();
     });
 });
+
+function initUnreadBellNumber(){
+    $(".bell-notify-box").css("opacity", 0);
+    $(".bell-notify-box").html("");
+}
