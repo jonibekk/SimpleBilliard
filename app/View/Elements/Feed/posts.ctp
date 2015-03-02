@@ -337,7 +337,7 @@
                    post-id="<?= $post['Post']['id'] ?>"
                    get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', $post['Post']['id']]) ?>"
                     >
-                    <div class="alert alert-info new-comment-read" style="width: 100%; height: 20px; margin: 5px 0px; clear: both; opacity: 1;padding: 3px;">
+                    <div class="alert alert-danger new-comment-read" style="width: 100%; height: 26px; margin: 5px 0px; clear: both; opacity: 1;padding: 3px;">
                         <span class="num">0</span>
                         <?= __d('gl', "件の新しいコメントがあります") ?>
                     </div>

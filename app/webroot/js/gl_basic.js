@@ -1644,7 +1644,7 @@ $(document).ready(function () {
                 prevNotifyId = notifyId;
                 $("#bell-dropdown").prepend(data.html);
                 // 新しいコメント通知の場合
-            } else if(isNewCommentNotify){
+            } else if(isNewCommentNotify) {
                 var postId = data.post_id;
                 var notifyBox = $("#Comments_new_" + String(postId));
                 notifyNewComment(notifyBox);
@@ -1704,14 +1704,14 @@ function notifyNewBell() {
     notifyBox.html("1");
 
     // 通知をふんわり出す
-    var i = 0.2;
+    var i = 0.1;
     var roop = setInterval(function () {
         notifyBox.css("opacity", i);
-        i = i + 0.2;
+        i = i + 0.1;
         if (i > 1) {
             clearInterval(roop);
         }
-    }, 100);
+    }, 300);
 }
 
 function appendSocketId(form, socketId) {
@@ -1881,7 +1881,7 @@ function evCommentLatestView() {
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     //ローダー表示
-    $obj.after($loader_html);
+    $obj.children(".new-comment-read").append($loader_html);
     $.ajax({
         type: 'GET',
         url: get_url,
@@ -1892,7 +1892,12 @@ function evCommentLatestView() {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
                 //一旦非表示
+                $posts.hide();
                 $($obj).before($posts);
+                $posts.show("slow", function () {
+                    //もっと見る
+                    showMore(this);
+                });
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
