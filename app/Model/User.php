@@ -790,17 +790,18 @@ class User extends AppModel
 
     /**
      * デフォルトチームを更新
-     * 未設定の場合のみ
+     * 未設定の場合のみ(強制的に変更可)
      *
      * @param      $team_id
      * @param bool $force
+     * @param null $uid
      *
      * @return bool
      */
-    public function updateDefaultTeam($team_id, $force = false)
+    public function updateDefaultTeam($team_id, $force = false, $uid = null)
     {
         if (!$this->me['default_team_id'] || $force) {
-            $this->id = $this->my_uid;
+            $this->id = $uid ? $uid : $this->my_uid;
             $this->saveField('default_team_id', $team_id);
             return true;
         }
@@ -996,5 +997,4 @@ class User extends AppModel
 
         return json_encode($my_channels);
     }
-
 }

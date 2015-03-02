@@ -103,7 +103,8 @@ echo $this->Html->script('gl_basic');
             d: "<?=viaIsSet($feed_filter)?>",
             e: <?=MY_GOALS_DISPLAY_NUMBER?>,
             f: <?=MY_COLLABO_GOALS_DISPLAY_NUMBER?>,
-            g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>
+            g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>,
+            h: "<?=viaIsSet($circle_id)?>"
         },
         pusher: {
             key: "<?=PUSHER_KEY?>"

@@ -43,6 +43,16 @@ class UservoiceComponent extends Object
 
     public function getToken($with_avatar = false)
     {
+        if ($token = $this->Controller->Session->read('uservoice_token')) {
+            return $token;
+        }
+        return $this->setToken($with_avatar);
+
+    }
+
+    function setToken($with_avatar = false)
+    {
+
         $user = $this->Controller->Session->read('Auth');
         if (empty($user)) {
             return null;
@@ -97,6 +107,7 @@ class UservoiceComponent extends Object
         mcrypt_generic_deinit($cipher);
 
         $encryptedData = urlencode(base64_encode($encryptedData));
+        $this->Controller->Session->write('uservoice_token', $encryptedData);
         return $encryptedData;
     }
 

@@ -148,6 +148,34 @@ class TeamMember extends AppModel
     }
 
     /**
+     * @param $uid
+     * @param $team_id
+     *
+     * @return bool
+     */
+    public function isActive($uid, $team_id = null)
+    {
+        if (!$team_id) {
+            if (!$this->current_team_id) {
+                return false;
+            }
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id'    => $team_id,
+                'user_id'    => $uid,
+                'active_flg' => true,
+            ],
+            'fields'     => ['id']
+        ];
+        if ($this->find('first', $options)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * アクセス権限の確認
      *
      * @param $team_id
@@ -550,7 +578,6 @@ class TeamMember extends AppModel
         ];
 
         $before_csv_data = $this->getAllMembersCsvData();
-
         //emails
         $before_emails = array_column($before_csv_data, 'email');
 
@@ -581,11 +608,24 @@ class TeamMember extends AppModel
 
             //email exists
             if (!in_array($row['email'], $before_emails)) {
-                $res['error_msg'] = __d('validate', "存在しないメールアドレスが含まれています。");
+                $res['error_msg'] = __d('validate', "メールアドレスは変更できません。");
                 return $res;
             }
             $this->csv_emails[] = $row['email'];
             $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
+
+            $before_record = $before_csv_data[array_search($row['email'], $before_emails)];
+
+            //first name check
+            if ($row['first_name'] != $before_record['first_name']) {
+                $res['error_msg'] = __d('gl', "ファーストネームは変更できません。");
+                return $res;
+            }
+            //last name check
+            if ($row['last_name'] != $before_record['last_name']) {
+                $res['error_msg'] = __d('gl', "ラストネームは変更できません。");
+                return $res;
+            }
 
             //Member ID(*)
             if (!viaIsSet($row['member_no'])) {
@@ -631,6 +671,9 @@ class TeamMember extends AppModel
             if (viaIsSet($row['member_type'])) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             }
+            else {
+                $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
+            }
             //Group
             $groups = [];
             for ($i = 1; $i <= 7; $i++) {
@@ -662,6 +705,9 @@ class TeamMember extends AppModel
             $this->csv_coach_ids[] = $row['coach_member_no'];
             if (viaIsSet($row['coach_member_no'])) {
                 $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
+            }
+            else {
+                $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
             }
 
             //Rater ID
@@ -933,14 +979,18 @@ class TeamMember extends AppModel
 
             //[13]Birth Month
             //validation check
-            if (viaIsSet($row['birth_month']) && !preg_match('/^\d{1,2}$/', $row['birth_month'])) {
+            if (viaIsSet($row['birth_month']) && !preg_match('/^(0[1-9]{1}|1[0-2]{1}|[1-9]{1})$/',
+                                                             $row['birth_month'])
+            ) {
                 $res['error_msg'] = __d('gl', "'%s'は誕生月として正しくありません。", $row['birth_month']);
                 return $res;
             }
 
             //[14]Birth Day
             //validation check
-            if (viaIsSet($row['birth_day']) && !preg_match('/^\d{1,2}$/', $row['birth_day'])) {
+            if (viaIsSet($row['birth_day']) && !preg_match('/^(0[1-9]{1}|[1-9]{1}|[1-2]{1}[0-9]{1}|3[0-1]{1})$/',
+                                                           $row['birth_day'])
+            ) {
                 $res['error_msg'] = __d('gl', "'%s'は誕生日として正しくありません。", $row['birth_day']);
                 return $res;
             }
@@ -1153,6 +1203,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => ['TeamMember.team_id' => $team_id,],
             'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
+            'order'      => ['TeamMember.member_no ASC'],
             'contain'    => [
                 'User'       => [
                     'fields'       => ['first_name', 'last_name'],
@@ -1177,6 +1228,10 @@ class TeamMember extends AppModel
         //convert csv data
         $csv_data = [];
         foreach ($all_users as $k => $v) {
+            if (!viaIsSet($v['User']['id'])) {
+                unset($all_users[$k]);
+                continue;
+            }
             $csv_data[$k]['email'] = viaIsSet($v['User']['PrimaryEmail']['email']) ? $v['User']['PrimaryEmail']['email'] : null;
             $csv_data[$k]['first_name'] = viaIsSet($v['User']['first_name']) ? $v['User']['first_name'] : null;
             $csv_data[$k]['last_name'] = viaIsSet($v['User']['last_name']) ? $v['User']['last_name'] : null;
@@ -1186,9 +1241,11 @@ class TeamMember extends AppModel
             $csv_data[$k]['evaluation_enable_flg'] = viaIsSet($v['TeamMember']['evaluation_enable_flg']) && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
             $csv_data[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
             //group
-            foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
-                $key_index = $g_k + 1;
-                $csv_data[$k]['group_' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
+            if (viaIsSet($v['User']['MemberGroup'])) {
+                foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
+                    $key_index = $g_k + 1;
+                    $csv_data[$k]['group_' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
+                }
             }
             //coach after
 
