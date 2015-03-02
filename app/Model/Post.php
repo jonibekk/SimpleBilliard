@@ -481,8 +481,6 @@ class Post extends AppModel
 
         //投稿を既読に
         $this->PostRead->red($post_list);
-        //コメントを既読に
-        $this->Comment->CommentRead->red($post_list);
         $options = [
             'conditions' => [
                 'Post.id' => $post_list,
@@ -579,6 +577,12 @@ class Post extends AppModel
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
+        }
+        //コメントを既読に
+        if (!empty($res)) {
+            /** @noinspection PhpDeprecationInspection */
+            $comment_list = Set::classicExtract(Set::flatten(Set::classicExtract($res, '{n}.Comment.{n}.id')), '{s}');
+            $this->Comment->CommentRead->red($comment_list);
         }
 
         //１件のサークル名をランダムで取得
