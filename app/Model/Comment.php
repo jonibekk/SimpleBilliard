@@ -187,7 +187,7 @@ class Comment extends AppModel
         return $res;
     }
 
-    public function getLatestPostsComment($post_id, $cut_num = 0)
+    public function getLatestPostsComment($post_id, $last_comment_id = 0)
     {
         //既読済みに
         $this->CommentRead->red($post_id);
@@ -195,6 +195,7 @@ class Comment extends AppModel
             'conditions' => [
                 'Comment.post_id' => $post_id,
                 'Comment.team_id' => $this->current_team_id,
+                'Comment.id > '   => $last_comment_id
             ],
             'order'      => [
                 'Comment.created' => 'desc'
@@ -210,7 +211,6 @@ class Comment extends AppModel
                     ]
                 ],
             ],
-            'limit' => $cut_num
         ];
         //表示を昇順にする
         $res = array_reverse($this->find('all', $options));

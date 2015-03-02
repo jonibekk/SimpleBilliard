@@ -19,7 +19,7 @@ if (!isset($id_prefix)) {
 }
 ?>
 <!-- START app/View/Elements/Feed/comment.ctp -->
-<div class="font_12px">
+<div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_4px">
         <?=
         $this->Html->image('ajax-loader.gif',

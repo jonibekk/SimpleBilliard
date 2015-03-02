@@ -284,9 +284,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_latest_comment($post_id, $num) {
+    public function ajax_get_latest_comment($post_id, $last_comment_id = 0) {
         $this->_ajaxPreProcess();
-        $comments = $this->Post->Comment->getLatestPostsComment($post_id, $num);
+        $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
 
         //エレメントの出力を変数に格納する

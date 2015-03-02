@@ -1875,11 +1875,20 @@ function evCommentLatestView() {
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var unreadNum = $(".new-comment-read").children(".num").html();
-    var get_url = $obj.attr('get-url') + "/" + unreadNum;
+    var lastCommentBox = $obj.closest(".comment-block").children("div.comment-box:last");
+    var lastCommentId  = "";
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    if (!lastCommentBox) {
+        // コメントがまだ0件の場合
+        lastCommentId = "";
+    } else {
+        // コメントが存在する場合
+        attrUndefinedCheck(lastCommentBox, 'comment-id');
+        lastCommentId = lastCommentBox.attr("comment-id");
+    }
+    var get_url = $obj.attr('get-url') + "/" + lastCommentId;
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     //ローダー表示
     $obj.children(".new-comment-read").append($loader_html);
     $.ajax({
