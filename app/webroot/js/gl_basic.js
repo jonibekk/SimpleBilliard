@@ -1941,3 +1941,9 @@ function initUnreadCommentNum(notifyBox) {
     var numInBox = notifyBox.find(".num");
     numInBox.html(0);
 }
+
+$(document).ready(function(){
+    $(document).on("click", "#click-header-bell", function(){
+
+    });
+});
