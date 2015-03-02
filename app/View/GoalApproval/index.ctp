@@ -34,18 +34,16 @@
 			<div class="col-sm-8 col-sm-offset-2">
 				<div class="panel panel-default" id="AddGoalFormPurposeWrap">
 					<div class="panel-heading goal-set-heading clearfix">
-						<div class="pull-left goal-set-title">(成長) ゴール認定機能を完了させる</div>
-						<div class="col-sm-8">
-							<p class="approval_body_text">目的</p>
-							<p class="approval_body_text">単位, 達成時, 開始時</p>
-							<p class="approval_body_text">詳細</p>
-							<p class="approval_body_text">重要度</p>
-						</div>
-						<div class="col-sm-2">
-							<p class="approval_body_text">リーダー</p>
-							<p class="approval_body_text">コラボレーター</p>
-							<p class="approval_body_text">フォロー</p>
-						</div>
+						<p class="approval_body_text">名前</p>
+						<p class="approval_body_text">成長か職務か</p>
+						<p class="approval_body_text">ゴール名</p>
+						<p class="approval_body_text">リーダーかコラボレーターか</p>
+						<p class="approval_body_text">単位, 達成時, 開始時</p>
+						<p class="approval_body_text">期限日</p>
+						<p class="approval_body_text">重要度</p>
+						<p class="approval_body_text">目的</p>
+						<p class="approval_body_text">詳細</p>
+						<p class="approval_body_text">ゴールイメージ</p>
 					</div>
 					<div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
 						<div class="row">
