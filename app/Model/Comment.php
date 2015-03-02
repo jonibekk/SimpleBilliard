@@ -212,7 +212,8 @@ class Comment extends AppModel
             ],
             'limit' => $cut_num
         ];
-        $res = $this->find('all', $options);
+        //表示を昇順にする
+        $res = array_reverse($this->find('all', $options));
         return $res;
     }
 

@@ -285,6 +285,7 @@ class PostsController extends AppController
     }
 
     public function ajax_get_latest_comment($post_id, $num) {
+        $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $num);
         $this->set(compact('comments'));
 

@@ -1647,7 +1647,6 @@ $(document).ready(function () {
             } else if(isNewCommentNotify){
                 var postId = data.post_id;
                 var notifyBox = $("#Comments_new_" + String(postId));
-                alert(notifyBox);
                 notifyNewComment(notifyBox);
             }
         });
@@ -1847,35 +1846,36 @@ function notifyNewComment(notifyBox) {
     if (num >= 1) {
         // top of feed
         numInBox.html(num + 1);
-        return;
+    } else {
+        // Case of not existing unread post yet
+        numInBox.html("1");
     }
 
-    // Case of not existing unread post yet
-    numInBox.html("1");
-    notifyBox.css("display", "block");
+    if(notifyBox.css("display") === "none") {
+        notifyBox.css("display", "block");
 
-    // 通知をふんわり出す
-    var i = 0.2;
-    var roop = setInterval(function () {
-        notifyBox.css("opacity", i);
-        i = i + 0.2;
-        if (i > 1) {
-            clearInterval(roop);
-        }
-    }, 100);
+        // 通知をふんわり出す
+        var i = 0.2;
+        var roop = setInterval(function () {
+            notifyBox.css("opacity", i);
+            i = i + 0.2;
+            if (i > 1) {
+                clearInterval(roop);
+            }
+        }, 100);
+    }
 }
 
 $(document).ready(function(){
     $(document).on("click", ".click-comment-new", evCommentLatestView);
-})
+});
 
 function evCommentLatestView() {
-    attrUndefinedCheck(this, 'parent-id');
+    attrUndefinedCheck(this, 'post-id');
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var parent_id = $obj.attr('parent-id');
-    var unreadNum = $(".new-comment-read .num").children(".num").html();
+    var unreadNum = $(".new-comment-read").children(".num").html();
     var get_url = $obj.attr('get-url') + "/" + unreadNum;
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -1892,17 +1892,11 @@ function evCommentLatestView() {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
                 //一旦非表示
-                $posts.hide();
-                $("#" + parent_id).after($posts);
-                //html表示
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
+                $($obj).before($posts);
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
-                $obj.remove();
+                $obj.css("display", "none").css("opacity", 0);
                 //画像をレイジーロード
                 imageLazyOn();
                 //画像リサイズ
@@ -1915,6 +1909,8 @@ function evCommentLatestView() {
                 });
 
                 $('.custom-radio-check').customRadioCheck();
+                $obj.removeAttr("disabled");
+                initUnreadCommentNum($obj);
 
             }
             else {
@@ -1934,4 +1930,9 @@ function evCommentLatestView() {
         }
     });
     return false;
+}
+
+function initUnreadCommentNum(notifyBox) {
+    var numInBox = notifyBox.find(".num");
+    numInBox.html(0);
 }

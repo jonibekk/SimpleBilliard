@@ -334,7 +334,7 @@
                 <a href="#" class="btn btn-link click-comment-new"
                    id="Comments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
-                   parent-id="Comments_<?= $post['Post']['id'] ?>"
+                   post-id="<?= $post['Post']['id'] ?>"
                    get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', $post['Post']['id']]) ?>"
                     >
                     <div class="alert alert-info new-comment-read" style="width: 100%; height: 20px; margin: 5px 0px; clear: both; opacity: 1;padding: 3px;">
