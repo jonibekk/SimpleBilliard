@@ -3,6 +3,9 @@ module.exports = (grunt) ->
   grunt.initConfig
 
     watch:
+      options:
+        spawn: false
+
       coffee:
         files: ['coffee/**/*.coffee']
         tasks: ['jstask']
@@ -64,7 +67,8 @@ module.exports = (grunt) ->
 
     cssmin:
       target:
-        files: 'dest/cssmin/goalous.min.css': 'dest/csspre/goalous-src-pre.css'
+        files:
+          'dest/cssmin/goalous.min.css': 'dest/csspre/goalous-src-pre.css'
 
 
     styleguide:
@@ -84,7 +88,6 @@ module.exports = (grunt) ->
         cwd: 'dest/jsmin/'
         src: 'goalous.min.js'
         dest: '../app/webroot/js/'
-
 
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
