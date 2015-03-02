@@ -227,7 +227,7 @@ class PostTest extends CakeTestCase
                 'PostShareUser'   => [
                     ['user_id' => 1]
                 ],
-                'share_user_name' => 'first last'
+                'share_user_name' => 'firstname lastname'
             ]
         ];
         $this->assertEquals($excepted, $res);
