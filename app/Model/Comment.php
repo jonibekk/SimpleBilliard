@@ -194,7 +194,6 @@ class Comment extends AppModel
     public function getLatestPostsComment($post_id, $last_comment_id = 0)
     {
         //既読済みに
-        $this->CommentRead->red($post_id);
         $options = [
             'conditions' => [
                 'Comment.post_id' => $post_id,
