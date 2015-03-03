@@ -449,9 +449,11 @@ function addComment(e) {
     attrUndefinedCheck(e.target, 'first-form-id');
     var first_form_id = $(e.target).attr('first-form-id');
     var $first_form = $('#' + first_form_id);
+    attrUndefinedCheck(e.target, 'refresh-link-id');
+    var refresh_link_id = $(e.target).attr('refresh-link-id');
+    var $refresh_link = $('#' + refresh_link_id);
 
     $error_msg_box.text("");
-    console.log($(e.target));
     appendSocketId($(e.target), cake.pusher.socket_id);
 
     var $f = $(e.target);
@@ -467,9 +469,9 @@ function addComment(e) {
         .done(function (data) {
             // 通信が成功したときの処理
             if (!data.error) {
-                //翔平さんが作ってくれるコメント呼び出しメソッド追加
                 $first_form.children().toggle();
                 $f.remove();
+                $refresh_link.click();
             }
             else {
                 $error_msg_box.text(data.msg);
@@ -1647,7 +1649,6 @@ $(document).ready(function () {
         socketId = pusher.connection.socket_id;
         cake.pusher.socket_id = socketId;
     });
-
     // フォームがsubmitされた際にsocket_idを埋め込む
     $(document).on('submit', 'form.form-feed-notify', function () {
         appendSocketId($(this), socketId);

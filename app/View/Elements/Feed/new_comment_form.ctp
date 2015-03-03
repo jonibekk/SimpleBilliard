@@ -26,6 +26,7 @@ $this->Form->create('Comment', [
     'error-msg-id'  => 'CommentFormErrorMsg_' . $post_id,
     'submit-id'     => 'CommentSubmit_' . $post_id,
     'first-form-id'     => 'PostNewCommentForm_' . $post_id,
+    'refresh-link-id' => 'Comments_new_' . $post_id,
 ]); ?>
 <? $this->Form->unlockField('socket_id') ?>
 <?=
