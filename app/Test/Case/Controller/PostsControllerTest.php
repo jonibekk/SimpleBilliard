@@ -87,8 +87,8 @@ class PostsControllerTest extends ControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [
             'Post' => [
-                'body'  => 'test',
-                'share' => 'public,circle_1,user_12',
+                'body'      => 'test',
+                'share'     => 'public,circle_1,user_12',
                 'socket_id' => 'hogehage'
             ],
         ];
@@ -143,7 +143,7 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
-    function testAddComment()
+    function testAddCommentSuccess()
     {
         /**
          * @var UsersController $Posts
@@ -160,10 +160,11 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
-            'Comment' => [
+            'Comment'   => [
                 'body'    => 'test',
                 'post_id' => 1,
             ],
+            'socket_id' => 'test'
         ];
 
         $this->testAction('/posts/ajax_add_comment/',
@@ -1145,6 +1146,7 @@ class PostsControllerTest extends ControllerTestCase
             ['User' => ['id' => 1]],
             ['User' => ['id' => 4]],
         ];
+        /** @noinspection PhpUndefinedMethodInspection */
         $res = $Posts->_getTotalShareUserCount($circles, $users);
         $this->assertEquals(4, $res);
     }
