@@ -218,6 +218,11 @@ class Comment extends AppModel
         ];
         //表示を昇順にする
         $res = array_reverse($this->find('all', $options));
+
+        // Add these comment to red list
+        $commentIdList = Set::classicExtract($res, '{n}.Comment.id');
+        $this->CommentRead->red($commentIdList);
+
         return $res;
     }
 
