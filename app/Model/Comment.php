@@ -155,8 +155,6 @@ class Comment extends AppModel
 
     public function getPostsComment($post_id, $cut_num = 0)
     {
-        //既読済みに
-        $this->CommentRead->red($post_id);
         $options = [
             'conditions' => [
                 'Comment.post_id' => $post_id,
@@ -184,6 +182,12 @@ class Comment extends AppModel
                 array_pop($res);
             }
         }
+
+        //既読済みに
+        /** @noinspection PhpDeprecationInspection */
+        $comment_list = Set::classicExtract($res, '{n}.Comment.id');
+        $this->CommentRead->red($comment_list);
+
         return $res;
     }
 
