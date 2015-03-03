@@ -822,6 +822,8 @@ class TeamMember extends AppModel
      */
     function validateNewMemberCsvData($csv_data)
     {
+        $this->_setCsvValidateRule();
+
         $res = [
             'error'         => true,
             'error_line_no' => 0,
@@ -849,11 +851,9 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "項目数が一致しません。");
                 return $res;
             }
-            $this->_setCsvValidateRule();
             $this->set($row);
             if (!$this->validates()) {
                 $validationErrors = $this->validationErrors;
-                $this->log($validationErrors);
                 $msg = array_shift($validationErrors);
                 $res['error_msg'] = $msg[0];
                 return $res;
@@ -869,21 +869,19 @@ class TeamMember extends AppModel
             $this->csv_datas[$key]['User']['last_name'] = $row['last_name'];
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) === 'on' ? true : false;
             $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) === 'on' ? true : false;
-            //[6]Member Type
-            //no check
             if (viaIsSet($row['member_type'])) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
+            }
+            if (viaIsSet($row['language']) && viaIsSet($row['local_first_name']) && viaIsSet($row['local_last_name'])) {
+                $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
+                $this->csv_datas[$key]['LocalName']['first_name'] = $row['local_first_name'];
+                $this->csv_datas[$key]['LocalName']['last_name'] = $row['local_last_name'];
             }
             if (viaIsSet($row['phone_no'])) {
                 $this->csv_datas[$key]['User']['phone_no'] = str_replace(["-", "(", ")"], '', $row['phone_no']);
             }
             if (viaIsSet($row['gender'])) {
                 $this->csv_datas[$key]['User']['gender_type'] = $row['gender'] === 'male' ? User::TYPE_GENDER_MALE : User::TYPE_GENDER_FEMALE;
-            }
-            if (viaIsSet($row['language']) && viaIsSet($row['local_first_name']) && viaIsSet($row['local_last_name'])) {
-                $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
-                $this->csv_datas[$key]['LocalName']['first_name'] = $row['local_first_name'];
-                $this->csv_datas[$key]['LocalName']['last_name'] = $row['local_last_name'];
             }
             //[12]Birth Year
             if (viaIsSet($row['birth_year']) && viaIsSet($row['birth_month']) && viaIsSet($row['birth_day'])) {
@@ -1046,6 +1044,8 @@ class TeamMember extends AppModel
             }
         }
 
+        $this->_setValidateFromBackUp();
+        $this->log($this->validate);
         $res['error'] = false;
         return $res;
     }
