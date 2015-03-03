@@ -108,4 +108,113 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         }
         return true;
     }
+
+    function isOnOrOff(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return strtolower($value) == 'on' || strtolower($value) == 'off';
+    }
+
+    function phoneNo(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^[0-9-\(\)]+$/', $value);
+    }
+
+    function isAllOrNothing(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $compare_fields)
+    {
+        $exists = false;
+        $not_exists = false;
+        foreach ($compare_fields as $field) {
+            if (empty($Model->data[$Model->alias][$field])) {
+                $not_exists = true;
+            }
+            else {
+                $exists = true;
+            }
+
+        }
+        return $exists !== $not_exists;
+    }
+
+    function isAlignLeft(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $compare_fields)
+    {
+        $array = [];
+        foreach ($compare_fields as $field) {
+            $array[] = $Model->data[$Model->alias][$field];
+        }
+        //first remove empty data
+        foreach ($array as $k => $v) {
+            if (!$v) {
+                unset($array[$k]);
+            }
+        }
+
+        if (empty($array)) {
+            return true;
+        }
+
+        //if toothless then return false
+        $expect_k = 0;
+        foreach ($array as $k => $v) {
+            if ($k !== $expect_k) {
+                return false;
+            }
+            $expect_k++;
+        }
+        return true;
+    }
+
+    function maxLengthArray(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $length, $fields)
+    {
+        foreach ($fields as $field) {
+            if (!Validation::maxLength($Model->data[$Model->alias][$field], $length)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function isNotDuplicated(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $compare_fields)
+    {
+        $array = [];
+        foreach ($compare_fields as $field) {
+            $array[] = $Model->data[$Model->alias][$field];
+        }
+        $array = array_filter($array, "strlen");
+        return count(array_unique($array)) == count($array);
+    }
+
+    function birthYear(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^\d{4}$/', $value);
+    }
+
+    function birthMonth(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^(0[1-9]{1}|1[0-2]{1}|[1-9]{1})$/', $value);
+    }
+
+    function birthDay(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^(0[1-9]{1}|[1-9]{1}|[1-2]{1}[0-9]{1}|3[0-1]{1})$/', $value);
+    }
+
 }
