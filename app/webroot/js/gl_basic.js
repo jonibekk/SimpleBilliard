@@ -1846,7 +1846,7 @@ function notifyNewComment(notifyBox) {
     // Increment unread number
     if (num >= 1) {
         // top of feed
-        numInBox.html(num + 1);
+        numInBox.html(String(num + 1));
     } else {
         // Case of not existing unread post yet
         numInBox.html("1");
@@ -1978,5 +1978,5 @@ function decrementBellUnreadNumber($num) {
 
 function initBell(){
     $(".bell-notify-box").css("opacity", 0);
-    $(".bell-notify-box").html("");
+    $(".bell-notify-box").html("0");
 }
