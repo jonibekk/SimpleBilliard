@@ -1693,7 +1693,6 @@ function notifyNewFeed() {
 function notifyNewBell() {
     var notifyBox = $(".bell-notify-box");
     var num = parseInt(notifyBox.html());
-    var title = $("title");
 
     // Increment unread number
     if (num >= 1) {
@@ -1706,14 +1705,14 @@ function notifyNewBell() {
     notifyBox.html("1");
 
     // 通知をふんわり出す
-    var i = 0.1;
+    var i = 0.2;
     var roop = setInterval(function () {
         notifyBox.css("opacity", i);
-        i = i + 0.1;
+        i = i + 0.2;
         if (i > 1) {
             clearInterval(roop);
         }
-    }, 300);
+    }, 100);
 }
 
 function appendSocketId(form, socketId) {
@@ -1904,6 +1903,7 @@ function evCommentLatestView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                var postNum = $posts.children("div").length;
                 //一旦非表示
                 $posts.hide();
                 $($obj).before($posts);
@@ -1928,8 +1928,9 @@ function evCommentLatestView() {
 
                 $('.custom-radio-check').customRadioCheck();
                 $obj.removeAttr("disabled");
-                initUnreadCommentNum($obj);
-                initUnreadBellNumber();
+
+                initCommentNotify($obj);
+                decrementBellUnreadNumber(postNum);
             }
             else {
                 //ローダーを削除
@@ -1950,18 +1951,32 @@ function evCommentLatestView() {
     return false;
 }
 
-function initUnreadCommentNum(notifyBox) {
+function initCommentNotify(notifyBox) {
     var numInBox = notifyBox.find(".num");
-    numInBox.html(0);
+    numInBox.html("0");
 }
 
 $(document).ready(function(){
     $(document).on("click", "#click-header-bell", function() {
-        initUnreadBellNumber();
+        initBell();
     });
 });
 
-function initUnreadBellNumber(){
+function decrementBellUnreadNumber($num) {
+    var bellNumBox = $(".bell-notify-box");
+    var unreadNum = bellNumBox.html();
+    var retNum;
+    if(unreadNum < 1) {
+        return;
+    }
+    retNum = parseInt(unreadNum) - $num;
+    if(retNum < 1) {
+        initBell();
+    }
+    bellNumBox.html(retNum);
+}
+
+function initBell(){
     $(".bell-notify-box").css("opacity", 0);
     $(".bell-notify-box").html("");
 }
