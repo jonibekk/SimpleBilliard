@@ -191,6 +191,40 @@ class Comment extends AppModel
         return $res;
     }
 
+    public function getLatestPostsComment($post_id, $last_comment_id = 0)
+    {
+        //既読済みに
+        $options = [
+            'conditions' => [
+                'Comment.post_id' => $post_id,
+                'Comment.team_id' => $this->current_team_id,
+                'Comment.id > '   => $last_comment_id
+            ],
+            'order'      => [
+                'Comment.created' => 'desc'
+            ],
+            'contain'    => [
+                'User'          => [
+                    'fields' => $this->User->profileFields
+                ],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $this->my_uid,
+                        'MyCommentLike.team_id' => $this->current_team_id,
+                    ]
+                ],
+            ],
+        ];
+        //表示を昇順にする
+        $res = array_reverse($this->find('all', $options));
+
+        // Add these comment to red list
+        $commentIdList = Set::classicExtract($res, '{n}.Comment.id');
+        $this->CommentRead->red($commentIdList);
+
+        return $res;
+    }
+
     function commentEdit($data)
     {
         if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
