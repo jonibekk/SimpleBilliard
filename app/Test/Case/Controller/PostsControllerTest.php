@@ -149,7 +149,7 @@ class PostsControllerTest extends ControllerTestCase
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
-
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = [
             'user_id' => 1,
             'team_id' => 1,
@@ -166,15 +166,16 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment/',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAddCommentFailNotPost()
     {
         $this->_getPostsCommonMock();
         try {
-            $this->testAction('/posts/comment_add',
+            $this->testAction('/posts/ajax_add_comment',
                               ['method' => 'GET', 'return' => 'contents']);
 
         } catch (RuntimeException $e) {
@@ -186,25 +187,31 @@ class PostsControllerTest extends ControllerTestCase
     function testAddCommentFail()
     {
         $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = [];
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAddCommentFailNotFound()
     {
         $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = ['Comment' => ['post_id' => 9999999999]];
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAddCommentFailValidate()
     {
         $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = ['Comment' => ['post_id' => 1, 'comment_like_count' => 'test']];
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetFeedNoPageNum()
