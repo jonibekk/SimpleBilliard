@@ -420,6 +420,49 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "[異常]commentをajax以外で取得しようとしたとき");
     }
 
+    function testAjaxGetLatestComment()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+
+        //投稿記事を20個いれる
+        $user_id = 1;
+        $team_id = 1;
+        $get_num = 3;
+
+        $post_data[] = [
+            'Post'    => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
+            ],
+            'Comment' => [
+                [
+                    'user_id' => $user_id,
+                    'team_id' => $team_id,
+                    'body'    => 'test'
+                ]
+            ]
+        ];
+        $Posts->Post->saveAll($post_data);
+        $post_id = $Posts->Post->getLastInsertID();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_latest_comment/' . $post_id . '/' . $get_num, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetLatestCommentException()
+    {
+        $this->_getPostsCommonMock();
+        try {
+            $this->testAction('/posts/ajax_get_latest_comment/2/2', ['method' => 'GET']);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e), "[異常]commentをajax以外で取得しようとしたとき");
+    }
+
     function testAjaxPostLike()
     {
         /**
