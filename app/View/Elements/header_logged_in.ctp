@@ -155,8 +155,8 @@
                                 opacity: 0;
                                 background-color:red!important;
                                 display:block">0</div>
-                    <a id="click-header-bell" class="font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link" data-toggle="dropdown" href="#">
-                        <i class="fa fa-flag fa-bell-o header-icon header-drop-icons"></i>
+                    <a id="click-header-bell" class="header-link" data-toggle="dropdown" href="#">
+                        <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" id="bell-dropdown" role="menu" style="
                         min-width: 450px;
