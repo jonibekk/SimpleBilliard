@@ -853,9 +853,7 @@ class TeamMember extends AppModel
             }
             $this->set($row);
             if (!$this->validates()) {
-                $validationErrors = $this->validationErrors;
-                $msg = array_shift($validationErrors);
-                $res['error_msg'] = $msg[0];
+                $res['error_msg'] = current(array_shift($this->validationErrors));
                 return $res;
             }
 
@@ -900,11 +898,6 @@ class TeamMember extends AppModel
             }
 
             //[22]Coach ID
-            //not allow include own member ID
-            if (!empty($row['member_no']) && $row['member_no'] == $row['coach_member_no']) {
-                $res['error_msg'] = __d('gl', "コーチIDに本人のIDを指定する事はできません。");
-                return $res;
-            }
             //exists check (after check)
             $this->csv_coach_ids[] = $row['coach_member_no'];
             if (viaIsSet($row['coach_member_no'])) {
@@ -916,18 +909,11 @@ class TeamMember extends AppModel
             for ($i = 1; $i <= 7; $i++) {
                 $raters[] = $row["rater_member_no_{$i}"];
             }
-            //not allow include own member ID
-            if (!empty($row['member_no']) && in_array($row['member_no'], $raters)
-            ) {
-                $res['error_msg'] = __d('gl', "評価者IDに本人のIDを指定する事はできません。");
-                return $res;
-            }
             foreach ($raters as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Rater'][] = $v;
                 }
             }
-
             //rater id check(after check)
             $this->csv_rater_ids[] = array_filter($raters, "strlen");
         }
@@ -1045,7 +1031,6 @@ class TeamMember extends AppModel
         }
 
         $this->_setValidateFromBackUp();
-        $this->log($this->validate);
         $res['error'] = false;
         return $res;
     }
@@ -1255,13 +1240,18 @@ class TeamMember extends AppModel
                 ],
             ],
             'member_no'             => [
-                'notEmpty'  => [
+                'notEmpty'        => [
                     'rule'    => 'notEmpty',
                     'message' => __d('validate', "%sは必須項目です。", __d('gl', "メンバーID"))
                 ],
-                'maxLength' => [
+                'maxLength'       => [
                     'rule'    => ['maxLength', 64],
                     'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "メンバーID"))
+                ],
+                'isNotExistArray' => [
+                    'rule'       => ['isNotExistArray', ['rater_member_no_1', 'rater_member_no_2', 'rater_member_no_3', 'rater_member_no_4', 'rater_member_no_5', 'rater_member_no_6', 'rater_member_no_7']],
+                    'message'    => __d('gl', "%sに本人のIDを指定する事はできません。", __d('gl', "評価者ID")),
+                    'allowEmpty' => true,
                 ],
             ],
             'first_name'            => [
@@ -1393,6 +1383,13 @@ class TeamMember extends AppModel
                     'allowEmpty' => true,
                 ],
             ],
+            'coach_member_no'       => [
+                'isNotDuplicated' => [
+                    'rule'       => ['isNotDuplicated', ['coach_member_no', 'member_no']],
+                    'message'    => __d('validate', "%sに本人のIDを指定する事はできません。", __d('gl', "コーチID")),
+                    'allowEmpty' => true,
+                ],
+            ],
             'rater_member_no_1'     => [
                 'isAlignLeft'     => [
                     'rule'       => ['isAlignLeft', ['rater_member_no_1', 'rater_member_no_2', 'rater_member_no_3', 'rater_member_no_4', 'rater_member_no_5', 'rater_member_no_6', 'rater_member_no_7']],
@@ -1410,9 +1407,7 @@ class TeamMember extends AppModel
                     'allowEmpty' => true,
                 ],
             ],
-            //            'coach_member_no'       => __d('gl', "コーチID"),
         ];
-
         $this->validateBackup = $this->validate;
         $this->validate = $validate;
     }

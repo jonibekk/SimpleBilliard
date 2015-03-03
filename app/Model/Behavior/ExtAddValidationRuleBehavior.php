@@ -11,7 +11,11 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
 {
     /**
      * アルファベットのみかどうかチェックするバリデーションルール
-
+     *
+     * @param Model $Model
+     * @param array $field
+     *
+     * @return bool
      */
     function isAlphabetOnly(/** @noinspection PhpUnusedParameterInspection */
         Model $Model, $field = [])
@@ -191,6 +195,17 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         }
         $array = array_filter($array, "strlen");
         return count(array_unique($array)) == count($array);
+    }
+
+    function isNotExistArray(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $compare_fields)
+    {
+        $check = current($check);
+        $array = [];
+        foreach ($compare_fields as $field) {
+            $array[] = $Model->data[$Model->alias][$field];
+        }
+        return !in_array($check, $array);
     }
 
     function birthYear(/** @noinspection PhpUnusedParameterInspection */
