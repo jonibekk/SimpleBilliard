@@ -143,7 +143,7 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
-    function testAddCommentSuccess()
+    function testAddCommentSuccessWithSocketId()
     {
         /**
          * @var UsersController $Posts
@@ -165,6 +165,34 @@ class PostsControllerTest extends ControllerTestCase
                 'post_id' => 1,
             ],
             'socket_id' => 'test'
+        ];
+
+        $this->testAction('/posts/ajax_add_comment/',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAddCommentSuccessWithoutSocketId()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'body'    => 'test'
+        ];
+        $Posts->Post->save($data);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Comment' => [
+                'body'    => 'test',
+                'post_id' => 1,
+            ],
         ];
 
         $this->testAction('/posts/ajax_add_comment/',
