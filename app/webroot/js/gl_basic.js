@@ -1640,13 +1640,17 @@ $(document).ready(function () {
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }
-                // ベル通知の場合
-            } else if(isBellNotify) {
+            }
+
+            // ベル通知の場合
+            if(isBellNotify) {
                 notifyNewBell();
                 prevNotifyId = notifyId;
                 $("#bell-dropdown").prepend(data.html);
-                // 新しいコメント通知の場合
-            } else if(isNewCommentNotify) {
+            }
+
+            // 新しいコメント通知の場合
+            if(isNewCommentNotify) {
                 var postId = data.post_id;
                 var notifyBox = $("#Comments_new_" + String(postId));
                 notifyNewComment(notifyBox);
