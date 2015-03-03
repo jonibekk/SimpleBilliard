@@ -108,7 +108,8 @@ echo $this->Html->script('gl_basic');
             h: "<?=viaIsSet($circle_id)?>"
         },
         pusher: {
-            key: "<?=PUSHER_KEY?>"
+            key: "<?=PUSHER_KEY?>",
+            socket_id: ""
         }
     };
 

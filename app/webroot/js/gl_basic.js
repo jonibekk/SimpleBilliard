@@ -451,6 +451,8 @@ function addComment(e) {
     var $first_form = $('#' + first_form_id);
 
     $error_msg_box.text("");
+    console.log($(e.target));
+    appendSocketId($(e.target), cake.pusher.socket_id);
 
     var $f = $(e.target);
     $.ajax({
@@ -1643,6 +1645,7 @@ $(document).ready(function () {
     var prevNotifyId = "";
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
+        cake.pusher.socket_id = socketId;
     });
 
     // フォームがsubmitされた際にsocket_idを埋め込む
