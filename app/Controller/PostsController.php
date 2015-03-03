@@ -8,6 +8,11 @@ App::uses('AppController', 'Controller');
  */
 class PostsController extends AppController
 {
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Security->unlockedActions = ['ajax_add_comment'];
+    }
 
     /**
      * add method
@@ -419,9 +424,14 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function comment_add()
+    public function ajax_add_comment()
     {
         $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+        $result = [
+            'error' => false,
+            'msg' => ""
+        ];
         $this->Post->id = viaIsSet($this->request->data['Comment']['post_id']);
         try {
             if (!$this->Post->exists()) {
@@ -437,7 +447,7 @@ class PostsController extends AppController
                                                  $this->Post->Comment->id);
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                                                  $this->Post->id, $this->Post->Comment->id);
-                $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
+                $result['msg'] = __d('gl', "コメントしました。");
             }
             else {
                 if (!empty($this->Post->Comment->validationErrors)) {
@@ -446,8 +456,9 @@ class PostsController extends AppController
                 }
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "コメントに失敗しました。")]);
-            $this->redirect($this->referer());
+            $result['error'] = true;
+            $result['msg'] = $e->getMessage();
+            return $this->_ajaxGetResponse($result);
         }
 
         //push通知するユーザーを定義
@@ -463,7 +474,7 @@ class PostsController extends AppController
         $socketId = viaIsSet($this->request->data['socket_id']);
         $comment  = viaIsSet($this->request->data['Comment']['body']);
         if(!$socketId || !$comment) {
-            $this->redirect($this->referer());
+            $this->_ajaxGetResponse($result);
         }
         // 通知テンプレートのレンダリング
         $view = new View();
@@ -482,8 +493,7 @@ class PostsController extends AppController
             $channelName = "user_" . $user . "_team_" . $teamId;
             $this->NotifyBiz->bellPush($socketId, $channelName, $data);
         }
-
-        $this->redirect($this->referer());
+        return $this->_ajaxGetResponse($result);
     }
 
     function feed()

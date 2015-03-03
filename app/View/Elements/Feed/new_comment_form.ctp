@@ -12,16 +12,20 @@
 <!-- START app/View/Elements/Feed/new_comment_form.ctp -->
 <?=
 $this->Form->create('Comment', [
-    'url'           => ['controller' => 'posts', 'action' => 'comment_add'],
+    'default'    => false,
+    'url'           => ['controller' => 'posts', 'action' => 'ajax_add_comment'],
     'inputDefaults' => [
         'div'       => 'form-group mlr_-1px',
         'label'     => false,
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class'         => 'form-feed-notify',
+    'class'         => 'form-feed-notify ajax-add-comment',
     'type'          => 'file',
     'novalidate'    => true,
+    'error-msg-id'  => 'CommentFormErrorMsg_' . $post_id,
+    'submit-id'     => 'CommentSubmit_' . $post_id,
+    'first-form-id'     => 'PostNewCommentForm_' . $post_id,
 ]); ?>
 <? $this->Form->unlockField('socket_id') ?>
 <?=
@@ -61,9 +65,12 @@ $this->Form->input('body', [
         </button>
 
     </a>
+    <div class="pull-left mt_12px font_brownRed"><span id="CommentFormErrorMsg_<?= $post_id ?>"></span></div>
+    <div class="pull-right">
     <?=
     $this->Form->submit(__d('gl', "コメントする"),
-                        ['class' => 'btn btn-primary pull-right submit-btn', 'id' => "CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
+                        ['class' => 'btn btn-primary submit-btn', 'id' => "CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
+    </div>
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>
