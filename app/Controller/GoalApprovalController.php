@@ -69,8 +69,10 @@ class GoalApprovalController extends AppController {
 		$result_data = array();
 
 		if ($this->user_type === 1) {
-			$a = $this->Goal->getMyApprovalGoal(0);
-			//var_dump($a[0]['MyCollabo']);
+			$my_goal_id = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
+			$col_obj = new Collaborator();
+			$goal_info = $col_obj->getCollabeGoalDetail($my_goal_id, false);
+			$this->set(compact('goal_info'));
 
 		} elseif ($this->user_type === 2) {
 			$this->Goal->getMyGoals();

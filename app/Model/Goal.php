@@ -291,50 +291,23 @@ class Goal extends AppModel
     }
 
 	/**
-	 * 承認状況別、自分のゴールを取得する。
-	 * @param approval_flag
-	 * @param limit
-	 * @param page
+	 * user_idからgoal_idを取得する
+	 * @param $user_id
+	 * @param $team_id
 	 * @return array|null
 	 */
-	function getMyApprovalGoal ($approval_flag, $limit = null, $page = 1)
-	{
-	    $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
-        $options = [
-            'conditions' => [
-                'Goal.user_id'       => $this->my_uid,
-                'Goal.team_id'       => $this->current_team_id,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
-            ],
-            'contain'    => [
-                'MyCollabo' => [
-                    'conditions' => [
-                        'MyCollabo.user_id' => $this->my_uid,
-                        'MyCollabo.valued_flg' => $approval_flag
-                    ]
-                ],
-                'KeyResult' => [
-                    //KeyResultは期限が今期内
-                    'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
-                    ]
-                ],
-                'Purpose',
-            ],
-			'type'       => 'inner',
-            'limit'      => $limit,
-            'page'       => $page
-        ];
-        $res = $this->find('all', $options);
-        //進捗を計算
-        foreach ($res as $key => $goal) {
-            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
-        }
-
-		return $res;
+	function getGoalIdFromUserId ($user_id, $team_id) {
+		$options = [
+			'fields' => ['id'],
+			'conditions' => [
+				'Goal.user_id'       => $user_id,
+				'Goal.team_id'       => $team_id,
+				'Goal.start_date >=' => $this->Team->getTermStartDate(),
+				'Goal.end_date <'    => $this->Team->getTermEndDate(),
+				'Goal.del_flg'       => 0,
+			],
+		];
+		return $this->find('list', $options);
 	}
 
     /**

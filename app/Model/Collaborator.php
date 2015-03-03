@@ -144,4 +144,26 @@ class Collaborator extends AppModel
         return false;
     }
 
+	function getCollabeGoalDetail ($goal_id, $approval_flg) {
+		$options = [
+			'fields' => ['type', 'priority'],
+			'conditions' => [
+				'Collaborator.goal_id'    => $goal_id,
+				'Collaborator.valued_flg' => $approval_flg,
+			],
+			'contain'    => [
+				'Goal' => [
+					'fields'  => ['name', 'goal_category_id', 'end_date', 'photo_file_name'],
+					'Purpose' => ['fields' => 'name']
+				],
+				'User' => [
+					'fields'  => ['first_name', 'last_name']
+				],
+			],
+			'type'       => 'inner',
+			'order'      => ['Collaborator.created'],
+		];
+		return $this->find('all', $options);
+	}
+
 }
