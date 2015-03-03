@@ -280,6 +280,8 @@ $(document).ready(function () {
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
 
+
+
 });
 function imageLazyOn($elm_obj) {
     if ($elm_obj === undefined) {
@@ -1875,16 +1877,18 @@ function evCommentLatestView() {
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var lastCommentBox = $obj.closest(".comment-block").children("div.comment-box:last");
+    var commentBlock = $obj.closest(".comment-block");
+    var commentNum = commentBlock.children("div.comment-box").length;
+    var lastCommentBox = commentBlock.children("div.comment-box:last");
     var lastCommentId  = "";
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    if (!lastCommentBox) {
-        // コメントがまだ0件の場合
-        lastCommentId = "";
-    } else {
+    if (commentNum > 0) {
         // コメントが存在する場合
         attrUndefinedCheck(lastCommentBox, 'comment-id');
         lastCommentId = lastCommentBox.attr("comment-id");
+    } else {
+        // コメントがまだ0件の場合
+        lastCommentId = "";
     }
     var get_url = $obj.attr('get-url') + "/" + lastCommentId;
     //リンクを無効化

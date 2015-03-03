@@ -1609,6 +1609,10 @@ ul.example-indent {
 .comment-edit-form {
 }
 
+.comment-box {
+    overflow: hidden;
+}
+
 .comment-img {
     display: block;
     float: left;
