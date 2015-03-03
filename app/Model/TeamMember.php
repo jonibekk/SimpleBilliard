@@ -573,6 +573,8 @@ class TeamMember extends AppModel
 
     function validateUpdateMemberCsvData($csv_data)
     {
+        $this->_setCsvValidateRule(false);
+
         $res = [
             'error'         => true,
             'error_line_no' => 0,
@@ -607,12 +609,12 @@ class TeamMember extends AppModel
                 }
                 continue;
             }
-
-            //email exists
-            if (!in_array($row['email'], $before_emails)) {
-                $res['error_msg'] = __d('validate', "メールアドレスは変更できません。");
+            $this->set($row);
+            if (!$this->validates()) {
+                $res['error_msg'] = current(array_shift($this->validationErrors));
                 return $res;
             }
+
             $this->csv_emails[] = $row['email'];
             $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
 
@@ -628,47 +630,10 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "ラストネームは変更できません。");
                 return $res;
             }
-
-            //Member ID(*)
-            if (!viaIsSet($row['member_no'])) {
-                $res['error_msg'] = __d('gl', "メンバーIDは必須項目です。");
-                return $res;
-            }
             $this->csv_member_ids[] = $row['member_no'];
             $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
-            //Active(*)
-            if (!viaIsSet($row['active_flg'])) {
-                $res['error_msg'] = __d('gl', "メンバーアクティブ状態は必須項目です。");
-                return $res;
-            }
-            // ON or OFF check
-            if (!isOnOrOff($row['active_flg'])) {
-                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', 'メンバーアクティブ状態'));
-                return $res;
-            }
             $this->csv_datas[$key]['TeamMember']['active_flg'] = strtolower($row['active_flg']) == "on" ? true : false;
-            //Administrator(*)
-            if (!viaIsSet($row['admin_flg'])) {
-                $res['error_msg'] = __d('gl', "管理者は必須項目です。");
-                return $res;
-            }
-            // ON or OFF check
-            if (!isOnOrOff($row['admin_flg'])) {
-                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '管理者'));
-                return $res;
-            }
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) == 'on' ? true : false;
-            //Evaluated(*)
-            if (!viaIsSet($row['evaluation_enable_flg'])) {
-                $res['error_msg'] = __d('gl', "評価対象は必須項目です。");
-                return $res;
-            }
-
-            // ON or OFF check
-            if (!isOnOrOff($row['evaluation_enable_flg'])) {
-                $res['error_msg'] = __d('gl', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', '評価対象'));
-                return $res;
-            }
             $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'on' ? true : false;
             if (viaIsSet($row['member_type'])) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
@@ -681,27 +646,10 @@ class TeamMember extends AppModel
             for ($i = 1; $i <= 7; $i++) {
                 $groups[] = $row["group_{$i}"];
             }
-            if (!isAlignLeft($groups)) {
-                $res['error_msg'] = __d('gl', "グループ名は左詰めで記入してください。");
-                return $res;
-            }
-            //duplicate group check.
-            $filtered_groups = array_filter($groups, "strlen");
-            if (count(array_unique($filtered_groups)) != count($filtered_groups)
-            ) {
-                $res['error_msg'] = __d('gl', "グループ名が重複しています。");
-                return $res;
-            }
             foreach ($groups as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Group'][] = $v;
                 }
-            }
-            //Coach ID
-            //not allow include own member ID
-            if (!empty($row['member_no']) && $row['member_no'] == $row['coach_member_no']) {
-                $res['error_msg'] = __d('gl', "コーチIDに本人のIDを指定する事はできません。");
-                return $res;
             }
             //exists check (after check)
             $this->csv_coach_ids[] = $row['coach_member_no'];
@@ -717,23 +665,8 @@ class TeamMember extends AppModel
             for ($i = 1; $i <= 7; $i++) {
                 $raters[] = $row["rater_member_no_{$i}"];
             }
-            if (!isAlignLeft($raters)) {
-                $res['error_msg'] = __d('gl', "評価者IDは左詰めで記入してください。");
-                return $res;
-            }
-            //not allow include own member ID
-            if (!empty($row['member_no']) && in_array($row['member_no'], $raters)
-            ) {
-                $res['error_msg'] = __d('gl', "評価者IDに本人のIDを指定する事はできません。");
-                return $res;
-            }
             //duplicate rater check.
             $filtered_raters = array_filter($raters, "strlen");
-            if (count(array_unique($filtered_raters)) != count($filtered_raters)
-            ) {
-                $res['error_msg'] = __d('gl', "評価者IDが重複しています。");
-                return $res;
-            }
             foreach ($raters as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Rater'][] = $v;
@@ -810,6 +743,7 @@ class TeamMember extends AppModel
             }
         }
         $res['error'] = false;
+        $this->_setValidateFromBackUp();
         return $res;
     }
 
@@ -1228,7 +1162,7 @@ class TeamMember extends AppModel
 
     function _setCsvValidateRule($new = true)
     {
-        $validate = [
+        $common_validate = [
             'email'                 => [
                 'notEmpty' => [
                     'rule'    => 'notEmpty',
@@ -1308,64 +1242,6 @@ class TeamMember extends AppModel
                     'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "メンバータイプ"))
                 ],
             ],
-            'phone_no'              => [
-                'phoneNo' => [
-                    'rule'       => 'phoneNo',
-                    'message'    => __d('validate', "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'gender'                => [
-                'inList' => [
-                    'rule'       => ['inList', ['male', 'female']],
-                    'message'    => __d('validate', "サポートされていない性別表記です。'male'もしくは'female'で記入してください。"),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'language'              => [
-                'inList' => [
-                    'rule'       => ['inList', $this->support_lang_codes],
-                    'message'    => __d('validate', "サポートされていないローカル姓名の言語コードです。"),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'local_first_name'      => [
-                'maxLength' => [
-                    'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "ローカル名"))
-                ],
-            ],
-            'local_last_name'       => [
-                'maxLength' => [
-                    'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "ローカル姓"))
-                ],
-            ],
-            'birth_year'            => [
-                'isAllOrNothing' => [
-                    'rule'    => ['isAllOrNothing', ['birth_year', 'birth_month', 'birth_day']],
-                    'message' => __d('validate', "誕生日を記入する場合は年月日のすべての項目を記入してください。"),
-                ],
-                'birthYear'      => [
-                    'rule'       => 'birthYear',
-                    'message'    => __d('validate', "%sが正しくありません。", __d('gl', "誕生年")),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'birth_month'           => [
-                'birthMonth' => [
-                    'rule'       => 'birthMonth',
-                    'message'    => __d('validate', "%sが正しくありません。", __d('gl', "誕生月")),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'birth_day'             => [
-                'birthDay' => [
-                    'rule'       => 'birthDay',
-                    'message'    => __d('validate', "%sが正しくありません。", __d('gl', "誕生日")),
-                    'allowEmpty' => true,
-                ],
-            ],
             'group_1'               => [
                 'isAlignLeft'     => [
                     'rule'       => ['isAlignLeft', ['group_1', 'group_2', 'group_3', 'group_4', 'group_5', 'group_6', 'group_7']],
@@ -1408,6 +1284,84 @@ class TeamMember extends AppModel
                 ],
             ],
         ];
+        $validateOfNew = [
+            'phone_no'         => [
+                'phoneNo' => [
+                    'rule'       => 'phoneNo',
+                    'message'    => __d('validate', "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"),
+                    'allowEmpty' => true,
+                ],
+            ],
+            'gender'           => [
+                'inList' => [
+                    'rule'       => ['inList', ['male', 'female']],
+                    'message'    => __d('validate', "サポートされていない性別表記です。'male'もしくは'female'で記入してください。"),
+                    'allowEmpty' => true,
+                ],
+            ],
+            'language'         => [
+                'inList' => [
+                    'rule'       => ['inList', $this->support_lang_codes],
+                    'message'    => __d('validate', "サポートされていないローカル姓名の言語コードです。"),
+                    'allowEmpty' => true,
+                ],
+            ],
+            'local_first_name' => [
+                'maxLength' => [
+                    'rule'    => ['maxLength', 64],
+                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "ローカル名"))
+                ],
+            ],
+            'local_last_name'  => [
+                'maxLength' => [
+                    'rule'    => ['maxLength', 64],
+                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "ローカル姓"))
+                ],
+            ],
+            'birth_year'       => [
+                'isAllOrNothing' => [
+                    'rule'    => ['isAllOrNothing', ['birth_year', 'birth_month', 'birth_day']],
+                    'message' => __d('validate', "誕生日を記入する場合は年月日のすべての項目を記入してください。"),
+                ],
+                'birthYear'      => [
+                    'rule'       => 'birthYear',
+                    'message'    => __d('validate', "%sが正しくありません。", __d('gl', "誕生年")),
+                    'allowEmpty' => true,
+                ],
+            ],
+            'birth_month'      => [
+                'birthMonth' => [
+                    'rule'       => 'birthMonth',
+                    'message'    => __d('validate', "%sが正しくありません。", __d('gl', "誕生月")),
+                    'allowEmpty' => true,
+                ],
+            ],
+            'birth_day'        => [
+                'birthDay' => [
+                    'rule'       => 'birthDay',
+                    'message'    => __d('validate', "%sが正しくありません。", __d('gl', "誕生日")),
+                    'allowEmpty' => true,
+                ],
+            ],
+        ];
+        $validateOfUpdate = [
+            'active_flg' => [
+                'notEmpty'  => [
+                    'rule'    => 'notEmpty',
+                    'message' => __d('validate', "%sは必須項目です。", __d('gl', "メンバーアクティブ状態"))
+                ],
+                'isOnOrOff' => [
+                    'rule'    => 'isOnOrOff',
+                    'message' => __d('validate', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('gl', 'メンバーアクティブ状態'))
+                ],
+            ],
+        ];
+        if ($new) {
+            $validate = $common_validate + $validateOfNew;
+        }
+        else {
+            $validate = $common_validate + $validateOfUpdate;
+        }
         $this->validateBackup = $this->validate;
         $this->validate = $validate;
     }
