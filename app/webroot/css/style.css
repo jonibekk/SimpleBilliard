@@ -29,7 +29,7 @@ ul {
 
 /*/=== CSS Animation ====*/
 
-.pointer{
+.pointer {
     cursor: pointer;
 }
 
@@ -943,7 +943,7 @@ textarea{
     color: #ae2f2f;
 }
 
-.font_brownRed{
+.font_brownRed {
     color: #ae2f2f;
 }
 
@@ -1369,7 +1369,7 @@ textarea{
     vertical-align: top;
 }
 
-.feed-notify-box{
+.feed-notify-box {
     background-color: #f4edf2;
     border-color: #ddd;
     color: #b36e6f;
@@ -1378,7 +1378,7 @@ textarea{
 
 .feed-notify-box:hover,
 .feed-notify-box:target,
-.feed-notify-box:focus{
+.feed-notify-box:focus {
     background-color: #e8c8cc;
     border-color: #ddd;
     color: #b36e6f;
@@ -1686,11 +1686,10 @@ ul.example-indent {
 
 .panel-read-more-body:hover,
 .panel-read-more-body:target,
-.panel-read-more-body:focus{
+.panel-read-more-body:focus {
     background-color: #e8c8cc;
     border-color: #ddd;
 }
-
 
 .feed-read-more {
     margin-top: 20px;
@@ -2753,7 +2752,7 @@ textarea.comment-post-form {
 
 .btn-goals-column-plus:hover,
 .btn-goals-column-plus:target,
-.btn-goals-column-plus:active{
+.btn-goals-column-plus:active {
     text-decoration: none;
     border-color: #ae2f2f;
 }
@@ -3388,11 +3387,12 @@ Temporary Properties - YOU MUST FIX
     margin-left: 1.6667%;
     width: 15%;
 }
+
 .goalsCard-activity:hover,
 .goalsCard-activity:active,
 .goalsCard-activity:focus {
     border-color: #ae2f2f;
-    text-decoration: none ;
+    text-decoration: none;
 }
 
 .goalsCard-activity0 {
@@ -3685,4 +3685,107 @@ Temporary Properties - YOU MUST FIX
     direction: ltr;
 }
 
-/* コメント太郎 */
+/* 通知部分 */
+/*
+> notify-dropdown-area
+>> notify-card
+>>> notify-text
+*/
+.notify-head {
+    text-align: center;
+    height: 20px;
+    font-weight: bold;
+}
+
+.notify-icon {
+    width: 64px;
+    height: 64px;
+}
+
+.notify-dropdown-area {
+    min-width: 450px;
+    max-width: 450px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+}
+
+.notify-card-list {
+    clear: both;
+}
+
+.dropdown-menu > li > .notify-card {
+    display: block;
+    padding: 12px 8px 8px;
+}
+
+.dropdown-menu > li > a.notify-card:hover,
+    /* .dropdown-menu > li > a.notify-card:active,*/
+.dropdown-menu > li > a.notify-card:focus {
+    color: #000;
+    background-color: #f0f0f0;
+}
+
+.notify-text {
+    /*
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    */
+    white-space: normal;
+    overflow: hidden;
+}
+
+.dropdown-menu .notify-divider {
+    clear: both;
+    margin: 0;
+}
+
+.notify-contents {
+    margin-left: 8px;
+}
+
+.notify-line-number {
+    margin: 0;
+    line-break: normal;
+    height: 48px;
+    position: relative;
+}
+/*
+.notify-line-number:before, .notify-line-number:after {
+    background: #fff;
+    background: -webkit-linear-gradient(left, rgba(245, 245, 245, 0), #fff);
+    background: linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
+    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
+    position: absolute;
+}
+
+.notify-line-number-on:before, .notify-line-number-on:after {
+    "background" : "#f0f0f0";
+    "background" : "-webkit-linear-gradient(left, rgba(245, 245, 245, 0), #f0f0f0)";
+    "background" : "linear-gradient(to right, rgba(245, 245, 245, 0), #fff)";
+    "background" : "-webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #f0f0f0)";
+    position : absolute;
+}
+
+.notify-line-number:before {
+    content: "...";
+    color: rgba(0, 0, 0, 0);
+    top: 34px;
+    width: 30%;
+    height: 24px;
+    right: 0;
+}
+
+.notify-line-number:after, .notify-line-number:after {
+    content: "";
+    height: 100%;
+    width: 100%;
+}
+*/
+/*photo-upボタン*/
+.comment-contents .new-comment-add-pic {
+    display: inline;
+}
+

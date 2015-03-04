@@ -2008,6 +2008,17 @@ function initCommentNotify(notifyBox) {
     numInBox.html("0");
 }
 
+/*
+// 通知の文字制限
+$(document).on("mouseover", "#notifyCard", function () {
+/*
+    $('.notify-line-number').removeClass("notify-line-number")
+});
+$(document).on("mouseout", "#notifyCard", function () {
+    $('.notify-line-number').addClass("notify-line-numbern")
+});
+*/
+
 $(document).ready(function(){
     $(document).on("click", "#click-header-bell", function() {
         initBell();

@@ -158,13 +158,9 @@
                     <a id="click-header-bell" class="header-link" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" id="bell-dropdown" role="menu" style="
-                        min-width: 450px;
-                        max-width: 450px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                    "></ul>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon notify-dropdown-area" id="bell-dropdown" role="menu">
+                        <li class="notify-head">お知らせ</li>
+                    </ul>
                 </div>
                 <div class="pull-right header-function dropdown">
                     <a href="#"
