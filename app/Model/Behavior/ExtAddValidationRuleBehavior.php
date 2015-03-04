@@ -147,12 +147,10 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
     }
 
     function isAlignLeft(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check, $compare_fields)
+        Model $Model, $array)
     {
-        $array = [];
-        foreach ($compare_fields as $field) {
-            $array[] = $Model->data[$Model->alias][$field];
-        }
+        $array = array_values($array);
+        $array = $array[0];
         //first remove empty data
         foreach ($array as $k => $v) {
             if (!$v) {
@@ -165,7 +163,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         }
 
         //if toothless then return false
-        $expect_k = 0;
+        $expect_k = 1;
         foreach ($array as $k => $v) {
             if ($k !== $expect_k) {
                 return false;
@@ -176,10 +174,12 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
     }
 
     function maxLengthArray(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check, $length, $fields)
+        Model $Model, $array, $length)
     {
-        foreach ($fields as $field) {
-            if (!Validation::maxLength($Model->data[$Model->alias][$field], $length)) {
+        $array = array_values($array);
+        $array = $array[0];
+        foreach ($array as $v) {
+            if (!Validation::maxLength($v, $length)) {
                 return false;
             }
         }
@@ -187,12 +187,10 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
     }
 
     function isNotDuplicated(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check, $compare_fields)
+        Model $Model, $array)
     {
-        $array = [];
-        foreach ($compare_fields as $field) {
-            $array[] = $Model->data[$Model->alias][$field];
-        }
+        $array = array_values($array);
+        $array = $array[0];
         $array = array_filter($array, "strlen");
         return count(array_unique($array)) == count($array);
     }
@@ -201,11 +199,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         Model $Model, $check, $compare_fields)
     {
         $check = current($check);
-        $array = [];
-        foreach ($compare_fields as $field) {
-            $array[] = $Model->data[$Model->alias][$field];
-        }
-        return !in_array($check, $array);
+        return !in_array($check, $Model->data[$Model->alias][$compare_fields]);
     }
 
     function birthYear(/** @noinspection PhpUnusedParameterInspection */
@@ -230,6 +224,15 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         $value = array_values($check);
         $value = $value[0];
         return preg_match('/^(0[1-9]{1}|[1-9]{1}|[1-2]{1}[0-9]{1}|3[0-1]{1})$/', $value);
+    }
+
+    function isNotEqual(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $target)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        $target_value = $Model->data[$Model->alias][$target];
+        return $value !== $target_value;
     }
 
 }

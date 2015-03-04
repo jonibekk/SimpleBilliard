@@ -601,7 +601,6 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "項目数が一致しません。");
                 return $res;
             }
-
             if ($key === 0) {
                 if (!empty(array_diff($row, $this->_getCsvHeading(false)))) {
                     $res['error_msg'] = __d('gl', "見出しが一致しません。");
@@ -609,6 +608,7 @@ class TeamMember extends AppModel
                 }
                 continue;
             }
+            $row = Hash::expand($row);
             $this->set($row);
             if (!$this->validates()) {
                 $res['error_msg'] = current(array_shift($this->validationErrors));
@@ -642,11 +642,7 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
             //Group
-            $groups = [];
-            for ($i = 1; $i <= 7; $i++) {
-                $groups[] = $row["group_{$i}"];
-            }
-            foreach ($groups as $v) {
+            foreach ($res['group'] as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Group'][] = $v;
                 }
@@ -661,13 +657,9 @@ class TeamMember extends AppModel
             }
 
             //Rater ID
-            $raters = [];
-            for ($i = 1; $i <= 7; $i++) {
-                $raters[] = $row["rater_member_no_{$i}"];
-            }
             //duplicate rater check.
-            $filtered_raters = array_filter($raters, "strlen");
-            foreach ($raters as $v) {
+            $filtered_raters = array_filter($row['rater_member_no'], "strlen");
+            foreach ($row['rater_member_no'] as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Rater'][] = $v;
                 }
@@ -785,6 +777,8 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "項目数が一致しません。");
                 return $res;
             }
+
+            $row = Hash::expand($row);
             $this->set($row);
             if (!$this->validates()) {
                 $res['error_msg'] = current(array_shift($this->validationErrors));
@@ -821,11 +815,7 @@ class TeamMember extends AppModel
             }
 
             //[15]-[21]Group
-            $groups = [];
-            for ($i = 1; $i <= 7; $i++) {
-                $groups[] = $row["group_{$i}"];
-            }
-            foreach ($groups as $v) {
+            foreach ($row['group'] as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Group'][] = $v;
                 }
@@ -839,17 +829,13 @@ class TeamMember extends AppModel
             }
 
             //[23]-[29]Rater ID
-            $raters = [];
-            for ($i = 1; $i <= 7; $i++) {
-                $raters[] = $row["rater_member_no_{$i}"];
-            }
-            foreach ($raters as $v) {
+            foreach ($row['rater_member_no'] as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Rater'][] = $v;
                 }
             }
             //rater id check(after check)
-            $this->csv_rater_ids[] = array_filter($raters, "strlen");
+            $this->csv_rater_ids[] = array_filter($row['rater_member_no'], "strlen");
         }
 
         //email exists check
@@ -1114,21 +1100,21 @@ class TeamMember extends AppModel
                 'birth_year'            => __d('gl', "誕生年"),
                 'birth_month'           => __d('gl', "誕生月"),
                 'birth_day'             => __d('gl', "誕生日"),
-                'group_1'               => __d('gl', "グループ1"),
-                'group_2'               => __d('gl', "グループ2"),
-                'group_3'               => __d('gl', "グループ3"),
-                'group_4'               => __d('gl', "グループ4"),
-                'group_5'               => __d('gl', "グループ5"),
-                'group_6'               => __d('gl', "グループ6"),
-                'group_7'               => __d('gl', "グループ7"),
+                'group.1'               => __d('gl', "グループ1"),
+                'group.2'               => __d('gl', "グループ2"),
+                'group.3'               => __d('gl', "グループ3"),
+                'group.4'               => __d('gl', "グループ4"),
+                'group.5'               => __d('gl', "グループ5"),
+                'group.6'               => __d('gl', "グループ6"),
+                'group.7'               => __d('gl', "グループ7"),
                 'coach_member_no'       => __d('gl', "コーチID"),
-                'rater_member_no_1'     => __d('gl', "評価者1"),
-                'rater_member_no_2'     => __d('gl', "評価者2"),
-                'rater_member_no_3'     => __d('gl', "評価者3"),
-                'rater_member_no_4'     => __d('gl', "評価者4"),
-                'rater_member_no_5'     => __d('gl', "評価者5"),
-                'rater_member_no_6'     => __d('gl', "評価者6"),
-                'rater_member_no_7'     => __d('gl', "評価者7"),
+                'rater_member_no.1'     => __d('gl', "評価者1"),
+                'rater_member_no.2'     => __d('gl', "評価者2"),
+                'rater_member_no.3'     => __d('gl', "評価者3"),
+                'rater_member_no.4'     => __d('gl', "評価者4"),
+                'rater_member_no.5'     => __d('gl', "評価者5"),
+                'rater_member_no.6'     => __d('gl', "評価者6"),
+                'rater_member_no.7'     => __d('gl', "評価者7"),
             ];
         }
 
@@ -1141,21 +1127,21 @@ class TeamMember extends AppModel
             'admin_flg'             => __d('gl', "管理者(*)"),
             'evaluation_enable_flg' => __d('gl', "評価対象(*)"),
             'member_type'           => __d('gl', "メンバータイプ"),
-            'group_1'               => __d('gl', "グループ1"),
-            'group_2'               => __d('gl', "グループ2"),
-            'group_3'               => __d('gl', "グループ3"),
-            'group_4'               => __d('gl', "グループ4"),
-            'group_5'               => __d('gl', "グループ5"),
-            'group_6'               => __d('gl', "グループ6"),
-            'group_7'               => __d('gl', "グループ7"),
+            'group.1'               => __d('gl', "グループ1"),
+            'group.2'               => __d('gl', "グループ2"),
+            'group.3'               => __d('gl', "グループ3"),
+            'group.4'               => __d('gl', "グループ4"),
+            'group.5'               => __d('gl', "グループ5"),
+            'group.6'               => __d('gl', "グループ6"),
+            'group.7'               => __d('gl', "グループ7"),
             'coach_member_no'       => __d('gl', "コーチID"),
-            'rater_member_no_1'     => __d('gl', "評価者1"),
-            'rater_member_no_2'     => __d('gl', "評価者2"),
-            'rater_member_no_3'     => __d('gl', "評価者3"),
-            'rater_member_no_4'     => __d('gl', "評価者4"),
-            'rater_member_no_5'     => __d('gl', "評価者5"),
-            'rater_member_no_6'     => __d('gl', "評価者6"),
-            'rater_member_no_7'     => __d('gl', "評価者7"),
+            'rater_member_no.1'     => __d('gl', "評価者1"),
+            'rater_member_no.2'     => __d('gl', "評価者2"),
+            'rater_member_no.3'     => __d('gl', "評価者3"),
+            'rater_member_no.4'     => __d('gl', "評価者4"),
+            'rater_member_no.5'     => __d('gl', "評価者5"),
+            'rater_member_no.6'     => __d('gl', "評価者6"),
+            'rater_member_no.7'     => __d('gl', "評価者7"),
         ];
 
     }
@@ -1183,7 +1169,7 @@ class TeamMember extends AppModel
                     'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "メンバーID"))
                 ],
                 'isNotExistArray' => [
-                    'rule'       => ['isNotExistArray', ['rater_member_no_1', 'rater_member_no_2', 'rater_member_no_3', 'rater_member_no_4', 'rater_member_no_5', 'rater_member_no_6', 'rater_member_no_7']],
+                    'rule'       => ['isNotExistArray', 'rater_member_no'],
                     'message'    => __d('gl', "%sに本人のIDを指定する事はできません。", __d('gl', "評価者ID")),
                     'allowEmpty' => true,
                 ],
@@ -1242,43 +1228,43 @@ class TeamMember extends AppModel
                     'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "メンバータイプ"))
                 ],
             ],
-            'group_1'               => [
+            'group'                 => [
                 'isAlignLeft'     => [
-                    'rule'       => ['isAlignLeft', ['group_1', 'group_2', 'group_3', 'group_4', 'group_5', 'group_6', 'group_7']],
+                    'rule'       => 'isAlignLeft',
                     'message'    => __d('validate', "%sは左詰めで記入してください。", __d('gl', "グループ名")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
-                    'rule'       => ['isNotDuplicated', ['group_1', 'group_2', 'group_3', 'group_4', 'group_5', 'group_6', 'group_7']],
+                    'rule'       => 'isNotDuplicated',
                     'message'    => __d('validate', "%sが重複しています。", __d('gl', "グループ名")),
                     'allowEmpty' => true,
                 ],
                 'maxLengthArray'  => [
-                    'rule'       => ['maxLengthArray', 64, ['group_1', 'group_2', 'group_3', 'group_4', 'group_5', 'group_6', 'group_7']],
+                    'rule'       => ['maxLengthArray', 64],
                     'message'    => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "グループ名")),
                     'allowEmpty' => true,
                 ],
             ],
             'coach_member_no'       => [
-                'isNotDuplicated' => [
-                    'rule'       => ['isNotDuplicated', ['coach_member_no', 'member_no']],
+                'isNotEqual' => [
+                    'rule'       => ['isNotEqual', 'member_no'],
                     'message'    => __d('validate', "%sに本人のIDを指定する事はできません。", __d('gl', "コーチID")),
                     'allowEmpty' => true,
                 ],
             ],
-            'rater_member_no_1'     => [
+            'rater_member_no'       => [
                 'isAlignLeft'     => [
-                    'rule'       => ['isAlignLeft', ['rater_member_no_1', 'rater_member_no_2', 'rater_member_no_3', 'rater_member_no_4', 'rater_member_no_5', 'rater_member_no_6', 'rater_member_no_7']],
+                    'rule'       => 'isAlignLeft',
                     'message'    => __d('validate', "%sは左詰めで記入してください。", __d('gl', "評価者")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
-                    'rule'       => ['isNotDuplicated', ['rater_member_no_1', 'rater_member_no_2', 'rater_member_no_3', 'rater_member_no_4', 'rater_member_no_5', 'rater_member_no_6', 'rater_member_no_7']],
+                    'rule'       => 'isNotDuplicated',
                     'message'    => __d('validate', "%sが重複しています。", __d('gl', "評価者")),
                     'allowEmpty' => true,
                 ],
                 'maxLengthArray'  => [
-                    'rule'       => ['maxLengthArray', 64, ['rater_member_no_1', 'rater_member_no_2', 'rater_member_no_3', 'rater_member_no_4', 'rater_member_no_5', 'rater_member_no_6', 'rater_member_no_7']],
+                    'rule'       => ['maxLengthArray', 64],
                     'message'    => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "評価者")),
                     'allowEmpty' => true,
                 ],
