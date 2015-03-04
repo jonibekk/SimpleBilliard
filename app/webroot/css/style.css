@@ -1610,8 +1610,7 @@ ul.example-indent {
 }
 
 .comment-box {
-    overflow: hidden;
-
+    min-height: 54px;
 }
 
 .new-comment-read {
