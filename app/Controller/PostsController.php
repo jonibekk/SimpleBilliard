@@ -8,6 +8,11 @@ App::uses('AppController', 'Controller');
  */
 class PostsController extends AppController
 {
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Security->unlockedActions = ['ajax_add_comment'];
+    }
 
     /**
      * add method
@@ -20,7 +25,8 @@ class PostsController extends AppController
         $this->request->allowMethod('post');
 
         // ogbをインサートデータに追加
-        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
+        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
+                                                             viaIsSet($this->request->data['Post']['body']));
 
         // 投稿を保存
         $successSavedPost = $this->Post->addNormal($this->request->data);
@@ -41,7 +47,7 @@ class PostsController extends AppController
         $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
-        $share    = explode(",", viaIsSet($this->request->data['Post']['share']));
+        $share = explode(",", viaIsSet($this->request->data['Post']['share']));
 
         // リクエストデータが正しくないケース
         if (!$socketId || $share[0] === "") {
@@ -53,7 +59,8 @@ class PostsController extends AppController
         // チーム全体公開が含まれている場合はチーム全体にのみpush
         if (in_array("public", $share)) {
             $this->NotifyBiz->push($socketId, "public");
-        } else {
+        }
+        else {
             // それ以外の場合は共有先の数だけ回す
             foreach ($share as $val) {
                 $this->NotifyBiz->push($socketId, $val);
@@ -114,7 +121,8 @@ class PostsController extends AppController
         }
 
         // ogbをインサートデータに追加
-        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), viaIsSet($this->request->data['Post']['body']));
+        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
+                                                             viaIsSet($this->request->data['Post']['body']));
 
         // 投稿を保存
         if ($this->Post->postEdit($this->request->data)) {
@@ -180,7 +188,8 @@ class PostsController extends AppController
         }
 
         // ogbをインサートデータに追加
-        $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), viaIsSet($this->request->data['Comment']['body']));
+        $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
+                                                                viaIsSet($this->request->data['Comment']['body']));
 
         // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
@@ -272,6 +281,22 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
 
         $comments = $this->Post->Comment->getPostsComment($post_id, 3);
+        $this->set(compact('comments'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/ajax_comments');
+        $html = $response->__toString();
+        $result = array(
+            'html' => $html
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_get_latest_comment($post_id, $last_comment_id = 0)
+    {
+        $this->_ajaxPreProcess();
+        $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
 
         //エレメントの出力を変数に格納する
@@ -419,9 +444,14 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function comment_add()
+    public function ajax_add_comment()
     {
         $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+        $result = [
+            'error' => false,
+            'msg'   => ""
+        ];
         $this->Post->id = viaIsSet($this->request->data['Comment']['post_id']);
         try {
             if (!$this->Post->exists()) {
@@ -429,7 +459,8 @@ class PostsController extends AppController
             }
 
             // ogbをインサートデータに追加
-            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), viaIsSet($this->request->data['Comment']['body']));
+            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
+                                                                    viaIsSet($this->request->data['Comment']['body']));
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
@@ -437,7 +468,7 @@ class PostsController extends AppController
                                                  $this->Post->Comment->id);
                 $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                                                  $this->Post->id, $this->Post->Comment->id);
-                $this->Pnotify->outSuccess(__d('gl', "コメントしました。"));
+                $result['msg'] = __d('gl', "コメントしました。");
             }
             else {
                 if (!empty($this->Post->Comment->validationErrors)) {
@@ -446,44 +477,15 @@ class PostsController extends AppController
                 }
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage(), ['title' => __d('gl', "コメントに失敗しました。")]);
-            $this->redirect($this->referer());
+            $result['error'] = true;
+            $result['msg'] = $e->getMessage();
+            return $this->_ajaxGetResponse($result);
         }
 
-        //push通知するユーザーを定義
-        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id);
-        $findRes = $this->Post->findById($this->Post->id, array('user_id'));
-        $postUserId = viaIsSet($findRes['Post']['user_id']);
-        if($postUserId && !in_array($postUserId, $pushUserList) && $postUserId !== $this->Session->read('Auth.User.id')) {
-            $pushUserList[] = $postUserId;
-        }
+        $this->_pushCommentToBell();
+        $this->_pushCommentToPost($this->Post->id);
 
-        // pusherに渡すデータを定義
-        $teamId   = $this->Session->read('current_team_id');
-        $socketId = viaIsSet($this->request->data['socket_id']);
-        $comment  = viaIsSet($this->request->data['Comment']['body']);
-        if(!$socketId || !$comment) {
-            $this->redirect($this->referer());
-        }
-        // 通知テンプレートのレンダリング
-        $view = new View();
-        $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
-        $postUrl = "/post_permanent/" . $this->Post->id;
-        $html = $view->element('bell_notification_item', compact('userName', 'comment', 'postUrl'));
-        $notifyId = Security::hash(time());
-        $data = array(
-            'notify_id'      => $notifyId,
-            'is_bell_notify' => true,
-            'html' => $html,
-        );
-
-        // Pusherへ送信
-        foreach($pushUserList as $user) {
-            $channelName = "user_" . $user . "_team_" . $teamId;
-            $this->NotifyBiz->bellPush($socketId, $channelName, $data);
-        }
-
-        $this->redirect($this->referer());
+        return $this->_ajaxGetResponse($result);
     }
 
     function feed()
@@ -565,7 +567,7 @@ class PostsController extends AppController
     }
 
     /**
-     * @param array $requestData
+     * @param array  $requestData
      * @param string $body
      *
      * @return $requestData
@@ -583,7 +585,7 @@ class PostsController extends AppController
         // ogpが取得できない場合
         $notExistOgp = !isset($ogp['title']) || !isset($ogp['description']);
         if ($notExistOgp) {
-            $requestData['site_info']  = null;
+            $requestData['site_info'] = null;
             $requestData['site_photo'] = null;
             return $requestData;
         }
@@ -594,6 +596,62 @@ class PostsController extends AppController
             $requestData['site_photo'] = $ogp['image'];
         }
         return $requestData;
+    }
+
+    function _pushCommentToBell()
+    {
+        //push通知するユーザーを定義
+        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id);
+        $findRes = $this->Post->findById($this->Post->id, array('user_id'));
+        $postUserId = viaIsSet($findRes['Post']['user_id']);
+        if ($postUserId && !in_array($postUserId,
+                                     $pushUserList) && $postUserId !== $this->Session->read('Auth.User.id')
+        ) {
+            $pushUserList[] = $postUserId;
+        }
+
+        // pusherに渡すデータを定義
+        $teamId = $this->Session->read('current_team_id');
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $comment = viaIsSet($this->request->data['Comment']['body']);
+        if (!$socketId || !$comment) {
+            return;
+        }
+        // 通知テンプレートのレンダリング
+        $view = new View();
+        $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
+        $postUrl = "/post_permanent/" . $this->Post->id;
+        $html = $view->element('bell_notification_item', compact('userName', 'comment', 'postUrl'));
+        $notifyId = Security::hash(time());
+        $data = array(
+            'notify_id'      => $notifyId,
+            'is_bell_notify' => true,
+            'html'           => $html,
+        );
+
+        // Pusherへ送信
+        foreach ($pushUserList as $user) {
+            $channelName = "user_" . $user . "_team_" . $teamId;
+            $this->NotifyBiz->bellPush($socketId, $channelName, $data);
+        }
+    }
+
+    public function _pushCommentToPost($postId)
+    {
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $notifyId = Security::hash(time());
+
+        // リクエストデータが正しくないケース
+        if (!$socketId) {
+            return;
+        }
+
+        $data = [
+            'notify_id'         => $notifyId,
+            'is_comment_notify' => true,
+            'post_id'           => $postId
+        ];
+        $this->NotifyBiz->commentPush($socketId, $data);
     }
 
 }

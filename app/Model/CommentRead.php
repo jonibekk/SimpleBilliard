@@ -36,15 +36,38 @@ class CommentRead extends AppModel
         'Team'
     ];
 
-    public function red($post_list)
+    public function  red($comment_list)
+    {
+        //既読コメントを除外
+        $comment_list = $this->pickUnread($comment_list);
+        //自分のコメントを除外
+        $comment_list = $this->pickNotMine($comment_list);
+        $common_data = [
+            'user_id' => $this->my_uid,
+            'team_id' => $this->current_team_id
+        ];
+        $comment_data = [];
+        if (is_array($comment_list)) {
+            foreach ($comment_list as $comment) {
+                $data = array_merge($common_data, ['comment_id' => $comment]);
+                $comment_data[] = $data;
+            }
+        }
+        if (empty($comment_data)) {
+            return;
+        }
+        $this->saveAll($comment_data);
+    }
+
+    private function pickUnread($comment_list)
     {
         //既読済みのリスト取得
         $options = [
             'conditions' => [
-                'post_id' => $post_list,
+                'id'      => $comment_list,
                 'team_id' => $this->current_team_id,
             ],
-            'fields'     => ['id', 'post_id'],
+            'fields'     => ['id'],
             'contain'    => [
                 'CommentRead' => [
                     'conditions' => [
@@ -56,24 +79,34 @@ class CommentRead extends AppModel
             ]
         ];
         $all_read = $this->Comment->find('all', $options);
-        $common_data = [
-            'user_id' => $this->my_uid,
-            'team_id' => $this->current_team_id
-        ];
         $comment_data = [];
         foreach ($all_read as $read) {
             //既読をスキップ
             if (!empty($read['CommentRead'])) {
                 continue;
             }
-            $data = array_merge($common_data, ['comment_id' => $read['Comment']['id']]);
-            $comment_data[] = $data;
+            $comment_data[] = $read['Comment']['id'];
         }
+        return $comment_data;
+    }
 
-        if (empty($comment_data)) {
-            return;
-        }
-        $this->saveAll($comment_data);
+    private function pickNotMine($comment_list)
+    {
+        //自分以外の投稿を取得
+        $options = [
+            'conditions' => [
+                'id'      => $comment_list,
+                'team_id' => $this->current_team_id,
+                'NOT'     => [
+                    'user_id' => $this->my_uid,
+                ]
+            ],
+            'fields'     => ['id']
+        ];
+        $not_mine_list = $this->Comment->find('all', $options);
+        /** @noinspection PhpDeprecationInspection */
+        $not_mines = Set::classicExtract($not_mine_list, '{n}.Comment.id');
+        return $not_mines;
     }
 
     public function getRedUsers($comment_id)

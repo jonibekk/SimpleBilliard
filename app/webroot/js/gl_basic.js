@@ -356,7 +356,7 @@ function getAjaxFormReplaceElm() {
     var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
     var tmp_target_height = $obj.attr("tmp-target-height");
-    replace_elm.children().remove();
+    replace_elm.children().toggle();
     replace_elm.height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
     $.ajax({
@@ -371,7 +371,9 @@ function getAjaxFormReplaceElm() {
             else {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
-                replace_elm.children("form").bootstrapValidator();
+                replace_elm.children("form").bootstrapValidator().on('success.form.bv', function (e) {
+                    validatorCallback(e)
+                });
                 $('#' + click_target_id).trigger('click').focus();
             }
         }
@@ -418,7 +420,6 @@ function uploadCsvFileByForm(e) {
                 .children('.alert-heading').text(data.title);
             //noinspection JSUnresolvedVariable
             $result_msg.find('.alert-msg').text(data.msg);
-
             $submit.removeAttr('disabled');
         })
         .fail(function (data) {
@@ -433,6 +434,55 @@ function uploadCsvFileByForm(e) {
             // 通信が完了したとき
             $result_msg.removeClass('none');
             $loader.addClass('none');
+        });
+}
+
+function addComment(e) {
+    e.preventDefault();
+
+    attrUndefinedCheck(e.target, 'error-msg-id');
+    var result_msg_id = $(e.target).attr('error-msg-id');
+    var $error_msg_box = $('#' + result_msg_id);
+    attrUndefinedCheck(e.target, 'submit-id');
+    var submit_id = $(e.target).attr('submit-id');
+    var $submit = $('#' + submit_id);
+    attrUndefinedCheck(e.target, 'first-form-id');
+    var first_form_id = $(e.target).attr('first-form-id');
+    var $first_form = $('#' + first_form_id);
+    attrUndefinedCheck(e.target, 'refresh-link-id');
+    var refresh_link_id = $(e.target).attr('refresh-link-id');
+    var $refresh_link = $('#' + refresh_link_id);
+
+    $error_msg_box.text("");
+    appendSocketId($(e.target), cake.pusher.socket_id);
+
+    var $f = $(e.target);
+    $.ajax({
+        url: $f.prop('action'),
+        method: 'post',
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        data: new FormData(e.target),
+        timeout: 300000 //5min
+    })
+        .done(function (data) {
+            // 通信が成功したときの処理
+            if (!data.error) {
+                $first_form.children().toggle();
+                $f.remove();
+                $refresh_link.click();
+            }
+            else {
+                $error_msg_box.text(data.msg);
+            }
+        })
+        .fail(function (data) {
+            $error_msg_box.text(cake.message.notice.g);
+        })
+        .always(function (data) {
+            // 通信が完了したとき
+            $submit.removeAttr('disabled');
         });
 }
 
@@ -1597,17 +1647,17 @@ $(document).ready(function () {
     var prevNotifyId = "";
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
+        cake.pusher.socket_id = socketId;
     });
-
     // フォームがsubmitされた際にsocket_idを埋め込む
     $(document).on('submit', 'form.form-feed-notify', function () {
         appendSocketId($(this), socketId);
     });
 
     // keyResultの完了送信時にsocket_idを埋め込む
-    $(document).on("click", ".kr_achieve_button", function() {
+    $(document).on("click", ".kr_achieve_button", function () {
         var formId = $(this).attr("form-id");
-        var $form  = $("form#" + formId);
+        var $form = $("form#" + formId);
         appendSocketId($form, socketId);
         $form.submit();
         return false;
@@ -1621,6 +1671,7 @@ $(document).ready(function () {
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
             var isFeedNotify = viaIsSet(data.is_feed_notify);
             var isBellNotify = viaIsSet(data.is_bell_notify);
+            var isNewCommentNotify = viaIsSet(data.is_comment_notify);
             var notifyId = data.notify_id;
 
             // not allowed multple notify
@@ -1637,13 +1688,20 @@ $(document).ready(function () {
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }
-                // ベル通知の場合
-            } else if(isBellNotify) {
+            }
+
+            // ベル通知の場合
+            if(isBellNotify) {
                 notifyNewBell();
                 prevNotifyId = notifyId;
                 $("#bell-dropdown").prepend(data.html);
-            } else {
+            }
 
+            // 新しいコメント通知の場合
+            if(isNewCommentNotify) {
+                var postId = data.post_id;
+                var notifyBox = $("#Comments_new_" + String(postId));
+                notifyNewComment(notifyBox);
             }
         });
     }
@@ -1687,7 +1745,6 @@ function notifyNewFeed() {
 function notifyNewBell() {
     var notifyBox = $(".bell-notify-box");
     var num = parseInt(notifyBox.html());
-    var title = $("title");
 
     // Increment unread number
     if (num >= 1) {
@@ -1828,8 +1885,159 @@ function evGoalsMoreView() {
     return false;
 }
 
-function viaIsSet( data ){
+function viaIsSet(data) {
     var isExist = typeof( data ) !== 'undefined';
     if (!isExist) return false;
     return data;
+}
+
+function notifyNewComment(notifyBox) {
+    var numInBox  = notifyBox.find(".num");
+    var num = parseInt(numInBox.html());
+
+    // Increment unread number
+    if (num >= 1) {
+        // top of feed
+        numInBox.html(String(num + 1));
+    } else {
+        // Case of not existing unread post yet
+        numInBox.html("1");
+    }
+
+    if(notifyBox.css("display") === "none") {
+        notifyBox.css("display", "block");
+
+        // 通知をふんわり出す
+        var i = 0.2;
+        var roop = setInterval(function () {
+            notifyBox.css("opacity", i);
+            i = i + 0.2;
+            if (i > 1) {
+                clearInterval(roop);
+            }
+        }, 100);
+    }
+}
+
+$(document).ready(function(){
+    $(document).on("click", ".click-comment-new", evCommentLatestView);
+});
+
+function evCommentLatestView() {
+    attrUndefinedCheck(this, 'post-id');
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var commentBlock = $obj.closest(".comment-block");
+    var commentNum = commentBlock.children("div.comment-box").length;
+    var lastCommentBox = commentBlock.children("div.comment-box:last");
+    var lastCommentId  = "";
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    if (commentNum > 0) {
+        // コメントが存在する場合
+        attrUndefinedCheck(lastCommentBox, 'comment-id');
+        lastCommentId = lastCommentBox.attr("comment-id");
+    } else {
+        // コメントがまだ0件の場合
+        lastCommentId = "";
+    }
+    var get_url = $obj.attr('get-url') + "/" + lastCommentId;
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    //ローダー表示
+    $obj.children(".new-comment-read").append($loader_html);
+    $.ajax({
+        type: 'GET',
+        url: get_url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                var postNum = $posts.children("div").length;
+                //一旦非表示
+                $posts.hide();
+                $($obj).before($posts);
+                $posts.show("slow", function () {
+                    //もっと見る
+                    showMore(this);
+                });
+                //ローダーを削除
+                $loader_html.remove();
+                //リンクを削除
+                $obj.css("display", "none").css("opacity", 0);
+                //画像をレイジーロード
+                imageLazyOn();
+                //画像リサイズ
+                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
+                $('.custom-radio-check').customRadioCheck();
+                $obj.removeAttr("disabled");
+
+                initCommentNotify($obj);
+                decrementBellUnreadNumber(postNum);
+            }
+            else {
+                //ローダーを削除
+                $loader_html.remove();
+                //親を取得
+                //noinspection JSCheckFunctionSignatures
+                var $parent = $obj.parent();
+                //「もっと読む」リンクを削除
+                $obj.remove();
+                //「データが無かった場合はデータ無いよ」を表示
+                $parent.append(cake.message.info.g);
+            }
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+function initCommentNotify(notifyBox) {
+    var numInBox = notifyBox.find(".num");
+    numInBox.html("0");
+}
+
+$(document).ready(function(){
+    $(document).on("click", "#click-header-bell", function() {
+        initBell();
+    });
+});
+
+function decrementBellUnreadNumber($num) {
+    var bellNumBox = $(".bell-notify-box");
+    var unreadNum = bellNumBox.html();
+    var retNum;
+    if(unreadNum < 1) {
+        return;
+    }
+    retNum = parseInt(unreadNum) - $num;
+    if(retNum < 1) {
+        initBell();
+    }
+    bellNumBox.html(retNum);
+}
+
+function initBell(){
+    $(".bell-notify-box").css("opacity", 0);
+    $(".bell-notify-box").html("0");
+}
+
+//bootstrapValidatorがSuccessした時
+function validatorCallback(e) {
+    switch (e.target.id) {
+        case "CommentAjaxGetNewCommentFormForm":
+            addComment(e);
+            break;
+    }
 }
