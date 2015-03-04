@@ -330,6 +330,18 @@
                     $this->element('Feed/comment',
                                    ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 <? endforeach ?>
+
+                <a href="#" class="btn btn-link click-comment-new"
+                   id="Comments_new_<?= $post['Post']['id'] ?>"
+                   style="display:none"
+                   post-id="<?= $post['Post']['id'] ?>"
+                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', $post['Post']['id']]) ?>"
+                    >
+                    <div class="alert alert-danger new-comment-read">
+                        <span class="num">0</span>
+                        <?= __d('gl', "件の新しいコメントがあります") ?>
+                    </div>
+                </a>
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <?=
                     $this->Html->image('ajax-loader.gif',

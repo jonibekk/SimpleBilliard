@@ -258,6 +258,9 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
                     ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->expects($this->any())->method('login')
+                    ->will($this->returnValue(true));
         $this->generateMockSecurity();
         $data = [
             'User' => [
