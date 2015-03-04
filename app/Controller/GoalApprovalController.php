@@ -10,6 +10,42 @@ App::uses('Collaborator',  'Model');
  * @property SessionComponent $Session
  */
 class GoalApprovalController extends AppController {
+
+	/*
+	 * 処理待ち && 自分のゴールの場合
+	 */
+	const WAIT_MY_GOAL_MSG         = '承認待ち中です';
+
+	/*
+	 * 処理済み && 自分のゴールが承認されたの場合
+	 */
+	const APPROVAL_MY_GOAL_YES_MSG = 'コーチが承認しました';
+
+	/*
+	 * 処理済み && 自分のゴールが保留の場合
+	 */
+	const APPROVAL_MY_GOAL_NG_MSG  = 'コーチが保留しました';
+
+	/*
+	 * 処理済み && メンバーのゴールが承認されたの場合
+	 */
+	const APPROVAL_MEMBER_GOAL_YES_MSG  = '承認しました';
+
+	/*
+	 * 処理済み && メンバーのゴールが保留の場合
+	 */
+	const APPROVAL_MEMBER_GOAL_NG_MSG   = '保留にしました';
+
+	/*
+	 * 処理済み用のメッセージリスト
+	 */
+	private $approval_msg_list = [
+		1 => GoalApprovalController::APPROVAL_MY_GOAL_YES_MSG,
+		2 => GoalApprovalController::APPROVAL_MY_GOAL_NG_MSG,
+		3 => GoalApprovalController::APPROVAL_MEMBER_GOAL_YES_MSG,
+		4 => GoalApprovalController::APPROVAL_MEMBER_GOAL_NG_MSG
+	];
+
 	/*
 	 * コーチ判定フラグ
 	 * true: コーチがいる false: コーチがいない
@@ -24,6 +60,9 @@ class GoalApprovalController extends AppController {
 
 	/*
 	 * ログインしているユーザータイプ
+	 * 1: コーチのみ存在
+	 * 2: コーチとメンバーが存在
+	 * 3: メンバーのみ存在
 	 */
 	private $user_type = 0;
 
@@ -36,6 +75,7 @@ class GoalApprovalController extends AppController {
 	 * ログインユーザーのteam_id
 	 */
 	private $team_id = NULL;
+
 
 	/*
 	 * オーバーライド
@@ -54,11 +94,10 @@ class GoalApprovalController extends AppController {
 		// コーチ認定機能が使えるユーザーはトップページ
 		if ($this->user_type = $this->getUserType() === 0) {
 		}
+		$this->layout = LAYOUT_ONE_COLUMN;
 
 		// test code
 		$this->user_type = 1;
-
-		$this->layout = LAYOUT_ONE_COLUMN;
 	}
 
 	/*
@@ -67,15 +106,15 @@ class GoalApprovalController extends AppController {
 	public function index() {
 
 		$result_data = array();
+		$col_obj = new Collaborator();
 
 		if ($this->user_type === 1) {
 			$my_goal_id = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
-			$col_obj = new Collaborator();
 			$goal_info = $col_obj->getCollabeGoalDetail($my_goal_id, false);
-			$this->set(compact('goal_info'));
+			$wait_my_goal_msg = GoalApprovalController::WAIT_MY_GOAL_MSG;
+			$this->set(compact('goal_info', 'wait_my_goal_msg'));
 
 		} elseif ($this->user_type === 2) {
-			$this->Goal->getMyGoals();
 			// + メンバーのゴールを取得
 
 		} elseif ($this->user_type === 3) {

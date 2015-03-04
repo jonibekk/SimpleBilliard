@@ -46,10 +46,14 @@
 					</div>
 					<div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
 						<div class="row">
-							<div class="pull-right">
-								<a href="" class="btn btn-link btn-lightGray bd-radius_4px"><?=__d('gl', "保留する")?></a>
-								<a href="" class="btn btn-primary"><?=__d('gl', "承認する")?></a>
-							</div>
+							<? if (isset($wait_my_goal_msg) === true) { ?>
+								<? echo $wait_my_goal_msg; ?>
+							<? } else {  ?>
+								<div class="pull-right">
+									<a href="" class="btn btn-link btn-lightGray bd-radius_4px"><?=__d('gl', "保留する")?></a>
+									<a href="" class="btn btn-primary"><?=__d('gl', "承認する")?></a>
+								</div>
+							<? } ?>
 						</div>
 					</div>
 				</div>
