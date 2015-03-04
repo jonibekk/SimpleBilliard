@@ -1895,6 +1895,8 @@ function notifyNewComment(notifyBox) {
     var numInBox  = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
 
+    hideNotifyErrorBox(notifyBox);
+
     // Increment unread number
     if (num >= 1) {
         // top of feed
@@ -1989,11 +1991,13 @@ function evCommentLatestView() {
                 $loader_html.remove();
                 //親を取得
                 //noinspection JSCheckFunctionSignatures
-                var $parent = $obj.parent();
-                //「もっと読む」リンクを削除
-                $obj.remove();
+                var $errorBox = $obj.siblings("div.new-comment-error");
+                $obj.removeAttr("disabled");
+                //「もっと読む」リンクを初期化
+                initCommentNotify($obj);
                 //「データが無かった場合はデータ無いよ」を表示
-                $parent.append(cake.message.info.g);
+                $errorBox.children("i").css("color", "red");
+                $errorBox.append(cake.message.notice.h).css("display", "block");
             }
         },
         error: function () {
@@ -2006,6 +2010,7 @@ function evCommentLatestView() {
 function initCommentNotify(notifyBox) {
     var numInBox = notifyBox.find(".num");
     numInBox.html("0");
+    notifyBox.css("display", "none").css("opacity", 0);
 }
 
 $(document).ready(function(){
@@ -2040,4 +2045,13 @@ function validatorCallback(e) {
             addComment(e);
             break;
     }
+}
+
+function hideNotifyErrorBox(notifyBox) {
+    errorBox = notifyBox.siblings(".new-comment-error");
+    if(errorBox.attr("display") === "none") {
+        return;
+    }
+
+    errorBox.css("display", "none");
 }
