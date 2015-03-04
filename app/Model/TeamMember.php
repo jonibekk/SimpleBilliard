@@ -1390,4 +1390,25 @@ class TeamMember extends AppModel
 		];
 		return $this->find('first', $options);
 	}
+
+	/**
+	 * ログインしているユーザーが管理するのメンバーIDを取得する
+	 * @param $user_id
+	 * @param $team_id
+	 * @return array|null
+	 */
+	function selectUserIdFromTeamMembersTB ($user_id, $team_id) {
+		// 検索テーブル: team_members
+		// 取得カラム: user_id
+		// 条件: coach_user_id = パラメータ1 team_id = パラメータ2
+		$options = [
+			'fields'     => ['user_id'],
+			'conditions' => [
+				'TeamMember.coach_user_id' => $user_id,
+				'TeamMember.team_id'       => $team_id,
+			],
+		];
+		return $this->find('list', $options);
+	}
+
 }

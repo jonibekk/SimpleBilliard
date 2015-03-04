@@ -1,6 +1,5 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('Collaborator',  'Model');
 
 /**
  * GoalApproval Controller
@@ -74,6 +73,11 @@ class GoalApprovalController extends AppController {
 	private $member_flag = FALSE;
 
 	/*
+	 * メンバーIDリスト
+	 */
+	private $member_ids = [];
+
+	/*
 	 * ログインしているユーザータイプ
 	 * 1: コーチのみ存在
 	 * 2: コーチとメンバーが存在
@@ -119,20 +123,20 @@ class GoalApprovalController extends AppController {
 	 */
 	public function index() {
 
-		$result_data = array();
-
 		if ($this->user_type === 1) {
 			list ($goal_info, $wait_my_goal_msg) = $this->getMyGoalList();
 			$this->set(compact('goal_info', 'wait_my_goal_msg'));
 
 		} elseif ($this->user_type === 2) {
-			// + メンバーのゴールを取得
+			list ($my_goal_info, $wait_my_goal_msg) = $this->getMyGoalList();
+			$member_goal_info = $this->getMemberGoalList();
+			$goal_info = array_merge($my_goal_info, $member_goal_info);
+			$this->set(compact('goal_info', 'wait_my_goal_msg'));
 
 		} elseif ($this->user_type === 3) {
-			// + メンバーのゴールのみ取得
+			$goal_info = $this->getMemberGoalList();
+			$this->set(compact('goal_info'));
 		}
-
-		$this->set($result_data);
 	}
 
 	/*
@@ -143,6 +147,15 @@ class GoalApprovalController extends AppController {
 		$goal_info = $this->Collaborator->getCollabeGoalDetail($my_goal_id, false);
 		$wait_my_goal_msg = GoalApprovalController::WAIT_MY_GOAL_MSG;
 		return array($goal_info, $wait_my_goal_msg);
+	}
+
+	/*
+	 * メンバーのゴールリストを取得する
+	 */
+	private function getMemberGoalList () {
+		$member_goal_id = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($member_goal_id, false);
+		return $goal_info;
 	}
 
 	/*
@@ -177,7 +190,7 @@ class GoalApprovalController extends AppController {
 	 */
 	private function setCoachFlag ($user_id, $team_id) {
 		$coach_id = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
-		if (empty($coach_id) === FALSE) {
+		if (is_null($coach_id['TeamMember']['coach_user_id']) === FALSE) {
 			$this->coach_id = $coach_id['TeamMember']['coach_user_id'];
 			$this->coach_flag = TRUE;
 		}
@@ -187,19 +200,11 @@ class GoalApprovalController extends AppController {
 	 * ログインしているユーザーは管理するメンバー存在するのか
 	 */
 	private function setMemberFlag ($user_id, $team_id) {
-		$this->selectUserIdFromTeamMembersTB($user_id, $team_id);
-		//$this->member_flag = TRUE;
-	}
-
-	/*
-	 * ログインしているユーザーが管理するのメンバーIDを取得する
-	 * TODO: Model/TeamMemberに定義するのが正しい
-	 */
-	private function selectUserIdFromTeamMembersTB ($user_id, $team_id) {
-		// 検索テーブル: team_members
-		// 取得カラム: user_id
-		// 条件: coach_user_id = パラメータ1 team_id = パラメータ2
-
+		$member_ids = $this->TeamMember->selectUserIdFromTeamMembersTB($user_id, $team_id);
+		if (empty($member_ids) === FALSE) {
+			$this->member_ids = $member_ids;
+			$this->member_flag = TRUE;
+		}
 	}
 
 	/*
