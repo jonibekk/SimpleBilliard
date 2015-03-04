@@ -87,8 +87,8 @@ class PostsControllerTest extends ControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [
             'Post' => [
-                'body'  => 'test',
-                'share' => 'public,circle_1,user_12',
+                'body'      => 'test',
+                'share'     => 'public,circle_1,user_12',
                 'socket_id' => 'hogehage'
             ],
         ];
@@ -143,13 +143,42 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
-    function testAddComment()
+    function testAddCommentSuccessWithSocketId()
     {
         /**
          * @var UsersController $Posts
          */
         $Posts = $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'body'    => 'test'
+        ];
+        $Posts->Post->save($data);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Comment'   => [
+                'body'    => 'test',
+                'post_id' => 1,
+            ],
+            'socket_id' => 'test'
+        ];
 
+        $this->testAction('/posts/ajax_add_comment/',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAddCommentSuccessWithoutSocketId()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = [
             'user_id' => 1,
             'team_id' => 1,
@@ -166,15 +195,16 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment/',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAddCommentFailNotPost()
     {
         $this->_getPostsCommonMock();
         try {
-            $this->testAction('/posts/comment_add',
+            $this->testAction('/posts/ajax_add_comment',
                               ['method' => 'GET', 'return' => 'contents']);
 
         } catch (RuntimeException $e) {
@@ -186,25 +216,31 @@ class PostsControllerTest extends ControllerTestCase
     function testAddCommentFail()
     {
         $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = [];
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAddCommentFailNotFound()
     {
         $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = ['Comment' => ['post_id' => 9999999999]];
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAddCommentFailValidate()
     {
         $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = ['Comment' => ['post_id' => 1, 'comment_like_count' => 'test']];
-        $this->testAction('/posts/comment_add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/posts/ajax_add_comment',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetFeedNoPageNum()
@@ -1138,6 +1174,7 @@ class PostsControllerTest extends ControllerTestCase
             ['User' => ['id' => 1]],
             ['User' => ['id' => 4]],
         ];
+        /** @noinspection PhpUndefinedMethodInspection */
         $res = $Posts->_getTotalShareUserCount($circles, $users);
         $this->assertEquals(4, $res);
     }

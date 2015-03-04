@@ -280,8 +280,6 @@ $(document).ready(function () {
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
 
-
-
 });
 function imageLazyOn($elm_obj) {
     if ($elm_obj === undefined) {
@@ -358,7 +356,7 @@ function getAjaxFormReplaceElm() {
     var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
     var tmp_target_height = $obj.attr("tmp-target-height");
-    replace_elm.children().remove();
+    replace_elm.children().toggle();
     replace_elm.height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
     $.ajax({
@@ -373,7 +371,9 @@ function getAjaxFormReplaceElm() {
             else {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
-                replace_elm.children("form").bootstrapValidator();
+                replace_elm.children("form").bootstrapValidator().on('success.form.bv', function (e) {
+                    validatorCallback(e)
+                });
                 $('#' + click_target_id).trigger('click').focus();
             }
         }
@@ -420,7 +420,6 @@ function uploadCsvFileByForm(e) {
                 .children('.alert-heading').text(data.title);
             //noinspection JSUnresolvedVariable
             $result_msg.find('.alert-msg').text(data.msg);
-
             $submit.removeAttr('disabled');
         })
         .fail(function (data) {
@@ -435,6 +434,55 @@ function uploadCsvFileByForm(e) {
             // 通信が完了したとき
             $result_msg.removeClass('none');
             $loader.addClass('none');
+        });
+}
+
+function addComment(e) {
+    e.preventDefault();
+
+    attrUndefinedCheck(e.target, 'error-msg-id');
+    var result_msg_id = $(e.target).attr('error-msg-id');
+    var $error_msg_box = $('#' + result_msg_id);
+    attrUndefinedCheck(e.target, 'submit-id');
+    var submit_id = $(e.target).attr('submit-id');
+    var $submit = $('#' + submit_id);
+    attrUndefinedCheck(e.target, 'first-form-id');
+    var first_form_id = $(e.target).attr('first-form-id');
+    var $first_form = $('#' + first_form_id);
+    attrUndefinedCheck(e.target, 'refresh-link-id');
+    var refresh_link_id = $(e.target).attr('refresh-link-id');
+    var $refresh_link = $('#' + refresh_link_id);
+
+    $error_msg_box.text("");
+    appendSocketId($(e.target), cake.pusher.socket_id);
+
+    var $f = $(e.target);
+    $.ajax({
+        url: $f.prop('action'),
+        method: 'post',
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        data: new FormData(e.target),
+        timeout: 300000 //5min
+    })
+        .done(function (data) {
+            // 通信が成功したときの処理
+            if (!data.error) {
+                $first_form.children().toggle();
+                $f.remove();
+                $refresh_link.click();
+            }
+            else {
+                $error_msg_box.text(data.msg);
+            }
+        })
+        .fail(function (data) {
+            $error_msg_box.text(cake.message.notice.g);
+        })
+        .always(function (data) {
+            // 通信が完了したとき
+            $submit.removeAttr('disabled');
         });
 }
 
@@ -1599,17 +1647,17 @@ $(document).ready(function () {
     var prevNotifyId = "";
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
+        cake.pusher.socket_id = socketId;
     });
-
     // フォームがsubmitされた際にsocket_idを埋め込む
     $(document).on('submit', 'form.form-feed-notify', function () {
         appendSocketId($(this), socketId);
     });
 
     // keyResultの完了送信時にsocket_idを埋め込む
-    $(document).on("click", ".kr_achieve_button", function() {
+    $(document).on("click", ".kr_achieve_button", function () {
         var formId = $(this).attr("form-id");
-        var $form  = $("form#" + formId);
+        var $form = $("form#" + formId);
         appendSocketId($form, socketId);
         $form.submit();
         return false;
@@ -1837,7 +1885,7 @@ function evGoalsMoreView() {
     return false;
 }
 
-function viaIsSet( data ){
+function viaIsSet(data) {
     var isExist = typeof( data ) !== 'undefined';
     if (!isExist) return false;
     return data;
@@ -1983,4 +2031,13 @@ function decrementBellUnreadNumber($num) {
 function initBell(){
     $(".bell-notify-box").css("opacity", 0);
     $(".bell-notify-box").html("0");
+}
+
+//bootstrapValidatorがSuccessした時
+function validatorCallback(e) {
+    switch (e.target.id) {
+        case "CommentAjaxGetNewCommentFormForm":
+            addComment(e);
+            break;
+    }
 }
