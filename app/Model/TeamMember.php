@@ -642,7 +642,7 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
             //Group
-            foreach ($res['group'] as $v) {
+            foreach ($row['group'] as $v) {
                 if (viaIsSet($v)) {
                     $this->csv_datas[$key]['Group'][] = $v;
                 }
