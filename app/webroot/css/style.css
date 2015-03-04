@@ -1677,8 +1677,12 @@ ul.example-indent {
 }
 
 .new-comment-error {
-    display:none;
+    display: none;
     margin: 10px 0;
+}
+
+.new-comment-error i {
+    color: red;
 }
 
 .panel-read-more-body {

@@ -1895,7 +1895,7 @@ function notifyNewComment(notifyBox) {
     var numInBox  = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
 
-    hideNotifyErrorBox(notifyBox);
+    hideCommentNotifyErrorBox(notifyBox);
 
     // Increment unread number
     if (num >= 1) {
@@ -1943,6 +1943,7 @@ function evCommentLatestView() {
         // コメントがまだ0件の場合
         lastCommentId = "";
     }
+    var $errorBox = $obj.siblings("div.new-comment-error");
     var get_url = $obj.attr('get-url') + "/" + lastCommentId;
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -1953,6 +1954,7 @@ function evCommentLatestView() {
         url: get_url,
         async: true,
         dataType: 'json',
+        timeout: 10000,
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
@@ -1991,18 +1993,25 @@ function evCommentLatestView() {
                 $loader_html.remove();
                 //親を取得
                 //noinspection JSCheckFunctionSignatures
-                var $errorBox = $obj.siblings("div.new-comment-error");
                 $obj.removeAttr("disabled");
                 //「もっと読む」リンクを初期化
                 initCommentNotify($obj);
                 //「データが無かった場合はデータ無いよ」を表示
-                $errorBox.children("i").css("color", "red");
                 $errorBox.append(cake.message.notice.h).css("display", "block");
             }
         },
-        error: function () {
-            alert(cake.message.notice.c);
+        error: function (ev) {
+            console.log(ev);
+            //ローダーを削除
+            $loader_html.remove();
+            //親を取得
+            //noinspection JSCheckFunctionSignatures
+            $obj.removeAttr("disabled");
+            //「もっと読む」リンクを初期化
+            initCommentNotify($obj);
+            $errorBox.append(cake.message.notice.i).css("display", "block");
         }
+
     });
     return false;
 }
@@ -2047,11 +2056,10 @@ function validatorCallback(e) {
     }
 }
 
-function hideNotifyErrorBox(notifyBox) {
+function hideCommentNotifyErrorBox(notifyBox) {
     errorBox = notifyBox.siblings(".new-comment-error");
     if(errorBox.attr("display") === "none") {
         return;
     }
-
     errorBox.css("display", "none");
 }
