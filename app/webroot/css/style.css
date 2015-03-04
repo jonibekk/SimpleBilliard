@@ -57,8 +57,10 @@ ul {
     border: 1px solid #ccc;
 }
 
-.nav-icons > .header-function > a:hover {
+.nav-icons > .header-function > a:hover,
+.nav-icons > .header-function > a:focus{
     border: 1px solid #ae2f2f;
+    text-decoration: none;
 }
 
 .header-user-profile {
@@ -3752,38 +3754,8 @@ Temporary Properties - YOU MUST FIX
     height: 48px;
     position: relative;
 }
-/*
-.notify-line-number:before, .notify-line-number:after {
-    background: #fff;
-    background: -webkit-linear-gradient(left, rgba(245, 245, 245, 0), #fff);
-    background: linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
-    background: -webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #fff);
-    position: absolute;
-}
 
-.notify-line-number-on:before, .notify-line-number-on:after {
-    "background" : "#f0f0f0";
-    "background" : "-webkit-linear-gradient(left, rgba(245, 245, 245, 0), #f0f0f0)";
-    "background" : "linear-gradient(to right, rgba(245, 245, 245, 0), #fff)";
-    "background" : "-webkit-linear-gradient(to right, rgba(245, 245, 245, 0), #f0f0f0)";
-    position : absolute;
-}
 
-.notify-line-number:before {
-    content: "...";
-    color: rgba(0, 0, 0, 0);
-    top: 34px;
-    width: 30%;
-    height: 24px;
-    right: 0;
-}
-
-.notify-line-number:after, .notify-line-number:after {
-    content: "";
-    height: 100%;
-    width: 100%;
-}
-*/
 /*photo-upボタン*/
 .comment-contents .new-comment-add-pic {
     display: inline;
