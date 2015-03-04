@@ -18,6 +18,7 @@
                     <?= __d('notify',"%sからコメントがありました。",'<span class="font_bold font_verydark">' . $userName . '</span>')?>
                 </div>
             </div>
+
             <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align notify-text notify-line-number" id="CommentTextBody_67">
                 <i class="fa fa-comment-o disp_i"></i>「<?= $comment ?>」
             </div>
