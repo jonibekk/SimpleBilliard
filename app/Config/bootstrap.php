@@ -179,69 +179,6 @@ function viaIsSet(&$val)
 }
 
 /**
- * string 'ON' or 'OFF' check
- *
- * @param $data
- *
- * @return bool
- */
-function isOnOrOff($data)
-{
-    return strtolower($data) == 'on' || strtolower($data) == 'off';
-}
-
-/**
- * all or nothing check
- *
- * @param array $array
- *
- * @return bool
- */
-function isAllOrNothing($array)
-{
-    $exists = false;
-    $not_exists = false;
-    foreach ($array as $v) {
-        if (empty($v)) {
-            $not_exists = true;
-        }
-        else {
-            $exists = true;
-        }
-    }
-    return $exists !== $not_exists;
-}
-
-/**
- * @param array $array
- *
- * @return bool
- */
-function isAlignLeft($array)
-{
-    //first remove empty data
-    foreach ($array as $k => $v) {
-        if (!$v) {
-            unset($array[$k]);
-        }
-    }
-
-    if (empty($array)) {
-        return true;
-    }
-
-    //if toothless then return false
-    $expect_k = 0;
-    foreach ($array as $k => $v) {
-        if ($k !== $expect_k) {
-            return false;
-        }
-        $expect_k++;
-    }
-    return true;
-}
-
-/**
  * @param int $val
  *
  * @return bool
