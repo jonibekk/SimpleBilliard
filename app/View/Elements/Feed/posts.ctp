@@ -343,7 +343,7 @@
                     </div>
                 </a>
                 <div class="new-comment-error" id="comment_error_<?= $post['Post']['id'] ?>">
-                    <i class="fa fa-exclamation-circle"></i>
+                    <i class="fa fa-exclamation-circle"></i><span class="message"></span>
                 </div>
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <?=

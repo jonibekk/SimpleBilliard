@@ -1996,12 +1996,12 @@ function evCommentLatestView() {
                 $obj.removeAttr("disabled");
                 //「もっと読む」リンクを初期化
                 initCommentNotify($obj);
-                //「データが無かった場合はデータ無いよ」を表示
-                $errorBox.append(cake.message.notice.h).css("display", "block");
+                var message = $errorBox.children(".message");
+                message.html(cake.message.notice.i);
+                $errorBox.css("display", "block");
             }
         },
         error: function (ev) {
-            console.log(ev);
             //ローダーを削除
             $loader_html.remove();
             //親を取得
@@ -2009,7 +2009,9 @@ function evCommentLatestView() {
             $obj.removeAttr("disabled");
             //「もっと読む」リンクを初期化
             initCommentNotify($obj);
-            $errorBox.append(cake.message.notice.i).css("display", "block");
+            var message = $errorBox.children(".message");
+            message.html(cake.message.notice.i);
+            $errorBox.css("display", "block");
         }
 
     });
