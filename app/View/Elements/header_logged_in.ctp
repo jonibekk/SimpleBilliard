@@ -158,7 +158,7 @@
                     <a id="click-header-bell" class="header-link" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon notify-dropdown-area" id="bell-dropdown" role="menu">
+                    <ul class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area" id="bell-dropdown" role="menu">
                         <li class="notify-head">お知らせ</li>
                     </ul>
                 </div>

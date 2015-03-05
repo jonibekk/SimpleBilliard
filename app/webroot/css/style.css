@@ -1882,6 +1882,13 @@ ul.input-images > li {
     border: 1px solid #ccc;
 }
 
+.frame-arrow-notify {
+    top: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ccc;
+}
+
+
 .frame-arrow-icon::before {
     content: "";
     border: 8px solid transparent;
@@ -1921,6 +1928,27 @@ ul.input-images > li {
     border-bottom: 7px solid #ccc;
     position: absolute;
     right: 14%;
+    top: -15px;
+}
+
+.frame-arrow-notify::before {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid #e5e5e5;
+    position: absolute;
+    right: 5%;
+    top: -14px;
+    z-index: 2;
+}
+
+.frame-arrow-notify::after {
+    content: "";
+    border: 7px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 7px solid #ccc;
+    position: absolute;
+    right: 5%;
     top: -15px;
 }
 
@@ -3697,6 +3725,7 @@ Temporary Properties - YOU MUST FIX
     text-align: center;
     height: 20px;
     font-weight: bold;
+    background: #e5e5e5;
 }
 
 .notify-icon {
@@ -3705,12 +3734,17 @@ Temporary Properties - YOU MUST FIX
 }
 
 .notify-dropdown-area {
-    min-width: 450px;
-    max-width: 450px;
+    width: 90%;
     white-space: nowrap;
-    overflow: hidden;
+    /*overflow: hidden;*/
     text-overflow: ellipsis;
     padding: 0;
+}
+@media screen and (min-width: 768px) {
+    .notify-dropdown-area {
+        width: 320px;
+        max-height: 520px;
+    }
 }
 
 .notify-card-list {
