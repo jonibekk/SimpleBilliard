@@ -95,7 +95,6 @@ class GoalApprovalController extends AppController {
 	 */
 	private $team_id = NULL;
 
-
 	/*
 	 * オーバーライド
 	 */
@@ -121,47 +120,28 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 処理待ちページ
 	 */
-	public function index() {
+	public function index()
+	{
+		$goal_ids = $this->getCollaboratorGoalId();
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, false);
 
-		if ($this->user_type === 1) {
-			list ($goal_info, $wait_my_goal_msg) = $this->getMyGoalList();
-			$this->set(compact('goal_info', 'wait_my_goal_msg'));
-
-		} elseif ($this->user_type === 2) {
-			list ($my_goal_info, $wait_my_goal_msg) = $this->getMyGoalList();
-			$member_goal_info = $this->getMemberGoalList();
-			$goal_info = array_merge($my_goal_info, $member_goal_info);
-			$this->set(compact('goal_info', 'wait_my_goal_msg'));
-
-		} elseif ($this->user_type === 3) {
-			$goal_info = $this->getMemberGoalList();
-			$this->set(compact('goal_info'));
+		foreach ($goal_info as $key => $val) {
+			if ($this->user_id === $val['User']['id']) {
+				$goal_info[$key]['msg'] = GoalApprovalController::WAIT_MY_GOAL_MSG;
+			}
 		}
-	}
 
-	/*
-	 * 自分のゴールリストを取得する
-	 */
-	private function getMyGoalList () {
-		$my_goal_id = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
-		$goal_info = $this->Collaborator->getCollabeGoalDetail($my_goal_id, false);
-		$wait_my_goal_msg = GoalApprovalController::WAIT_MY_GOAL_MSG;
-		return array($goal_info, $wait_my_goal_msg);
-	}
-
-	/*
-	 * メンバーのゴールリストを取得する
-	 */
-	private function getMemberGoalList () {
-		$member_goal_id = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
-		$goal_info = $this->Collaborator->getCollabeGoalDetail($member_goal_id, false);
-		return $goal_info;
+		$this->set(compact('goal_info'));
 	}
 
 	/*
 	 * 処理済みページ
 	 */
 	public function done () {
+
+		$goal_ids = $this->getCollaboratorGoalId();
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, true);
+
 	}
 
 	/*
@@ -183,6 +163,25 @@ class GoalApprovalController extends AppController {
 	 */
 	public function cancle () {
 		return $this->done();
+	}
+
+	/*
+	 * リストに表示するゴールのIDを取得
+	 */
+	private function getCollaboratorGoalId () {
+		$goal_ids = [];
+		if ($this->user_type === 1) {
+			$goal_ids = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
+
+		} elseif ($this->user_type === 2) {
+			$my_goal_id = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
+			$member_goal_id = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
+			$goal_ids = array_merge($my_goal_id, $member_goal_id);
+
+		} elseif ($this->user_type === 3) {
+			$goal_ids = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
+		}
+		return $goal_ids;
 	}
 
 	/*

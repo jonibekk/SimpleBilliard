@@ -47,8 +47,8 @@
 						</div>
 						<div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
 							<div class="row">
-								<? if (isset($wait_my_goal_msg) === true) { ?>
-									<? echo $wait_my_goal_msg; ?>
+								<? if (isset($goal['msg']) === true) { ?>
+									<p align="right"><? echo $goal['msg']; ?></p>
 								<? } else {  ?>
 									<div class="pull-right">
 										<a href="" class="btn btn-link btn-lightGray bd-radius_4px"><?=__d('gl', "保留する")?></a>
