@@ -486,7 +486,7 @@ class Post extends AppModel
                 'Post.id' => $post_list,
             ],
             'order'      => [
-                'Post.modified' => 'desc'
+                'Post.created' => 'desc'
             ],
             'contain'    => [
                 'User'            => [

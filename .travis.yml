@@ -102,13 +102,6 @@ deploy:
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
     secret-access-key: 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
-    app-id: d1b2b17e-2be3-4a94-90dc-03b1767bd786
-    wait-until-deployed: true
-    on:
-      branch: develop
-  - provider: opsworks
-    access-key-id: AKIAJHXVNZZEOX3TD5BA
-    secret-access-key: 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
     app-id: feaeb538-35a5-4a1c-bab7-01a70c666987
     wait-until-deployed: true
     on:
