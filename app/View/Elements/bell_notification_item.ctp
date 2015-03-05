@@ -1,3 +1,5 @@
+<!-- START app/View/Elements/bell_notification.ctp -->
+<li class="divider notify-divider"></li>
 <li class="notify-card-list">
     <a href="<?= $postUrl ?>" class="col col-xxs-12 notify-card" id="notifyCard">
         <?=
@@ -25,4 +27,4 @@
         </div>
     </a>
 </li>
-<li class="divider notify-divider"></li>
+<!-- END app/View/Elements/bell_notification.ctp -->
