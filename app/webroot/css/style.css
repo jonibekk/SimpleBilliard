@@ -2427,7 +2427,7 @@ textarea.comment-post-form {
     padding-right: 0;
 }
 
-.follow-on, .follow-on:hover, .collabo-on, .collabo-on:hover {
+.follow-on, .follow-on:hover, .follow-on:focus, .collabo-on, .collabo-on:hover, .collabo-on:focus {
     color: #fff;
     background-color: #ea5e5b;
 }
