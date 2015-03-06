@@ -1019,7 +1019,7 @@ class TeamMember extends AppModel
             if (viaIsSet($v['User']['MemberGroup'])) {
                 foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
                     $key_index = $g_k + 1;
-                    $csv_data[$k]['group_' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
+                    $csv_data[$k]['group.' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
                 }
             }
             //coach after
@@ -1058,7 +1058,7 @@ class TeamMember extends AppModel
             foreach ($raters as $r_k => $r_v) {
                 $key_index = $r_k + 1;
                 if (viaIsSet($r_v['RaterUser']['TeamMember'][0]['member_no'])) {
-                    $csv_data[$k]['rater_member_no_' . $key_index] = $r_v['RaterUser']['TeamMember'][0]['member_no'];
+                    $csv_data[$k]['rater_member_no.' . $key_index] = $r_v['RaterUser']['TeamMember'][0]['member_no'];
                 }
             }
         }
