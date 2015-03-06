@@ -116,7 +116,7 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
     //noinspection JSUnresolvedVariable
-    $(document).on("click", ".click-comment-all", evCommentAllView);
+    $(document).on("click", ".click-comment-all", evCommentOldView);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-like", evLike);
     //noinspection JSUnresolvedVariable
@@ -1427,13 +1427,13 @@ function evFeedMoreView() {
     return false;
 }
 
-function evCommentAllView() {
+function evCommentOldView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
     var parent_id = $obj.attr('parent-id');
-    var get_url = $obj.attr('get-url');
+    var get_url   = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
