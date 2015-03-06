@@ -452,9 +452,13 @@ function addComment(e) {
     attrUndefinedCheck(e.target, 'refresh-link-id');
     var refresh_link_id = $(e.target).attr('refresh-link-id');
     var $refresh_link = $('#' + refresh_link_id);
+    var $loader_html = $('<i class="fa fa-refresh fa-spin mr_8px"></i>');
 
     $error_msg_box.text("");
     appendSocketId($(e.target), cake.pusher.socket_id);
+
+    // Display loading button
+    $("#" + submit_id).before($loader_html);
 
     var $f = $(e.target);
     $.ajax({
