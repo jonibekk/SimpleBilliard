@@ -1936,7 +1936,7 @@ ul.input-images > li {
     /*noinspection CssOverwrittenProperties*/
     border-bottom: 7px solid #e5e5e5;
     position: absolute;
-    right: 5%;
+    right: 18%;
     top: -14px;
     z-index: 2;
 }
@@ -1947,8 +1947,20 @@ ul.input-images > li {
     /*noinspection CssOverwrittenProperties*/
     border-bottom: 7px solid #ccc;
     position: absolute;
-    right: 5%;
+    right: 18%;
     top: -15px;
+}
+
+
+@media screen and (min-width: 768px) {
+    .frame-arrow-notify::before {
+        right: 5%;
+    }
+
+    .frame-arrow-notify::after {
+        right: 5%;
+    }
+
 }
 
 /*/メニューなどの▲マーク*/
@@ -3727,36 +3739,72 @@ Temporary Properties - YOU MUST FIX
 }
 
 .notify-icon {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
 }
 
 .notify-dropdown-area {
-    width: 90%;
-    white-space: nowrap;
-    /*overflow: hidden;*/
-    text-overflow: ellipsis;
+    width: 280px;
     padding: 0;
+    right: -36px;
 }
+
+.notify-dropdown-lists{
+    margin: 0;
+    padding: 0;
+    max-height: 360px;
+    white-space: nowrap;
+    overflow: scroll;
+    text-overflow: ellipsis;
+}
+
 @media screen and (min-width: 768px) {
     .notify-dropdown-area {
         width: 320px;
         max-height: 520px;
     }
+
+    .notify-icon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .notify-dropdown-lists{
+        max-height: 500px;
+    }
+
+    .notify-line-number {
+        margin: 0;
+        line-break: normal;
+        height: 48px;
+        position: relative;
+    }
+
 }
 
 .notify-card-list {
     clear: both;
 }
 
-.dropdown-menu > li > .notify-card {
+.notify-card-empty{
+    text-align: center;
+    padding: 10px 0;
+    color: #231814;
+}
+
+.notify-empty-text{
+    line-height: 33px;
+    vertical-align: top;
+}
+
+.dropdown-menu .notify-card {
     display: block;
     padding: 12px 8px 8px;
 }
 
-.dropdown-menu > li > a.notify-card:hover,
+.dropdown-menu .notify-card:hover,
     /* .dropdown-menu > li > a.notify-card:active,*/
-.dropdown-menu > li > a.notify-card:focus {
+.dropdown-menu .notify-card:focus {
     color: #000;
     background-color: #f0f0f0;
 }
@@ -3783,7 +3831,7 @@ Temporary Properties - YOU MUST FIX
 .notify-line-number {
     margin: 0;
     line-break: normal;
-    height: 48px;
+    height: 32px;
     position: relative;
 }
 
