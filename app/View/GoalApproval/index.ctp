@@ -35,7 +35,7 @@
 					<div class="panel panel-default" id="AddGoalFormPurposeWrap">
 						<div class="panel-heading goal-set-heading clearfix">
 							<p class="approval_body_text">名前: <? echo $goal['User']['local_username']; ?></p>
-							<p class="approval_body_text"><? echo $goal['Goal']['goal_category_id'] === '1' ? '職務' : '成長'; ?></p>
+							<p class="approval_body_text"><? echo $goal['Goal']['goal_category_id'] === '3' ? '職務' : '成長'; ?></p>
 							<p class="approval_body_text">ゴール名: <? echo $goal['Goal']['name']; ?></p>
 							<p class="approval_body_text"><? echo $goal['Collaborator']['type'] === '1' ? 'リーダー' : 'コラボレーター'; ?></p>
 							<p class="approval_body_text">単位, 達成時, 開始時</p>
