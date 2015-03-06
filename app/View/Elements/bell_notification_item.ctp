@@ -24,7 +24,7 @@
                 text-overflow: ellipsis;
                 width: 100%;">
                 <i class="fa fa-comment-o"></i>
-                「<?= $comment ?>」
+                「<?= h($comment) ?>」
             </div>
         </div>
     </a>
