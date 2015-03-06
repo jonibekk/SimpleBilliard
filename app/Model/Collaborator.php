@@ -146,7 +146,7 @@ class Collaborator extends AppModel
 
 	function getCollabeGoalDetail ($goal_id, $approval_flg) {
 		$options = [
-			'fields' => ['type', 'priority'],
+			'fields' => ['id', 'type', 'priority'],
 			'conditions' => [
 				'Collaborator.goal_id'    => $goal_id,
 				'Collaborator.valued_flg' => $approval_flg,
@@ -164,6 +164,11 @@ class Collaborator extends AppModel
 			'order'      => ['Collaborator.created'],
 		];
 		return $this->find('all', $options);
+	}
+
+	function changeApprovalStatus ($id, $status) {
+		$this->id = $id;
+		$this->save(['valued_flg' => $status]);
 	}
 
 }

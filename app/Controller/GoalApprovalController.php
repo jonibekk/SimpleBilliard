@@ -122,8 +122,9 @@ class GoalApprovalController extends AppController {
 	 */
 	public function index()
 	{
+
 		$goal_ids = $this->getCollaboratorGoalId();
-		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, false);
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, 'wait');
 
 		foreach ($goal_info as $key => $val) {
 			if ($this->user_id === $val['User']['id']) {
@@ -147,15 +148,23 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 承認する
 	 */
-	public function doApproval () {
-		return $this->index();
+	public function approval () {
+		$id = $this->request->param('id');
+		if (empty($id) === FALSE) {
+			$this->Collaborator->changeApprovalStatus(intval($id), 'approval');
+		}
+		$this->redirect($this->referer());
 	}
 
 	/*
 	 * 承認しない
 	 */
-	public function dontApproval () {
-		return $this->index();
+	public function wait () {
+		$id = $this->request->param('id');
+		if (empty($id) === FALSE) {
+			$this->Collaborator->changeApprovalStatus(intval($id), 'hold');
+		}
+		$this->redirect($this->referer());
 	}
 
 	/*

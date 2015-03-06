@@ -51,8 +51,8 @@
 									<p align="right"><? echo $goal['msg']; ?></p>
 								<? } else {  ?>
 									<div class="pull-right">
-										<a href="" class="btn btn-link btn-lightGray bd-radius_4px"><?=__d('gl', "保留する")?></a>
-										<a href="" class="btn btn-primary"><?=__d('gl', "承認する")?></a>
+										<a href="/goalapproval/wait/<?echo $goal['Collaborator']['id']; ?>" class="btn btn-link btn-lightGray bd-radius_4px"><?=__d('gl', "保留する")?></a>
+										<a href="/goalapproval/approval/<?echo $goal['Collaborator']['id']; ?>" class="btn btn-primary"><?=__d('gl', "承認する")?></a>
 									</div>
 								<? } ?>
 							</div>
