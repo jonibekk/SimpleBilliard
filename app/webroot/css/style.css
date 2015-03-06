@@ -3753,7 +3753,7 @@ Temporary Properties - YOU MUST FIX
     margin: 0;
     padding: 0;
     max-height: 360px;
-    white-space: nowrap;
+    white-space: normal;
     overflow: scroll;
     text-overflow: ellipsis;
 }
@@ -3833,6 +3833,10 @@ Temporary Properties - YOU MUST FIX
     line-break: normal;
     height: 32px;
     position: relative;
+}
+
+.notify-card-list .comment-user {
+    height: auto;
 }
 
 /*photo-upボタン*/
