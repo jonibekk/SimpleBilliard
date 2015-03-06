@@ -3711,7 +3711,6 @@ Temporary Properties - YOU MUST FIX
     cursor: pointer;
     filter: alpha(opacity=0);
     opacity: 0;
-
     direction: ltr;
 }
 
@@ -3789,9 +3788,7 @@ Temporary Properties - YOU MUST FIX
     position: relative;
 }
 
-
 /*photo-upボタン*/
 .comment-contents .new-comment-add-pic {
     display: inline;
 }
-
