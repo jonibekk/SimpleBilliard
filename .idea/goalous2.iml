@@ -5,6 +5,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.vagrant" />
       <excludeFolder url="file://$MODULE_DIR$/Plugin/Cakeplus/Test" />
       <excludeFolder url="file://$MODULE_DIR$/Plugin/Utils/Test" />
       <excludeFolder url="file://$MODULE_DIR$/Vendor/cakephp/cakephp/app" />
@@ -18,9 +19,11 @@
       <excludeFolder url="file://$MODULE_DIR$/Vendor/pear-pear.cakephp.org/CakePHP/Cake/Console/Templates/skel/Controller" />
       <excludeFolder url="file://$MODULE_DIR$/Vendor/pear-pear.cakephp.org/CakePHP/Cake/Console/Templates/skel/Model" />
       <excludeFolder url="file://$MODULE_DIR$/Vendor/pear-pear.cakephp.org/CakePHP/Cake/Console/Templates/skel/View/Helper" />
+      <excludeFolder url="file://$MODULE_DIR$/cookbooks" />
+      <excludeFolder url="file://$MODULE_DIR$/docs" />
+      <excludeFolder url="file://$MODULE_DIR$/etc" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
-
