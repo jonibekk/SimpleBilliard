@@ -12,35 +12,35 @@
 <!-- START app/View/Elements/Feed/new_comment_form.ctp -->
 <?=
 $this->Form->create('Comment', [
-    'default'    => false,
-    'url'           => ['controller' => 'posts', 'action' => 'ajax_add_comment'],
-    'inputDefaults' => [
+    'default'         => false,
+    'url'             => ['controller' => 'posts', 'action' => 'ajax_add_comment'],
+    'inputDefaults'   => [
         'div'       => 'form-group mlr_-1px',
         'label'     => false,
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class'         => 'form-feed-notify ajax-add-comment',
-    'type'          => 'file',
-    'novalidate'    => true,
-    'error-msg-id'  => 'CommentFormErrorMsg_' . $post_id,
-    'submit-id'     => 'CommentSubmit_' . $post_id,
-    'first-form-id'     => 'PostNewCommentForm_' . $post_id,
+    'class'           => 'form-feed-notify ajax-add-comment',
+    'type'            => 'file',
+    'novalidate'      => true,
+    'error-msg-id'    => 'CommentFormErrorMsg_' . $post_id,
+    'submit-id'       => 'CommentSubmit_' . $post_id,
+    'first-form-id'   => 'PostNewCommentForm_' . $post_id,
     'refresh-link-id' => 'Comments_new_' . $post_id,
 ]); ?>
 <? $this->Form->unlockField('socket_id') ?>
 <?=
 $this->Form->input('body', [
-    'id'                       => "CommentFormBody_{$post_id}",
-    'label'                    => false,
-    'type'                     => 'textarea',
-    'wrap'                     => 'soft',
-    'rows'                     => 1,
-    'required'                 => true,
-    'placeholder'              => __d('gl', "コメントする"),
-    'class'                    => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
-    'target-id'                => "CommentSubmit_{$post_id}",
-    'required'                 => 'false'
+    'id'          => "CommentFormBody_{$post_id}",
+    'label'       => false,
+    'type'        => 'textarea',
+    'wrap'        => 'soft',
+    'rows'        => 1,
+    'required'    => true,
+    'placeholder' => __d('gl', "コメントする"),
+    'class'       => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
+    'target-id'   => "CommentSubmit_{$post_id}",
+    'required'    => 'false'
 ])
 ?>
 <div class="form-group" id="CommentFormImage_<?= $post_id ?>"
@@ -58,19 +58,19 @@ $this->Form->input('body', [
 </div>
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
 <div class="comment-btn" id="Comment_<?= $post_id ?>">
-    <a href="#" class="target-show-target-click font_12px comment-add-pic"
-       target-id="CommentFormImage_<?= $post_id ?>"
-       click-target-id="Comment__Post_<?= $post_id ?>_Photo_1">
-        <button type="button" class="btn pull-left photo-up-btn">
-            <i class="fa fa-camera post-camera-icon"></i>
-        </button>
-
-    </a>
+    <div>
+        <a href="#" class="target-show-target-click comment-add-pic new-comment-add-pic" target-id="CommentFormImage_<?= $post_id ?>"
+           click-target-id="Comment__Post_<?= $post_id ?>_Photo_1">
+            <button type="button" class="btn pull-left photo-up-btn">
+                <i class="fa fa-camera post-camera-icon"></i>
+            </button>
+        </a>
+    </div>
     <div class="pull-left mt_12px font_brownRed"><span id="CommentFormErrorMsg_<?= $post_id ?>"></span></div>
     <div class="pull-right">
-    <?=
-    $this->Form->submit(__d('gl', "コメントする"),
-                        ['class' => 'btn btn-primary submit-btn', 'id' => "CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
+        <?=
+        $this->Form->submit(__d('gl', "コメントする"),
+                            ['class' => 'btn btn-primary submit-btn', 'id' => "CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
     </div>
     <div class="clearfix"></div>
 </div>

@@ -1694,7 +1694,7 @@ $(document).ready(function () {
             if(isBellNotify) {
                 notifyNewBell();
                 prevNotifyId = notifyId;
-                $("#bell-dropdown").prepend(data.html);
+                $("#bell-dropdown").append(data.html);
             }
 
             // 新しいコメント通知の場合
@@ -2023,6 +2023,7 @@ function initCommentNotify(notifyBox) {
     numInBox.html("0");
     notifyBox.css("display", "none").css("opacity", 0);
 }
+
 
 $(document).ready(function(){
     $(document).on("click", "#click-header-bell", function() {
