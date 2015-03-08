@@ -1675,6 +1675,15 @@ ul.example-indent {
     font-size: 12px;
 }
 
+.new-comment-error {
+    display: none;
+    margin: 10px 0;
+}
+
+.new-comment-error i {
+    color: red;
+}
+
 .panel-read-more-body {
     padding: 0;
     width: 100%;

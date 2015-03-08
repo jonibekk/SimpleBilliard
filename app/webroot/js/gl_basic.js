@@ -1895,6 +1895,8 @@ function notifyNewComment(notifyBox) {
     var numInBox  = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
 
+    hideCommentNotifyErrorBox(notifyBox);
+
     // Increment unread number
     if (num >= 1) {
         // top of feed
@@ -1941,6 +1943,7 @@ function evCommentLatestView() {
         // コメントがまだ0件の場合
         lastCommentId = "";
     }
+    var $errorBox = $obj.siblings("div.new-comment-error");
     var get_url = $obj.attr('get-url') + "/" + lastCommentId;
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -1951,6 +1954,7 @@ function evCommentLatestView() {
         url: get_url,
         async: true,
         dataType: 'json',
+        timeout: 10000,
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
@@ -1989,16 +1993,27 @@ function evCommentLatestView() {
                 $loader_html.remove();
                 //親を取得
                 //noinspection JSCheckFunctionSignatures
-                var $parent = $obj.parent();
-                //「もっと読む」リンクを削除
-                $obj.remove();
-                //「データが無かった場合はデータ無いよ」を表示
-                $parent.append(cake.message.info.g);
+                $obj.removeAttr("disabled");
+                //「もっと読む」リンクを初期化
+                initCommentNotify($obj);
+                var message = $errorBox.children(".message");
+                message.html(cake.message.notice.i);
+                $errorBox.css("display", "block");
             }
         },
-        error: function () {
-            alert(cake.message.notice.c);
+        error: function (ev) {
+            //ローダーを削除
+            $loader_html.remove();
+            //親を取得
+            //noinspection JSCheckFunctionSignatures
+            $obj.removeAttr("disabled");
+            //「もっと読む」リンクを初期化
+            initCommentNotify($obj);
+            var message = $errorBox.children(".message");
+            message.html(cake.message.notice.i);
+            $errorBox.css("display", "block");
         }
+
     });
     return false;
 }
@@ -2006,6 +2021,7 @@ function evCommentLatestView() {
 function initCommentNotify(notifyBox) {
     var numInBox = notifyBox.find(".num");
     numInBox.html("0");
+    notifyBox.css("display", "none").css("opacity", 0);
 }
 
 $(document).ready(function(){
@@ -2040,4 +2056,12 @@ function validatorCallback(e) {
             addComment(e);
             break;
     }
+}
+
+function hideCommentNotifyErrorBox(notifyBox) {
+    errorBox = notifyBox.siblings(".new-comment-error");
+    if(errorBox.attr("display") === "none") {
+        return;
+    }
+    errorBox.css("display", "none");
 }
