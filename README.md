@@ -8,6 +8,9 @@ Goalous 2.0のリポジトリです。
 - develop   
 [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=develop)](https://coveralls.io/r/IsaoCorp/goalous2?branch=develop)   
 
+## Progress
+- [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous2) ... Goalousの開発状況はこのかんばんボードで管理しています。
+
 ## What's Goalous ?
 GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目標達成ツールです。
 
