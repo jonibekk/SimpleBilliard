@@ -19,9 +19,9 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 
 ## Documentation
 ドキュメントはすべて[wiki](https://github.com/IsaoCorp/goalous2/wiki)にまとめています。
-wiki以外のドキュメントは[ここ](https://drive.google.com/a/isao.co.jp/#folders/0B6mjvNcPiJ6PLXBlTUJsZWphMG8)にあります。(未整理)
+wiki以外のドキュメントは[Google Docs](https://drive.google.com/a/isao.co.jp/#folders/0B6mjvNcPiJ6PLXBlTUJsZWphMG8)にあります。(Google Docsは未整理)
 
-手っ取り早くソース弄ってみたいという方は[こちら](https://github.com/IsaoCorp/goalous2/wiki/%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89%E6%89%8B%E9%A0%86)から。
+手っ取り早くソース弄ってみたいという方は[開発環境構築手順](https://github.com/IsaoCorp/goalous2/wiki/%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89%E6%89%8B%E9%A0%86)から。
 
 ## Contributing
 みなさんの貢献は大いに歓迎します。  
