@@ -41,37 +41,3 @@ Goalousチームについて
 # Documentation
 Goalous開発におけるすべてのドキュメントは[ここ](https://drive.google.com/a/isao.co.jp/#folders/0B6mjvNcPiJ6PLXBlTUJsZWphMG8)にあります。
 
-## Development
-- [開発フロー](https://www.lucidchart.com/documents/view/ae4a8af6-88c8-41fe-a67b-e121f973026b)
-
-## Design Documentation
-- [ER図](https://www.lucidchart.com/documents/view/4f5b2ed4-5153-79ec-ba7f-70600a004117/0)
-- [DBスキーマ設計書](https://docs.google.com/a/isao.co.jp/spreadsheets/d/156jnN_MQ9FRyVGRgTKtQd0GiAQ1frN_7JoVF6TqmDRg/edit?usp=sharing)
-
-## Operations
-## Infrastructure
-- [全体像](https://www.lucidchart.com/documents/view/4b328b80-5327-fa30-8c2f-0aab0a00da8d/0)
-
-# Cloud Tools For Project
-Goalousプロジェクトで利用しているクラウドツールについて。
-## Development
-- [Waffle（かんばん）](https://waffle.io/isaocorp/goalous2)
-- [TravisCI (テストツール)](https://magnum.travis-ci.com/IsaoCorp/goalous2)
-- [Coveralls (カバレッジ分析)](https://coveralls.io/r/IsaoCorp/goalous2)
-
-## Operations
-- [AWS Management Console (AWSのリソースの全てを管理)](https://console.aws.amazon.com/console/home?#)
-
-## Metrics
-- [Mixpanel (ユーザ行動分析)](https://mixpanel.com/report/388879/events/#events)
-- [NewRelic (パフォーマンス監視)](https://rpm.newrelic.com/accounts/652568/applications/3337537)
-- [Visual Website Optimizer](http://v2.visualwebsiteoptimizer.com/) (A/Bテスト)
-- [Google Analytics](https://www.google.com/analytics/web/?hl=ja&pli=1#report/visitors-overview/a37579734w69803133p83571333/) (アクセス解析)
-- [User Voice (ユーザフォーラム/サポート)](http://app.uservoice.com/signin)
-- SurveryMonkey (アンケート)
-
-## Communication
-- [Slack (チャット・通知集約ツール)](https://isao.slack.com/messages/goalous/)
-
-## Other
-- [Zapier (API連携)](https://zapier.com/app/dashboard)
