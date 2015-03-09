@@ -6,6 +6,7 @@ App::uses('Collaborator', 'Model');
  *
  * @property Collaborator $Collaborator
  */
+
 class CollaboratorTest extends CakeTestCase
 {
 
@@ -25,6 +26,7 @@ class CollaboratorTest extends CakeTestCase
         'app.comment',
         'app.post',
         'app.goal',
+		'app.purpose',
         'app.goal_category',
         'app.key_result',
         'app.post_share_user',
@@ -59,6 +61,8 @@ class CollaboratorTest extends CakeTestCase
     {
         parent::setUp();
         $this->Collaborator = ClassRegistry::init('Collaborator');
+		//$this->Collaborator->User = ClassRegistry::init('User');
+		//$this->Collaborator->Goal->Purpose = ClassRegistry::init('Purpose');
     }
 
     /**
@@ -80,5 +84,72 @@ class CollaboratorTest extends CakeTestCase
         $res = $this->Collaborator->add(1);
         $this->assertTrue(!empty($res));
     }
+
+	function testGetCollabeGoalDetail()
+	{
+		$team_id    = 1;
+
+		$params = [
+			'first_name' => 'test',
+			'last_name'  => 'test'
+		];
+		$this->Collaborator->User->save($params);
+		$user_id = $this->Collaborator->User->getLastInsertID();
+
+		$params = [
+			'user_id' => $user_id,
+			'team_id' => $team_id,
+			'name'    => 'test'
+		];
+		$this->Collaborator->Goal->Purpose->save($params);
+		$purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
+
+		$params = [
+			'user_id'     => $user_id,
+			'team_id'     => $team_id,
+			'purpose_id'  => $purpose_id,
+			'name'        => 'test',
+			'goal_category_id' => 1,
+			'end_date'         => '1427813999',
+			'photo_file_name'  => 'aa.png'
+		];
+		$this->Collaborator->Goal->save($params);
+		$goal_id = $this->Collaborator->Goal->getLastInsertID();
+
+		$valued_flg = 'wait';
+		$params = [
+			'user_id'    => $user_id,
+			'team_id'    => $team_id,
+			'goal_id'    => $goal_id,
+			'valued_flg' => $valued_flg,
+			'type'       => 0,
+			'priority'   => 1,
+		];
+		$this->Collaborator->save($params);
+
+		// TODO: すべての関連テーブルにデータを挿入したにもかかわらず正しく検索されない。
+		$this->Collaborator->getCollaboGoalList($goal_id, $valued_flg);
+	}
+
+	function testChangeApprovalStatus()
+	{
+		$user_id    = 777;
+		$team_id    = 888;
+		$goal_id    = 999;
+		$valued_flg = false;
+
+		$params = [
+			'user_id'    => $user_id,
+			'team_id'    => $team_id,
+			'goal_id'    => $goal_id,
+			'valued_flg' => $valued_flg,
+		];
+		$this->Collaborator->save($params);
+		$id = $this->Collaborator->getLastInsertID();
+		$this->Collaborator->changeApprovalStatus($id, true);
+
+		$res = $this->Collaborator->findById($id);
+		$this->assertTrue($res['Collaborator']['valued_flg']);
+	}
 
 }
