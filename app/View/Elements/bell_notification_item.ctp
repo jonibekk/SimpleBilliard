@@ -32,7 +32,7 @@ else {
             <div class="col col-xxs-12 comment-text comment-user">
                 <div class="mb_2px lh_12px">
                     <?= __d('notify', "%sからコメントがありました。",
-                            '<span class="font_bold font_verydark">' . $userName . '</span>') ?>
+                            '<span class="font_bold font_verydark">' . h($displayUserName) . '</span>') ?>
                 </div>
             </div>
 
