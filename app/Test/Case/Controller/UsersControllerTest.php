@@ -16,7 +16,7 @@ class UsersControllerTest extends ControllerTestCase
      */
     public $fixtures = array(
         'app.action_result',
-        'app.rater',
+        'app.evaluator',
         'app.member_type',
         'app.goal',
         'app.follower',
