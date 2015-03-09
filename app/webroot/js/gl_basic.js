@@ -116,7 +116,7 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
     //noinspection JSUnresolvedVariable
-    $(document).on("click", ".click-comment-all", evCommentAllView);
+    $(document).on("click", ".click-comment-all", evCommentOldView);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-like", evLike);
     //noinspection JSUnresolvedVariable
@@ -452,9 +452,13 @@ function addComment(e) {
     attrUndefinedCheck(e.target, 'refresh-link-id');
     var refresh_link_id = $(e.target).attr('refresh-link-id');
     var $refresh_link = $('#' + refresh_link_id);
+    var $loader_html = $('<i class="fa fa-refresh fa-spin mr_8px"></i>');
 
     $error_msg_box.text("");
     appendSocketId($(e.target), cake.pusher.socket_id);
+
+    // Display loading button
+    $("#" + submit_id).before($loader_html);
 
     var $f = $(e.target);
     $.ajax({
@@ -1427,13 +1431,13 @@ function evFeedMoreView() {
     return false;
 }
 
-function evCommentAllView() {
+function evCommentOldView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
     var parent_id = $obj.attr('parent-id');
-    var get_url = $obj.attr('get-url');
+    var get_url   = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
@@ -1694,7 +1698,7 @@ $(document).ready(function () {
             if(isBellNotify) {
                 notifyNewBell();
                 prevNotifyId = notifyId;
-                $("#bell-dropdown").prepend(data.html);
+                $("#bell-dropdown").append(data.html);
             }
 
             // 新しいコメント通知の場合
@@ -1895,6 +1899,8 @@ function notifyNewComment(notifyBox) {
     var numInBox  = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
 
+    hideCommentNotifyErrorBox(notifyBox);
+
     // Increment unread number
     if (num >= 1) {
         // top of feed
@@ -1941,6 +1947,7 @@ function evCommentLatestView() {
         // コメントがまだ0件の場合
         lastCommentId = "";
     }
+    var $errorBox = $obj.siblings("div.new-comment-error");
     var get_url = $obj.attr('get-url') + "/" + lastCommentId;
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -1951,6 +1958,7 @@ function evCommentLatestView() {
         url: get_url,
         async: true,
         dataType: 'json',
+        timeout: 10000,
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
@@ -1989,16 +1997,27 @@ function evCommentLatestView() {
                 $loader_html.remove();
                 //親を取得
                 //noinspection JSCheckFunctionSignatures
-                var $parent = $obj.parent();
-                //「もっと読む」リンクを削除
-                $obj.remove();
-                //「データが無かった場合はデータ無いよ」を表示
-                $parent.append(cake.message.info.g);
+                $obj.removeAttr("disabled");
+                //「もっと読む」リンクを初期化
+                initCommentNotify($obj);
+                var message = $errorBox.children(".message");
+                message.html(cake.message.notice.i);
+                $errorBox.css("display", "block");
             }
         },
-        error: function () {
-            alert(cake.message.notice.c);
+        error: function (ev) {
+            //ローダーを削除
+            $loader_html.remove();
+            //親を取得
+            //noinspection JSCheckFunctionSignatures
+            $obj.removeAttr("disabled");
+            //「もっと読む」リンクを初期化
+            initCommentNotify($obj);
+            var message = $errorBox.children(".message");
+            message.html(cake.message.notice.i);
+            $errorBox.css("display", "block");
         }
+
     });
     return false;
 }
@@ -2006,7 +2025,9 @@ function evCommentLatestView() {
 function initCommentNotify(notifyBox) {
     var numInBox = notifyBox.find(".num");
     numInBox.html("0");
+    notifyBox.css("display", "none").css("opacity", 0);
 }
+
 
 $(document).ready(function(){
     $(document).on("click", "#click-header-bell", function() {
@@ -2040,4 +2061,12 @@ function validatorCallback(e) {
             addComment(e);
             break;
     }
+}
+
+function hideCommentNotifyErrorBox(notifyBox) {
+    errorBox = notifyBox.siblings(".new-comment-error");
+    if(errorBox.attr("display") === "none") {
+        return;
+    }
+    errorBox.css("display", "none");
 }
