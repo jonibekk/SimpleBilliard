@@ -153,7 +153,7 @@ class Comment extends AppModel
         return $res;
     }
 
-    public function getPostsComment($post_id, $cut_num = 0)
+    public function getPostsComment($post_id, $get_num=null)
     {
         $options = [
             'conditions' => [
@@ -174,14 +174,9 @@ class Comment extends AppModel
                     ]
                 ],
             ],
+            'limit' => $get_num
         ];
         $res = $this->find('all', $options);
-        //最後のコメントから指定件数を削除
-        if ($cut_num > 0) {
-            for ($i = 0; $i < $cut_num; $i++) {
-                array_pop($res);
-            }
-        }
 
         //既読済みに
         /** @noinspection PhpDeprecationInspection */

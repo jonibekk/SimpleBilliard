@@ -50,7 +50,8 @@ class Group extends AppModel
                 'name'    => $name
             ]
         ];
-        return $this->find('first', $options);
+        $res = $this->find('first', $options);
+        return $res;
     }
 
     function saveNewGroup($name, $team_id = null)
@@ -63,7 +64,8 @@ class Group extends AppModel
             'team_id' => $team_id
         ];
         $this->create();
-        return $this->save($data);
+        $res = $this->save($data);
+        return $res;
     }
 
     function getByNameIfNotExistsSave($name, $team_id = null)
@@ -74,8 +76,7 @@ class Group extends AppModel
         if (!empty($group = $this->getByName($name, $team_id))) {
             return $group;
         }
-        $this->saveNewGroup($name);
-        $group = $this->getByName($name, $team_id);
+        $group = $this->saveNewGroup($name);
         return $group;
     }
 }

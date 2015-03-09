@@ -1083,7 +1083,7 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname_a', 'lastname', 'member_1', '', 'ON', 'ON']);
+                                   ['from@email.com', 'firstnamex', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
                                    ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
@@ -1109,7 +1109,7 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname_a', 'member_1', '', 'ON', 'ON']);
+                                   ['from@email.com', 'firstname', 'lastnamex', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
                                    ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),

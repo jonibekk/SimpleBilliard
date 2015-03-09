@@ -276,11 +276,11 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_comment($post_id)
+    public function ajax_get_old_comment($post_id, $get_num)
     {
         $this->_ajaxPreProcess();
 
-        $comments = $this->Post->Comment->getPostsComment($post_id, 3);
+        $comments = $this->Post->Comment->getPostsComment($post_id, $get_num);
         $this->set(compact('comments'));
 
         //エレメントの出力を変数に格納する
