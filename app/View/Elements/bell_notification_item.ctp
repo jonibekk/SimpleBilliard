@@ -39,7 +39,7 @@ else {
             <div
                 class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align notify-text notify-line-number"
                 id="CommentTextBody_67">
-                <i class="fa fa-comment-o disp_i"></i>「<?= $comment ?>」
+                <i class="fa fa-comment-o disp_i"></i>「<?= h($comment) ?>」
             </div>
         </div>
     </a>
