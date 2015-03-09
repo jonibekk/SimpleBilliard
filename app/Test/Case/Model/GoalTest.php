@@ -425,4 +425,22 @@ class GoalTest extends CakeTestCase
         $this->Goal->Post->current_team_id = 1;
     }
 
+	function testGetGoalIdFromUserId ()
+	{
+		$this->setDefault();
+		$user_id = 1;
+		$team_id = 1;
+        $goal_params = [
+            'user_id'    => $user_id,
+            'team_id'    => $team_id,
+            'name'       => 'test',
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
+        ];
+		$this->Goal->save($goal_params);
+		$goal_id = $this->Goal->getLastInsertID();
+		$res = $this->Goal->getGoalIdFromUserId($user_id, $team_id);
+		$this->assertContains($goal_id, $res);
+	}
+
 }
