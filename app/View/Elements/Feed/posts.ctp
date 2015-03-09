@@ -318,7 +318,7 @@
                     <a href="#" class="btn btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_comment', $post['Post']['id']]) ?>"
+                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
                         >
                         <i class="fa fa-comment-o"></i>&nbsp;<?=
                         __d('gl', "他%s件のコメントを見る",
@@ -342,6 +342,9 @@
                         <?= __d('gl', "件の新しいコメントがあります") ?>
                     </div>
                 </a>
+                <div class="new-comment-error" id="comment_error_<?= $post['Post']['id'] ?>">
+                    <i class="fa fa-exclamation-circle"></i><span class="message"></span>
+                </div>
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <?=
                     $this->Html->image('ajax-loader.gif',

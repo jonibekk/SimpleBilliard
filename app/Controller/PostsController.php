@@ -276,11 +276,11 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_comment($post_id)
+    public function ajax_get_old_comment($post_id, $get_num)
     {
         $this->_ajaxPreProcess();
 
-        $comments = $this->Post->Comment->getPostsComment($post_id, 3);
+        $comments = $this->Post->Comment->getPostsComment($post_id, $get_num);
         $this->set(compact('comments'));
 
         //エレメントの出力を変数に格納する
@@ -619,9 +619,9 @@ class PostsController extends AppController
         }
         // 通知テンプレートのレンダリング
         $view = new View();
-        $userName = $this->Session->read('Auth.User.last_name') . $this->Session->read('Auth.User.first_name');
+        $displayUserName = $this->Session->read('Auth.User.display_username');
         $postUrl = "/post_permanent/" . $this->Post->id;
-        $html = $view->element('bell_notification_item', compact('userName', 'comment', 'postUrl'));
+        $html = $view->element('bell_notification_item', compact('displayUserName', 'comment', 'postUrl'));
         $notifyId = Security::hash(time());
         $data = array(
             'notify_id'      => $notifyId,

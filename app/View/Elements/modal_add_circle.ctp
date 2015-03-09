@@ -52,7 +52,7 @@
                         <? $this->Form->unlockField('Circle.members') ?>
                         <span class="help-block font_11px"><?=
                             __d('gl', "管理者：%s",
-                                $this->Session->read('Auth.User.display_username')) ?></span>
+                                h($this->Session->read('Auth.User.display_username'))) ?></span>
                     </div>
                 </div>
                 <hr>

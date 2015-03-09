@@ -11,7 +11,11 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
 {
     /**
      * アルファベットのみかどうかチェックするバリデーションルール
-
+     *
+     * @param Model $Model
+     * @param array $field
+     *
+     * @return bool
      */
     function isAlphabetOnly(/** @noinspection PhpUnusedParameterInspection */
         Model $Model, $field = [])
@@ -108,4 +112,127 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         }
         return true;
     }
+
+    function isOnOrOff(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return strtolower($value) == 'on' || strtolower($value) == 'off';
+    }
+
+    function phoneNo(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^[0-9-\(\)]+$/', $value);
+    }
+
+    function isAllOrNothing(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $compare_fields)
+    {
+        $exists = false;
+        $not_exists = false;
+        foreach ($compare_fields as $field) {
+            if (empty($Model->data[$Model->alias][$field])) {
+                $not_exists = true;
+            }
+            else {
+                $exists = true;
+            }
+
+        }
+        return $exists !== $not_exists;
+    }
+
+    function isAlignLeft(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $array)
+    {
+        $array = array_values($array);
+        $array = $array[0];
+        //first remove empty data
+        foreach ($array as $k => $v) {
+            if (!$v) {
+                unset($array[$k]);
+            }
+        }
+
+        if (empty($array)) {
+            return true;
+        }
+
+        //if toothless then return false
+        $expect_k = 1;
+        foreach ($array as $k => $v) {
+            if ($k !== $expect_k) {
+                return false;
+            }
+            $expect_k++;
+        }
+        return true;
+    }
+
+    function maxLengthArray(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $array, $length)
+    {
+        $array = array_values($array);
+        $array = $array[0];
+        foreach ($array as $v) {
+            if (!Validation::maxLength($v, $length)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function isNotDuplicated(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $array)
+    {
+        $array = array_values($array);
+        $array = $array[0];
+        $array = array_filter($array, "strlen");
+        return count(array_unique($array)) == count($array);
+    }
+
+    function isNotExistArray(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $compare_fields)
+    {
+        $check = current($check);
+        return !in_array($check, $Model->data[$Model->alias][$compare_fields]);
+    }
+
+    function birthYear(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^\d{4}$/', $value);
+    }
+
+    function birthMonth(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^(0[1-9]{1}|1[0-2]{1}|[1-9]{1})$/', $value);
+    }
+
+    function birthDay(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        return preg_match('/^(0[1-9]{1}|[1-9]{1}|[1-2]{1}[0-9]{1}|3[0-1]{1})$/', $value);
+    }
+
+    function isNotEqual(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check, $target)
+    {
+        $value = array_values($check);
+        $value = $value[0];
+        $target_value = $Model->data[$Model->alias][$target];
+        return $value !== $target_value;
+    }
+
 }
