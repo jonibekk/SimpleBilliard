@@ -17,7 +17,7 @@ class UserTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.rater',
+        'app.evaluator',
         'app.goal',
         'app.local_name',
         'app.user', 'app.notify_setting',

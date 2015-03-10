@@ -49,7 +49,7 @@ class MemberGroupTest extends CakeTestCase
         'app.job_category',
         'app.member_type',
         'app.local_name',
-        'app.rater',
+        'app.evaluator',
         'app.group',
         'app.invite',
         'app.thread',
