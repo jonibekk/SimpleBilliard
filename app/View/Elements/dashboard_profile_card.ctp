@@ -19,7 +19,7 @@
         </a>
 
         <span class="dashboardProfileCard-userField font_bold font_verydark ln_1-f">
-            <?= $this->Session->read('Auth.User.display_first_name') ?>
+            <?= h($this->Session->read('Auth.User.display_first_name')) ?>
         </span>
 
         <div class="dashboardProfileCard-stats font_10px">
