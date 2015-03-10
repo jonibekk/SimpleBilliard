@@ -48,7 +48,8 @@ class TeamsControllerTest extends ControllerTestCase
         'app.thread',
         'app.send_mail',
         'app.send_mail_to_user',
-        'app.message'
+        'app.message',
+        'app.evaluate_term'
     );
 
     /**
