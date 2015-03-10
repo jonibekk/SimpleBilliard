@@ -161,6 +161,9 @@
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
                         <div class="notify-head">お知らせ</div>
                         <ul class="notify-dropdown-lists" id="bell-dropdown" role="menu">
+                            <li class="notify-card-empty" id="notifyCardEmpty">
+                                <i class="fa fa-smile-o font_33px mr_8px"></i><span class="notify-empty-text">未読の通知はありません。</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
