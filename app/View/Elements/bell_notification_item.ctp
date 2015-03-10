@@ -1,19 +1,5 @@
 <!-- START app/View/Elements/bell_notification.ctp -->
 <li class="divider notify-divider"></li>
-
-<!-- ToDo
-<? /*
-if (コメントがある場合) {
-    下に書いてあるやつ。
-}
-else {
-    <li class="notify-card-empty">
-        <i class="fa fa-smile-o font_33px mr_8px"></i><span class="notify-empty-text">未読の通知はありません。</span>
-    </li>
-}
-*/ ?>
--->
-
 <li class="notify-card-list">
     <a href="<?= $postUrl ?>" class="col col-xxs-12 notify-card" id="notifyCard">
         <?=

@@ -30,12 +30,14 @@ class NotifyShell extends AppShell
     public function startup()
     {
         parent::startup();
-        if ($this->params['session_id']) {
-            CakeSession::id($this->params['session_id']);
+        $sessionId = viaIsSet($this->params['session_id']);
+        $baseUrl   = viaIsSet($this->params['base_url']);
+        if ($sessionId) {
+            CakeSession::id($sessionId);
             CakeSession::start();
         }
-        if ($this->params['base_url']) {
-            Router::fullBaseUrl($this->params['base_url']);
+        if ($baseUrl) {
+            Router::fullBaseUrl($baseUrl);
         }
         $this->components = new ComponentCollection();
         $this->AppController = new AppController();

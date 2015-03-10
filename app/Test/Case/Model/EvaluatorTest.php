@@ -1,12 +1,12 @@
 <?php
-App::uses('Rater', 'Model');
+App::uses('Evaluator', 'Model');
 
 /**
- * Rater Test Case
+ * Evaluator Test Case
  *
- * @property Rater $Rater
+ * @property Evaluator $Evaluator
  */
-class RaterTest extends CakeTestCase
+class EvaluatorTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class RaterTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.rater',
+        'app.evaluator',
         'app.user',
         'app.team',
         'app.badge',
@@ -64,7 +64,7 @@ class RaterTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Rater = ClassRegistry::init('Rater');
+        $this->Evaluator = ClassRegistry::init('Evaluator');
     }
 
     /**
@@ -74,7 +74,7 @@ class RaterTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->Rater);
+        unset($this->Evaluator);
 
         parent::tearDown();
     }

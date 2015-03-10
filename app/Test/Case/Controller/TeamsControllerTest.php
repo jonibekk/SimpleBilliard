@@ -41,7 +41,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.oauth_token',
         'app.team_member',
         'app.group',
-        'app.rater',
+        'app.evaluator',
         'app.member_group',
         'app.job_category',
         'app.invite',

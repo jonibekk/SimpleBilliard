@@ -2,13 +2,13 @@
 App::uses('AppModel', 'Model');
 
 /**
- * Rater Model
+ * Evaluator Model
  *
- * @property User $RateeUser
- * @property User $RaterUser
+ * @property User $EvaluateeUser
+ * @property User $EvaluatorUser
  * @property Team $Team
  */
-class Rater extends AppModel
+class Evaluator extends AppModel
 {
 
     /**
@@ -35,13 +35,13 @@ class Rater extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'RateeUser' => [
+        'EvaluateeUser' => [
             'className'  => 'User',
-            'foreignKey' => 'ratee_user_id',
+            'foreignKey' => 'evaluatee_user_id',
         ],
-        'RaterUser' => [
+        'EvaluatorUser' => [
             'className'  => 'User',
-            'foreignKey' => 'rater_user_id',
+            'foreignKey' => 'evaluator_user_id',
         ],
         'Team',
     ];

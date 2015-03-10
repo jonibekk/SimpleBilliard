@@ -1699,6 +1699,7 @@ $(document).ready(function () {
                 notifyNewBell();
                 prevNotifyId = notifyId;
                 $("#bell-dropdown").append(data.html);
+                $("#notifyCardEmpty").hide();
             }
 
             // 新しいコメント通知の場合

@@ -4,23 +4,23 @@ App::uses('AppModel', 'Model');
 /**
  * Team Model
  *
- * @property Badge           $Badge
- * @property CommentLike     $CommentLike
- * @property CommentMention  $CommentMention
- * @property CommentRead     $CommentRead
- * @property Comment         $Comment
- * @property GivenBadge      $GivenBadge
- * @property Group           $Group
- * @property Invite          $Invite
- * @property JobCategory     $JobCategory
- * @property Notification    $Notification
- * @property PostLike        $PostLike
- * @property PostMention     $PostMention
- * @property PostRead        $PostRead
- * @property Post            $Post
- * @property TeamMember      $TeamMember
- * @property Thread          $Thread
- * @property Rater           $Rater
+ * @property Badge               $Badge
+ * @property CommentLike         $CommentLike
+ * @property CommentMention      $CommentMention
+ * @property CommentRead         $CommentRead
+ * @property Comment             $Comment
+ * @property GivenBadge          $GivenBadge
+ * @property Group               $Group
+ * @property Invite              $Invite
+ * @property JobCategory         $JobCategory
+ * @property Notification        $Notification
+ * @property PostLike            $PostLike
+ * @property PostMention         $PostMention
+ * @property PostRead            $PostRead
+ * @property Post                $Post
+ * @property TeamMember          $TeamMember
+ * @property Thread              $Thread
+ * @property Evaluator           $Evaluator
  */
 class Team extends AppModel
 {
@@ -116,7 +116,7 @@ class Team extends AppModel
         'Post',
         'TeamMember',
         'Thread',
-        'Rater',
+        'Evaluator',
     ];
 
     public $current_team = [];
