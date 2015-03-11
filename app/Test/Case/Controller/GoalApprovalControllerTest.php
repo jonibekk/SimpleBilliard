@@ -57,7 +57,48 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
 	function testIndex()
 	{
-		$this->_getGoalApprovalCommonMock();
+		$GoalApproval = $this->_getGoalApprovalCommonMock();
+
+		$team_id = 1;
+		$params = [
+			'first_name' => 'test',
+			'last_name'  => 'test'
+		];
+		$GoalApproval->Collaborator->User->save($params);
+		$user_id = $GoalApproval->Collaborator->User->getLastInsertID();
+
+		$params = [
+			'user_id' => $user_id,
+			'team_id' => $team_id,
+			'name'    => 'test'
+		];
+		$GoalApproval->Collaborator->Goal->Purpose->save($params);
+		$purpose_id = $GoalApproval->Collaborator->Goal->Purpose->getLastInsertID();
+
+		$params = [
+			'user_id'          => $user_id,
+			'team_id'          => $team_id,
+			'purpose_id'       => $purpose_id,
+			'name'             => 'test',
+			'goal_category_id' => 1,
+			'end_date'         => '1427813999',
+			'photo_file_name'  => 'aa.png'
+		];
+		$GoalApproval->Collaborator->Goal->save($params);
+		$goal_id = $GoalApproval->Collaborator->Goal->getLastInsertID();
+
+		$valued_flg = 'wait';
+		$params = [
+			'user_id'    => $user_id,
+			'team_id'    => $team_id,
+			'goal_id'    => $goal_id,
+			'valued_flg' => $valued_flg,
+			'type'       => 0,
+			'priority'   => 1,
+		];
+		$GoalApproval->Collaborator->save($params);
+
+		$GoalApproval->user_id = $user_id;
 		$this->testAction('/goalapproval/index', ['method' => 'GET']);
 	}
 
