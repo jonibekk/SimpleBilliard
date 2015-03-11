@@ -69,5 +69,4 @@ class EvaluateScore extends AppModel
         return $res;
     }
 
-
 }

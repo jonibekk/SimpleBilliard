@@ -43,9 +43,54 @@ class EvaluationsControllerTest extends ControllerTestCase
      *
      * @return void
      */
-    public function testAdd()
+    public function testAddPost()
     {
-        $this->testAction('/evaluations/add', ['method' => 'POST']);
+        $data = [
+            'Purpose' => [
+                'name' => 'test',
+            ],
+        ];
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function testAddPostFail()
+    {
+        $data = [
+            'Purpose' => [
+                'name' => 'test',
+            ],
+        ];
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function testAddPostDraft()
+    {
+        $data = [
+            'Purpose' => [
+                'name' => 'test',
+            ],
+        ];
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    public function testAddPostDraftFail()
+    {
+        $data = [
+            'Purpose' => [
+                'name' => 'test',
+            ],
+        ];
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
     }
 
 }

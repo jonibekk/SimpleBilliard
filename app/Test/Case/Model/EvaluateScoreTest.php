@@ -87,26 +87,32 @@ class EvaluateScoreTest extends CakeTestCase
             [
                 'team_id' => 1,
                 'comment' => 'aiueo',
+                'index'   => 0
             ],
             [
                 'team_id' => 1,
-                'comment' => 'kakikukeko'
+                'comment' => 'kakikukeko',
+                'index'   => 1
             ],
             [
                 'team_id' => 2,
-                'comment' => 'sasisuseso'
+                'comment' => 'sasisuseso',
+                'index'   => 1
             ],
             [
                 'team_id' => 1,
-                'comment' => 'tatituteto'
+                'comment' => 'tatituteto',
+                'index'   => 2
             ],
             [
                 'team_id' => 1,
-                'comment' => 'naninuneno'
+                'comment' => 'naninuneno',
+                'index'   => 3
             ],
             [
                 'team_id' => 2,
-                'comment' => 'hahihuheho'
+                'comment' => 'hahihuheho',
+                'index'   => 2
             ]
         ];
         $this->EvaluateScore->save($data);
@@ -131,5 +137,4 @@ class EvaluateScoreTest extends CakeTestCase
         $res = $this->EvaluateScore->getScoreList(1);
         $this->assertEquals($res, $expected);
     }
-
 }
