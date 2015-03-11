@@ -2,15 +2,24 @@
 App::uses('AppModel', 'Model');
 
 /**
- * Evaluator Model
+ * Evaluation Model
  *
- * @property User         $EvaluateeUser
- * @property User         $EvaluatorUser
- * @property Team         $Team
- * @property EvaluateTerm $EvaluateTerm
+ * @property Team          $Team
+ * @property User          $EvaluateeUser
+ * @property User          $EvaluatorUser
+ * @property EvaluateTerm  $EvaluateTerm
+ * @property EvaluateScore $EvaluateScore
+ * @property Goal          $Goal
  */
-class Evaluator extends AppModel
+class Evaluation extends AppModel
 {
+
+    /**
+     * Display field
+     *
+     * @var string
+     */
+    public $displayField = 'name';
 
     /**
      * Validation rules
@@ -36,15 +45,23 @@ class Evaluator extends AppModel
      * @var array
      */
     public $belongsTo = [
+        'Team',
         'EvaluateeUser' => [
             'className'  => 'User',
             'foreignKey' => 'evaluatee_user_id',
+            'conditions' => '',
+            'fields'     => '',
+            'order'      => ''
         ],
         'EvaluatorUser' => [
             'className'  => 'User',
             'foreignKey' => 'evaluator_user_id',
+            'conditions' => '',
+            'fields'     => '',
+            'order'      => ''
         ],
-        'Team',
         'EvaluateTerm',
+        'EvaluateScore',
+        'Goal',
     ];
 }

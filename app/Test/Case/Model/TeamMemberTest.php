@@ -24,7 +24,8 @@ class TeamMemberTest extends CakeTestCase
         'app.user', 'app.notify_setting',
         'app.team',
         'app.group',
-        'app.job_category'
+        'app.job_category',
+        'app.evaluate_term'
     );
 
     /**
