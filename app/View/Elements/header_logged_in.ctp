@@ -159,10 +159,10 @@
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
-                        <div class="notify-head">お知らせ</div>
+                        <div class="notify-head"><?=__d('gl',"お知らせ")?></div>
                         <ul class="notify-dropdown-lists" id="bell-dropdown" role="menu">
                             <li class="notify-card-empty" id="notifyCardEmpty">
-                                <i class="fa fa-smile-o font_33px mr_8px"></i><span class="notify-empty-text">未読の通知はありません。</span>
+                                <i class="fa fa-smile-o font_33px mr_8px"></i><span class="notify-empty-text"><?=__d('gl',"未読の通知はありません。")?></span>
                             </li>
                         </ul>
                     </div>
