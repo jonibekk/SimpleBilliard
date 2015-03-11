@@ -38,4 +38,14 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/view', ['method' => 'GET']);
     }
 
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function testAdd()
+    {
+        $this->testAction('/evaluations/add', ['method' => 'POST']);
+    }
+
 }

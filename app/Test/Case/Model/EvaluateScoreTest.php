@@ -81,9 +81,55 @@ class EvaluateScoreTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetScoreList()
     {
-
+        $data = [
+            [
+                'team_id' => 1,
+                'comment' => 'aiueo',
+            ],
+            [
+                'team_id' => 1,
+                'comment' => 'kakikukeko'
+            ],
+            [
+                'team_id' => 2,
+                'comment' => 'sasisuseso'
+            ],
+            [
+                'team_id' => 1,
+                'comment' => 'tatituteto'
+            ],
+            [
+                'team_id' => 1,
+                'comment' => 'naninuneno'
+            ],
+            [
+                'team_id' => 2,
+                'comment' => 'hahihuheho'
+            ]
+        ];
+        $this->EvaluateScore->save($data);
+        $expected = [
+            [
+                'team_id' => 1,
+                'comment' => 'aiueo',
+            ],
+            [
+                'team_id' => 1,
+                'comment' => 'kakikukeko'
+            ],
+            [
+                'team_id' => 1,
+                'comment' => 'tatituteto'
+            ],
+            [
+                'team_id' => 1,
+                'comment' => 'naninuneno'
+            ],
+        ];
+        $res = $this->EvaluateScore->getScoreList(1);
+        $this->assertEquals($res, $expected);
     }
 
 }

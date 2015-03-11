@@ -19,4 +19,9 @@ class EvaluationsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
     }
 
+    function add()
+    {
+        $this->request->allowMethod('post');
+    }
+
 }

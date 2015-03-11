@@ -52,4 +52,22 @@ class EvaluateScore extends AppModel
         'Evaluation'
     ];
 
+    public function getScoreList($teamId) {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+            ],
+            'fields'     => [
+                'name',
+                'description'
+            ],
+            'order'      => [
+                'index' => 'asc'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+
 }
