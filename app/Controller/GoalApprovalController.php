@@ -100,9 +100,9 @@ class GoalApprovalController extends AppController
 	 * 評価ステータス
 	 */
 	public $goal_status = [
-		'unapproved' => 'wait',
-		'approval'   => 'approval',
-		'hold'       => 'hold',
+		'unapproved' => 0,
+		'approval'   => 1,
+		'hold'       => 2,
 		'modify'     => 3,
 	];
 
@@ -134,7 +134,6 @@ class GoalApprovalController extends AppController
 	 */
 	public function index()
 	{
-
 		$goal_ids = $this->getCollaboratorGoalId();
 		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, $this->goal_status['unapproved']);
 
@@ -152,10 +151,9 @@ class GoalApprovalController extends AppController
 	 */
 	public function done()
 	{
-
 		$goal_ids = $this->getCollaboratorGoalId();
-		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, true);
-
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, $this->goal_status['approval']);
+		$this->set(compact('goal_info'));
 	}
 
 	/*
@@ -173,6 +171,7 @@ class GoalApprovalController extends AppController
 	/*
 	 * 承認しない
 	 */
+	/*
 	public function wait()
 	{
 		$id = $this->request->param('id');
@@ -181,14 +180,17 @@ class GoalApprovalController extends AppController
 		}
 		$this->redirect($this->referer());
 	}
+	*/
 
 	/*
 	 * 処理を取り消す
 	 */
+	/*
 	public function cancle()
 	{
 		return $this->done();
 	}
+	*/
 
 	/*
 	 * リストに表示するゴールのIDを取得
