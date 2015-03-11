@@ -97,6 +97,16 @@ class GoalApprovalController extends AppController
 	public $team_id = null;
 
 	/*
+	 * 評価ステータス
+	 */
+	public $goal_status = [
+		'unapproved' => 'wait',
+		'approval'   => 'approval',
+		'hold'       => 'hold',
+		'modify'     => 3,
+	];
+
+	/*
 	 * オーバーライド
 	 */
 	public function beforeFilter()
@@ -126,7 +136,7 @@ class GoalApprovalController extends AppController
 	{
 
 		$goal_ids = $this->getCollaboratorGoalId();
-		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, 'wait');
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, $this->goal_status['unapproved']);
 
 		foreach ($goal_info as $key => $val) {
 			if ($this->user_id === $val['User']['id']) {
@@ -155,7 +165,7 @@ class GoalApprovalController extends AppController
 	{
 		$id = $this->request->param('id');
 		if (empty($id) === false) {
-			$this->Collaborator->changeApprovalStatus(intval($id), 'approval');
+			$this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['approval']);
 		}
 		$this->redirect($this->referer());
 	}
@@ -167,7 +177,7 @@ class GoalApprovalController extends AppController
 	{
 		$id = $this->request->param('id');
 		if (empty($id) === false) {
-			$this->Collaborator->changeApprovalStatus(intval($id), 'hold');
+			$this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['hold']);
 		}
 		$this->redirect($this->referer());
 	}
