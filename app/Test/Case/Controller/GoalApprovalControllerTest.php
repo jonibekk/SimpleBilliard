@@ -48,7 +48,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
 		'app.notify_from_user',
 		'app.thread',
 		'app.message',
-		'app.rater',
+		'app.evaluator',
 		'app.email',
 		'app.notify_setting',
 		'app.oauth_token',
