@@ -102,6 +102,26 @@ class GoalApprovalControllerTest extends ControllerTestCase
 		$this->testAction('/goalapproval/index', ['method' => 'GET']);
 	}
 
+	function testDone()
+	{
+		$this->_getGoalApprovalCommonMock();
+		$this->testAction('/goalapproval/done', ['method' => 'GET']);
+	}
+
+	function testApproval()
+	{
+		$GoalApproval = $this->_getGoalApprovalCommonMock();
+		$params = [
+			'user_id'    => 999,
+			'team_id'    => 888,
+			'goal_id'    => 777,
+			'valued_flg' => 0,
+		];
+		$GoalApproval->Collaborator->save($params);
+		$id = $GoalApproval->Collaborator->getLastInsertID();
+		$this->testAction('/goalapproval/approval/'. $id, ['method' => 'GET']);
+	}
+
 	function testSetCoachFlagTrue()
 	{
 		$GoalApproval = $this->_getGoalApprovalCommonMock();
