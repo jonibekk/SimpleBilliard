@@ -11,6 +11,8 @@
  * @var array $my_teams
  * @var       $current_global_menu
  * @var       $avail_sub_menu
+ * @var       $my_member_status
+ * @var       $is_evaluation_available
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
@@ -200,6 +202,13 @@
                             $this->Html->link(__d('gl', "ログアウト"),
                                               ['controller' => 'users', 'action' => 'logout']) ?></li>
                         <li class="divider"></li>
+                        <? if ($is_evaluation_available): ?>
+                            <li>
+                                <?=
+                                $this->Html->link(__d('gl', '評価'),
+                                                  ['controller' => 'evaluations', 'action' => 'index']) ?>
+                            </li>
+                        <? endif; ?>
                         <?
                         //TODO 一時的にチーム管理者はチーム招待リンクを表示
                         if (isset($my_member_status['TeamMember']) && $my_member_status['TeamMember']['admin_flg']):?>
