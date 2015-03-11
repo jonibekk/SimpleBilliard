@@ -1,12 +1,12 @@
 <?php
-App::uses('MemberGroup', 'Model');
+App::uses('EvaluationSetting', 'Model');
 
 /**
- * MemberGroup Test Case
+ * EvaluationSetting Test Case
  *
- * @property MemberGroup $MemberGroup
+ * @property EvaluationSetting $EvaluationSetting
  */
-class MemberGroupTest extends CakeTestCase
+class EvaluationSettingTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class MemberGroupTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.member_group',
+        'app.evaluation_setting',
         'app.team',
         'app.badge',
         'app.user',
@@ -49,8 +49,9 @@ class MemberGroupTest extends CakeTestCase
         'app.job_category',
         'app.member_type',
         'app.local_name',
-        'app.evaluator',
+        'app.member_group',
         'app.group',
+        'app.evaluator',
         'app.invite',
         'app.thread',
         'app.message'
@@ -64,7 +65,7 @@ class MemberGroupTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->MemberGroup = ClassRegistry::init('MemberGroup');
+        $this->EvaluationSetting = ClassRegistry::init('EvaluationSetting');
     }
 
     /**
@@ -74,7 +75,7 @@ class MemberGroupTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->MemberGroup);
+        unset($this->EvaluationSetting);
 
         parent::tearDown();
     }

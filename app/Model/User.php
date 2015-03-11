@@ -234,7 +234,7 @@ class User extends AppModel
         'Goal',
         'MemberGroup',
         'Collaborator',
-        'Rater',
+        'Evaluator',
     ];
 
     /**

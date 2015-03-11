@@ -1,12 +1,12 @@
 <?php
-App::uses('MemberGroup', 'Model');
+App::uses('Evaluator', 'Model');
 
 /**
- * MemberGroup Test Case
+ * Evaluator Test Case
  *
- * @property MemberGroup $MemberGroup
+ * @property Evaluator $Evaluator
  */
-class MemberGroupTest extends CakeTestCase
+class EvaluatorTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,8 @@ class MemberGroupTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.member_group',
+        'app.evaluator',
+        'app.user',
         'app.team',
         'app.badge',
         'app.user',
@@ -46,11 +47,10 @@ class MemberGroupTest extends CakeTestCase
         'app.notify_from_user',
         'app.oauth_token',
         'app.team_member',
+        'app.group',
         'app.job_category',
         'app.member_type',
         'app.local_name',
-        'app.evaluator',
-        'app.group',
         'app.invite',
         'app.thread',
         'app.message'
@@ -64,7 +64,7 @@ class MemberGroupTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->MemberGroup = ClassRegistry::init('MemberGroup');
+        $this->Evaluator = ClassRegistry::init('Evaluator');
     }
 
     /**
@@ -74,12 +74,12 @@ class MemberGroupTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->MemberGroup);
+        unset($this->Evaluator);
 
         parent::tearDown();
     }
 
-    function testDummy()
+    public function testDummy()
     {
 
     }

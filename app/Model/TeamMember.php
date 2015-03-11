@@ -50,7 +50,7 @@ class TeamMember extends AppModel
     private $csv_emails = [];
     private $csv_member_ids = [];
     private $csv_coach_ids = [];
-    private $csv_rater_ids = [];
+    private $csv_evaluator_ids = [];
 
     /**
      * 現在有効なチーム一覧を取得
@@ -364,27 +364,27 @@ class TeamMember extends AppModel
          * 評価者IDはメンバーIDを検索し、セット
          */
         //評価者紐付けを解除
-        $this->Team->Rater->deleteAll(['Rater.team_id' => $this->current_team_id]);
+        $this->Team->Evaluator->deleteAll(['Evaluator.team_id' => $this->current_team_id]);
 
-        $save_rater_data = [];
+        $save_evaluator_data = [];
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (!viaIsSet($row_v['Rater'])) {
+            if (!viaIsSet($row_v['Evaluator'])) {
                 continue;
             }
-            foreach ($row_v['Rater'] as $r_k => $r_v) {
-                if ($rater_team_member = $this->getByMemberNo($r_v)) {
-                    $save_rater_data[] = [
-                        'index'         => $r_k,
-                        'team_id'       => $this->current_team_id,
-                        'ratee_user_id' => $row_v['User']['id'],
-                        'rater_user_id' => $rater_team_member['TeamMember']['user_id'],
+            foreach ($row_v['Evaluator'] as $r_k => $r_v) {
+                if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
+                    $save_evaluator_data[] = [
+                        'index'             => $r_k,
+                        'team_id'           => $this->current_team_id,
+                        'evaluatee_user_id' => $row_v['User']['id'],
+                        'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
                     ];
                 }
             }
         }
-        if (viaIsSet($save_rater_data)) {
-            $this->Team->Rater->create();
-            $this->Team->Rater->saveAll($save_rater_data);
+        if (viaIsSet($save_evaluator_data)) {
+            $this->Team->Evaluator->create();
+            $this->Team->Evaluator->saveAll($save_evaluator_data);
         }
 
         $res['success_count'] = count($this->csv_datas);
@@ -546,25 +546,25 @@ class TeamMember extends AppModel
          * 評価者は最後に登録
          * 評価者IDはメンバーIDを検索し、セット
          */
-        $save_rater_data = [];
+        $save_evaluator_data = [];
         foreach ($this->csv_datas as $row_k => $row_v) {
-            if (!viaIsSet($row_v['Rater'])) {
+            if (!viaIsSet($row_v['Evaluator'])) {
                 continue;
             }
-            foreach ($row_v['Rater'] as $r_k => $r_v) {
-                if ($rater_team_member = $this->getByMemberNo($r_v)) {
-                    $save_rater_data[] = [
-                        'index'         => $r_k,
-                        'team_id'       => $this->current_team_id,
-                        'ratee_user_id' => $row_v['User']['id'],
-                        'rater_user_id' => $rater_team_member['TeamMember']['user_id'],
+            foreach ($row_v['Evaluator'] as $r_k => $r_v) {
+                if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
+                    $save_evaluator_data[] = [
+                        'index'             => $r_k,
+                        'team_id'           => $this->current_team_id,
+                        'evaluatee_user_id' => $row_v['User']['id'],
+                        'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
                     ];
                 }
             }
         }
-        if (viaIsSet($save_rater_data)) {
-            $this->Team->Rater->create();
-            $this->Team->Rater->saveAll($save_rater_data);
+        if (viaIsSet($save_evaluator_data)) {
+            $this->Team->Evaluator->create();
+            $this->Team->Evaluator->saveAll($save_evaluator_data);
         }
 
         $res['success_count'] = count($this->csv_datas);
@@ -656,16 +656,16 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
             }
 
-            //Rater ID
-            //duplicate rater check.
-            $filtered_raters = array_filter($row['rater_member_no'], "strlen");
-            foreach ($row['rater_member_no'] as $v) {
+            //Evaluator ID
+            //duplicate evaluator check.
+            $filtered_evaluators = array_filter($row['evaluator_member_no'], "strlen");
+            foreach ($row['evaluator_member_no'] as $v) {
                 if (viaIsSet($v)) {
-                    $this->csv_datas[$key]['Rater'][] = $v;
+                    $this->csv_datas[$key]['Evaluator'][] = $v;
                 }
             }
-            //rater id check(after check)
-            $this->csv_rater_ids[] = $filtered_raters;
+            //evaluator id check(after check)
+            $this->csv_evaluator_ids[] = $filtered_evaluators;
         }
 
         //require least 1 or more admin and active check
@@ -711,20 +711,20 @@ class TeamMember extends AppModel
                 return $res;
             }
         }
-        //rater id check
-        //Rater ID must be already been registered or must be included in the member ID
+        //evaluator id check
+        //Evaluator ID must be already been registered or must be included in the member ID
         //remove empty elements
-        foreach ($this->csv_rater_ids as $k => $v) {
-            $this->csv_rater_ids[$k] = array_filter($v, "strlen");
+        foreach ($this->csv_evaluator_ids as $k => $v) {
+            $this->csv_evaluator_ids[$k] = array_filter($v, "strlen");
         }
 
-        //Merge all rater ID
-        $merged_rater_ids = [];
-        foreach ($this->csv_rater_ids as $v) {
-            $merged_rater_ids = array_merge($merged_rater_ids, $v);
+        //Merge all evaluator ID
+        $merged_evaluator_ids = [];
+        foreach ($this->csv_evaluator_ids as $v) {
+            $merged_evaluator_ids = array_merge($merged_evaluator_ids, $v);
         }
-        //Error if the unregistered rater ID is not included in the member ID
-        foreach ($this->csv_rater_ids as $r_k => $r_v) {
+        //Error if the unregistered evaluator ID is not included in the member ID
+        foreach ($this->csv_evaluator_ids as $r_k => $r_v) {
             foreach ($r_v as $k => $v) {
                 $key = array_search($v, $this->csv_member_ids);
                 if ($key === false) {
@@ -828,14 +828,14 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
             }
 
-            //[23]-[29]Rater ID
-            foreach ($row['rater_member_no'] as $v) {
+            //[23]-[29]Evaluator ID
+            foreach ($row['evaluator_member_no'] as $v) {
                 if (viaIsSet($v)) {
-                    $this->csv_datas[$key]['Rater'][] = $v;
+                    $this->csv_datas[$key]['Evaluator'][] = $v;
                 }
             }
-            //rater id check(after check)
-            $this->csv_rater_ids[] = array_filter($row['rater_member_no'], "strlen");
+            //evaluator id check(after check)
+            $this->csv_evaluator_ids[] = array_filter($row['evaluator_member_no'], "strlen");
         }
 
         //email exists check
@@ -909,37 +909,37 @@ class TeamMember extends AppModel
             }
         }
 
-        //rater id check
-        //Rater ID must be already been registered or must be included in the member ID
+        //evaluator id check
+        //Evaluator ID must be already been registered or must be included in the member ID
         //remove empty elements
-        foreach ($this->csv_rater_ids as $k => $v) {
-            $this->csv_rater_ids[$k] = array_filter($v, "strlen");
+        foreach ($this->csv_evaluator_ids as $k => $v) {
+            $this->csv_evaluator_ids[$k] = array_filter($v, "strlen");
         }
 
-        //Merge all rater ID
-        $merged_rater_ids = [];
-        foreach ($this->csv_rater_ids as $v) {
-            $merged_rater_ids = array_merge($merged_rater_ids, $v);
+        //Merge all evaluator ID
+        $merged_evaluator_ids = [];
+        foreach ($this->csv_evaluator_ids as $v) {
+            $merged_evaluator_ids = array_merge($merged_evaluator_ids, $v);
         }
-        //Check for rater ID registered
-        $exists_rater_ids = $this->find('all',
-                                        [
-                                            'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_rater_ids],
-                                            'fields'     => ['member_no']
-                                        ]
+        //Check for evaluator ID registered
+        $exists_evaluator_ids = $this->find('all',
+                                            [
+                                                'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_evaluator_ids],
+                                                'fields'     => ['member_no']
+                                            ]
         );
-        //remove the rater ID of the registered
-        foreach ($exists_rater_ids as $er_k => $er_v) {
+        //remove the evaluator ID of the registered
+        foreach ($exists_evaluator_ids as $er_k => $er_v) {
             $member_no = $er_v['TeamMember']['member_no'];
-            foreach ($this->csv_rater_ids as $r_k => $r_v) {
+            foreach ($this->csv_evaluator_ids as $r_k => $r_v) {
                 $key = array_search($member_no, $r_v);
                 if ($key !== false) {
-                    unset($this->csv_rater_ids[$r_k][$key]);
+                    unset($this->csv_evaluator_ids[$r_k][$key]);
                 }
             }
         }
-        //Error if the unregistered rater ID is not included in the member ID
-        foreach ($this->csv_rater_ids as $r_k => $r_v) {
+        //Error if the unregistered evaluator ID is not included in the member ID
+        foreach ($this->csv_evaluator_ids as $r_k => $r_v) {
             foreach ($r_v as $k => $v) {
                 $key = array_search($v, $this->csv_member_ids);
                 if ($key === false) {
@@ -1024,7 +1024,7 @@ class TeamMember extends AppModel
             }
             //coach after
 
-            //rater after
+            //evaluator after
         }
 
         //set coach member #
@@ -1039,13 +1039,13 @@ class TeamMember extends AppModel
             $coach_member = $this->find('first', $options);
             $csv_data[$k]['coach_member_no'] = viaIsSet($coach_member['TeamMember']['member_no']) ? $coach_member['TeamMember']['member_no'] : null;
         }
-        //set rater member #
+        //set evaluator member #
         foreach ($all_users as $k => $v) {
             $options = [
-                'conditions' => ['team_id' => $team_id, 'ratee_user_id' => $v['User']['id']],
-                'fields'     => ['rater_user_id'],
+                'conditions' => ['team_id' => $team_id, 'evaluatee_user_id' => $v['User']['id']],
+                'fields'     => ['evaluator_user_id'],
                 'contain'    => [
-                    'RaterUser' => [
+                    'EvaluatorUser' => [
                         'fields'     => ['id'],
                         'TeamMember' => [
                             'conditions' => ['team_id' => $team_id],
@@ -1054,11 +1054,11 @@ class TeamMember extends AppModel
                     ]
                 ]
             ];
-            $raters = $this->Team->Rater->find('all', $options);
-            foreach ($raters as $r_k => $r_v) {
+            $evaluators = $this->Team->Evaluator->find('all', $options);
+            foreach ($evaluators as $r_k => $r_v) {
                 $key_index = $r_k + 1;
-                if (viaIsSet($r_v['RaterUser']['TeamMember'][0]['member_no'])) {
-                    $csv_data[$k]['rater_member_no.' . $key_index] = $r_v['RaterUser']['TeamMember'][0]['member_no'];
+                if (viaIsSet($r_v['EvaluatorUser']['TeamMember'][0]['member_no'])) {
+                    $csv_data[$k]['evaluator_member_no.' . $key_index] = $r_v['EvaluatorUser']['TeamMember'][0]['member_no'];
                 }
             }
         }
@@ -1108,13 +1108,13 @@ class TeamMember extends AppModel
                 'group.6'               => __d('gl', "グループ6"),
                 'group.7'               => __d('gl', "グループ7"),
                 'coach_member_no'       => __d('gl', "コーチID"),
-                'rater_member_no.1'     => __d('gl', "評価者1"),
-                'rater_member_no.2'     => __d('gl', "評価者2"),
-                'rater_member_no.3'     => __d('gl', "評価者3"),
-                'rater_member_no.4'     => __d('gl', "評価者4"),
-                'rater_member_no.5'     => __d('gl', "評価者5"),
-                'rater_member_no.6'     => __d('gl', "評価者6"),
-                'rater_member_no.7'     => __d('gl', "評価者7"),
+                'evaluator_member_no.1' => __d('gl', "評価者1"),
+                'evaluator_member_no.2' => __d('gl', "評価者2"),
+                'evaluator_member_no.3' => __d('gl', "評価者3"),
+                'evaluator_member_no.4' => __d('gl', "評価者4"),
+                'evaluator_member_no.5' => __d('gl', "評価者5"),
+                'evaluator_member_no.6' => __d('gl', "評価者6"),
+                'evaluator_member_no.7' => __d('gl', "評価者7"),
             ];
         }
 
@@ -1135,13 +1135,13 @@ class TeamMember extends AppModel
             'group.6'               => __d('gl', "グループ6"),
             'group.7'               => __d('gl', "グループ7"),
             'coach_member_no'       => __d('gl', "コーチID"),
-            'rater_member_no.1'     => __d('gl', "評価者1"),
-            'rater_member_no.2'     => __d('gl', "評価者2"),
-            'rater_member_no.3'     => __d('gl', "評価者3"),
-            'rater_member_no.4'     => __d('gl', "評価者4"),
-            'rater_member_no.5'     => __d('gl', "評価者5"),
-            'rater_member_no.6'     => __d('gl', "評価者6"),
-            'rater_member_no.7'     => __d('gl', "評価者7"),
+            'evaluator_member_no.1' => __d('gl', "評価者1"),
+            'evaluator_member_no.2' => __d('gl', "評価者2"),
+            'evaluator_member_no.3' => __d('gl', "評価者3"),
+            'evaluator_member_no.4' => __d('gl', "評価者4"),
+            'evaluator_member_no.5' => __d('gl', "評価者5"),
+            'evaluator_member_no.6' => __d('gl', "評価者6"),
+            'evaluator_member_no.7' => __d('gl', "評価者7"),
         ];
 
     }
@@ -1169,7 +1169,7 @@ class TeamMember extends AppModel
                     'message' => __d('validate', "%sは64文字以内で入力してください。", __d('gl', "メンバーID"))
                 ],
                 'isNotExistArray' => [
-                    'rule'       => ['isNotExistArray', 'rater_member_no'],
+                    'rule'       => ['isNotExistArray', 'evaluator_member_no'],
                     'message'    => __d('gl', "%sに本人のIDを指定する事はできません。", __d('gl', "評価者ID")),
                     'allowEmpty' => true,
                 ],
@@ -1252,7 +1252,7 @@ class TeamMember extends AppModel
                     'allowEmpty' => true,
                 ],
             ],
-            'rater_member_no'       => [
+            'evaluator_member_no'   => [
                 'isAlignLeft'     => [
                     'rule'       => 'isAlignLeft',
                     'message'    => __d('validate', "%sは左詰めで記入してください。", __d('gl', "評価者")),

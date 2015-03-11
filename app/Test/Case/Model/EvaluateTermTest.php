@@ -1,12 +1,12 @@
 <?php
-App::uses('Rater', 'Model');
+App::uses('EvaluateTerm', 'Model');
 
 /**
- * Rater Test Case
+ * EvaluateTerm Test Case
  *
- * @property Rater $Rater
+ * @property EvaluateTerm $EvaluateTerm
  */
-class RaterTest extends CakeTestCase
+class EvaluateTermTest extends CakeTestCase
 {
 
     /**
@@ -15,8 +15,7 @@ class RaterTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.rater',
-        'app.user',
+        'app.evaluate_term',
         'app.team',
         'app.badge',
         'app.user',
@@ -47,13 +46,16 @@ class RaterTest extends CakeTestCase
         'app.notify_from_user',
         'app.oauth_token',
         'app.team_member',
-        'app.group',
         'app.job_category',
         'app.member_type',
         'app.local_name',
+        'app.member_group',
+        'app.group',
+        'app.evaluator',
         'app.invite',
         'app.thread',
-        'app.message'
+        'app.message',
+        'app.evaluation'
     );
 
     /**
@@ -64,7 +66,7 @@ class RaterTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Rater = ClassRegistry::init('Rater');
+        $this->EvaluateTerm = ClassRegistry::init('EvaluateTerm');
     }
 
     /**
@@ -74,12 +76,12 @@ class RaterTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->Rater);
+        unset($this->EvaluateTerm);
 
         parent::tearDown();
     }
 
-    public function testDummy()
+    function testDummy()
     {
 
     }

@@ -2,14 +2,20 @@
 App::uses('AppModel', 'Model');
 
 /**
- * Rater Model
+ * EvaluateScore Model
  *
- * @property User $RateeUser
- * @property User $RaterUser
- * @property Team $Team
+ * @property Team       $Team
+ * @property Evaluation $Evaluation
  */
-class Rater extends AppModel
+class EvaluateScore extends AppModel
 {
+
+    /**
+     * Display field
+     *
+     * @var string
+     */
+    public $displayField = 'name';
 
     /**
      * Validation rules
@@ -28,21 +34,22 @@ class Rater extends AppModel
             ],
         ],
     ];
-
     /**
      * belongsTo associations
      *
      * @var array
      */
     public $belongsTo = [
-        'RateeUser' => [
-            'className'  => 'User',
-            'foreignKey' => 'ratee_user_id',
-        ],
-        'RaterUser' => [
-            'className'  => 'User',
-            'foreignKey' => 'rater_user_id',
-        ],
-        'Team',
+        'Team'
     ];
+
+    /**
+     * hasMany associations
+     *
+     * @var array
+     */
+    public $hasMany = [
+        'Evaluation'
+    ];
+
 }

@@ -41,14 +41,15 @@ class TeamsControllerTest extends ControllerTestCase
         'app.oauth_token',
         'app.team_member',
         'app.group',
-        'app.rater',
+        'app.evaluator',
         'app.member_group',
         'app.job_category',
         'app.invite',
         'app.thread',
         'app.send_mail',
         'app.send_mail_to_user',
-        'app.message'
+        'app.message',
+        'app.evaluate_term'
     );
 
     /**

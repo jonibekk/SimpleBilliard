@@ -17,14 +17,15 @@ class TeamMemberTest extends CakeTestCase
     public $fixtures = array(
         'app.team_member',
         'app.member_group',
-        'app.rater',
+        'app.evaluator',
         'app.email',
         'app.local_name',
         'app.member_type',
         'app.user', 'app.notify_setting',
         'app.team',
         'app.group',
-        'app.job_category'
+        'app.job_category',
+        'app.evaluate_term'
     );
 
     /**
@@ -760,7 +761,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateNewMemberCsvDataRaterIdAlignLeft()
+    function testValidateNewMemberCsvDataEvaluatorIdAlignLeft()
     {
         $this->setDefault();
 
@@ -781,7 +782,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateNewMemberCsvDataRaterIdNotIncludeMemberId()
+    function testValidateNewMemberCsvDataEvaluatorIdNotIncludeMemberId()
     {
         $this->setDefault();
 
@@ -802,7 +803,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateNewMemberCsvDataRaterIdDuplicate()
+    function testValidateNewMemberCsvDataEvaluatorIdDuplicate()
     {
         $this->setDefault();
 
@@ -950,7 +951,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateNewMemberCsvDataRaterIdExists()
+    function testValidateNewMemberCsvDataEvaluatorIdExists()
     {
         $this->setDefault();
 
@@ -1425,7 +1426,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateUpdateMemberCsvDataRaterAlignLeftError()
+    function testValidateUpdateMemberCsvDataEvaluatorAlignLeftError()
     {
         $this->setDefault();
 
@@ -1452,7 +1453,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateUpdateMemberCsvDataRaterMemberIdError()
+    function testValidateUpdateMemberCsvDataEvaluatorMemberIdError()
     {
         $this->setDefault();
 
@@ -1479,7 +1480,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateUpdateMemberCsvDataRaterDuplicateError()
+    function testValidateUpdateMemberCsvDataEvaluatorDuplicateError()
     {
         $this->setDefault();
 
@@ -1613,7 +1614,7 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-    function testValidateUpdateMemberCsvDataNotExistsRater()
+    function testValidateUpdateMemberCsvDataNotExistsEvaluator()
     {
         $this->setDefault();
 
