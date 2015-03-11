@@ -174,4 +174,26 @@ class EvaluationSetting extends AppModel
     public $belongsTo = [
         'Team',
     ];
+
+    public function getSettings($teamId) {
+        $options = [
+            'conditions' => [
+                'team_id'                  => $teamId,
+            ],
+        ];
+        return $this->find('first', $options);
+    }
+
+    public function getSelfSettings($teamId) {
+
+    }
+
+    public function getEvaluatorSettings($teamId) {
+
+    }
+
+    public function getFinalSettings($teamId) {
+
+    }
+
 }

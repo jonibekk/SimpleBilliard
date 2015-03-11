@@ -26,27 +26,27 @@ class EvaluationsController extends AppController
     function add()
     {
         $this->request->allowMethod('post');
-        $type = $this->request->data['type'];
-        if ($type !== 'register' || $type !== 'draft') {
+        $isDraft  = isset($this->request->data['is_draft']);
+        $isRegist = isset($this->request->data['is_register']);
+
+        if(!$isDraft || !$isRegist) {
             $this->Pnotify->outError(__d('gl', "保存に失敗しました。"));
             $this->redirect($this->referer());
         }
 
-        $this->Evaluation->create();
-
         // case of saving draft
-        if($type === 'draft') {
-            $saveDraft = $this->Evaluation->saveDraft($this->request->data);
+        if($isDraft) {
+            $saveDraft = $this->Evaluation->addDrafts($this->request->data);
             if ($saveDraft) {
-                $this->Pnotify->outError(__d('gl', "下書きを保存しました。"));
+                $this->Pnotify->outSuccess(__d('gl', "下書きを保存しました。"));
                 $this->redirect($this->referer());
             }
 
         // case of registering
         } else {
-            $saveRegister = $this->Evaluation->saveRegister($this->request->data);
+            $saveRegister = $this->Evaluation->addRegisters($this->request->data);
             if ($saveRegister) {
-                $this->Pnotify->outError(__d('gl', "自己評価を登録しました。"));
+                $this->Pnotify->outSuccess(__d('gl', "自己評価を登録しました。"));
                 $this->redirect($this->referer());
             }
         }
