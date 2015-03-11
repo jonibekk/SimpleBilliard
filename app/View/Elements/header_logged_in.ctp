@@ -204,6 +204,15 @@
                         <li class="divider"></li>
                         <? if ($is_evaluation_available): ?>
                             <li>
+                                <? if (viaIsSet($my_member_status['TeamMember']['evaluable_count']) && $my_member_status['TeamMember']['evaluable_count'] > 0): ?>
+                                    <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
+                                margin: 4px 0 0 132px;
+                                color: #fff;
+                                font-size: 10px;
+                                background-color:red!important;
+                                display:block"><?= $my_member_status['TeamMember']['evaluable_count'] ?></div>
+                                <? endif; ?>
+
                                 <?=
                                 $this->Html->link(__d('gl', '評価'),
                                                   ['controller' => 'evaluations', 'action' => 'index']) ?>
