@@ -145,6 +145,7 @@
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
+
                 <div class="dropdown dropdown-menu-right navbar-nav-fix header-circle">
                     <div class="btn btn-danger btn-xs bell-notify-box"
                          id="bellNum"
@@ -154,20 +155,31 @@
                                 font-size: 10px;
                                 opacity: 0;
                                 background-color:red!important;
-                                display:block">0</div>
+                                display:block">0
+                    </div>
                     <a id="click-header-bell" class="header-link" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
+
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
-                        <div class="notify-head"><?=__d('gl',"お知らせ")?></div>
+                        <div class="notify-head"><?= __d('gl', "お知らせ") ?></div>
                         <ul class="notify-dropdown-lists" id="bell-dropdown" role="menu">
                             <li class="notify-card-empty" id="notifyCardEmpty">
-                                <i class="fa fa-smile-o font_33px mr_8px"></i><span class="notify-empty-text"><?=__d('gl',"未読の通知はありません。")?></span>
+                                <i class="fa fa-smile-o font_33px mr_8px"></i><span
+                                    class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="pull-right header-function dropdown">
+                    <? if (viaIsSet($my_member_status['TeamMember']['evaluable_count']) && $my_member_status['TeamMember']['evaluable_count'] > 0): ?>
+                        <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
+                                margin: 5px 0 0 33px;
+                                color: #fff;
+                                font-size: 10px;
+                                background-color:red!important;
+                                display:block"><?= $my_member_status['TeamMember']['evaluable_count'] ?></div>
+                    <? endif; ?>
                     <a href="#"
                        class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
                        data-toggle="dropdown"
