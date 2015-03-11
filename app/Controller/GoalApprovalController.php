@@ -4,13 +4,14 @@ App::uses('AppController', 'Controller');
 /**
  * GoalApproval Controller
  *
- * @property GoalApproval $GoalApproval
+ * @property GoalApproval       $GoalApproval
  * @property PaginatorComponent $Paginator
- * @property SessionComponent $Session
- * @property TeamMember $TeamMember
- * @property Collaborator $Collaborator
+ * @property SessionComponent   $Session
+ * @property TeamMember         $TeamMember
+ * @property Collaborator       $Collaborator
  */
-class GoalApprovalController extends AppController {
+class GoalApprovalController extends AppController
+{
 
 	/*
 	 * 使用モデル
@@ -23,7 +24,7 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 処理待ち && 自分のゴールの場合
 	 */
-	const WAIT_MY_GOAL_MSG         = '承認待ち中です';
+	const WAIT_MY_GOAL_MSG = '承認待ち中です';
 
 	/*
 	 * 処理済み && 自分のゴールが承認されたの場合
@@ -33,22 +34,22 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 処理済み && 自分のゴールが保留の場合
 	 */
-	const APPROVAL_MY_GOAL_NG_MSG  = 'コーチが保留しました';
+	const APPROVAL_MY_GOAL_NG_MSG = 'コーチが保留しました';
 
 	/*
 	 * 処理済み && メンバーのゴールが承認されたの場合
 	 */
-	const APPROVAL_MEMBER_GOAL_YES_MSG  = '承認しました';
+	const APPROVAL_MEMBER_GOAL_YES_MSG = '承認しました';
 
 	/*
 	 * 処理済み && メンバーのゴールが保留の場合
 	 */
-	const APPROVAL_MEMBER_GOAL_NG_MSG   = '保留にしました';
+	const APPROVAL_MEMBER_GOAL_NG_MSG = '保留にしました';
 
 	/*
 	 * 処理済み用のメッセージリスト
 	 */
-	private $approval_msg_list = [
+	public $approval_msg_list = [
 		1 => GoalApprovalController::APPROVAL_MY_GOAL_YES_MSG,
 		2 => GoalApprovalController::APPROVAL_MY_GOAL_NG_MSG,
 		3 => GoalApprovalController::APPROVAL_MEMBER_GOAL_YES_MSG,
@@ -59,23 +60,23 @@ class GoalApprovalController extends AppController {
 	 * コーチ判定フラグ
 	 * true: コーチがいる false: コーチがいない
 	 */
-	private $coach_flag = FALSE;
+	public $coach_flag = false;
 
 	/*
 	 * コーチID
 	 */
-	private $coach_id = '';
+	public $coach_id = '';
 
 	/*
 	 * メンバー判定フラグ
 	 * true: メンバーがいる false: メンバーがいない
 	 */
-	private $member_flag = FALSE;
+	public $member_flag = false;
 
 	/*
 	 * メンバーIDリスト
 	 */
-	private $member_ids = [];
+	public $member_ids = [];
 
 	/*
 	 * ログインしているユーザータイプ
@@ -83,22 +84,23 @@ class GoalApprovalController extends AppController {
 	 * 2: コーチとメンバーが存在
 	 * 3: メンバーのみ存在
 	 */
-	private $user_type = 0;
+	public $user_type = 0;
 
 	/*
 	 * ログインユーザーのuser_id
 	 */
-	private $user_id = NULL;
+	public $user_id = null;
 
 	/*
 	 * ログインユーザーのteam_id
 	 */
-	private $team_id = NULL;
+	public $team_id = null;
 
 	/*
 	 * オーバーライド
 	 */
-	public function beforeFilter() {
+	public function beforeFilter()
+	{
 
 		parent::beforeFilter();
 
@@ -111,7 +113,7 @@ class GoalApprovalController extends AppController {
 
 		// コーチ認定機能が使えるユーザーはトップページ
 		$this->user_type = $this->getUserType();
-		if ($this->user_type  === 0) {
+		if ($this->user_type === 0) {
 		}
 		$this->layout = LAYOUT_ONE_COLUMN;
 
@@ -138,7 +140,8 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 処理済みページ
 	 */
-	public function done () {
+	public function done()
+	{
 
 		$goal_ids = $this->getCollaboratorGoalId();
 		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, true);
@@ -148,9 +151,10 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 承認する
 	 */
-	public function approval () {
+	public function approval()
+	{
 		$id = $this->request->param('id');
-		if (empty($id) === FALSE) {
+		if (empty($id) === false) {
 			$this->Collaborator->changeApprovalStatus(intval($id), 'approval');
 		}
 		$this->redirect($this->referer());
@@ -159,9 +163,10 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 承認しない
 	 */
-	public function wait () {
+	public function wait()
+	{
 		$id = $this->request->param('id');
-		if (empty($id) === FALSE) {
+		if (empty($id) === false) {
 			$this->Collaborator->changeApprovalStatus(intval($id), 'hold');
 		}
 		$this->redirect($this->referer());
@@ -170,24 +175,28 @@ class GoalApprovalController extends AppController {
 	/*
 	 * 処理を取り消す
 	 */
-	public function cancle () {
+	public function cancle()
+	{
 		return $this->done();
 	}
 
 	/*
 	 * リストに表示するゴールのIDを取得
 	 */
-	private function getCollaboratorGoalId () {
+	public function getCollaboratorGoalId()
+	{
 		$goal_ids = [];
 		if ($this->user_type === 1) {
 			$goal_ids = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
 
-		} elseif ($this->user_type === 2) {
+		}
+		elseif ($this->user_type === 2) {
 			$my_goal_id = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
 			$member_goal_id = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
 			$goal_ids = array_merge($my_goal_id, $member_goal_id);
 
-		} elseif ($this->user_type === 3) {
+		}
+		elseif ($this->user_type === 3) {
 			$goal_ids = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
 		}
 		return $goal_ids;
@@ -196,22 +205,26 @@ class GoalApprovalController extends AppController {
 	/*
 	 * ログインしているユーザーはコーチが存在するのか
 	 */
-	private function setCoachFlag ($user_id, $team_id) {
+	public function setCoachFlag($user_id, $team_id)
+	{
 		$coach_id = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
-		if (is_null($coach_id['TeamMember']['coach_user_id']) === FALSE) {
+		if (isset($coach_id['TeamMember']['coach_user_id']) === true
+			&& is_null($coach_id['TeamMember']['coach_user_id']) === false
+		) {
 			$this->coach_id = $coach_id['TeamMember']['coach_user_id'];
-			$this->coach_flag = TRUE;
+			$this->coach_flag = true;
 		}
 	}
 
 	/*
 	 * ログインしているユーザーは管理するメンバー存在するのか
 	 */
-	private function setMemberFlag ($user_id, $team_id) {
+	public function setMemberFlag($user_id, $team_id)
+	{
 		$member_ids = $this->TeamMember->selectUserIdFromTeamMembersTB($user_id, $team_id);
-		if (empty($member_ids) === FALSE) {
+		if (empty($member_ids) === false) {
 			$this->member_ids = $member_ids;
-			$this->member_flag = TRUE;
+			$this->member_flag = true;
 		}
 	}
 
@@ -221,17 +234,18 @@ class GoalApprovalController extends AppController {
 	 * 2: コーチいる、メンバーがいる
 	 * 3: コーチがいない、メンバーがいる
 	 */
-	private function getUserType() {
+	public function getUserType()
+	{
 
-		if ($this->coach_flag === TRUE && $this->member_flag === FALSE) {
+		if ($this->coach_flag === true && $this->member_flag === false) {
 			return 1;
 		}
 
-		if ($this->coach_flag === TRUE && $this->member_flag === TRUE) {
+		if ($this->coach_flag === true && $this->member_flag === true) {
 			return 2;
 		}
 
-		if ($this->coach_flag === FALSE && $this->member_flag === TRUE) {
+		if ($this->coach_flag === false && $this->member_flag === true) {
 			return 3;
 		}
 
