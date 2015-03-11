@@ -220,7 +220,7 @@
                         <? endif; ?>
                         <?
                         //TODO 一時的にチーム管理者はチーム招待リンクを表示
-                        if (isset($my_member_status['TeamMember']) && $my_member_status['TeamMember']['admin_flg']):?>
+                        if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
                             <li>
                                 <?=
                                 $this->Html->link(__d('gl', 'チーム設定'),
