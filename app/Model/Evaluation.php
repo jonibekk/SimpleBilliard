@@ -9,6 +9,7 @@ App::uses('AppModel', 'Model');
  * @property User          $EvaluatorUser
  * @property EvaluateTerm  $EvaluateTerm
  * @property EvaluateScore $EvaluateScore
+ * @property Goal          $Goal
  */
 class Evaluation extends AppModel
 {
@@ -61,5 +62,6 @@ class Evaluation extends AppModel
         ],
         'EvaluateTerm',
         'EvaluateScore',
+        'Goal',
     ];
 }
