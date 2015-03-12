@@ -6,88 +6,87 @@ App::uses('Collaborator', 'Model');
  *
  * @property Collaborator $Collaborator
  */
-
 class CollaboratorTest extends CakeTestCase
 {
 
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = array(
-        'app.collaborator',
-        'app.team',
-        'app.badge',
-        'app.user',
-        'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.goal',
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
+	public $fixtures = array(
+		'app.collaborator',
+		'app.team',
+		'app.badge',
+		'app.user',
+		'app.email',
+		'app.notify_setting',
+		'app.comment_like',
+		'app.comment',
+		'app.post',
+		'app.goal',
 		'app.purpose',
-        'app.goal_category',
-        'app.key_result',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
-        'app.oauth_token',
-        'app.team_member',
-        'app.group',
-        'app.job_category',
-        'app.local_name',
-        'app.invite',
-        'app.thread',
-        'app.message'
-    );
+		'app.goal_category',
+		'app.key_result',
+		'app.post_share_user',
+		'app.post_share_circle',
+		'app.circle',
+		'app.circle_member',
+		'app.post_like',
+		'app.post_read',
+		'app.comment_mention',
+		'app.given_badge',
+		'app.post_mention',
+		'app.comment_read',
+		'app.notification',
+		'app.notify_to_user',
+		'app.notify_from_user',
+		'app.oauth_token',
+		'app.team_member',
+		'app.group',
+		'app.job_category',
+		'app.local_name',
+		'app.invite',
+		'app.thread',
+		'app.message'
+	);
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->Collaborator = ClassRegistry::init('Collaborator');
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
+	public function setUp()
+	{
+		parent::setUp();
+		$this->Collaborator = ClassRegistry::init('Collaborator');
 		//$this->Collaborator->User = ClassRegistry::init('User');
 		//$this->Collaborator->Goal->Purpose = ClassRegistry::init('Purpose');
-    }
+	}
 
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        unset($this->Collaborator);
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
+	public function tearDown()
+	{
+		unset($this->Collaborator);
 
-        parent::tearDown();
-    }
+		parent::tearDown();
+	}
 
-    function testAdd()
-    {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
-        $res = $this->Collaborator->add(1);
-        $this->assertTrue(!empty($res));
-    }
+	function testAdd()
+	{
+		$this->Collaborator->my_uid = 1;
+		$this->Collaborator->current_team_id = 1;
+		$res = $this->Collaborator->add(1);
+		$this->assertTrue(!empty($res));
+	}
 
 	function testGetCollabeGoalDetail()
 	{
-		$team_id    = 1;
+		$team_id = 1;
 
 		$params = [
 			'first_name' => 'test',
@@ -105,10 +104,10 @@ class CollaboratorTest extends CakeTestCase
 		$purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
 
 		$params = [
-			'user_id'     => $user_id,
-			'team_id'     => $team_id,
-			'purpose_id'  => $purpose_id,
-			'name'        => 'test',
+			'user_id'          => $user_id,
+			'team_id'          => $team_id,
+			'purpose_id'       => $purpose_id,
+			'name'             => 'test',
 			'goal_category_id' => 1,
 			'end_date'         => '1427813999',
 			'photo_file_name'  => 'aa.png'
@@ -127,15 +126,15 @@ class CollaboratorTest extends CakeTestCase
 		];
 		$this->Collaborator->save($params);
 
-		// TODO: すべての関連テーブルにデータを挿入したにもかかわらず正しく検索されない。
-		$this->Collaborator->getCollaboGoalList($goal_id, $valued_flg);
+		$goal_detail = $this->Collaborator->getCollaboGoalDetail($goal_id, $valued_flg);
+		$this->assertEquals($user_id, $goal_detail[0]['User']['id']);
 	}
 
 	function testChangeApprovalStatus()
 	{
-		$user_id    = 777;
-		$team_id    = 888;
-		$goal_id    = 999;
+		$user_id = 777;
+		$team_id = 888;
+		$goal_id = 999;
 		$valued_flg = false;
 
 		$params = [

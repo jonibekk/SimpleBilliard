@@ -144,7 +144,7 @@ class Collaborator extends AppModel
 		return false;
 	}
 
-	function getCollabeGoalDetail($goal_id, $approval_flg)
+	function getCollaboGoalDetail($goal_id, $approval_flg)
 	{
 		$options = [
 			'fields'     => ['id', 'type', 'priority'],
@@ -173,7 +173,7 @@ class Collaborator extends AppModel
 		$this->save(['valued_flg' => $status]);
 	}
 
-	function CountCollaboGoal($user_id, $goal_id, $approval_flg)
+	function countCollaboGoal($user_id, $goal_id, $approval_flg)
 	{
 		$options = [
 			'fields'     => ['id', 'type', 'priority'],
