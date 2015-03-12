@@ -58,6 +58,7 @@ class EvaluateScore extends AppModel
                 'team_id' => $teamId,
             ],
             'fields'     => [
+                'id',
                 'name',
                 'description'
             ],

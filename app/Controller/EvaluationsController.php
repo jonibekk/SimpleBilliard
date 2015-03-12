@@ -22,8 +22,8 @@ class EvaluationsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $evaluateList = $this->Evaluation->getEvaluationList($evaluateTermId, $evaluateeId);
-        $this->set(compact('scoreList', 'evaluateList'));
+        $evaluationList = $this->Evaluation->getEvaluationList($evaluateTermId, $evaluateeId);
+        $this->set(compact('scoreList', 'evaluationList'));
     }
 
     function add()
