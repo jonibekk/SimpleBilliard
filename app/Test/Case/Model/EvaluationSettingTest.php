@@ -86,6 +86,13 @@ class EvaluationSettingTest extends CakeTestCase
         $this->assertTrue($this->EvaluationSetting->isEnabled());
     }
 
+    function testIsEnabledTrueAlreadySet()
+    {
+        $this->_setDefaultAllOn();
+        $this->EvaluationSetting->isEnabled();
+        $this->assertTrue($this->EvaluationSetting->isEnabled());
+    }
+
     function testIsEnabledFalse()
     {
         $this->_setDefaultAllOn([EvaluationSetting::FLG_ENABLE]);

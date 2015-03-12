@@ -82,9 +82,46 @@ class EvaluationTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testCheckAvailViewEvaluateListNoTeamMember()
     {
-
+        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
+        try {
+            $this->Evaluation->checkAvailViewEvaluationList();
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
     }
 
+    function testCheckAvailViewEvaluateListNotEnabled()
+    {
+        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
+        $data = [
+            'team_id'               => 1,
+            'user_id'               => 1,
+            'evaluation_enable_flg' => 0,
+        ];
+        $this->Evaluation->Team->TeamMember->save($data);
+        $this->Evaluation->Team->TeamMember->current_team_id = 1;
+        $this->Evaluation->Team->TeamMember->my_uid = 1;
+        try {
+            $this->Evaluation->checkAvailViewEvaluationList();
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testCheckAvailViewEvaluateListTrue()
+    {
+        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
+        $data = [
+            'team_id'               => 1,
+            'user_id'               => 1,
+            'evaluation_enable_flg' => 1,
+        ];
+        $this->Evaluation->Team->TeamMember->save($data);
+        $this->Evaluation->Team->TeamMember->current_team_id = 1;
+        $this->Evaluation->Team->TeamMember->my_uid = 1;
+        $res = $this->Evaluation->checkAvailViewEvaluationList();
+        $this->assertTrue($res);
+    }
 }
