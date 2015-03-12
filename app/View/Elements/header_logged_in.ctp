@@ -155,7 +155,7 @@
                                 opacity: 0;
                                 background-color:red!important;
                                 display:block">0</div>
-                    <a id="click-header-bell" class="header-link" data-toggle="dropdown" href="#">
+                    <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
