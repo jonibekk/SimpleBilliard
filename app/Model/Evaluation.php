@@ -105,7 +105,7 @@ class Evaluation extends AppModel
         $this->_setDraftValidation();
         foreach($data as $law) {
             if(empty($law)) continue;
-            $law['Evaluation']['draft_flg'] = 1;
+            $law['Evaluation']['status'] = 1;
             $this->create();
             $this->save($law);
         }

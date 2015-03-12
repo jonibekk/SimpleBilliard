@@ -149,7 +149,7 @@ class EvaluationTest extends CakeTestCase
                 'conditions' => [
                     'evaluatee_user_id' => 1,
                     'evaluate_term_id' => 1,
-                    'draft_flg' => 1
+                    'status' => 1
                 ]
             ]
         );
