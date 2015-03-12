@@ -290,6 +290,26 @@ class Goal extends AppModel
         return $res;
     }
 
+	/**
+	 * user_idからgoal_idを取得する
+	 * @param $user_id
+	 * @param $team_id
+	 * @return array|null
+	 */
+	function getGoalIdFromUserId ($user_id, $team_id) {
+		$options = [
+			'fields' => ['id'],
+			'conditions' => [
+				'Goal.user_id'       => $user_id,
+				'Goal.team_id'       => $team_id,
+				'Goal.start_date >=' => $this->Team->getTermStartDate(),
+				'Goal.end_date <'    => $this->Team->getTermEndDate(),
+				'Goal.del_flg'       => 0,
+			],
+		];
+		return $this->find('list', $options);
+	}
+
     /**
      * 自分が作成したゴール取得
      *

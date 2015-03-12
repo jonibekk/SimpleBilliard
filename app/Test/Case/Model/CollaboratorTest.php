@@ -9,76 +9,190 @@ App::uses('Collaborator', 'Model');
 class CollaboratorTest extends CakeTestCase
 {
 
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = array(
-        'app.collaborator',
-        'app.team',
-        'app.badge',
-        'app.user',
-        'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.goal',
-        'app.goal_category',
-        'app.key_result',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
-        'app.oauth_token',
-        'app.team_member',
-        'app.group',
-        'app.job_category',
-        'app.local_name',
-        'app.invite',
-        'app.thread',
-        'app.message'
-    );
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
+	public $fixtures = array(
+		'app.collaborator',
+		'app.team',
+		'app.badge',
+		'app.user',
+		'app.email',
+		'app.notify_setting',
+		'app.comment_like',
+		'app.comment',
+		'app.post',
+		'app.goal',
+		'app.purpose',
+		'app.goal_category',
+		'app.key_result',
+		'app.post_share_user',
+		'app.post_share_circle',
+		'app.circle',
+		'app.circle_member',
+		'app.post_like',
+		'app.post_read',
+		'app.comment_mention',
+		'app.given_badge',
+		'app.post_mention',
+		'app.comment_read',
+		'app.notification',
+		'app.notify_to_user',
+		'app.notify_from_user',
+		'app.oauth_token',
+		'app.team_member',
+		'app.group',
+		'app.job_category',
+		'app.local_name',
+		'app.invite',
+		'app.thread',
+		'app.message'
+	);
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->Collaborator = ClassRegistry::init('Collaborator');
-    }
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
+	public function setUp()
+	{
+		parent::setUp();
+		$this->Collaborator = ClassRegistry::init('Collaborator');
+		//$this->Collaborator->User = ClassRegistry::init('User');
+		//$this->Collaborator->Goal->Purpose = ClassRegistry::init('Purpose');
+	}
 
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        unset($this->Collaborator);
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
+	public function tearDown()
+	{
+		unset($this->Collaborator);
 
-        parent::tearDown();
-    }
+		parent::tearDown();
+	}
 
-    function testAdd()
-    {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
-        $res = $this->Collaborator->add(1);
-        $this->assertTrue(!empty($res));
-    }
+	function testAdd()
+	{
+		$this->Collaborator->my_uid = 1;
+		$this->Collaborator->current_team_id = 1;
+		$res = $this->Collaborator->add(1);
+		$this->assertTrue(!empty($res));
+	}
+
+	function testGetCollabeGoalDetail()
+	{
+		$team_id = 1;
+
+		$params = [
+			'first_name' => 'test',
+			'last_name'  => 'test'
+		];
+		$this->Collaborator->User->save($params);
+		$user_id = $this->Collaborator->User->getLastInsertID();
+
+		$params = [
+			'user_id' => $user_id,
+			'team_id' => $team_id,
+			'name'    => 'test'
+		];
+		$this->Collaborator->Goal->Purpose->save($params);
+		$purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
+
+		$params = [
+			'user_id'          => $user_id,
+			'team_id'          => $team_id,
+			'purpose_id'       => $purpose_id,
+			'name'             => 'test',
+			'goal_category_id' => 1,
+			'end_date'         => '1427813999',
+			'photo_file_name'  => 'aa.png'
+		];
+		$this->Collaborator->Goal->save($params);
+		$goal_id = $this->Collaborator->Goal->getLastInsertID();
+
+		$valued_flg = 0;
+		$params = [
+			'user_id'    => $user_id,
+			'team_id'    => $team_id,
+			'goal_id'    => $goal_id,
+			'valued_flg' => $valued_flg,
+			'type'       => 0,
+			'priority'   => 1,
+		];
+		$this->Collaborator->save($params);
+
+		$goal_detail = $this->Collaborator->getCollaboGoalDetail($goal_id, $valued_flg);
+		$this->assertEquals($user_id, $goal_detail[0]['User']['id']);
+	}
+
+	function testChangeApprovalStatus()
+	{
+		$user_id = 777;
+		$team_id = 888;
+		$goal_id = 999;
+		$valued_flg = 0;
+
+		$params = [
+			'user_id'    => $user_id,
+			'team_id'    => $team_id,
+			'goal_id'    => $goal_id,
+			'valued_flg' => $valued_flg,
+		];
+		$this->Collaborator->save($params);
+		$id = $this->Collaborator->getLastInsertID();
+		$this->Collaborator->changeApprovalStatus($id, 1);
+
+		$res = $this->Collaborator->findById($id);
+		$this->assertEquals(1, $res['Collaborator']['valued_flg']);
+	}
+
+	function testcountCollaboGoal()
+	{
+		$team_id = 1;
+		$params = [
+			'first_name' => 'test',
+			'last_name'  => 'test'
+		];
+		$this->Collaborator->User->save($params);
+		$user_id = $this->Collaborator->User->getLastInsertID();
+
+		$params = [
+			'user_id' => $user_id,
+			'team_id' => $team_id,
+			'name'    => 'test'
+		];
+		$this->Collaborator->Goal->Purpose->save($params);
+		$purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
+
+		$params = [
+			'user_id'          => $user_id,
+			'team_id'          => $team_id,
+			'purpose_id'       => $purpose_id,
+			'name'             => 'test',
+			'goal_category_id' => 1,
+			'end_date'         => '1427813999',
+			'photo_file_name'  => 'aa.png'
+		];
+		$this->Collaborator->Goal->save($params);
+		$goal_id = $this->Collaborator->Goal->getLastInsertID();
+
+		$valued_flg = 0;
+		$params = [
+			'user_id'    => $user_id,
+			'team_id'    => $team_id,
+			'goal_id'    => $goal_id,
+			'valued_flg' => $valued_flg,
+			'type'       => 0,
+			'priority'   => 1,
+		];
+		$this->Collaborator->save($params);
+		$cnt = $this->Collaborator->countCollaboGoal($user_id, [$goal_id], $valued_flg);
+		$this->assertEquals(0, $cnt);
+	}
 
 }
