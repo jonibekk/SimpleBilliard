@@ -17,6 +17,7 @@ class UsersControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.action_result',
         'app.evaluator',
+        'app.evaluation_setting',
         'app.member_type',
         'app.goal',
         'app.follower',
@@ -1742,16 +1743,6 @@ class UsersControllerTest extends ControllerTestCase
                 'GlEmail',
             ]
         ]);
-        $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
-            ['id', '1'],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Security
             ->expects($this->any())

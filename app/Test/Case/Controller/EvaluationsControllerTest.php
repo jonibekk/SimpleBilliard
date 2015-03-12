@@ -16,6 +16,10 @@ class EvaluationsControllerTest extends ControllerTestCase
     public $fixtures = [
         'app.circle_member',
         'app.goal',
+        'app.follower',
+        'app.collaborator',
+        'app.evaluation',
+        'app.evaluation_setting',
     ];
 
     /**

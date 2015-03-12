@@ -196,4 +196,18 @@ class EvaluationSetting extends AppModel
 
     }
 
+    /**
+     * @return bool
+     */
+    function isAvailEvaluation()
+    {
+        $options = [
+            'conditions' => [
+                'team_id'    => $this->current_team_id,
+                'enable_flg' => true,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return (bool)$res;
+    }
 }

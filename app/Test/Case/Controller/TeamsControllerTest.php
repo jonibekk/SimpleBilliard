@@ -16,6 +16,7 @@ class TeamsControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.circle_member',
         'app.member_type',
+        'app.evaluation_setting',
         'app.action_result',
         'app.goal',
         'app.follower',
@@ -366,9 +367,11 @@ class TeamsControllerTest extends ControllerTestCase
                    ->method('is_uploaded_file')
                    ->will($this->returnValue(true));
         /** @noinspection PhpUndefinedFieldInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Csv->expects($this->any())
                    ->method('move_uploaded_file')
                    ->will($this->returnCallback('copy'));
+        /** @noinspection PhpUndefinedMethodInspection */
         $Teams->expects($this->any())->method('referer')->will($this->returnValue($referer));
         if (!$value_map) {
             $value_map = [

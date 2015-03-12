@@ -33,6 +33,7 @@ App::uses('HelpsController', 'Controller');
  * @property User                         $User
  * @property Post                         $Post
  * @property Goal                         $Goal
+ * @property Team                         $Team
  * @property NotifyBizComponent           $NotifyBiz
  */
 class AppController extends Controller
@@ -77,6 +78,7 @@ class AppController extends Controller
         'User',
         'Post',
         'Goal',
+        'Team',
     ];
 
     /**
@@ -99,6 +101,7 @@ class AppController extends Controller
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
                 $this->_setMyTeam();
+                $this->_setAvailEvaluation();
                 //リクエストがログイン中のチーム以外なら切り替える
                 if ($this->request->is('get')) {
                     $this->_switchTeamBeforeCheck();
@@ -502,6 +505,11 @@ class AppController extends Controller
     public function _flashClickEvent($id)
     {
         $this->Session->setFlash(null, "flash_click_event", ['id' => $id], 'click_event');
+    }
+
+    public function _setAvailEvaluation()
+    {
+        $this->set('is_evaluation_available', $this->Team->EvaluationSetting->isAvailEvaluation());
     }
 
 }

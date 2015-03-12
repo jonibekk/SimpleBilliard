@@ -21,6 +21,7 @@ class TeamTest extends CakeTestCase
         'app.user', 'app.notify_setting',
         'app.badge',
         'app.post',
+        'app.evaluation_setting',
         //'app.goal',
         'app.comment_mention',
         'app.comment',
