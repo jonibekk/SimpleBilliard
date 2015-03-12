@@ -18,6 +18,8 @@ class EvaluationsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
+        //評価設定の取得
+
         //自己評価取得
 
     }

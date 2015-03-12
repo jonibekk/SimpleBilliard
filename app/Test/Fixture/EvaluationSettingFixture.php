@@ -62,44 +62,7 @@ class EvaluationSettingFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array(
-        array(
-            'id'                                  => '',
-            'team_id'                             => '',
-            'enable_flg'                          => 1,
-            'self_flg'                            => 1,
-            'self_goal_score_flg'                 => 1,
-            'self_goal_score_required_flg'        => 1,
-            'self_goal_comment_flg'               => 1,
-            'self_goal_comment_required_flg'      => 1,
-            'self_score_flg'                      => 1,
-            'self_score_required_flg'             => 1,
-            'self_comment_flg'                    => 1,
-            'self_comment_required_flg'           => 1,
-            'evaluator_flg'                       => 1,
-            'evaluator_goal_score_flg'            => 1,
-            'evaluator_goal_score_reuqired_flg'   => 1,
-            'evaluator_goal_comment_flg'          => 1,
-            'evaluator_goal_comment_required_flg' => 1,
-            'evaluator_score_flg'                 => 1,
-            'evaluator_score_required_flg'        => 1,
-            'evaluator_comment_flg'               => 1,
-            'evaluator_comment_required_flg'      => 1,
-            'final_flg'                           => 1,
-            'final_score_flg'                     => 1,
-            'final_score_required_flg'            => 1,
-            'final_comment_flg'                   => 1,
-            'final_comment_required_flg'          => 1,
-            'leader_flg'                          => 1,
-            'leader_goal_score_flg'               => 1,
-            'leader_goal_score_reuqired_flg'      => 1,
-            'leader_goal_comment_flg'             => 1,
-            'leader_goal_comment_required_flg'    => 1,
-            'del_flg'                             => 1,
-            'deleted'                             => 1,
-            'created'                             => 1,
-            'modified'                            => 1
-        ),
-    );
+    public $records = [
+    ];
 
 }

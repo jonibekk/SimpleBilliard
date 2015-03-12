@@ -84,4 +84,14 @@ class Evaluation extends AppModel
         return true;
     }
 
+//    function getMyEvaluation()
+//    {
+//        $options = [
+//            'conditions'=>[
+//                'evaluatee_user_id'=>$this->my_uid,
+//                'team_id'=>$this->current_team_id
+//            ]
+//        ];
+//    }
+
 }
