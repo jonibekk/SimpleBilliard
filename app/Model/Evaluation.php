@@ -115,12 +115,25 @@ class Evaluation extends AppModel
     public function addRegisters($data) {
         foreach($data as $law) {
             if(empty($law)) continue;
-            $goalId = viaIsSet($law['Evaluation']['goal_id']);
             // Select Validation type
             $this->create();
             $this->save($law);
         }
         return true;
+    }
+
+    public function getEvaluationList($evaluateTermId, $evaluateeId)
+    {
+
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $evaluateTermId,
+                'evaluatee_user_id' => $evaluateeId
+            ],
+            'order' => 'Evaluation.index asc'
+        ];
+        $res = $this->find('all', $options);
+        return $res;
     }
 
     public function _setDraftValidation()

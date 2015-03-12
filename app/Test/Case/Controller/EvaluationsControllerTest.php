@@ -39,37 +39,7 @@ class EvaluationsControllerTest extends ControllerTestCase
      */
     public function testView()
     {
-        $this->testAction('/evaluations/view', ['method' => 'GET']);
-    }
-
-    /**
-     * add method
-     *
-     * @return void
-     */
-    public function testAddPost()
-    {
-        $data = [
-            'Purpose' => [
-                'name' => 'test',
-            ],
-        ];
-        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
-    }
-
-    /**
-     * add method
-     *
-     * @return void
-     */
-    public function testAddPostFail()
-    {
-        $data = [
-            'Purpose' => [
-                'name' => 'test',
-            ],
-        ];
-        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 
     /**
@@ -80,20 +50,59 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostDraft()
     {
         $data = [
-            'Purpose' => [
-                'name' => 'test',
+            'is_draft' => true,
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                    'index'             => 0,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'team_id'           => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                    'index'             => 1,
+                    'goal_id'           => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'team_id'           => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                    'index'             => 2,
+                    'goal_id'           => 2,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'team_id'           => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                    'index'             => 3,
+                    'goal_id'           => 3,
+                ],
             ],
         ];
-        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
-    }
 
-    public function testAddPostDraftFail()
-    {
-        $data = [
-            'Purpose' => [
-                'name' => 'test',
-            ],
-        ];
         $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
     }
 

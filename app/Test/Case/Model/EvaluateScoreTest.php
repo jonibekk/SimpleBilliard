@@ -15,7 +15,6 @@ class EvaluateScoreTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.evaluate_score',
         'app.team',
         'app.badge',
         'app.user',
@@ -55,7 +54,8 @@ class EvaluateScoreTest extends CakeTestCase
         'app.invite',
         'app.thread',
         'app.message',
-        'app.evaluation'
+        'app.evaluation',
+        'app.evaluate_score'
     );
 
     /**
@@ -66,7 +66,7 @@ class EvaluateScoreTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->EvaluateScore = ClassRegistry::init('EvaluateScore');
+        $this->Evaluation = ClassRegistry::init('Evaluation');
     }
 
     /**
@@ -76,6 +76,7 @@ class EvaluateScoreTest extends CakeTestCase
      */
     public function tearDown()
     {
+        unset($this->Evaluation);
         unset($this->EvaluateScore);
 
         parent::tearDown();
@@ -115,7 +116,7 @@ class EvaluateScoreTest extends CakeTestCase
                 'index'   => 2
             ]
         ];
-        $this->EvaluateScore->save($data);
+        $this->Evaluation->EvaluateScore->saveAll($data);
         $expected = [
             [
                 'team_id' => 1,
@@ -134,7 +135,7 @@ class EvaluateScoreTest extends CakeTestCase
                 'comment' => 'naninuneno'
             ],
         ];
-        $res = $this->EvaluateScore->getScoreList(1);
+        $res = $this->Evaluation->EvaluateScore->getScoreList(1);
         $this->assertEquals($res, $expected);
     }
 }

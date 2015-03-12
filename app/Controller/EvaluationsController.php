@@ -13,13 +13,17 @@ class EvaluationsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
     }
 
-    function view()
+    function view($evaluateTermId=null, $evaluateeId=null)
     {
+        if(!$evaluateTermId || !$evaluateeId) {
+            return;
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $goalList  = $this->Goal->getGoalsTargetForEvaluation();
-        $this->set(compact('scoreList', 'goalList'));
+        $evaluateList = $this->Evaluation->getEvaluationList($evaluateTermId, $evaluateeId);
+        $this->set(compact('scoreList', 'evaluateList'));
     }
 
     function add()
