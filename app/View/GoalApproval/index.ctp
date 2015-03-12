@@ -22,7 +22,7 @@
 	<div class="col col-xxs-6 text-align_r">
 		<a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
 		   id="SubHeaderMenuFeed">
-			処理待ち </a>
+			処理待ち <? if ($unapproved_cnt > 0) echo $unapproved_cnt; ?></a>
 	</div>
 	<div class="col col-xxs-6">
 		<a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"

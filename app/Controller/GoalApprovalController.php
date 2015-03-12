@@ -107,6 +107,16 @@ class GoalApprovalController extends AppController
 	];
 
 	/*
+	 * 検索対象のゴールID
+	 */
+	public $goal_ids = [];
+
+	/*
+	 * 承認前ページの「全ゴール - 自分のゴール」件数
+	 */
+	public $unapproved_cnt = 0;
+
+	/*
 	 * オーバーライド
 	 */
 	public function beforeFilter()
@@ -125,6 +135,11 @@ class GoalApprovalController extends AppController
 		$this->user_type = $this->getUserType();
 		if ($this->user_type === 0) {
 		}
+
+		$this->goal_ids = $this->getCollaboratorGoalId();
+		$this->unapproved_cnt = $this->Collaborator->CountCollaboGoal(
+			$this->user_id, $this->goal_ids, $this->goal_status['unapproved']);
+
 		$this->layout = LAYOUT_ONE_COLUMN;
 
 	}
@@ -134,16 +149,15 @@ class GoalApprovalController extends AppController
 	 */
 	public function index()
 	{
-		$goal_ids = $this->getCollaboratorGoalId();
-		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, $this->goal_status['unapproved']);
-
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($this->goal_ids, $this->goal_status['unapproved']);
 		foreach ($goal_info as $key => $val) {
 			if ($this->user_id === $val['User']['id']) {
 				$goal_info[$key]['msg'] = GoalApprovalController::WAIT_MY_GOAL_MSG;
 			}
 		}
 
-		$this->set(compact('goal_info'));
+		$unapproved_cnt = $this->unapproved_cnt;
+		$this->set(compact('goal_info', 'unapproved_cnt'));
 	}
 
 	/*
@@ -151,9 +165,9 @@ class GoalApprovalController extends AppController
 	 */
 	public function done()
 	{
-		$goal_ids = $this->getCollaboratorGoalId();
-		$goal_info = $this->Collaborator->getCollabeGoalDetail($goal_ids, $this->goal_status['approval']);
-		$this->set(compact('goal_info'));
+		$goal_info = $this->Collaborator->getCollabeGoalDetail($this->goal_ids, $this->goal_status['approval']);
+		$unapproved_cnt = $this->unapproved_cnt;
+		$this->set(compact('goal_info', 'unapproved_cnt'));
 	}
 
 	/*
