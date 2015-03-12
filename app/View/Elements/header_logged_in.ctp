@@ -11,6 +11,8 @@
  * @var array $my_teams
  * @var       $current_global_menu
  * @var       $avail_sub_menu
+ * @var       $my_member_status
+ * @var       $is_evaluation_available
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
@@ -145,6 +147,7 @@
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
+
                 <div class="dropdown dropdown-menu-right navbar-nav-fix header-circle">
                     <div class="btn btn-danger btn-xs bell-notify-box"
                          id="bellNum"
@@ -158,16 +161,26 @@
                     <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
+
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
-                        <div class="notify-head">お知らせ</div>
+                        <div class="notify-head"><?= __d('gl', "お知らせ") ?></div>
                         <ul class="notify-dropdown-lists" id="bell-dropdown" role="menu">
                             <li class="notify-card-empty" id="notifyCardEmpty">
-                                <i class="fa fa-smile-o font_33px mr_8px"></i><span class="notify-empty-text">未読の通知はありません。</span>
+                                <i class="fa fa-smile-o font_33px mr_8px"></i><span
+                                    class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="pull-right header-function dropdown">
+                    <? if (viaIsSet($my_member_status['TeamMember']['evaluable_count']) && $my_member_status['TeamMember']['evaluable_count'] > 0): ?>
+                        <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
+                                margin: 5px 0 0 33px;
+                                color: #fff;
+                                font-size: 10px;
+                                background-color:red!important;
+                                display:block"><?= $my_member_status['TeamMember']['evaluable_count'] ?></div>
+                    <? endif; ?>
                     <a href="#"
                        class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
                        data-toggle="dropdown"
@@ -192,9 +205,25 @@
                             $this->Html->link(__d('gl', "ログアウト"),
                                               ['controller' => 'users', 'action' => 'logout']) ?></li>
                         <li class="divider"></li>
+                        <? if ($is_evaluation_available): ?>
+                            <li>
+                                <? if (viaIsSet($my_member_status['TeamMember']['evaluable_count']) && $my_member_status['TeamMember']['evaluable_count'] > 0): ?>
+                                    <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
+                                margin: 4px 0 0 132px;
+                                color: #fff;
+                                font-size: 10px;
+                                background-color:red!important;
+                                display:block"><?= $my_member_status['TeamMember']['evaluable_count'] ?></div>
+                                <? endif; ?>
+
+                                <?=
+                                $this->Html->link(__d('gl', '評価'),
+                                                  ['controller' => 'evaluations', 'action' => 'index']) ?>
+                            </li>
+                        <? endif; ?>
                         <?
                         //TODO 一時的にチーム管理者はチーム招待リンクを表示
-                        if (isset($my_member_status['TeamMember']) && $my_member_status['TeamMember']['admin_flg']):?>
+                        if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
                             <li>
                                 <?=
                                 $this->Html->link(__d('gl', 'チーム設定'),
