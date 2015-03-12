@@ -117,11 +117,6 @@ class Evaluation extends AppModel
             if(empty($law)) continue;
             $goalId = viaIsSet($law['Evaluation']['goal_id']);
             // Select Validation type
-            if($goalId) {
-                $this->_setGoalValidation();
-            } else {
-                $this->_setTotalValidation();
-            }
             $this->create();
             $this->save($law);
         }
@@ -135,7 +130,6 @@ class Evaluation extends AppModel
 
     public function _setRegisterValidation()
     {
-        $settins = $this->EvaluationSetting->getSettings(1);
 
     }
 

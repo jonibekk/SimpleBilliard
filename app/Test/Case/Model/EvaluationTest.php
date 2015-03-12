@@ -56,7 +56,8 @@ class EvaluationTest extends CakeTestCase
         'app.thread',
         'app.message',
         'app.evaluate_term',
-        'app.evaluate_score'
+        'app.evaluate_score',
+        'app.evaluation_setting'
     );
 
     /**
@@ -68,6 +69,8 @@ class EvaluationTest extends CakeTestCase
     {
         parent::setUp();
         $this->Evaluation = ClassRegistry::init('Evaluation');
+        $this->Evaluation->EvaluationScore = ClassRegistry::init('EvaluationScore');
+        $this->Evaluation->EvaluationSetting = ClassRegistry::init('EvaluationSetting');
     }
 
     /**
@@ -82,9 +85,90 @@ class EvaluationTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testAddDrafts()
     {
+        $this->setDefault();
+
+        $draftData = [
+            [
+                'Evaluation' => [
+                    'id' => 1,
+                    'team_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment' => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                    'index' => 0,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id' => 2,
+                    'team_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment' => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                    'index' => 1,
+                    'goal_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id' => 3,
+                    'team_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment' => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                    'index' => 2,
+                    'goal_id' => 2,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id' => 4,
+                    'team_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment' => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                    'index' => 3,
+                    'goal_id' => 3,
+                ],
+            ],
+        ];
+        $res = $this->Evaluation->addDrafts($draftData);
+        $this->assertNotEmpty($res, "[正常]下書き保存");
+        $res = $this->Evaluation->find('all',
+            [
+                'conditions' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id' => 1
+                ]
+            ]
+        );
+        $this->assertEquals(count($res), count($draftData));
 
     }
+
+    function setDefault()
+    {
+        $this->current_date = strtotime('2015/7/1');
+        $this->start_date = strtotime('2015/7/1');
+        $this->end_date = strtotime('2015/10/1');
+
+        $this->Evaluation->my_uid = 1;
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->EvaluationSetting->my_uid = 1;
+        $this->Evaluation->EvaluationSetting->current_team_id = 1;
+        $this->Evaluation->EvaluationScore->my_uid = 1;
+        $this->Evaluation->EvaluationScore->current_team_id = 1;
+    }
+
 
 }
