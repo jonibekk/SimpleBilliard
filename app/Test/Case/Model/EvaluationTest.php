@@ -148,12 +148,83 @@ class EvaluationTest extends CakeTestCase
             [
                 'conditions' => [
                     'evaluatee_user_id' => 1,
-                    'evaluate_term_id' => 1
+                    'evaluate_term_id' => 1,
+                    'draft_flg' => 1
                 ]
             ]
         );
         $this->assertEquals(count($res), count($draftData));
+    }
 
+    function testAddRegisters()
+    {
+        $this->setDefault();
+
+        $registerData = [
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'team_id'           => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                    'index'             => 0,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'team_id'           => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                    'index'             => 1,
+                    'goal_id'           => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'team_id'           => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                    'index'             => 2,
+                    'goal_id'           => 2,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'team_id'           => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => 1,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                    'index'             => 3,
+                    'goal_id'           => 3,
+                ],
+            ],
+        ];
+        $res = $this->Evaluation->addRegisters($registerData);
+        $this->assertNotEmpty($res, "[正常]評価登録");
+        $res = $this->Evaluation->find(
+            'all',
+           [
+               'conditions' => [
+                   'evaluatee_user_id' => 1,
+                   'evaluate_term_id'  => 1,
+               ]
+           ]
+        );
+        $this->assertEquals(count($res), count($registerData));
     }
 
     function setDefault()
