@@ -154,7 +154,10 @@ class Collaborator extends AppModel
 			],
 			'contain'    => [
 				'Goal' => [
-					'fields'  => ['name', 'goal_category_id', 'end_date', 'photo_file_name'],
+					'fields'  => [
+						'name', 'goal_category_id', 'end_date', 'photo_file_name',
+						'value_unit', 'target_value', 'start_value'
+					],
 					'Purpose' => ['fields' => 'name']
 				],
 				'User' => [

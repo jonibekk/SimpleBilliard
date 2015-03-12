@@ -22,12 +22,16 @@
 	<div class="col col-xxs-6 text-align_r">
 		<a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
 		   id="SubHeaderMenuFeed" href="/goalapproval">
-			処理待ち <? if ($unapproved_cnt > 0) echo $unapproved_cnt; ?></a>
+			処理待ち <? if ($unapproved_cnt > 0) {
+				echo $unapproved_cnt;
+			} ?></a>
 	</div>
 	<div class="col col-xxs-6">
 		<a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
 		   id="SubHeaderMenuGoal">
-			処理済み </a>
+			処理済み <? if ($done_cnt > 0) {
+				echo $done_cnt;
+			} ?></a>
 	</div>
 </div>
 
@@ -46,7 +50,11 @@
 
 							<p class="approval_body_text"><? echo $goal['Collaborator']['type'] === '1' ? 'リーダー' : 'コラボレーター'; ?></p>
 
-							<p class="approval_body_text">単位, 達成時, 開始時</p>
+							<p class="approval_body_text">単位: <? echo $goal['Goal']['value_unit']; ?></p>
+
+							<p class="approval_body_text">達成時: <? echo $goal['Goal']['target_value']; ?></p>
+
+							<p class="approval_body_text">開始時: <? echo $goal['Goal']['start_value']; ?></p>
 
 							<p class="approval_body_text">期限日: <? echo $goal['Goal']['end_date']; ?></p>
 
