@@ -45,6 +45,5 @@ class Evaluator extends AppModel
             'foreignKey' => 'evaluator_user_id',
         ],
         'Team',
-        'EvaluateTerm',
     ];
 }
