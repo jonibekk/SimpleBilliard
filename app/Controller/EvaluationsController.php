@@ -11,16 +11,15 @@ class EvaluationsController extends AppController
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-
     }
 
     function view()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
-        $scoreList = $this->EvaluateScore->getScoreList($teamId);
-
-        $this->set(compact('scoreList'));
+        $scoreList = $this->Evaluation->EvaluateScore->getScoreList($teamId);
+        $goalList  = $this->Goal->getGoalsTargetForEvaluation();
+        $this->set(compact('scoreList', 'goalList'));
     }
 
     function add()

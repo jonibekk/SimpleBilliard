@@ -358,6 +358,56 @@ class GoalTest extends CakeTestCase
         $this->Goal->add($data);
     }
 
+    function testGetGoalsTargetForEvaluation() {
+        $this->setDefault();
+        $goal_data = [
+            [
+                'user_id'      => 1,
+                'team_id'      => 1,
+                'name'         => 'goal1',
+                'evaluate_flg' => 1,
+                'start_date'   => $this->start_date,
+                'end_date'     => $this->end_date,
+            ],
+            [
+                'user_id'      => 1,
+                'team_id'      => 1,
+                'name'         => 'goal2',
+                'evaluate_flg' => 1,
+                'start_date'   => $this->start_date,
+                'end_date'     => $this->end_date,
+            ],
+            [
+                'user_id'      => 1,
+                'team_id'      => 1,
+                'name'         => 'goal3',
+                'evaluate_flg' => 0,
+                'start_date' => $this->start_date,
+                'end_date'   => $this->end_date,
+            ],
+        ];
+        $this->Goal->saveAll($goal_data);
+        $collabo_goal = [
+            'user_id'      => 2,
+            'team_id'      => 1,
+            'name'         => 'goal4',
+            'evaluate_flg' => 1,
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
+        ];
+        $this->Goal->save($collabo_goal);
+        $goal_id = $this->Goal->getLastInsertID();
+        $collabo_data = [
+            'goal_id'    => $goal_id,
+            'team_id'    => 1,
+            'user_id'    => 1,
+        ];
+        $this->Goal->Collaborator->save($collabo_data);
+        $res = $this->Goal->getGoalsTargetForEvaluation();
+        $this->assertTrue(!empty($res));
+        $this->assertEquals(count($res), 3);
+    }
+
     function _getNewGoal()
     {
         $goal = [

@@ -805,4 +805,28 @@ class Goal extends AppModel
         return $res;
     }
 
+    function getGoalsTargetForEvaluation() {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'start_date >=' => $start_date,
+                'end_date <'    => $end_date,
+                'evaluate_flg'  => 1,
+                'Goal.user_id'  => $this->my_uid,
+            ],
+            'joins' => [
+                [
+                    'type'       => 'left',
+                    'table'      => 'collaborators',
+                    'alias'      => 'Collaborator',
+                    'conditions' => [
+                        'Collaborator.user_id' => 'Goal.user_id'
+                    ]
+                ]
+            ]
+        ];
+        return $this->find('all', $options);
+    }
+
 }
