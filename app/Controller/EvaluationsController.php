@@ -22,13 +22,12 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        //評価設定の取得
+        //get evaluation setting.
         $is_self_on = $this->Team->EvaluationSetting->isEnabledSelf();
         $is_evaluator_on = $this->Team->EvaluationSetting->isEnabledEvaluator();
         $is_final_on = $this->Team->EvaluationSetting->isEnabledFinal();
-
-        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on'));
-
+        $my_evaluations = $this->Evaluation->getMyEvaluation();
+        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'my_evaluations'));
     }
 
     function view()
