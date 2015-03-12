@@ -115,7 +115,7 @@ class CollaboratorTest extends CakeTestCase
 		$this->Collaborator->Goal->save($params);
 		$goal_id = $this->Collaborator->Goal->getLastInsertID();
 
-		$valued_flg = 'wait';
+		$valued_flg = 0;
 		$params = [
 			'user_id'    => $user_id,
 			'team_id'    => $team_id,
@@ -135,7 +135,7 @@ class CollaboratorTest extends CakeTestCase
 		$user_id = 777;
 		$team_id = 888;
 		$goal_id = 999;
-		$valued_flg = false;
+		$valued_flg = 0;
 
 		$params = [
 			'user_id'    => $user_id,
@@ -145,10 +145,54 @@ class CollaboratorTest extends CakeTestCase
 		];
 		$this->Collaborator->save($params);
 		$id = $this->Collaborator->getLastInsertID();
-		$this->Collaborator->changeApprovalStatus($id, true);
+		$this->Collaborator->changeApprovalStatus($id, 1);
 
 		$res = $this->Collaborator->findById($id);
-		$this->assertTrue($res['Collaborator']['valued_flg']);
+		$this->assertEquals(1, $res['Collaborator']['valued_flg']);
+	}
+
+	function testcountCollaboGoal()
+	{
+		$team_id = 1;
+		$params = [
+			'first_name' => 'test',
+			'last_name'  => 'test'
+		];
+		$this->Collaborator->User->save($params);
+		$user_id = $this->Collaborator->User->getLastInsertID();
+
+		$params = [
+			'user_id' => $user_id,
+			'team_id' => $team_id,
+			'name'    => 'test'
+		];
+		$this->Collaborator->Goal->Purpose->save($params);
+		$purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
+
+		$params = [
+			'user_id'          => $user_id,
+			'team_id'          => $team_id,
+			'purpose_id'       => $purpose_id,
+			'name'             => 'test',
+			'goal_category_id' => 1,
+			'end_date'         => '1427813999',
+			'photo_file_name'  => 'aa.png'
+		];
+		$this->Collaborator->Goal->save($params);
+		$goal_id = $this->Collaborator->Goal->getLastInsertID();
+
+		$valued_flg = 0;
+		$params = [
+			'user_id'    => $user_id,
+			'team_id'    => $team_id,
+			'goal_id'    => $goal_id,
+			'valued_flg' => $valued_flg,
+			'type'       => 0,
+			'priority'   => 1,
+		];
+		$this->Collaborator->save($params);
+		$cnt = $this->Collaborator->countCollaboGoal($user_id, [$goal_id], $valued_flg);
+		$this->assertEquals(0, $cnt);
 	}
 
 }

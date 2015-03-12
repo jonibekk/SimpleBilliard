@@ -176,19 +176,19 @@ class Collaborator extends AppModel
 	function countCollaboGoal($user_id, $goal_id, $approval_flg)
 	{
 		$options = [
-			'fields'     => ['id', 'type', 'priority'],
+			'fields'     => ['id'],
 			'conditions' => [
 				'Collaborator.goal_id'    => $goal_id,
 				'Collaborator.valued_flg' => $approval_flg,
-				'User.id !=' => $user_id
+				'User.id !='              => $user_id
 			],
 			'contain'    => [
 				'Goal' => [
-					'fields'  => ['name', 'goal_category_id', 'end_date', 'photo_file_name'],
-					'Purpose' => ['fields' => 'name']
+					'fields'  => ['id'],
+					'Purpose' => ['fields' => 'id']
 				],
 				'User' => [
-					'fields'     => ['first_name', 'last_name'],
+					'fields' => ['id'],
 				],
 			],
 			'type'       => 'inner',
