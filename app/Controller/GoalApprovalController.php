@@ -4,7 +4,6 @@ App::uses('AppController', 'Controller');
 /**
  * GoalApproval Controller
  *
- * @property GoalApproval       $GoalApproval
  * @property PaginatorComponent $Paginator
  * @property SessionComponent   $Session
  * @property TeamMember         $TeamMember
@@ -24,37 +23,32 @@ class GoalApprovalController extends AppController
     /*
      * 処理待ち && 自分のゴールの場合
      */
-    const WAIT_MY_GOAL_MSG = '承認待ち中です';
+    const WAIT_MY_GOAL_MSG = 0;
 
     /*
      * 処理済み && 自分のゴールが承認されたの場合
      */
-    const APPROVAL_MY_GOAL_YES_MSG = 'コーチが承認しました';
+    const APPROVAL_MY_GOAL_YES_MSG = 1;
 
     /*
      * 処理済み && 自分のゴールが保留の場合
      */
-    const APPROVAL_MY_GOAL_NG_MSG = 'コーチが保留しました';
+    const APPROVAL_MY_GOAL_NG_MSG = 2;
 
     /*
      * 処理済み && メンバーのゴールが承認されたの場合
      */
-    const APPROVAL_MEMBER_GOAL_YES_MSG = '承認しました';
+    const APPROVAL_MEMBER_GOAL_YES_MSG = 3;
 
     /*
      * 処理済み && メンバーのゴールが保留の場合
      */
-    const APPROVAL_MEMBER_GOAL_NG_MSG = '保留にしました';
+    const APPROVAL_MEMBER_GOAL_NG_MSG = 4;
 
     /*
      * 処理済み用のメッセージリスト
      */
-    public $approval_msg_list = [
-        1 => GoalApprovalController::APPROVAL_MY_GOAL_YES_MSG,
-        2 => GoalApprovalController::APPROVAL_MY_GOAL_NG_MSG,
-        3 => GoalApprovalController::APPROVAL_MEMBER_GOAL_YES_MSG,
-        4 => GoalApprovalController::APPROVAL_MEMBER_GOAL_NG_MSG
-    ];
+    public $approval_msg_list = [];
 
     /*
      * コーチ判定フラグ
@@ -121,6 +115,23 @@ class GoalApprovalController extends AppController
      */
     public $done_cnt = 0;
 
+    public function __construct(CakeRequest $request = null, CakeResponse $response = null)
+    {
+        parent::__construct($request, $response);
+        $this->_setMsg();
+    }
+
+    private function _setMsg()
+    {
+        $this->approval_msg_list = [
+            self::WAIT_MY_GOAL_MSG             => __d('gl', "承認待ち中です"),
+            self::APPROVAL_MY_GOAL_YES_MSG     => __d('gl', "コーチが承認しました"),
+            self::APPROVAL_MY_GOAL_NG_MSG      => __d('gl', "コーチが保留しました"),
+            self::APPROVAL_MEMBER_GOAL_YES_MSG => __d('gl', "承認しました"),
+            self::APPROVAL_MEMBER_GOAL_NG_MSG  => __d('gl', "保留にしました"),
+        ];
+    }
+
     /*
      * オーバーライド
      */
@@ -163,7 +174,7 @@ class GoalApprovalController extends AppController
         $goal_info = $this->Collaborator->getCollaboGoalDetail($this->goal_ids, $this->goal_status['unapproved']);
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
-                $goal_info[$key]['msg'] = GoalApprovalController::WAIT_MY_GOAL_MSG;
+                $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
             }
         }
 
