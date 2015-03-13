@@ -1,3 +1,9 @@
+<?
+/**
+ * @var CodeCompletionView $this
+ */
+?>
+<!-- START app/View/GoalApproval/index.ctp -->
 <style type="text/css">
     .approval_body_text {
         font-size: 14px
@@ -65,7 +71,7 @@
                                 : <?= $goal['Goal']['start_value']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "期限日") ?>
-                                : <?= $goal['Goal']['end_date']; ?></p>
+                                :                         <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "重要度") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
@@ -99,3 +105,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/GoalApproval/index.ctp -->

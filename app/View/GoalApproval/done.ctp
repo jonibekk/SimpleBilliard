@@ -1,3 +1,9 @@
+<?
+/**
+ * @var CodeCompletionView $this
+ */
+?>
+<!-- START app/View/GoalApproval/done.ctp -->
 <style type="text/css">
     .approval_body_text {
         font-size: 14px
@@ -82,3 +88,4 @@
         </div>
     </div>
 </div>
+<!-- END app/View/GoalApproval/done.ctp -->
