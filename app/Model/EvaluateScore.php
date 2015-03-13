@@ -60,7 +60,6 @@ class EvaluateScore extends AppModel
             'fields'     => [
                 'id',
                 'name',
-                'description'
             ],
             'order'      => [
                 'index' => 'asc'

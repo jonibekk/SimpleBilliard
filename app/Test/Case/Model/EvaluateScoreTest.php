@@ -84,58 +84,49 @@ class EvaluateScoreTest extends CakeTestCase
 
     function testGetScoreList()
     {
+        $this->Evaluation->EvaluateScore->deleteAll(['team_id' => 1]);
         $data = [
             [
                 'team_id' => 1,
-                'comment' => 'aiueo',
+                'name' => 'A++',
+                'description' => 'aiueo',
                 'index'   => 0
             ],
             [
                 'team_id' => 1,
-                'comment' => 'kakikukeko',
+                'name' => 'A+',
+                'description' => 'kakikukeko',
                 'index'   => 1
             ],
             [
                 'team_id' => 2,
-                'comment' => 'sasisuseso',
+                'name' => 'A++',
+                'description' => 'sasisuseso',
                 'index'   => 1
             ],
             [
                 'team_id' => 1,
-                'comment' => 'tatituteto',
+                'name' => 'A',
+                'description' => 'tatituteto',
                 'index'   => 2
             ],
             [
                 'team_id' => 1,
-                'comment' => 'naninuneno',
+                'name' => 'B',
+                'description' => 'naninuneno',
                 'index'   => 3
             ],
             [
                 'team_id' => 2,
-                'comment' => 'hahihuheho',
+                'name' => 'A+',
+                'description' => 'hahihuheho',
                 'index'   => 2
             ]
         ];
         $this->Evaluation->EvaluateScore->saveAll($data);
-        $expected = [
-            [
-                'team_id' => 1,
-                'comment' => 'aiueo',
-            ],
-            [
-                'team_id' => 1,
-                'comment' => 'kakikukeko'
-            ],
-            [
-                'team_id' => 1,
-                'comment' => 'tatituteto'
-            ],
-            [
-                'team_id' => 1,
-                'comment' => 'naninuneno'
-            ],
-        ];
+        $expected = 4;
+
         $res = $this->Evaluation->EvaluateScore->getScoreList(1);
-        $this->assertEquals($res, $expected);
+        $this->assertEquals(count($res), $expected);
     }
 }

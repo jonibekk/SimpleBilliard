@@ -52,7 +52,8 @@ class EvaluationsControllerTest extends ControllerTestCase
         'app.send_mail',
         'app.send_mail_to_user',
         'app.message',
-        'app.evaluate_term'
+        'app.evaluate_term',
+        'app.evaluate_score'
     ];
 
     /**
