@@ -59,7 +59,7 @@ class Evaluation extends AppModel
         ],
         'comment' => [
             'maxLength' => [
-                'rule' => ['maxLength', 32]
+                'rule' => ['maxLength', 200]
             ]
         ],
         'evaluate_score_id' => [
@@ -94,6 +94,21 @@ class Evaluation extends AppModel
     ];
 
     /**
+     * evaluation type
+     */
+    const TYPE_ONESELF         = 0;
+    const TYPE_EVALUATOR       = 1;
+    const TYPE_LEADER          = 2;
+    const TYPE_FINAL_EVALUATOR = 3;
+
+    /**
+     *  status type
+     */
+    const TYPE_STATUS_NOT_ENTERED = 0;
+    const TYPE_STATUS_DRAFT       = 1;
+    const TYPE_STATUS_DONE        = 2;
+
+    /**
      * 評価リストの閲覧権限チェック
      * ・評価画面の表示条件
      * 　チームの評価機能がon かつ 自分の評価フラグがon
@@ -125,14 +140,6 @@ class Evaluation extends AppModel
     }
 
 
-    /**
-     * evaluation type
-     */
-    const TYPE_ONESELF         = 0;
-    const TYPE_EVALUATOR       = 1;
-    const TYPE_LEADER          = 2;
-    const TYPE_FINAL_EVALUATOR = 3;
-
     public function add($data, $saveType) {
         $this->_setDraftValidation();
         foreach($data as $law) {
@@ -150,12 +157,13 @@ class Evaluation extends AppModel
         return true;
     }
 
-    public function getEvaluationList($evaluateTermId, $evaluateeId)
+    public function getNotEnteredEvaluations($evaluateTermId, $evaluateeId)
     {
         $options = [
             'conditions' => [
                 'evaluate_term_id' => $evaluateTermId,
-                'evaluatee_user_id' => $evaluateeId
+                'evaluatee_user_id' => $evaluateeId,
+                'status' => self::TYPE_STATUS_NOT_ENTERED
             ],
             'order' => 'Evaluation.index asc'
         ];

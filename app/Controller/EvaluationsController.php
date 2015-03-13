@@ -34,13 +34,14 @@ class EvaluationsController extends AppController
     function view($evaluateTermId=null, $evaluateeId=null)
     {
         if(!$evaluateTermId || !$evaluateeId) {
-            return;
+            $this->Pnotify->outError(__d('gl', "パラメータが不正です。"));
+            return $this->redirect($this->referer());
         }
 
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $evaluationList = $this->Evaluation->getEvaluationList($evaluateTermId, $evaluateeId);
+        $evaluationList = $this->Evaluation->getNotEnteredEvaluations($evaluateTermId, $evaluateeId);
         $this->set(compact('scoreList', 'evaluationList'));
     }
 

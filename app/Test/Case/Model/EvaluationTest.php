@@ -222,6 +222,7 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->EvaluationSetting->current_team_id = 1;
         $this->Evaluation->EvaluationScore->my_uid = 1;
         $this->Evaluation->EvaluationScore->current_team_id = 1;
+
     }
 
 
@@ -240,13 +241,14 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
-    function testGetMyEvaluation()
+    function testGetNotEnteredEvaluations()
     {
         $this->Evaluation->deleteAll(['Evaluation.team_id' => 1]);
         $data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 1,
             'evaluator_user_id' => 2,
+            'status' => 0
         ];
         $this->Evaluation->save($data);
         $this->Evaluation->current_team_id = 1;
