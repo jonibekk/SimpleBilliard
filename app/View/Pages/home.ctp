@@ -129,211 +129,211 @@
 
 <!-- start: lastest-work -->
 <div class="section-wrapper lastest-work">
-<div class="container">
-<div class="row">
-<div class="span12">
-    <div class="separator">
-        <div class="left">
-            <div class="lines">
-                <div>
-                    <h2 class="lines-title">
-                        <?= __d('home', 'Features') ?>
-                    </h2>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="span3">
-    <div class="white-content">
-        <div class="img-mask hover-mask">
-            <?= $this->Html->image('homepage/photos/feature-1.png') ?>
-            <div class="flip-container">
-                <div class="flipper">
-                    <div class="back">
-                        <div class="flip-b">
-                            <a href="<?=
-                            $this->Html->url(
-                                       [
-                                           'controller' => 'pages',
-                                           'action'     => 'display',
-                                           'pagename'   => 'features',
-                                           'lang'       => $top_lang,
-                                       ])
-                            ?>
-										"><span
-                                    class="icon-back"><i class="icon-plus-sign"></i></span></a>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="separator">
+                    <div class="left">
+                        <div class="lines">
+                            <div>
+                                <h2 class="lines-title">
+                                    <?= __d('home', 'Features') ?>
+                                </h2>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
-        </div>
-        <a href="<?=
-        $this->Html->url(
-                   [
-                       'controller' => 'pages',
-                       'action'     => 'display',
-                       'pagename'   => 'features',
-                       'lang'       => $top_lang,
-                   ])
-        ?>
-										"><h5>
-                <?= __d('home', "Set a goal") ?>
-                <span class="white-title"><i class="icon-plus"></i></span>
-            </h5></a>
-
-        <p>
-            <?=
-            __d('home',
-                "Create a goal by establishing its title, deadline, challenging point, benefits, alists, and overall image.")
-            ?>
-        </p>
-    </div>
-</div>
-<div class="span3">
-    <div class="white-content">
-        <div class="img-mask hover-mask">
-            <?= $this->Html->image('homepage/photos/feature-2.png') ?>
-            <div class="flip-container">
-                <div class="flipper">
-                    <div class="back">
-                        <div class="flip-b">
-                            <a href="<?=
-                            $this->Html->url(
-                                       [
-                                           'controller' => 'pages',
-                                           'action'     => 'display',
-                                           'pagename'   => 'features',
-                                           'lang'       => $top_lang,
-                                       ])
-                            ?>
+            <div class="span3">
+                <div class="white-content">
+                    <div class="img-mask hover-mask">
+                        <?= $this->Html->image('homepage/photos/feature-1.png') ?>
+                        <div class="flip-container">
+                            <div class="flipper">
+                                <div class="back">
+                                    <div class="flip-b">
+                                        <a href="<?=
+                                        $this->Html->url(
+                                            [
+                                                'controller' => 'pages',
+                                                'action'     => 'display',
+                                                'pagename'   => 'features',
+                                                'lang'       => $top_lang,
+                                            ])
+                                        ?>
 										"><span
-                                    class="icon-back"><i class="icon-plus-sign"></i></span></a>
+                                                class="icon-back"><i class="icon-plus-sign"></i></span></a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
                     </div>
+                    <a href="<?=
+                    $this->Html->url(
+                        [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'features',
+                            'lang'       => $top_lang,
+                        ])
+                    ?>
+										"><h5>
+                            <?= __d('home', "Set a goal") ?>
+                            <span class="white-title"><i class="icon-plus"></i></span>
+                        </h5></a>
+
+                    <p>
+                        <?=
+                        __d('home',
+                            "Create a goal by establishing its title, deadline, challenging point, benefits, alists, and overall image.")
+                        ?>
+                    </p>
                 </div>
             </div>
-            <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
-        </div>
-        <a href="<?=
-        $this->Html->url(
-                   [
-                       'controller' => 'pages',
-                       'action'     => 'display',
-                       'pagename'   => 'features',
-                       'lang'       => $top_lang,
-                   ])
-        ?>
-										"><h5>
-                <?= __d('home', "Make it open") ?>
-                <span class="white-title"><i class="icon-plus"></i></span>
-            </h5></a>
-
-        <p>
-            <?=
-            __d('home',
-                "Let team members and other co-workers know of your ambition, collaborators, and daily progress.")
-            ?>
-        </p>
-    </div>
-</div>
-<div class="span3">
-    <div class="white-content">
-        <div class="img-mask hover-mask">
-            <?= $this->Html->image('homepage/photos/feature-3.png') ?>
-            <div class="flip-container">
-                <div class="flipper">
-                    <div class="back">
-                        <div class="flip-b">
-                            <a href="<?=
-                            $this->Html->url(
-                                       [
-                                           'controller' => 'pages',
-                                           'action'     => 'display',
-                                           'pagename'   => 'features',
-                                           'lang'       => $top_lang,
-                                       ])
-                            ?>
+            <div class="span3">
+                <div class="white-content">
+                    <div class="img-mask hover-mask">
+                        <?= $this->Html->image('homepage/photos/feature-2.png') ?>
+                        <div class="flip-container">
+                            <div class="flipper">
+                                <div class="back">
+                                    <div class="flip-b">
+                                        <a href="<?=
+                                        $this->Html->url(
+                                            [
+                                                'controller' => 'pages',
+                                                'action'     => 'display',
+                                                'pagename'   => 'features',
+                                                'lang'       => $top_lang,
+                                            ])
+                                        ?>
 										"><span
-                                    class="icon-back"><i class="icon-plus-sign"></i></span></a>
+                                                class="icon-back"><i class="icon-plus-sign"></i></span></a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
                     </div>
+                    <a href="<?=
+                    $this->Html->url(
+                        [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'features',
+                            'lang'       => $top_lang,
+                        ])
+                    ?>
+										"><h5>
+                            <?= __d('home', "Make it open") ?>
+                            <span class="white-title"><i class="icon-plus"></i></span>
+                        </h5></a>
+
+                    <p>
+                        <?=
+                        __d('home',
+                            "Let team members and other co-workers know of your ambition, collaborators, and daily progress.")
+                        ?>
+                    </p>
                 </div>
             </div>
-            <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
-        </div>
-        <a href="<?=
-        $this->Html->url(
-                   [
-                       'controller' => 'pages',
-                       'action'     => 'display',
-                       'pagename'   => 'features',
-                       'lang'       => $top_lang,
-                   ])
-        ?>
-										"><h5>
-                <?= __d('home', "Help each other") ?>
-                <span class="white-title"><i class="icon-plus"></i></span>
-            </h5></a>
-
-        <p>
-            <?=
-            __d('home',
-                "Work towards your goal with your collaborators. You don't need to struggle alone anymore.")
-            ?>
-        </p>
-    </div>
-</div>
-<div class="span3">
-    <div class="white-content">
-        <div class="img-mask hover-mask">
-            <?= $this->Html->image('homepage/photos/feature-4.png') ?>
-            <div class="flip-container">
-                <div class="flipper">
-                    <div class="back">
-                        <div class="flip-b">
-                            <a href="<?=
-                            $this->Html->url(
-                                       [
-                                           'controller' => 'pages',
-                                           'action'     => 'display',
-                                           'pagename'   => 'features',
-                                           'lang'       => $top_lang,
-                                       ])
-                            ?>
+            <div class="span3">
+                <div class="white-content">
+                    <div class="img-mask hover-mask">
+                        <?= $this->Html->image('homepage/photos/feature-3.png') ?>
+                        <div class="flip-container">
+                            <div class="flipper">
+                                <div class="back">
+                                    <div class="flip-b">
+                                        <a href="<?=
+                                        $this->Html->url(
+                                            [
+                                                'controller' => 'pages',
+                                                'action'     => 'display',
+                                                'pagename'   => 'features',
+                                                'lang'       => $top_lang,
+                                            ])
+                                        ?>
 										"><span
-                                    class="icon-back"><i class="icon-plus-sign"></i></span></a>
+                                                class="icon-back"><i class="icon-plus-sign"></i></span></a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
                     </div>
+                    <a href="<?=
+                    $this->Html->url(
+                        [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'features',
+                            'lang'       => $top_lang,
+                        ])
+                    ?>
+										"><h5>
+                            <?= __d('home', "Help each other") ?>
+                            <span class="white-title"><i class="icon-plus"></i></span>
+                        </h5></a>
+
+                    <p>
+                        <?=
+                        __d('home',
+                            "Work towards your goal with your collaborators. You don't need to struggle alone anymore.")
+                        ?>
+                    </p>
                 </div>
             </div>
-            <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
-        </div>
-        <a href="<?=
-        $this->Html->url(
-                   [
-                       'controller' => 'pages',
-                       'action'     => 'display',
-                       'pagename'   => 'features',
-                       'lang'       => $top_lang,
-                   ])
-        ?>
+            <div class="span3">
+                <div class="white-content">
+                    <div class="img-mask hover-mask">
+                        <?= $this->Html->image('homepage/photos/feature-4.png') ?>
+                        <div class="flip-container">
+                            <div class="flipper">
+                                <div class="back">
+                                    <div class="flip-b">
+                                        <a href="<?=
+                                        $this->Html->url(
+                                            [
+                                                'controller' => 'pages',
+                                                'action'     => 'display',
+                                                'pagename'   => 'features',
+                                                'lang'       => $top_lang,
+                                            ])
+                                        ?>
+										"><span
+                                                class="icon-back"><i class="icon-plus-sign"></i></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="hover-fade"><i class="icon-plus-sign icon-3x"></i></span>
+                    </div>
+                    <a href="<?=
+                    $this->Html->url(
+                        [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'features',
+                            'lang'       => $top_lang,
+                        ])
+                    ?>
 										"><h5>
-                <?= __d('home', "Send compliments") ?>
-                <span class="white-title"><i class="icon-plus"></i></span>
-            </h5></a>
+                            <?= __d('home', "Send compliments") ?>
+                            <span class="white-title"><i class="icon-plus"></i></span>
+                        </h5></a>
 
-        <p>
-            <?=
-            __d('home',
-                "Getting a compliment is the best treat for your brain. Best of all, complimenting one another is free!")
-            ?>
-        </p>
+                    <p>
+                        <?=
+                        __d('home',
+                            "Getting a compliment is the best treat for your brain. Best of all, complimenting one another is free!")
+                        ?>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-</div>
-</div>
 </div>
 <!-- end: lastest-work -->
 <!-- start: social icon -->

@@ -42,7 +42,7 @@
                 </div>
             <? else: ?>
                 <?= __d('gl', "公開サークルはありません。") ?>
-            <?endif ?>
+            <? endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
             <? if (!empty($circles)): ?>
@@ -51,10 +51,10 @@
                                     ['class' => 'btn btn-primary pull-right', 'div' => false /*, 'disabled' => 'disabled'*/]) ?>
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px"
                         data-dismiss="modal"><?= __d('gl',
-                                                                                                      "キャンセル") ?></button>
+                                                     "キャンセル") ?></button>
             <? else: ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
-            <?endif; ?>
+            <? endif; ?>
         </div>
         <?= $this->Form->end() ?>
     </div>

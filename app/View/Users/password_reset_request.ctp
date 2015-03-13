@@ -28,7 +28,7 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body reset-password-panel-body">
-            <p><?= __d('gl', "Goalousに登録しているメールアドレスを入力して送信してください。") ?></p>
+                <p><?= __d('gl', "Goalousに登録しているメールアドレスを入力して送信してください。") ?></p>
 
                 <p><?= __d('gl', "Goalousからパスワード再設定用のURLを送信いたします。") ?></p>
                 <?=
@@ -37,7 +37,7 @@
                     'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                     'required'                     => true
-                ])?>
+                ]) ?>
             </div>
             <div class="panel-footer">
                 <div class="form-group">

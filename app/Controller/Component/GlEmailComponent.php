@@ -41,12 +41,12 @@ class GlEmailComponent extends Component
     public function sendMailEmailTokenResend($to_uid, $email_token)
     {
         $url = Router::url(
-                     [
-                         'admin'      => false,
-                         'controller' => 'users',
-                         'action'     => 'verify',
-                         $email_token,
-                     ], true);
+            [
+                'admin'      => false,
+                'controller' => 'users',
+                'action'     => 'verify',
+                $email_token,
+            ], true);
         $item = [
             'url'      => $url,
             'language' => Configure::read('Config.language'),
@@ -69,12 +69,12 @@ class GlEmailComponent extends Component
             return null;
         }
         $url = Router::url(
-                     [
-                         'admin'      => false,
-                         'controller' => 'users',
-                         'action'     => 'verify',
-                         $email_token,
-                     ], true);
+            [
+                'admin'      => false,
+                'controller' => 'users',
+                'action'     => 'verify',
+                $email_token,
+            ], true);
         $item = [
             'url'      => $url,
             'language' => Configure::read('Config.language')
@@ -98,12 +98,12 @@ class GlEmailComponent extends Component
             return null;
         }
         $url = Router::url(
-                     [
-                         'admin'      => false,
-                         'controller' => 'users',
-                         'action'     => 'change_email_verify',
-                         $email_token,
-                     ], true);
+            [
+                'admin'      => false,
+                'controller' => 'users',
+                'action'     => 'change_email_verify',
+                $email_token,
+            ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_CHANGE_EMAIL_VERIFY,
                                       ['url' => $url, 'to' => $email]);
         $this->execSendMailById($this->SendMail->id);
@@ -133,12 +133,12 @@ class GlEmailComponent extends Component
     public function sendMailPasswordReset($to_uid, $token)
     {
         $url = Router::url(
-                     [
-                         'admin'      => false,
-                         'controller' => 'users',
-                         'action'     => 'password_reset',
-                         $token,
-                     ], true);
+            [
+                'admin'      => false,
+                'controller' => 'users',
+                'action'     => 'password_reset',
+                $token,
+            ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_PASSWORD_RESET, ['url' => $url]);
         $this->execSendMailById($this->SendMail->id);
     }
@@ -158,12 +158,12 @@ class GlEmailComponent extends Component
         }
         $invite_data = $invite_data['Invite'];
         $url = Router::url(
-                     [
-                         'admin'      => false,
-                         'controller' => 'users',
-                         'action'     => 'accept_invite',
-                         $invite_data['email_token'],
-                     ], true);
+            [
+                'admin'      => false,
+                'controller' => 'users',
+                'action'     => 'accept_invite',
+                $invite_data['email_token'],
+            ], true);
         $item = [
             'url'       => $url,
             'to'        => $invite_data['email'],

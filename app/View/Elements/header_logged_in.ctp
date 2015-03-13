@@ -157,7 +157,8 @@
                                 font-size: 10px;
                                 opacity: 0;
                                 background-color:red!important;
-                                display:block">0</div>
+                                display:block">0
+                    </div>
                     <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
@@ -197,10 +198,10 @@
                         <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
                                 __d('gl',
                                     "チュートリアル") ?></a></li>
-						<li>
-							<?= $this->Html->link(__d('gl', "ゴール認定"),
-												  ['controller' => 'goalapproval', 'action' => 'index']) ?>
-						</li>
+                        <li>
+                            <?= $this->Html->link(__d('gl', "ゴール認定"),
+                                                  ['controller' => 'goal_approval', 'action' => 'index']) ?>
+                        </li>
                         <li><?=
                             $this->Html->link(__d('gl', "ログアウト"),
                                               ['controller' => 'users', 'action' => 'logout']) ?></li>

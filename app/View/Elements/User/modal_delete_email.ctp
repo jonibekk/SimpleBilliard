@@ -12,7 +12,7 @@
 ?>
 <!-- START app/View/Elements/User/modal_delete_email.ctp -->
 <div class="modal fade" tabindex="-1" id="modal_delete_email">
-<div class="modal-dialog">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
@@ -23,7 +23,7 @@
                 <p><?= __d('gl', "%sへのメールアドレス変更をキャンセルしますか？", $email) ?></p>
             </div>
             <div class="modal-footer modal_pannel-footer">
-            <?=
+                <?=
                 $this->Form
                     ->postLink(__d('gl', "はい"),
                                [

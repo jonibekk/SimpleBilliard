@@ -103,26 +103,33 @@ class NotifyBizComponent extends Component
 
     public function push($socketId, $share)
     {
-        if (!$socketId) return;
+        if (!$socketId) {
+            return;
+        }
 
         $teamId = $this->Session->read('current_team_id');
         $channelName = $share . "_team_" . $teamId;
 
         // アクション投稿のケース
-        if (strpos($share, "goal") !== false ) {
+        if (strpos($share, "goal") !== false) {
             $feedType = "goal";
         }
         // サークル投稿のケース
-        else if (strpos($share, "circle") !== false) {
-            $feedType = $share;
-        // ユーザー向け投稿のケース
-        } else if (strpos($share, "user") !== false ) {
-            $feedType = "all";
-        }
-        // その他
         else {
-            $channelName = "team_all_" . $teamId;
-            $feedType    = "all";
+            if (strpos($share, "circle") !== false) {
+                $feedType = $share;
+                // ユーザー向け投稿のケース
+            }
+            else {
+                if (strpos($share, "user") !== false) {
+                    $feedType = "all";
+                }
+                // その他
+                else {
+                    $channelName = "team_all_" . $teamId;
+                    $feedType = "all";
+                }
+            }
         }
 
         // レスポンスデータの定義
@@ -138,18 +145,20 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
-    public function bellPush($socketId, $channelName, $data) {
+    public function bellPush($socketId, $channelName, $data)
+    {
         // push
-        if(!$socketId || !$channelName || !$data) {
+        if (!$socketId || !$channelName || !$data) {
             return;
         }
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
-    public function commentPush($socketId, $data) {
+    public function commentPush($socketId, $data)
+    {
         // push
-        if(!$socketId || !$data) {
+        if (!$socketId || !$data) {
             return;
         }
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
