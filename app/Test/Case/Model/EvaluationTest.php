@@ -92,29 +92,29 @@ class EvaluationTest extends CakeTestCase
         $draftData = [
             [
                 'Evaluation' => [
-                    'id' => 1,
-                    'comment' => 'あいうえお',
+                    'id'                => 1,
+                    'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id' => 2,
-                    'comment' => 'かきくけこ',
+                    'id'                => 2,
+                    'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id' => 3,
-                    'comment' => 'さしすせそ',
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id' => 4,
-                    'comment' => 'たちつてと',
+                    'id'                => 4,
+                    'comment'           => 'たちつてと',
                     'evaluate_score_id' => 1,
                 ],
             ],
@@ -122,15 +122,43 @@ class EvaluationTest extends CakeTestCase
         $res = $this->Evaluation->add($draftData, "draft");
         $this->assertNotEmpty($res, "[正常]下書き保存");
         $res = $this->Evaluation->find('all',
-            [
-                'conditions' => [
-                    'evaluatee_user_id' => 1,
-                    'evaluate_term_id' => 1,
-                    'status' => 1
-                ]
-            ]
+                                       [
+                                           'conditions' => [
+                                               'evaluatee_user_id' => 1,
+                                               'evaluate_term_id'  => 1,
+                                               'status'            => 1
+                                           ]
+                                       ]
         );
         $this->assertEquals(count($res), count($draftData));
+    }
+
+    function testCheckAvailViewEvaluateListNoTeamMember()
+    {
+        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
+        try {
+            $this->Evaluation->checkAvailViewEvaluationList();
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+    
+    function testCheckAvailViewEvaluateListNotEnabled()
+    {
+        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
+        $data = [
+            'team_id'               => 1,
+            'user_id'               => 1,
+            'evaluation_enable_flg' => 0,
+        ];
+        $this->Evaluation->Team->TeamMember->save($data);
+        $this->Evaluation->Team->TeamMember->current_team_id = 1;
+        $this->Evaluation->Team->TeamMember->my_uid = 1;
+        try {
+            $this->Evaluation->checkAvailViewEvaluationList();
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
     }
 
     function testAddRegisters()
@@ -197,4 +225,58 @@ class EvaluationTest extends CakeTestCase
     }
 
 
+    function testCheckAvailViewEvaluateListTrue()
+    {
+        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
+        $data = [
+            'team_id'               => 1,
+            'user_id'               => 1,
+            'evaluation_enable_flg' => 1,
+        ];
+        $this->Evaluation->Team->TeamMember->save($data);
+        $this->Evaluation->Team->TeamMember->current_team_id = 1;
+        $this->Evaluation->Team->TeamMember->my_uid = 1;
+        $res = $this->Evaluation->checkAvailViewEvaluationList();
+        $this->assertTrue($res);
+    }
+
+    function testGetMyEvaluation()
+    {
+        $this->Evaluation->deleteAll(['Evaluation.team_id' => 1]);
+        $data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 2,
+        ];
+        $this->Evaluation->save($data);
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
+        $actual = $this->Evaluation->getMyEvaluation();
+        $expect = [
+            (int)0 => [
+                'Evaluation' => [
+                    'id'                => '2',
+                    'team_id'           => '1',
+                    'evaluatee_user_id' => '1',
+                    'evaluator_user_id' => '2',
+                    'evaluate_term_id'  => null,
+                    'evaluate_type'     => '0',
+                    'goal_id'           => null,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'index'             => '0',
+                    'status'            => '0',
+                    'del_flg'           => false,
+                    'deleted'           => null,
+                    'created'           => '1426206160',
+                    'modified'          => '1426206160'
+                ]
+            ]
+        ];
+        unset($actual[0]['Evaluation']['created']);
+        unset($actual[0]['Evaluation']['modified']);
+        unset($expect[0]['Evaluation']['created']);
+        unset($expect[0]['Evaluation']['modified']);
+        $this->assertEquals($expect, $actual);
+    }
 }
