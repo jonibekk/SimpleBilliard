@@ -45,7 +45,9 @@
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= $goal['User']['local_username']; ?></p>
 
-                            <p class="approval_body_text"><?= $goal['Goal']['goal_category_id'] === '3' ? '職務' : '成長'; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
+                                : <?= $goal['Goal']['goal_category_id'] === '3' ? __d('gl', "職務") : __d('gl',
+                                                                                                        "成長"); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>
                                 : <?= $goal['Goal']['name']; ?></p>
