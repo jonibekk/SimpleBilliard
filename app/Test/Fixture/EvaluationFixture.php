@@ -48,6 +48,7 @@ class EvaluationFixture extends CakeTestFixture
      */
     public $records = [
         [
+            'team_id'           => 1,
             'evaluatee_user_id' => 1,
             'evaluator_user_id' => 2,
             'evaluate_term_id'  => 1,

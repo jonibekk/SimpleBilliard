@@ -29,36 +29,30 @@ class EvaluationsController extends AppController
     function add()
     {
         $this->request->allowMethod('post');
-        $isDraft  = viaIsSet($this->request->data['is_draft']);
-        $isRegist = viaIsSet($this->request->data['is_register']);
-
-        if(!$isDraft || !$isRegist) {
-            $this->Pnotify->outError(__d('gl', "保存に失敗しました。"));
-            $this->redirect($this->referer());
-        }
 
         // case of saving draft
-        if($isDraft) {
-            $saveDraft = $this->Evaluation->addDrafts($this->request->data);
-            if ($saveDraft) {
-                $this->Pnotify->outSuccess(__d('gl', "下書きを保存しました。"));
-                $this->redirect($this->referer());
-            } else {
-                $this->Pnotify->outSuccess(__d('gl', "下書きの保存に失敗しました。"));
-                $this->redirect($this->referer());
-            }
+        if(isset($this->request->data['is_draft'])) {
+            $saveType = "draft";
+            unset($this->request->data['is_draft']);
+            $successMsg = __d('gl', "下書きを保存しました。");
+            $errorMsg   = __d('gl', "下書きの保存に失敗しました。");
 
         // case of registering
         } else {
-            $saveRegister = $this->Evaluation->addRegisters($this->request->data);
-            if ($saveRegister) {
-                $this->Pnotify->outSuccess(__d('gl', "自己評価を登録しました。"));
-                $this->redirect($this->referer());
-            } else {
-                $this->Pnotify->outSuccess(__d('gl', "自己評価の登録に失敗しました。"));
-                $this->redirect($this->referer());
-            }
+            $saveType = "register";
+            unset($this->request->data['is_register']);
+            $successMsg = __d('gl', "自己評価を登録しました。");
+            $errorMsg   = __d('gl', "自己評価の登録に失敗しました。");
         }
+
+        $saveEvaluation = $this->Evaluation->add($this->request->data, $saveType);
+        if ($saveEvaluation) {
+            $this->Pnotify->outSuccess($successMsg);
+        } else {
+            $this->Pnotify->outError($errorMsg);
+        }
+        $this->redirect($this->referer());
+
     }
 
 }

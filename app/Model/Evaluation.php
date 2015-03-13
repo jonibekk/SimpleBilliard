@@ -101,21 +101,17 @@ class Evaluation extends AppModel
     const TYPE_LEADER          = 2;
     const TYPE_FINAL_EVALUATOR = 3;
 
-    public function addDrafts($data) {
+    public function add($data, $saveType) {
         $this->_setDraftValidation();
         foreach($data as $law) {
             if(empty($law)) continue;
-            $law['Evaluation']['status'] = 1;
-            $this->create();
-            $this->save($law);
-        }
-        return true;
-    }
-
-    public function addRegisters($data) {
-        foreach($data as $law) {
-            if(empty($law)) continue;
-            // Select Validation type
+            if($saveType == "draft") {
+                // case of saving draft
+                $law['Evaluation']['status'] = 1;
+            } else {
+                // case of registering
+                $law['Evaluation']['status'] = 2;
+            }
             $this->create();
             $this->save($law);
         }
@@ -124,7 +120,6 @@ class Evaluation extends AppModel
 
     public function getEvaluationList($evaluateTermId, $evaluateeId)
     {
-
         $options = [
             'conditions' => [
                 'evaluate_term_id' => $evaluateTermId,

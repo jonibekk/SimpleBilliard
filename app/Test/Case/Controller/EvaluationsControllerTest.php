@@ -54,51 +54,71 @@ class EvaluationsControllerTest extends ControllerTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
-                    'index'             => 0,
                 ],
             ],
             [
                 'Evaluation' => [
                     'id'                => 2,
-                    'team_id'           => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
-                    'index'             => 1,
-                    'goal_id'           => 1,
                 ],
             ],
             [
                 'Evaluation' => [
                     'id'                => 3,
-                    'team_id'           => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
-                    'index'             => 2,
-                    'goal_id'           => 2,
                 ],
             ],
             [
                 'Evaluation' => [
                     'id'                => 4,
-                    'team_id'           => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment'           => 'たちつてと',
                     'evaluate_score_id' => 1,
-                    'index'             => 3,
-                    'goal_id'           => 3,
+                ],
+            ],
+        ];
+
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function testAddPostRegister()
+    {
+        $data = [
+            'is_register' => true,
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
                 ],
             ],
         ];

@@ -93,56 +93,33 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id' => 1,
-                    'team_id' => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment' => 'あいうえお',
                     'evaluate_score_id' => 1,
-                    'index' => 0,
                 ],
             ],
             [
                 'Evaluation' => [
                     'id' => 2,
-                    'team_id' => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment' => 'かきくけこ',
                     'evaluate_score_id' => 1,
-                    'index' => 1,
-                    'goal_id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
                     'id' => 3,
-                    'team_id' => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment' => 'さしすせそ',
                     'evaluate_score_id' => 1,
-                    'index' => 2,
-                    'goal_id' => 2,
                 ],
             ],
             [
                 'Evaluation' => [
                     'id' => 4,
-                    'team_id' => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
                     'comment' => 'たちつてと',
                     'evaluate_score_id' => 1,
-                    'index' => 3,
-                    'goal_id' => 3,
                 ],
             ],
         ];
-        $res = $this->Evaluation->addDrafts($draftData);
+        $res = $this->Evaluation->add($draftData, "draft");
         $this->assertNotEmpty($res, "[正常]下書き保存");
         $res = $this->Evaluation->find('all',
             [
@@ -163,57 +140,34 @@ class EvaluationTest extends CakeTestCase
         $registerData = [
             [
                 'Evaluation' => [
-                    'id'                => 1,
-                    'team_id'           => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
-                    'comment'           => 'あいうえお',
+                    'id' => 1,
+                    'comment' => 'あいうえお',
                     'evaluate_score_id' => 1,
-                    'index'             => 0,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id'                => 2,
-                    'team_id'           => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
-                    'comment'           => 'かきくけこ',
+                    'id' => 2,
+                    'comment' => 'かきくけこ',
                     'evaluate_score_id' => 1,
-                    'index'             => 1,
-                    'goal_id'           => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id'                => 3,
-                    'team_id'           => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
-                    'comment'           => 'さしすせそ',
+                    'id' => 3,
+                    'comment' => 'さしすせそ',
                     'evaluate_score_id' => 1,
-                    'index'             => 2,
-                    'goal_id'           => 2,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id'                => 4,
-                    'team_id'           => 1,
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => 1,
-                    'comment'           => 'たちつてと',
+                    'id' => 4,
+                    'comment' => 'たちつてと',
                     'evaluate_score_id' => 1,
-                    'index'             => 3,
-                    'goal_id'           => 3,
                 ],
             ],
         ];
-        $res = $this->Evaluation->addRegisters($registerData);
+        $res = $this->Evaluation->add($registerData, "register");
         $this->assertNotEmpty($res, "[正常]評価登録");
         $res = $this->Evaluation->find(
             'all',
@@ -221,6 +175,7 @@ class EvaluationTest extends CakeTestCase
                'conditions' => [
                    'evaluatee_user_id' => 1,
                    'evaluate_term_id'  => 1,
+                   'status' => 2
                ]
            ]
         );
