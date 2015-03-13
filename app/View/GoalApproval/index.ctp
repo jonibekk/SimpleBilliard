@@ -65,10 +65,10 @@
                                 : <?= $goal['Goal']['value_unit']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "達成時") ?>
-                                : <?= $goal['Goal']['target_value']; ?></p>
+                                : <?= (double)$goal['Goal']['target_value']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "開始時") ?>
-                                : <?= $goal['Goal']['start_value']; ?></p>
+                                : <?= (double)$goal['Goal']['start_value']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "期限日") ?>
                                 :                         <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
