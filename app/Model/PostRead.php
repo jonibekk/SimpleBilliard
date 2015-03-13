@@ -93,12 +93,12 @@ class PostRead extends AppModel
     private function pickUnMyPosts($post_list)
     {
         if (empty($post_list)) {
-            return ;
+            return;
         }
         //自分以外の投稿を取得
         $options = [
             'conditions' => [
-                'id' => $post_list,
+                'id'      => $post_list,
                 'team_id' => $this->current_team_id,
                 'NOT'     => [
                     'user_id' => $this->my_uid,

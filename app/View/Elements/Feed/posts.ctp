@@ -134,7 +134,8 @@
                     <? elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                         <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= $this->TextEx->autoLink(h($post['ActionResult']['name'])) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
-                        <i class="fa fa-key disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['KeyResult']['name'])) ?>
+                        <i class="fa fa-key disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！",
+                                                                      h($post['KeyResult']['name'])) ?>
                     <? elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
                         <i class="fa fa-flag disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['Goal']['name'])) ?>
                     <? else: ?>
@@ -342,6 +343,7 @@
                         <?= __d('gl', "件の新しいコメントがあります") ?>
                     </div>
                 </a>
+
                 <div class="new-comment-error" id="comment_error_<?= $post['Post']['id'] ?>">
                     <i class="fa fa-exclamation-circle"></i><span class="message"></span>
                 </div>

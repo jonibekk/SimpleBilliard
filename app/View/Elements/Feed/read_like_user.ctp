@@ -18,11 +18,11 @@
     ?>
     <div class="comment-body modal-comment">
         <div class="font_12px font_bold modalFeedTextPadding">
-        <?= h($user['display_username']) ?></div>
+            <?= h($user['display_username']) ?></div>
 
         <? if ($created): ?>
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-            <?= $this->TimeEx->elapsedTime(h($created)) ?>
+                <?= $this->TimeEx->elapsedTime(h($created)) ?>
             </div>
         <? endif; ?>
     </div>

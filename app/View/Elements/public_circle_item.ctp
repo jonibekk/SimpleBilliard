@@ -37,7 +37,7 @@ if (!isset($form)) {
                     echo $this->Form->input("$key.join",
                                             ['label' => false, 'div' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => $joined ? true : false]) ?>
                     <?= $this->Form->hidden("$key.circle_id", ['value' => $circle['Circle']['id']]) ?>
-                <?endif; ?>
+                <? endif; ?>
             </div>
         <? endif; ?>
         <div class="font_12px font_bold modalFeedTextPadding">

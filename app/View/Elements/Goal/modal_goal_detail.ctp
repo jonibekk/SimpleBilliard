@@ -98,7 +98,7 @@
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-child"></i><span class="pl_2px"><?= __d('gl', "コラボレータ") ?>
-                                &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
+                            &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
                     <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <? foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
@@ -113,7 +113,7 @@
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-heart"></i><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
-                                &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
+                            &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
                     <? if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
                         <? foreach ($goal['Follower'] as $follower): ?>
                             <img src="<?=

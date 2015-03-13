@@ -28,19 +28,19 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body reset-password-panel-body">
-            <?=
+                <?=
                 $this->Form->input('password', [
                     'label'                    => __d('gl', "パスワードを作成"),
                     'placeholder'              => __d('gl', '8文字以上'),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
-                ])?>
+                ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
                     'label'                    => __d('gl', "パスワードを再入力"),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
-                ])?>
+                ]) ?>
             </div>
             <div class="panel-footer">
                 <div class="form-group">
