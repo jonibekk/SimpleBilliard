@@ -12,6 +12,17 @@
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "評価画面的タイトル") ?></div>
             <div class="panel-body add-team-panel-body">
+                <?
+                if(empty($evaluationList[0]['Evaluation']['goal_id'])):
+                ?>
+                    <h4>トータル評価</h4>
+                <?
+                else:
+                ?>
+                    <h4>ゴール評価</h4>
+                <?
+                endif;
+                ?>
                 <?= $this->Form->create('Evaluation', [
                     'inputDefaults' => [
                         'div'       => 'form-group mb_5px develop--font_normal',
@@ -21,6 +32,13 @@
                     'url'           => ['controller' => 'evaluations', 'action' => 'add'],
                 ]); ?>
                 <? foreach($evaluationList as $eval):?>
+                    <?
+                    if($eval['Evaluation']['index'] == 1 && empty($evaluationList[0]['Evaluation']['goal_id'])):
+                    ?>
+                        <h4>ゴール評価</h4>
+                    <?
+                    endif;
+                    ?>
 
                     <?=
                     $this->Form->input('Evaluation.evaluate_score_id', [
