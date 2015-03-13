@@ -200,7 +200,7 @@
                                     "チュートリアル") ?></a></li>
                         <li>
                             <?= $this->Html->link(__d('gl', "ゴール認定"),
-                                                  ['controller' => 'goalapproval', 'action' => 'index']) ?>
+                                                  ['controller' => 'goal_approval', 'action' => 'index']) ?>
                         </li>
                         <li><?=
                             $this->Html->link(__d('gl', "ログアウト"),
