@@ -27,11 +27,12 @@
                     'inputDefaults' => [
                         'div'       => 'form-group mb_5px develop--font_normal',
                         'wrapInput' => false,
-                        'class'     => 'form-control',
+                        'class'     => '',
                     ],
                     'url'           => ['controller' => 'evaluations', 'action' => 'add'],
+                    'novalidate'
                 ]); ?>
-                <? foreach($evaluationList as $eval):?>
+                <? foreach($evaluationList as $key => $eval):?>
                     <?
                     if($eval['Evaluation']['index'] == 1 && empty($evaluationList[0]['Evaluation']['goal_id'])):
                     ?>
@@ -39,32 +40,44 @@
                     <?
                     endif;
                     ?>
-
                     <?=
-                    $this->Form->input('Evaluation.evaluate_score_id', [
+                    $this->Form->input("{$key}.Evaluation.evaluate_score_id", [
                         'label'   => false,
-                        'class'   => 'form-control col-xxs-10 mb_12px add-select-options',
+                        'class'   => 'form-control col-xxs-10 mb_12px',
                         'type'    => 'select',
+                        'default' => $eval['Evaluation']['evaluate_score_id'],
                         'options' => $scoreList
                     ]);
                     ?>
                     <?=
-                    $this->Form->input('Evaluation.comment', [
+                    $this->Form->input("{$key}.Evaluation.comment", [
                         'label' => false,
                         'class' => 'form-control col-xxs-10 mb_12px',
+                        'default' => $eval['Evaluation']['comment'],
+                    ]);
+                    ?>
+                    <?=
+                    $this->Form->input("{$key}.Evaluation.id", [
+                        'label' => false,
+                        'class' => 'form-control col-xxs-10 mb_12px',
+                        'type'  => 'hidden',
+                        'value' => $eval['Evaluation']['id']
                     ]);
                     ?>
                 <? endforeach ?>
-                <?= $this->Form->submit(__d('gl', "下書き保存"), [
-                    'div'      => false,
-                    'class'    => 'btn btn-info pull-right',
-                    'name'     => 'is_draft'
+                <?= $this->Form->button(__d('gl', "下書き保存"), [
+                    'div'   => false,
+                    'class' => 'btn btn-info pull-right',
+                    'name'  => 'is_draft',
+                    'value' => true
                 ]); ?>
-                <?= $this->Form->submit(__d('gl', "評価登録"), [
-                    'div'      => false,
-                    'class'    => 'btn btn-info pull-right',
-                    'name'     => 'is_register'
+                <?= $this->Form->button(__d('gl', "評価登録"), [
+                    'div'   => false,
+                    'class' => 'btn btn-info pull-right',
+                    'name'  => 'is_register',
+                    'value' => true
                 ]); ?>
+                <?= $this->Form->end(); ?>
             </div>
         </div>
     </div>

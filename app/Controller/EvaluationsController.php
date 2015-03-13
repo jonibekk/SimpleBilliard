@@ -8,6 +8,7 @@ App::uses('AppController', 'Controller');
  */
 class EvaluationsController extends AppController
 {
+
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -45,8 +46,6 @@ class EvaluationsController extends AppController
 
     function add()
     {
-        $this->request->allowMethod('post');
-
         // case of saving draft
         if(isset($this->request->data['is_draft'])) {
             $saveType = "draft";
@@ -68,7 +67,7 @@ class EvaluationsController extends AppController
         } else {
             $this->Pnotify->outError($errorMsg);
         }
-        $this->redirect($this->referer());
+        $this->redirect('index');
 
     }
 
