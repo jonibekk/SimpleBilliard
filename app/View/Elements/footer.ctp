@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/footer.ctp -->
-<footer>
+<footer class="col-xxs-12">
     <div class="row">
         <div class="col-lg-12">
 
