@@ -1,6 +1,9 @@
 <?
 /**
  * @var CodeCompletionView $this
+ * @var                    $unapproved_cnt
+ * @var                    $done_cnt
+ * @var                    $goal_info
  */
 ?>
 <!-- START app/View/GoalApproval/index.ctp -->
@@ -34,7 +37,7 @@
     </div>
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
-           id="SubHeaderMenuGoal" href="/goalapproval/done">
+           id="SubHeaderMenuGoal" href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'done']) ?>">
             <?= __d('gl', "処理済み") ?> <? if ($done_cnt > 0) {
                 echo $done_cnt;
             } ?></a>
