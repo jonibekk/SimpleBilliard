@@ -59,7 +59,8 @@ $this->Form->input('body', [
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
 <div class="comment-btn" id="Comment_<?= $post_id ?>">
     <div>
-        <a href="#" class="target-show-target-click comment-add-pic new-comment-add-pic" target-id="CommentFormImage_<?= $post_id ?>"
+        <a href="#" class="target-show-target-click comment-add-pic new-comment-add-pic"
+           target-id="CommentFormImage_<?= $post_id ?>"
            click-target-id="Comment__Post_<?= $post_id ?>_Photo_1">
             <button type="button" class="btn pull-left photo-up-btn">
                 <i class="fa fa-camera post-camera-icon"></i>

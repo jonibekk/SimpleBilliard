@@ -207,7 +207,7 @@ class OgpComponent extends Object
                 strpos($tag->getAttribute('property'), 'og:') === 0
             ) {
                 $key = strtr(substr($tag->getAttribute('property'), 3), '-', '_');
-                if(isset($page->_values[$key])){
+                if (isset($page->_values[$key])) {
                     continue;
                 }
                 $page->_values[$key] = $tag->getAttribute('content');

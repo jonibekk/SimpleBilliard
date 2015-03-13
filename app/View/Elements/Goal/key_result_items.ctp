@@ -62,15 +62,16 @@
                                             'label'     => false,
                                             'wrapInput' => '',
                                         ],
-                                        'class' => 'form-feed-notify',
-                                        'name'  => 'kr_achieve_' . $kr['KeyResult']['id'],
-                                        'id'    => 'kr_achieve_' . $kr['KeyResult']['id']
+                                        'class'         => 'form-feed-notify',
+                                        'name'          => 'kr_achieve_' . $kr['KeyResult']['id'],
+                                        'id'            => 'kr_achieve_' . $kr['KeyResult']['id']
                                     ]); ?>
                                     <? $this->Form->unlockField('socket_id') ?>
                                     <?= $this->Form->end() ?>
-                                    <a href="#" form-id="kr_achieve_<?=$kr['KeyResult']['id']?>" class="kr_achieve_button">
+                                    <a href="#" form-id="kr_achieve_<?= $kr['KeyResult']['id'] ?>"
+                                       class="kr_achieve_button">
                                         <i class="fa fa-check"></i><span class="ml_2px">
-                                            <?= __d('gl', "出したい成果を完了にする");?>
+                                            <?= __d('gl', "出したい成果を完了にする"); ?>
                                         </span>
                                     </a>
                                 <? endif; ?>

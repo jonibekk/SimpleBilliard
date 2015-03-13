@@ -11,5 +11,5 @@
     <?= $this->element('Feed/contents') ?>
 <? else: ?>
     <?= $this->Html->link(__d('gl', "チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
-<?endif; ?>
+<? endif; ?>
 <!-- END app/View/Posts/feed.ctp -->

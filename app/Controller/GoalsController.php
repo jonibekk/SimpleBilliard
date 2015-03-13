@@ -363,7 +363,7 @@ class GoalsController extends AppController
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
         $goal = viaIsSet($goal);
-        if(!$goal) {
+        if (!$goal) {
             $goal = $goal = $this->Goal->findById($key_result['KeyResult']['goal_id']);
         }
         $channelName = "goal_" . $goal['Goal']['id'];
@@ -829,7 +829,8 @@ class GoalsController extends AppController
         }
         elseif ($type === 'follow') {
             $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
-        } else {
+        }
+        else {
             $goals = [];
         }
 
