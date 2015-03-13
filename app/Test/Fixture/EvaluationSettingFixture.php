@@ -63,6 +63,44 @@ class EvaluationSettingFixture extends CakeTestFixture
      * @var array
      */
     public $records = [
+        [
+            'id'                                  => '1',
+            'team_id'                             => '1',
+            'enable_flg'                          => true,
+            'self_flg'                            => true,
+            'self_goal_score_flg'                 => true,
+            'self_goal_score_required_flg'        => true,
+            'self_goal_comment_flg'               => true,
+            'self_goal_comment_required_flg'      => true,
+            'self_score_flg'                      => true,
+            'self_score_required_flg'             => true,
+            'self_comment_flg'                    => true,
+            'self_comment_required_flg'           => true,
+            'evaluator_flg'                       => true,
+            'evaluator_goal_score_flg'            => true,
+            'evaluator_goal_score_reuqired_flg'   => true,
+            'evaluator_goal_comment_flg'          => true,
+            'evaluator_goal_comment_required_flg' => true,
+            'evaluator_score_flg'                 => true,
+            'evaluator_score_required_flg'        => true,
+            'evaluator_comment_flg'               => true,
+            'evaluator_comment_required_flg'      => true,
+            'final_flg'                           => true,
+            'final_score_flg'                     => true,
+            'final_score_required_flg'            => true,
+            'final_comment_flg'                   => true,
+            'final_comment_required_flg'          => true,
+            'leader_flg'                          => true,
+            'leader_goal_score_flg'               => true,
+            'leader_goal_score_reuqired_flg'      => true,
+            'leader_goal_comment_flg'             => true,
+            'leader_goal_comment_required_flg'    => true,
+            'del_flg'                             => false,
+            'deleted'                             => null,
+            'created'                             => '1426209229',
+            'modified'                            => '1426209229'
+        ]
+
     ];
 
 }

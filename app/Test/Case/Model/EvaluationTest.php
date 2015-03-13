@@ -124,4 +124,44 @@ class EvaluationTest extends CakeTestCase
         $res = $this->Evaluation->checkAvailViewEvaluationList();
         $this->assertTrue($res);
     }
+
+    function testGetMyEvaluation()
+    {
+        $this->Evaluation->deleteAll(['Evaluation.team_id' => 1]);
+        $data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 2,
+        ];
+        $this->Evaluation->save($data);
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
+        $actual = $this->Evaluation->getMyEvaluation();
+        $expect = [
+            (int)0 => [
+                'Evaluation' => [
+                    'id'                => '2',
+                    'team_id'           => '1',
+                    'evaluatee_user_id' => '1',
+                    'evaluator_user_id' => '2',
+                    'evaluate_term_id'  => null,
+                    'evaluate_type'     => '0',
+                    'goal_id'           => null,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'index'             => '0',
+                    'status'            => '0',
+                    'del_flg'           => false,
+                    'deleted'           => null,
+                    'created'           => '1426206160',
+                    'modified'          => '1426206160'
+                ]
+            ]
+        ];
+        unset($actual[0]['Evaluation']['created']);
+        unset($actual[0]['Evaluation']['modified']);
+        unset($expect[0]['Evaluation']['created']);
+        unset($expect[0]['Evaluation']['modified']);
+        $this->assertEquals($expect, $actual);
+    }
 }
