@@ -84,9 +84,9 @@
                                 else { ?>
                                     <div class="pull-right">
                                         <a href="/goalapproval/wait/<?= $goal['Collaborator']['id']; ?>"
-                                           class="btn btn-link btn-lightGray bd-radius_4px"><?= __d('gl', "保留する") ?></a>
+                                           class="btn btn-link btn-lightGray bd-radius_4px"><?= __d('gl', "しない") ?></a>
                                         <a href="/goalapproval/approval/<?= $goal['Collaborator']['id']; ?>"
-                                           class="btn btn-primary"><?= __d('gl', "承認する") ?></a>
+                                           class="btn btn-primary"><?= __d('gl', "評価対象とする") ?></a>
                                     </div>
                                 <? } ?>
                             </div>
