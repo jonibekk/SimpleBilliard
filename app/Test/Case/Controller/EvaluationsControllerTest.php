@@ -88,6 +88,16 @@ class EvaluationsControllerTest extends ControllerTestCase
     }
 
     /**
+     * view method
+     *
+     * @return void
+     */
+    public function testViewNotExistParamater()
+    {
+        $this->testAction('/evaluations/view/', ['method' => 'GET']);
+    }
+
+    /**
      * add method
      *
      * @return void
