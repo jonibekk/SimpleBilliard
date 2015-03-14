@@ -1,9 +1,9 @@
 <?
 /**
  * @var CodeCompletionView $this
- * @var $unapproved_cnt
- * @var $done_cnt
- * @var $goal_info
+ * @var                    $unapproved_cnt
+ * @var                    $done_cnt
+ * @var                    $goal_info
  */
 ?>
 <!-- START app/View/GoalApproval/done.ctp -->
@@ -52,13 +52,13 @@
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
                         <div class="panel-heading goal-set-heading clearfix">
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
-                                : <?= $goal['User']['local_username']; ?></p>
+                                : <?= $goal['User']['display_username']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
                                 : <?= $goal['Goal']['goal_category_id'] === '3' ? __d('gl', "職務") : __d('gl',
                                                                                                         "成長"); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>: <?= $goal['Goal']['name']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>: <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
@@ -79,9 +79,10 @@
                                 : <?= $goal['Collaborator']['priority']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "目的") ?>
-                                : <?= $goal['Goal']['Purpose']['name']; ?></p>
+                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>: <?= $goal['Goal']['name']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>
+                                : <?= $this->TextEx->autoLink($goal['Goal']['description']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "ゴールイメージ") ?>
                                 : <?= $goal['Goal']['photo_file_name']; ?></p>
