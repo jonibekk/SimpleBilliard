@@ -52,7 +52,7 @@
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
                         <div class="panel-heading goal-set-heading clearfix">
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
-                                : <?= $goal['User']['local_username']; ?></p>
+                                : <?= $goal['User']['display_username']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
                                 : <?= $goal['Goal']['goal_category_id'] === '3' ? __d('gl', "職務") : __d('gl',

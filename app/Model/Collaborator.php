@@ -161,7 +161,7 @@ class Collaborator extends AppModel
                     'Purpose' => ['fields' => 'name']
                 ],
                 'User' => [
-                    'fields' => ['first_name', 'last_name']
+                    'fields' => $this->User->profileFields
                 ],
             ],
             'type'       => 'inner',
