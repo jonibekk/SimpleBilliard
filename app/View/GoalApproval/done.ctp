@@ -84,8 +84,18 @@
                             <p class="approval_body_text"><?= __d('gl', "詳細") ?>
                                 : <?= $this->TextEx->autoLink($goal['Goal']['description']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "ゴールイメージ") ?>
-                                : <?= $goal['Goal']['photo_file_name']; ?></p>
+                            <?=
+                            $this->Html->image('ajax-loader.gif',
+                                               [
+                                                   'class'         => 'lazy',
+                                                   'data-original' => $this->Upload->uploadUrl($goal,
+                                                                                               "Goal.photo",
+                                                                                               ['style' => 'medium']),
+                                                   'width'         => '48px',
+                                                   'error-img'     => "/img/no-image-link.png",
+                                               ]
+                            )
+                            ?>
                         </div>
                     </div>
                 <? } ?>
