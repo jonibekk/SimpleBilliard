@@ -56,7 +56,7 @@
     </div>
 </div>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span
-        class="num"></span>件の新しい投稿があります。</a>
+        class="num"></span><?=__d('gl',"件の新しい投稿があります。")?></a>
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
     <div class="panel panel-default">
