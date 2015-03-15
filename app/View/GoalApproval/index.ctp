@@ -1,6 +1,9 @@
 <?
 /**
  * @var CodeCompletionView $this
+ * @var                    $unapproved_cnt
+ * @var                    $done_cnt
+ * @var                    $goal_info
  */
 ?>
 <!-- START app/View/GoalApproval/index.ctp -->
@@ -34,7 +37,7 @@
     </div>
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
-           id="SubHeaderMenuGoal" href="/goalapproval/done">
+           id="SubHeaderMenuGoal" href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'done']) ?>">
             <?= __d('gl', "処理済み") ?> <? if ($done_cnt > 0) {
                 echo $done_cnt;
             } ?></a>
@@ -49,14 +52,14 @@
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
                         <div class="panel-heading goal-set-heading clearfix">
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
-                                : <?= $goal['User']['local_username']; ?></p>
+                                : <?= h($goal['User']['display_username']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
                                 : <?= $goal['Goal']['goal_category_id'] === '3' ? __d('gl', "職務") : __d('gl',
                                                                                                         "成長"); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>
-                                : <?= $goal['Goal']['name']; ?></p>
+                                : <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
@@ -77,12 +80,22 @@
                                 : <?= $goal['Collaborator']['priority']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "目的") ?>
-                                : <?= $goal['Goal']['Purpose']['name']; ?></p>
+                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>: <?= $goal['Goal']['name']; ?></p>
-
-                            <p class="approval_body_text"><?= __d('gl', "ゴールイメージ") ?>
-                                : <?= $goal['Goal']['photo_file_name']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>
+                                : <?= $this->TextEx->autoLink($goal['Goal']['description']); ?></p>
+                            <?=
+                            $this->Html->image('ajax-loader.gif',
+                                               [
+                                                   'class'         => 'lazy',
+                                                   'data-original' => $this->Upload->uploadUrl($goal,
+                                                                                               "Goal.photo",
+                                                                                               ['style' => 'medium']),
+                                                   'width'         => '48px',
+                                                   'error-img'     => "/img/no-image-link.png",
+                                               ]
+                            )
+                            ?>
                         </div>
                         <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                             <div class="row">
