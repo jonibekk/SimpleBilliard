@@ -4,6 +4,7 @@
  * @var                    $unapproved_cnt
  * @var                    $done_cnt
  * @var                    $goal_info
+ * @var                    $value_unit_list
  */
 ?>
 <!-- START app/View/GoalApproval/done.ctp -->
@@ -30,7 +31,8 @@
 <div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SubHeaderMenu">
     <div class="col col-xxs-6 text-align_r">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
-           id="SubHeaderMenuFeed" href="<?= $this->Html->url(['controller' => 'goal_approval','action'=>'index']) ?>">
+           id="SubHeaderMenuFeed"
+           href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'index']) ?>">
             <?= __d('gl', "処理待ち") ?> <? if ($unapproved_cnt > 0) {
                 echo $unapproved_cnt;
             } ?></a>
@@ -64,7 +66,7 @@
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
-                                : <?= $goal['Goal']['value_unit']; ?></p>
+                                : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "達成時") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>

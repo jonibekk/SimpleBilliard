@@ -4,6 +4,7 @@
  * @var                    $unapproved_cnt
  * @var                    $done_cnt
  * @var                    $goal_info
+ * @var                    $value_unit_list
  */
 ?>
 <!-- START app/View/GoalApproval/index.ctp -->
@@ -65,7 +66,7 @@
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
-                                : <?= $goal['Goal']['value_unit']; ?></p>
+                                : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "達成時") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>

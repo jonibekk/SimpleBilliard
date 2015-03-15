@@ -17,7 +17,7 @@ class GoalApprovalController extends AppController
      */
     public $uses = [
         'Collaborator',
-        'TeamMember'
+        'TeamMember',
     ];
 
     /*
@@ -180,7 +180,10 @@ class GoalApprovalController extends AppController
 
         $unapproved_cnt = $this->unapproved_cnt;
         $done_cnt = $this->done_cnt;
-        $this->set(compact('goal_info', 'unapproved_cnt', 'done_cnt'));
+        $kr = new KeyResult();
+        $value_unit_list = $kr::$UNIT;
+
+        $this->set(compact('value_unit_list', 'goal_info', 'unapproved_cnt', 'done_cnt'));
     }
 
     /*
@@ -194,7 +197,10 @@ class GoalApprovalController extends AppController
         );
         $unapproved_cnt = $this->unapproved_cnt;
         $done_cnt = $this->done_cnt;
-        $this->set(compact('goal_info', 'unapproved_cnt', 'done_cnt'));
+        $kr = new KeyResult();
+        $value_unit_list = $kr::$UNIT;
+
+        $this->set(compact('value_unit_list', 'goal_info', 'unapproved_cnt', 'done_cnt'));
     }
 
     /*
