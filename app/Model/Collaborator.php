@@ -147,7 +147,7 @@ class Collaborator extends AppModel
     function getCollaboGoalDetail($goal_id, $approval_flg)
     {
         $options = [
-            'fields'     => ['id', 'type', 'priority'],
+            'fields'     => ['id', 'type', 'role', 'priority'],
             'conditions' => [
                 'Collaborator.goal_id'    => $goal_id,
                 'Collaborator.valued_flg' => $approval_flg,

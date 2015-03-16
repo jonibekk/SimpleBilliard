@@ -65,6 +65,9 @@
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
+							<p class="approval_body_text"><?= __d('gl', "役割") ?>
+								: <?= h($goal['Collaborator']['role']); ?></p>
+
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
                                 : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
 
