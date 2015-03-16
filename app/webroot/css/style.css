@@ -1236,6 +1236,9 @@ textarea{
 
 .panel-default > .panel-heading {
     background-color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+
 / / padding : 10 px 11 px;
 }
 
@@ -3851,4 +3854,30 @@ Temporary Properties - YOU MUST FIX
 /*photo-upボタン*/
 .comment-contents .new-comment-add-pic {
     display: inline;
+}
+
+.eval-view-panel-body .form-label {
+    text-align: left;
+    padding-left: 4px;
+}
+
+.eval-view-panel-title {
+    font-weight: bold;
+    padding-left: 4px;
+}
+
+.eval-view-panel-goal-pic {
+    margin: auto;
+}
+
+.eval-view-result-number,
+.eval-view-action-number {
+    text-align: center;
+    font-size: 33px;
+    font-weight: bold;
+}
+
+.eval-view-result-text,
+.eval-view-action-text {
+    text-align: center;
 }

@@ -78,8 +78,6 @@ class User extends AppModel
         'hun',
     ];
 
-    public $displayField = 'username';
-
     /**
      * ローカル名の一時格納用
      *
@@ -192,7 +190,6 @@ class User extends AppModel
         'language',
         'auto_language_flg',
         'romanize_flg',
-        'username',
     ];
 
     /**
@@ -249,7 +246,6 @@ class User extends AppModel
         /** @noinspection PhpUndefinedClassInspection */
         parent::__construct($id, $table, $ds);
         $this->_setGenderTypeName();
-        $this->_setVirtualFields();
     }
 
     public function resetLocalNames()
@@ -268,15 +264,6 @@ class User extends AppModel
             $this->data[$this->alias]['last_name'] = ucfirst($this->data[$this->alias]['last_name']);
         }
         return true;
-    }
-
-    private function _setVirtualFields()
-    {
-        $first_name = $this->alias . '.first_name';
-        $last_name = $this->alias . '.last_name';
-        $this->virtualFields = [
-            'username' => 'CONCAT(' . $first_name . ', " ", ' . $last_name . ')'
-        ];
     }
 
     /**
@@ -379,7 +366,7 @@ class User extends AppModel
         $local_names = $this->_getLocalUsername($row);
         if (!$local_names) {
             //ローカル名が存在しない場合はローマ字で
-            $display_username = $this->_getRomanUsername($row);
+            $display_username = $row[$this->alias]['first_name'] . " " . $row[$this->alias]['last_name'];
         }
         else {
             //それ以外は
@@ -391,6 +378,7 @@ class User extends AppModel
 
         $row[$this->alias]['display_username'] = $display_username;
         $row[$this->alias]['local_username'] = $local_name;
+        $row[$this->alias]['roman_username'] = $row[$this->alias]['first_name'] . " " . $row[$this->alias]['last_name'];
 
         //姓名の並び順の場合フラグをセット
         if (isset($row[$this->alias]['language'])) {
@@ -398,15 +386,6 @@ class User extends AppModel
             $row[$this->alias]['last_first'] = $last_first;
         }
         return $row;
-    }
-
-    private function _getRomanUsername($row)
-    {
-        $display_username = null;
-        if (!empty($row[$this->alias]['username'])) {
-            $display_username = $row[$this->alias]['username'];
-        }
-        return $display_username;
     }
 
     /**
@@ -813,9 +792,9 @@ class User extends AppModel
         $user_list = $this->TeamMember->getAllMemberUserIdList();
         $options = [
             'conditions' => [
-                'User.id'              => $user_list,
-                'User.active_flg'      => true,
-                'User.username Like ?' => "%" . $keyword . "%",
+                'User.id'                                               => $user_list,
+                'User.active_flg'                                       => true,
+                'CONCAT(`User.first_name`," ",`User.last_name`) Like ?' => "%" . $keyword . "%",
             ],
             'limit'      => $limit,
             'fields'     => $this->profileFields,
@@ -835,7 +814,7 @@ class User extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['username'];
+            $data['text'] = $val['User']['roman_username'];
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
@@ -860,7 +839,7 @@ class User extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['username'];
+            $data['text'] = $val['User']['roman_username'];
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
@@ -891,7 +870,7 @@ class User extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['username'] . " ( " . $val['User']['display_username'] . " )";
+            $data['text'] = $val['User']['roman_username'] . " ( " . $val['User']['display_username'] . " )";
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }

@@ -13,8 +13,8 @@
 <div class="modal-dialog modal-dialog_300px">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
-                    class="close-icon">&times;</span></button>
+            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
+                <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __d('gl', "ゴール概要") ?></h4>
         </div>
         <div class="modal-body modal-circle-body">
@@ -69,7 +69,7 @@
                     <i class="fa fa-folder"></i><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span>
                 </div>
                 <div class="col col-xxs-12">
-                    <b class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></b>
+                    <p class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></p>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <?= h($goal['Purpose']['name']) ?>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-child"></i><span class="pl_2px"><?= __d('gl', "コラボレータ") ?>
-                                &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
+                            &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
                     <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <? foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
@@ -113,7 +113,7 @@
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-heart"></i><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
-                                &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
+                            &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
                     <? if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
                         <? foreach ($goal['Follower'] as $follower): ?>
                             <img src="<?=

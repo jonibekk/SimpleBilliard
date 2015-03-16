@@ -144,4 +144,59 @@ class Collaborator extends AppModel
         return false;
     }
 
+    function getCollaboGoalDetail($goal_id, $approval_flg)
+    {
+        $options = [
+            'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
+            'conditions' => [
+                'Collaborator.goal_id'    => $goal_id,
+                'Collaborator.valued_flg' => $approval_flg,
+            ],
+            'contain'    => [
+                'Goal' => [
+                    'fields'  => [
+                        'name', 'goal_category_id', 'end_date', 'photo_file_name',
+                        'value_unit', 'target_value', 'start_value', 'description'
+                    ],
+                    'Purpose' => ['fields' => 'name']
+                ],
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ],
+            ],
+            'type'       => 'inner',
+            'order'      => ['Collaborator.created'],
+        ];
+        return $this->find('all', $options);
+    }
+
+    function changeApprovalStatus($id, $status)
+    {
+        $this->id = $id;
+        $this->save(['valued_flg' => $status]);
+    }
+
+    function countCollaboGoal($user_id, $goal_id, $approval_flg)
+    {
+        $options = [
+            'fields'     => ['id'],
+            'conditions' => [
+                'Collaborator.goal_id'    => $goal_id,
+                'Collaborator.valued_flg' => $approval_flg,
+                'User.id !='              => $user_id
+            ],
+            'contain'    => [
+                'Goal' => [
+                    'fields'  => ['id'],
+                    'Purpose' => ['fields' => 'id']
+                ],
+                'User' => [
+                    'fields' => ['id'],
+                ],
+            ],
+            'type'       => 'inner',
+        ];
+        return $this->find('count', $options);
+    }
+
 }

@@ -18,6 +18,7 @@ class EmailsControllerTest extends ControllerTestCase
         'app.local_name',
         'app.cake_session',
         'app.email',
+        'app.evaluation_setting',
         'app.user', 'app.notify_setting',
         'app.team',
         'app.badge',
@@ -39,6 +40,10 @@ class EmailsControllerTest extends ControllerTestCase
         'app.notification',
         'app.thread',
         'app.message',
+        'app.follower',
+        'app.collaborator',
+        'app.goal',
+        'app.circle_member',
         'app.oauth_token'
     );
 

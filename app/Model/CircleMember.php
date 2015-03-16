@@ -158,7 +158,7 @@ class CircleMember extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['username'];
+            $data['text'] = $val['User']['roman_username'];
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }

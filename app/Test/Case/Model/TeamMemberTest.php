@@ -1696,4 +1696,37 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->User->Email->my_uid = $uid;
     }
 
+	function testSelectCoachUserIdFromTeamMembersTB ()
+	{
+		$user_id = 777;
+		$team_id = 888;
+		$coach_user_id = 999;
+
+		$params = [
+			'user_id'       => $user_id,
+			'team_id'       => $team_id,
+			'coach_user_id' => $coach_user_id,
+		];
+		$this->TeamMember->save($params);
+		$res = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
+		$this->assertEquals($coach_user_id, intval($res['TeamMember']['coach_user_id']));
+
+	}
+
+	function testSelectUserIdFromTeamMembersTB ()
+	{
+		$user_id = 777;
+		$team_id = 888;
+		$coach_user_id = 999;
+
+		$params = [
+			'user_id'       => $user_id,
+			'team_id'       => $team_id,
+			'coach_user_id' => $coach_user_id,
+		];
+		$this->TeamMember->save($params);
+		$res = $this->TeamMember->selectUserIdFromTeamMembersTB($coach_user_id, $team_id);
+		$this->assertContains($user_id, $res);
+	}
+
 }
