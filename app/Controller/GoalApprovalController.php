@@ -195,6 +195,13 @@ class GoalApprovalController extends AppController
             $this->goal_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
+
+		foreach ($goal_info as $key => $val) {
+			if ($this->user_id === $val['User']['id']) {
+				$goal_info[$key]['msg'] = '自分のゴール';
+			}
+		}
+
         $unapproved_cnt = $this->unapproved_cnt;
         $done_cnt = $this->done_cnt;
         $kr = new KeyResult();
@@ -230,12 +237,16 @@ class GoalApprovalController extends AppController
     /*
      * 処理を取り消す
      */
-    /*
+	/*
     public function cancle()
     {
-        return $this->done();
+		$id = $this->request->param('id');
+		if (empty($id) === false) {
+			$this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['unapproved']);
+		}
+		$this->redirect($this->referer());
     }
-    */
+	*/
 
     /*
      * リストに表示するゴールのIDを取得
