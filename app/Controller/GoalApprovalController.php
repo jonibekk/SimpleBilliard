@@ -230,12 +230,16 @@ class GoalApprovalController extends AppController
     /*
      * 処理を取り消す
      */
-    /*
+	/*
     public function cancle()
     {
-        return $this->done();
+		$id = $this->request->param('id');
+		if (empty($id) === false) {
+			$this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['unapproved']);
+		}
+		$this->redirect($this->referer());
     }
-    */
+	*/
 
     /*
      * リストに表示するゴールのIDを取得
