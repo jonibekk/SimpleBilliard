@@ -47,7 +47,15 @@ class EvaluationsController extends AppController
             $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しまいます。"));
             return $this->redirect($this->referer());
         }
-        $this->set(compact('scoreList', 'evaluationList', 'evaluateTermId', 'evaluateeId'));
+        if(empty($evaluationList[0]['Evaluation']['goal_id'])) {
+            $total = $evaluationList[0];
+            unset($evaluationList[0]);
+            $goalList = $evaluationList;
+        } else {
+            $total = [];
+            $goalList = $evaluationList;
+        }
+        $this->set(compact('scoreList', 'total', 'goalList', 'evaluateTermId', 'evaluateeId'));
     }
 
     function add($evaluateTermId, $evaluateeId)
