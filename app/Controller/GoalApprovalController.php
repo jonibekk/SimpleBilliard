@@ -164,7 +164,7 @@ class GoalApprovalController extends AppController
             $this->goal_user_ids, $this->user_id, $this->goal_ids, $this->goal_status['unapproved']);
 
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
-            $this->goal_user_ids, $this->user_id, $this->goal_ids,
+            $this->user_id, $this->goal_user_ids,  $this->goal_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
 
