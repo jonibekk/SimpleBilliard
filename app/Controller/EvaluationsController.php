@@ -46,11 +46,12 @@ class EvaluationsController extends AppController
             $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しまいます。"));
             return $this->redirect($this->referer());
         }
-        $this->set(compact('scoreList', 'evaluationList'));
+        $this->set(compact('scoreList', 'evaluationList', 'evaluateTermId', 'evaluateeId'));
     }
 
     function add()
     {
+        $this->Evaluation->setEvaluationType();
         // case of saving draft
         if(isset($this->request->data['is_draft'])) {
             $saveType = "draft";

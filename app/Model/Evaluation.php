@@ -52,14 +52,12 @@ class Evaluation extends AppModel
                 'rule' => 'notEmpty'
             ]
         ],
-        'goal_id' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
-            ]
-        ],
         'comment' => [
             'maxLength' => [
                 'rule' => ['maxLength', 200]
+            ],
+            'notEmpty' => [
+                'rule' => 'notEmpty'
             ]
         ],
         'evaluate_score_id' => [
@@ -108,6 +106,8 @@ class Evaluation extends AppModel
     const TYPE_STATUS_DRAFT       = 1;
     const TYPE_STATUS_DONE        = 2;
 
+    var $evaluationType = null;
+
     /**
      * 評価リストの閲覧権限チェック
      * ・評価画面の表示条件
@@ -139,21 +139,18 @@ class Evaluation extends AppModel
         return $res;
     }
 
-
     public function add($data, $saveType) {
-        foreach($data as $law) {
-            if(empty($law)) continue;
-            if($saveType == "draft") {
-                // case of saving draft
-                $law['Evaluation']['status'] = 1;
-            } else {
-                // case of registering
-                $law['Evaluation']['status'] = 2;
-            }
-            $this->create();
-            $this->save($law);
+        if($saveType === "draft") {
+            $data = Set::insert($data, '{n}.Evaluation.status', 1);
+        } else {
+            $data = Set::insert($data, '{n}.Evaluation.status', 2);
         }
-        return true;
+        $this->create();
+        $saved = $this->saveAll($data);
+        if($saved) {
+            return true;
+        }
+        return false;
     }
 
     public function getEditableEvaluations($evaluateTermId, $evaluateeId)
@@ -171,6 +168,14 @@ class Evaluation extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    public function setEvaluationType() {
+        $this->evaluationType = self::TYPE_ONESELF;
+    }
+
+    public function setEvaluationValidations() {
+
     }
 
 }

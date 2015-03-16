@@ -29,7 +29,7 @@
                         'wrapInput' => false,
                         'class'     => '',
                     ],
-                    'url'           => ['controller' => 'evaluations', 'action' => 'add'],
+                    'url'           => ['controller' => 'evaluations', 'action' => 'add', $evaluateTermId, $evaluateeId],
                     'novalidate'
                 ]); ?>
                 <? foreach($evaluationList as $key => $eval):?>
@@ -65,6 +65,7 @@
                     ]);
                     ?>
                 <? endforeach ?>
+                ?>
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
                     'div'   => false,
                     'class' => 'btn btn-info pull-right',
