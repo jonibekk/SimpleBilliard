@@ -41,7 +41,11 @@ class EvaluationsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $evaluationList = $this->Evaluation->getNotEnteredEvaluations($evaluateTermId, $evaluateeId);
+        $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
+        if(empty($evaluationList)) {
+            $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しまいます。"));
+            return $this->redirect($this->referer());
+        }
         $this->set(compact('scoreList', 'evaluationList'));
     }
 

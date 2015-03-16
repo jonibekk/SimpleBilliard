@@ -156,13 +156,16 @@ class Evaluation extends AppModel
         return true;
     }
 
-    public function getNotEnteredEvaluations($evaluateTermId, $evaluateeId)
+    public function getEditableEvaluations($evaluateTermId, $evaluateeId)
     {
         $options = [
             'conditions' => [
                 'evaluate_term_id' => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
-                'status' => self::TYPE_STATUS_NOT_ENTERED
+                'OR' => [
+                    ['Evaluation.status' => self::TYPE_STATUS_NOT_ENTERED],
+                    ['Evaluation.status' => self::TYPE_STATUS_DRAFT]
+                ]
             ],
             'order' => 'Evaluation.index asc'
         ];

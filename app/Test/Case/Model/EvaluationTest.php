@@ -241,7 +241,7 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
-    function testGetNotEnteredEvaluations()
+    function testGetEditableEvaluations()
     {
         $this->Evaluation->deleteAll(['Evaluation.team_id' => 1]);
         $data = [
