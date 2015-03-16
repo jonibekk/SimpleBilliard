@@ -313,6 +313,48 @@ class GoalApprovalControllerTest extends ControllerTestCase
 		$this->assertContains($goal_id, $res);
 	}
 
+	function testGetCollaboratorUserIdType1()
+	{
+		$GoalApproval = $this->_getGoalApprovalCommonMock();
+		$GoalApproval->user_type = 1;
+		$GoalApproval->user_id = 999;
+		$GoalApproval->member_ids = [888, 777];
+		$goal_user_id = $GoalApproval->getCollaboratorUserId();
+		$this->assertContains($GoalApproval->user_id, $goal_user_id);
+	}
+
+	function testGetCollaboratorUserIdType2()
+	{
+		$GoalApproval = $this->_getGoalApprovalCommonMock();
+		$GoalApproval->user_type = 2;
+
+		$user_id = 999;
+		$member_id = [888, 777];
+		$ids = array_merge([$user_id], $member_id);
+
+		$GoalApproval->user_id = $user_id;
+		$GoalApproval->member_ids = $member_id;
+		$goal_user_id = $GoalApproval->getCollaboratorUserId();
+		$this->assertEquals($ids, $goal_user_id);
+
+	}
+
+	function testGetCollaboratorUserIdType3()
+	{
+		$GoalApproval = $this->_getGoalApprovalCommonMock();
+		$GoalApproval->user_type = 3;
+
+		$user_id = 999;
+		$member_id = [888, 777];
+
+		$GoalApproval->user_id = $user_id;
+		$GoalApproval->member_ids = $member_id;
+
+		$goal_user_id = $GoalApproval->getCollaboratorUserId();
+		$this->assertEquals($member_id, $goal_user_id);
+
+	}
+
 	function _getGoalApprovalCommonMock()
 	{
 		/**
