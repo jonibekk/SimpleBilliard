@@ -3865,3 +3865,19 @@ Temporary Properties - YOU MUST FIX
     font-weight: bold;
     padding-left: 4px;
 }
+
+.eval-view-panel-goal-pic {
+    margin: auto;
+}
+
+.eval-view-result-number,
+.eval-view-action-number {
+    text-align: center;
+    font-size: 33px;
+    font-weight: bold;
+}
+
+.eval-view-result-text,
+.eval-view-action-text {
+    text-align: center;
+}
