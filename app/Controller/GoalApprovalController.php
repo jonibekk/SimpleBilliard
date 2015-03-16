@@ -195,6 +195,13 @@ class GoalApprovalController extends AppController
             $this->goal_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
+
+		foreach ($goal_info as $key => $val) {
+			if ($this->user_id === $val['User']['id']) {
+				$goal_info[$key]['msg'] = '自分のゴール';
+			}
+		}
+
         $unapproved_cnt = $this->unapproved_cnt;
         $done_cnt = $this->done_cnt;
         $kr = new KeyResult();
