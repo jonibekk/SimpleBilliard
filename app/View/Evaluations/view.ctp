@@ -7,81 +7,160 @@
  */
 ?>
 <!-- START app/View/Evaluations/view.ctp -->
-<div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('gl', "評価画面的タイトル") ?></div>
-            <div class="panel-body add-team-panel-body">
-                <?
-                if(empty($evaluationList[0]['Evaluation']['goal_id'])):
+
+<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
+    <div class="panel-heading"><?= __d('gl', "トータル評価") ?></div>
+    <?=
+    $this->Form->create('EvalTotal', [
+        'inputDefaults' => [
+            'div'       => 'form-group',
+            'label'     => [
+                'class' => 'col col-xxs-12 col-sm-3 control-label form-label'
+            ],
+            'wrapInput' => 'col col-sm-6',
+            'class'     => 'form-control'
+        ],
+        'class'         => 'form-horizontal',
+        //        'novalidate'    => true,
+        //        'id'            => 'UserAccountForm',
+    ]); ?>
+    <div class="panel-body eval-view-panel-body">
+        <div class="form-group">
+            <div for="#" class="col col-sm-3 eval-view-panel-title"><?= __d('gl', "本人") ?></div>
+
+            <div class="col col-sm-12">
+                <?=
+                $this->Form->input('eval_user_comment',
+                                   ['label'       => __d('gl', "評価コメント"),
+                                    'placeholder' => __d('gl', "コメントを書いてください")
+                                   ]),
+                $this->Form->input('eval_user_score',
+                                   array(
+                                       'type'      => 'select',
+                                       'options'   => __d('gl', 'ここ何入れるか知らん'),
+                                       'value'     => $this->Session->read('current_team_id'),
+                                       'id'        => '',
+                                       'label'     => __d('gl', "評価スコア"),
+                                       'div'       => false,
+                                       'class'     => 'form-control col-xxs-3',
+                                       'wrapInput' => false,
+                                   ))
                 ?>
-                    <h4>トータル評価</h4>
-                <?
-                else:
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="#" class="col col-sm-3 control-label form-label"><?= __d('gl', "最終者") ?></label>
+
+            <div class="col col-sm-12">
+                <?=
+                $this->Form->input('eval_user_comment',
+                                   ['label'       => __d('gl', "評価コメント"),
+                                    'placeholder' => __d('gl', "コメントを書いてください")
+                                   ]),
+                $this->Form->input('eval_user_score',
+                                   array(
+                                       'type'      => 'select',
+                                       'options'   => __d('gl', 'ここ何入れるか知らん'),
+                                       'value'     => $this->Session->read('current_team_id'),
+                                       'id'        => '',
+                                       'label'     => __d('gl', "評価スコア"),
+                                       'div'       => false,
+                                       'class'     => 'form-control col-xxs-3',
+                                       'wrapInput' => false,
+                                   ))
                 ?>
-                    <h4>ゴール評価</h4>
-                <?
-                endif;
-                ?>
-                <?= $this->Form->create('Evaluation', [
-                    'inputDefaults' => [
-                        'div'       => 'form-group mb_5px develop--font_normal',
-                        'wrapInput' => false,
-                        'class'     => '',
-                    ],
-                    'url'           => ['controller' => 'evaluations', 'action' => 'add', $evaluateTermId, $evaluateeId],
-                ]); ?>
-                <? foreach($evaluationList as $key => $eval):?>
-                    <?
-                    if(empty($evaluationList[0]['Evaluation']['goal_id']) && $eval['Evaluation']['index'] == 1):
-                    ?>
-                        <h4>ゴール評価</h4>
-                    <?
-                    endif;
-                    ?>
-                    <?=
-                    $this->Form->input("{$key}.Evaluation.evaluate_score_id", [
-                        'label'   => false,
-                        'class'   => 'form-control col-xxs-10 mb_12px',
-                        'type'    => 'select',
-                        'default' => $eval['Evaluation']['evaluate_score_id'],
-                        'options' => $scoreList
-                    ]);
-                    ?>
-                    <?=
-                    $this->Form->input("{$key}.Evaluation.comment", [
-                        'label' => false,
-                        'class' => 'form-control col-xxs-10 mb_12px',
-                        'default' => $eval['Evaluation']['comment'],
-                        'allow-empty' => $eval['Evaluation']['allow_empty']
-                    ]);
-                    ?>
-                    <?=
-                    $this->Form->input("{$key}.Evaluation.id", [
-                        'label' => false,
-                        'class' => 'form-control col-xxs-10 mb_12px',
-                        'type'  => 'hidden',
-                        'value' => $eval['Evaluation']['id']
-                    ]);
-                    ?>
-                <? endforeach ?>
-                <?= $this->Form->button(__d('gl', "下書き保存"), [
-                    'div'   => false,
-                    'class' => 'btn btn-info pull-right',
-                    'id'    => 'evaluation-draft-submit',
-                    'name'  => 'is_draft',
-                    'value' => true
-                ]); ?>
-                <?= $this->Form->button(__d('gl', "評価登録"), [
-                    'div'   => false,
-                    'class' => 'btn btn-info pull-right',
-                    'id'    => 'evaluation-register-submit',
-                    'name'  => 'is_register',
-                    'value' => true
-                ]); ?>
-                <?= $this->Form->end(); ?>
             </div>
         </div>
     </div>
+    <div class="panel-footer setting_pannel-footer">
+
+        <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+
+        <div class="clearfix"></div>
+    </div>
+    <?= $this->Form->end(); ?>
 </div>
+<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
+    <div class="panel-heading"><?= __d('gl', "ゴール評価") ?></div>
+    <?=
+    $this->Form->create('EvalGoals', [
+        'inputDefaults' => [
+            'div'       => 'form-group',
+            'label'     => [
+                'class' => 'col col-xxs-12 col-sm-3 control-label form-label'
+            ],
+            'wrapInput' => 'col col-sm-6',
+            'class'     => 'form-control'
+        ],
+        'class'         => 'form-horizontal',
+        //        'novalidate'    => true,
+        //        'id'            => 'UserAccountForm',
+    ]); ?>
+    <div class="panel-body eval-view-panel-body">
+        <div class="form-group">
+            <div class="col col-xxs-6 col-sm-3">
+                <img src="../../img/logo_on.png" width="128" height="128" alt="ゴール画像" class="eval-view-panel-goal-pic">
+            </div>
+            <div class="col-xxs-6">
+                <div>職務とか</div>
+                <div>ゴール名</div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <div class="col-xxs-12">
+                <div class="col-xxs-6">
+                    <div class="eval-view-result-number"><?= __d('gl', "10") ?></div>
+                    <div class="eval-view-result-text"><?= __d('gl', "成果") ?></div>
+                </div>
+                <div class="col-xxs-6">
+                    <div class="eval-view-action-number"><?= __d('gl', "56") ?></div>
+                    <div class="eval-view-action-text"><?= __d('gl', "アクション") ?></div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "役割:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "アクション:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "コラボれーた:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "進捗:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "比重:") ?></div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <div for="#" class="col col-sm-3 eval-view-panel-title"><?= __d('gl', "本人") ?></div>
+
+            <div class="col col-sm-12">
+                <?=
+                $this->Form->input('eval_user_comment',
+                                   ['label'       => __d('gl', "評価コメント"),
+                                    'placeholder' => __d('gl', "コメントを書いてください")
+                                   ]),
+                $this->Form->input('eval_user_score',
+                                   array(
+                                       'type'      => 'select',
+                                       'options'   => __d('gl', 'ここ何入れるか知らん'),
+                                       'value'     => $this->Session->read('current_team_id'),
+                                       'id'        => '',
+                                       'label'     => __d('gl', "評価スコア"),
+                                       'div'       => false,
+                                       'class'     => 'form-control col-xxs-3',
+                                       'wrapInput' => false,
+                                   ))
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer setting_pannel-footer">
+
+        <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+
+        <div class="clearfix"></div>
+    </div>
+    <?= $this->Form->end(); ?>
+</div>
+<? $this->append('script') ?>
+<? $this->end() ?>
 <!-- END app/View/Evaluations/view.ctp -->

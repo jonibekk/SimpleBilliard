@@ -65,6 +65,9 @@
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
+							<p class="approval_body_text"><?= __d('gl', "役割") ?>
+								: <?= h($goal['Collaborator']['role']); ?></p>
+
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
                                 : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
 
@@ -105,9 +108,9 @@
                                 <? }
                                 else { ?>
                                     <div class="pull-right">
-                                        <a href="/goalapproval/wait/<?= $goal['Collaborator']['id']; ?>"
+                                        <a href="/goal_approval/wait/<?= $goal['Collaborator']['id']; ?>"
                                            class="btn btn-link btn-lightGray bd-radius_4px"><?= __d('gl', "しない") ?></a>
-                                        <a href="/goalapproval/approval/<?= $goal['Collaborator']['id']; ?>"
+                                        <a href="/goal_approval/approval/<?= $goal['Collaborator']['id']; ?>"
                                            class="btn btn-primary"><?= __d('gl', "評価対象とする") ?></a>
                                     </div>
                                 <? } ?>
