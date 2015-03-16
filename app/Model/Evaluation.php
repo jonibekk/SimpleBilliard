@@ -141,7 +141,6 @@ class Evaluation extends AppModel
 
 
     public function add($data, $saveType) {
-        $this->_setDraftValidation();
         foreach($data as $law) {
             if(empty($law)) continue;
             if($saveType == "draft") {
@@ -170,16 +169,5 @@ class Evaluation extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
-
-    public function _setDraftValidation()
-    {
-
-    }
-
-    public function _setRegisterValidation()
-    {
-
-    }
-
 
 }
