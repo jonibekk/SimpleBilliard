@@ -45,16 +45,16 @@
             <div class="post-panel-body plr_11px ptb_7px">
                 <?=
                 $this->Form->input('body', [
-                    'label'                    => false,
-                    'type'                     => 'textarea',
-                    'wrap'                     => 'soft',
-                    'rows'                     => 1,
-                    'required'                 => true,
-                    'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'                    => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
-                    'target_show_id'           => "PostFormFooter",
-                    'target-id'                => "PostSubmit",
-                    "required"                 => false
+                    'label'          => false,
+                    'type'           => 'textarea',
+                    'wrap'           => 'soft',
+                    'rows'           => 1,
+                    'required'       => true,
+                    'placeholder'    => __d('gl', "何か投稿しよう"),
+                    'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
+                    'target_show_id' => "PostFormFooter",
+                    'target-id'      => "PostSubmit",
+                    "required"       => false
                 ])
                 ?>
                 <div class="row form-group m_0px none" id="PostFormImage">
@@ -89,7 +89,8 @@
                 <div class="font_12px none" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
-                        <button type="button" class="btn pull-left photo-up-btn"><i class="fa fa-camera post-camera-icon"></i>
+                        <button type="button" class="btn pull-left photo-up-btn"><i
+                                class="fa fa-camera post-camera-icon"></i>
                         </button>
                     </a>
 

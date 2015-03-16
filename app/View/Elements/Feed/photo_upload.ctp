@@ -107,7 +107,8 @@ if (!isset($id_prefix)) {
                                          'data-bv-file-extension' => 'jpeg,jpg,png,gif',
                                          'data-bv-file-type'      => 'image/jpeg,image/png,image/gif',
                                          'data-bv-file-maxsize'   => 10485760,   // 10mb
-                                         'data-bv-message'        => __d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")
+                                         'data-bv-message'        => __d('validate',
+                                                                         "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")
                                         ]) ?>
             </span>
         </div>

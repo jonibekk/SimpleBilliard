@@ -9,6 +9,11 @@ App::uses('AppModel', 'Model');
 class EvaluationSetting extends AppModel
 {
 
+    const FLG_ENABLE = 'enable_flg';
+    const FLG_SELF = 'self_flg';
+    const FLG_EVALUATOR = 'evaluator_flg';
+    const FLG_FINAL = 'final_flg';
+
     /**
      * Validation rules
      *
@@ -166,6 +171,13 @@ class EvaluationSetting extends AppModel
             ],
         ],
     ];
+
+    /**
+     * @var array
+     */
+    private $evaluation_setting = [];
+    private $not_exists_evaluation_setting = false;
+
     /**
      * belongsTo associations
      *
@@ -178,15 +190,63 @@ class EvaluationSetting extends AppModel
     /**
      * @return bool
      */
-    function isAvailEvaluation()
+    function isEnabled()
     {
+        return $this->isFlagOn(self::FLG_ENABLE);
+    }
+
+    /**
+     * @return bool
+     */
+    function isEnabledSelf()
+    {
+        return $this->isFlagOn(self::FLG_SELF);
+    }
+
+    /**
+     * @return bool
+     */
+    function isEnabledEvaluator()
+    {
+        return $this->isFlagOn(self::FLG_EVALUATOR);
+    }
+
+    /**
+     * @return bool
+     */
+    function isEnabledFinal()
+    {
+        return $this->isFlagOn(self::FLG_FINAL);
+    }
+
+    private function isFlagOn($flag_name)
+    {
+        $evaluation_setting = $this->getEvaluationSetting();
+        if ($this->not_exists_evaluation_setting) {
+            return false;
+        }
+        return (bool)$evaluation_setting['EvaluationSetting'][$flag_name];
+
+    }
+
+    /**
+     * @return array
+     */
+    function getEvaluationSetting()
+    {
+        if (!empty($this->evaluation_setting) || $this->not_exists_evaluation_setting) {
+            return $this->evaluation_setting;
+        }
+
         $options = [
             'conditions' => [
-                'team_id'    => $this->current_team_id,
-                'enable_flg' => true,
+                'team_id' => $this->current_team_id
             ]
         ];
-        $res = $this->find('first', $options);
-        return (bool)$res;
+        $this->evaluation_setting = $this->find('first', $options);
+        if (empty($this->evaluation_setting)) {
+            $this->not_exists_evaluation_setting = true;
+        }
+        return $this->evaluation_setting;
     }
 }

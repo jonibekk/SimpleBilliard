@@ -20,7 +20,7 @@
         <div class="modal-body modal-feed-body">
             <? if (!empty($red_users)): ?>
                 <div class="row borderBottom">
-                <? foreach ($red_users as $user): ?>
+                    <? foreach ($red_users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
                                        ['user' => $user['User'], 'created' => $user['CommentRead']['created']]) ?>
@@ -28,10 +28,10 @@
                 </div>
             <? else: ?>
                 <?= __d('gl', "まだ、この投稿を読んだ人はいません。") ?>
-            <?endif ?>
+            <? endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
         </div>
     </div>
 </div>

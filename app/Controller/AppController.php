@@ -509,7 +509,7 @@ class AppController extends Controller
 
     public function _setAvailEvaluation()
     {
-        $this->set('is_evaluation_available', $this->Team->EvaluationSetting->isAvailEvaluation());
+        $this->set('is_evaluation_available', $this->Team->EvaluationSetting->isEnabled());
     }
 
 }

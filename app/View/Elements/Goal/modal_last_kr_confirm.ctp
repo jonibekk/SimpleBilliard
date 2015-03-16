@@ -37,7 +37,7 @@
                     'label'     => false,
                     'wrapInput' => '',
                 ],
-                'class' => 'form-feed-notify'
+                'class'         => 'form-feed-notify'
             ]); ?>
             <? $this->Form->unlockField('socket_id') ?>
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id'], $kr_id]) ?>"
