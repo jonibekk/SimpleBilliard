@@ -56,10 +56,13 @@
 
 							<p class="approval_body_text">
 								<? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-									<p class="text-right"><?=	__d('gl', "評価対象") ?></p>
-								<? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-									<p class="text-right"><?=	__d('gl', "評価対象ではない") ?></p>
-								<? } ?>
+
+							<p class="text-right"><?= __d('gl', "評価対象") ?></p>
+							<? } else {
+								if ($goal['Collaborator']['valued_flg'] === '2') { ?>
+									<p class="text-right"><?= __d('gl', "評価対象ではない") ?></p>
+								<? }
+							} ?>
 							</p>
 
 							<p class="approval_body_text"><?= __d('gl', "名前") ?>
