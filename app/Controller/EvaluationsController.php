@@ -42,6 +42,7 @@ class EvaluationsController extends AppController
         $teamId = $this->Session->read('current_team_id');
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($teamId);
         $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
+        $evaluationList = $this->Evaluation->insertValidationStatus($evaluationList);
         if(empty($evaluationList)) {
             $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しまいます。"));
             return $this->redirect($this->referer());
@@ -49,30 +50,35 @@ class EvaluationsController extends AppController
         $this->set(compact('scoreList', 'evaluationList', 'evaluateTermId', 'evaluateeId'));
     }
 
-    function add()
+    function add($evaluateTermId, $evaluateeId)
     {
-        $this->Evaluation->setEvaluationType();
+        $this->request->allowMethod('post', 'put');
+
         // case of saving draft
         if(isset($this->request->data['is_draft'])) {
             $saveType = "draft";
             unset($this->request->data['is_draft']);
             $successMsg = __d('gl', "下書きを保存しました。");
-            $errorMsg   = __d('gl', "下書きの保存に失敗しました。");
 
         // case of registering
         } else {
             $saveType = "register";
             unset($this->request->data['is_register']);
             $successMsg = __d('gl', "自己評価を登録しました。");
-            $errorMsg   = __d('gl', "自己評価の登録に失敗しました。");
         }
 
-        $saveEvaluation = $this->Evaluation->add($this->request->data, $saveType);
-        if ($saveEvaluation) {
-            $this->Pnotify->outSuccess($successMsg);
-        } else {
-            $this->Pnotify->outError($errorMsg);
+        // 保存処理実行
+        try {
+            $saved = $this->Evaluation->add($this->request->data, $saveType, $evaluateTermId, $evaluateeId);
+            if(!$saved) {
+                throw new RuntimeException(__d('validate', "入力値に誤りがあります。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
         }
+
+        $this->Pnotify->outSuccess($successMsg);
         $this->redirect('index');
 
     }

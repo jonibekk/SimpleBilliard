@@ -30,11 +30,10 @@
                         'class'     => '',
                     ],
                     'url'           => ['controller' => 'evaluations', 'action' => 'add', $evaluateTermId, $evaluateeId],
-                    'novalidate'
                 ]); ?>
                 <? foreach($evaluationList as $key => $eval):?>
                     <?
-                    if($eval['Evaluation']['index'] == 1 && empty($evaluationList[0]['Evaluation']['goal_id'])):
+                    if(empty($evaluationList[0]['Evaluation']['goal_id']) && $eval['Evaluation']['index'] == 1):
                     ?>
                         <h4>ゴール評価</h4>
                     <?
@@ -54,6 +53,7 @@
                         'label' => false,
                         'class' => 'form-control col-xxs-10 mb_12px',
                         'default' => $eval['Evaluation']['comment'],
+                        'allow-empty' => $eval['Evaluation']['allow_empty']
                     ]);
                     ?>
                     <?=
@@ -65,16 +65,17 @@
                     ]);
                     ?>
                 <? endforeach ?>
-                ?>
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
                     'div'   => false,
                     'class' => 'btn btn-info pull-right',
+                    'id'    => 'evaluation-draft-submit',
                     'name'  => 'is_draft',
                     'value' => true
                 ]); ?>
                 <?= $this->Form->button(__d('gl', "評価登録"), [
                     'div'   => false,
                     'class' => 'btn btn-info pull-right',
+                    'id'    => 'evaluation-register-submit',
                     'name'  => 'is_register',
                     'value' => true
                 ]); ?>

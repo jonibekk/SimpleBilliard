@@ -56,9 +56,6 @@ class Evaluation extends AppModel
             'maxLength' => [
                 'rule' => ['maxLength', 200]
             ],
-            'notEmpty' => [
-                'rule' => 'notEmpty'
-            ]
         ],
         'evaluate_score_id' => [
 
@@ -140,17 +137,22 @@ class Evaluation extends AppModel
     }
 
     public function add($data, $saveType) {
+        // insert status value to save data
         if($saveType === "draft") {
             $data = Set::insert($data, '{n}.Evaluation.status', 1);
         } else {
             $data = Set::insert($data, '{n}.Evaluation.status', 2);
         }
-        $this->create();
-        $saved = $this->saveAll($data);
-        if($saved) {
-            return true;
+
+        foreach($data as $law) {
+            $this->setValidationByEvaluationId($law['Evaluation']['id'], $saveType);
+            $this->create();
+            if(!$this->save($law)) {
+
+            }
         }
-        return false;
+
+        return true;
     }
 
     public function getEditableEvaluations($evaluateTermId, $evaluateeId)
@@ -170,12 +172,76 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    public function setEvaluationType() {
-        $this->evaluationType = self::TYPE_ONESELF;
+    public function setValidationByEvaluationId($evaluationId, $saveType)
+    {
+        if($saveType === "draft") {
+            $this->setDraftValidation();
+            return;
+        }
+        $total_or_goal = $this->getEvaluationTypeTotalOrGoal($evaluationId);
+        $this->setRegisterValidation($total_or_goal);
     }
 
-    public function setEvaluationValidations() {
+    public function setDraftValidation() {
+        $this->setAllowEmptyToComment();
+        return;
+    }
 
+    public function setRegisterValidation($total_or_goal) {
+        $settings = $this->Team->EvaluationSetting->getEvaluationSetting();
+        if($total_or_goal === "total") {
+            $notAllowCommentEmpty = $settings['Evaluation']['self_comment_required_flg'];
+        } else {
+            $notAllowCommentEmpty = $settings['Evaluation']['self_goal_comment_required_flg'];
+        }
+        if($notAllowCommentEmpty) {
+            $this->setNotAllowEmptyToComment();
+        } else {
+            $this->setAllowEmptyToComment();
+        }
+    }
+
+    public function setAllowEmptyToComment() {
+        if(isset($this->validate['comment']['notEmpty'])) {
+            unset($this->validate['comment']['notEmpty']);
+        }
+        return;
+    }
+
+    public function setNotAllowEmptyToComment() {
+        if(isset($this->validate['comment']['notEmpty'])) {
+            return;
+        }
+        $this->validate['comment']['notEmpty'] = ['rule' => 'notEmpty'];
+        return;
+    }
+
+    public function insertValidationStatus($records)
+    {
+        $evaSettings = $this->Team->EvaluationSetting->getEvaluationSetting();
+        foreach($records as $key => $law) {
+            $isTotal = empty($law['Evaluation']['goal_id']);
+            if($isTotal) {
+                $allowEmpty = $evaSettings['EvaluationSetting']['self_goal_comment_required_flg'];
+            } else {
+                $allowEmpty = $evaSettings['EvaluationSetting']['self_comment_required_flg'];
+            }
+            $records[$key]['Evaluation']['allow_empty'] = $allowEmpty;
+        }
+        return $records;
+    }
+
+    public function getEvaluationTypeTotalOrGoal($evaluationId) {
+        $options = [
+            'conditions' => [
+                'id' => $evaluationId
+            ],
+            'fields' => [
+                'goal_id'
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return (empty($res)) ? "total" : "goal";
     }
 
 }
