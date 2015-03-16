@@ -8,19 +8,6 @@
 ?>
 <!-- START app/View/Evaluations/view.ctp -->
 
-<!--
-<div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading"><? /*= __d('gl', "評価画面的タイトル") */ ?></div>
-            <div class="panel-body add-team-panel-body">
-                評価画面だよ。なる。よろしく(^^)
-            </div>
-        </div>
-    </div>
-</div>
--->
-
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __d('gl', "トータル評価") ?></div>
     <?=
