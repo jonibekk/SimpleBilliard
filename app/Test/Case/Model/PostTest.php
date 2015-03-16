@@ -392,7 +392,7 @@ class PostTest extends CakeTestCase
         $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1);
     }
 
-    function testGetFollowCollaboPostList()
+    function testGetRelatedPostList()
     {
         $this->Post->current_team_id = 1;
         $this->Post->my_uid = 1;
@@ -400,7 +400,7 @@ class PostTest extends CakeTestCase
         $this->Post->Goal->Collaborator->current_team_id = 1;
 
         $this->Post->Goal->Follower->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1]);
-        $this->Post->getFollowCollaboPostList(1, 10000);
+        $this->Post->getRelatedPostList(1, 10000);
     }
 
     function testIsPermittedGoalPostSuccess()
