@@ -1,6 +1,10 @@
 <?
 /**
  * @var CodeCompletionView $this
+ * @var                    $unapproved_cnt
+ * @var                    $done_cnt
+ * @var                    $goal_info
+ * @var                    $value_unit_list
  */
 ?>
 <!-- START app/View/GoalApproval/done.ctp -->
@@ -27,7 +31,8 @@
 <div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SubHeaderMenu">
     <div class="col col-xxs-6 text-align_r">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
-           id="SubHeaderMenuFeed" href="/goalapproval">
+           id="SubHeaderMenuFeed"
+           href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'index']) ?>">
             <?= __d('gl', "処理待ち") ?> <? if ($unapproved_cnt > 0) {
                 echo $unapproved_cnt;
             } ?></a>
@@ -49,19 +54,19 @@
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
                         <div class="panel-heading goal-set-heading clearfix">
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
-                                : <?= $goal['User']['local_username']; ?></p>
+                                : <?= $goal['User']['display_username']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
                                 : <?= $goal['Goal']['goal_category_id'] === '3' ? __d('gl', "職務") : __d('gl',
                                                                                                         "成長"); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>: <?= $goal['Goal']['name']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>: <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
-                                : <?= $goal['Goal']['value_unit']; ?></p>
+                                : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "達成時") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>
@@ -76,12 +81,23 @@
                                 : <?= $goal['Collaborator']['priority']; ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "目的") ?>
-                                : <?= $goal['Goal']['Purpose']['name']; ?></p>
+                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>: <?= $goal['Goal']['name']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>
+                                : <?= $this->TextEx->autoLink($goal['Goal']['description']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "ゴールイメージ") ?>
-                                : <?= $goal['Goal']['photo_file_name']; ?></p>
+                            <?=
+                            $this->Html->image('ajax-loader.gif',
+                                               [
+                                                   'class'         => 'lazy',
+                                                   'data-original' => $this->Upload->uploadUrl($goal,
+                                                                                               "Goal.photo",
+                                                                                               ['style' => 'medium']),
+                                                   'width'         => '48px',
+                                                   'error-img'     => "/img/no-image-link.png",
+                                               ]
+                            )
+                            ?>
                         </div>
                     </div>
                 <? } ?>

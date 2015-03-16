@@ -156,12 +156,12 @@ class Collaborator extends AppModel
                 'Goal' => [
                     'fields'  => [
                         'name', 'goal_category_id', 'end_date', 'photo_file_name',
-                        'value_unit', 'target_value', 'start_value'
+                        'value_unit', 'target_value', 'start_value', 'description'
                     ],
                     'Purpose' => ['fields' => 'name']
                 ],
                 'User' => [
-                    'fields' => ['first_name', 'last_name']
+                    'fields' => $this->User->profileFields
                 ],
             ],
             'type'       => 'inner',
