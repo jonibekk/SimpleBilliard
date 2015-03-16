@@ -218,7 +218,6 @@ class GoalApprovalController extends AppController
     /*
      * 承認しない
      */
-    /*
     public function wait()
     {
         $id = $this->request->param('id');
@@ -227,7 +226,6 @@ class GoalApprovalController extends AppController
         }
         $this->redirect($this->referer());
     }
-    */
 
     /*
      * 処理を取り消す
