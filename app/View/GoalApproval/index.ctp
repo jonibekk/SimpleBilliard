@@ -51,7 +51,7 @@
             <? if (isset($goal_info) === true && count($goal_info) > 0) { ?>
                 <? foreach ($goal_info as $goal) { ?>
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
-                        <div class="panel-heading goal-set-heading clearfix">
+                        <div class="panel-body goal-set-heading clearfix">
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 

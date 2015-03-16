@@ -105,6 +105,11 @@ class GoalApprovalController extends AppController
      */
     public $goal_ids = [];
 
+	/*
+     * 検索対象のゴールID
+	 */
+	public $goal_user_ids = [];
+
     /*
      * 承認前ページの「全ゴール - 自分のゴール」件数
      */
@@ -153,12 +158,13 @@ class GoalApprovalController extends AppController
         }
 
         $this->goal_ids = $this->getCollaboratorGoalId();
+		$this->goal_user_ids = $this->getCollaboratorUserId();
 
         $this->unapproved_cnt = $this->Collaborator->countCollaboGoal(
-            $this->user_id, $this->goal_ids, $this->goal_status['unapproved']);
+            $this->goal_user_ids, $this->user_id, $this->goal_ids, $this->goal_status['unapproved']);
 
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
-            $this->user_id, $this->goal_ids,
+            $this->user_id, $this->goal_user_ids,  $this->goal_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
 
@@ -171,7 +177,8 @@ class GoalApprovalController extends AppController
      */
     public function index()
     {
-        $goal_info = $this->Collaborator->getCollaboGoalDetail($this->goal_ids, $this->goal_status['unapproved']);
+        $goal_info = $this->Collaborator->getCollaboGoalDetail(
+			$this->goal_user_ids, $this->goal_ids, $this->goal_status['unapproved']);
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
@@ -192,7 +199,7 @@ class GoalApprovalController extends AppController
     public function done()
     {
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->goal_ids,
+            $this->goal_user_ids, $this->goal_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
 
@@ -269,6 +276,24 @@ class GoalApprovalController extends AppController
         }
         return $goal_ids;
     }
+
+	/*
+	 * リストに表示するゴールのUserIDを取得
+	 */
+	public function getCollaboratorUserId()
+	{
+		$goal_user_ids = [];
+        if ($this->user_type === 1) {
+			$goal_user_ids = [$this->user_id];
+        }
+        elseif ($this->user_type === 2) {
+			$goal_user_ids = array_merge([$this->user_id], $this->member_ids);
+        }
+        elseif ($this->user_type === 3) {
+			$goal_user_ids = $this->member_ids;
+        }
+		return $goal_user_ids;
+	}
 
     /*
      * ログインしているユーザーはコーチが存在するのか
