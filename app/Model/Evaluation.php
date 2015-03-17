@@ -52,14 +52,8 @@ class Evaluation extends AppModel
                 'rule' => 'notEmpty'
             ]
         ],
-        'comment' => [
-            'maxLength' => [
-                'rule' => ['maxLength', 200]
-            ],
-        ],
-        'evaluate_score_id' => [
-
-        ]
+        'comment' => [],
+        'evaluate_score_id' => []
     ];
 
     /**

@@ -60,10 +60,11 @@ class EvaluationsController extends AppController
             $total = [];
             $goalList = $evaluationList;
         }
+        var_dump($scoreList);
         $this->set(compact('scoreList', 'total', 'goalList', 'evaluateTermId', 'evaluateeId'));
     }
 
-    function add($evaluateTermId, $evaluateeId)
+    function add()
     {
         $this->request->allowMethod('post', 'put');
 
@@ -82,7 +83,7 @@ class EvaluationsController extends AppController
 
         // 保存処理実行
         try {
-            $saved = $this->Evaluation->add($this->request->data, $saveType, $evaluateTermId, $evaluateeId);
+            $saved = $this->Evaluation->add($this->request->data, $saveType);
             if(!$saved) {
                 throw new RuntimeException(__d('validate', "入力値に誤りがあります。"));
             }

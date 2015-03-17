@@ -18,7 +18,7 @@
         'class'     => 'form-control'
     ],
     'class'         => 'form-horizontal',
-    'url'           => ['controller' => 'evaluations', 'action' => 'add', $evaluateTermId, $evaluateeId],
+    'url'           => ['controller' => 'evaluations', 'action' => 'add'],
 ]); ?>
 <? if(!empty($total)): ?>
 
