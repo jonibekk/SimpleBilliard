@@ -51,7 +51,18 @@ class TeamsController extends AppController
         //get evaluation setting
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
 
-        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled'));
+        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
+
+        $eval_start_button_enabled = true;
+        if (!is_null($current_term_id) &&
+            !is_null($latest_term_id) &&
+            $current_term_id === $latest_term_id
+        ) {
+            $eval_start_button_enabled = false;
+        }
+
+        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled'));
 
         return $this->render();
     }

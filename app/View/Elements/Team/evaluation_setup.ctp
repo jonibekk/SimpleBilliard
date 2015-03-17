@@ -10,6 +10,7 @@
  * @var                    $term_start_date
  * @var                    $term_end_date
  * @var                    $eval_enabled
+ * @var                    $eval_start_button_enabled
  */
 ?>
 <!-- START app/View/Elements/Team/evaluation_setup.ctp -->
@@ -37,9 +38,13 @@
             <div class="alert alert-danger" role="alert">
                 <?= __d('gl', "現在、評価設定が有効では無い為、評価を開始する事ができません。") ?>
             </div>
+        <? elseif (!$eval_start_button_enabled): ?>
+            <div class="alert alert-info" role="alert">
+                <?= __d('gl', "評価期間中です。") ?>
+            </div>
         <? endif; ?>
     </div>
-    <? if ($eval_enabled): ?>
+    <? if ($eval_enabled && $eval_start_button_enabled): ?>
         <div class="panel-footer">
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3">
