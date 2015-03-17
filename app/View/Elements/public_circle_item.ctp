@@ -41,8 +41,11 @@ if (!isset($form)) {
             </div>
         <? endif; ?>
         <div class="font_12px font_bold modalFeedTextPadding">
-            <?= h($circle['Circle']['name']) ?></div>
-
+            <? if($circle['Circle']['created'] > strtotime("-1 week")): ?>
+                <span class="circle-new">New</span>
+            <? endif; ?>
+            <?= h($circle['Circle']['name']) ?>
+        </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
             <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
         </div>

@@ -212,14 +212,14 @@ class Circle extends AppModel
         return $circle;
     }
 
-    function getPublicCircles($type = 'all')
+    function getPublicCircles($type = 'all', $start_date = null, $end_date = null,$order = 'Circle.modified desc')
     {
         $options = [
             'conditions' => [
                 'Circle.team_id'    => $this->current_team_id,
                 'Circle.public_flg' => true,
             ],
-            'order'      => ['Circle.modified desc'],
+            'order'      => [$order],
             'contain'    => [
                 'CircleMember' => [
                     'fields' => [
@@ -238,11 +238,18 @@ class Circle extends AppModel
                 ]
             ]
         ];
+        if ($start_date) {
+            $options['conditions']['Circle.created >='] = $start_date;
+        }
+        if ($end_date) {
+            $options['conditions']['Circle.created <'] = $end_date;
+        }
         $res = $this->find('all', $options);
         //typeに応じて絞り込み
         switch ($type) {
+            //参加している
             case 'joined':
-                $filter = function($circle){
+                $filter = function ($circle) {
                     foreach ($circle['CircleMember'] as $member) {
                         if ($member['user_id'] == $this->my_uid) {
                             return true;
@@ -251,8 +258,9 @@ class Circle extends AppModel
                     return false;
                 };
                 break;
+            //参加していない
             case 'non-joined':
-                $filter = function($circle){
+                $filter = function ($circle) {
                     foreach ($circle['CircleMember'] as $member) {
                         if ($member['user_id'] == $this->my_uid) {
                             return false;
@@ -262,7 +270,9 @@ class Circle extends AppModel
                 };
                 break;
             default :
-                $filter = function(){return true;};
+                $filter = function () {
+                    return true;
+                };
         }
         $res = array_filter($res, $filter);
         return $res;

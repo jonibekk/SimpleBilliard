@@ -18,8 +18,8 @@
             <h4 class="modal-title font_18px font_bold"><?= __d('gl', "公開サークル") ?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "未参加") ?></a></li>
-            <li><a href="#tab2" data-toggle="tab"><?= __d('gl', "参加済") ?></a></li>
+            <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "参加していない") ?></a></li>
+            <li><a href="#tab2" data-toggle="tab"><?= __d('gl', "参加している") ?></a></li>
         </ul>
         <?=
         $this->Form->create('Circle', [
@@ -46,7 +46,7 @@
                         <? endforeach ?>
                     </div>
                 <? else: ?>
-                    <?= __d('gl', "参加していないサークルはありません") ?>
+                    <?= __d('gl', "参加していないサークルはありません。") ?>
                 <? endif ?>
             </div>
             <div class="tab-pane fade" id="tab2">

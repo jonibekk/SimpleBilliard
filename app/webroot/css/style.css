@@ -2301,6 +2301,10 @@ textarea.comment-post-form {
     padding-left: 0;
 }
 
+.circle-new {
+    color: #d9230f;
+}
+
 .header-icon {
     width: 36px;
     height: 20px;
