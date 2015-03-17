@@ -3857,7 +3857,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 .eval-index-panel-title {
-    font-weight: bold;
     padding-left: 4px;
 }
 
@@ -3886,4 +3885,8 @@ Temporary Properties - YOU MUST FIX
 .eval-view-result-text,
 .eval-view-action-text {
     text-align: center;
+}
+
+.bg-lightGray {
+    background-color: #f0f0f0;
 }
