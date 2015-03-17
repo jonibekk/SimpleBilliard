@@ -100,11 +100,6 @@ class GoalApprovalController extends AppController
         'modify'     => 3,
     ];
 
-    /*
-     * 検索対象のゴールID
-     */
-    public $goal_ids = [];
-
 	/*
      * 検索対象のゴールID
 	 */
@@ -157,14 +152,13 @@ class GoalApprovalController extends AppController
         if ($this->user_type === 0) {
         }
 
-        $this->goal_ids = $this->getCollaboratorGoalId();
 		$this->goal_user_ids = $this->getCollaboratorUserId();
 
         $this->unapproved_cnt = $this->Collaborator->countCollaboGoal(
-            $this->user_id, $this->goal_user_ids, $this->goal_ids, $this->goal_status['unapproved']);
+            $this->user_id, $this->goal_user_ids, $this->goal_status['unapproved']);
 
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
-            $this->user_id, $this->goal_user_ids,  $this->goal_ids,
+            $this->user_id, $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
 
@@ -178,7 +172,7 @@ class GoalApprovalController extends AppController
     public function index()
     {
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
-			$this->goal_user_ids, $this->goal_ids, $this->goal_status['unapproved']);
+			$this->goal_user_ids, $this->goal_status['unapproved']);
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
@@ -199,7 +193,7 @@ class GoalApprovalController extends AppController
     public function done()
     {
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->goal_user_ids, $this->goal_ids,
+            $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
 
@@ -239,42 +233,6 @@ class GoalApprovalController extends AppController
             $this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['hold']);
         }
         $this->redirect($this->referer());
-    }
-
-    /*
-     * 処理を取り消す
-     */
-	/*
-    public function cancle()
-    {
-		$id = $this->request->param('id');
-		if (empty($id) === false) {
-			$this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['unapproved']);
-		}
-		$this->redirect($this->referer());
-    }
-	*/
-
-    /*
-     * リストに表示するゴールのIDを取得
-     */
-    public function getCollaboratorGoalId()
-    {
-        $goal_ids = [];
-        if ($this->user_type === 1) {
-            $goal_ids = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
-
-        }
-        elseif ($this->user_type === 2) {
-            $my_goal_id = $this->Goal->getGoalIdFromUserId($this->user_id, $this->team_id);
-            $member_goal_id = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
-            $goal_ids = array_merge($my_goal_id, $member_goal_id);
-
-        }
-        elseif ($this->user_type === 3) {
-            $goal_ids = $this->Goal->getGoalIdFromUserId($this->member_ids, $this->team_id);
-        }
-        return $goal_ids;
     }
 
 	/*
