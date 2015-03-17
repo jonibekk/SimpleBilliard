@@ -32,7 +32,7 @@ class EvaluationsController extends AppController
         $is_self_on = $this->Team->EvaluationSetting->isEnabledSelf();
         $is_evaluator_on = $this->Team->EvaluationSetting->isEnabledEvaluator();
         $is_final_on = $this->Team->EvaluationSetting->isEnabledFinal();
-        $my_evaluations = $this->Evaluation->getMyEvaluation();
+        $my_evaluations = $this->Evaluation->EvaluateTerm->getMyEvaluationAllTerm();
         $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'my_evaluations'));
     }
 
