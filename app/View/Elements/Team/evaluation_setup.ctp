@@ -36,8 +36,10 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
-                <a href="#" class="btn btn-primary" data-toggle="modal"
-                   data-target="#ModalEditMembersByCsv"><?= __d('gl', '今期の評価を開始する') ?></a>
+                <?=
+                $this->Form->postLink(__d('gl', "今期の評価を開始する"),
+                                      ['controller' => 'teams', 'action' => 'start_evaluation',],
+                                      ['class' => 'btn btn-primary'], __d('gl', "取り消しができません。よろしいですか？")) ?>
             </div>
         </div>
     </div>

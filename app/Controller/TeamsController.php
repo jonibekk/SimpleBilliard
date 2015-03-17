@@ -54,6 +54,23 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    function start_evaluation()
+    {
+        $this->request->allowMethod('post');
+        $team_id = $this->Session->read('current_team_id');
+        try {
+            $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e);
+            $this->redirect($this->referer());
+        }
+        //start evaluation process
+
+        $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
+
+        return $this->redirect($this->referer());
+    }
+
     public function invite()
     {
         $from_setting = false;
