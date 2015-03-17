@@ -9,6 +9,7 @@
  * @var array              $my_teams
  * @var                    $term_start_date
  * @var                    $term_end_date
+ * @var                    $eval_enabled
  */
 ?>
 <!-- START app/View/Elements/Team/evaluation_setup.ctp -->
@@ -32,17 +33,24 @@
                         - <?= $this->TimeEx->date($term_end_date) ?></b></p>
             </div>
         </div>
+        <? if (!$eval_enabled): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= __d('gl', "現在、評価設定が有効では無い為、評価を開始する事ができません。") ?>
+            </div>
+        <? endif; ?>
     </div>
-    <div class="panel-footer">
-        <div class="row">
-            <div class="col-sm-9 col-sm-offset-3">
-                <?=
-                $this->Form->postLink(__d('gl', "今期の評価を開始する"),
-                                      ['controller' => 'teams', 'action' => 'start_evaluation',],
-                                      ['class' => 'btn btn-primary'], __d('gl', "取り消しができません。よろしいですか？")) ?>
+    <? if ($eval_enabled): ?>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-9 col-sm-offset-3">
+                    <?=
+                    $this->Form->postLink(__d('gl', "今期の評価を開始する"),
+                                          ['controller' => 'teams', 'action' => 'start_evaluation',],
+                                          ['class' => 'btn btn-primary'], __d('gl', "取り消しができません。よろしいですか？")) ?>
+                </div>
             </div>
         </div>
-    </div>
+    <? endif; ?>
 </div>
 <!-- END app/View/Elements/Team/evaluation_setup.ctp -->
 <? $this->start('modal') ?>

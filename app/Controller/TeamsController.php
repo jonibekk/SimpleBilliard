@@ -48,8 +48,10 @@ class TeamsController extends AppController
         $term_start_date = $this->Team->getTermStartDate();
         $term_end_date = $this->Team->getTermEndDate();
         $term_end_date = $term_end_date - 1;
+        //get evaluation setting
+        $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
 
-        $this->set(compact('team', 'term_start_date', 'term_end_date'));
+        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled'));
 
         return $this->render();
     }
@@ -62,7 +64,7 @@ class TeamsController extends AppController
             $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e);
-            $this->redirect($this->referer());
+            return $this->redirect($this->referer());
         }
         //start evaluation process
 

@@ -96,4 +96,10 @@ class Evaluation extends AppModel
         return $res;
     }
 
+    function startEvaluation()
+    {
+        //get evaluation setting.
+
+    }
+
 }
