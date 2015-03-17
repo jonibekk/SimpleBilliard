@@ -149,7 +149,7 @@ class Collaborator extends AppModel
         $options = [
             'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
             'conditions' => [
-				'Collaborator.user_id'    => $goal_user_id,
+                'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.goal_id'    => $goal_id,
                 'Collaborator.valued_flg' => $approval_flg,
             ],
@@ -182,7 +182,7 @@ class Collaborator extends AppModel
         $options = [
             'fields'     => ['id'],
             'conditions' => [
-				'Collaborator.user_id'    => $goal_user_id,
+                'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.goal_id'    => $goal_id,
                 'Collaborator.valued_flg' => $approval_flg,
                 'User.id !='              => $user_id
@@ -199,6 +199,27 @@ class Collaborator extends AppModel
             'type'       => 'inner',
         ];
         return $this->find('count', $options);
+    }
+
+    function getLeaderUid($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+                'type'    => [
+                    Collaborator::TYPE_OWNER,
+                ],
+            ],
+            'fields'     => [
+                'user_id'
+            ],
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['Collaborator']['user_id'])) {
+            return $res['Collaborator']['user_id'];
+        }
+        return null;
     }
 
 }

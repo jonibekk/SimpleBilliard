@@ -68,10 +68,14 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
         //start evaluation process
-        $this->Team->Evaluation->startEvaluation();
-
+        $this->Team->Evaluation->begin();
+        if (!$this->Team->Evaluation->startEvaluation()) {
+            $this->Team->Evaluation->rollback();
+            $this->Pnotify->outError(__d('gl', "評価を開始できませんでした。"));
+            return $this->redirect($this->referer());
+        }
+        $this->Team->Evaluation->commit();
         $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
-
         return $this->redirect($this->referer());
     }
 
