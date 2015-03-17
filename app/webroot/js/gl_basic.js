@@ -2071,3 +2071,11 @@ function hideCommentNotifyErrorBox(notifyBox) {
     }
     errorBox.css("display", "none");
 }
+
+$(document).ready(function(){
+    $(document).on("click", "#evaluation-register-submit", function() {
+        $("#evaluation-form").bootstrapValidator().on('success.form.bv', function (e) {
+
+        });
+    });
+});

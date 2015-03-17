@@ -18,7 +18,9 @@
         'class'     => 'form-control'
     ],
     'class'         => 'form-horizontal',
+    'id'            => 'evaluation-form',
     'url'           => ['controller' => 'evaluations', 'action' => 'add'],
+    'data-bv-live'  => "enabled"
 ]); ?>
 <? if(!empty($total)): ?>
 
@@ -33,11 +35,16 @@
                 <?=
                 $this->Form->input("0.Evaluation.comment", [
                     'type' => 'text',
+                    'default'     => $total['Evaluation']['comment'],
                     'label'       => __d('gl', "評価コメント"),
                     'placeholder' => __d('gl', "コメントを書いてください"),
-                    'allow-empty' => $total['Evaluation']['allow_empty']
+                    'allow-empty' => $total['Evaluation']['allow_empty'],
+                    'required'    => false,
+                    'data-bv-notempty' => "true",
+                    'data-bv-notempty-message' => "入力必須項目です。"
                 ])
                 ?>
+                <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][comment]" data-bv-result="NOT_VALIDATED" style="display: none;">入力必須項目です。</small>
                 <?=
                 $this->Form->input("0.Evaluation.evaluate_score_id", [
                     'type'      => 'select',
@@ -45,11 +52,14 @@
                     'options'   => $scoreList,
                     'id'        => '',
                     'label'     => __d('gl', "評価スコア"),
-                    'div'       => false,
                     'class'     => 'form-control col-xxs-3',
                     'wrapInput' => false,
+                    'required'  => false,
+                    'data-bv-notempty' => "true",
+                    'data-bv-notempty-message' => "選択必須項目です。"
                 ]);
                 ?>
+                <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED" style="display: none;">選択必須項目です。</small>
                 <?=
                 $this->Form->input("0.Evaluation.id", [
                     'label' => false,
@@ -64,10 +74,12 @@
 </div>
 <? endif; ?>
 
-<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
-    <div class="panel-heading"><?= __d('gl', "ゴール評価") ?></div>
+<? foreach($goalList as $key => $eval):?>
 
-    <? foreach($goalList as $key => $eval):?>
+
+<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
+    <div class="panel-heading"><?= __d('gl', "ゴール評価") ?>(<?=$key?>/<?=count($goalList)?>)</div>
+
 
     <div class="panel-body eval-view-panel-body">
         <div class="form-group">
@@ -108,11 +120,16 @@
                 <?=
                 $this->Form->input("{$key}.Evaluation.comment", [
                    'type' => 'text',
+                   'default'     => $eval['Evaluation']['comment'],
                    'label'       => __d('gl', "評価コメント"),
                    'placeholder' => __d('gl', "コメントを書いてください"),
-                   'allow-empty' => $eval['Evaluation']['allow_empty']
+                   'allow-empty' => $eval['Evaluation']['allow_empty'],
+                   'required'    => false,
+                   'data-bv-notempty' => "true",
+                   'data-bv-notempty-message' => "入力必須項目です。"
                 ])
                 ?>
+                <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[<?= $key ?>][Evaluation][comment]" data-bv-result="NOT_VALIDATED" style="display: none;">入力必須項目です。</small>
                 <?=
                 $this->Form->input("{$key}.Evaluation.evaluate_score_id", [
                    'type'      => 'select',
@@ -120,11 +137,14 @@
                    'options'   => $scoreList,
                    'id'        => '',
                    'label'     => __d('gl', "評価スコア"),
-                   'div'       => false,
                    'class'     => 'form-control col-xxs-3',
                    'wrapInput' => false,
+                   'required'  => false,
+                   'data-bv-notempty' => "true",
+                   'data-bv-notempty-message' => "選択必須項目です。"
                 ]);
                 ?>
+                <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[<?= $key ?>][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED" style="display: none;">選択必須項目です。</small>
                 <?=
                 $this->Form->input("{$key}.Evaluation.id", [
                     'label' => false,
@@ -136,28 +156,29 @@
             </div>
         </div>
     </div>
-    <hr>
-    <? endforeach ?>
 
-    <div class="panel-footer setting_pannel-footer">
-
-        <?= $this->Form->button(__d('gl', "評価登録"), [
-            'div'   => false,
-            'class' => 'btn btn-primary pull-right',
-            'id'    => 'evaluation-register-submit',
-            'name'  => 'is_register',
-            'value' => true
-        ]); ?>
-        <?= $this->Form->button(__d('gl', "下書き保存"), [
-            'div'   => false,
-            'class' => 'btn pull-right',
-            'id'    => 'evaluation-draft-submit',
-            'name'  => 'is_draft',
-            'value' => true
-        ]); ?>
-        <?= $this->Form->end(); ?>
-
-        <div class="clearfix"></div>
-    </div>
 </div>
+<? endforeach ?>
+
+<div>
+
+    <?= $this->Form->button(__d('gl', "評価登録"), [
+        'div'   => false,
+        'class' => 'btn btn-primary pull-right',
+        'id'    => 'evaluation-register-submit',
+        'name'  => 'is_register',
+        'value' => true
+    ]); ?>
+    <?= $this->Form->button(__d('gl', "下書き保存"), [
+        'div'   => false,
+        'class' => 'btn pull-right',
+        'id'    => 'evaluation-draft-submit',
+        'name'  => 'is_draft',
+        'value' => true
+    ]); ?>
+    <?= $this->Form->end(); ?>
+
+    <div class="clearfix"></div>
+</div>
+
 <!-- END app/View/Evaluations/view.ctp -->

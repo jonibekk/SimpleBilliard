@@ -72,12 +72,13 @@ class EvaluationsController extends AppController
             $saveType = "draft";
             unset($this->request->data['is_draft']);
             $successMsg = __d('gl', "下書きを保存しました。");
-
+            $successAct = $this->referer();
         // case of registering
         } else {
             $saveType = "register";
             unset($this->request->data['is_register']);
             $successMsg = __d('gl', "自己評価を登録しました。");
+            $successAct = "index";
         }
 
         // 保存処理実行
@@ -92,7 +93,7 @@ class EvaluationsController extends AppController
         }
 
         $this->Pnotify->outSuccess($successMsg);
-        $this->redirect('index');
+        return $this->redirect($successAct);
 
     }
 

@@ -52,8 +52,16 @@ class Evaluation extends AppModel
                 'rule' => 'notEmpty'
             ]
         ],
-        'comment' => [],
-        'evaluate_score_id' => []
+        'comment' => [
+            'notEmpty' => [
+                'rule' => 'notEmpty'
+            ]
+        ],
+        'evaluate_score_id' => [
+            'notEmpty' => [
+                'rule' => 'notEmpty'
+            ]
+        ]
     ];
 
     /**
@@ -134,15 +142,17 @@ class Evaluation extends AppModel
         // insert status value to save data
         if($saveType === "draft") {
             $data = Set::insert($data, '{n}.Evaluation.status', 1);
+            $this->setDraftValidation();
         } else {
             $data = Set::insert($data, '{n}.Evaluation.status', 2);
+            $this->setNotAllowEmptyToComment();
+            $this->setNotAllowEmptyToEvaluateScoreId();
         }
 
         foreach($data as $law) {
-            $this->setValidationByEvaluationId($law['Evaluation']['id'], $saveType);
             $this->create();
             if(!$this->save($law)) {
-
+                return false;
             }
         }
 
@@ -178,6 +188,7 @@ class Evaluation extends AppModel
 
     public function setDraftValidation() {
         $this->setAllowEmptyToComment();
+        $this->setAllowEmptyToEvaluateScoreId();
         return;
     }
 
@@ -207,6 +218,21 @@ class Evaluation extends AppModel
             return;
         }
         $this->validate['comment']['notEmpty'] = ['rule' => 'notEmpty'];
+        return;
+    }
+
+    public function setAllowEmptyToEvaluateScoreId() {
+        if(isset($this->validate['evaluate_score_id']['notEmpty'])) {
+            unset($this->validate['evaluate_score_id']['notEmpty']);
+        }
+        return;
+    }
+
+    public function setNotAllowEmptyToEvaluateScoreId() {
+        if(isset($this->validate['evaluate_score_id']['notEmpty'])) {
+            return;
+        }
+        $this->validate['evaluate_score_id']['notEmpty'] = ['rule' => 'notEmpty'];
         return;
     }
 
