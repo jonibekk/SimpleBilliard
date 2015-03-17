@@ -43,7 +43,7 @@ class EvaluateTerm extends AppModel
         'Evaluator',
     ];
 
-    function getCurrentTerm()
+    function getCurrentTermId()
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -55,7 +55,10 @@ class EvaluateTerm extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        return $res;
+        if (viaIsSet($res['EvaluateTerm']['id'])) {
+            return $res['EvaluateTerm']['id'];
+        }
+        return null;
     }
 
 }

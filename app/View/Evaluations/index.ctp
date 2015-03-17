@@ -6,11 +6,10 @@
  * @var CodeCompletionView $this
  * @var                    $eval_term_id
  * @var                    $incomplete_count
- * @var                    $is_myself_evaluations_completed
+ * @var                    $is_myself_evaluations_incomplete
  */
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
-
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __d('gl', "評価") ?></div>
     <div class="panel-body eval-view-panel-body">
@@ -22,7 +21,7 @@
             <hr>
             <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                 <p class="font_bold"><?= __d('gl', "自分") ?></p>
-                <? if ($is_self_on && !$is_myself_evaluations_completed): ?>
+                <? if ($is_myself_evaluations_incomplete): ?>
                     <p><?= __d('gl', "未完了:1") ?></p>
                 <? endif; ?>
             </div>
@@ -39,7 +38,7 @@
                         <span><?= __d('gl', "あなた") ?></span><i class="fa fa-long-arrow-right"></i><span><?= __d('gl',
                                                                                                                 "最終者") ?></span>
 
-                        <? if ($is_self_on && !$is_myself_evaluations_completed): ?>
+                        <? if ($is_myself_evaluations_incomplete): ?>
                             <p class="font_brownRed"><?= __d('gl', "自己評価をしてください") ?></p>
                         <? endif; ?>
                     </div>

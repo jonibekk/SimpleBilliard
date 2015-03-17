@@ -25,19 +25,13 @@ class EvaluationsController extends AppController
 
         $incomplete_count = 0;
         //get evaluation setting.
-        $is_self_on = $this->Team->EvaluationSetting->isEnabledSelf();
-        $is_evaluator_on = $this->Team->EvaluationSetting->isEnabledEvaluator();
-        $is_final_on = $this->Team->EvaluationSetting->isEnabledFinal();
-        $eval_term = $this->Team->EvaluateTerm->getCurrentTerm();
-        $eval_term_id = viaIsSet($eval_term['EvaluateTerm']['id']) ? $eval_term['EvaluateTerm']['id'] : null;
-        $is_myself_evaluations_completed = $this->Evaluation->isMySelfEvalCompleted($eval_term_id);
-        if ($is_self_on && !$is_myself_evaluations_completed) {
+        $eval_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $is_myself_evaluations_incomplete = $this->Evaluation->isMySelfEvalIncomplete($eval_term_id);
+        if ($is_myself_evaluations_incomplete) {
             $incomplete_count++;
         }
 
-        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'is_myself_evaluations_completed',
-                           'eval_term_id',
-                           'incomplete_count'));
+        $this->set(compact('eval_term_id', 'incomplete_count', 'is_myself_evaluations_incomplete'));
     }
 
     function view()

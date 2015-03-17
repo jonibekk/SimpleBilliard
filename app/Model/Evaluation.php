@@ -87,14 +87,16 @@ class Evaluation extends AppModel
         return true;
     }
 
-    function isMySelfEvalCompleted($term_id)
+    function isMySelfEvalIncomplete($term_id)
     {
         $options = [
             'conditions' => [
                 'evaluatee_user_id' => $this->my_uid,
                 'team_id'           => $this->current_team_id,
                 'evaluate_term_id'  => $term_id,
-                'status'            => self::STATUS_COMPLETED
+                'NOT'               => [
+                    'status' => self::STATUS_COMPLETED
+                ],
             ],
         ];
         $res = $this->find('first', $options);
