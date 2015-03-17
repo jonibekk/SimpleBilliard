@@ -3856,6 +3856,11 @@ Temporary Properties - YOU MUST FIX
     display: inline;
 }
 
+.eval-index-panel-title {
+    padding-left: 4px;
+}
+
+
 .eval-view-panel-body .form-label {
     text-align: left;
     padding-left: 4px;
@@ -3880,4 +3885,8 @@ Temporary Properties - YOU MUST FIX
 .eval-view-result-text,
 .eval-view-action-text {
     text-align: center;
+}
+
+.bg-lightGray {
+    background-color: #f0f0f0;
 }
