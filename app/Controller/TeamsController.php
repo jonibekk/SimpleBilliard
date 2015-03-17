@@ -45,7 +45,11 @@ class TeamsController extends AppController
             $this->redirect($this->referer());
         }
         $team = $this->Team->findById($team_id);
-        $this->set(compact('team'));
+        $term_start_date = $this->Team->getTermStartDate();
+        $term_end_date = $this->Team->getTermEndDate();
+        $term_end_date = $term_end_date - 1;
+
+        $this->set(compact('team', 'term_start_date', 'term_end_date'));
 
         return $this->render();
     }
