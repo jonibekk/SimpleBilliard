@@ -212,7 +212,7 @@ class Circle extends AppModel
         return $circle;
     }
 
-    function getPublicCircles()
+    function getPublicCircles($type = 'all')
     {
         $options = [
             'conditions' => [
@@ -225,6 +225,9 @@ class Circle extends AppModel
                     'fields' => [
                         'CircleMember.id',
                         'CircleMember.user_id'
+                    ],
+                    'conditions' => [
+                        'CircleMember.user_id' => $this->my_uid,
                     ],
                 ],
                 'CircleAdmin'  => [
@@ -239,6 +242,18 @@ class Circle extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+        //typeに応じて絞り込み
+        switch ($type) {
+            case 'joined':
+                $filter = create_function('$circle', 'return !empty($circle["CircleMember"]);');
+                break;
+            case 'non-joined':
+                $filter = create_function('$circle', 'return empty($circle["CircleMember"]);');
+                break;
+            default :
+                $filter = create_function('$circle', 'return true');
+        }
+        $res = array_filter($res, $filter);
         return $res;
     }
 
