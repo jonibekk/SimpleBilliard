@@ -65,6 +65,11 @@ class EvaluationsController extends AppController
             $total = [];
             $goalList = $evaluationList;
         }
+
+        // set progress
+        foreach($goalList as $key => $val) {
+            $goalList[$key]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($val['Goal']);
+        }
         $this->set(compact('scoreList', 'total', 'goalList', 'evaluateTermId', 'evaluateeId'));
     }
 
