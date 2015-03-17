@@ -22,6 +22,7 @@ App::uses('AppModel', 'Model');
  * @property Thread                      $Thread
  * @property Evaluator                   $Evaluator
  * @property EvaluationSetting           $EvaluationSetting
+ * @property EvaluateTerm                $EvaluateTerm
  */
 class Team extends AppModel
 {
@@ -119,6 +120,7 @@ class Team extends AppModel
         'Thread',
         'Evaluator',
         'EvaluationSetting',
+        'EvaluateTerm',
     ];
 
     public $current_team = [];

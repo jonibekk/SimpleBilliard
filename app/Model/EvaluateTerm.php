@@ -65,4 +65,19 @@ class EvaluateTerm extends AppModel
         return $res;
     }
 
+    function getCurrentTerm()
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'start_date <=' => $start_date,
+                'end_date >='   => $end_date,
+                'team_id'       => $this->current_team_id
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }

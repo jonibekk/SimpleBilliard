@@ -4,6 +4,7 @@
  * @package       app.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var CodeCompletionView $this
+ * @var                    $eval_term_id
  */
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
@@ -20,7 +21,8 @@
 
                 <p><?= __d('gl', "未完了:") ?></p> <!-- ToDo 0の場合は表示しない-->
             </div>
-            <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view']) ?>" class="">
+            <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', $eval_term_id, $this->Session->read('Auth.User.id')]) ?>"
+               class="">
                 <div class="col-xxs-12 mb_8px">
                     <div class="col-xxs-1">
                         <?=

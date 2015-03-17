@@ -27,7 +27,10 @@ class EvaluationsController extends AppController
         $is_evaluator_on = $this->Team->EvaluationSetting->isEnabledEvaluator();
         $is_final_on = $this->Team->EvaluationSetting->isEnabledFinal();
         $my_evaluations = $this->Evaluation->EvaluateTerm->getMyEvaluationAllTerm();
-        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'my_evaluations'));
+        $eval_term = $this->Team->EvaluateTerm->getCurrentTerm();
+        $eval_term_id = viaIsSet($eval_term['EvaluateTerm']['id']) ? $eval_term['EvaluateTerm']['id'] : null;
+
+        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'my_evaluations', 'eval_term_id'));
     }
 
     function view()
