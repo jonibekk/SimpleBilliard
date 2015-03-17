@@ -58,15 +58,23 @@
             </div>
             <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                 <div class="col col-xxs-12 mt_5px">
-                    <? if (empty($goal['MyFollow'])) {
+                    <? if (empty($goal['MyFollow']) && empty($goal['User']['TeamMember'][0]['coach_user_id'])) {
                         $follow_class = 'follow-off';
                         $follow_style = null;
                         $follow_text = __d('gl', "フォロー");
+                        $follow_disabled = null;
+                    }
+                    elseif ($goal['User']['TeamMember'][0]['coach_user_id']){
+                        $follow_class = 'follow-off';
+                        $follow_style = null;
+                        $follow_text = __d('gl', "フォロー");
+                        $follow_disabled = "disabled";
                     }
                     else {
                         $follow_class = 'follow-on';
                         $follow_style = 'display:none;';
                         $follow_text = __d('gl', "フォロー中");
+                        $follow_disabled = null;
                     } ?>
                     <? if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
                         $collabo_class = 'collabo-on';
@@ -78,7 +86,6 @@
                         $collabo_class = 'collabo-off';
                         $collabo_style = null;
                         $collabo_text = __d('gl', "コラボる");
-                        $follow_disabled = null;
                     } ?>
                     <div class="col col-xxs-6 col-xs-4 mr_5px">
                         <a class="btn btn-white font_verydark bd-circle_20 toggle-follow p_8px <?= $follow_class ?>"
