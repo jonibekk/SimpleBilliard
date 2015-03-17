@@ -3856,6 +3856,12 @@ Temporary Properties - YOU MUST FIX
     display: inline;
 }
 
+.eval-index-panel-title {
+    font-weight: bold;
+    padding-left: 4px;
+}
+
+
 .eval-view-panel-body .form-label {
     text-align: left;
     padding-left: 4px;
