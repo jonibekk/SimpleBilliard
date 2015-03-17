@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Evaluation', 'Model');
 
 /**
  * Evaluations Controller
@@ -22,15 +23,21 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $incomplete_count = 0;
         //get evaluation setting.
         $is_self_on = $this->Team->EvaluationSetting->isEnabledSelf();
         $is_evaluator_on = $this->Team->EvaluationSetting->isEnabledEvaluator();
         $is_final_on = $this->Team->EvaluationSetting->isEnabledFinal();
-        $my_evaluations = $this->Evaluation->EvaluateTerm->getMyEvaluationAllTerm();
         $eval_term = $this->Team->EvaluateTerm->getCurrentTerm();
         $eval_term_id = viaIsSet($eval_term['EvaluateTerm']['id']) ? $eval_term['EvaluateTerm']['id'] : null;
+        $is_myself_evaluations_completed = $this->Evaluation->isMySelfEvalCompleted($eval_term_id);
+        if ($is_self_on && !$is_myself_evaluations_completed) {
+            $incomplete_count++;
+        }
 
-        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'my_evaluations', 'eval_term_id'));
+        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'is_myself_evaluations_completed',
+                           'eval_term_id',
+                           'incomplete_count'));
     }
 
     function view()

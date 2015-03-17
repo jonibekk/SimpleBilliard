@@ -43,28 +43,6 @@ class EvaluateTerm extends AppModel
         'Evaluator',
     ];
 
-    function getMyEvaluationAllTerm()
-    {
-
-        $options = [
-            'conditions' => [
-                'EvaluateTerm.team_id' => $this->current_team_id,
-            ],
-            'order'      => ['EvaluateTerm.start_date' => 'asc'],
-            'contain'    => [
-                'Evaluation' => [
-                    'conditions' => [
-                        'Evaluation.evaluatee_user_id' => $this->my_uid,
-                        'Evaluation.team_id'           => $this->current_team_id,
-                    ],
-                    'order'      => ['Evaluation.index' => 'asc'],
-                ]
-            ]
-        ];
-        $res = $this->find('all', $options);
-        return $res;
-    }
-
     function getCurrentTerm()
     {
         $start_date = $this->Team->getTermStartDate();

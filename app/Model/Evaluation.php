@@ -14,6 +14,9 @@ App::uses('AppModel', 'Model');
 class Evaluation extends AppModel
 {
 
+    const STATUS_NOT_ENTERED = 0;
+    const STATUS_DRAFT = 1;
+    const STATUS_COMPLETED = 2;
     /**
      * Display field
      *
@@ -84,16 +87,21 @@ class Evaluation extends AppModel
         return true;
     }
 
-    function getMyEvaluation()
+    function isMySelfEvalCompleted($term_id)
     {
         $options = [
             'conditions' => [
                 'evaluatee_user_id' => $this->my_uid,
-                'team_id'           => $this->current_team_id
+                'team_id'           => $this->current_team_id,
+                'evaluate_term_id'  => $term_id,
+                'status'            => self::STATUS_COMPLETED
             ],
         ];
-        $res = $this->find('all', $options);
-        return $res;
+        $res = $this->find('first', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
     }
 
 }

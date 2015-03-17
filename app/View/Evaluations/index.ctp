@@ -5,6 +5,8 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var CodeCompletionView $this
  * @var                    $eval_term_id
+ * @var                    $incomplete_count
+ * @var                    $is_myself_evaluations_completed
  */
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
@@ -12,14 +14,17 @@
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __d('gl', "評価") ?></div>
     <div class="panel-body eval-view-panel-body">
-        <div class="col-sm-12 bg-danger font_bold p_8px mb_8px"><?= __d('gl',
-                                                                        "あと1件の評価が完了しておりません。以下より評価を行なってください。") ?></div>
+        <? if ($incomplete_count > 0): ?>
+            <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
+                <?= __d('gl', "あと%s件の評価が完了しておりません。以下より評価を行なってください。", $incomplete_count) ?></div>
+        <? endif; ?>
         <div class="form-group">
             <hr>
             <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                 <p class="font_bold"><?= __d('gl', "自分") ?></p>
-
-                <p><?= __d('gl', "未完了:") ?></p> <!-- ToDo 0の場合は表示しない-->
+                <? if ($is_self_on && !$is_myself_evaluations_completed): ?>
+                    <p><?= __d('gl', "未完了:1") ?></p>
+                <? endif; ?>
             </div>
             <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', $eval_term_id, $this->Session->read('Auth.User.id')]) ?>"
                class="">
@@ -34,7 +39,9 @@
                         <span><?= __d('gl', "あなた") ?></span><i class="fa fa-long-arrow-right"></i><span><?= __d('gl',
                                                                                                                 "最終者") ?></span>
 
-                        <p class="font_brownRed"><?= __d('gl', "自己評価をしてください") ?></p>
+                        <? if ($is_self_on && !$is_myself_evaluations_completed): ?>
+                            <p class="font_brownRed"><?= __d('gl', "自己評価をしてください") ?></p>
+                        <? endif; ?>
                     </div>
                 </div>
             </a>
