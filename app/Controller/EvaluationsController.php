@@ -43,15 +43,20 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        if($evaluateeId !== $this->Auth->user('id')) {
+            $this->Pnotify->outError(__d('gl', "この期間は自己評価しかできません。"));
+            return $this->redirect($this->referer());
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
         $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
-        $evaluationList = $this->Evaluation->insertValidationStatus($evaluationList);
         if(empty($evaluationList)) {
             $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しています。"));
             return $this->redirect($this->referer());
         }
+
         if(empty($evaluationList[0]['Evaluation']['goal_id'])) {
             $total = $evaluationList[0];
             unset($evaluationList[0]);

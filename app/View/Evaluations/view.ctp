@@ -14,7 +14,7 @@
         'label'     => [
             'class' => 'col col-xxs-12 col-sm-3 control-label form-label'
         ],
-        'wrapInput' => 'col col-sm-6',
+        'wrapInput' => 'col col-sm-8',
         'class'     => 'form-control'
     ],
     'class'         => 'form-horizontal',
@@ -34,11 +34,11 @@
             <div class="col col-sm-12">
                 <?=
                 $this->Form->input("0.Evaluation.comment", [
-                    'type' => 'text',
+                    'type' => 'textarea',
+                    'rows' => 2,
                     'default'     => $total['Evaluation']['comment'],
                     'label'       => __d('gl', "評価コメント"),
                     'placeholder' => __d('gl', "コメントを書いてください"),
-                    'allow-empty' => $total['Evaluation']['allow_empty'],
                     'required'    => false,
                     'data-bv-notempty' => "true",
                     'data-bv-notempty-message' => "入力必須項目です。"
@@ -84,32 +84,66 @@
     <div class="panel-body eval-view-panel-body">
         <div class="form-group">
             <div class="col col-xxs-6 col-sm-3">
-                <img src="http://192.168.50.4/upload/users/1/9c75baad22a4cc4f0c3d63a163a2e280_small.jpg?1426140852" width="128" height="128" alt="ゴール画像" class="eval-view-panel-goal-pic">
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $eval['Goal']['id']]) ?>"
+                   class="modal-ajax-get">
+                    <?=
+                    $this->Html->image('ajax-loader.gif',
+                                       [
+                                           'class'         => 'lazy img-rounded eval-view-panel-goal-pic',
+                                           'width'         => "128",
+                                           'height'        => "128",
+                                           'alt'           => "ゴール画像",
+                                           'data-original' => $this->Upload->uploadUrl($eval, 'Goal.photo',
+                                                                                       ['style' => 'large']),
+                                       ]
+                    )
+                    ?></a>
             </div>
             <div class="col-xxs-6">
-                <div>職務とか</div>
-                <div>ゴール名</div>
+                <div><?= h($eval['Goal']['GoalCategory']['name'])?></div>
+                <div>
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $eval['Goal']['id']]) ?>"
+                       class="modal-ajax-get"><p
+                            class="ln_trigger-ff font_verydark"><?= h($eval['Goal']['name']) ?></p></a>
+                </div>
             </div>
         </div>
         <hr>
         <div class="form-group">
             <div class="col-xxs-12">
                 <div class="col-xxs-6">
-                    <div class="eval-view-result-number"><?= __d('gl', "10") ?></div>
+                    <div class="eval-view-result-number"><?= count($eval['Goal']['KeyResult']) ?></div>
                     <div class="eval-view-result-text"><?= __d('gl', "成果") ?></div>
                 </div>
                 <div class="col-xxs-6">
-                    <div class="eval-view-action-number"><?= __d('gl', "56") ?></div>
+                    <div class="eval-view-action-number">
+                        <a class="click-show-post-modal pointer"
+                           id="ActionListOpen_<?= $eval['Goal']['id'] ?>"
+                           href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                            <?= $eval['Goal']['action_result_count'] ?>
+                        </a>
+                    </div>
                     <div class="eval-view-action-text"><?= __d('gl', "アクション") ?></div>
                 </div>
             </div>
         </div>
         <hr>
         <div class="form-group">
-            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "役割:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                <?= __d('gl', "役割:") ?>
+            </div>
             <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "アクション:") ?></div>
-            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "コラボれーた:") ?></div>
-            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "進捗:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "コラボレータ:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                <?= __d('gl', "進捗:") ?>
+                <div class="progress mb_0px goals-column-progress-bar">
+                    <div class="progress-bar progress-bar-info" role="progressbar"
+                         aria-valuenow="<?= h($eval['Goal']['progress']) ?>" aria-valuemin="0"
+                         aria-valuemax="100" style="width: <?= h($eval['Goal']['progress']) ?>%;">
+                        <span class="ml_12px"><?= h($eval['Goal']['progress']) ?>%</span>
+                    </div>
+                </div>
+            </div>
             <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "比重:") ?></div>
         </div>
         <hr>
@@ -119,11 +153,11 @@
             <div class="col col-sm-12">
                 <?=
                 $this->Form->input("{$key}.Evaluation.comment", [
-                   'type' => 'text',
+                   'type' => 'textarea',
+                   'rows' => 2,
                    'default'     => $eval['Evaluation']['comment'],
                    'label'       => __d('gl', "評価コメント"),
                    'placeholder' => __d('gl', "コメントを書いてください"),
-                   'allow-empty' => $eval['Evaluation']['allow_empty'],
                    'required'    => false,
                    'data-bv-notempty' => "true",
                    'data-bv-notempty-message' => "入力必須項目です。"

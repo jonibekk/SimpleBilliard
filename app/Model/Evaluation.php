@@ -141,16 +141,17 @@ class Evaluation extends AppModel
     public function add($data, $saveType) {
         // insert status value to save data
         if($saveType === "draft") {
-            $data = Set::insert($data, '{n}.Evaluation.status', 1);
+            $data = Hash::insert($data, '{n}.Evaluation.status', 1);
             $this->setDraftValidation();
         } else {
-            $data = Set::insert($data, '{n}.Evaluation.status', 2);
+            $data = Hash::insert($data, '{n}.Evaluation.status', 2);
             $this->setNotAllowEmptyToComment();
             $this->setNotAllowEmptyToEvaluateScoreId();
         }
 
-        foreach($data as $law) {
+        foreach($data as $key => $law) {
             $this->create();
+            $law['Evaluation']['index'] = $key;
             if(!$this->save($law)) {
                 return false;
             }
@@ -170,7 +171,14 @@ class Evaluation extends AppModel
                     ['Evaluation.status' => self::TYPE_STATUS_DRAFT]
                 ]
             ],
-            'order' => 'Evaluation.index asc'
+            'order'   => 'Evaluation.index asc',
+            'contain' => [
+                'Goal' => [
+                    'KeyResult',
+                    'GoalCategory',
+                    'MyCollabo'
+                ]
+            ]
         ];
         $res = $this->find('all', $options);
         return $res;
