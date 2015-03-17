@@ -26,13 +26,22 @@
     ]); ?>
     <div class="panel-body eval-view-panel-body">
         <div class="col-sm-12 bg-warning p_8px mb_8px"><?= __d('gl',"あと1件の評価が完了しておりません。以下より評価を行なってください。") ?></div>
-        <hr>
         <div class="form-group">
-            <div for="#" class="col col-sm-3 eval-index-panel-title"><?= __d('gl', "自分") ?></div>
-            <p><?= __d('gl', "未完了") ?></p>
-            <div class="col col-xxs-6 col-sm-3">
-                <img src="../../img/logo_on.png" width="64" height="64" alt="You" class="eval-view-panel-goal-pic">
+            <hr>
+            <div for="#" class="col col-sm-12 eval-index-panel-title">
+                <p><?= __d('gl', "自分") ?></p>
+                <p><?= __d('gl', "未完了") ?></p>
             </div>
+            <div class="col-xxs-12">
+                <div class="col-xxs-1">
+                    <img src="../../img/logo_on.png" width="48" height="48" alt="You" class="eval-view-panel-goal-pic">
+                </div>
+                <div class="col-xxs-11">
+                    <p>菊池厚平</p>
+                    <span>あなた</span><i class="fa fa-long-arrow-right"></i><span>最終者</span>
+                </div>
+            </div>
+            <div></div>
 
             <div class="col col-sm-12">
                 <?=
@@ -64,4 +73,5 @@
     <?= $this->Form->end(); ?>
 </div>
 <? $this->append('script') ?>
-<? $this->end() ?><!-- END app/View/Evaluations/index.ctp -->
+<? $this->end() ?>
+<!-- END app/View/Evaluations/index.ctp -->
