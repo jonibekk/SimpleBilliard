@@ -126,7 +126,7 @@ class CollaboratorTest extends CakeTestCase
 		];
 		$this->Collaborator->save($params);
 
-		$goal_detail = $this->Collaborator->getCollaboGoalDetail($user_id, $goal_id, $valued_flg);
+		$goal_detail = $this->Collaborator->getCollaboGoalDetail($user_id, $valued_flg);
 		$this->assertEquals($user_id, $goal_detail[0]['User']['id']);
 	}
 
@@ -191,7 +191,7 @@ class CollaboratorTest extends CakeTestCase
 			'priority'   => 1,
 		];
 		$this->Collaborator->save($params);
-		$cnt = $this->Collaborator->countCollaboGoal($user_id, $user_id, [$goal_id], $valued_flg);
+		$cnt = $this->Collaborator->countCollaboGoal($user_id, [$goal_id], $valued_flg);
 		$this->assertEquals(0, $cnt);
 	}
 
