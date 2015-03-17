@@ -65,4 +65,15 @@ class EvaluateTerm extends AppModel
         return $res;
     }
 
+    function saveTerm()
+    {
+        $data = [
+            'team_id'    => $this->current_team_id,
+            'start_date' => $this->Team->getTermStartDate(),
+            'end_date'   => $this->Team->getTermEndDate() - 1,
+        ];
+        $res = $this->save($data);
+        return $res;
+    }
+
 }

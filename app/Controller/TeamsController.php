@@ -59,14 +59,16 @@ class TeamsController extends AppController
     function start_evaluation()
     {
         $this->request->allowMethod('post');
-        $team_id = $this->Session->read('current_team_id');
         try {
-            $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
+            if (!$this->Team->EvaluationSetting->isEnabled()) {
+                throw new RuntimeException(__d('gl', "評価設定が有効ではありません。"));
+            }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e);
             return $this->redirect($this->referer());
         }
         //start evaluation process
+        $this->Team->Evaluation->startEvaluation();
 
         $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
 

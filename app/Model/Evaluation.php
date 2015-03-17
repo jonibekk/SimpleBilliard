@@ -14,6 +14,10 @@ App::uses('AppModel', 'Model');
 class Evaluation extends AppModel
 {
 
+    const TYPE_SELF = 0;
+    const TYPE_EVALUATOR = 1;
+    const TYPE_LEADER = 2;
+    const TYPE_FINAL = 3;
     /**
      * Display field
      *
@@ -99,7 +103,55 @@ class Evaluation extends AppModel
     function startEvaluation()
     {
         //get evaluation setting.
+        if (!$this->Team->EvaluationSetting->isEnabled()) {
+            return false;
+        }
+        $this->Team->EvaluateTerm->saveTerm();
+        $term_id = $this->Team->EvaluateTerm->getLastInsertID();
 
+        $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
+        $is_enable_self = $this->Team->EvaluationSetting->isEnabledSelf();
+        $is_enable_evaluator = $this->Team->EvaluationSetting->isEnabledEvaluator();
+        $is_enable_leader = $this->Team->EvaluationSetting->isEnabledLeader();
+        $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true);
+        if ($is_enable_evaluator) {
+            $evaluators = $this->Team->Evaluator->getEvaluatorsCombined();
+        }
+        $all_evaluations = [];
+        //一人ずつデータを生成
+        foreach ($team_members_list as $uid) {
+            $index = 0;
+            $default_data = [
+                'evaluatee_user_id' => $uid,
+                'team_id'           => $this->current_team_id,
+                'evaluator_user_id' => null,
+                'goal_id'           => null,
+                'evaluate_term_id'  => $term_id,
+                'evaluate_type'     => null,
+                'index'             => 0,
+            ];
+            //self total
+            if ($is_enable_self) {
+                $data = $default_data;
+                $data['evaluator_user_id'] = $uid;
+                $data['evaluate_type'] = self::TYPE_SELF;
+                $data['index'] = $index;
+            }
+
+            //evaluator total
+
+            //final total
+
+            /**
+             * goal evaluation
+             */
+            //self
+            //evaluator
+            //leader
+
+        }
+
+        return true;
     }
 
 }

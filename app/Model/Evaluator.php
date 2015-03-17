@@ -46,4 +46,32 @@ class Evaluator extends AppModel
         ],
         'Team',
     ];
+
+    /**
+     * return value as below.
+     * (
+     * [Evaluator.evaluatee_user_id] => Array
+     * (
+     * [Evaluator.id] => Evaluator.evaluator_user_id
+     * )
+     * )
+     *
+     * @return array
+     */
+    function getEvaluatorsCombined()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+            ],
+            'order'      => [
+                'evaluatee_user_id' => 'asc',
+                'index'             => 'asc',
+            ],
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Evaluator.id', '{n}.Evaluator.evaluator_user_id',
+                             '{n}.Evaluator.evaluatee_user_id');
+        return $res;
+    }
 }
