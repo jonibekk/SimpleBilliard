@@ -144,11 +144,12 @@ class Collaborator extends AppModel
         return false;
     }
 
-    function getCollaboGoalDetail($goal_user_id, $approval_flg)
+    function getCollaboGoalDetail($team_id, $goal_user_id, $approval_flg)
     {
         $options = [
             'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
             'conditions' => [
+                'Collaborator.team_id'    => $team_id,
 				'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
             ],
@@ -176,11 +177,12 @@ class Collaborator extends AppModel
         $this->save(['valued_flg' => $status]);
     }
 
-    function countCollaboGoal($user_id, $goal_user_id, $approval_flg)
+    function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
     {
         $options = [
             'fields'     => ['id'],
             'conditions' => [
+                'Collaborator.team_id'    => $team_id,
 				'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
                 'User.id !='              => $user_id

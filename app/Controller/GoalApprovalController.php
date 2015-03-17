@@ -155,10 +155,10 @@ class GoalApprovalController extends AppController
 		$this->goal_user_ids = $this->getCollaboratorUserId();
 
         $this->unapproved_cnt = $this->Collaborator->countCollaboGoal(
-            $this->user_id, $this->goal_user_ids, $this->goal_status['unapproved']);
+            $this->team_id, $this->user_id, $this->goal_user_ids, $this->goal_status['unapproved']);
 
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
-            $this->user_id, $this->goal_user_ids,
+            $this->team_id, $this->user_id, $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
 
@@ -172,7 +172,7 @@ class GoalApprovalController extends AppController
     public function index()
     {
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
-			$this->goal_user_ids, $this->goal_status['unapproved']);
+			$this->team_id, $this->goal_user_ids, $this->goal_status['unapproved']);
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
@@ -193,7 +193,7 @@ class GoalApprovalController extends AppController
     public function done()
     {
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->goal_user_ids,
+            $this->team_id, $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
 
