@@ -93,15 +93,18 @@ class EvaluationsController extends AppController
 
         // 保存処理実行
         try {
+            $this->Evaluation->begin();
             $saved = $this->Evaluation->add($this->request->data, $saveType);
             if(!$saved) {
                 throw new RuntimeException(__d('validate', "入力値に誤りがあります。"));
             }
         } catch (RuntimeException $e) {
+            $this->Evaluation->rollback();
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
 
+        $this->Evaluation->commit();
         $this->Pnotify->outSuccess($successMsg);
         return $this->redirect($successAct);
 
