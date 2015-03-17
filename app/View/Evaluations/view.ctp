@@ -19,7 +19,6 @@
     ],
     'class'         => 'form-horizontal',
     'url'           => ['controller' => 'evaluations', 'action' => 'add', $evaluateTermId, $evaluateeId],
-    'novalidate'    => true
 ]); ?>
 <? if(!empty($total)): ?>
 
@@ -37,7 +36,9 @@
                     'label'       => __d('gl', "評価コメント"),
                     'placeholder' => __d('gl', "コメントを書いてください"),
                     'allow-empty' => $total['Evaluation']['allow_empty']
-                ]),
+                ])
+                ?>
+                <?=
                 $this->Form->input("0.Evaluation.evaluate_score_id", [
                     'type'      => 'select',
                     'default'   => $total['Evaluation']['evaluate_score_id'],
@@ -49,12 +50,20 @@
                     'wrapInput' => false,
                 ]);
                 ?>
+                <?=
+                $this->Form->input("0.Evaluation.id", [
+                    'label' => false,
+                    'class' => 'form-control col-xxs-10 mb_12px',
+                    'type'  => 'hidden',
+                    'value' => $total['Evaluation']['id']
+                ]);
+                ?>
             </div>
         </div>
-
     </div>
 </div>
 <? endif; ?>
+
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __d('gl', "ゴール評価") ?></div>
 
@@ -98,11 +107,13 @@
             <div class="col col-sm-12">
                 <?=
                 $this->Form->input("{$key}.Evaluation.comment", [
-                    'type' => 'text',
+                   'type' => 'text',
                    'label'       => __d('gl', "評価コメント"),
                    'placeholder' => __d('gl', "コメントを書いてください"),
                    'allow-empty' => $eval['Evaluation']['allow_empty']
-                ]),
+                ])
+                ?>
+                <?=
                 $this->Form->input("{$key}.Evaluation.evaluate_score_id", [
                    'type'      => 'select',
                    'default'   => $eval['Evaluation']['evaluate_score_id'],
@@ -113,6 +124,8 @@
                    'class'     => 'form-control col-xxs-3',
                    'wrapInput' => false,
                 ]);
+                ?>
+                <?=
                 $this->Form->input("{$key}.Evaluation.id", [
                     'label' => false,
                     'class' => 'form-control col-xxs-10 mb_12px',
@@ -142,10 +155,9 @@
             'name'  => 'is_draft',
             'value' => true
         ]); ?>
+        <?= $this->Form->end(); ?>
 
         <div class="clearfix"></div>
     </div>
 </div>
-<? $this->append('script') ?>
-<? $this->end() ?>
 <!-- END app/View/Evaluations/view.ctp -->

@@ -9,6 +9,11 @@ App::uses('AppController', 'Controller');
 class EvaluationsController extends AppController
 {
 
+    function beforeFilter(){
+        parent::beforeFilter();
+        $this->Security->enabled = false;
+    }
+
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
