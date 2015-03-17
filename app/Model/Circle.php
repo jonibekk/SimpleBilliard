@@ -226,9 +226,6 @@ class Circle extends AppModel
                         'CircleMember.id',
                         'CircleMember.user_id'
                     ],
-                    'conditions' => [
-                        'CircleMember.user_id' => $this->my_uid,
-                    ],
                 ],
                 'CircleAdmin'  => [
                     'conditions' => [
@@ -245,13 +242,27 @@ class Circle extends AppModel
         //typeに応じて絞り込み
         switch ($type) {
             case 'joined':
-                $filter = create_function('$circle', 'return !empty($circle["CircleMember"]);');
+                $filter = function($circle){
+                    foreach ($circle['CircleMember'] as $member) {
+                        if ($member['user_id'] == $this->my_uid) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
                 break;
             case 'non-joined':
-                $filter = create_function('$circle', 'return empty($circle["CircleMember"]);');
+                $filter = function($circle){
+                    foreach ($circle['CircleMember'] as $member) {
+                        if ($member['user_id'] == $this->my_uid) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
                 break;
             default :
-                $filter = create_function('$circle', 'return true');
+                $filter = function(){return true;};
         }
         $res = array_filter($res, $filter);
         return $res;
