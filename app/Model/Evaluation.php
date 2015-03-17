@@ -184,34 +184,10 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    public function setValidationByEvaluationId($evaluationId, $saveType)
-    {
-        if($saveType === "draft") {
-            $this->setDraftValidation();
-            return;
-        }
-        $total_or_goal = $this->getEvaluationTypeTotalOrGoal($evaluationId);
-        $this->setRegisterValidation($total_or_goal);
-    }
-
     public function setDraftValidation() {
         $this->setAllowEmptyToComment();
         $this->setAllowEmptyToEvaluateScoreId();
         return;
-    }
-
-    public function setRegisterValidation($total_or_goal) {
-        $settings = $this->Team->EvaluationSetting->getEvaluationSetting();
-        if($total_or_goal === "total") {
-            $notAllowCommentEmpty = $settings['Evaluation']['self_comment_required_flg'];
-        } else {
-            $notAllowCommentEmpty = $settings['Evaluation']['self_goal_comment_required_flg'];
-        }
-        if($notAllowCommentEmpty) {
-            $this->setNotAllowEmptyToComment();
-        } else {
-            $this->setAllowEmptyToComment();
-        }
     }
 
     public function setAllowEmptyToComment() {
@@ -242,34 +218,6 @@ class Evaluation extends AppModel
         }
         $this->validate['evaluate_score_id']['notEmpty'] = ['rule' => 'notEmpty'];
         return;
-    }
-
-    public function insertValidationStatus($records)
-    {
-        $evaSettings = $this->Team->EvaluationSetting->getEvaluationSetting();
-        foreach($records as $key => $law) {
-            $isTotal = empty($law['Evaluation']['goal_id']);
-            if($isTotal) {
-                $allowEmpty = $evaSettings['EvaluationSetting']['self_goal_comment_required_flg'];
-            } else {
-                $allowEmpty = $evaSettings['EvaluationSetting']['self_comment_required_flg'];
-            }
-            $records[$key]['Evaluation']['allow_empty'] = $allowEmpty;
-        }
-        return $records;
-    }
-
-    public function getEvaluationTypeTotalOrGoal($evaluationId) {
-        $options = [
-            'conditions' => [
-                'id' => $evaluationId
-            ],
-            'fields' => [
-                'goal_id'
-            ]
-        ];
-        $res = $this->find('first', $options);
-        return (empty($res)) ? "total" : "goal";
     }
 
 }
