@@ -45,11 +45,11 @@ class EvaluationsController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
-        $scoreList = $this->Evaluation->EvaluateScore->getScoreList($teamId);
+        $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
         $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
         $evaluationList = $this->Evaluation->insertValidationStatus($evaluationList);
         if(empty($evaluationList)) {
-            $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しまいます。"));
+            $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しています。"));
             return $this->redirect($this->referer());
         }
         if(empty($evaluationList[0]['Evaluation']['goal_id'])) {
@@ -60,7 +60,6 @@ class EvaluationsController extends AppController
             $total = [];
             $goalList = $evaluationList;
         }
-        var_dump($scoreList);
         $this->set(compact('scoreList', 'total', 'goalList', 'evaluateTermId', 'evaluateeId'));
     }
 
