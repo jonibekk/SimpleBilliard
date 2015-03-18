@@ -186,6 +186,35 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
     }
 
+    public function testAddPostRegisterValidationError() {
+        $data = [
+            'is_register' => true,
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                ],
+            ],
+        ];
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
     function _getEvaluationsCommonMock()
     {
         /**
