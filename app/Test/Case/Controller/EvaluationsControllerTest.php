@@ -84,7 +84,14 @@ class EvaluationsControllerTest extends ControllerTestCase
      */
     public function testView()
     {
+        $this->_getEvaluationsCommonMock();
         $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
+    }
+
+    public function testViewNotMatchPramater()
+    {
+        $this->_getEvaluationsCommonMock();
+        $this->testAction('/evaluations/view/1/2', ['method' => 'GET']);
     }
 
     /**
@@ -94,6 +101,7 @@ class EvaluationsControllerTest extends ControllerTestCase
      */
     public function testViewNotExistParamater()
     {
+        $this->_getEvaluationsCommonMock();
         $this->testAction('/evaluations/view/', ['method' => 'GET']);
     }
 
@@ -221,8 +229,8 @@ class EvaluationsControllerTest extends ControllerTestCase
                           ->will($this->returnValue(true));
         /** @noinspection PhpUndefinedMethodInspection */
         $Evaluations->Auth->staticExpects($this->any())->method('user')
-                          ->will($this->returnValueMap($value_map)
-                          );
+                    ->will($this->returnValueMap($value_map)
+                    );
 
         $Evaluations->Evaluation->Team->TeamMember->current_team_id = 1;
         $Evaluations->Evaluation->Team->TeamMember->my_uid = 1;
