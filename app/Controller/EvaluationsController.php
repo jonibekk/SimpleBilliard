@@ -43,7 +43,7 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        if($evaluateeId !== $this->Auth->user('id')) {
+        if($evaluateeId != $this->Auth->user('id')) {
             $this->Pnotify->outError(__d('gl', "この期間は自己評価しかできません。"));
             return $this->redirect($this->referer());
         }
