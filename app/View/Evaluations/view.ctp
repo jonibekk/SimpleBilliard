@@ -20,7 +20,7 @@
     'class'         => 'form-horizontal',
     'id'            => 'evaluation-form',
     'url'           => ['controller' => 'evaluations', 'action' => 'add'],
-    'data-bv-live'  => "submitted"
+    'data-bv-live'  => "disabled"
 ]); ?>
 <? if(!empty($total)): ?>
 
@@ -76,7 +76,6 @@
 
 <? foreach($goalList as $key => $eval):?>
 
-
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __d('gl', "ゴール評価") ?>(<?=$key?>/<?=count($goalList)?>)</div>
 
@@ -112,8 +111,16 @@
         <div class="form-group">
             <div class="col-xxs-12">
                 <div class="col-xxs-6">
-                    <div class="eval-view-result-number"><?= count($eval['Goal']['KeyResult']) ?></div>
-                    <div class="eval-view-result-text"><?= __d('gl', "成果") ?></div>
+                    <div class="eval-view-result-number">
+                        <a class="develop--forbiddenLink" href="#">
+                            <?= count($eval['Goal']['KeyResult']) ?>
+                        </a>
+                    </div>
+                    <div class="eval-view-result-text">
+                        <a class="develop--forbiddenLink" href="#">
+                            <?= __d('gl', "成果") ?>
+                        </a>
+                    </div>
                 </div>
                 <div class="col-xxs-6">
                     <div class="eval-view-action-number">
@@ -123,7 +130,13 @@
                             <?= $eval['Goal']['action_result_count'] ?>
                         </a>
                     </div>
-                    <div class="eval-view-action-text"><?= __d('gl', "アクション") ?></div>
+                    <div class="eval-view-action-text">
+                        <a class="click-show-post-modal pointer"
+                           id="ActionListOpen_<?= $eval['Goal']['id'] ?>"
+                           href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                        <?= __d('gl', "アクション") ?>
+                            </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,20 +144,24 @@
         <div class="form-group">
             <div for="#" class="col col-xxs-12 eval-view-panel-title">
                 <?= __d('gl', "役割:") ?>
+                <? $role = h(viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"])); ?>
+                <?= ($role) ? $role : "リーダー" ?>
             </div>
-            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "アクション:") ?></div>
-            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "コラボレータ:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                <?= __d('gl', "アクション:") ?>
+                <?= $eval['Goal']['action_result_count'] ?>
+            </div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                <?= __d('gl', "コラボレータ:") ?>
+                <?= count(Hash::extract($eval, "Goal.MyCollabo.{n}[type=0]")) ?>
+            </div>
             <div for="#" class="col col-xxs-12 eval-view-panel-title">
                 <?= __d('gl', "進捗:") ?>
-                <div class="progress mb_0px goals-column-progress-bar">
-                    <div class="progress-bar progress-bar-info" role="progressbar"
-                         aria-valuenow="<?= h($eval['Goal']['progress']) ?>" aria-valuemin="0"
-                         aria-valuemax="100" style="width: <?= h($eval['Goal']['progress']) ?>%;">
-                        <span class="ml_12px"><?= h($eval['Goal']['progress']) ?>%</span>
-                    </div>
-                </div>
+                <?= h($eval['Goal']['progress']) ?>%
             </div>
-            <div for="#" class="col col-xxs-12 eval-view-panel-title"><?= __d('gl', "比重:") ?></div>
+            <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                <?= __d('gl', "比重:") ?>
+            </div>
         </div>
         <hr>
         <div class="form-group">

@@ -145,7 +145,11 @@ class Evaluation extends AppModel
             $this->create();
             $law['Evaluation']['index'] = $key;
             if(!$this->save($law)) {
-                return false;
+                if(!empty($this->validationErrors)) {
+                    throw new RuntimeException(__d('validate', "入力内容に不足があります。"));
+                } else {
+                    throw new RuntimeException(__d('validate', "保存処理に失敗しました。"));
+                }
             }
         }
 
