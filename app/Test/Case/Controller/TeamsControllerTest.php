@@ -17,6 +17,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.circle_member',
         'app.member_type',
         'app.evaluation_setting',
+        'app.evaluation',
         'app.action_result',
         'app.goal',
         'app.follower',
@@ -266,7 +267,26 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $this->_getTeamsCommonMock(null, true, false);
         $this->testAction('/teams/settings', ['method' => 'GET']);
+    }
 
+    function testStartEvaluationSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true, false);
+        $this->testAction('/teams/start_evaluation', ['method' => 'POST']);
+    }
+
+    function testStartEvaluationFailEvalNotEnable()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true, false);
+        $Teams->Team->EvaluationSetting->deleteAll(['EvaluationSetting.team_id' => 1]);
+        $this->testAction('/teams/start_evaluation', ['method' => 'POST']);
+    }
+
+    function testStartEvaluationFailSaveEvalFail()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true, false);
+        $Teams->Team->TeamMember->updateAll(['TeamMember.evaluation_enable_flg' => false], ['TeamMember.team_id' => 1]);
+        $this->testAction('/teams/start_evaluation', ['method' => 'POST']);
     }
 
     function testAjaxUploadNewMembersCsvEmpty()
