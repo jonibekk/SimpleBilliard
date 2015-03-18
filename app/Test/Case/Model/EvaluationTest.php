@@ -16,6 +16,7 @@ class EvaluationTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.evaluation',
+        'app.evaluation_setting',
         'app.team',
         'app.badge',
         'app.user',
@@ -164,4 +165,31 @@ class EvaluationTest extends CakeTestCase
         unset($expect[0]['Evaluation']['modified']);
         $this->assertEquals($expect, $actual);
     }
+
+    function testStartEvaluationNotEnabled()
+    {
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
+        $res = $this->Evaluation->startEvaluation();
+        $this->assertFalse($res);
+    }
+
+    function testStartEvaluationAllEnabled()
+    {
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
+        $this->Evaluation->Team->TeamMember->current_team_id = 1;
+        $this->Evaluation->Team->TeamMember->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->current_team_id = 1;
+        $this->Evaluation->Team->EvaluateTerm->my_uid = 1;
+        $this->Evaluation->Team->Evaluator->current_team_id = 1;
+        $this->Evaluation->Team->Evaluator->my_uid = 1;
+        $this->Evaluation->Team->EvaluationSetting->current_team_id = 1;
+        $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
+        $this->Evaluation->Goal->Collaborator->current_team_id = 1;
+        $this->Evaluation->Goal->Collaborator->my_uid = 1;
+        $res = $this->Evaluation->startEvaluation();
+        $this->assertTrue($res);
+    }
+
 }
