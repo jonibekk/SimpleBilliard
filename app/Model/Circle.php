@@ -212,14 +212,14 @@ class Circle extends AppModel
         return $circle;
     }
 
-    function getPublicCircles()
+    function getPublicCircles($type = 'all', $start_date = null, $end_date = null, $order = 'Circle.modified desc')
     {
         $options = [
             'conditions' => [
                 'Circle.team_id'    => $this->current_team_id,
                 'Circle.public_flg' => true,
             ],
-            'order'      => ['Circle.modified desc'],
+            'order'      => [$order],
             'contain'    => [
                 'CircleMember' => [
                     'fields' => [
@@ -238,7 +238,43 @@ class Circle extends AppModel
                 ]
             ]
         ];
+        if ($start_date) {
+            $options['conditions']['Circle.created >='] = $start_date;
+        }
+        if ($end_date) {
+            $options['conditions']['Circle.created <'] = $end_date;
+        }
         $res = $this->find('all', $options);
+        //typeに応じて絞り込み
+        switch ($type) {
+            //参加している
+            case 'joined':
+                $filter = function ($circle) {
+                    foreach ($circle['CircleMember'] as $member) {
+                        if ($member['user_id'] == $this->my_uid) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+                break;
+            //参加していない
+            case 'non-joined':
+                $filter = function ($circle) {
+                    foreach ($circle['CircleMember'] as $member) {
+                        if ($member['user_id'] == $this->my_uid) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                break;
+            default :
+                $filter = function () {
+                    return true;
+                };
+        }
+        $res = array_filter($res, $filter);
         return $res;
     }
 
@@ -286,6 +322,19 @@ class Circle extends AppModel
             return $res['Circle']['name'];
         }
         return null;
+    }
+
+    function updateModified($circle_list)
+    {
+        if (empty($circle_list)) {
+            return false;
+        }
+        $conditions = [
+            'Circle.id' => $circle_list,
+        ];
+
+        $res = $this->updateAll(['modified' => "'" . time() . "'"], $conditions);
+        return $res;
     }
 
 }
