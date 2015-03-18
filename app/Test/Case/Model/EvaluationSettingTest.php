@@ -140,6 +140,18 @@ class EvaluationSettingTest extends CakeTestCase
         $this->assertFalse($this->EvaluationSetting->isEnabledFinal());
     }
 
+    function testIsEvaluatorLeaderTrue()
+    {
+        $this->_setDefaultAllOn();
+        $this->assertTrue($this->EvaluationSetting->isEnabledLeader());
+    }
+    function testIsEvaluatorLeaderFalse()
+    {
+        $this->_setDefaultAllOn([EvaluationSetting::FLG_LEADER]);
+        $this->assertFalse($this->EvaluationSetting->isEnabledLeader());
+    }
+
+
     function _setDefaultAllOn($set_false_flags = [])
     {
         $this->EvaluationSetting->my_uid = 1;
