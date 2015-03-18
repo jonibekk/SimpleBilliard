@@ -69,8 +69,6 @@ class EvaluationTest extends CakeTestCase
     {
         parent::setUp();
         $this->Evaluation = ClassRegistry::init('Evaluation');
-        $this->Evaluation->EvaluationScore = ClassRegistry::init('EvaluationScore');
-        $this->Evaluation->EvaluationSetting = ClassRegistry::init('EvaluationSetting');
     }
 
     /**
@@ -222,6 +220,11 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->EvaluationSetting->current_team_id = 1;
         $this->Evaluation->EvaluationScore->my_uid = 1;
         $this->Evaluation->EvaluationScore->current_team_id = 1;
+        $this->notEmptyArray = [
+            'notEmpty' => [
+                'rule' => 'notEmpty'
+            ]
+        ];
 
     }
 
@@ -364,6 +367,44 @@ class EvaluationTest extends CakeTestCase
         $res = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
         $this->assertNotEmpty($res, "[正常]評価登録");
         $this->assertEquals(count($res), count($records));
+    }
+
+    function testSetAllowEmptyToComment() {
+        $this->setDefault();
+        // case of empty
+        $this->Evaluation->setAllowEmptyToComment();
+        var_dump($this->Evaluation->validate['comment']);
+
+        // case of not empty
+
+    }
+
+    public function TestSetNotAllowEmptyToComment() {
+        $this->setDefault();
+        // case of empty
+        $this->Evaluation->setNotAllowEmptyToComment();
+
+        // case of not empty
+
+    }
+
+    public function testSetAllowEmptyToEvaluateScoreId() {
+        $this->setDefault();
+
+        // case of empty
+        $this->Evaluation->setAllowEmptyToEvaluateScoreId();
+
+        // case of not empty
+    }
+
+    public function testSetNotAllowEmptyToEvaluateScoreId() {
+        $this->setDefault();
+
+        // case of empty
+        $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
+
+        // case of not empty
+
     }
 
 }

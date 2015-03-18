@@ -20,6 +20,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         'app.evaluation',
         'app.action_result',
         'app.goal',
+        'app.goal_category',
         'app.follower',
         'app.collaborator',
         'app.local_name',
@@ -53,7 +54,8 @@ class EvaluationsControllerTest extends ControllerTestCase
         'app.send_mail_to_user',
         'app.message',
         'app.evaluate_term',
-        'app.evaluate_score'
+        'app.evaluate_score',
+        'app.key_result',
     ];
 
     /**
@@ -88,17 +90,12 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 
-    public function testViewNotMatchPramater()
+    public function testViewNotMatchParamater()
     {
         $this->_getEvaluationsCommonMock();
         $this->testAction('/evaluations/view/1/2', ['method' => 'GET']);
     }
 
-    /**
-     * view method
-     *
-     * @return void
-     */
     public function testViewNotExistParamater()
     {
         $this->_getEvaluationsCommonMock();
@@ -236,6 +233,22 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations->Evaluation->Team->TeamMember->my_uid = 1;
         $Evaluations->Evaluation->Team->EvaluationSetting->my_uid = 1;
         $Evaluations->Evaluation->Team->EvaluationSetting->current_team_id = 1;
+        $Evaluations->Evaluation->Goal->my_uid = '1';
+        $Evaluations->Evaluation->Goal->current_team_id = '1';
+        $Evaluations->Evaluation->Team->TeamMember->my_uid = '1';
+        $Evaluations->Evaluation->Team->TeamMember->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->ActionResult->my_uid = '1';
+        $Evaluations->Evaluation->Goal->ActionResult->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->GoalCategory->my_uid = '1';
+        $Evaluations->Evaluation->Goal->GoalCategory->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->KeyResult->my_uid = '1';
+        $Evaluations->Evaluation->Goal->KeyResult->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->Collaborator->my_uid = '1';
+        $Evaluations->Evaluation->Goal->Collaborator->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->Follower->my_uid = '1';
+        $Evaluations->Evaluation->Goal->Follower->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->Post->my_uid = '1';
+        $Evaluations->Evaluation->Goal->Post->current_team_id = '1';
 
         return $Evaluations;
     }
