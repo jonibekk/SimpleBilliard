@@ -216,11 +216,7 @@ class EvaluationTest extends CakeTestCase
 
         $this->Evaluation->my_uid = 1;
         $this->Evaluation->current_team_id = 1;
-        $this->Evaluation->EvaluationSetting->my_uid = 1;
-        $this->Evaluation->EvaluationSetting->current_team_id = 1;
-        $this->Evaluation->EvaluationScore->my_uid = 1;
-        $this->Evaluation->EvaluationScore->current_team_id = 1;
-        $this->notEmptyArray = [
+        $this->notAllowEmptyArray = [
             'notEmpty' => [
                 'rule' => 'notEmpty'
             ]
@@ -369,42 +365,82 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals(count($res), count($records));
     }
 
-    function testSetAllowEmptyToComment() {
+    /**
+     * setAllowEmptyToComment method
+     *
+     * @return void
+     */
+    function testSetAllowEmptyToCommentCaseOfEmpty() {
         $this->setDefault();
-        // case of empty
+        $this->Evaluation->validate['comment'] = [];
         $this->Evaluation->setAllowEmptyToComment();
-        var_dump($this->Evaluation->validate['comment']);
-
-        // case of not empty
+        $this->assertEquals($this->Evaluation->validate['comment'], []);
 
     }
 
-    public function TestSetNotAllowEmptyToComment() {
+    function testSetAllowEmptyToCommentCaseOfNotEmpty() {
         $this->setDefault();
-        // case of empty
+        $this->Evaluation->validate['comment'] = $this->notAllowEmptyArray;
+        $this->Evaluation->setAllowEmptyToComment();
+        $this->assertEquals($this->Evaluation->validate['comment'], []);
+    }
+
+    /**
+     * setNotAllowEmptyToComment method
+     *
+     * @return void
+     */
+    public function TestSetNotAllowEmptyToCommentCaseOfEmpty() {
+        $this->setDefault();
+        $this->Evaluation->validate['comment'] = [];
         $this->Evaluation->setNotAllowEmptyToComment();
-
-        // case of not empty
+        $this->assertEquals($this->Evaluation->validate['comment'], $this->notAllowEmptyArray);
 
     }
 
-    public function testSetAllowEmptyToEvaluateScoreId() {
+    public function TestSetNotAllowEmptyToCommentCaseOfNotEmpty() {
         $this->setDefault();
+        $this->Evaluation->validate['comment'] = $this->notAllowEmptyArray;
+        $this->Evaluation->setNotAllowEmptyToComment();
+        $this->assertEquals($this->Evaluation->validate['comment'], $this->notAllowEmptyArray);
+    }
 
-        // case of empty
+    /**
+     * setAllowEmptyToEvaluateScoreId method
+     *
+     * @return void
+     */
+    public function testSetAllowEmptyToEvaluateScoreIdCaseOfEmpty() {
+        $this->setDefault();
+        $this->Evaluation->validate['evaluate_score_id'] = [];
         $this->Evaluation->setAllowEmptyToEvaluateScoreId();
-
-        // case of not empty
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], []);
     }
 
-    public function testSetNotAllowEmptyToEvaluateScoreId() {
+    public function testSetAllowEmptyToEvaluateScoreIdCaseOfNotEmpty() {
         $this->setDefault();
+        $this->Evaluation->validate['evaluate_score_id'] = $this->notAllowEmptyArray;
+        $this->Evaluation->setAllowEmptyToEvaluateScoreId();
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], []);
+    }
 
-        // case of empty
+    /**
+     * setNotAllowEmptyToComment method
+     *
+     * @return void
+     */
+    public function testSetNotAllowEmptyToEvaluateScoreIdCaseOfEmpty() {
+        $this->setDefault();
+        $this->Evaluation->validate['evaluate_score_id'] = [];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $this->notAllowEmptyArray);
+    }
 
-        // case of not empty
-
+    public function testSetNotAllowEmptyToEvaluateScoreIdCaseOfNotEmpty() {
+        $this->setDefault();
+        $this->Evaluation->validate['evaluate_score_id'] = $this->notAllowEmptyArray;
+        $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $this->notAllowEmptyArray);
     }
 
 }
