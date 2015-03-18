@@ -1,0 +1,28 @@
+- [Lib](http://book.cakephp.org/2.0/ja/core-libraries.html)
+ - [イベントシステム](http://book.cakephp.org/2.0/ja/core-libraries/events.html#id1)をできれば複雑ないくつかの処理に利用したい。
+- [Model](http://book.cakephp.org/2.0/ja/models.html)
+ - [JOIN句](http://book.cakephp.org/2.0/ja/models/associations-linking-models-together.html#id6)でjoinする
+ - 共通の検索条件がある場合は[カスタムfind](http://book.cakephp.org/2.0/ja/models/retrieving-your-data.html#model-custom-find)をうまく使う
+ - [Model::read()](http://book.cakephp.org/2.0/ja/models/retrieving-your-data.html#model-read)は使わない
+ - [サブクエリ](http://book.cakephp.org/2.0/ja/models/retrieving-your-data.html#id6)の使い方
+ - [`Model::create`を使う場合の注意点](http://book.cakephp.org/2.0/ja/models/saving-your-data.html#model-create-array-data-array)
+ - [HABTMはhasMayとbelongsToに分解する](http://book.cakephp.org/2.0/ja/models/saving-your-data.html#id2)
+ - [`delete`](http://book.cakephp.org/2.0/ja/models/deleting-data.html#delete)は、必要に応じて`cascade`を有効にして、関連するデータも削除する
+ - [`recursive`は-1に設定する](http://book.cakephp.org/2.0/ja/models/model-attributes.html#recursive)
+ - 複数の更新クエリがある場合は[トランザクション](http://book.cakephp.org/2.0/ja/models/transactions.html#id1)を使う
+ - [Containableの代替え](https://gist.github.com/gothedistance/5931772)
+- [View](http://book.cakephp.org/2.0/ja/views.html)
+- [Controller](http://book.cakephp.org/2.0/ja/controllers.html)
+ - Postのリクエストがあった場合に、Postされたデータを検索条件にしてfindする場合は、[`Controller::postConditions`](http://book.cakephp.org/2.0/ja/controllers.html#Controller::postConditions)を使う。
+ - [Etagヘッダ](http://book.cakephp.org/2.0/ja/controllers/request-response.html#etag)でキャッシュをコントロールする？
+- [Component](http://book.cakephp.org/2.0/ja/controllers/components.html)
+- [Behavior](http://book.cakephp.org/2.0/ja/models/behaviors.html)
+- [Helper](http://book.cakephp.org/2.0/ja/views/helpers.html)
+- [Plugin](http://book.cakephp.org/2.0/ja/plugins.html)
+- [Test](http://book.cakephp.org/2.0/ja/development/testing.html)
+- [Console](http://book.cakephp.org/2.0/ja/console-and-shells.html)
+- [REST](http://book.cakephp.org/2.0/ja/development/rest.html)
+- [例外について](http://book.cakephp.org/2.0/ja/development/exceptions.html)
+
+## 運用
+### DBマイグレーション
