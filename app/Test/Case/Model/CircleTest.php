@@ -80,11 +80,13 @@ class CircleTest extends CakeTestCase
 
     function testGetPublicCircles()
     {
+        $this->Circle->my_uid = 1;
+        $this->Circle->current_team_id = 1;
         $this->Circle->getPublicCircles($type = 'all');
         $this->Circle->getPublicCircles($type = 'joined');
         $this->Circle->getPublicCircles($type = 'non-joined');
+        $this->Circle->my_uid = 2;
+        $this->Circle->getPublicCircles($type = 'joined');
+        $this->Circle->getPublicCircles($type = 'non-joined');
     }
-
-
-
 }
