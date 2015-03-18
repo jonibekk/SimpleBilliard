@@ -232,6 +232,22 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->getAllMemberUserIdList(false);
     }
 
+    function testGetAllMemberUserIdListWithEval()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->TeamMember->current_team_id = $team_id;
+        $this->TeamMember->my_uid = $uid;
+        $this->TeamMember->save(['id' => 1, 'evaluation_enable_flg' => false]);
+        $expected = [
+            (int)2 => '2',
+            (int)3 => '12',
+            (int)4 => '13'
+        ];
+        $actual = $this->TeamMember->getAllMemberUserIdList(true, true, true);
+        $this->assertEquals($expected, $actual);
+    }
+
     function testIncrementNotifyUnreadCount()
     {
         $uid = 1;
@@ -1696,37 +1712,37 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->User->Email->my_uid = $uid;
     }
 
-	function testSelectCoachUserIdFromTeamMembersTB ()
-	{
-		$user_id = 777;
-		$team_id = 888;
-		$coach_user_id = 999;
+    function testSelectCoachUserIdFromTeamMembersTB()
+    {
+        $user_id = 777;
+        $team_id = 888;
+        $coach_user_id = 999;
 
-		$params = [
-			'user_id'       => $user_id,
-			'team_id'       => $team_id,
-			'coach_user_id' => $coach_user_id,
-		];
-		$this->TeamMember->save($params);
-		$res = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
-		$this->assertEquals($coach_user_id, intval($res['TeamMember']['coach_user_id']));
+        $params = [
+            'user_id'       => $user_id,
+            'team_id'       => $team_id,
+            'coach_user_id' => $coach_user_id,
+        ];
+        $this->TeamMember->save($params);
+        $res = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
+        $this->assertEquals($coach_user_id, intval($res['TeamMember']['coach_user_id']));
 
-	}
+    }
 
-	function testSelectUserIdFromTeamMembersTB ()
-	{
-		$user_id = 777;
-		$team_id = 888;
-		$coach_user_id = 999;
+    function testSelectUserIdFromTeamMembersTB()
+    {
+        $user_id = 777;
+        $team_id = 888;
+        $coach_user_id = 999;
 
-		$params = [
-			'user_id'       => $user_id,
-			'team_id'       => $team_id,
-			'coach_user_id' => $coach_user_id,
-		];
-		$this->TeamMember->save($params);
-		$res = $this->TeamMember->selectUserIdFromTeamMembersTB($coach_user_id, $team_id);
-		$this->assertContains($user_id, $res);
-	}
+        $params = [
+            'user_id'       => $user_id,
+            'team_id'       => $team_id,
+            'coach_user_id' => $coach_user_id,
+        ];
+        $this->TeamMember->save($params);
+        $res = $this->TeamMember->selectUserIdFromTeamMembersTB($coach_user_id, $team_id);
+        $this->assertContains($user_id, $res);
+    }
 
 }
