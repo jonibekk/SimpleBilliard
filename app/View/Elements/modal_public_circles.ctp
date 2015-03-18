@@ -38,6 +38,7 @@
         ]); ?>
         <div class="modal-body modal-feed-body tab-content">
             <div class="tab-pane fade in active" id="tab1">
+                <? $key = 0 ?>
                 <? if (!empty($non_joined_circles)): ?>
                     <div class="row borderBottom">
                         <? foreach ($non_joined_circles as $key => $circle): ?>
