@@ -254,6 +254,14 @@ class TeamsControllerTest extends ControllerTestCase
 
     }
 
+    function testSettingsSuccessNotAvailStartEvalButton()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams->Team->EvaluateTerm->saveTerm();
+
+        $this->testAction('/teams/settings', ['method' => 'GET']);
+    }
+
     function testSettingsFail()
     {
         $this->_getTeamsCommonMock(null, true, false);
@@ -428,6 +436,15 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams->Team->TeamMember->MemberType->uid = 1;
         $Teams->Team->TeamMember->User->Email->current_team_id = 1;
         $Teams->Team->TeamMember->User->Email->uid = 1;
+        $Teams->Team->EvaluateTerm->current_team_id = 1;
+        $Teams->Team->EvaluateTerm->my_uid = 1;
+        $Teams->Team->Evaluator->current_team_id = 1;
+        $Teams->Team->Evaluator->my_uid = 1;
+        $Teams->Team->EvaluationSetting->current_team_id = 1;
+        $Teams->Team->EvaluationSetting->my_uid = 1;
+        $Teams->Team->Evaluation->current_team_id = 1;
+        $Teams->Team->Evaluation->my_uid = 1;
+
         return $Teams;
     }
 }
