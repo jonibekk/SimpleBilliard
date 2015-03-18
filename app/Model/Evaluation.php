@@ -52,16 +52,8 @@ class Evaluation extends AppModel
                 'rule' => 'notEmpty'
             ]
         ],
-        'comment' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
-            ]
-        ],
-        'evaluate_score_id' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
-            ]
-        ]
+        'comment' => [],
+        'evaluate_score_id' => []
     ];
 
     /**

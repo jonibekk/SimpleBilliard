@@ -241,7 +241,7 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
-    function testGetEditableEvaluations()
+    function testGetMyEvaluations()
     {
         $this->Evaluation->deleteAll(['Evaluation.team_id' => 1]);
         $data = [
@@ -279,4 +279,91 @@ class EvaluationTest extends CakeTestCase
         unset($actual[0]['Evaluation']['modified']);
         $this->assertEquals(count($expect), count($actual));
     }
+
+    function testGetEditableEvaluations() {
+        $this->setDefault();
+        $this->Evaluation->deleteAll(['evaluate_term_id' => 1]);
+        $evaluateTermId = 1;
+        $evaluateeId = 1;
+
+        $records = [
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => 1,
+                    'comment' => null,
+                    'evaluate_score_id' => null,
+                    'index'   => 0,
+                    'status'  => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => 1,
+                    'goal_id' => 1,
+                    'comment' => null,
+                    'evaluate_score_id' => null,
+                    'index'   => 1,
+                    'status'  => 0
+                ],
+
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => 1,
+                    'comment' => null,
+                    'goal_id' => 2,
+                    'evaluate_score_id' => null,
+                    'index'   => 2,
+                    'status'  => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => 1,
+                    'goal_id' => 3,
+                    'comment' => null,
+                    'evaluate_score_id' => null,
+                    'index'   => 3,
+                    'status'  => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => 1,
+                    'goal_id' => 4,
+                    'comment' => null,
+                    'evaluate_score_id' => null,
+                    'index'   => 4,
+                    'status'  => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => 1,
+                    'goal_id' => 5,
+                    'comment' => null,
+                    'evaluate_score_id' => null,
+                    'index'   => 5,
+                    'status'  => 0
+                ],
+            ],
+        ];
+        $this->Evaluation->saveAll($records);
+        $res = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
+        $this->assertNotEmpty($res, "[正常]評価登録");
+        $this->assertEquals(count($res), count($records));
+    }
+
 }
