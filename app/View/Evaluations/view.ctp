@@ -20,7 +20,7 @@
     'class'         => 'form-horizontal',
     'id'            => 'evaluation-form',
     'url'           => ['controller' => 'evaluations', 'action' => 'add'],
-    'data-bv-live'  => "enabled"
+    'data-bv-live'  => "submitted"
 ]); ?>
 <? if(!empty($total)): ?>
 
@@ -169,7 +169,6 @@
                    'type'      => 'select',
                    'default'   => $eval['Evaluation']['evaluate_score_id'],
                    'options'   => $scoreList,
-                   'id'        => '',
                    'label'     => __d('gl', "評価スコア"),
                    'class'     => 'form-control col-xxs-3',
                    'wrapInput' => false,
