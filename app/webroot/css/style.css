@@ -3889,3 +3889,7 @@ Temporary Properties - YOU MUST FIX
 .none-border {
     border: none !important;
 }
+
+.bg-lightGray {
+    background-color: #f0f0f0;
+}
