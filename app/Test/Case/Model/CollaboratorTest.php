@@ -209,7 +209,7 @@ class CollaboratorTest extends CakeTestCase
     {
         $this->Collaborator->my_uid = 1;
         $this->Collaborator->current_team_id = 1;
-        $actual = $this->Collaborator->getLeaderUid(1);
+        $actual = $this->Collaborator->getLeaderUid(111111);
         $this->assertEquals(null, $actual);
     }
 
