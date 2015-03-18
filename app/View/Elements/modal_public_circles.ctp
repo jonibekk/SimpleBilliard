@@ -52,7 +52,8 @@
             <div class="tab-pane fade" id="tab2">
                 <? if (!empty($joined_circles)): ?>
                     <div class="row borderBottom">
-                        <? foreach ($joined_circles as $key => $circle): ?>
+                        <? foreach ($joined_circles as $circle): ?>
+                            <? ++$key ?>
                             <?=
                             $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
                         <? endforeach ?>

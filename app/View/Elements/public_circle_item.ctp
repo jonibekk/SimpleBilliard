@@ -48,6 +48,8 @@ if (!isset($form)) {
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
             <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
+            &middot;
+            <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified'])) ?>
         </div>
     </div>
 </div>

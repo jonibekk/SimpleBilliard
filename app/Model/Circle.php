@@ -212,7 +212,7 @@ class Circle extends AppModel
         return $circle;
     }
 
-    function getPublicCircles($type = 'all', $start_date = null, $end_date = null,$order = 'Circle.modified desc')
+    function getPublicCircles($type = 'all', $start_date = null, $end_date = null, $order = 'Circle.modified desc')
     {
         $options = [
             'conditions' => [
@@ -322,6 +322,19 @@ class Circle extends AppModel
             return $res['Circle']['name'];
         }
         return null;
+    }
+
+    function updateModified($circle_list)
+    {
+        if (empty($circle_list)) {
+            return false;
+        }
+        $conditions = [
+            'Circle.id' => $circle_list,
+        ];
+
+        $res = $this->updateAll(['modified' => "'" . time() . "'"], $conditions);
+        return $res;
     }
 
 }
