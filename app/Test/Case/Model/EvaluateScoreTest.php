@@ -15,7 +15,6 @@ class EvaluateScoreTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.evaluate_score',
         'app.team',
         'app.badge',
         'app.user',
@@ -55,7 +54,8 @@ class EvaluateScoreTest extends CakeTestCase
         'app.invite',
         'app.thread',
         'app.message',
-        'app.evaluation'
+        'app.evaluation',
+        'app.evaluate_score'
     );
 
     /**
@@ -66,7 +66,7 @@ class EvaluateScoreTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->EvaluateScore = ClassRegistry::init('EvaluateScore');
+        $this->Evaluation = ClassRegistry::init('Evaluation');
     }
 
     /**
@@ -76,14 +76,57 @@ class EvaluateScoreTest extends CakeTestCase
      */
     public function tearDown()
     {
+        unset($this->Evaluation);
         unset($this->EvaluateScore);
 
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetScoreList()
     {
+        $this->Evaluation->EvaluateScore->deleteAll(['team_id' => 1]);
+        $data = [
+            [
+                'team_id'     => 1,
+                'name'        => 'A++',
+                'description' => 'aiueo',
+                'index'       => 0
+            ],
+            [
+                'team_id'     => 1,
+                'name'        => 'A+',
+                'description' => 'kakikukeko',
+                'index'       => 1
+            ],
+            [
+                'team_id'     => 2,
+                'name'        => 'A++',
+                'description' => 'sasisuseso',
+                'index'       => 1
+            ],
+            [
+                'team_id'     => 1,
+                'name'        => 'A',
+                'description' => 'tatituteto',
+                'index'       => 2
+            ],
+            [
+                'team_id'     => 1,
+                'name'        => 'B',
+                'description' => 'naninuneno',
+                'index'       => 3
+            ],
+            [
+                'team_id'     => 2,
+                'name'        => 'A+',
+                'description' => 'hahihuheho',
+                'index'       => 2
+            ]
+        ];
+        $this->Evaluation->EvaluateScore->saveAll($data);
+        $expected = 4;
 
+        $res = $this->Evaluation->EvaluateScore->getScoreList(1);
+        $this->assertEquals(count($res), $expected);
     }
-
 }
