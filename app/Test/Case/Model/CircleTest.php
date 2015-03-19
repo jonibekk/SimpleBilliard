@@ -3,7 +3,8 @@ App::uses('Circle', 'Model');
 
 /**
  * Circle Test Case
-
+ *
+ * @property Circle $Circle
  */
 class CircleTest extends CakeTestCase
 {
@@ -70,4 +71,22 @@ class CircleTest extends CakeTestCase
     {
     }
 
+    public function testUpdateModifiedIfEmpty()
+    {
+        $circle_list = [];
+        $res = $this->Circle->updateModified($circle_list);
+        $this->assertFalse($res);
+    }
+
+    function testGetPublicCircles()
+    {
+        $this->Circle->my_uid = 1;
+        $this->Circle->current_team_id = 1;
+        $this->Circle->getPublicCircles($type = 'all');
+        $this->Circle->getPublicCircles($type = 'joined');
+        $this->Circle->getPublicCircles($type = 'non-joined');
+        $this->Circle->my_uid = 2;
+        $this->Circle->getPublicCircles($type = 'joined');
+        $this->Circle->getPublicCircles($type = 'non-joined');
+    }
 }

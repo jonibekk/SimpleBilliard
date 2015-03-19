@@ -129,4 +129,16 @@ class CommentRead extends AppModel
         return $res;
     }
 
+    function countMyRead($comment_list)
+    {
+        $options = [
+            'conditions' => [
+                'CommentRead.comment_id' => $comment_list,
+                'CommentRead.user_id'    => $this->my_uid,
+                'CommentRead.team_id'    => $this->current_team_id,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
 }
