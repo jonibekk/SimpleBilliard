@@ -289,11 +289,12 @@ class Post extends AppModel
      *
      * @return array|null|void
      */
-    public function getFollowCollaboPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getRelatedPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $g_list = [];
         $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
         $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true));
+        $g_list = array_merge($g_list, $this->Goal->User->TeamMember->getCoachingGoalList($this->my_uid));
 
         if (empty($g_list)) {
             return [];
@@ -405,8 +406,8 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
             //自分のサークルが共有範囲指定された投稿
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
-            //フォローorコラボのゴール投稿を取得
-            $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
+            //フォローorコラボorマイメンバーのゴール投稿を取得
+            $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
 
         }
         //パラメータ指定あり
@@ -454,7 +455,7 @@ class Post extends AppModel
             elseif ($this->orgParams['filter_goal']) {
                 $p_list = $this->getAllExistGoalPostList($start, $end);
                 //フォローorコラボのゴール投稿を取得
-                $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
+                $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
             }
         }
 

@@ -707,7 +707,15 @@ class Goal extends AppModel
                     ],
                 ],
                 'User'         => [
-                    'fields' => $this->User->profileFields,
+                    'fields'     => $this->User->profileFields,
+                    'TeamMember' => [
+                        'fields' => [
+                            'coach_user_id',
+                        ],
+                        'conditions' =>[
+                            'coach_user_id' => $this->my_uid,
+                        ]
+                    ],
                 ]
             ]
         ];

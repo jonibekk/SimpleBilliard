@@ -1403,4 +1403,29 @@ class TeamMember extends AppModel
         return $this->find('list', $options);
     }
 
+    /**
+     * マイメンバーのゴールを取得する
+     *
+     * @param      $user_id
+     * @param null $limit
+     * @param int  $page
+     *
+     * @return array|null
+     */
+    function getCoachingGoalList($user_id, $limit = null, $page = 1)
+    {
+        $options = [
+            'conditions' => [
+                'coach_user_id' => $user_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'user_id'
+            ],
+        ];
+        $member_list = $this->find("list",$options);
+        $res = $this->User->Collaborator->getCollaboGoalList($member_list, true, $limit, $page);
+        return $res;
+    }
+
 }
