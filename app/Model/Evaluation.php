@@ -175,7 +175,15 @@ class Evaluation extends AppModel
                 'Goal' => [
                     'KeyResult',
                     'GoalCategory',
-                    'MyCollabo'
+                    'MyCollabo',
+                    'ActionResult' => [
+                        'conditions' => [
+                            'user_id' => $evaluateeId
+                        ],
+                        'fields' => [
+                            'id'
+                        ]
+                    ]
                 ]
             ]
         ];
