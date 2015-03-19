@@ -102,6 +102,181 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/view/', ['method' => 'GET']);
     }
 
+    public function testViewNotExistEditableEvaluation()
+    {
+        $this->_getEvaluationsCommonMock();
+        $this->Evaluation->deleteAll(['evaluate_term_id' => 1]);
+        $records = [
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'あいうえお',
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'かきくけこ',
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 1,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'さしすせそ',
+                'evaluate_score_id' => 1,
+                'index'             => 2,
+                'goal_id'           => 2,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'たちつてと',
+                'evaluate_score_id' => 1,
+                'index'             => 3,
+                'goal_id'           => 3,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'なにぬねの',
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => 10,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'はひふへほ',
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 11,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'まみむめも',
+                'evaluate_score_id' => 1,
+                'index'             => 2,
+                'goal_id'           => 12,
+                'status'            => 2,
+            ],
+        ];
+        $this->Evaluation->saveAll($records);
+        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
+    }
+
+    public function testViewNotExistTotalEvaluation()
+    {
+        $this->_getEvaluationsCommonMock();
+        $this->Evaluation->deleteAll(['evaluate_term_id' => 1]);
+        $records = [
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'あいうえお',
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => 1,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'かきくけこ',
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 2,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'さしすせそ',
+                'evaluate_score_id' => 1,
+                'index'             => 2,
+                'goal_id'           => 3,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'たちつてと',
+                'evaluate_score_id' => 1,
+                'index'             => 3,
+                'goal_id'           => 10,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'なにぬねの',
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => 11,
+                'status'            => 2,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'はひふへほ',
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 12,
+                'status'            => 2,
+            ],
+        ];
+        $this->Evaluation->saveAll($records);
+        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
+    }
+
     /**
      * add method
      *
@@ -192,12 +367,16 @@ class EvaluationsControllerTest extends ControllerTestCase
             'is_register' => true,
             [
                 'Evaluation' => [
-                    'id' => 1,
+                    'id'                => 1,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id' => 2,
+                    'id'                => 2,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
                 ],
             ],
             [
@@ -209,7 +388,9 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 4,
+                    'id'                => 4,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
                 ],
             ],
         ];
