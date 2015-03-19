@@ -174,6 +174,10 @@ class Post extends AppModel
         'Comment'         => [
             'dependent' => true,
         ],
+        'CommentId'       => [
+            'className' => 'Comment',
+            'fields'    => ['CommentId.id', 'CommentId.user_id'],
+        ],
         'PostShareUser'   => [
             'dependent' => true,
         ],
@@ -515,6 +519,7 @@ class Post extends AppModel
                         ]
                     ],
                 ],
+                'CommentId',
                 'PostShareCircle' => [
                     'fields' => [
                         "PostShareCircle.id",
@@ -596,7 +601,8 @@ class Post extends AppModel
         $res = $this->getShareMode($res);
         //シェアメッセージの特定
         $res = $this->getShareMessages($res);
-
+        //未読件数を取得
+        $res = $this->getCommentMyUnreadCount($res);
         return $res;
     }
 
@@ -771,6 +777,24 @@ class Post extends AppModel
                     }
 
                     break;
+            }
+        }
+        return $data;
+    }
+
+    function getCommentMyUnreadCount($data)
+    {
+        foreach ($data as $key => $val) {
+            if ($val['Post']['comment_count'] > 3) {
+                $comment_list = [];
+                foreach ($val['CommentId'] as $comment_id) {
+                    if ($comment_id['user_id'] != $this->my_uid) {
+                        $comment_list[] = $comment_id['id'];
+                    }
+                }
+                //未読件数 = 自分以外のコメント数 - 自分以外のコメントの自分の既読数
+                $data[$key]['unread_count'] =
+                    count($comment_list) - $this->Comment->CommentRead->countMyRead($comment_list);
             }
         }
         return $data;
