@@ -63,9 +63,9 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [GitHub](docs/tips/GitHub.md)
 - [Git](docs/tips/Git.md)
 - [PhpStorm](docs/tips/PhpStorm.md)
-- [Travis.md](docs/tips/Travis.md)
-- [Mac.md](docs/tips/Mac.md)
-- [Windows.md](docs/tips/Windows.md)
+- [Travis](docs/tips/Travis.md)
+- [Mac](docs/tips/Mac.md)
+- [Windows](docs/tips/Windows.md)
 
 ### 調査内容
 - [SQL](docs/investigations/SQL.md)
