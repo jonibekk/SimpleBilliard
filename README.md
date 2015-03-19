@@ -25,27 +25,27 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 
 ### ガイドライン
 #### 基本ポリシー
-- [チームのポリシー](TeamPolicy.md)
-- [禁止事項](Prohibited.md)
-- [ドキュメントについて](Documentation.md)
+- [チームのポリシー](docs/guidelines/TeamPolicy.md)
+- [禁止事項](docs/guidelines/Prohibited.md)
+- [ドキュメントについて](docs/guidelines/Documentation.md)
 
 #### 開発ガイドライン
-- [開発サイクル](DevelopmentCycle.md)
-- [アジャイル開発](Ajile.md)
-- [イテレーションについて](Iteration.md)
+- [開発サイクル](docs/guidelines/DevelopmentCycle.md)
+- [アジャイル開発](docs/guidelines/Ajile.md)
+- [イテレーションについて](docs/guidelines/Iteration.md)
 
 #### 運用ガイドライン
-- [GitHub運用ガイドライン](GitHub.md)
-- [Waffle運用ガイドライン](Waffle.md)
+- [GitHub運用ガイドライン](docs/guidelines/GitHub.md)
+- [Waffle運用ガイドライン](docs/guidelines/Waffle.md)
 
 #### コーディングガイド
-- [CSSコーディングガイド](CSS.md)
-- [CakePHPコーディングガイド](CodingGuideCakePHP.md)
+- [CSSコーディングガイド](docs/guidelines/CSS.md)
+- [CakePHPコーディングガイド](docs/guidelines/CodingGuideCakePHP.md)
 
 #### プラグイン・ライブラリ
-- [jQuery Plugin](jQueryPlugins.md)
-- [CakePHP Plugin](CodingGuideCakePHP.md)
-- [PHPライブラリ](LibraryForPHP.md)
+- [jQuery Plugin](docs/guidelines/jQueryPlugins.md)
+- [CakePHP Plugin](docs/guidelines/CodingGuideCakePHP.md)
+- [PHPライブラリ](docs/guidelines/LibraryForPHP.md)
 
 ### 手順書
 - [開発環境構築手順書](docs/process_docs/LocalDevEnv.md)
