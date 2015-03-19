@@ -7,6 +7,7 @@
  * @var                    $eval_term_id
  * @var                    $incomplete_count
  * @var                    $is_myself_evaluations_incomplete
+ * @var                    $my_eval_status
  */
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
@@ -26,7 +27,7 @@
                 <? endif; ?>
             </div>
             <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', $eval_term_id, $this->Session->read('Auth.User.id')]) ?>"
-               class="">
+               class="font_verydark">
                 <div class="col-xxs-12 mb_8px">
                     <div class="col-xxs-1">
                         <?=
@@ -35,9 +36,16 @@
                     </div>
                     <div class="col-xxs-11">
                         <p><?= $this->Session->read('Auth.User.display_username') ?></p>
-                        <span><?= __d('gl', "あなた") ?></span><i class="fa fa-long-arrow-right"></i><span><?= __d('gl',
-                                                                                                                "最終者") ?></span>
-
+                        <? foreach ($my_eval_status as $k => $v): ?>
+                            <? if ($k !== 0): ?>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<? endif ?>
+                            <span>
+                                <? if ($v['my_tarn']): ?>
+                                    <b><?= $v['name'] ?></b>
+                                <? else: ?>
+                                    <?= $v['name'] ?>
+                                <? endif; ?>
+                            </span>
+                        <? endforeach ?>
                         <? if ($is_myself_evaluations_incomplete): ?>
                             <p class="font_brownRed"><?= __d('gl', "自己評価をしてください") ?></p>
                         <? endif; ?>

@@ -13,6 +13,7 @@ class EvaluationsController extends AppController
     function beforeFilter()
     {
         parent::beforeFilter();
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->Security->enabled = false;
     }
 
@@ -33,12 +34,13 @@ class EvaluationsController extends AppController
         $incomplete_count = 0;
         //get evaluation setting.
         $eval_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $my_eval_status = $this->Evaluation->getMyEvalStatus($eval_term_id);
         $is_myself_evaluations_incomplete = $this->Evaluation->isMySelfEvalIncomplete($eval_term_id);
         if ($is_myself_evaluations_incomplete) {
             $incomplete_count++;
         }
 
-        $this->set(compact('eval_term_id', 'incomplete_count', 'is_myself_evaluations_incomplete'));
+        $this->set(compact('eval_term_id', 'incomplete_count', 'is_myself_evaluations_incomplete', 'my_eval_status'));
     }
 
     function view($evaluateTermId = null, $evaluateeId = null)
