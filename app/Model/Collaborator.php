@@ -204,4 +204,25 @@ class Collaborator extends AppModel
         return $this->find('count', $options);
     }
 
+    function getLeaderUid($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+                'type'    => [
+                    Collaborator::TYPE_OWNER,
+                ],
+            ],
+            'fields'     => [
+                'user_id'
+            ],
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['Collaborator']['user_id'])) {
+            return $res['Collaborator']['user_id'];
+        }
+        return null;
+    }
+
 }

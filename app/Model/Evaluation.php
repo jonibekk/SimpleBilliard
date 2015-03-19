@@ -13,7 +13,6 @@ App::uses('AppModel', 'Model');
  */
 class Evaluation extends AppModel
 {
-
     /**
      * Display field
      *
@@ -230,6 +229,131 @@ class Evaluation extends AppModel
         }
         $this->validate['evaluate_score_id']['notEmpty'] = ['rule' => 'notEmpty'];
         return;
+    }
+
+    /**
+     * @return bool
+     */
+    function startEvaluation()
+    {
+        //get evaluation setting.
+        if (!$this->Team->EvaluationSetting->isEnabled()) {
+            return false;
+        }
+        $this->Team->EvaluateTerm->saveTerm();
+        $term_id = $this->Team->EvaluateTerm->getLastInsertID();
+        $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
+        $evaluators = [];
+        if ($this->Team->EvaluationSetting->isEnabledEvaluator()) {
+            $evaluators = $this->Team->Evaluator->getEvaluatorsCombined();
+        }
+        $all_evaluations = [];
+        //一人ずつデータを生成
+        foreach ($team_members_list as $uid) {
+            $all_evaluations = array_merge($all_evaluations,
+                                           $this->getAddRecordsOfEvaluatee($uid, $term_id, $evaluators));
+        }
+        if (!empty($all_evaluations)) {
+            $res = $this->saveAll($all_evaluations);
+            return (bool)$res;
+        }
+        return false;
+    }
+
+    /**
+     * @param $uid
+     * @param $term_id
+     * @param $evaluators
+     *
+     * @return array
+     */
+    function getAddRecordsOfEvaluatee($uid, $term_id, $evaluators)
+    {
+        $index = 0;
+        $evaluations = [];
+        //self total
+        if ($this->Team->EvaluationSetting->isEnabledSelf()) {
+            $evaluations[] = $this->getAddRecord($uid, $uid, $term_id, $index++, self::TYPE_ONESELF);
+        }
+        //evaluator total
+        if ($this->Team->EvaluationSetting->isEnabledEvaluator() && viaIsSet($evaluators[$uid])) {
+            $evals = $evaluators[$uid];
+            foreach ($evals as $eval_uid) {
+                $evaluations[] = $this->getAddRecord($uid, $eval_uid, $term_id, $index++, self::TYPE_EVALUATOR);
+            }
+        }
+        //final total
+        if ($this->Team->EvaluationSetting->isEnabledFinal() && $admin_uid = $this->Team->TeamMember->getTeamAdminUid()) {
+            $evaluations[] = $this->getAddRecord($uid, $admin_uid, $term_id, $index++,
+                                                 self::TYPE_FINAL_EVALUATOR);
+        }
+
+        $evaluations = array_merge($evaluations,
+                                   $this->getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index));
+
+        return $evaluations;
+    }
+
+    /**
+     * @param $uid
+     * @param $term_id
+     * @param $evaluators
+     * @param $index
+     *
+     * @return array
+     */
+    function getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index)
+    {
+        $goal_evaluations = [];
+        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true);
+        foreach ($goal_list as $gid) {
+            //self
+            if ($this->Team->EvaluationSetting->isEnabledSelf()) {
+                $goal_evaluations[] = $this->getAddRecord($uid, $uid, $term_id, $index++, self::TYPE_ONESELF, $gid);
+            }
+
+            //evaluator
+            if ($this->Team->EvaluationSetting->isEnabledEvaluator() && viaIsSet($evaluators[$uid])) {
+                $evals = $evaluators[$uid];
+                foreach ($evals as $eval_uid) {
+                    $goal_evaluations[] = $this->getAddRecord($uid, $eval_uid, $term_id, $index++,
+                                                              self::TYPE_EVALUATOR, $gid);
+                }
+            }
+            //leader
+            if ($this->Team->EvaluationSetting->isEnabledLeader()) {
+                $leader_uid = $this->Goal->Collaborator->getLeaderUid($gid);
+                if ($uid !== $leader_uid) {
+                    $goal_evaluations[] = $this->getAddRecord($uid, $leader_uid, $term_id, $index++,
+                                                              self::TYPE_LEADER, $gid);
+                }
+            }
+        }
+        return $goal_evaluations;
+    }
+
+    /**
+     * @param      $evaluatee_user_id
+     * @param      $evaluator_user_id
+     * @param      $term_id
+     * @param      $index
+     * @param      $type
+     * @param null $goal_id
+     *
+     * @return array
+     */
+    function getAddRecord($evaluatee_user_id, $evaluator_user_id, $term_id, $index, $type, $goal_id = null)
+    {
+        $record = [
+            'evaluatee_user_id' => $evaluatee_user_id,
+            'evaluator_user_id' => $evaluator_user_id,
+            'team_id'           => $this->current_team_id,
+            'goal_id'           => $goal_id,
+            'evaluate_term_id'  => $term_id,
+            'evaluate_type'     => $type,
+            'index'             => $index,
+        ];
+        return $record;
     }
 
 }

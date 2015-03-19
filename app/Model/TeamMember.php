@@ -212,7 +212,7 @@ class TeamMember extends AppModel
         return $this->save($data);
     }
 
-    public function getAllMemberUserIdList($with_me = true)
+    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false)
     {
         $options = [
             'conditions' => [
@@ -221,6 +221,12 @@ class TeamMember extends AppModel
             ],
             'fields'     => ['user_id'],
         ];
+        if ($required_active) {
+            $options['conditions']['active_flg'] = true;
+        }
+        if ($required_evaluate) {
+            $options['conditions']['evaluation_enable_flg'] = true;
+        }
         if (!$with_me) {
             $options['conditions']['NOT']['user_id'] = $this->my_uid;
         }
@@ -1401,6 +1407,21 @@ class TeamMember extends AppModel
             ],
         ];
         return $this->find('list', $options);
+    }
+
+    function getTeamAdminUid()
+    {
+        $options = [
+            'conditions' => [
+                'team_id'   => $this->current_team_id,
+                'admin_flg' => true
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['TeamMember']['id'])) {
+            return $res['TeamMember']['id'];
+        }
+        return null;
     }
 
     /**

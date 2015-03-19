@@ -108,82 +108,82 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
         $records = [
             [
-                'id' => 1,
+                'id'                => 1,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'comment' => "a",
+                'comment'           => "a",
                 'evaluate_score_id' => 1,
                 'index'             => 0,
                 'goal_id'           => 1,
-                'status' => 2
+                'status'            => 2
             ],
             [
-                'id' => 2,
+                'id'                => 2,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'comment' => "b",
+                'comment'           => "b",
                 'evaluate_score_id' => 1,
                 'index'             => 1,
                 'goal_id'           => 2,
-                'status' => 2
+                'status'            => 2
             ],
             [
-                'id' => 3,
+                'id'                => 3,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'comment' => "c",
+                'comment'           => "c",
                 'evaluate_score_id' => 1,
                 'index'             => 2,
                 'goal_id'           => 3,
-                'status' => 2
+                'status'            => 2
             ],
             [
-                'id' => 4,
+                'id'                => 4,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'comment' => "d",
+                'comment'           => "d",
                 'evaluate_score_id' => 1,
                 'index'             => 3,
                 'goal_id'           => 10,
-                'status' => 2
+                'status'            => 2
             ],
             [
-                'id' => 5,
+                'id'                => 5,
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => 2,
                 'evaluate_type'     => 0,
-                'comment' => "e",
+                'comment'           => "e",
                 'evaluate_score_id' => 1,
                 'index'             => 0,
                 'goal_id'           => 11,
-                'status' => 2
+                'status'            => 2
             ],
             [
-                'id' => 6,
+                'id'                => 6,
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => 2,
                 'evaluate_type'     => 0,
-                'comment' => "f",
+                'comment'           => "f",
                 'evaluate_score_id' => 1,
                 'index'             => 1,
                 'goal_id'           => 12,
-                'status' => 2
+                'status'            => 2
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
@@ -196,7 +196,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
         $records = [
             [
-                'id' => 1,
+                'id'                => 1,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 2,
@@ -206,7 +206,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'goal_id'           => 1,
             ],
             [
-                'id' => 2,
+                'id'                => 2,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
@@ -216,7 +216,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'goal_id'           => 2,
             ],
             [
-                'id' => 3,
+                'id'                => 3,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
@@ -226,7 +226,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'goal_id'           => 3,
             ],
             [
-                'id' => 4,
+                'id'                => 4,
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
@@ -236,7 +236,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'goal_id'           => 10,
             ],
             [
-                'id' => 5,
+                'id'                => 5,
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
@@ -246,7 +246,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'goal_id'           => 11,
             ],
             [
-                'id' => 6,
+                'id'                => 6,
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,

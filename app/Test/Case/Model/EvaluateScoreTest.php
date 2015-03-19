@@ -66,7 +66,7 @@ class EvaluateScoreTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Evaluation = ClassRegistry::init('Evaluation');
+        $this->EvaluateScore = ClassRegistry::init('EvaluateScore');
     }
 
     /**
@@ -76,7 +76,6 @@ class EvaluateScoreTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->Evaluation);
         unset($this->EvaluateScore);
 
         parent::tearDown();
@@ -84,7 +83,7 @@ class EvaluateScoreTest extends CakeTestCase
 
     function testGetScoreList()
     {
-        $this->Evaluation->EvaluateScore->deleteAll(['team_id' => 1]);
+        $this->EvaluateScore->deleteAll(['team_id' => 1]);
         $data = [
             [
                 'team_id'     => 1,
@@ -123,10 +122,10 @@ class EvaluateScoreTest extends CakeTestCase
                 'index'       => 2
             ]
         ];
-        $this->Evaluation->EvaluateScore->saveAll($data);
+        $this->EvaluateScore->saveAll($data);
         $expected = 4;
 
-        $res = $this->Evaluation->EvaluateScore->getScoreList(1);
+        $res = $this->EvaluateScore->getScoreList(1);
         $this->assertEquals(count($res), $expected);
     }
 }

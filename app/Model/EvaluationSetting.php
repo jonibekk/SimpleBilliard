@@ -8,11 +8,11 @@ App::uses('AppModel', 'Model');
  */
 class EvaluationSetting extends AppModel
 {
-
     const FLG_ENABLE = 'enable_flg';
     const FLG_SELF = 'self_flg';
     const FLG_EVALUATOR = 'evaluator_flg';
     const FLG_FINAL = 'final_flg';
+    const FLG_LEADER = 'leader_flg';
 
     /**
      * Validation rules
@@ -217,6 +217,14 @@ class EvaluationSetting extends AppModel
     function isEnabledFinal()
     {
         return $this->isFlagOn(self::FLG_FINAL);
+    }
+
+    /**
+     * @return bool
+     */
+    function isEnabledLeader()
+    {
+        return $this->isFlagOn(self::FLG_LEADER);
     }
 
     private function isFlagOn($flag_name)

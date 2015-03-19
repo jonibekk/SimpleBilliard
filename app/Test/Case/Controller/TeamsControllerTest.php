@@ -17,6 +17,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.circle_member',
         'app.member_type',
         'app.evaluation_setting',
+        'app.evaluation',
         'app.action_result',
         'app.goal',
         'app.follower',
@@ -254,11 +255,38 @@ class TeamsControllerTest extends ControllerTestCase
 
     }
 
+    function testSettingsSuccessNotAvailStartEvalButton()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams->Team->EvaluateTerm->saveTerm();
+
+        $this->testAction('/teams/settings', ['method' => 'GET']);
+    }
+
     function testSettingsFail()
     {
         $this->_getTeamsCommonMock(null, true, false);
         $this->testAction('/teams/settings', ['method' => 'GET']);
+    }
 
+    function testStartEvaluationSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true, false);
+        $this->testAction('/teams/start_evaluation', ['method' => 'POST']);
+    }
+
+    function testStartEvaluationFailEvalNotEnable()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true, false);
+        $Teams->Team->EvaluationSetting->deleteAll(['EvaluationSetting.team_id' => 1]);
+        $this->testAction('/teams/start_evaluation', ['method' => 'POST']);
+    }
+
+    function testStartEvaluationFailSaveEvalFail()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true, false);
+        $Teams->Team->TeamMember->updateAll(['TeamMember.evaluation_enable_flg' => false], ['TeamMember.team_id' => 1]);
+        $this->testAction('/teams/start_evaluation', ['method' => 'POST']);
     }
 
     function testAjaxUploadNewMembersCsvEmpty()
@@ -428,6 +456,15 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams->Team->TeamMember->MemberType->uid = 1;
         $Teams->Team->TeamMember->User->Email->current_team_id = 1;
         $Teams->Team->TeamMember->User->Email->uid = 1;
+        $Teams->Team->EvaluateTerm->current_team_id = 1;
+        $Teams->Team->EvaluateTerm->my_uid = 1;
+        $Teams->Team->Evaluator->current_team_id = 1;
+        $Teams->Team->Evaluator->my_uid = 1;
+        $Teams->Team->EvaluationSetting->current_team_id = 1;
+        $Teams->Team->EvaluationSetting->my_uid = 1;
+        $Teams->Team->Evaluation->current_team_id = 1;
+        $Teams->Team->Evaluation->my_uid = 1;
+
         return $Teams;
     }
 }

@@ -59,6 +59,10 @@ class EvaluationTest extends CakeTestCase
         'app.evaluate_score',
         'app.evaluation_setting'
     );
+    private $current_date;
+    private $start_date;
+    private $end_date;
+    private $notAllowEmptyArray;
 
     /**
      * setUp method
@@ -488,6 +492,37 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->validate['evaluate_score_id'] = $this->notAllowEmptyArray;
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $this->notAllowEmptyArray);
+    }
+
+    function testStartEvaluationNotEnabled()
+    {
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
+        $res = $this->Evaluation->startEvaluation();
+        $this->assertFalse($res);
+    }
+
+    function testStartEvaluationAllEnabled()
+    {
+        $this->_setDefault();
+        $res = $this->Evaluation->startEvaluation();
+        $this->assertTrue($res);
+    }
+
+    function _setDefault()
+    {
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
+        $this->Evaluation->Team->TeamMember->current_team_id = 1;
+        $this->Evaluation->Team->TeamMember->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->current_team_id = 1;
+        $this->Evaluation->Team->EvaluateTerm->my_uid = 1;
+        $this->Evaluation->Team->Evaluator->current_team_id = 1;
+        $this->Evaluation->Team->Evaluator->my_uid = 1;
+        $this->Evaluation->Team->EvaluationSetting->current_team_id = 1;
+        $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
+        $this->Evaluation->Goal->Collaborator->current_team_id = 1;
+        $this->Evaluation->Goal->Collaborator->my_uid = 1;
     }
 
 }
