@@ -6,6 +6,7 @@
  * @var CodeCompletionView $this
  * @var                    $scoreList
  * @var                    $goalList
+ * @var                    $evaluateeId
  */
 ?>
 <!-- START app/View/Evaluations/view.ctp -->
@@ -86,7 +87,6 @@
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
         <div class="panel-heading"><?= __d('gl', "ゴール評価") ?>(<?= $key ?>/<?= count($goalList) ?>)</div>
 
-
         <div class="panel-body eval-view-panel-body">
             <div class="form-group">
                 <div class="col col-xxs-6 col-sm-3">
@@ -119,28 +119,32 @@
                 <div class="col-xxs-12">
                     <div class="col-xxs-6">
                         <div class="eval-view-result-number">
-                            <a class="develop--forbiddenLink" href="#">
-                                <?= count($eval['Goal']['KeyResult']) ?>
-                            </a>
+                            <div style="margin:0 auto;width:100px;">
+                                <a class="develop--forbiddenLink" href="#">
+                                    <?= count($eval['Goal']['KeyResult']) ?>
+                                </a>
+                            </div>
                         </div>
                         <div class="eval-view-result-text">
-                            <a class="develop--forbiddenLink" href="#">
-                                <?= __d('gl', "成果") ?>
-                            </a>
+                            <div style="margin:0 auto;width:100px;">
+                                <a class="develop--forbiddenLink" href="#">
+                                    <?= __d('gl', "成果") ?>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xxs-6">
                         <div class="eval-view-action-number">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $eval['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
-                                <?= $eval['Goal']['action_result_count'] ?>
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION, 'user_id' => $evaluateeId]) ?>">
+                                <?= count($eval['Goal']['ActionResult']); ?>
                             </a>
                         </div>
                         <div class="eval-view-action-text">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $eval['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION, 'user_id' => $evaluateeId]) ?>">
                                 <?= __d('gl', "アクション") ?>
                             </a>
                         </div>
@@ -151,8 +155,8 @@
             <div class="form-group">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "役割:") ?>
-                    <? $role = h(viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"])); ?>
-                    <?= ($role) ? $role : "リーダー" ?>
+                    <? $role = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"]); ?>
+                    <?= ($role) ? h($role) : "リーダー" ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "アクション:") ?>
@@ -167,7 +171,21 @@
                     <?= h($eval['Goal']['progress']) ?>%
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                    <?= __d('gl', "成果:") ?>
+                    <? if (empty($eval['Goal']['KeyResult'])): ?>
+                        <?= __d('gl', "なし") ?>
+                    <? else: ?>
+                        <? foreach ($eval['Goal']['KeyResult'] as $kr): ?>
+                            <p><?= h($kr['name']) ?></p>
+                        <? endforeach; ?>
+                    <? endif; ?>
+                </div>
+                <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
+                    <? $collaboPriority = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["priority"]); ?>
+                    <? $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($eval,
+                                                                                                  "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
+                    <?= h($priority) ?>
                 </div>
             </div>
             <hr>
