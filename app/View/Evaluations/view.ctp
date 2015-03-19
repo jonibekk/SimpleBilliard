@@ -4,6 +4,9 @@
  * @package       app.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var CodeCompletionView $this
+ * @var                    $scoreList
+ * @var                    $goalList
+ * @var                    $evaluateeId
  */
 ?>
 <!-- START app/View/Evaluations/view.ctp -->
@@ -169,18 +172,19 @@
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "成果:") ?>
-                    <? if(empty($eval['Goal']['KeyResult'])):?>
+                    <? if (empty($eval['Goal']['KeyResult'])): ?>
                         <?= __d('gl', "なし") ?>
                     <? else: ?>
-                        <? foreach($eval['Goal']['KeyResult'] as $kr): ?>
+                        <? foreach ($eval['Goal']['KeyResult'] as $kr): ?>
                             <p><?= h($kr['name']) ?></p>
-                        <? endforeach;?>
-                    <? endif;?>
+                        <? endforeach; ?>
+                    <? endif; ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
                     <? $collaboPriority = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["priority"]); ?>
-                    <? $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
+                    <? $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($eval,
+                                                                                                  "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
                     <?= h($priority) ?>
                 </div>
             </div>
