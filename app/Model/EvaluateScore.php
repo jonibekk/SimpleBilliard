@@ -52,7 +52,8 @@ class EvaluateScore extends AppModel
         'Evaluation'
     ];
 
-    public function getScoreList($teamId) {
+    public function getScoreList($teamId)
+    {
         $options = [
             'conditions' => [
                 'team_id' => $teamId,

@@ -186,17 +186,18 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
     }
 
-    public function testAddPostRegisterValidationError() {
+    public function testAddPostRegisterValidationError()
+    {
         $data = [
             'is_register' => true,
             [
                 'Evaluation' => [
-                    'id'                => 1,
+                    'id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id'                => 2,
+                    'id' => 2,
                 ],
             ],
             [
@@ -208,7 +209,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
             [
                 'Evaluation' => [
-                    'id'                => 4,
+                    'id' => 4,
                 ],
             ],
         ];
@@ -255,8 +256,8 @@ class EvaluationsControllerTest extends ControllerTestCase
                           ->will($this->returnValue(true));
         /** @noinspection PhpUndefinedMethodInspection */
         $Evaluations->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
+                          ->will($this->returnValueMap($value_map)
+                          );
 
         $Evaluations->Evaluation->Team->TeamMember->current_team_id = 1;
         $Evaluations->Evaluation->Team->TeamMember->my_uid = 1;

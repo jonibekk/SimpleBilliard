@@ -87,40 +87,40 @@ class EvaluateScoreTest extends CakeTestCase
         $this->Evaluation->EvaluateScore->deleteAll(['team_id' => 1]);
         $data = [
             [
-                'team_id' => 1,
-                'name' => 'A++',
+                'team_id'     => 1,
+                'name'        => 'A++',
                 'description' => 'aiueo',
-                'index'   => 0
+                'index'       => 0
             ],
             [
-                'team_id' => 1,
-                'name' => 'A+',
+                'team_id'     => 1,
+                'name'        => 'A+',
                 'description' => 'kakikukeko',
-                'index'   => 1
+                'index'       => 1
             ],
             [
-                'team_id' => 2,
-                'name' => 'A++',
+                'team_id'     => 2,
+                'name'        => 'A++',
                 'description' => 'sasisuseso',
-                'index'   => 1
+                'index'       => 1
             ],
             [
-                'team_id' => 1,
-                'name' => 'A',
+                'team_id'     => 1,
+                'name'        => 'A',
                 'description' => 'tatituteto',
-                'index'   => 2
+                'index'       => 2
             ],
             [
-                'team_id' => 1,
-                'name' => 'B',
+                'team_id'     => 1,
+                'name'        => 'B',
                 'description' => 'naninuneno',
-                'index'   => 3
+                'index'       => 3
             ],
             [
-                'team_id' => 2,
-                'name' => 'A+',
+                'team_id'     => 2,
+                'name'        => 'A+',
                 'description' => 'hahihuheho',
-                'index'   => 2
+                'index'       => 2
             ]
         ];
         $this->Evaluation->EvaluateScore->saveAll($data);
