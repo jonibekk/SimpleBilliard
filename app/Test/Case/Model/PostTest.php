@@ -445,6 +445,50 @@ class PostTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    function testGetCommentMyUnreadCount()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $comment_uid = '2';
+        $comment_num = 4;
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $test_save_data = [
+            'Post'    => [
+                'user_id' => $uid,
+                'team_id' => $team_id,
+                'body'    => 'test',
+            ]
+        ];
+        for ($i = 0 ; $i < $comment_num ; $i++) {
+            $test_save_data['Comment'][] =
+                [
+                    'user_id' => $comment_uid,
+                    'team_id' => $team_id,
+                    'body'    => 'test',
+                ];
+        }
+        $this->Post->saveAll($test_save_data);
+        $options = [
+            'conditions' => [
+                'Post.id' => $this->Post->getLastInsertID(),
+            ],
+            'contain'    => [
+                'Comment'         => [
+                    'conditions'    => ['Comment.team_id' => $team_id],
+                    'order'         => [
+                        'Comment.created' => 'desc'
+                    ],
+                    'limit'         => 3,
+                ],
+                'CommentId',
+            ],
+        ];
+        $res = $this->Post->find('all', $options);
+        $res = $this->Post->getCommentMyUnreadCount($res);
+        $this->assertEquals($comment_num, $res[0]['unread_count']);
+    }
+
     function _setDefault()
     {
         $uid = '1';
