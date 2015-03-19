@@ -431,7 +431,7 @@ class EvaluationTest extends CakeTestCase
      *
      * @return void
      */
-    public function TestSetNotAllowEmptyToCommentCaseOfEmpty()
+    public function testSetNotAllowEmptyToCommentCaseOfEmpty()
     {
         $this->setDefault();
         $this->Evaluation->validate['comment'] = [];
@@ -440,7 +440,7 @@ class EvaluationTest extends CakeTestCase
 
     }
 
-    public function TestSetNotAllowEmptyToCommentCaseOfNotEmpty()
+    public function testSetNotAllowEmptyToCommentCaseOfNotEmpty()
     {
         $this->setDefault();
         $this->Evaluation->validate['comment'] = $this->notAllowEmptyArray;
