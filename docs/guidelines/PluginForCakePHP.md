@@ -1,0 +1,11 @@
+- Oauth認証
+ - [cakephp-opauth](https://github.com/uzyn/cakephp-opauth)
+- Debug
+ - [debug_kit](https://github.com/cakephp/debug_kit)
+- DBマイグレーション
+ - [migrations](https://github.com/CakeDC/migrations)
+- メディアアップロード
+ - [cakephp-file-storage](https://github.com/burzum/cakephp-file-storage)
+- Cake拡張用
+ - [cakeplus](https://github.com/ichikaway/cakeplus)
+ - [utils](https://github.com/CakeDC/utils)
