@@ -131,14 +131,14 @@
                         <div class="eval-view-action-number">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $eval['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_only_my_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION, 'user_id' => $evaluateeId]) ?>">
                                 <?= $eval['Goal']['action_result_count'] ?>
                             </a>
                         </div>
                         <div class="eval-view-action-text">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $eval['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_only_my_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION, 'user_id' => $evaluateeId]) ?>">
                                 <?= __d('gl', "アクション") ?>
                             </a>
                         </div>

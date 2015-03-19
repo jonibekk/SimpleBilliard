@@ -51,6 +51,7 @@ class Post extends AppModel
 
     public $orgParams = [
         'circle_id'   => null,
+        'user_id'     => null,
         'post_id'     => null,
         'goal_id'     => null,
         'filter_goal' => null,
@@ -642,6 +643,9 @@ class Post extends AppModel
             'order'      => [$order => $order_direction],
             'fields'     => ['id'],
         ];
+        if($this->orgParams['user_id']) {
+            $options['conditions']['user_id'] = $this->orgParams['user_id'];
+        }
         $res = $this->find('list', $options);
         return $res;
     }
