@@ -152,8 +152,8 @@
             <div class="form-group">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "役割:") ?>
-                    <? $role = h(viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"])); ?>
-                    <?= ($role) ? $role : "リーダー" ?>
+                    <? $role = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"]); ?>
+                    <?= ($role) ? h($role) : "リーダー" ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "アクション:") ?>
@@ -169,12 +169,19 @@
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "成果:") ?>
-                    <? foreach($eval['Goal']['KeyResult'] as $kr): ?>
-                        <p><?= $kr['name'] ?></p>
-                    <? endforeach;?>
+                    <? if(empty($eval['Goal']['KeyResult'])):?>
+                        <?= __d('gl', "なし") ?>
+                    <? else: ?>
+                        <? foreach($eval['Goal']['KeyResult'] as $kr): ?>
+                            <p><?= h($kr['name']) ?></p>
+                        <? endforeach;?>
+                    <? endif;?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
+                    <? $collaboPriority = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["priority"]); ?>
+                    <? $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
+                    <?= h($priority) ?>
                 </div>
             </div>
             <hr>
