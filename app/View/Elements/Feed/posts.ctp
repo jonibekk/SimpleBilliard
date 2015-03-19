@@ -323,7 +323,10 @@
                         >
                         <i class="fa fa-comment-o"></i>&nbsp;<?=
                         __d('gl', "他%s件のコメントを見る",
-                            $post['Post']['comment_count'] - 3) ?></a>
+                            $post['Post']['comment_count'] - 3) ?>
+                        <?=
+                        __d('gl', "(%s)",
+                            $post['unread_count']) ?></a>
                 <? endif; ?>
 
                 <? foreach ($post['Comment'] as $comment): ?>
