@@ -496,7 +496,8 @@ class EvaluationTest extends CakeTestCase
 
     function testStartEvaluationNotEnabled()
     {
-        $this->_setDefault();
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
         $res = $this->Evaluation->startEvaluation();
         $this->assertFalse($res);
     }
