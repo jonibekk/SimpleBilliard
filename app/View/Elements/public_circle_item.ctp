@@ -49,7 +49,7 @@ if (!isset($form)) {
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
             <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
             &middot;
-            <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified'])) ?>
+            <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified']), 'rough') ?>
         </div>
     </div>
 </div>
