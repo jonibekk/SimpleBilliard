@@ -105,8 +105,8 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotExistEditableEvaluation()
     {
         $this->_getEvaluationsCommonMock();
-        $this->Evaluation->deleteAll(['evaluate_term_id' => 1]);
         $records = [
+            'is_register' => true,
             [
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
@@ -116,7 +116,6 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'comment'           => 'あいうえお',
                 'evaluate_score_id' => 1,
                 'index'             => 0,
-                'status'            => 2,
             ],
             [
                 'team_id'           => 1,
@@ -128,7 +127,6 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 1,
                 'goal_id'           => 1,
-                'status'            => 2,
             ],
             [
                 'team_id'           => 1,
@@ -140,7 +138,6 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 2,
                 'goal_id'           => 2,
-                'status'            => 2,
             ],
             [
                 'team_id'           => 1,
@@ -152,7 +149,6 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 3,
                 'goal_id'           => 3,
-                'status'            => 2,
             ],
             [
                 'team_id'           => 2,
@@ -164,7 +160,6 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 0,
                 'goal_id'           => 10,
-                'status'            => 2,
             ],
             [
                 'team_id'           => 2,
@@ -176,7 +171,6 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 1,
                 'goal_id'           => 11,
-                'status'            => 2,
             ],
             [
                 'team_id'           => 2,
@@ -188,18 +182,17 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 2,
                 'goal_id'           => 12,
-                'status'            => 2,
             ],
         ];
-        $this->Evaluation->saveAll($records);
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $records]);
         $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 
     public function testViewNotExistTotalEvaluation()
     {
         $this->_getEvaluationsCommonMock();
-        $this->Evaluation->deleteAll(['evaluate_term_id' => 1]);
         $records = [
+            'is_draft' => true,
             [
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
@@ -210,7 +203,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 0,
                 'goal_id'           => 1,
-                'status'            => 2,
+                'status'            => 1,
             ],
             [
                 'team_id'           => 1,
@@ -222,7 +215,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 1,
                 'goal_id'           => 2,
-                'status'            => 2,
+                'status'            => 1,
             ],
             [
                 'team_id'           => 1,
@@ -234,7 +227,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 2,
                 'goal_id'           => 3,
-                'status'            => 2,
+                'status'            => 1,
             ],
             [
                 'team_id'           => 1,
@@ -246,7 +239,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 3,
                 'goal_id'           => 10,
-                'status'            => 2,
+                'status'            => 1,
             ],
             [
                 'team_id'           => 2,
@@ -258,7 +251,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 0,
                 'goal_id'           => 11,
-                'status'            => 2,
+                'status'            => 1,
             ],
             [
                 'team_id'           => 2,
@@ -270,10 +263,10 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_score_id' => 1,
                 'index'             => 1,
                 'goal_id'           => 12,
-                'status'            => 2,
+                'status'            => 1,
             ],
         ];
-        $this->Evaluation->saveAll($records);
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $records]);
         $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 

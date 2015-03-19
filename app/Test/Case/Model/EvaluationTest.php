@@ -208,6 +208,45 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals(count($res), count($registerData));
     }
 
+    function testAddRegistersValidationError()
+    {
+        $this->setDefault();
+
+        $registerData = [
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+        ];
+        $this->setExpectedException('RuntimeException');
+        $this->Evaluation->add($registerData, "register");
+
+    }
+
     function setDefault()
     {
         $this->current_date = strtotime('2015/7/1');
