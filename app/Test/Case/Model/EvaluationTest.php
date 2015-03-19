@@ -496,13 +496,19 @@ class EvaluationTest extends CakeTestCase
 
     function testStartEvaluationNotEnabled()
     {
-        $this->Evaluation->current_team_id = 1;
-        $this->Evaluation->my_uid = 1;
+        $this->_setDefault();
         $res = $this->Evaluation->startEvaluation();
         $this->assertFalse($res);
     }
 
     function testStartEvaluationAllEnabled()
+    {
+        $this->_setDefault();
+        $res = $this->Evaluation->startEvaluation();
+        $this->assertTrue($res);
+    }
+
+    function _setDefault()
     {
         $this->Evaluation->current_team_id = 1;
         $this->Evaluation->my_uid = 1;
@@ -516,8 +522,6 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
         $this->Evaluation->Goal->Collaborator->current_team_id = 1;
         $this->Evaluation->Goal->Collaborator->my_uid = 1;
-        $res = $this->Evaluation->startEvaluation();
-        $this->assertTrue($res);
     }
 
 }
