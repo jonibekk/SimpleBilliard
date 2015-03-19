@@ -56,8 +56,7 @@
                                 : <?= h($goal['User']['display_username']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
-                                : <?= $goal['Goal']['goal_category_id'] === '3' ? __d('gl', "職務") : __d('gl',
-                                                                                                        "成長"); ?></p>
+                                : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>
                                 : <?= h($goal['Goal']['name']); ?></p>

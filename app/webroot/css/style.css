@@ -2301,6 +2301,10 @@ textarea.comment-post-form {
     padding-left: 0;
 }
 
+.circle-new {
+    color: #d9230f;
+}
+
 .header-icon {
     width: 36px;
     height: 20px;
@@ -3856,11 +3860,6 @@ Temporary Properties - YOU MUST FIX
     display: inline;
 }
 
-.eval-index-panel-title {
-    padding-left: 4px;
-}
-
-
 .eval-view-panel-body .form-label {
     text-align: left;
     padding-left: 4px;
@@ -3885,6 +3884,10 @@ Temporary Properties - YOU MUST FIX
 .eval-view-result-text,
 .eval-view-action-text {
     text-align: center;
+}
+
+.none-border {
+    border: none !important;
 }
 
 .bg-lightGray {

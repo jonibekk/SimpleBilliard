@@ -56,6 +56,7 @@ class Collaborator extends AppModel
     public $belongsTo = [
         'Team',
         'Goal',
+        'GoalCategory',
         'User',
     ];
 
@@ -159,7 +160,8 @@ class Collaborator extends AppModel
                         'name', 'goal_category_id', 'end_date', 'photo_file_name',
                         'value_unit', 'target_value', 'start_value', 'description'
                     ],
-                    'Purpose' => ['fields' => 'name']
+                    'Purpose' => ['fields' => 'name'],
+                    'GoalCategory' => ['fields' => 'name'],
                 ],
                 'User' => [
                     'fields' => $this->User->profileFields
@@ -190,7 +192,8 @@ class Collaborator extends AppModel
             'contain'    => [
                 'Goal' => [
                     'fields'  => ['id'],
-                    'Purpose' => ['fields' => 'id']
+                    'Purpose' => ['fields' => 'id'],
+                    'GoalCategory' => ['fields' => 'id'],
                 ],
                 'User' => [
                     'fields' => ['id'],

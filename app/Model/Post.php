@@ -257,6 +257,7 @@ class Post extends AppModel
             $this->User->CircleMember->incrementUnreadCount($circles);
             //共有サークル指定されてた場合、更新日時更新
             $this->User->CircleMember->updateModified($circles);
+            $this->PostShareCircle->Circle->updateModified($circles);
 
         }
         return $res;
