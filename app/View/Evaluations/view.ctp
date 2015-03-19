@@ -165,6 +165,12 @@
                     <?= h($eval['Goal']['progress']) ?>%
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                    <?= __d('gl', "成果:") ?>
+                    <? foreach($eval['Goal']['KeyResult'] as $kr): ?>
+                        <p><?= $kr['name'] ?></p>
+                    <? endforeach;?>
+                </div>
+                <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
                 </div>
             </div>
