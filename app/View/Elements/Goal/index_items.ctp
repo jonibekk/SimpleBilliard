@@ -58,13 +58,13 @@
             </div>
             <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                 <div class="col col-xxs-12 mt_5px">
-                    <? if (empty($goal['MyFollow']) && empty($goal['User']['TeamMember'][0]['coach_user_id'])) {
+                    <? if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
                         $follow_class = 'follow-off';
                         $follow_style = null;
                         $follow_text = __d('gl', "フォロー");
                         $follow_disabled = null;
                     }
-                    elseif ($goal['User']['TeamMember'][0]['coach_user_id']){
+                    elseif (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])){
                         $follow_class = 'follow-off';
                         $follow_style = null;
                         $follow_text = __d('gl', "フォロー");
