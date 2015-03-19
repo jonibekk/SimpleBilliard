@@ -1696,37 +1696,85 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->User->Email->my_uid = $uid;
     }
 
-	function testSelectCoachUserIdFromTeamMembersTB ()
-	{
-		$user_id = 777;
-		$team_id = 888;
-		$coach_user_id = 999;
+    function testSelectCoachUserIdFromTeamMembersTB()
+    {
+        $user_id = 777;
+        $team_id = 888;
+        $coach_user_id = 999;
 
-		$params = [
-			'user_id'       => $user_id,
-			'team_id'       => $team_id,
-			'coach_user_id' => $coach_user_id,
-		];
-		$this->TeamMember->save($params);
-		$res = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
-		$this->assertEquals($coach_user_id, intval($res['TeamMember']['coach_user_id']));
+        $params = [
+            'user_id'       => $user_id,
+            'team_id'       => $team_id,
+            'coach_user_id' => $coach_user_id,
+        ];
+        $this->TeamMember->save($params);
+        $res = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
+        $this->assertEquals($coach_user_id, intval($res['TeamMember']['coach_user_id']));
 
-	}
+    }
 
-	function testSelectUserIdFromTeamMembersTB ()
-	{
-		$user_id = 777;
-		$team_id = 888;
-		$coach_user_id = 999;
+    function testSelectUserIdFromTeamMembersTB()
+    {
+        $user_id = 777;
+        $team_id = 888;
+        $coach_user_id = 999;
 
-		$params = [
-			'user_id'       => $user_id,
-			'team_id'       => $team_id,
-			'coach_user_id' => $coach_user_id,
-		];
-		$this->TeamMember->save($params);
-		$res = $this->TeamMember->selectUserIdFromTeamMembersTB($coach_user_id, $team_id);
-		$this->assertContains($user_id, $res);
-	}
+        $params = [
+            'user_id'       => $user_id,
+            'team_id'       => $team_id,
+            'coach_user_id' => $coach_user_id,
+        ];
+        $this->TeamMember->save($params);
+        $res = $this->TeamMember->selectUserIdFromTeamMembersTB($coach_user_id, $team_id);
+        $this->assertContains($user_id, $res);
+    }
+
+    function testGetEvaluationEnableFlgReturnTrue()
+    {
+        $user_id = 777;
+        $team_id = 888;
+
+        $params = [
+            'user_id'               => $user_id,
+            'team_id'               => $team_id,
+            'active_flg'            => 1,
+            'evaluation_enable_flg' => 1
+        ];
+        $this->TeamMember->save($params);
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $this->assertTrue($flg);
+    }
+
+    function testGetEvaluationEnableFlgReturnFalsePattern1()
+    {
+        $user_id = 777;
+        $team_id = 888;
+
+        $params = [
+            'user_id'               => $user_id,
+            'team_id'               => $team_id,
+            'active_flg'            => 0,
+            'evaluation_enable_flg' => 1
+        ];
+        $this->TeamMember->save($params);
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $this->assertFalse($flg);
+    }
+
+    function testGetEvaluationEnableFlgReturnFalsePattern2()
+    {
+        $user_id = 777;
+        $team_id = 888;
+
+        $params = [
+            'user_id'               => $user_id,
+            'team_id'               => $team_id,
+            'active_flg'            => 1,
+            'evaluation_enable_flg' => 0
+        ];
+        $this->TeamMember->save($params);
+        $flg = $this->TeamMember->getEvaluationEnableFlg($user_id, $team_id);
+        $this->assertFalse($flg);
+    }
 
 }

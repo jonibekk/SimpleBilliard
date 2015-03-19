@@ -115,6 +115,12 @@ class GoalApprovalController extends AppController
      */
     public $done_cnt = 0;
 
+    /*
+     * ログインユーザーの評価対象フラグ
+     */
+    public $my_evaluation_flg = false;
+
+
     public function __construct(CakeRequest $request = null, CakeResponse $response = null)
     {
         parent::__construct($request, $response);
@@ -152,6 +158,7 @@ class GoalApprovalController extends AppController
         if ($this->user_type === 0) {
         }
 
+        $this->my_evaluation_flg = $this->TeamMember->getEvaluationEnableFlg($this->user_id, $this->team_id);
 		$this->goal_user_ids = $this->getCollaboratorUserId();
 
         $this->unapproved_cnt = $this->Collaborator->countCollaboGoal(
@@ -176,6 +183,7 @@ class GoalApprovalController extends AppController
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
+                if ($this->my_evaluation_flg === false) unset($goal_info[$key]);
             }
         }
 
@@ -200,6 +208,7 @@ class GoalApprovalController extends AppController
 		foreach ($goal_info as $key => $val) {
 			if ($this->user_id === $val['User']['id']) {
 				$goal_info[$key]['msg'] = '自分のゴール';
+                if ($this->my_evaluation_flg === false) unset($goal_info[$key]);
 			}
 		}
 
