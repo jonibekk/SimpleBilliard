@@ -20,6 +20,9 @@ class GoalsController extends AppController
      */
     public function index()
     {
+        $search_option = $this->_getSearchVal();
+        $search_url = $this->_getSearchUrl($search_option);
+        $search_options = $this->Goal->search_options;
         $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals(300);//TODO 暫定的に300、将来的に20に戻す
         $this->_setViewValOnRightColumn();
@@ -29,7 +32,8 @@ class GoalsController extends AppController
         $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
         $is_admin = ($isExistAdminFlg) ? true : false;
 
-        $this->set(compact('is_admin', 'goals', 'current_global_menu'));
+        $this->set(compact('is_admin', 'goals', 'current_global_menu', 'search_option', 'search_options',
+                           'search_url'));
     }
 
     /**
@@ -878,4 +882,39 @@ class GoalsController extends AppController
                    ));
     }
 
+    /**
+     *
+     */
+    function _getSearchVal()
+    {
+        $options = $this->Goal->search_options;
+        foreach (array_keys($options) as $type) {
+            //URLパラーメタ取得
+            $res[$type][0] = viaIsSet($this->request->params['named'][$type]);
+            //パラメータチェック
+            if (!in_array($res[$type][0], array_keys($options[$type]))) {
+                $res[$type] = null;
+            }
+            //表示名取得
+            if (viaIsSet($res[$type])) {
+                $res[$type][1] = $options[$type][$res[$type][0]];
+                ///デフォルト表示名取得
+            }
+            else {
+                $res[$type][1] = reset($options[$type]);
+            }
+        }
+        return $res;
+    }
+
+    function _getSearchUrl($search_option)
+    {
+        $res = ['controller' => 'goals', 'action' => 'index'];
+        foreach ($search_option as $key => $val) {
+            if (viaIsSet($val[0])) {
+                $res[$key] = $val[0];
+            }
+        }
+        return $res;
+    }
 }

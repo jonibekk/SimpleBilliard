@@ -55,6 +55,40 @@ class Goal extends AppModel
         4 => 4,
         5 => 5,
     ];
+
+    /**
+     * 検索用オプションをセット
+     * ここ以外での各要素の設定は不要です
+     * 各タイプの最初の要素がデフォルト表示になります
+     */
+    private function _setSearchOptions()
+    {
+        $this->search_options = [
+            'term'     => [
+                'present'  => __d('gl', "今期"),
+                'previous' => __d('gl', "前期"),
+                'before'   => __d('gl', "もっと前")],
+            'progress' => [
+                'all'        => __d('gl', "すべて"),
+                'complete'   => __d('gl', "達成"),
+                'incomplete' => __d('gl', "未達成")],
+            'order'    => [
+                'new'           => __d('gl', "新着順"),
+                'action'        => __d('gl', "アクションが多い順"),
+                'action_result' => __d('gl', "出した成果が多い順"),
+                'follow'        => __d('gl', "フォロワーが多い順"),
+                'collabo'       => __d('gl', "コラボレーターが多い順"),
+                'progress'      => __d('gl', "進捗率が高い順")]
+        ];
+        $options = [
+
+        ];
+        //TODO
+        $this->search_options['category'] = $this->GoalCategory->find('all', $options);
+
+    }
+
+    public $search_options = null;
     /**
      * Display field
      *
@@ -171,6 +205,7 @@ class Goal extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setStatusName();
         $this->_setPriorityName();
+        $this->_setSearchOptions();
     }
 
     function add($data)

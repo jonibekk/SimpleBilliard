@@ -3921,3 +3921,16 @@ Temporary Properties - YOU MUST FIX
 .goal-filter-menu {
     margin: 10px 0;
 }
+
+.goal-term-search-menu .selected {
+    background: #e0e0e0 none;
+}
+
+.goal-search-count {
+    padding: 4px;
+    background: #e0e0e0;
+}
+
+.goal-search-count p {
+    color: #ffffff;
+}

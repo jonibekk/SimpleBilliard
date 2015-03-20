@@ -34,47 +34,53 @@
         </div>
         <div class="goal-search-menu">
             <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
-                <a href="#" class="btn btn-default goal-search-elm" role="button"><?= __d('gl', '今期') ?></a>
-                <a href="#" class="btn btn-default goal-search-elm" role="button"><?= __d('gl', '前期') ?></a>
-                <a href="#" class="btn btn-default goal-search-elm" role="button"><?= __d('gl', 'もっと前') ?></a>
+                <? foreach ($search_options['term'] as $key => $val): ?>
+                    <? if ($val == $search_option['term'][1]): ?>
+                        <a href="<?= $this->Html->url(array_merge($search_url,['term' => $key])) ?>" class="btn btn-default goal-search-elm selected" role="button"><?= $val ?></a>
+                    <? else: ?>
+                        <a href="<?= $this->Html->url(array_merge($search_url,['term' => $key])) ?>" class="btn btn-default goal-search-elm" role="button"><?= $val ?></a>
+                    <? endif; ?>
+                <? endforeach; ?>
             </div>
             <div class="goal-filter-menu btn-group btn-group-justified" role="group">
                 <div class=" btn-group" role="group">
-                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        すべて <span class="caret"></span>
+                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-expanded="false">
+                        <?= $search_option['category'][1] ?> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">すべて</a></li>
-                        <li><a href="#">職務</a></li>
-                        <li><a href="#">成長</a></li>
+                        <? foreach ($search_options['category'] as $key => $val): ?>
+                            <li><a href="<?= $this->Html->url(array_merge($search_url,['category' => $key])) ?>"><?= $val ?></a></li>
+                        <? endforeach; ?>
                     </ul>
                 </div>
                 <div class="btn-group" role="group">
-                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        未達成 <span class="caret"></span>
+                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-expanded="false">
+                        <?= $search_option['progress'][1] ?> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">すべて</a></li>
-                        <li><a href="#">未達成</a></li>
-                        <li><a href="#">達成した</a></li>
+                        <? foreach ($search_options['progress'] as $key =>$val): ?>
+                            <li><a href="<?= $this->Html->url(array_merge($search_url,['progress' => $key])) ?>"><?= $val ?></a></li>
+                        <? endforeach; ?>
                     </ul>
                 </div>
                 <div class="btn-group " role="group">
-                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        新着順 <span class="caret"></span>
+                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-expanded="false">
+                        <?= $search_option['order'][1] ?> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a href="#">新着順</a></li>
-                        <li><a href="#">アクションが多い順</a></li>
-                        <li><a href="#">出した成果が多い順</a></li>
-                        <li><a href="#">フォロワーが多い順</a></li>
-                        <li><a href="#">コラボレーターが多い順</a></li>
-                        <li><a href="#">進捗率が高い順</a></li>
+                        <? foreach ($search_options['order'] as $key =>$val): ?>
+                            <li><a href="<?= $this->Html->url(array_merge($search_url,['order' => $key])) ?>"><?= $val ?></a></li>
+                        <? endforeach; ?>
                     </ul>
                 </div>
             </div>
         </div>
-
+        <div class="goal-search-count">
+            <p>対象ゴール　○○件</p>
+        </div>
         <? if (empty($goals)): ?>
             <div class="col col-xxs-12 mt_16px">
                 <div class="alert alert-warning fade in" role="alert">
