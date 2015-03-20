@@ -509,6 +509,36 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
+    function testGetMyEvalStatus()
+    {
+        $this->_setDefault();
+        $eval_term = [
+            'team_id'    => 1,
+            'start_date' => 1,
+            'end_date'   => 1,
+        ];
+        $this->Evaluation->Team->EvaluateTerm->save($eval_term);
+        $term_id = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $eval = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => $term_id,
+            'evaluate_type'     => 0,
+            'index'             => 0,
+        ];
+        $this->Evaluation->save($eval);
+        $expected = [
+            (int)0 => [
+                'name'    => 'あなた',
+                'status'  => '0',
+                'my_tarn' => true
+            ]
+        ];
+        $actual = $this->Evaluation->getMyEvalStatus($term_id);
+        $this->assertEquals($expected, $actual);
+    }
+
     function _setDefault()
     {
         $this->Evaluation->current_team_id = 1;
