@@ -88,4 +88,12 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
+    function _setDefault()
+    {
+        $this->EvaluateTerm->current_team_id = 1;
+        $this->EvaluateTerm->my_uid = 1;
+        $this->EvaluateTerm->Team->current_team_id = 1;
+        $this->EvaluateTerm->Team->my_uid = 1;
+    }
+
 }
