@@ -225,4 +225,53 @@ class Collaborator extends AppModel
         return null;
     }
 
+    //TODO ハードコーディング中! for こーへーさん
+    function tempCountUnvalued()
+    {
+        $options = [
+            'conditions' => [
+                'team_id'    => 1,
+                'valued_flg' => 0,
+            ],
+            'fields'     => [
+                'user_id'
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields'     => [
+                        'User.last_name',
+                        'User.first_name',
+                    ],
+                    'TeamMember' => [
+                        'conditions' => [
+                            'team_id' => 1,
+                            'evaluation_enable_flg' => 1,
+                            'NOT'                   => [
+                                'TeamMember.coach_user_id' => null,
+                            ],
+                        ],
+                        'fields'     => [
+                            'TeamMember.coach_user_id',
+                            'evaluation_enable_flg'
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $data = $this->find('all', $options);
+
+        $i = 0;
+        foreach ($data as $collabo) {
+            if (!empty($collabo['User']['TeamMember'])) {
+                $res[$i] = [];
+                $coach = $this->User->findById($collabo['User']['TeamMember'][0]['coach_user_id']);
+                $res[$i] += ['評価対象者' => $collabo['User']['display_last_name'] . $collabo['User']['display_first_name']];
+                $res[$i] += ['コーチ' => $coach['User']['display_last_name'] . $coach['User']['display_first_name']];
+                $i++;
+            }
+        }
+        $res['count'] = $i;
+        return $res;
+    }
+
 }
