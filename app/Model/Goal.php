@@ -316,6 +316,9 @@ class Goal extends AppModel
     /**
      * 自分が作成したゴール取得
      *
+     * @param null $limit
+     * @param int  $page
+     *
      * @return array
      */
     function getMyGoals($limit = null, $page = 1)
@@ -464,6 +467,9 @@ class Goal extends AppModel
 
     /**
      * 自分がこらぼったゴール取得
+     *
+     * @param null $limit
+     * @param int  $page
      *
      * @return array
      */
@@ -709,10 +715,10 @@ class Goal extends AppModel
                 'User'         => [
                     'fields'     => $this->User->profileFields,
                     'TeamMember' => [
-                        'fields' => [
+                        'fields'     => [
                             'coach_user_id',
                         ],
-                        'conditions' =>[
+                        'conditions' => [
                             'coach_user_id' => $this->my_uid,
                         ]
                     ],
@@ -833,6 +839,22 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->Collaborator->User->find('all', $options);
+        return $res;
+    }
+
+    function filterThisTermIds($gids)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'id'            => $gids,
+                'start_date >=' => $start_date,
+                'end_date <='   => $end_date,
+            ],
+            'fields'     => ['id']
+        ];
+        $res = $this->find('list', $options);
         return $res;
     }
 
