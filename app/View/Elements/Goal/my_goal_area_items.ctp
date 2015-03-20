@@ -41,21 +41,25 @@
                                 </a>
                             </li>
                         <? endif; ?>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                   href="<?= $this->Html->url($edit_url) ?>">
-                                <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
-                            </a>
-                        </li>
-                        <li role="presentation">
-                            <?=
-                            $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                                  __d('gl', "ゴールを削除") . '</span>',
-                                                  $del_url,
-                                                  ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
-                        </li>
+                        <? if (!viaIsSet($goal['Evaluation'])): ?>
+                            <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                       href="<?= $this->Html->url($edit_url) ?>">
+                                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <?=
+                                $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
+                                                      __d('gl', "ゴールを削除") . '</span>',
+                                                      $del_url,
+                                                      ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
+                            </li>
+                        <? endif; ?>
                     </ul>
                 </div>
-            <? elseif ($type == 'collabo'): ?>
+            <? elseif
+            ($type == 'collabo'
+            ): ?>
                 <div class="pull-right goals-column-function bd-radius_4px dropdown">
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
                        data-toggle="dropdown"
