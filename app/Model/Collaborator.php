@@ -123,14 +123,7 @@ class Collaborator extends AppModel
             unset($options['conditions']['type']);
         }
         if ($approval_status) {
-            if (is_array($approval_status)) {
-                foreach ($approval_status as $v) {
-                    $options['conditions']['OR']['valued_flg'] = $v;
-                }
-            }
-            else {
-                $options['conditions']['valued_flg'] = $approval_status;
-            }
+            $options['conditions']['valued_flg'] = $approval_status;
         }
         $res = $this->find('list', $options);
         return $res;
