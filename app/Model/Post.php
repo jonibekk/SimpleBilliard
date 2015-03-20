@@ -650,7 +650,7 @@ class Post extends AppModel
             'order'      => [$order => $order_direction],
             'fields'     => ['id'],
         ];
-        if($this->orgParams['user_id']) {
+        if ($this->orgParams['user_id']) {
             $options['conditions']['user_id'] = $this->orgParams['user_id'];
         }
         $res = $this->find('list', $options);

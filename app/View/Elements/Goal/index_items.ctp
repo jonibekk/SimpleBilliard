@@ -64,7 +64,7 @@
                         $follow_text = __d('gl', "フォロー");
                         $follow_disabled = null;
                     }
-                    elseif (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])){
+                    elseif (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
                         $follow_class = 'follow-off';
                         $follow_style = null;
                         $follow_text = __d('gl', "フォロー");

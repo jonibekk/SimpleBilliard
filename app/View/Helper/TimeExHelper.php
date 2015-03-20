@@ -102,7 +102,7 @@ class TimeExHelper extends AppHelper
         //「７月１３日 [15:10]」$date > REQUEST_TIMESTAMP - 1y
         elseif ($unixtime > strtotime("-1 year")) {
             //「７月１３日」
-            if( $type == 'rough') {
+            if ($type == 'rough') {
                 $elapsed = $this->dateLocalFormat($unixtime);
             }
             //「７月１３日 15:10」
