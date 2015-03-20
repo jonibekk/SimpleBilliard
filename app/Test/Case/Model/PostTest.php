@@ -392,7 +392,7 @@ class PostTest extends CakeTestCase
         $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1);
     }
 
-    function testGetFollowCollaboPostList()
+    function testGetRelatedPostList()
     {
         $this->Post->current_team_id = 1;
         $this->Post->my_uid = 1;
@@ -400,7 +400,7 @@ class PostTest extends CakeTestCase
         $this->Post->Goal->Collaborator->current_team_id = 1;
 
         $this->Post->Goal->Follower->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1]);
-        $this->Post->getFollowCollaboPostList(1, 10000);
+        $this->Post->getRelatedPostList(1, 10000);
     }
 
     function testIsPermittedGoalPostSuccess()
@@ -443,6 +443,50 @@ class PostTest extends CakeTestCase
         $this->Post->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1000, 'body' => 'test']);
         $res = $this->Post->isPermittedGoalPost($this->Post->getLastInsertID());
         $this->assertFalse($res);
+    }
+
+    function testGetCommentMyUnreadCount()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $comment_uid = '2';
+        $comment_num = 4;
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $test_save_data = [
+            'Post' => [
+                'user_id' => $uid,
+                'team_id' => $team_id,
+                'body'    => 'test',
+            ]
+        ];
+        for ($i = 0; $i < $comment_num; $i++) {
+            $test_save_data['Comment'][] =
+                [
+                    'user_id' => $comment_uid,
+                    'team_id' => $team_id,
+                    'body'    => 'test',
+                ];
+        }
+        $this->Post->saveAll($test_save_data);
+        $options = [
+            'conditions' => [
+                'Post.id' => $this->Post->getLastInsertID(),
+            ],
+            'contain'    => [
+                'Comment' => [
+                    'conditions' => ['Comment.team_id' => $team_id],
+                    'order'      => [
+                        'Comment.created' => 'desc'
+                    ],
+                    'limit'      => 3,
+                ],
+                'CommentId',
+            ],
+        ];
+        $res = $this->Post->find('all', $options);
+        $res = $this->Post->getCommentMyUnreadCount($res);
+        $this->assertEquals($comment_num, $res[0]['unread_count']);
     }
 
     function _setDefault()

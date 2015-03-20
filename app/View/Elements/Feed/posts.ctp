@@ -321,9 +321,22 @@
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
                        get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
                         >
-                        <i class="fa fa-comment-o"></i>&nbsp;<?=
-                        __d('gl', "他%s件のコメントを見る",
-                            $post['Post']['comment_count'] - 3) ?></a>
+                        <? if ($post['unread_count'] > 0): ?>
+                            <i class="fa fa-comment-o"></i>&nbsp;<?=
+                            __d('gl', "他%s件のコメントを見る",
+                                $post['Post']['comment_count'] - 3) ?>
+                            <?=
+                            __d('gl', "(%s)",
+                                $post['unread_count']) ?>
+
+                        <? else: ?>
+                            <span class="font_gray">
+                            <i class="fa fa-comment-o"></i>&nbsp;<?=
+                                __d('gl', "他%s件のコメントを見る",
+                                    $post['Post']['comment_count'] - 3) ?>
+                            </span>
+                        <? endif; ?>
+                    </a>
                 <? endif; ?>
 
                 <? foreach ($post['Comment'] as $comment): ?>

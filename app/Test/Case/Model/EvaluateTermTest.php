@@ -81,9 +81,11 @@ class EvaluateTermTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testSaveTerm()
     {
-
+        $this->EvaluateTerm->current_team_id = 1;
+        $res = $this->EvaluateTerm->saveTerm();
+        $this->assertNotEmpty($res);
     }
 
 }

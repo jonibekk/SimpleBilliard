@@ -43,6 +43,39 @@ class EvaluateTerm extends AppModel
         'Evaluator',
     ];
 
+    function getCurrentTermId()
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'start_date >=' => $start_date,
+                'end_date <='   => $end_date,
+                'team_id'       => $this->current_team_id
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['EvaluateTerm']['id'])) {
+            return $res['EvaluateTerm']['id'];
+        }
+        return null;
+    }
+
+    function getLatestTermId()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id
+            ],
+            'order'      => ['id' => 'desc']
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['EvaluateTerm']['id'])) {
+            return $res['EvaluateTerm']['id'];
+        }
+        return null;
+    }
+
     function getMyEvaluationAllTerm()
     {
 
@@ -62,6 +95,17 @@ class EvaluateTerm extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+        return $res;
+    }
+
+    function saveTerm()
+    {
+        $data = [
+            'team_id'    => $this->current_team_id,
+            'start_date' => $this->Team->getTermStartDate(),
+            'end_date'   => $this->Team->getTermEndDate() - 1,
+        ];
+        $res = $this->save($data);
         return $res;
     }
 

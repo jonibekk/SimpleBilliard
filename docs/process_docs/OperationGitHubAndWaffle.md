@@ -9,6 +9,7 @@
 1. PR発行(develop <- 作業したブランチ)
 1. 作業が全て終わるまで、コーディング〜`git push`。
 1. メンバーにレビュー依頼(Issueのコメントでmention`@IsaoCorp/goalous_developers`を付ける)。
+1. カードを`Review`に移動。
 
 ### hotfix(緊急時)
 1. 作業を開始する前に`ToDo`から`In Progress`にカードを移動する。
@@ -22,6 +23,7 @@
 1. PR発行(`hotfix`<- 作業したブランチ)
 1. 作業が全て終わるまで、コーディング〜`git push`。
 1. メンバーにレビュー依頼(Issueのコメントでmention`@IsaoCorp/goalous_developers`を付ける)。
+1. カードを`Review`に移動。
 
 ## Deploy(プロダクトオーナー)
 実行前に、`travis`, `coveralls`のエラーが無い事を確認する。
