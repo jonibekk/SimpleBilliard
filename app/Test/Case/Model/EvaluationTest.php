@@ -539,19 +539,55 @@ class EvaluationTest extends CakeTestCase
         ];
         $this->Evaluation->saveAll($eval);
         $expected = [
-            (int) 0 => [
-                'name' => 'あなた',
-                'status' => '0',
+            (int)0 => [
+                'name'    => 'あなた',
+                'status'  => '0',
                 'my_tarn' => true
             ],
-            (int) 1 => [
-                'name' => '評価者1',
-                'status' => '0',
+            (int)1 => [
+                'name'    => '評価者1',
+                'status'  => '0',
                 'my_tarn' => false
             ]
         ];
         $actual = $this->Evaluation->getMyEvalStatus($term_id);
         $this->assertEquals($expected, $actual);
+    }
+
+    function testGetAddRecordsOfEvaluatee()
+    {
+        $this->_setDefault();
+        $evaluators_save_data = [
+            [
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'team_id'           => 1,
+                'index'             => 0,
+            ],
+            [
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 3,
+                'team_id'           => 1,
+                'index'             => 1,
+            ],
+        ];
+        $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);
+        $evaluators = $this->Evaluation->Team->Evaluator->getEvaluatorsCombined();
+
+        $this->Evaluation->Team->current_term_start_date = 0;
+        $this->Evaluation->Team->current_term_end_date = 9999999;
+
+        $collabo = $this->Evaluation->Goal->Collaborator->find('all');
+        foreach ($collabo as $k => $v) {
+            $collabo[$k]['Collaborator']['valued_flg'] = Collaborator::STATUS_APPROVAL;
+        }
+        $this->Evaluation->Goal->Collaborator->saveAll($collabo);
+        $this->Evaluation->Goal->id = 1;
+        $this->Evaluation->Goal->saveField('start_date', 1);
+        $this->Evaluation->Goal->saveField('end_date', 1);
+
+        $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, 1, $evaluators, 0);
+        $this->assertCount(5, $res);
     }
 
     function _setDefault()

@@ -21,6 +21,11 @@ class Collaborator extends AppModel
         self::TYPE_OWNER        => "",
     ];
 
+    const STATUS_UNAPPROVED = 0;
+    const STATUS_APPROVAL = 1;
+    const STATUS_HOLD = 2;
+    const STATUS_MODIFY = 3;
+
     /**
      * タイプの表示名をセット
      */
@@ -98,7 +103,7 @@ class Collaborator extends AppModel
         return $res;
     }
 
-    function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1)
+    function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1, $approval_status = null)
     {
         $options = [
             'conditions' => [
@@ -116,12 +121,9 @@ class Collaborator extends AppModel
         ];
         if ($with_owner) {
             unset($options['conditions']['type']);
-            $options['OR'] = [
-                'type' => [
-                    Collaborator::TYPE_COLLABORATOR,
-                    Collaborator::TYPE_OWNER,
-                ],
-            ];
+        }
+        if ($approval_status) {
+            $options['conditions']['valued_flg'] = $approval_status;
         }
         $res = $this->find('list', $options);
         return $res;
