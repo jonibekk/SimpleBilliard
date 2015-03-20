@@ -31,25 +31,50 @@
     <div class="panel-body">
         <div class="col col-xxs-12 goals-feed-head">
             <span class="font_14px goals-column-title"><?= __d('gl', 'みんなのゴール') ?></span>
-
-            <div class="pull-right">
-                <div class="dropdown">
-                    <a href="#" class="font_lightgray font_11px" data-toggle="dropdown" id="download">
-                        <span class="lh_20px"><?= __d('gl', "全て") ?></span><i
-                            class="fa fa-caret-down feed-arrow lh_20px"></i>
+        </div>
+        <div class="goal-search-menu">
+            <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
+                <a href="#" class="btn btn-default goal-search-elm" role="button"><?= __d('gl', '今期') ?></a>
+                <a href="#" class="btn btn-default goal-search-elm" role="button"><?= __d('gl', '前期') ?></a>
+                <a href="#" class="btn btn-default goal-search-elm" role="button"><?= __d('gl', 'もっと前') ?></a>
+            </div>
+            <div class="goal-filter-menu btn-group btn-group-justified" role="group">
+                <div class=" btn-group" role="group">
+                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        すべて <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
-                        aria-labelledby="dropdownMenu1">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?=
-                                __d('gl',
-                                    "完了しているゴール") ?></a>
-                        </li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?= __d('gl', "今期のゴール") ?></a>
-                        </li>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">すべて</a></li>
+                        <li><a href="#">職務</a></li>
+                        <li><a href="#">成長</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" role="group">
+                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        未達成 <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">すべて</a></li>
+                        <li><a href="#">未達成</a></li>
+                        <li><a href="#">達成した</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group " role="group">
+                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        新着順 <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#">新着順</a></li>
+                        <li><a href="#">アクションが多い順</a></li>
+                        <li><a href="#">出した成果が多い順</a></li>
+                        <li><a href="#">フォロワーが多い順</a></li>
+                        <li><a href="#">コラボレーターが多い順</a></li>
+                        <li><a href="#">進捗率が高い順</a></li>
                     </ul>
                 </div>
             </div>
         </div>
+
         <? if (empty($goals)): ?>
             <div class="col col-xxs-12 mt_16px">
                 <div class="alert alert-warning fade in" role="alert">

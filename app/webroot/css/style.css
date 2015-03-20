@@ -58,7 +58,7 @@ ul {
 }
 
 .nav-icons > .header-function > a:hover,
-.nav-icons > .header-function > a:focus{
+.nav-icons > .header-function > a:focus {
     border: 1px solid #ae2f2f;
     text-decoration: none;
 }
@@ -1899,7 +1899,6 @@ ul.input-images > li {
     border: 1px solid #ccc;
 }
 
-
 .frame-arrow-icon::before {
     content: "";
     border: 8px solid transparent;
@@ -1962,7 +1961,6 @@ ul.input-images > li {
     right: 18%;
     top: -15px;
 }
-
 
 @media screen and (min-width: 768px) {
     .frame-arrow-notify::before {
@@ -3765,7 +3763,7 @@ Temporary Properties - YOU MUST FIX
     right: -36px;
 }
 
-.notify-dropdown-lists{
+.notify-dropdown-lists {
     margin: 0;
     padding: 0;
     max-height: 360px;
@@ -3785,7 +3783,7 @@ Temporary Properties - YOU MUST FIX
         height: 64px;
     }
 
-    .notify-dropdown-lists{
+    .notify-dropdown-lists {
         max-height: 500px;
     }
 
@@ -3802,13 +3800,13 @@ Temporary Properties - YOU MUST FIX
     clear: both;
 }
 
-.notify-card-empty{
+.notify-card-empty {
     text-align: center;
     padding: 10px 0;
     color: #231814;
 }
 
-.notify-empty-text{
+.notify-empty-text {
     line-height: 33px;
     vertical-align: top;
 }
@@ -3892,4 +3890,34 @@ Temporary Properties - YOU MUST FIX
 
 .bg-lightGray {
     background-color: #f0f0f0;
+}
+
+.goal-term-search-menu {
+    border-bottom: solid 2px #e0e0e0;
+}
+
+.goal-search-elm, .goal-filter-elm {
+    background-color: #ffffff;
+    border: none;
+    color: gray;
+    border-radius: 0;
+}
+
+.goal-search-elm:focus, .goal-search-elm:active {
+    background: #e0e0e0 none;
+    border: none;
+}
+
+.goal-search-elm:hover {
+    background: #ae2f2f none;
+    border: none;
+}
+
+.goal-filter-elm:focus, .goal-filter-elm:active, .goal-filter-elm:hover, .open .dropdown-toggle.btn-default {
+    background: #e0e0e0 none;
+    border: none;
+}
+
+.goal-filter-menu {
+    margin: 10px 0;
 }
