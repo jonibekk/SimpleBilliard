@@ -170,7 +170,14 @@ class Collaborator extends AppModel
             'type'       => 'inner',
             'order'      => ['Collaborator.created'],
         ];
-        return $this->find('all', $options);
+        if (is_array($approval_flg)) {
+            unset($options['conditions']['Collaborator.valued_flg']);
+            foreach ($approval_flg as $val) {
+                $options['conditions']['OR'][]['Collaborator.valued_flg'] = $val;
+            }
+        }
+        $res = $this->find('all', $options);
+        return $res;
     }
 
     function changeApprovalStatus($id, $status)

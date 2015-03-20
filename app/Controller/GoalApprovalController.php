@@ -100,10 +100,10 @@ class GoalApprovalController extends AppController
         'modify'     => 3,
     ];
 
-	/*
+    /*
      * 検索対象のゴールID
-	 */
-	public $goal_user_ids = [];
+     */
+    public $goal_user_ids = [];
 
     /*
      * 承認前ページの「全ゴール - 自分のゴール」件数
@@ -119,7 +119,6 @@ class GoalApprovalController extends AppController
      * ログインユーザーの評価対象フラグ
      */
     public $my_evaluation_flg = false;
-
 
     public function __construct(CakeRequest $request = null, CakeResponse $response = null)
     {
@@ -146,9 +145,8 @@ class GoalApprovalController extends AppController
 
         parent::beforeFilter();
 
-        $Session = new CakeSession();
-        $this->user_id = $Session->read('Auth.User.id');
-        $this->team_id = $Session->read('current_team_id');
+        $this->user_id = $this->Auth->user('id');
+        $this->team_id = $this->Session->read('current_team_id');
 
         $this->setCoachFlag($this->user_id, $this->team_id);
         $this->setMemberFlag($this->user_id, $this->team_id);
@@ -159,7 +157,7 @@ class GoalApprovalController extends AppController
         }
 
         $this->my_evaluation_flg = $this->TeamMember->getEvaluationEnableFlg($this->user_id, $this->team_id);
-		$this->goal_user_ids = $this->getCollaboratorUserId();
+        $this->goal_user_ids = $this->getCollaboratorUserId();
 
         $this->unapproved_cnt = $this->Collaborator->countCollaboGoal(
             $this->team_id, $this->user_id, $this->goal_user_ids, $this->goal_status['unapproved']);
@@ -179,11 +177,13 @@ class GoalApprovalController extends AppController
     public function index()
     {
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
-			$this->team_id, $this->goal_user_ids, $this->goal_status['unapproved']);
+            $this->team_id, $this->goal_user_ids, $this->goal_status['unapproved']);
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
-                if ($this->my_evaluation_flg === false) unset($goal_info[$key]);
+                if ($this->my_evaluation_flg === false) {
+                    unset($goal_info[$key]);
+                }
             }
         }
 
@@ -204,13 +204,15 @@ class GoalApprovalController extends AppController
             $this->team_id, $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
-
-		foreach ($goal_info as $key => $val) {
-			if ($this->user_id === $val['User']['id']) {
-				$goal_info[$key]['msg'] = '自分のゴール';
-                if ($this->my_evaluation_flg === false) unset($goal_info[$key]);
-			}
-		}
+        $this->log($goal_info);
+        foreach ($goal_info as $key => $val) {
+            if ($this->user_id === $val['User']['id']) {
+                $goal_info[$key]['msg'] = '自分のゴール';
+                if ($this->my_evaluation_flg === false) {
+                    unset($goal_info[$key]);
+                }
+            }
+        }
 
         $unapproved_cnt = $this->unapproved_cnt;
         $done_cnt = $this->done_cnt;
@@ -244,23 +246,23 @@ class GoalApprovalController extends AppController
         $this->redirect($this->referer());
     }
 
-	/*
-	 * リストに表示するゴールのUserIDを取得
-	 */
-	public function getCollaboratorUserId()
-	{
-		$goal_user_ids = [];
+    /*
+     * リストに表示するゴールのUserIDを取得
+     */
+    public function getCollaboratorUserId()
+    {
+        $goal_user_ids = [];
         if ($this->user_type === 1) {
-			$goal_user_ids = [$this->user_id];
+            $goal_user_ids = [$this->user_id];
         }
         elseif ($this->user_type === 2) {
-			$goal_user_ids = array_merge([$this->user_id], $this->member_ids);
+            $goal_user_ids = array_merge([$this->user_id], $this->member_ids);
         }
         elseif ($this->user_type === 3) {
-			$goal_user_ids = $this->member_ids;
+            $goal_user_ids = $this->member_ids;
         }
-		return $goal_user_ids;
-	}
+        return $goal_user_ids;
+    }
 
     /*
      * ログインしているユーザーはコーチが存在するのか

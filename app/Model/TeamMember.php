@@ -1469,7 +1469,6 @@ class TeamMember extends AppModel
             ],
         ];
         $res = $this->find('first', $options);
-
         $evaluation_flg = false;
         if (isset($res['TeamMember']['active_flg']) === true
             && $res['TeamMember']['active_flg'] === true
