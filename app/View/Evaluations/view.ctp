@@ -29,11 +29,11 @@
 
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
         <div class="panel-heading"><?= __d('gl', "トータル評価") ?></div>
-
         <div class="panel-body eval-view-panel-body">
             <div class="form-group">
-                <div for="#" class="col col-sm-3 eval-view-panel-title"><?= __d('gl', "本人") ?></div>
-
+                <div for="#" class="col col-sm-3 eval-view-panel-title">
+                    <?= __d('gl', "本人") ?>
+                </div>
                 <div class="col col-sm-12">
                     <?=
                     $this->Form->input("0.Evaluation.comment", [
@@ -79,6 +79,26 @@
                 </div>
             </div>
         </div>
+        <div class="panel-footer clearfix">
+            <div class="disp_ib pull-right">
+                <?= $this->Form->button(__d('gl', "下書き保存"), [
+                    'div'   => false,
+                    'class' => 'btn btn-default',
+                    'id'    => 'evaluation-draft-submit',
+                    'name'  => 'is_draft',
+                    'value' => true
+                ]); ?>
+                <?= $this->Form->end(); ?>
+                <?= $this->Form->button(__d('gl', "評価登録"), [
+                    'div'   => false,
+                    'class' => 'btn btn-primary',
+                    'id'    => 'evaluation-register-submit',
+                    'name'  => 'is_register',
+                    'value' => true
+                ]); ?>
+            </div>
+        </div>
+
     </div>
 <? endif; ?>
 
@@ -88,7 +108,7 @@
         <div class="panel-heading"><?= __d('gl', "ゴール評価") ?>(<?= $key ?>/<?= count($goalList) ?>)</div>
 
         <div class="panel-body eval-view-panel-body">
-            <div class="form-group">
+            <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div class="col col-xxs-6 col-sm-3">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $eval['Goal']['id']]) ?>"
                        class="modal-ajax-get">
@@ -114,8 +134,7 @@
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="form-group">
+            <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div class="col-xxs-12">
                     <div class="col-xxs-6">
                         <div class="eval-view-result-number">
@@ -151,8 +170,7 @@
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="form-group">
+            <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "役割:") ?>
                     <? $role = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"]); ?>
@@ -188,7 +206,6 @@
                     <?= h($priority) ?>
                 </div>
             </div>
-            <hr>
             <div class="form-group">
                 <div for="#" class="col col-sm-3 eval-view-panel-title"><?= __d('gl', "本人") ?></div>
 
@@ -237,29 +254,26 @@
                 </div>
             </div>
         </div>
+        <div class="panel-footer clearfix">
+            <div class="disp_ib pull-right">
+                <?= $this->Form->button(__d('gl', "下書き保存"), [
+                    'div'   => false,
+                    'class' => 'btn btn-default',
+                    'id'    => 'evaluation-draft-submit',
+                    'name'  => 'is_draft',
+                    'value' => true
+                ]); ?>
+                <?= $this->Form->end(); ?>
+                <?= $this->Form->button(__d('gl', "評価登録"), [
+                    'div'   => false,
+                    'class' => 'btn btn-primary',
+                    'id'    => 'evaluation-register-submit',
+                    'name'  => 'is_register',
+                    'value' => true
+                ]); ?>
+            </div>
+        </div>
 
     </div>
 <? endforeach ?>
-
-<div>
-
-    <?= $this->Form->button(__d('gl', "評価登録"), [
-        'div'   => false,
-        'class' => 'btn btn-primary pull-right',
-        'id'    => 'evaluation-register-submit',
-        'name'  => 'is_register',
-        'value' => true
-    ]); ?>
-    <?= $this->Form->button(__d('gl', "下書き保存"), [
-        'div'   => false,
-        'class' => 'btn pull-right',
-        'id'    => 'evaluation-draft-submit',
-        'name'  => 'is_draft',
-        'value' => true
-    ]); ?>
-    <?= $this->Form->end(); ?>
-
-    <div class="clearfix"></div>
-</div>
-
 <!-- END app/View/Evaluations/view.ctp -->

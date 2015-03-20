@@ -3929,3 +3929,9 @@ Temporary Properties - YOU MUST FIX
 .tag-info {
     background-color: #029acf;
 }
+
+.eval-view-panel-section {
+    border-bottom: 1px solid #ccc;
+    padding-top: 12px;
+    padding-bottom: 8px;
+}
