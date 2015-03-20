@@ -23,9 +23,9 @@
                     <i class="fa fa-check-circle"></i>
                     <span class="ml_2px"><?= h($kr['KeyResult']['action_result_count']) ?></span>
                     <? if ($kr['KeyResult']['completed']): ?>
-                        <span class="fin-kr tag-sm tag-info">完了</span>
+                        <span class="fin-kr tag-sm tag-info"><?= __d('gl',"完了") ?></span>
                     <? else: ?>
-                        <span class="unfin-kr tag-sm tag-danger">未完了</span>
+                        <span class="unfin-kr tag-sm tag-danger"><?= __d('gl',"未完了") ?></span>
                     <? endif; ?>
                 </div>
             </div>
