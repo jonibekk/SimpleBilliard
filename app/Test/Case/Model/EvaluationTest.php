@@ -520,19 +520,34 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluateTerm->save($eval_term);
         $term_id = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $eval = [
-            'team_id'           => 1,
-            'evaluatee_user_id' => 1,
-            'evaluator_user_id' => 1,
-            'evaluate_term_id'  => $term_id,
-            'evaluate_type'     => 0,
-            'index'             => 0,
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => $term_id,
+                'evaluate_type'     => 0,
+                'index'             => 0,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => $term_id,
+                'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+                'index'             => 1,
+            ],
         ];
-        $this->Evaluation->save($eval);
+        $this->Evaluation->saveAll($eval);
         $expected = [
-            (int)0 => [
-                'name'    => 'あなた',
-                'status'  => '0',
+            (int) 0 => [
+                'name' => 'あなた',
+                'status' => '0',
                 'my_tarn' => true
+            ],
+            (int) 1 => [
+                'name' => '評価者1',
+                'status' => '0',
+                'my_tarn' => false
             ]
         ];
         $actual = $this->Evaluation->getMyEvalStatus($term_id);
