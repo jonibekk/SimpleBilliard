@@ -65,7 +65,17 @@ class EvaluationsControllerTest extends ControllerTestCase
      */
     public function testIndexSuccess()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $eval_data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => $Evaluations->Team->EvaluateTerm->getLastInsertID(),
+            'evaluate_type'     => 0,
+            'index'             => 0,
+        ];
+        $Evaluations->Evaluation->save($eval_data);
         $this->testAction('/evaluations/', ['method' => 'GET']);
     }
 
@@ -443,6 +453,12 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations->Evaluation->Goal->Follower->current_team_id = '1';
         $Evaluations->Evaluation->Goal->Post->my_uid = '1';
         $Evaluations->Evaluation->Goal->Post->current_team_id = '1';
+        $Evaluations->Evaluation->current_team_id = 1;
+        $Evaluations->Evaluation->my_uid = 1;
+        $Evaluations->Team->EvaluateTerm->current_team_id = 1;
+        $Evaluations->Team->EvaluateTerm->my_uid = 1;
+        $Evaluations->Team->current_team_id = 1;
+        $Evaluations->Team->my_uid = 1;
 
         return $Evaluations;
     }

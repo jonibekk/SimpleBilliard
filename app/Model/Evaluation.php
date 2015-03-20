@@ -13,6 +13,7 @@ App::uses('AppModel', 'Model');
  */
 class Evaluation extends AppModel
 {
+
     /**
      * Display field
      *
@@ -98,6 +99,30 @@ class Evaluation extends AppModel
 
     var $evaluationType = null;
 
+    static public $TYPE = [
+        self::TYPE_ONESELF         => "",
+        self::TYPE_EVALUATOR       => "",
+        self::TYPE_FINAL_EVALUATOR => "",
+        self::TYPE_LEADER          => ","
+    ];
+
+    /**
+     * タイプの表示名をセット
+     */
+    private function _setTypeName()
+    {
+        self::$TYPE[self::TYPE_ONESELF] = __d('gl', "あなた");
+        self::$TYPE[self::TYPE_EVALUATOR] = __d('gl', "評価者");
+        self::$TYPE[self::TYPE_FINAL_EVALUATOR] = __d('gl', "最終者");
+        self::$TYPE[self::TYPE_LEADER] = __d('gl', "リーダ");
+    }
+
+    function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+        $this->_setTypeName();
+    }
+
     /**
      * 評価リストの閲覧権限チェック
      * ・評価画面の表示条件
@@ -127,6 +152,28 @@ class Evaluation extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    function isMySelfEvalIncomplete($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluatee_user_id' => $this->my_uid,
+                'evaluator_user_id' => $this->my_uid,
+                'evaluate_type'     => self::TYPE_ONESELF,
+                'goal_id'           => null,
+                'team_id'           => $this->current_team_id,
+                'evaluate_term_id'  => $term_id,
+                'NOT'               => [
+                    'status' => self::TYPE_STATUS_DONE
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
     }
 
     public function add($data, $saveType)
@@ -179,7 +226,7 @@ class Evaluation extends AppModel
                         'conditions' => [
                             'user_id' => $evaluateeId
                         ],
-                        'fields' => [
+                        'fields'     => [
                             'id'
                         ]
                     ]
@@ -354,6 +401,41 @@ class Evaluation extends AppModel
             'index'             => $index,
         ];
         return $record;
+    }
+
+    function getMyEvalStatus($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluatee_user_id' => $this->my_uid,
+                'evaluate_term_id'  => $term_id,
+                'team_id'           => $this->current_team_id,
+                'goal_id'           => null,
+            ],
+            'fields'     => ['id', 'evaluate_type', 'status',],
+            'order'      => ['index' => 'asc']
+        ];
+        $data = $this->find('all', $options);
+        $data = Hash::combine($data, '{n}.Evaluation.id', '{n}.Evaluation');
+        $res = [];
+        $already_exists_incomplete = false;
+        $evaluator_index = 1;
+        foreach ($data as $val) {
+            $name = self::$TYPE[$val['evaluate_type']];
+            if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
+                $name .= $evaluator_index;
+                $evaluator_index++;
+            }
+            $res[] = [
+                'name'    => $name,
+                'status'  => $val['status'],
+                'my_tarn' => !$already_exists_incomplete && $val['status'] != self::TYPE_STATUS_DONE ? true : false,
+            ];
+            if ($val['status'] != self::TYPE_STATUS_DONE) {
+                $already_exists_incomplete = true;
+            }
+        }
+        return $res;
     }
 
 }

@@ -1438,13 +1438,13 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'coach_user_id' => $user_id,
-                'team_id' => $this->current_team_id,
+                'team_id'       => $this->current_team_id,
             ],
             'fields'     => [
                 'user_id'
             ],
         ];
-        $member_list = $this->find("list",$options);
+        $member_list = $this->find("list", $options);
         $res = $this->User->Collaborator->getCollaboGoalList($member_list, true, $limit, $page);
         return $res;
     }

@@ -123,6 +123,7 @@ class Team extends AppModel
         'Evaluation',
         'EvaluateTerm',
         'EvaluationSetting',
+        'EvaluateTerm',
     ];
 
     public $current_team = [];

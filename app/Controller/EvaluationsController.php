@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Evaluation', 'Model');
 
 /**
  * Evaluations Controller
@@ -12,6 +13,7 @@ class EvaluationsController extends AppController
     function beforeFilter()
     {
         parent::beforeFilter();
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->Security->enabled = false;
     }
 
@@ -29,12 +31,16 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $incomplete_count = 0;
         //get evaluation setting.
-        $is_self_on = $this->Team->EvaluationSetting->isEnabledSelf();
-        $is_evaluator_on = $this->Team->EvaluationSetting->isEnabledEvaluator();
-        $is_final_on = $this->Team->EvaluationSetting->isEnabledFinal();
-        $my_evaluations = $this->Evaluation->EvaluateTerm->getMyEvaluationAllTerm();
-        $this->set(compact('is_self_on', 'is_evaluator_on', 'is_final_on', 'my_evaluations'));
+        $eval_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $my_eval_status = $this->Evaluation->getMyEvalStatus($eval_term_id);
+        $is_myself_evaluations_incomplete = $this->Evaluation->isMySelfEvalIncomplete($eval_term_id);
+        if ($is_myself_evaluations_incomplete) {
+            $incomplete_count++;
+        }
+
+        $this->set(compact('eval_term_id', 'incomplete_count', 'is_myself_evaluations_incomplete', 'my_eval_status'));
     }
 
     function view($evaluateTermId = null, $evaluateeId = null)

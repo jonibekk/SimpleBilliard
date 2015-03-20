@@ -145,18 +145,18 @@ class EvaluationSettingTest extends CakeTestCase
         $this->_setDefaultAllOn();
         $this->assertTrue($this->EvaluationSetting->isEnabledLeader());
     }
+
     function testIsEvaluatorLeaderFalse()
     {
         $this->_setDefaultAllOn([EvaluationSetting::FLG_LEADER]);
         $this->assertFalse($this->EvaluationSetting->isEnabledLeader());
     }
 
-
     function _setDefaultAllOn($set_false_flags = [])
     {
         $this->EvaluationSetting->my_uid = 1;
         $this->EvaluationSetting->current_team_id = 1;
-        $this->EvaluationSetting->deleteAll(['EvaluationSetting.team_id'=>1]);
+        $this->EvaluationSetting->deleteAll(['EvaluationSetting.team_id' => 1]);
         $data = [
             'team_id'    => 1,
             'enable_flg' => true,

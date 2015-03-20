@@ -151,16 +151,16 @@ class Collaborator extends AppModel
             'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
             'conditions' => [
                 'Collaborator.team_id'    => $team_id,
-				'Collaborator.user_id'    => $goal_user_id,
+                'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
             ],
             'contain'    => [
                 'Goal' => [
-                    'fields'  => [
+                    'fields'       => [
                         'name', 'goal_category_id', 'end_date', 'photo_file_name',
                         'value_unit', 'target_value', 'start_value', 'description'
                     ],
-                    'Purpose' => ['fields' => 'name'],
+                    'Purpose'      => ['fields' => 'name'],
                     'GoalCategory' => ['fields' => 'name'],
                 ],
                 'User' => [
@@ -185,14 +185,14 @@ class Collaborator extends AppModel
             'fields'     => ['id'],
             'conditions' => [
                 'Collaborator.team_id'    => $team_id,
-				'Collaborator.user_id'    => $goal_user_id,
+                'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
                 'User.id !='              => $user_id
             ],
             'contain'    => [
                 'Goal' => [
-                    'fields'  => ['id'],
-                    'Purpose' => ['fields' => 'id'],
+                    'fields'       => ['id'],
+                    'Purpose'      => ['fields' => 'id'],
                     'GoalCategory' => ['fields' => 'id'],
                 ],
                 'User' => [
