@@ -35,8 +35,8 @@ class EvaluateTermFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array(
-        array(
+    public $records = [
+        [
             'id'         => '',
             'team_id'    => '',
             'start_date' => 1,
@@ -45,7 +45,7 @@ class EvaluateTermFixture extends CakeTestFixture
             'deleted'    => 1,
             'created'    => 1,
             'modified'   => 1
-        ),
-    );
+        ],
+    ];
 
 }
