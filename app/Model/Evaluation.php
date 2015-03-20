@@ -352,7 +352,7 @@ class Evaluation extends AppModel
     function getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index)
     {
         $goal_evaluations = [];
-        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true);
+        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true, null, 1, Collaborator::STATUS_APPROVAL);
         foreach ($goal_list as $gid) {
             //self
             if ($this->Team->EvaluationSetting->isEnabledSelf()) {
