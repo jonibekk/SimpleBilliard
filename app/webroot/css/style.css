@@ -1340,7 +1340,6 @@ textarea{
 
 .post-contents a {
     color: #ddd;
-    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1348,7 +1347,6 @@ textarea{
 
 .comment-contents a {
     color: #c5c5c5;
-    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
