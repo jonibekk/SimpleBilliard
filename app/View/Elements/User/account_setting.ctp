@@ -109,6 +109,21 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "２要素認証") ?></label>
+
+            <div class="col col-sm-6">
+                <p class="form-control-static">
+                    <? if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
+                        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_delete']) ?>"
+                           class="modal-ajax-get"><?= __d('gl', "解除する") ?></a>
+                    <? else: ?>
+                        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_register']) ?>"
+                           class="modal-ajax-get"><?= __d('gl', "設定する") ?></a>
+                    <? endif; ?>
+                </p>
+            </div>
+        </div>
     </div>
     <div class="panel-footer setting_pannel-footer">
         <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
