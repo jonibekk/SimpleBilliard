@@ -235,11 +235,11 @@ class Collaborator extends AppModel
     }
 
     //TODO ハードコーディング中! for こーへーさん
-    function tempCountUnvalued()
+    function tempCountUnvalued($team_id = [1,1111111])
     {
         $options = [
             'conditions' => [
-                'team_id'    => 1,
+                'team_id'    => $team_id,
                 'valued_flg' => 0,
             ],
             'fields'     => [
@@ -253,7 +253,7 @@ class Collaborator extends AppModel
                     ],
                     'TeamMember' => [
                         'conditions' => [
-                            'team_id' => 1,
+                            'team_id' => $team_id,
                             'evaluation_enable_flg' => 1,
                             'NOT'                   => [
                                 'TeamMember.coach_user_id' => null,
