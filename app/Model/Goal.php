@@ -74,12 +74,12 @@ class Goal extends AppModel
                 'complete'   => __d('gl', "達成"),
                 'incomplete' => __d('gl', "未達成")],
             'order'    => [
-                'new'           => __d('gl', "新着順"),
-                'action'        => __d('gl', "アクションが多い順"),
-                'action_result' => __d('gl', "出した成果が多い順"),
-                'follow'        => __d('gl', "フォロワーが多い順"),
-                'collabo'       => __d('gl', "コラボレーターが多い順"),
-                'progress'      => __d('gl', "進捗率が高い順")]
+                'new'      => __d('gl', "新着順"),
+                'action'   => __d('gl', "アクションが多い順"),
+                'result'   => __d('gl', "出した成果が多い順"),
+                'follow'   => __d('gl', "フォロワーが多い順"),
+                'collabo'  => __d('gl', "コラボレーターが多い順"),
+                'progress' => __d('gl', "進捗率が高い順")]
         ];
         //カテゴリ取得
         $options = [
@@ -730,7 +730,8 @@ class Goal extends AppModel
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
             ],
-            'order'      => ['Goal.modified desc'],
+            'fields'     => ['Goal.user_id', 'Goal.name', 'Goal.photo_file_name',],
+            'order'      => ['Goal.created desc'],
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
@@ -794,6 +795,7 @@ class Goal extends AppModel
         ];
         $options = $this->setFilter($options, $search_option);
         $res = $this->find('all', $options);
+        $this->log($res);
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
@@ -818,7 +820,7 @@ class Goal extends AppModel
                 break;
         }
         //カテゴリ指定
-        if (viaIsSet($search_option['category'][0])) {
+        if (viaIsSet($search_option['category'][0]) && $search_option['category'][0] != 'all') {
             $options['conditions']['Goal.goal_category_id'] = $search_option['category'][0];
         }
         //進捗指定
@@ -828,6 +830,65 @@ class Goal extends AppModel
                 break;
             case 'incomplete' :
                 $options['conditions']['completed'] = null;
+                break;
+        }
+        //ソート指定
+        switch (viaIsSet($search_option['order'][0])) {
+            case 'action' :
+                $options['order'] = ['Goal.action_result_count desc'];
+                break;
+            case 'result' :
+                $options['order'] = ['count_key_result desc'];
+                $options['fields'][] = 'count(KeyResult.id) as count_key_result';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'key_results',
+                        'alias'      => 'KeyResult',
+                        'conditions' => [
+                            'KeyResult.goal_id = Goal.id',
+                            'KeyResult.del_flg' => 0,
+                            'NOT'               => ['KeyResult.completed' => null],
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
+                break;
+                break;
+            case 'follow' :
+                $options['order'] = ['count_follow desc'];
+                $options['fields'][] = 'count(Follower.id) as count_follow';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'followers',
+                        'alias'      => 'Follower',
+                        'conditions' => [
+                            'Follower.goal_id = Goal.id',
+                            'Follower.del_flg' => 0,
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
+                break;
+            case 'collabo' :
+                $options['order'] = ['count_collaborator desc'];
+                $options['fields'][] = 'count(Collaborator.id) as count_collaborator';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'collaborators',
+                        'alias'      => 'Collaborator',
+                        'conditions' => [
+                            'Collaborator.goal_id = Goal.id',
+                            'Collaborator.del_flg' => 0,
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
+                break;
+            case 'progress' :
+                $options['order'] = null;
                 break;
         }
         return $options;
