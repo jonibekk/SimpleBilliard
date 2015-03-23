@@ -89,18 +89,40 @@
                     'value' => true
                 ]); ?>
                 <?= $this->Form->end(); ?>
-                <?= $this->Form->button(__d('gl', "評価登録"), [
+                <!--
+                <? /*= $this->Form->button(__d('gl', "確定"), [
                     'div'   => false,
                     'class' => 'btn btn-primary',
                     'id'    => 'evaluation-register-submit',
                     'name'  => 'is_register',
                     'value' => true
-                ]); ?>
+                ]); */ ?>
+
+-->
             </div>
         </div>
 
     </div>
 <? endif; ?>
+<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
+    <div class="text-align_c p_8px bg-lightGray">
+        <?= $this->Form->button(__d('gl', "下書き保存"), [
+            'div'   => false,
+            'class' => 'btn btn-default',
+            'id'    => 'evaluation-draft-submit',
+            'name'  => 'is_draft',
+            'value' => true
+        ]); ?>
+        <?= $this->Form->end(); ?>
+        <?= $this->Form->button(__d('gl', "確定"), [
+            'div'   => false,
+            'class' => 'btn btn-primary eval-view-btn-submit',
+            'id'    => 'evaluation-register-submit',
+            'name'  => 'is_register',
+            'value' => true
+        ]); ?>
+    </div>
+</div>
 
 <? foreach ($goalList as $key => $eval): ?>
 
@@ -264,16 +286,37 @@
                     'value' => true
                 ]); ?>
                 <?= $this->Form->end(); ?>
-                <?= $this->Form->button(__d('gl', "評価登録"), [
+                <!--
+                <? /*= $this->Form->button(__d('gl', "確定"), [
                     'div'   => false,
                     'class' => 'btn btn-primary',
                     'id'    => 'evaluation-register-submit',
                     'name'  => 'is_register',
                     'value' => true
-                ]); ?>
-            </div>
+                ]); */ ?>
+
+-->            </div>
         </div>
 
     </div>
 <? endforeach ?>
+<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
+    <div class="text-align_c p_8px bg-lightGray">
+        <?= $this->Form->button(__d('gl', "下書き保存"), [
+            'div'   => false,
+            'class' => 'btn btn-default',
+            'id'    => 'evaluation-draft-submit',
+            'name'  => 'is_draft',
+            'value' => true
+        ]); ?>
+        <?= $this->Form->end(); ?>
+        <?= $this->Form->button(__d('gl', "確定"), [
+            'div'   => false,
+            'class' => 'btn btn-primary eval-view-btn-submit',
+            'id'    => 'evaluation-register-submit',
+            'name'  => 'is_register',
+            'value' => true
+        ]); ?>
+    </div>
+</div>
 <!-- END app/View/Evaluations/view.ctp -->
