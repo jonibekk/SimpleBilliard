@@ -79,36 +79,59 @@
                 </div>
             </div>
         </div>
-        <div class="panel-footer clearfix">
-            <div class="disp_ib pull-right">
-                <?= $this->Form->button(__d('gl', "下書き保存"), [
-                    'div'   => false,
-                    'class' => 'btn btn-default',
-                    'id'    => 'evaluation-draft-submit',
-                    'name'  => 'is_draft',
-                    'value' => true
-                ]); ?>
+        <?
+        if ($status != Evaluation::TYPE_STATUS_DONE):
+            ?>
+            <div class="panel-footer clearfix">
+                <div class="disp_ib pull-right">
+                    <?= $this->Form->button(__d('gl', "下書き保存"), [
+                        'div'   => false,
+                        'class' => 'btn btn-default',
+                        'id'    => 'evaluation-draft-submit',
+                        'name'  => 'is_draft',
+                        'value' => true
+                    ]); ?>
+                </div>
             </div>
-        </div>
+        <?
+        endif;
+        ?>
 
     </div>
 <? endif; ?>
+
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
     <div class="text-align_c p_8px bg-lightGray">
-        <?= $this->Form->button(__d('gl', "下書き保存"), [
-            'div'   => false,
-            'class' => 'btn btn-default',
-            'id'    => 'evaluation-draft-submit',
-            'name'  => 'is_draft',
-            'value' => true
-        ]); ?>
-        <?= $this->Form->button(__d('gl', "確定"), [
+        <?
+        if ($status == Evaluation::TYPE_STATUS_DONE):
+            ?>
+            <?= $this->Form->button(__d('gl', "修正して確定"), [
             'div'   => false,
             'class' => 'btn btn-primary eval-view-btn-submit',
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
             'value' => true
         ]); ?>
+        <?
+        else:
+            ?>
+            <?= $this->Form->button(__d('gl', "下書き保存"), [
+            'div'   => false,
+            'class' => 'btn btn-default',
+            'id'    => 'evaluation-draft-submit',
+            'name'  => 'is_draft',
+            'value' => true
+        ]); ?>
+            <?= $this->Form->button(__d('gl', "確定"), [
+            'div'   => false,
+            'class' => 'btn btn-primary eval-view-btn-submit',
+            'id'    => 'evaluation-register-submit',
+            'name'  => 'is_register',
+            'value' => true
+        ]); ?>
+        <?
+        endif;
+        ?>
     </div>
 </div>
 
@@ -264,36 +287,58 @@
                 </div>
             </div>
         </div>
-        <div class="panel-footer clearfix">
-            <div class="disp_ib pull-right">
-                <?= $this->Form->button(__d('gl', "下書き保存"), [
-                    'div'   => false,
-                    'class' => 'btn btn-default',
-                    'id'    => 'evaluation-draft-submit',
-                    'name'  => 'is_draft',
-                    'value' => true
-                ]); ?>
+        <?
+        if ($status != Evaluation::TYPE_STATUS_DONE):
+            ?>
+            <div class="panel-footer clearfix">
+                <div class="disp_ib pull-right">
+                    <?= $this->Form->button(__d('gl', "下書き保存"), [
+                        'div'   => false,
+                        'class' => 'btn btn-default',
+                        'id'    => 'evaluation-draft-submit',
+                        'name'  => 'is_draft',
+                        'value' => true
+                    ]); ?>
+                </div>
             </div>
-        </div>
-
+        <?
+        endif;
+        ?>
     </div>
 <? endforeach ?>
+
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="text-align_c p_8px bg-lightGray">
-        <?= $this->Form->button(__d('gl', "下書き保存"), [
-            'div'   => false,
-            'class' => 'btn btn-default',
-            'id'    => 'evaluation-draft-submit',
-            'name'  => 'is_draft',
-            'value' => true
-        ]); ?>
-        <?= $this->Form->button(__d('gl', "確定"), [
+        <?
+        if ($status == Evaluation::TYPE_STATUS_DONE):
+            ?>
+            <?= $this->Form->button(__d('gl', "修正して確定"), [
             'div'   => false,
             'class' => 'btn btn-primary eval-view-btn-submit',
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
             'value' => true
         ]); ?>
+        <?
+        else:
+            ?>
+            <?= $this->Form->button(__d('gl', "下書き保存"), [
+            'div'   => false,
+            'class' => 'btn btn-default',
+            'id'    => 'evaluation-draft-submit',
+            'name'  => 'is_draft',
+            'value' => true
+        ]); ?>
+            <?= $this->Form->button(__d('gl', "確定"), [
+            'div'   => false,
+            'class' => 'btn btn-primary eval-view-btn-submit',
+            'id'    => 'evaluation-register-submit',
+            'name'  => 'is_register',
+            'value' => true
+        ]); ?>
+        <?
+        endif;
+        ?>
     </div>
 </div>
 <?= $this->Form->end(); ?>
