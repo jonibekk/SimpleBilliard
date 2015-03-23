@@ -107,7 +107,6 @@ class EvaluationsController extends AppController
         } catch (RuntimeException $e) {
             $this->Evaluation->rollback();
             // saving as draft
-            echo "test";
             if ($saveType === "register") {
                 $this->Evaluation->add($this->request->data, "draft");
             }
