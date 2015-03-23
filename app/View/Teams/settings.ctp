@@ -23,7 +23,7 @@
 <div id="evaluation">
     <? //TODO ハードコーディング中! for こーへーさん ?>
     <?= $this->element('Team/evaluation_setup') ?>
-    <? if ($this->Session->read('current_team_id') == 1) {
+    <? if (in_array($this->Session->read('current_team_id'),$team_id)) {
         foreach ($unvalued as $data) {
             if (is_int($data)) {
                 echo('count' . '=>' . $data . '<br>');
