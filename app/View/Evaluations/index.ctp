@@ -29,12 +29,12 @@
             <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', $eval_term_id, $this->Session->read('Auth.User.id')]) ?>"
                class="font_verydark">
                 <div class="col-xxs-12 mb_8px">
-                    <div class="col-xxs-1">
+                    <div class="disp_ib">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'medium'],
                                                    ['width' => '48px', 'height' => '48px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
                     </div>
-                    <div class="col-xxs-11">
+                    <div class="disp_ib ml_8px">
                         <p><?= $this->Session->read('Auth.User.display_username') ?></p>
                         <? foreach ($my_eval_status as $k => $v): ?>
                             <? if ($k !== 0): ?>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<? endif ?>
@@ -60,11 +60,11 @@
                     <p><?= __d('gl', "未完了:") ?></p> <!-- ToDo 0の場合は表示しない-->
                 </div>
                 <div class="col-xxs-12 mb_8px">
-                    <div class="col-xxs-1">
+                    <div class="disp_ib">
                         <img src="../../img/logo_on.png" width="48" height="48" alt="You"
                              class="eval-view-panel-goal-pic">
                     </div>
-                    <div class="col-xxs-11">
+                    <div class="disp_ib ml_8px">
                         <p class="font_bold"><?= __d('gl', "平形大樹") ?></p>
                         <span><?= __d('gl', "メンバー") ?></span><i class="fa fa-long-arrow-right"></i><span><?= __d('gl',
                                                                                                                  "あなた") ?></span><i
