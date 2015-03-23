@@ -1404,6 +1404,8 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.coach_user_id' => $user_id,
                 'TeamMember.team_id'       => $team_id,
+                'active_flg'               => 1,
+                'evaluation_enable_flg'    => 1,
             ],
         ];
         return $this->find('list', $options);
@@ -1449,4 +1451,33 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    /**
+     * Param1のユーザーは評価対象の人なのか
+     *
+     * @param $user_id
+     * @param $team_id
+     *
+     * @return array|null
+     */
+    function getEvaluationEnableFlg($user_id, $team_id)
+    {
+        $options = [
+            'fields'     => ['active_flg', 'evaluation_enable_flg'],
+            'conditions' => [
+                'TeamMember.user_id' => $user_id,
+                'TeamMember.team_id' => $team_id,
+            ],
+        ];
+        $res = $this->find('first', $options);
+        $evaluation_flg = false;
+        if (isset($res['TeamMember']['active_flg']) === true
+            && $res['TeamMember']['active_flg'] === true
+            && isset($res['TeamMember']['evaluation_enable_flg']) === true
+            && $res['TeamMember']['evaluation_enable_flg'] === true
+        ) {
+            $evaluation_flg = true;
+        }
+
+        return $evaluation_flg;
+    }
 }

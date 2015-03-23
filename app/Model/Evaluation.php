@@ -211,6 +211,7 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type'     => self::TYPE_ONESELF,
                 'OR'                => [
                     ['Evaluation.status' => self::TYPE_STATUS_NOT_ENTERED],
                     ['Evaluation.status' => self::TYPE_STATUS_DRAFT]
@@ -352,7 +353,8 @@ class Evaluation extends AppModel
     function getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index)
     {
         $goal_evaluations = [];
-        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true);
+        $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true, null, 1, Collaborator::STATUS_APPROVAL);
+        $goal_list = $this->Goal->filterThisTermIds($goal_list);
         foreach ($goal_list as $gid) {
             //self
             if ($this->Team->EvaluationSetting->isEnabledSelf()) {

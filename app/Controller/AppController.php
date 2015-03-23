@@ -475,9 +475,7 @@ class AppController extends Controller
                     $team_id = $id;
                     break;
                 default:
-                    $Model->recursive = -1;
                     $result = $Model->findById($id);
-                    $Model->recursive = 1;
                     if (empty($result)) {
                         return null;
                     }

@@ -454,13 +454,13 @@ class PostTest extends CakeTestCase
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $test_save_data = [
-            'Post'    => [
+            'Post' => [
                 'user_id' => $uid,
                 'team_id' => $team_id,
                 'body'    => 'test',
             ]
         ];
-        for ($i = 0 ; $i < $comment_num ; $i++) {
+        for ($i = 0; $i < $comment_num; $i++) {
             $test_save_data['Comment'][] =
                 [
                     'user_id' => $comment_uid,
@@ -474,12 +474,12 @@ class PostTest extends CakeTestCase
                 'Post.id' => $this->Post->getLastInsertID(),
             ],
             'contain'    => [
-                'Comment'         => [
-                    'conditions'    => ['Comment.team_id' => $team_id],
-                    'order'         => [
+                'Comment' => [
+                    'conditions' => ['Comment.team_id' => $team_id],
+                    'order'      => [
                         'Comment.created' => 'desc'
                     ],
-                    'limit'         => 3,
+                    'limit'      => 3,
                 ],
                 'CommentId',
             ],

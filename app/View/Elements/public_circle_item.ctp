@@ -41,7 +41,7 @@ if (!isset($form)) {
             </div>
         <? endif; ?>
         <div class="font_12px font_bold modalFeedTextPadding">
-            <? if($circle['Circle']['created'] > strtotime("-1 week")): ?>
+            <? if ($circle['Circle']['created'] > strtotime("-1 week")): ?>
                 <span class="circle-new">New</span>
             <? endif; ?>
             <?= h($circle['Circle']['name']) ?>

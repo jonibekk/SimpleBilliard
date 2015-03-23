@@ -55,6 +55,7 @@ class GoalsController extends AppController
             $this->request->data['Goal']['id'] = $id;
             try {
                 $this->Goal->isPermittedAdmin($id);
+                $this->Goal->isNotExistsEvaluation($id);
             } catch (RuntimeException $e) {
                 $this->Pnotify->outError($e->getMessage());
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -134,6 +135,7 @@ class GoalsController extends AppController
     {
         try {
             $this->Goal->isPermittedAdmin($id);
+            $this->Goal->isNotExistsEvaluation($id);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());

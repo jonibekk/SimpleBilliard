@@ -18,10 +18,15 @@
         <div class="bd-t h_50px">
             <div class="col col-xxs-12 responsive-goal-space-width mxh_50px ln_1 ptb_5px">
                 <div class="inline-block responsive-goal-title-width">
-                    <span class="ln_1 tap-btn-text font_verydark fin-kr">
+                    <span class="ln_1 tap-btn-text font_verydark kr-text">
                         <?= h($kr['KeyResult']['name']) ?></span>
                     <i class="fa fa-check-circle"></i>
                     <span class="ml_2px"><?= h($kr['KeyResult']['action_result_count']) ?></span>
+                    <? if ($kr['KeyResult']['completed']): ?>
+                        <span class="fin-kr tag-sm tag-info"><?= __d('gl',"完了") ?></span>
+                    <? else: ?>
+                        <span class="unfin-kr tag-sm tag-danger"><?= __d('gl',"未完了") ?></span>
+                    <? endif; ?>
                 </div>
             </div>
             <? if ($kr_can_edit): ?>

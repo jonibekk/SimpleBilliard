@@ -1899,6 +1899,7 @@ ul.input-images > li {
     border: 1px solid #ccc;
 }
 
+
 .frame-arrow-icon::before {
     content: "";
     border: 8px solid transparent;
@@ -1961,6 +1962,7 @@ ul.input-images > li {
     right: 18%;
     top: -15px;
 }
+
 
 @media screen and (min-width: 768px) {
     .frame-arrow-notify::before {
@@ -3763,7 +3765,7 @@ Temporary Properties - YOU MUST FIX
     right: -36px;
 }
 
-.notify-dropdown-lists {
+.notify-dropdown-lists{
     margin: 0;
     padding: 0;
     max-height: 360px;
@@ -3783,7 +3785,7 @@ Temporary Properties - YOU MUST FIX
         height: 64px;
     }
 
-    .notify-dropdown-lists {
+    .notify-dropdown-lists{
         max-height: 500px;
     }
 
@@ -3800,13 +3802,13 @@ Temporary Properties - YOU MUST FIX
     clear: both;
 }
 
-.notify-card-empty {
+.notify-card-empty{
     text-align: center;
     padding: 10px 0;
     color: #231814;
 }
 
-.notify-empty-text {
+.notify-empty-text{
     line-height: 33px;
     vertical-align: top;
 }
@@ -3933,4 +3935,38 @@ Temporary Properties - YOU MUST FIX
 
 .goal-search-count p {
     color: #ffffff;
+}
+
+/* tag */
+.tag-sm {
+    position: relative;
+    min-width: 32px;
+    height: 18px;
+    font-size: 10px;
+    background: #fff;
+    padding: 2px 4px 2px 14px;
+    border-radius: 9px 2px 2px 9px;
+    color: #fff;
+}
+
+.tag-sm::before {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    z-index: 2;
+    display: block;
+    content: '';
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
+    background-color: #fff;
+    border-radius: 100%;
+}
+
+.tag-danger {
+    background-color: #ac6819;
+}
+
+.tag-info {
+    background-color: #029acf;
 }
