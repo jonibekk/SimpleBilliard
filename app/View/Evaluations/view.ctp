@@ -88,17 +88,6 @@
                     'name'  => 'is_draft',
                     'value' => true
                 ]); ?>
-                <?= $this->Form->end(); ?>
-                <!--
-                <? /*= $this->Form->button(__d('gl', "確定"), [
-                    'div'   => false,
-                    'class' => 'btn btn-primary',
-                    'id'    => 'evaluation-register-submit',
-                    'name'  => 'is_register',
-                    'value' => true
-                ]); */ ?>
-
--->
             </div>
         </div>
 
@@ -113,7 +102,6 @@
             'name'  => 'is_draft',
             'value' => true
         ]); ?>
-        <?= $this->Form->end(); ?>
         <?= $this->Form->button(__d('gl', "確定"), [
             'div'   => false,
             'class' => 'btn btn-primary eval-view-btn-submit',
@@ -285,17 +273,7 @@
                     'name'  => 'is_draft',
                     'value' => true
                 ]); ?>
-                <?= $this->Form->end(); ?>
-                <!--
-                <? /*= $this->Form->button(__d('gl', "確定"), [
-                    'div'   => false,
-                    'class' => 'btn btn-primary',
-                    'id'    => 'evaluation-register-submit',
-                    'name'  => 'is_register',
-                    'value' => true
-                ]); */ ?>
-
--->            </div>
+            </div>
         </div>
 
     </div>
@@ -309,7 +287,6 @@
             'name'  => 'is_draft',
             'value' => true
         ]); ?>
-        <?= $this->Form->end(); ?>
         <?= $this->Form->button(__d('gl', "確定"), [
             'div'   => false,
             'class' => 'btn btn-primary eval-view-btn-submit',
@@ -319,4 +296,5 @@
         ]); ?>
     </div>
 </div>
+<?= $this->Form->end(); ?>
 <!-- END app/View/Evaluations/view.ctp -->
