@@ -47,6 +47,18 @@
                         'data-bv-notempty-message' => "入力必須項目です。"
                     ])
                     ?>
+                    <?=
+                    $this->Form->input("0.Evaluation.comment", [
+                        'type'                     => 'textarea',
+                        'rows'                     => 2,
+                        'default'                  => $total['Evaluation']['comment'],
+                        'label'                    => __d('gl', "評価コメント"),
+                        'placeholder'              => __d('gl', "コメントを書いてください"),
+                        'required'                 => false,
+                        'data-bv-notempty'         => "true",
+                        'data-bv-notempty-message' => "入力必須項目です。"
+                    ])
+                    ?>
                     <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][comment]"
                            data-bv-result="NOT_VALIDATED" style="display: none;">入力必須項目です。
                     </small>
@@ -79,6 +91,9 @@
                 </div>
             </div>
         </div>
+        <?
+        if($status != 2):
+        ?>
         <div class="panel-footer clearfix">
             <div class="disp_ib pull-right">
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
@@ -90,27 +105,47 @@
                 ]); ?>
             </div>
         </div>
+        <?
+        endif;
+        ?>
 
     </div>
 <? endif; ?>
-<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
-    <div class="text-align_c p_8px bg-lightGray">
-        <?= $this->Form->button(__d('gl', "下書き保存"), [
-            'div'   => false,
-            'class' => 'btn btn-default',
-            'id'    => 'evaluation-draft-submit',
-            'name'  => 'is_draft',
-            'value' => true
-        ]); ?>
-        <?= $this->Form->button(__d('gl', "確定"), [
-            'div'   => false,
-            'class' => 'btn btn-primary eval-view-btn-submit',
-            'id'    => 'evaluation-register-submit',
-            'name'  => 'is_register',
-            'value' => true
-        ]); ?>
+
+    <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
+        <div class="text-align_c p_8px bg-lightGray">
+            <?
+            if($status == 2):
+            ?>
+                <?= $this->Form->button(__d('gl', "修正して確定"), [
+                    'div'   => false,
+                    'class' => 'btn btn-primary eval-view-btn-submit',
+                    'id'    => 'evaluation-register-submit',
+                    'name'  => 'is_register',
+                    'value' => true
+                ]); ?>
+            <?
+            else:
+            ?>
+                <?= $this->Form->button(__d('gl', "下書き保存"), [
+                    'div'   => false,
+                    'class' => 'btn btn-default',
+                    'id'    => 'evaluation-draft-submit',
+                    'name'  => 'is_draft',
+                    'value' => true
+                ]); ?>
+                <?= $this->Form->button(__d('gl', "確定"), [
+                    'div'   => false,
+                    'class' => 'btn btn-primary eval-view-btn-submit',
+                    'id'    => 'evaluation-register-submit',
+                    'name'  => 'is_register',
+                    'value' => true
+                ]); ?>
+            <?
+            endif;
+            ?>
+        </div>
     </div>
-</div>
 
 <? foreach ($goalList as $key => $eval): ?>
 
@@ -264,6 +299,9 @@
                 </div>
             </div>
         </div>
+        <?
+        if($status != 2):
+        ?>
         <div class="panel-footer clearfix">
             <div class="disp_ib pull-right">
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
@@ -275,25 +313,44 @@
                 ]); ?>
             </div>
         </div>
-
+        <?
+        endif;
+        ?>
     </div>
 <? endforeach ?>
+
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="text-align_c p_8px bg-lightGray">
-        <?= $this->Form->button(__d('gl', "下書き保存"), [
-            'div'   => false,
-            'class' => 'btn btn-default',
-            'id'    => 'evaluation-draft-submit',
-            'name'  => 'is_draft',
-            'value' => true
-        ]); ?>
-        <?= $this->Form->button(__d('gl', "確定"), [
+        <?
+        if($status == 2):
+        ?>
+            <?= $this->Form->button(__d('gl', "修正して確定"), [
             'div'   => false,
             'class' => 'btn btn-primary eval-view-btn-submit',
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
             'value' => true
-        ]); ?>
+            ]); ?>
+        <?
+        else:
+        ?>
+            <?= $this->Form->button(__d('gl', "下書き保存"), [
+            'div'   => false,
+            'class' => 'btn btn-default',
+            'id'    => 'evaluation-draft-submit',
+            'name'  => 'is_draft',
+            'value' => true
+            ]); ?>
+            <?= $this->Form->button(__d('gl', "確定"), [
+            'div'   => false,
+            'class' => 'btn btn-primary eval-view-btn-submit',
+            'id'    => 'evaluation-register-submit',
+            'name'  => 'is_register',
+            'value' => true
+            ]); ?>
+        <?
+        endif;
+        ?>
     </div>
 </div>
 <?= $this->Form->end(); ?>
