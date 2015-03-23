@@ -80,7 +80,7 @@
             </div>
         </div>
         <?
-        if ($status != 2):
+        if ($status != Evaluation::TYPE_STATUS_DONE):
             ?>
             <div class="panel-footer clearfix">
                 <div class="disp_ib pull-right">
@@ -103,7 +103,7 @@
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
     <div class="text-align_c p_8px bg-lightGray">
         <?
-        if ($status == 2):
+        if ($status == Evaluation::TYPE_STATUS_DONE):
             ?>
             <?= $this->Form->button(__d('gl', "修正して確定"), [
             'div'   => false,
@@ -288,7 +288,7 @@
             </div>
         </div>
         <?
-        if ($status != 2):
+        if ($status != Evaluation::TYPE_STATUS_DONE):
             ?>
             <div class="panel-footer clearfix">
                 <div class="disp_ib pull-right">
@@ -310,7 +310,7 @@
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="text-align_c p_8px bg-lightGray">
         <?
-        if ($status == 2):
+        if ($status == Evaluation::TYPE_STATUS_DONE):
             ?>
             <?= $this->Form->button(__d('gl', "修正して確定"), [
             'div'   => false,
