@@ -47,18 +47,6 @@
                         'data-bv-notempty-message' => "入力必須項目です。"
                     ])
                     ?>
-                    <?=
-                    $this->Form->input("0.Evaluation.comment", [
-                        'type'                     => 'textarea',
-                        'rows'                     => 2,
-                        'default'                  => $total['Evaluation']['comment'],
-                        'label'                    => __d('gl', "評価コメント"),
-                        'placeholder'              => __d('gl', "コメントを書いてください"),
-                        'required'                 => false,
-                        'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "入力必須項目です。"
-                    ])
-                    ?>
                     <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][comment]"
                            data-bv-result="NOT_VALIDATED" style="display: none;">入力必須項目です。
                     </small>
