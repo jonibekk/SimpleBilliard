@@ -51,6 +51,7 @@ class Post extends AppModel
 
     public $orgParams = [
         'circle_id'   => null,
+        'user_id'     => null,
         'post_id'     => null,
         'goal_id'     => null,
         'filter_goal' => null,
@@ -173,6 +174,10 @@ class Post extends AppModel
         'Comment'         => [
             'dependent' => true,
         ],
+        'CommentId'       => [
+            'className' => 'Comment',
+            'fields'    => ['CommentId.id', 'CommentId.user_id'],
+        ],
         'PostShareUser'   => [
             'dependent' => true,
         ],
@@ -288,11 +293,12 @@ class Post extends AppModel
      *
      * @return array|null|void
      */
-    public function getFollowCollaboPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getRelatedPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $g_list = [];
         $g_list = array_merge($g_list, $this->Goal->Follower->getFollowList($this->my_uid));
         $g_list = array_merge($g_list, $this->Goal->Collaborator->getCollaboGoalList($this->my_uid, true));
+        $g_list = array_merge($g_list, $this->Goal->User->TeamMember->getCoachingGoalList($this->my_uid));
 
         if (empty($g_list)) {
             return [];
@@ -404,8 +410,8 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
             //自分のサークルが共有範囲指定された投稿
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
-            //フォローorコラボのゴール投稿を取得
-            $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
+            //フォローorコラボorマイメンバーのゴール投稿を取得
+            $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
 
         }
         //パラメータ指定あり
@@ -453,7 +459,7 @@ class Post extends AppModel
             elseif ($this->orgParams['filter_goal']) {
                 $p_list = $this->getAllExistGoalPostList($start, $end);
                 //フォローorコラボのゴール投稿を取得
-                $p_list = array_merge($p_list, $this->getFollowCollaboPostList($start, $end));
+                $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
             }
         }
 
@@ -513,6 +519,7 @@ class Post extends AppModel
                         ]
                     ],
                 ],
+                'CommentId',
                 'PostShareCircle' => [
                     'fields' => [
                         "PostShareCircle.id",
@@ -594,7 +601,8 @@ class Post extends AppModel
         $res = $this->getShareMode($res);
         //シェアメッセージの特定
         $res = $this->getShareMessages($res);
-
+        //未読件数を取得
+        $res = $this->getCommentMyUnreadCount($res);
         return $res;
     }
 
@@ -642,6 +650,9 @@ class Post extends AppModel
             'order'      => [$order => $order_direction],
             'fields'     => ['id'],
         ];
+        if($this->orgParams['user_id']) {
+            $options['conditions']['user_id'] = $this->orgParams['user_id'];
+        }
         $res = $this->find('list', $options);
         return $res;
     }
@@ -766,6 +777,24 @@ class Post extends AppModel
                     }
 
                     break;
+            }
+        }
+        return $data;
+    }
+
+    function getCommentMyUnreadCount($data)
+    {
+        foreach ($data as $key => $val) {
+            if ($val['Post']['comment_count'] > 3) {
+                $comment_list = [];
+                foreach ($val['CommentId'] as $comment_id) {
+                    if ($comment_id['user_id'] != $this->my_uid) {
+                        $comment_list[] = $comment_id['id'];
+                    }
+                }
+                //未読件数 = 自分以外のコメント数 - 自分以外のコメントの自分の既読数
+                $data[$key]['unread_count'] =
+                    count($comment_list) - $this->Comment->CommentRead->countMyRead($comment_list);
             }
         }
         return $data;

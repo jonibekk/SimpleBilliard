@@ -46,21 +46,83 @@ class EvaluationFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array(
-        array(
-            'id'                => '',
-            'team_id'           => '',
-            'evaluatee_user_id' => '',
-            'evaluator_user_id' => '',
-            'evaluate_term_id'  => '',
-            'comment'           => 'Lorem ipsum dolor sit amet',
-            'evaluate_score_id' => '',
+    public $records = [
+        [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 2,
+            'evaluate_term_id'  => 1,
+            'evaluate_type'     => 0,
+            'comment'           => 'あいうえお',
+            'evaluate_score_id' => 1,
+            'index'             => 0,
+        ],
+        [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => 1,
+            'evaluate_type'     => 0,
+            'comment'           => 'かきくけこ',
+            'evaluate_score_id' => 1,
             'index'             => 1,
-            'status'            => 0,
-            'deleted'           => 1,
-            'created'           => 1,
-            'modified'          => 1
-        ),
-    );
+            'goal_id'           => 1,
+        ],
+        [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => 1,
+            'evaluate_type'     => 0,
+            'comment'           => 'さしすせそ',
+            'evaluate_score_id' => 1,
+            'index'             => 2,
+            'goal_id'           => 2,
+        ],
+        [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => 1,
+            'evaluate_type'     => 0,
+            'comment'           => 'たちつてと',
+            'evaluate_score_id' => 1,
+            'index'             => 3,
+            'goal_id'           => 3,
+        ],
+        [
+            'team_id'           => 2,
+            'evaluatee_user_id' => 2,
+            'evaluator_user_id' => 2,
+            'evaluate_term_id'  => 2,
+            'evaluate_type'     => 0,
+            'comment'           => 'なにぬねの',
+            'evaluate_score_id' => 1,
+            'index'             => 0,
+            'goal_id'           => 10,
+        ],
+        [
+            'team_id'           => 2,
+            'evaluatee_user_id' => 2,
+            'evaluator_user_id' => 2,
+            'evaluate_term_id'  => 2,
+            'evaluate_type'     => 0,
+            'comment'           => 'はひふへほ',
+            'evaluate_score_id' => 1,
+            'index'             => 1,
+            'goal_id'           => 11,
+        ],
+        [
+            'team_id'           => 2,
+            'evaluatee_user_id' => 2,
+            'evaluator_user_id' => 2,
+            'evaluate_term_id'  => 2,
+            'evaluate_type'     => 0,
+            'comment'           => 'まみむめも',
+            'evaluate_score_id' => 1,
+            'index'             => 2,
+            'goal_id'           => 12,
+        ],
+    ];
 
 }
