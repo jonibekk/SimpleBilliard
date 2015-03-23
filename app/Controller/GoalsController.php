@@ -24,7 +24,7 @@ class GoalsController extends AppController
         $search_url = $this->_getSearchUrl($search_option);
         $search_options = $this->Goal->search_options;
         $this->_setMyCircle();
-        $goals = $this->Goal->getAllGoals(300);//TODO 暫定的に300、将来的に20に戻す
+        $goals = $this->Goal->getAllGoals(300, $search_option);//TODO 暫定的に300、将来的に20に戻す
         $this->_setViewValOnRightColumn();
         $current_global_menu = "goal";
 
@@ -888,8 +888,9 @@ class GoalsController extends AppController
     function _getSearchVal()
     {
         $options = $this->Goal->search_options;
+        $res = [];
         foreach (array_keys($options) as $type) {
-            //URLパラーメタ取得
+            //URLパラメータ取得
             $res[$type][0] = viaIsSet($this->request->params['named'][$type]);
             //パラメータチェック
             if (!in_array($res[$type][0], array_keys($options[$type]))) {
@@ -898,8 +899,8 @@ class GoalsController extends AppController
             //表示名取得
             if (viaIsSet($res[$type])) {
                 $res[$type][1] = $options[$type][$res[$type][0]];
-                ///デフォルト表示名取得
             }
+            ///デフォルト表示名取得
             else {
                 $res[$type][1] = reset($options[$type]);
             }

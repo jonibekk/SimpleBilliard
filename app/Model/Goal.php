@@ -80,12 +80,20 @@ class Goal extends AppModel
                 'collabo'       => __d('gl', "コラボレーターが多い順"),
                 'progress'      => __d('gl', "進捗率が高い順")]
         ];
+        //カテゴリ取得
         $options = [
-
+            'conditions' => [
+                'GoalCategory.team_id' => $this->current_team_id,
+            ],
+            'fields'     => ['id',
+                             'name'],
         ];
-        //TODO
-        $this->search_options['category'] = $this->GoalCategory->find('all', $options);
-
+        $goal_categories = $this->GoalCategory->find('all', $options);
+        $this->search_options['category'] = ['all' => __d('gl', 'すべて')];
+        foreach ($goal_categories as $val) {
+            $this->search_options['category'] +=
+                [$val['GoalCategory']['id'] => __d('gl', $val['GoalCategory']['name'])];
+        }
     }
 
     public $search_options = null;
@@ -671,12 +679,13 @@ class Goal extends AppModel
     /**
      * 全てのゴール取得
      *
-     * @param int  $limit
-     * @param null $params
+     * @param int   $limit
+     * @param array $search_option
+     * @param null  $params
      *
      * @return array
      */
-    function getAllGoals($limit = 20, $params = null)
+    function getAllGoals($limit = 20, $search_option = null, $params = null)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -744,16 +753,17 @@ class Goal extends AppModel
                 'User'         => [
                     'fields'     => $this->User->profileFields,
                     'TeamMember' => [
-                        'fields' => [
+                        'fields'     => [
                             'coach_user_id',
                         ],
-                        'conditions' =>[
+                        'conditions' => [
                             'coach_user_id' => $this->my_uid,
                         ]
                     ],
                 ]
             ]
         ];
+        $options = $this->setFilter($options, $search_option);
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
@@ -761,6 +771,37 @@ class Goal extends AppModel
         }
 
         return $res;
+    }
+
+    function setFilter($options, $search_option)
+    {
+        //期間指定
+        switch (viaIsSet($search_option['term'][0])) {
+            case 'previous':
+                $before_term = $this->Team->getBeforeTermStartEnd();
+                $options['conditions']['Goal.start_date >='] = $before_term['start'];
+                $options['conditions']['Goal.end_date <'] = $before_term['end'];
+                break;
+            case 'before' :
+                $before_term = $this->Team->getBeforeTermStartEnd();
+                unset($options['conditions']['Goal.start_date >=']);
+                $options['conditions']['Goal.end_date <'] = $before_term['start'];
+                break;
+        }
+        //カテゴリ指定
+        if (viaIsSet($search_option['category'][0])) {
+            $options['conditions']['Goal.goal_category_id'] = $search_option['category'][0];
+        }
+        //進捗指定
+        switch (viaIsSet($search_option['progress'][0])) {
+            case 'complete' :
+                $options['conditions']['NOT']['completed'] = null;
+                break;
+            case 'incomplete' :
+                $options['conditions']['completed'] = null;
+                break;
+        }
+        return $options;
     }
 
     function getProgress($goal)
