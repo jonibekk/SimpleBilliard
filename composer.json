@@ -1,26 +1,27 @@
 {
-    "name": "status-site",
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "http://pear.cakephp.org"
-        }
-    ],
-    "require": {
-        "cakephp/cakephp": "2.5.*",
-        "phpunit/phpunit": "3.7.*",
-        "cakephp/debug_kit": "2.2.*",
-        "cakedc/migrations": "2.*",
-        "cakedc/utils": "dev-master",
-        "slywalker/boost_cake": "*",
-        "ichikaway/cakeplus": "2.0.*@dev",
-        "satooshi/php-coveralls": "dev-master",
-        "pusher/pusher-php-server": "dev-master",
-        "mixpanel/mixpanel-php": "2.*",
-        "aws/aws-sdk-php": "2.6.*",
-        "uservoice/uservoice": "dev-master"
-    },
-    "config": {
-        "vendor-dir": "Vendor/"
+  "name": "status-site",
+  "repositories": [
+    {
+      "type": "pear",
+      "url": "http://pear.cakephp.org"
     }
+  ],
+  "require": {
+    "cakephp/cakephp": "2.5.*",
+    "phpunit/phpunit": "3.7.*",
+    "cakephp/debug_kit": "2.2.*",
+    "cakedc/migrations": "2.*",
+    "cakedc/utils": "dev-master",
+    "slywalker/boost_cake": "*",
+    "ichikaway/cakeplus": "2.0.*@dev",
+    "satooshi/php-coveralls": "dev-master",
+    "pusher/pusher-php-server": "dev-master",
+    "mixpanel/mixpanel-php": "2.*",
+    "aws/aws-sdk-php": "2.6.*",
+    "uservoice/uservoice": "dev-master",
+    "pragmarx/google2fa": "dev-master"
+  },
+  "config": {
+    "vendor-dir": "Vendor/"
+  }
 }

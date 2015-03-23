@@ -4,14 +4,18 @@ App::uses('AppController', 'Controller');
 /**
  * Users Controller
  *
- * @property User   $User
- * @property Invite $Invite
+ * @property User            $User
+ * @property Invite          $Invite
+ * @property TwoFaComponent  $TwoFa
  */
 class UsersController extends AppController
 {
     public $uses = [
         'User',
         'Invite',
+    ];
+    public $components = [
+        'TwoFa',
     ];
 
     public function beforeFilter()
@@ -512,6 +516,7 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
+
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
                            'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
@@ -631,6 +636,67 @@ class UsersController extends AppController
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit']);
         }
         return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_modal_2fa_register()
+    {
+        $this->_ajaxPreProcess();
+        if ($this->Session->read('2fa_secret_key')) {
+            $google_2fa_secret_key = $this->Session->read('2fa_secret_key');
+        }
+        else {
+            $google_2fa_secret_key = $this->TwoFa->generateSecretKey();
+            $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
+        }
+        $url_2fa = $this->TwoFa->getQRCodeGoogleUrl('Goalous',
+                                                    $this->Session->read('Auth.User.PrimaryEmail.email'),
+                                                    $google_2fa_secret_key);
+        $this->set(compact('url_2fa'));
+        $response = $this->render('User/modal_2fa_register');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function register_2fa()
+    {
+        $this->request->allowMethod('post');
+        try {
+            if (!$secret_key = $this->Session->read('2fa_secret_key')) {
+                throw new RuntimeException(__d('gl', "エラーが発生しました。"));
+            }
+            if (!viaIsSet($this->request->data['User']['2fa_code'])) {
+                throw new RuntimeException(__d('gl', "エラーが発生しました。"));
+            }
+            if (!$this->TwoFa->verifyKey($secret_key, $this->request->data['User']['2fa_code'])) {
+                throw new RuntimeException(__d('gl', "コードが正しくありません。"));
+            }
+            //2要素認証コードの登録
+            $this->User->id = $this->Auth->user('id');
+            $this->User->saveField('2fa_secret', $secret_key);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
+        }
+        $this->Session->delete('2fa_secret_key');
+        $this->Pnotify->outSuccess(__d('gl', "２要素認証の登録が完了しました。"));
+        return $this->redirect($this->referer());
+    }
+
+    function ajax_get_modal_2fa_delete()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('User/modal_2fa_delete');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function delete_2fa()
+    {
+        $this->request->allowMethod('post');
+        $this->User->id = $this->Auth->user('id');
+        $this->User->saveField('2fa_secret', null);
+        $this->Pnotify->outSuccess(__d('gl', "２要素認証を解除しました。"));
+        return $this->redirect($this->referer());
     }
 
     /**
