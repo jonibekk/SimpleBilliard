@@ -6,15 +6,16 @@ App::uses('KeyResult', 'Model');
 /**
  * Goal Model
  *
- * @property User                    $User
- * @property Team                    $Team
- * @property GoalCategory            $GoalCategory
- * @property Post                    $Post
- * @property KeyResult               $KeyResult
- * @property Collaborator            $Collaborator
- * @property Follower                $Follower
- * @property Purpose                 $Purpose
- * @property ActionResult            $ActionResult
+ * @property User                      $User
+ * @property Team                      $Team
+ * @property GoalCategory              $GoalCategory
+ * @property Post                      $Post
+ * @property KeyResult                 $KeyResult
+ * @property Collaborator              $Collaborator
+ * @property Follower                  $Follower
+ * @property Evaluation                $Evaluation
+ * @property Purpose                   $Purpose
+ * @property ActionResult              $ActionResult
  */
 class Goal extends AppModel
 {
@@ -164,6 +165,7 @@ class Goal extends AppModel
         'MyFollow'            => [
             'className' => 'Follower',
         ],
+        'Evaluation'
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -245,6 +247,20 @@ class Goal extends AppModel
         }
         if (!$this->isOwner($this->my_uid, $id)) {
             throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
+        }
+        return true;
+    }
+
+    function isNotExistsEvaluation($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id
+            ]
+        ];
+        $res = $this->Evaluation->find('first', $options);
+        if (!empty($res)) {
+            throw new RuntimeException(__d('gl', "このゴールは評価中のため、変更できません。"));
         }
         return true;
     }
@@ -333,12 +349,12 @@ class Goal extends AppModel
                 'Goal.end_date <'    => $end_date,
             ],
             'contain'    => [
-                'MyCollabo' => [
+                'MyCollabo'  => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
                 ],
-                'KeyResult' => [
+                'KeyResult'  => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.start_date >=' => $start_date,
@@ -346,6 +362,13 @@ class Goal extends AppModel
                     ]
                 ],
                 'Purpose',
+                'Evaluation' => [
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id' => $this->my_uid,
+                    ],
+                    'fields'     => ['Evaluation.id'],
+                    'limit'      => 1,
+                ]
             ],
             'limit'      => $limit,
             'page'       => $page

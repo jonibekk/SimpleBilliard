@@ -213,4 +213,10 @@ class CollaboratorTest extends CakeTestCase
         $this->assertEquals(null, $actual);
     }
 
+    //TODO ハードコーディング中! for こーへーさん
+    function testTempCountUnvalued()
+    {
+        $this->Collaborator->tempCountUnvalued();
+    }
+
 }

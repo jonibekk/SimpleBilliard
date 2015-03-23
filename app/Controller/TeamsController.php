@@ -61,8 +61,10 @@ class TeamsController extends AppController
         ) {
             $eval_start_button_enabled = false;
         }
-
-        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled'));
+        //TODO ハードコーディング中! for こーへーさん
+        $unvalued = $this->Goal->Collaborator->tempCountUnvalued();
+        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled','unvalued'));
+        //TODO ハードコーディング中! for こーへーさん
 
         return $this->render();
     }

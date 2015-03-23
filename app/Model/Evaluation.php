@@ -211,6 +211,7 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type'     => self::TYPE_ONESELF,
                 'OR'                => [
                     ['Evaluation.status' => self::TYPE_STATUS_NOT_ENTERED],
                     ['Evaluation.status' => self::TYPE_STATUS_DRAFT]
