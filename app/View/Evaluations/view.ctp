@@ -57,7 +57,7 @@
                         'options'                  => $scoreList,
                         'id'                       => '',
                         'label'                    => __d('gl', "評価スコア"),
-                        'class'                    => 'form-control col-xxs-3',
+                        'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3',
                         'wrapInput'                => false,
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
@@ -131,7 +131,7 @@
 
         <div class="panel-body eval-view-panel-body">
             <div class="form-group col-xxs-12 eval-view-panel-section">
-                <div class="col col-xxs-6 col-sm-3">
+                <div class="col col-xxs-6 col-sm-4">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $eval['Goal']['id']]) ?>"
                        class="modal-ajax-get">
                         <?=
@@ -254,7 +254,7 @@
                         'default'                  => $eval['Evaluation']['evaluate_score_id'],
                         'options'                  => $scoreList,
                         'label'                    => __d('gl', "評価スコア"),
-                        'class'                    => 'form-control col-xxs-3',
+                        'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3',
                         'wrapInput'                => false,
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
