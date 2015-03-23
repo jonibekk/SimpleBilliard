@@ -21,6 +21,11 @@ class Collaborator extends AppModel
         self::TYPE_OWNER        => "",
     ];
 
+    const STATUS_UNAPPROVED = 0;
+    const STATUS_APPROVAL = 1;
+    const STATUS_HOLD = 2;
+    const STATUS_MODIFY = 3;
+
     /**
      * タイプの表示名をセット
      */
@@ -98,7 +103,7 @@ class Collaborator extends AppModel
         return $res;
     }
 
-    function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1)
+    function getCollaboGoalList($user_id, $with_owner = false, $limit = null, $page = 1, $approval_status = null)
     {
         $options = [
             'conditions' => [
@@ -116,12 +121,9 @@ class Collaborator extends AppModel
         ];
         if ($with_owner) {
             unset($options['conditions']['type']);
-            $options['OR'] = [
-                'type' => [
-                    Collaborator::TYPE_COLLABORATOR,
-                    Collaborator::TYPE_OWNER,
-                ],
-            ];
+        }
+        if ($approval_status) {
+            $options['conditions']['valued_flg'] = $approval_status;
         }
         $res = $this->find('list', $options);
         return $res;
@@ -151,16 +153,16 @@ class Collaborator extends AppModel
             'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
             'conditions' => [
                 'Collaborator.team_id'    => $team_id,
-				'Collaborator.user_id'    => $goal_user_id,
+                'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
             ],
             'contain'    => [
                 'Goal' => [
-                    'fields'  => [
+                    'fields'       => [
                         'name', 'goal_category_id', 'end_date', 'photo_file_name',
                         'value_unit', 'target_value', 'start_value', 'description'
                     ],
-                    'Purpose' => ['fields' => 'name'],
+                    'Purpose'      => ['fields' => 'name'],
                     'GoalCategory' => ['fields' => 'name'],
                 ],
                 'User' => [
@@ -170,7 +172,14 @@ class Collaborator extends AppModel
             'type'       => 'inner',
             'order'      => ['Collaborator.created'],
         ];
-        return $this->find('all', $options);
+        if (is_array($approval_flg)) {
+            unset($options['conditions']['Collaborator.valued_flg']);
+            foreach ($approval_flg as $val) {
+                $options['conditions']['OR'][]['Collaborator.valued_flg'] = $val;
+            }
+        }
+        $res = $this->find('all', $options);
+        return $res;
     }
 
     function changeApprovalStatus($id, $status)
@@ -185,14 +194,14 @@ class Collaborator extends AppModel
             'fields'     => ['id'],
             'conditions' => [
                 'Collaborator.team_id'    => $team_id,
-				'Collaborator.user_id'    => $goal_user_id,
+                'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
                 'User.id !='              => $user_id
             ],
             'contain'    => [
                 'Goal' => [
-                    'fields'  => ['id'],
-                    'Purpose' => ['fields' => 'id'],
+                    'fields'       => ['id'],
+                    'Purpose'      => ['fields' => 'id'],
                     'GoalCategory' => ['fields' => 'id'],
                 ],
                 'User' => [
@@ -202,6 +211,76 @@ class Collaborator extends AppModel
             'type'       => 'inner',
         ];
         return $this->find('count', $options);
+    }
+
+    function getLeaderUid($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+                'type'    => [
+                    Collaborator::TYPE_OWNER,
+                ],
+            ],
+            'fields'     => [
+                'user_id'
+            ],
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['Collaborator']['user_id'])) {
+            return $res['Collaborator']['user_id'];
+        }
+        return null;
+    }
+
+    //TODO ハードコーディング中! for こーへーさん
+    function tempCountUnvalued($team_id = [1,1111111])
+    {
+        $options = [
+            'conditions' => [
+                'team_id'    => $team_id,
+                'valued_flg' => 0,
+            ],
+            'fields'     => [
+                'user_id'
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields'     => [
+                        'User.last_name',
+                        'User.first_name',
+                    ],
+                    'TeamMember' => [
+                        'conditions' => [
+                            'team_id' => $team_id,
+                            'evaluation_enable_flg' => 1,
+                            'NOT'                   => [
+                                'TeamMember.coach_user_id' => null,
+                            ],
+                        ],
+                        'fields'     => [
+                            'TeamMember.coach_user_id',
+                            'evaluation_enable_flg'
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $data = $this->find('all', $options);
+
+        $i = 0;
+        foreach ($data as $collabo) {
+            if (!empty($collabo['User']['TeamMember'])) {
+                $res[$i] = [];
+                $coach = $this->User->findById($collabo['User']['TeamMember'][0]['coach_user_id']);
+                $res[$i] += ['評価対象者' => $collabo['User']['display_last_name'] . $collabo['User']['display_first_name']];
+                $res[$i] += ['コーチ' => $coach['User']['display_last_name'] . $coach['User']['display_first_name']];
+                $i++;
+            }
+        }
+        $res['count'] = $i;
+        return $res;
     }
 
 }

@@ -1033,13 +1033,14 @@ $(function () {
 
 $(document).ready(function () {
     //入力途中での警告表示
-    $("input,select,textarea").change(function () {
-        if (!$(this).hasClass('disable-change-warning')) {
-            $(window).on('beforeunload', function () {
-                return cake.message.notice.a;
-            });
-        }
-    });
+    //TODO 後で対応する。issue #1349
+    //$("input,select,textarea").change(function () {
+    //    if (!$(this).hasClass('disable-change-warning')) {
+    //        $(window).on('beforeunload', function () {
+    //            return cake.message.notice.a;
+    //        });
+    //    }
+    //});
     $("input[type=submit]").click(function () {
         $(window).off('beforeunload');
     });
@@ -1437,7 +1438,7 @@ function evCommentOldView() {
 
     var $obj = $(this);
     var parent_id = $obj.attr('parent-id');
-    var get_url   = $obj.attr('get-url');
+    var get_url = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
@@ -1695,7 +1696,7 @@ $(document).ready(function () {
             }
 
             // ベル通知の場合
-            if(isBellNotify) {
+            if (isBellNotify) {
                 notifyNewBell();
                 prevNotifyId = notifyId;
                 $("#bell-dropdown").append(data.html);
@@ -1703,7 +1704,7 @@ $(document).ready(function () {
             }
 
             // 新しいコメント通知の場合
-            if(isNewCommentNotify) {
+            if (isNewCommentNotify) {
                 var postId = data.post_id;
                 var notifyBox = $("#Comments_new_" + String(postId));
                 notifyNewComment(notifyBox);
@@ -1897,7 +1898,7 @@ function viaIsSet(data) {
 }
 
 function notifyNewComment(notifyBox) {
-    var numInBox  = notifyBox.find(".num");
+    var numInBox = notifyBox.find(".num");
     var num = parseInt(numInBox.html());
 
     hideCommentNotifyErrorBox(notifyBox);
@@ -1911,7 +1912,7 @@ function notifyNewComment(notifyBox) {
         numInBox.html("1");
     }
 
-    if(notifyBox.css("display") === "none") {
+    if (notifyBox.css("display") === "none") {
         notifyBox.css("display", "block");
 
         // 通知をふんわり出す
@@ -1926,7 +1927,7 @@ function notifyNewComment(notifyBox) {
     }
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
     $(document).on("click", ".click-comment-new", evCommentLatestView);
 });
 
@@ -1938,7 +1939,7 @@ function evCommentLatestView() {
     var commentBlock = $obj.closest(".comment-block");
     var commentNum = commentBlock.children("div.comment-box").length;
     var lastCommentBox = commentBlock.children("div.comment-box:last");
-    var lastCommentId  = "";
+    var lastCommentId = "";
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     if (commentNum > 0) {
         // コメントが存在する場合
@@ -2030,8 +2031,8 @@ function initCommentNotify(notifyBox) {
 }
 
 
-$(document).ready(function(){
-    $(document).on("click", "#click-header-bell", function() {
+$(document).ready(function () {
+    $(document).on("click", "#click-header-bell", function () {
         initBell();
     });
 });
@@ -2040,17 +2041,17 @@ function decrementBellUnreadNumber($num) {
     var bellNumBox = $(".bell-notify-box");
     var unreadNum = bellNumBox.html();
     var retNum;
-    if(unreadNum < 1) {
+    if (unreadNum < 1) {
         return;
     }
     retNum = parseInt(unreadNum) - $num;
-    if(retNum < 1) {
+    if (retNum < 1) {
         initBell();
     }
     bellNumBox.html(retNum);
 }
 
-function initBell(){
+function initBell() {
     $(".bell-notify-box").css("opacity", 0);
     $(".bell-notify-box").html("0");
 }
@@ -2066,7 +2067,7 @@ function validatorCallback(e) {
 
 function hideCommentNotifyErrorBox(notifyBox) {
     errorBox = notifyBox.siblings(".new-comment-error");
-    if(errorBox.attr("display") === "none") {
+    if (errorBox.attr("display") === "none") {
         return;
     }
     errorBox.css("display", "none");

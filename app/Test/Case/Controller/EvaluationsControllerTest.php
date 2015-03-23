@@ -20,6 +20,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         'app.evaluation',
         'app.action_result',
         'app.goal',
+        'app.goal_category',
         'app.follower',
         'app.collaborator',
         'app.local_name',
@@ -52,7 +53,9 @@ class EvaluationsControllerTest extends ControllerTestCase
         'app.send_mail',
         'app.send_mail_to_user',
         'app.message',
-        'app.evaluate_term'
+        'app.evaluate_term',
+        'app.evaluate_score',
+        'app.key_result',
     ];
 
     /**
@@ -62,7 +65,17 @@ class EvaluationsControllerTest extends ControllerTestCase
      */
     public function testIndexSuccess()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $eval_data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => $Evaluations->Team->EvaluateTerm->getLastInsertID(),
+            'evaluate_type'     => 0,
+            'index'             => 0,
+        ];
+        $Evaluations->Evaluation->save($eval_data);
         $this->testAction('/evaluations/', ['method' => 'GET']);
     }
 
@@ -83,7 +96,298 @@ class EvaluationsControllerTest extends ControllerTestCase
      */
     public function testView()
     {
-        $this->testAction('/evaluations/view', ['method' => 'GET']);
+        $this->_getEvaluationsCommonMock();
+        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
+    }
+
+    public function testViewNotMatchParamater()
+    {
+        $this->_getEvaluationsCommonMock();
+        $this->testAction('/evaluations/view/1/2', ['method' => 'GET']);
+    }
+
+    public function testViewNotExistParamater()
+    {
+        $this->_getEvaluationsCommonMock();
+        $this->testAction('/evaluations/view/', ['method' => 'GET']);
+    }
+
+    public function testViewNotExistEditableEvaluation()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
+        $records = [
+            [
+                'id'                => 1,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => "a",
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => 1,
+                'status'            => 2
+            ],
+            [
+                'id'                => 2,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => "b",
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 2,
+                'status'            => 2
+            ],
+            [
+                'id'                => 3,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => "c",
+                'evaluate_score_id' => 1,
+                'index'             => 2,
+                'goal_id'           => 3,
+                'status'            => 2
+            ],
+            [
+                'id'                => 4,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => "d",
+                'evaluate_score_id' => 1,
+                'index'             => 3,
+                'goal_id'           => 10,
+                'status'            => 2
+            ],
+            [
+                'id'                => 5,
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => "e",
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => 11,
+                'status'            => 2
+            ],
+            [
+                'id'                => 6,
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => "f",
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 12,
+                'status'            => 2
+            ],
+        ];
+        $Evaluations->Evaluation->saveAll($records);
+        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
+    }
+
+    public function testViewNotExistTotalEvaluation()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
+        $records = [
+            [
+                'id'                => 1,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'index'             => 0,
+                'goal_id'           => 1,
+            ],
+            [
+                'id'                => 2,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'index'             => 1,
+                'goal_id'           => 2,
+            ],
+            [
+                'id'                => 3,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'index'             => 2,
+                'goal_id'           => 3,
+            ],
+            [
+                'id'                => 4,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'index'             => 3,
+                'goal_id'           => 10,
+            ],
+            [
+                'id'                => 5,
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'index'             => 0,
+                'goal_id'           => 11,
+            ],
+            [
+                'id'                => 6,
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'index'             => 1,
+                'goal_id'           => 12,
+            ],
+        ];
+        $Evaluations->Evaluation->saveAll($records);
+        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
+    }
+
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function testAddPostDraft()
+    {
+        $data = [
+            'is_draft' => true,
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+        ];
+
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    /**
+     * add method
+     *
+     * @return void
+     */
+    public function testAddPostRegister()
+    {
+        $data = [
+            'is_register' => true,
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+        ];
+
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    public function testAddPostRegisterValidationError()
+    {
+        $data = [
+            'is_register' => true,
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+        ];
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
     }
 
     function _getEvaluationsCommonMock()
@@ -133,6 +437,28 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations->Evaluation->Team->TeamMember->my_uid = 1;
         $Evaluations->Evaluation->Team->EvaluationSetting->my_uid = 1;
         $Evaluations->Evaluation->Team->EvaluationSetting->current_team_id = 1;
+        $Evaluations->Evaluation->Goal->my_uid = '1';
+        $Evaluations->Evaluation->Goal->current_team_id = '1';
+        $Evaluations->Evaluation->Team->TeamMember->my_uid = '1';
+        $Evaluations->Evaluation->Team->TeamMember->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->ActionResult->my_uid = '1';
+        $Evaluations->Evaluation->Goal->ActionResult->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->GoalCategory->my_uid = '1';
+        $Evaluations->Evaluation->Goal->GoalCategory->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->KeyResult->my_uid = '1';
+        $Evaluations->Evaluation->Goal->KeyResult->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->Collaborator->my_uid = '1';
+        $Evaluations->Evaluation->Goal->Collaborator->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->Follower->my_uid = '1';
+        $Evaluations->Evaluation->Goal->Follower->current_team_id = '1';
+        $Evaluations->Evaluation->Goal->Post->my_uid = '1';
+        $Evaluations->Evaluation->Goal->Post->current_team_id = '1';
+        $Evaluations->Evaluation->current_team_id = 1;
+        $Evaluations->Evaluation->my_uid = 1;
+        $Evaluations->Team->EvaluateTerm->current_team_id = 1;
+        $Evaluations->Team->EvaluateTerm->my_uid = 1;
+        $Evaluations->Team->current_team_id = 1;
+        $Evaluations->Team->my_uid = 1;
 
         return $Evaluations;
     }

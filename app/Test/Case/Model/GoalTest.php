@@ -423,13 +423,16 @@ class GoalTest extends CakeTestCase
         $this->Goal->Collaborator->current_team_id = 1;
         $this->Goal->Post->my_uid = 1;
         $this->Goal->Post->current_team_id = 1;
+        $this->Goal->Evaluation->current_team_id = 1;
+        $this->Goal->Evaluation->my_uid = 1;
+
     }
 
-	function testGetGoalIdFromUserId ()
-	{
-		$this->setDefault();
-		$user_id = 1;
-		$team_id = 1;
+    function testGetGoalIdFromUserId()
+    {
+        $this->setDefault();
+        $user_id = 1;
+        $team_id = 1;
         $goal_params = [
             'user_id'    => $user_id,
             'team_id'    => $team_id,
@@ -437,10 +440,27 @@ class GoalTest extends CakeTestCase
             'start_date' => $this->start_date,
             'end_date'   => $this->end_date,
         ];
-		$this->Goal->save($goal_params);
-		$goal_id = $this->Goal->getLastInsertID();
-		$res = $this->Goal->getGoalIdFromUserId($user_id, $team_id);
-		$this->assertContains($goal_id, $res);
-	}
+        $this->Goal->save($goal_params);
+        $goal_id = $this->Goal->getLastInsertID();
+        $res = $this->Goal->getGoalIdFromUserId($user_id, $team_id);
+        $this->assertContains($goal_id, $res);
+    }
+
+    function testIsNotExistsEvaluation()
+    {
+        $this->setDefault();
+        $save_data = [
+            'goal_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'team_id'           => 1,
+        ];
+        $this->Goal->Evaluation->save($save_data);
+        try {
+            $this->Goal->isNotExistsEvaluation(1);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
 
 }

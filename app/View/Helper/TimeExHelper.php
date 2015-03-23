@@ -76,10 +76,11 @@ class TimeExHelper extends AppHelper
 
     /**
      * @param $unixtime
+     * @param $type
      *
      * @return string
      */
-    public function elapsedTime($unixtime)
+    public function elapsedTime($unixtime, $type = 'normal')
     {
         $elapsed = null;
         //「たった今」 $date > REQUEST_TIMESTAMP - 60sec
@@ -98,9 +99,16 @@ class TimeExHelper extends AppHelper
         elseif ($unixtime > strtotime("-1 day")) {
             $elapsed = $this->elapsedHours($unixtime);
         }
-        //「７月１３日 15:10」$date > REQUEST_TIMESTAMP - 1y
+        //「７月１３日 [15:10]」$date > REQUEST_TIMESTAMP - 1y
         elseif ($unixtime > strtotime("-1 year")) {
-            $elapsed = $this->datetimeLocalFormat($unixtime);
+            //「７月１３日」
+            if ($type == 'rough') {
+                $elapsed = $this->dateLocalFormat($unixtime);
+            }
+            //「７月１３日 15:10」
+            else {
+                $elapsed = $this->datetimeLocalFormat($unixtime);
+            }
         }
         //「2013年７月１３日」 else
         else {
@@ -130,6 +138,16 @@ class TimeExHelper extends AppHelper
                     date('j', $local_time),
                     date('H', $local_time),
                     date('i', $local_time)
+        );
+        return $res;
+    }
+
+    public function dateLocalFormat($unixtime)
+    {
+        $local_time = $unixtime + ($this->timeOffset * 60 * 60);
+        $res = __dc("time", '%s月%s日', LC_TIME,
+                    date('n', $local_time),
+                    date('j', $local_time)
         );
         return $res;
     }

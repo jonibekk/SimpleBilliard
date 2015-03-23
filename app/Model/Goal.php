@@ -6,15 +6,16 @@ App::uses('KeyResult', 'Model');
 /**
  * Goal Model
  *
- * @property User                    $User
- * @property Team                    $Team
- * @property GoalCategory            $GoalCategory
- * @property Post                    $Post
- * @property KeyResult               $KeyResult
- * @property Collaborator            $Collaborator
- * @property Follower                $Follower
- * @property Purpose                 $Purpose
- * @property ActionResult            $ActionResult
+ * @property User                      $User
+ * @property Team                      $Team
+ * @property GoalCategory              $GoalCategory
+ * @property Post                      $Post
+ * @property KeyResult                 $KeyResult
+ * @property Collaborator              $Collaborator
+ * @property Follower                  $Follower
+ * @property Evaluation                $Evaluation
+ * @property Purpose                   $Purpose
+ * @property ActionResult              $ActionResult
  */
 class Goal extends AppModel
 {
@@ -164,6 +165,7 @@ class Goal extends AppModel
         'MyFollow'            => [
             'className' => 'Follower',
         ],
+        'Evaluation'
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -249,6 +251,20 @@ class Goal extends AppModel
         return true;
     }
 
+    function isNotExistsEvaluation($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id
+            ]
+        ];
+        $res = $this->Evaluation->find('first', $options);
+        if (!empty($res)) {
+            throw new RuntimeException(__d('gl', "このゴールは評価中のため、変更できません。"));
+        }
+        return true;
+    }
+
     function getAddData($id)
     {
         $start_date = $this->Team->getTermStartDate();
@@ -316,6 +332,9 @@ class Goal extends AppModel
     /**
      * 自分が作成したゴール取得
      *
+     * @param null $limit
+     * @param int  $page
+     *
      * @return array
      */
     function getMyGoals($limit = null, $page = 1)
@@ -330,12 +349,12 @@ class Goal extends AppModel
                 'Goal.end_date <'    => $end_date,
             ],
             'contain'    => [
-                'MyCollabo' => [
+                'MyCollabo'  => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
                 ],
-                'KeyResult' => [
+                'KeyResult'  => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.start_date >=' => $start_date,
@@ -343,6 +362,13 @@ class Goal extends AppModel
                     ]
                 ],
                 'Purpose',
+                'Evaluation' => [
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id' => $this->my_uid,
+                    ],
+                    'fields'     => ['Evaluation.id'],
+                    'limit'      => 1,
+                ]
             ],
             'limit'      => $limit,
             'page'       => $page
@@ -464,6 +490,9 @@ class Goal extends AppModel
 
     /**
      * 自分がこらぼったゴール取得
+     *
+     * @param null $limit
+     * @param int  $page
      *
      * @return array
      */
@@ -707,7 +736,15 @@ class Goal extends AppModel
                     ],
                 ],
                 'User'         => [
-                    'fields' => $this->User->profileFields,
+                    'fields'     => $this->User->profileFields,
+                    'TeamMember' => [
+                        'fields'     => [
+                            'coach_user_id',
+                        ],
+                        'conditions' => [
+                            'coach_user_id' => $this->my_uid,
+                        ]
+                    ],
                 ]
             ]
         ];
@@ -825,6 +862,22 @@ class Goal extends AppModel
             ]
         ];
         $res = $this->Collaborator->User->find('all', $options);
+        return $res;
+    }
+
+    function filterThisTermIds($gids)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'id'            => $gids,
+                'start_date >=' => $start_date,
+                'end_date <='   => $end_date,
+            ],
+            'fields'     => ['id']
+        ];
+        $res = $this->find('list', $options);
         return $res;
     }
 

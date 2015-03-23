@@ -58,7 +58,7 @@ ul {
 }
 
 .nav-icons > .header-function > a:hover,
-.nav-icons > .header-function > a:focus{
+.nav-icons > .header-function > a:focus {
     border: 1px solid #ae2f2f;
     text-decoration: none;
 }
@@ -1078,8 +1078,12 @@ textarea{
     visibility: hidden;
 }
 
-.fin-kr {
+.kr-text {
     color: #808080;
+}
+
+.fin-kr,.unfin-kr {
+    margin-left: 6px;
 }
 
 /*/KR*/
@@ -1336,7 +1340,6 @@ textarea{
 
 .post-contents a {
     color: #ddd;
-    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1344,7 +1347,6 @@ textarea{
 
 .comment-contents a {
     color: #c5c5c5;
-    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1899,7 +1901,6 @@ ul.input-images > li {
     border: 1px solid #ccc;
 }
 
-
 .frame-arrow-icon::before {
     content: "";
     border: 8px solid transparent;
@@ -1962,7 +1963,6 @@ ul.input-images > li {
     right: 18%;
     top: -15px;
 }
-
 
 @media screen and (min-width: 768px) {
     .frame-arrow-notify::before {
@@ -3765,7 +3765,7 @@ Temporary Properties - YOU MUST FIX
     right: -36px;
 }
 
-.notify-dropdown-lists{
+.notify-dropdown-lists {
     margin: 0;
     padding: 0;
     max-height: 360px;
@@ -3785,7 +3785,7 @@ Temporary Properties - YOU MUST FIX
         height: 64px;
     }
 
-    .notify-dropdown-lists{
+    .notify-dropdown-lists {
         max-height: 500px;
     }
 
@@ -3802,13 +3802,13 @@ Temporary Properties - YOU MUST FIX
     clear: both;
 }
 
-.notify-card-empty{
+.notify-card-empty {
     text-align: center;
     padding: 10px 0;
     color: #231814;
 }
 
-.notify-empty-text{
+.notify-empty-text {
     line-height: 33px;
     vertical-align: top;
 }
@@ -3892,4 +3892,48 @@ Temporary Properties - YOU MUST FIX
 
 .bg-lightGray {
     background-color: #f0f0f0;
+}
+
+/* tag */
+.tag-sm {
+    position: relative;
+    min-width: 32px;
+    height: 18px;
+    font-size: 10px;
+    background: #fff;
+    padding: 2px 4px 2px 14px;
+    border-radius: 9px 2px 2px 9px;
+    color: #fff;
+}
+
+.tag-sm::before {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    z-index: 2;
+    display: block;
+    content: '';
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
+    background-color: #fff;
+    border-radius: 100%;
+}
+
+.tag-danger {
+    background-color: #ac6819;
+}
+
+.tag-info {
+    background-color: #029acf;
+}
+
+.eval-view-panel-section {
+    border-bottom: 1px solid #ccc;
+    padding-top: 12px;
+    padding-bottom: 8px;
+}
+
+.eval-view-btn-submit {
+    padding: 8px 33px;
 }

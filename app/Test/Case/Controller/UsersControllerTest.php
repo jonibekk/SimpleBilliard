@@ -1674,6 +1674,86 @@ class UsersControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $post_data]);
     }
 
+    function testAjaxGetModal2faRegisterNoSession()
+    {
+        $this->_getUsersCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_get_modal_2fa_register', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetModal2faRegisterExistsSession()
+    {
+        $Users = $this->_getUsersCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session
+            ->expects($this->any())
+            ->method('read')
+            ->will($this->returnValueMap([['2fa_secret_key', '123456']]));
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_get_modal_2fa_register', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testRegister2faNotFoundSecret()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/register_2fa', ['method' => 'POST']);
+    }
+
+    function testRegister2faNoData()
+    {
+        $Users = $this->_getUsersCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session
+            ->expects($this->any())
+            ->method('read')
+            ->will($this->returnValueMap([['2fa_secret_key', '123456']]));
+        $this->testAction('/users/register_2fa', ['method' => 'POST']);
+    }
+
+    function testRegister2faVerifyFail()
+    {
+        $Users = $this->_getUsersCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session
+            ->expects($this->any())
+            ->method('read')
+            ->will($this->returnValueMap([['2fa_secret_key', 'R2ZR6FTBJUHDUOC7']]));
+        $this->testAction('/users/register_2fa', ['method' => 'POST', 'data' => ['User' => ['2fa_code' => '123456']]]);
+    }
+
+    function testRegister2faVerifySuccess()
+    {
+        $Users = $this->_getUsersCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session
+            ->expects($this->any())
+            ->method('read')
+            ->will($this->returnValueMap([['2fa_secret_key', 'R2ZR6FTBJUHDUOC7']]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->TwoFa
+            ->expects($this->any())
+            ->method('verifyKey')
+            ->with('R2ZR6FTBJUHDUOC7', '123456')
+            ->will($this->returnValue(true));
+        $this->testAction('/users/register_2fa', ['method' => 'POST', 'data' => ['User' => ['2fa_code' => '123456']]]);
+    }
+
+    function testAjaxGetModal2faDelete()
+    {
+        $this->_getUsersCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_get_modal_2fa_delete', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testDelete2Fa()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/delete_2fa', ['method' => 'POST']);
+    }
+
     function _getUsersCommonMock()
     {
         /**
@@ -1687,6 +1767,7 @@ class UsersControllerTest extends ControllerTestCase
                 'Ogp',
                 'NotifyBiz',
                 'GlEmail',
+                'TwoFa',
             ]
         ]);
         $value_map = [

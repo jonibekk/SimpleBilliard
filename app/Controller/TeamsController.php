@@ -45,9 +45,52 @@ class TeamsController extends AppController
             $this->redirect($this->referer());
         }
         $team = $this->Team->findById($team_id);
-        $this->set(compact('team'));
+        $term_start_date = $this->Team->getTermStartDate();
+        $term_end_date = $this->Team->getTermEndDate();
+        $term_end_date = $term_end_date - 1;
+        //get evaluation setting
+        $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
+
+        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
+
+        $eval_start_button_enabled = true;
+        if (!is_null($current_term_id) &&
+            !is_null($latest_term_id) &&
+            $current_term_id === $latest_term_id
+        ) {
+            $eval_start_button_enabled = false;
+        }
+        //TODO ハードコーディング中! for こーへーさん
+        $team_id = [1,1111111];
+        $unvalued = $this->Goal->Collaborator->tempCountUnvalued($team_id);
+        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled','unvalued','team_id'));
+        //TODO ハードコーディング中! for こーへーさん
 
         return $this->render();
+    }
+
+    function start_evaluation()
+    {
+        $this->request->allowMethod('post');
+        try {
+            if (!$this->Team->EvaluationSetting->isEnabled()) {
+                throw new RuntimeException(__d('gl', "評価設定が有効ではありません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e);
+            return $this->redirect($this->referer());
+        }
+        //start evaluation process
+        $this->Team->Evaluation->begin();
+        if (!$this->Team->Evaluation->startEvaluation()) {
+            $this->Team->Evaluation->rollback();
+            $this->Pnotify->outError(__d('gl', "評価を開始できませんでした。"));
+            return $this->redirect($this->referer());
+        }
+        $this->Team->Evaluation->commit();
+        $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
+        return $this->redirect($this->referer());
     }
 
     public function invite()
