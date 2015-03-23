@@ -87,7 +87,7 @@ class EvaluationsController extends AppController
             unset($this->request->data['is_draft']);
             $successMsg = __d('gl', "下書きを保存しました。");
 
-        // case of registering
+            // case of registering
         }
         else {
             $saveType = "register";
