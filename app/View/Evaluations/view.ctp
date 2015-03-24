@@ -44,11 +44,11 @@
                         'placeholder'              => __d('gl', "コメントを書いてください"),
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "入力必須項目です。"
+                        'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
                     ])
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][comment]"
-                           data-bv-result="NOT_VALIDATED" style="display: none;">入力必須項目です。
+                           data-bv-result="NOT_VALIDATED" style="display: none;"><?= __d('gl', "入力必須項目です。"); ?>
                     </small>
                     <?=
                     $this->Form->input("0.Evaluation.evaluate_score_id", [
@@ -61,12 +61,12 @@
                         'wrapInput'                => false,
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "選択必須項目です。"
+                        'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
                     ]);
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty"
                            data-bv-for="data[0][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
-                           style="display: none;">選択必須項目です。
+                           style="display: none;"><?= __d('gl', "選択必須項目です。"); ?>
                     </small>
                     <?=
                     $this->Form->input("0.Evaluation.id", [
@@ -252,12 +252,12 @@
                         'placeholder'              => __d('gl', "コメントを書いてください"),
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "入力必須項目です。"
+                        'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
                     ])
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty"
                            data-bv-for="data[<?= $key ?>][Evaluation][comment]" data-bv-result="NOT_VALIDATED"
-                           style="display: none;">入力必須項目です。
+                           style="display: none;"><?= __d('gl', "入力必須項目です。") ?>
                     </small>
                     <?=
                     $this->Form->input("{$key}.Evaluation.evaluate_score_id", [
@@ -269,12 +269,12 @@
                         'wrapInput'                => false,
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "選択必須項目です。"
+                        'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
                     ]);
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty"
                            data-bv-for="data[<?= $key ?>][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
-                           style="display: none;">選択必須項目です。
+                           style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
                     </small>
                     <?=
                     $this->Form->input("{$key}.Evaluation.id", [
