@@ -62,9 +62,9 @@ class Goal extends AppModel
      * ここ以外での各要素の設定は不要です
      * 各タイプの最初の要素がデフォルト表示になります
      */
-    private function _setSearchOptions()
+    public function getSearchOptions()
     {
-        $this->search_options = [
+        $res = [
             'term'     => [
                 'present'  => __d('gl', "今期"),
                 'previous' => __d('gl', "前期"),
@@ -90,14 +90,14 @@ class Goal extends AppModel
                              'name'],
         ];
         $goal_categories = $this->GoalCategory->find('all', $options);
-        $this->search_options['category'] = ['all' => __d('gl', 'すべて')];
+        $res['category'] = ['all' => __d('gl', 'すべて')];
         foreach ($goal_categories as $val) {
-            $this->search_options['category'] +=
+            $res['category'] +=
                 [$val['GoalCategory']['id'] => __d('gl', $val['GoalCategory']['name'])];
         }
+        return $res;
     }
 
-    public $search_options = null;
     /**
      * Display field
      *
@@ -215,7 +215,6 @@ class Goal extends AppModel
         parent::__construct($id, $table, $ds);
         $this->_setStatusName();
         $this->_setPriorityName();
-        $this->_setSearchOptions();
     }
 
     function add($data)

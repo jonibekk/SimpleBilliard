@@ -465,7 +465,8 @@ class GoalTest extends CakeTestCase
 
     function testSetFilter()
     {
-        $options = $this->Goal->search_options;
+        $this->setDefault();
+        $options = $this->Goal->getSearchOptions();
         foreach ($options as $type => $val) {
             foreach($val as $key => $value) {
                 $search_option[$type][0] = $key;

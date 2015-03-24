@@ -22,7 +22,7 @@ class GoalsController extends AppController
     {
         $search_option = $this->_getSearchVal();
         $search_url = $this->_getSearchUrl($search_option);
-        $search_options = $this->Goal->search_options;
+        $search_options = $this->Goal->getSearchOptions();
         $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals(300, $search_option);//TODO 暫定的に300、将来的に20に戻す
         $goal_count = $this->Goal->countGoalRes($search_option);
@@ -890,7 +890,7 @@ class GoalsController extends AppController
      */
     function _getSearchVal()
     {
-        $options = $this->Goal->search_options;
+        $options = $this->Goal->getSearchOptions();
         $res = [];
         foreach (array_keys($options) as $type) {
             //URLパラメータ取得
