@@ -92,8 +92,7 @@ class Goal extends AppModel
         $goal_categories = $this->GoalCategory->find('all', $options);
         $res['category'] = ['all' => __d('gl', 'すべて')];
         foreach ($goal_categories as $val) {
-            $res['category'] +=
-                [$val['GoalCategory']['id'] => __d('gl', $val['GoalCategory']['name'])];
+            $res['category'] += [$val['GoalCategory']['id'] => __d('gl', $val['GoalCategory']['name'])];
         }
         return $res;
     }
@@ -767,7 +766,7 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'    => [
-                    'fields'     => [
+                    'fields' => [
                         'KeyResult.id',
                         'KeyResult.progress',
                         'KeyResult.priority',
