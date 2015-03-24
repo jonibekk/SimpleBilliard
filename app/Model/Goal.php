@@ -78,7 +78,7 @@ class Goal extends AppModel
                 'action'   => __d('gl', "アクションが多い順"),
                 'result'   => __d('gl', "出した成果が多い順"),
                 'follow'   => __d('gl', "フォロワーが多い順"),
-                'collabo'  => __d('gl', "コラボレーターが多い順"),
+                'collabo'  => __d('gl', "コラボが多い順"),
                 'progress' => __d('gl', "進捗率が高い順")]
         ];
         //カテゴリ取得

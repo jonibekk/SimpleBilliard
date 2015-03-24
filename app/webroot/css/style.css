@@ -1899,7 +1899,6 @@ ul.input-images > li {
     border: 1px solid #ccc;
 }
 
-
 .frame-arrow-icon::before {
     content: "";
     border: 8px solid transparent;
@@ -1962,7 +1961,6 @@ ul.input-images > li {
     right: 18%;
     top: -15px;
 }
-
 
 @media screen and (min-width: 768px) {
     .frame-arrow-notify::before {
@@ -3765,7 +3763,7 @@ Temporary Properties - YOU MUST FIX
     right: -36px;
 }
 
-.notify-dropdown-lists{
+.notify-dropdown-lists {
     margin: 0;
     padding: 0;
     max-height: 360px;
@@ -3785,7 +3783,7 @@ Temporary Properties - YOU MUST FIX
         height: 64px;
     }
 
-    .notify-dropdown-lists{
+    .notify-dropdown-lists {
         max-height: 500px;
     }
 
@@ -3802,13 +3800,13 @@ Temporary Properties - YOU MUST FIX
     clear: both;
 }
 
-.notify-card-empty{
+.notify-card-empty {
     text-align: center;
     padding: 10px 0;
     color: #231814;
 }
 
-.notify-empty-text{
+.notify-empty-text {
     line-height: 33px;
     vertical-align: top;
 }
@@ -3918,6 +3916,21 @@ Temporary Properties - YOU MUST FIX
 .goal-filter-elm:focus, .goal-filter-elm:active, .goal-filter-elm:hover, .open .dropdown-toggle.btn-default {
     background: #e0e0e0 none;
     border: none;
+}
+
+.goal_type_name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.goal-menu-caret {
+    width: 6px;
+    display: block;
+    float: left;
+    height: 6px;
+    margin-top: 8px;
 }
 
 .goal-filter-menu {

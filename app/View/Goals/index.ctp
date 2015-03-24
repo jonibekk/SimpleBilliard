@@ -36,9 +36,11 @@
             <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
                 <? foreach ($search_options['term'] as $key => $val): ?>
                     <? if ($val == $search_option['term'][1]): ?>
-                        <a href="<?= $this->Html->url(array_merge($search_url,['term' => $key])) ?>" class="btn btn-default goal-search-elm selected" role="button"><?= $val ?></a>
+                        <a href="<?= $this->Html->url(array_merge($search_url, ['term' => $key])) ?>"
+                           class="btn btn-default goal-search-elm selected" role="button"><?= $val ?></a>
                     <? else: ?>
-                        <a href="<?= $this->Html->url(array_merge($search_url,['term' => $key])) ?>" class="btn btn-default goal-search-elm" role="button"><?= $val ?></a>
+                        <a href="<?= $this->Html->url(array_merge($search_url, ['term' => $key])) ?>"
+                           class="btn btn-default goal-search-elm" role="button"><?= $val ?></a>
                     <? endif; ?>
                 <? endforeach; ?>
             </div>
@@ -46,33 +48,42 @@
                 <div class=" btn-group" role="group">
                     <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
                        role="button" aria-expanded="false">
-                        <?= $search_option['category'][1] ?> <span class="caret"></span>
+                        <span class="caret goal-menu-caret"></span>
+                        <span class="goal_type_name"><?= $search_option['category'][1] ?></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <? foreach ($search_options['category'] as $key => $val): ?>
-                            <li><a href="<?= $this->Html->url(array_merge($search_url,['category' => $key])) ?>"><?= $val ?></a></li>
+                            <li><a href="<?= $this->Html->url(array_merge($search_url,
+                                                                          ['category' => $key])) ?>"><?= $val ?></a>
+                            </li>
                         <? endforeach; ?>
                     </ul>
                 </div>
                 <div class="btn-group" role="group">
                     <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
                        role="button" aria-expanded="false">
-                        <?= $search_option['progress'][1] ?> <span class="caret"></span>
+                        <span class="caret goal-menu-caret"></span>
+                        <span class="goal_type_name"><?= $search_option['progress'][1] ?></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <? foreach ($search_options['progress'] as $key =>$val): ?>
-                            <li><a href="<?= $this->Html->url(array_merge($search_url,['progress' => $key])) ?>"><?= $val ?></a></li>
+                        <? foreach ($search_options['progress'] as $key => $val): ?>
+                            <li><a href="<?= $this->Html->url(array_merge($search_url,
+                                                                          ['progress' => $key])) ?>"><?= $val ?></a>
+                            </li>
                         <? endforeach; ?>
                     </ul>
                 </div>
                 <div class="btn-group " role="group">
                     <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
                        role="button" aria-expanded="false">
-                        <?= $search_option['order'][1] ?> <span class="caret"></span>
+                        <span class="caret goal-menu-caret"></span>
+                        <span class="goal_type_name"><?= $search_option['order'][1] ?></span>
+
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
-                        <? foreach ($search_options['order'] as $key =>$val): ?>
-                            <li><a href="<?= $this->Html->url(array_merge($search_url,['order' => $key])) ?>"><?= $val ?></a></li>
+                        <? foreach ($search_options['order'] as $key => $val): ?>
+                            <li><a href="<?= $this->Html->url(array_merge($search_url,
+                                                                          ['order' => $key])) ?>"><?= $val ?></a></li>
                         <? endforeach; ?>
                     </ul>
                 </div>
