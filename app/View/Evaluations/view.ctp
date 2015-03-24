@@ -24,7 +24,7 @@
     'id'            => 'evaluation-form',
     'url'           => ['controller' => 'evaluations', 'action' => 'add'],
     'data-bv-live'  => "disabled"
-]); ?>
+]) ?>
 <? if (!empty($total)): ?>
 
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
@@ -44,11 +44,11 @@
                         'placeholder'              => __d('gl', "コメントを書いてください"),
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "入力必須項目です。"
+                        'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
                     ])
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][comment]"
-                           data-bv-result="NOT_VALIDATED" style="display: none;">入力必須項目です。
+                           data-bv-result="NOT_VALIDATED" style="display: none;"><?= __d('gl', "入力必須項目です。") ?>
                     </small>
                     <?=
                     $this->Form->input("0.Evaluation.evaluate_score_id", [
@@ -61,12 +61,12 @@
                         'wrapInput'                => false,
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "選択必須項目です。"
-                    ]);
+                        'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
+                    ])
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty"
                            data-bv-for="data[0][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
-                           style="display: none;">選択必須項目です。
+                           style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
                     </small>
                     <?=
                     $this->Form->input("0.Evaluation.id", [
@@ -74,7 +74,7 @@
                         'class' => 'form-control col-xxs-10 mb_12px',
                         'type'  => 'hidden',
                         'value' => $total['Evaluation']['id']
-                    ]);
+                    ])
                     ?>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                         'id'    => 'evaluation-draft-submit',
                         'name'  => 'is_draft',
                         'value' => true
-                    ]); ?>
+                    ]) ?>
                 </div>
             </div>
         <?
@@ -111,7 +111,7 @@
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
             'value' => true
-        ]); ?>
+        ]) ?>
         <?
         else:
             ?>
@@ -121,14 +121,14 @@
             'id'    => 'evaluation-draft-submit',
             'name'  => 'is_draft',
             'value' => true
-        ]); ?>
+        ]) ?>
             <?= $this->Form->button(__d('gl', "確定"), [
             'div'   => false,
             'class' => 'btn btn-primary eval-view-btn-submit',
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
             'value' => true
-        ]); ?>
+        ]) ?>
         <?
         endif;
         ?>
@@ -151,7 +151,7 @@
                                                'class'         => 'lazy img-rounded eval-view-panel-goal-pic',
                                                'width'         => "128",
                                                'height'        => "128",
-                                               'alt'           => "ゴール画像",
+                                               'alt'           => __d('gl', "ゴール画像"),
                                                'data-original' => $this->Upload->uploadUrl($eval, 'Goal.photo',
                                                                                            ['style' => 'large']),
                                            ]
@@ -190,7 +190,7 @@
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $eval['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $eval['Goal']['id'], 'type' => Post::TYPE_ACTION, 'user_id' => $evaluateeId]) ?>">
-                                <?= count($eval['Goal']['ActionResult']); ?>
+                                <?= count($eval['Goal']['ActionResult']) ?>
                             </a>
                         </div>
                         <div class="eval-view-action-text">
@@ -206,8 +206,8 @@
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "役割:") ?>
-                    <? $role = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"]); ?>
-                    <?= ($role) ? h($role) : "リーダー" ?>
+                    <? $role = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
+                    <?= ($role) ? h($role) : __d('gl', "リーダー") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "アクション:") ?>
@@ -233,7 +233,7 @@
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
-                    <? $collaboPriority = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["priority"]); ?>
+                    <? $collaboPriority = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
                     <? $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($eval,
                                                                                                   "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
                     <?= h($priority) ?>
@@ -252,12 +252,12 @@
                         'placeholder'              => __d('gl', "コメントを書いてください"),
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "入力必須項目です。"
+                        'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
                     ])
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty"
                            data-bv-for="data[<?= $key ?>][Evaluation][comment]" data-bv-result="NOT_VALIDATED"
-                           style="display: none;">入力必須項目です。
+                           style="display: none;"><?= __d('gl', "入力必須項目です。") ?>
                     </small>
                     <?=
                     $this->Form->input("{$key}.Evaluation.evaluate_score_id", [
@@ -269,12 +269,12 @@
                         'wrapInput'                => false,
                         'required'                 => false,
                         'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => "選択必須項目です。"
-                    ]);
+                        'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
+                    ])
                     ?>
                     <small class="help-block" data-bv-validator="notEmpty"
                            data-bv-for="data[<?= $key ?>][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
-                           style="display: none;">選択必須項目です。
+                           style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
                     </small>
                     <?=
                     $this->Form->input("{$key}.Evaluation.id", [
@@ -282,7 +282,7 @@
                         'class' => 'form-control col-xxs-10 mb_12px',
                         'type'  => 'hidden',
                         'value' => $eval['Evaluation']['id']
-                    ]);
+                    ])
                     ?>
                 </div>
             </div>
@@ -298,7 +298,7 @@
                         'id'    => 'evaluation-draft-submit',
                         'name'  => 'is_draft',
                         'value' => true
-                    ]); ?>
+                    ]) ?>
                 </div>
             </div>
         <?
@@ -318,7 +318,7 @@
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
             'value' => true
-        ]); ?>
+        ]) ?>
         <?
         else:
             ?>
@@ -328,18 +328,18 @@
             'id'    => 'evaluation-draft-submit',
             'name'  => 'is_draft',
             'value' => true
-        ]); ?>
+        ]) ?>
             <?= $this->Form->button(__d('gl', "確定"), [
             'div'   => false,
             'class' => 'btn btn-primary eval-view-btn-submit',
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
             'value' => true
-        ]); ?>
+        ]) ?>
         <?
         endif;
         ?>
     </div>
 </div>
-<?= $this->Form->end(); ?>
+<?= $this->Form->end() ?>
 <!-- END app/View/Evaluations/view.ctp -->
