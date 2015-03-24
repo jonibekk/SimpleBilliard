@@ -53,18 +53,12 @@ class EvaluationsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $evaluationList = $this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId);
-
-        if (empty($evaluationList)) {
-            $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しています。"));
-            return $this->redirect($this->referer());
-        }
-
-        if(empty(Hash::extract($evaluationList, '0.{n}.Evaluation.goal_id')[0]))
-        {
-            $totalList = $evaluationList[0];
-        } else {
-            $totalList = [];
+        $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
+        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $this->Auth->user('id'));
+        if (empty($evaluationList[0]['Evaluation']['goal_id'])) {
+            $total = $evaluationList[0];
+            unset($evaluationList[0]);
+            $goalList = $evaluationList;
         }
 
         unset($evaluationList[0]);
@@ -90,14 +84,13 @@ class EvaluationsController extends AppController
             $saveType = "draft";
             unset($this->request->data['is_draft']);
             $successMsg = __d('gl', "下書きを保存しました。");
-            $successAct = $this->referer();
+
             // case of registering
         }
         else {
             $saveType = "register";
             unset($this->request->data['is_register']);
             $successMsg = __d('gl', "自己評価を登録しました。");
-            $successAct = "index";
         }
 
         // 保存処理実行
@@ -107,7 +100,6 @@ class EvaluationsController extends AppController
         } catch (RuntimeException $e) {
             $this->Evaluation->rollback();
             // saving as draft
-            echo "test";
             if ($saveType === "register") {
                 $this->Evaluation->add($this->request->data, "draft");
             }
@@ -117,7 +109,7 @@ class EvaluationsController extends AppController
 
         $this->Evaluation->commit();
         $this->Pnotify->outSuccess($successMsg);
-        return $this->redirect($successAct);
+        return $this->redirect($this->referer());
 
     }
 
