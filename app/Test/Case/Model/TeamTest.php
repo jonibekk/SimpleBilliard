@@ -553,12 +553,28 @@ class TeamTest extends CakeTestCase
                             date('Y/m/d H:i:s', $this->Team->current_term_end_date + $time_offset));
     }
 
+    function testGetTermStartEnd()
+    {
+        $this->setDefault();
+        $time_offset = $this->Team->me['timezone'] * 60 * 60;
+        $this->Team->current_term_start_date = null;
+        $this->Team->current_term_end_date = null;
+        $this->Team->setCurrentTermStartEndFromParam(1, 6, strtotime('2014/1/1') - $time_offset);
+        $this->assertEquals('2014/01/01 00:00:00',
+                            date('Y/m/d H:i:s', $this->Team->current_term_start_date + $time_offset));
+    }
+
+    function testGetBeforeTermStartEnd()
+    {
+        $this->setDefault();
+        $this->assertTrue(is_null($this->Team->getBeforeTermStartEnd(0)));
+        $this->Team->getBeforeTermStartEnd(1);
+    }
     function setDefault()
     {
         $this->Team->my_uid = 1;
         $this->Team->me['timezone'] = 9;
         $this->Team->current_team_id = 1;
-
     }
 
 }
