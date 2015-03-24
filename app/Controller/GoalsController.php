@@ -34,7 +34,7 @@ class GoalsController extends AppController
         $is_admin = ($isExistAdminFlg) ? true : false;
 
         $this->set(compact('is_admin', 'goals', 'current_global_menu', 'search_option', 'search_options',
-                           'search_url','goal_count'));
+                           'search_url', 'goal_count'));
     }
 
     /**
@@ -180,7 +180,7 @@ class GoalsController extends AppController
     public function ajax_get_more_index_items()
     {
         $this->_ajaxPreProcess();
-        $goals = $this->Goal->getAllGoals(300, $this->request->params);//TODO 暫定的に300、将来的に20に戻す
+        $goals = $this->Goal->getAllGoals(300, null, $this->request->params);//TODO 暫定的に300、将来的に20に戻す
         $this->set(compact('goals'));
 
         //エレメントの出力を変数に格納する
