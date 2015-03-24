@@ -212,10 +212,6 @@ class Evaluation extends AppModel
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
                 'evaluate_type'     => self::TYPE_ONESELF,
-                'OR'                => [
-                    ['Evaluation.status' => self::TYPE_STATUS_NOT_ENTERED],
-                    ['Evaluation.status' => self::TYPE_STATUS_DRAFT]
-                ]
             ],
             'order'      => 'Evaluation.index asc',
             'contain'    => [
@@ -438,6 +434,22 @@ class Evaluation extends AppModel
             }
         }
         return $res;
+    }
+
+    function getStatus($evaluateTermId, $evaluateeId, $evaluatorId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => $evaluatorId,
+                'evaluate_term_id'  => $evaluateTermId,
+                'team_id'           => $this->current_team_id,
+            ],
+            'fields'     => ['status'],
+            'order'      => ['index' => 'asc']
+        ];
+        $res = $this->find("first", $options);
+        return $res['Evaluation']['status'];
     }
 
 }
