@@ -15,6 +15,17 @@
  * @var       $is_evaluation_available
  */
 ?>
+<style type="text/css">
+    .sub_cnt_alert {
+        position: absolute;
+        margin: 4px 0 0 132px;
+        color: #fff;
+        font-size: 10px;
+        background-color: red !important;
+        display: block
+    }
+</style>
+
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="navbar-toggle-box">
@@ -199,6 +210,11 @@
                                 __d('gl',
                                     "チュートリアル") ?></a></li>
                         <li>
+                            <? if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
+                                <div class="btn btn-danger btn-xs bell-notify-box sub_cnt_alert" id="bellNum">
+                                    <? echo $unapproved_cnt; ?>
+                                </div>
+                            <? } ?>
                             <?= $this->Html->link(__d('gl', "ゴール認定"),
                                                   ['controller' => 'goal_approval', 'action' => 'index']) ?>
                         </li>
@@ -209,12 +225,7 @@
                         <? if ($is_evaluation_available): ?>
                             <li>
                                 <? if (viaIsSet($my_member_status['TeamMember']['evaluable_count']) && $my_member_status['TeamMember']['evaluable_count'] > 0): ?>
-                                    <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
-                                margin: 4px 0 0 132px;
-                                color: #fff;
-                                font-size: 10px;
-                                background-color:red!important;
-                                display:block"><?= $my_member_status['TeamMember']['evaluable_count'] ?></div>
+                                    <div class="btn btn-danger btn-xs bell-notify-box sub_cnt_alert" id="bellNum"><?= $my_member_status['TeamMember']['evaluable_count'] ?></div>
                                 <? endif; ?>
 
                                 <?=

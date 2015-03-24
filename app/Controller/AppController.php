@@ -90,6 +90,11 @@ class AppController extends Controller
 //        'limit' => 20,
 //    ];
 
+    /*
+     * 承認前ページの「全ゴール - 自分のゴール」件数
+     */
+    public $unapproved_cnt = 0;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -126,6 +131,7 @@ class AppController extends Controller
                 $this->Auth->logout();
             }
             $this->_setMyMemberStatus();
+            $this->_setUnApprovedCnt($login_uid);
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
@@ -136,6 +142,20 @@ class AppController extends Controller
         $my_channels_json = $this->User->getMyChannelsJson();
         $this->set(compact('my_channels_json'));
 
+    }
+
+    /*
+     * ログインユーザーが管理しているメンバーの中で認定されてないゴールの件数
+     * @param $login_uid
+     */
+    public function _setUnApprovedCnt($login_uid)
+    {
+        $login_user_team_id = $this->Session->read('current_team_id');
+        $member_ids = $this->Team->TeamMember->selectUserIdFromTeamMembersTB($login_uid, $login_user_team_id);
+        $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
+                                                                      $member_ids, 0);
+        $this->set(compact('unapproved_cnt'));
+        $this->unapproved_cnt = $unapproved_cnt;
     }
 
     public function _setSecurity()
