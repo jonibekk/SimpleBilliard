@@ -142,6 +142,37 @@ class Evaluation extends AppModel
         return true;
     }
 
+    /**
+     * @param $termId
+     * @param $evaluateeId
+     *
+     * @return bool
+     */
+    function checkAvailParameterInEvalForm($termId, $evaluateeId)
+    {
+        if (!$termId || !$evaluateeId)
+        {
+            throw new RuntimeException(__d('gl', "パラメータが不正です。"));
+        }
+
+        if ($evaluateeId != $this->my_uid)
+        {
+            throw new RuntimeException(__d('gl', "現在、自己評価以外の評価はできません。"));
+        }
+
+        if (!$this->Team->EvaluateTerm->checkTermAvailable($termId))
+        {
+            throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
+        }
+
+        if ($this->getStatus($termId, $evaluateeId, $this->my_uid) === null)
+        {
+            throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
+        }
+
+        return true;
+    }
+
     function getMyEvaluation()
     {
         $options = [
@@ -449,7 +480,7 @@ class Evaluation extends AppModel
             'order'      => ['index' => 'asc']
         ];
         $res = $this->find("first", $options);
-        return $res['Evaluation']['status'];
+        return viaIsSet($res['Evaluation']['status']);
     }
 
 }
