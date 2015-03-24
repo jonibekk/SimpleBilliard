@@ -91,9 +91,14 @@ class AppController extends Controller
 //    ];
 
     /*
-     * 承認前ページの「全ゴール - 自分のゴール」件数
+     * 認定対象ゴール件数
      */
     public $unapproved_cnt = 0;
+
+    /*
+     * 評価対象ゴール件数
+     */
+    public $evaluable_cnt = 0;
 
     public function beforeFilter()
     {
@@ -132,6 +137,7 @@ class AppController extends Controller
             }
             $this->_setMyMemberStatus();
             $this->_setUnApprovedCnt($login_uid);
+            $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
@@ -142,6 +148,14 @@ class AppController extends Controller
         $my_channels_json = $this->User->getMyChannelsJson();
         $this->set(compact('my_channels_json'));
 
+    }
+
+    /*
+     * 各種アラート件数の合計
+     */
+    public function _setAllAlertCnt() {
+        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
+        $this->set(compact('all_alert_cnt'));
     }
 
     /*
@@ -209,7 +223,11 @@ class AppController extends Controller
 
     public function _setMyMemberStatus()
     {
-        $this->set('my_member_status', $this->User->TeamMember->getWithTeam());
+        $team_member_info = $this->User->TeamMember->getWithTeam();
+        if (isset($team_member_info['TeamMember']['evaluable_count']) === true) {
+            $this->evaluable_cnt = $team_member_info['TeamMember']['evaluable_count'];
+        }
+        $this->set('my_member_status', $team_member_info);
     }
 
     public function _setMyCircle()
