@@ -151,7 +151,7 @@
                                                'class'         => 'lazy img-rounded eval-view-panel-goal-pic',
                                                'width'         => "128",
                                                'height'        => "128",
-                                               'alt'           => "ゴール画像",
+                                               'alt'           => __d('gl', "ゴール画像"),
                                                'data-original' => $this->Upload->uploadUrl($eval, 'Goal.photo',
                                                                                            ['style' => 'large']),
                                            ]
@@ -207,7 +207,7 @@
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "役割:") ?>
                     <? $role = viaIsSet(Hash::extract($eval, "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
-                    <?= ($role) ? h($role) : "リーダー" ?>
+                    <?= ($role) ? h($role) : __d('gl', "リーダー") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "アクション:") ?>
