@@ -113,7 +113,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->create();
         $Goals->Goal->save($goal_data);
 
-        $this->testAction('/goals/index/term:previous', ['method' => 'GET']);
+        $this->testAction('/goals/index/term:previous/page:1', ['method' => 'GET']);
     }
 
     function testAjaxGetGoalDetailModal()
