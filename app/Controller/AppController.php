@@ -90,6 +90,16 @@ class AppController extends Controller
 //        'limit' => 20,
 //    ];
 
+    /*
+     * 認定対象ゴール件数
+     */
+    public $unapproved_cnt = 0;
+
+    /*
+     * 評価対象ゴール件数
+     */
+    public $evaluable_cnt = 0;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -98,6 +108,8 @@ class AppController extends Controller
         $this->_setAppLanguage();
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
+            $login_uid = $this->Auth->user('id');
+
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
                 $this->_setMyTeam();
@@ -108,22 +120,24 @@ class AppController extends Controller
                 }
             }
             //permission check
-            $active_team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
+            $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
             $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
 
             //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
             if (!$this->Auth->user('default_team_id')) {
-                $this->User->updateDefaultTeam($set_default_team_id, true, $this->Auth->user('id'));
+                $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
                 $this->Session->write('current_team_id', $set_default_team_id);
             }
             //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
-            elseif (!$this->User->TeamMember->isActive($this->Auth->user('id'))) {
-                $this->User->updateDefaultTeam($set_default_team_id, true, $this->Auth->user('id'));
+            elseif (!$this->User->TeamMember->isActive($login_uid)) {
+                $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
                 //ログアウト
                 $this->Pnotify->outError(__d('gl', "アクセスしたチームのアクセス権限がありません"));
                 $this->Auth->logout();
             }
             $this->_setMyMemberStatus();
+            $this->_setUnApprovedCnt($login_uid);
+            $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
@@ -133,6 +147,29 @@ class AppController extends Controller
         $this->set(compact('is_isao_user'));
         $my_channels_json = $this->User->getMyChannelsJson();
         $this->set(compact('my_channels_json'));
+
+    }
+
+    /*
+     * 各種アラート件数の合計
+     */
+    public function _setAllAlertCnt() {
+        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
+        $this->set(compact('all_alert_cnt'));
+    }
+
+    /*
+     * ログインユーザーが管理しているメンバーの中で認定されてないゴールの件数
+     * @param $login_uid
+     */
+    public function _setUnApprovedCnt($login_uid)
+    {
+        $login_user_team_id = $this->Session->read('current_team_id');
+        $member_ids = $this->Team->TeamMember->selectUserIdFromTeamMembersTB($login_uid, $login_user_team_id);
+        $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
+                                                                      $member_ids, 0);
+        $this->set(compact('unapproved_cnt'));
+        $this->unapproved_cnt = $unapproved_cnt;
     }
 
     public function _setSecurity()
@@ -186,7 +223,11 @@ class AppController extends Controller
 
     public function _setMyMemberStatus()
     {
-        $this->set('my_member_status', $this->User->TeamMember->getWithTeam());
+        $team_member_info = $this->User->TeamMember->getWithTeam();
+        if (isset($team_member_info['TeamMember']['evaluable_count']) === true) {
+            $this->evaluable_cnt = $team_member_info['TeamMember']['evaluable_count'];
+        }
+        $this->set('my_member_status', $team_member_info);
     }
 
     public function _setMyCircle()
