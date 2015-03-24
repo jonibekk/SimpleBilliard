@@ -768,11 +768,6 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'    => [
-                    //KeyResultは期限が今期内
-                    'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
-                    ],
                     'fields'     => [
                         'KeyResult.id',
                         'KeyResult.progress',
