@@ -25,6 +25,7 @@ class GoalsController extends AppController
         $search_options = $this->Goal->search_options;
         $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals(300, $search_option);//TODO 暫定的に300、将来的に20に戻す
+        $goal_count = $this->Goal->countGoalRes($search_option);
         $this->_setViewValOnRightColumn();
         $current_global_menu = "goal";
 
@@ -33,7 +34,7 @@ class GoalsController extends AppController
         $is_admin = ($isExistAdminFlg) ? true : false;
 
         $this->set(compact('is_admin', 'goals', 'current_global_menu', 'search_option', 'search_options',
-                           'search_url'));
+                           'search_url','goal_count'));
     }
 
     /**

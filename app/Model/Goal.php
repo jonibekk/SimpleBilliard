@@ -795,13 +795,28 @@ class Goal extends AppModel
         ];
         $options = $this->setFilter($options, $search_option);
         $res = $this->find('all', $options);
-        $this->log($res);
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
-
         return $res;
+    }
+
+    function countGoalRes($search_option)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
+            ],
+            'fields'     => ['Goal.user_id'],
+        ];
+        $options = $this->setFilter($options, $search_option);
+        $res_count = $this->find('count', $options);
+        return $res_count ? $res_count : 0;
     }
 
     function setFilter($options, $search_option)
@@ -826,10 +841,10 @@ class Goal extends AppModel
         //進捗指定
         switch (viaIsSet($search_option['progress'][0])) {
             case 'complete' :
-                $options['conditions']['NOT']['completed'] = null;
+                $options['conditions']['NOT']['Goal.completed'] = null;
                 break;
             case 'incomplete' :
-                $options['conditions']['completed'] = null;
+                $options['conditions']['Goal.completed'] = null;
                 break;
         }
         //ソート指定
@@ -853,7 +868,6 @@ class Goal extends AppModel
                     ],
                 ];
                 $options['group'] = ['Goal.id'];
-                break;
                 break;
             case 'follow' :
                 $options['order'] = ['count_follow desc'];
@@ -888,7 +902,20 @@ class Goal extends AppModel
                 $options['group'] = ['Goal.id'];
                 break;
             case 'progress' :
-                $options['order'] = null;
+                $options['order'] = ['cal_progress desc'];
+                $options['fields'][] = '(SUM(KeyResult.priority * KeyResult.progress)/(SUM(KeyResult.priority * 100)))*100 as cal_progress';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'key_results',
+                        'alias'      => 'KeyResult',
+                        'conditions' => [
+                            'KeyResult.goal_id = Goal.id',
+                            'KeyResult.del_flg' => 0,
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
                 break;
         }
         return $options;

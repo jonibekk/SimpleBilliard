@@ -79,12 +79,12 @@
             </div>
         </div>
         <div class="goal-search-count">
-            <p>対象ゴール　○○件</p>
+            <p><?= __d('gl', "対象ゴール") ?><span><?= $goal_count ?><?= __d('gl', "件") ?></span></p>
         </div>
         <? if (empty($goals)): ?>
             <div class="col col-xxs-12 mt_16px">
                 <div class="alert alert-warning fade in" role="alert">
-                    <?= __d('gl', "ゴールがありません。") ?>
+                    <?= __d('gl', "対象ゴールがありません。") ?>
                 </div>
             </div>
         <? else: ?>

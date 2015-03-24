@@ -3937,6 +3937,10 @@ Temporary Properties - YOU MUST FIX
     color: #ffffff;
 }
 
+.goal-search-count span {
+    margin-left: 15px;
+}
+
 /* tag */
 .tag-sm {
     position: relative;
