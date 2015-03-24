@@ -50,35 +50,35 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        if ($evaluateeId != $this->Auth->user('id')) {
-            $this->Pnotify->outError(__d('gl', "この期間は自己評価しかできません。"));
-            return $this->redirect($this->referer());
-        }
-
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
+        $evaluationList = $this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId);
+
         if (empty($evaluationList)) {
             $this->Pnotify->outError(__d('gl', "このメンバーの評価は完了しています。"));
             return $this->redirect($this->referer());
         }
 
-        if (empty($evaluationList[0]['Evaluation']['goal_id'])) {
-            $total = $evaluationList[0];
-            unset($evaluationList[0]);
-            $goalList = $evaluationList;
+        if(empty(Hash::extract($evaluationList, '0.{n}.Evaluation.goal_id')[0]))
+        {
+            $totalList = $evaluationList[0];
+        } else {
+            $totalList = [];
         }
-        else {
-            $total = [];
-            $goalList = $evaluationList;
-        }
+
+        unset($evaluationList[0]);
+        $goalList = $evaluationList;
+
+        $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
 
         // set progress
         foreach ($goalList as $key => $val) {
-            $goalList[$key]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($val['Goal']);
+            foreach ($val as $key2 => $val2) {
+                $goalList[$key][$key2]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($val2['Goal']);
+            }
         }
-        $this->set(compact('scoreList', 'total', 'goalList', 'evaluateTermId', 'evaluateeId'));
+        $this->set(compact('scoreList', 'totalList', 'goalList', 'evaluateTermId', 'evaluateeId', 'evaluateType'));
     }
 
     function add()

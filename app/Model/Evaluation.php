@@ -211,7 +211,7 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
-                'evaluate_type'     => self::TYPE_ONESELF,
+//                'evaluate_type'     => self::TYPE_ONESELF,
                 'OR'                => [
                     ['Evaluation.status' => self::TYPE_STATUS_NOT_ENTERED],
                     ['Evaluation.status' => self::TYPE_STATUS_DRAFT]
@@ -438,6 +438,47 @@ class Evaluation extends AppModel
             }
         }
         return $res;
+    }
+
+    function getEvaluations($evaluateTermId, $evaluateeId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $evaluateTermId,
+                'evaluatee_user_id' => $evaluateeId,
+            ],
+            'order'      => 'Evaluation.index asc',
+            'contain'    => [
+                'Goal' => [
+                    'KeyResult',
+                    'GoalCategory',
+                    'MyCollabo',
+                    'ActionResult' => [
+                        'conditions' => [
+                            'user_id' => $evaluateeId
+                        ],
+                        'fields'     => [
+                            'id'
+                        ]
+                    ]
+                ],
+                'EvaluatorUser'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
+    }
+
+    function getEvaluateType($evaluateTermId, $evaluateeId) {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $evaluateTermId,
+                'evaluatee_user_id' => $evaluateeId,
+            ],
+            'order'      => 'Evaluation.index asc',
+        ];
+        $res = $this->find('first', $options);
+        return $res['Evaluation']['evaluate_type'];
     }
 
 }
