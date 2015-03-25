@@ -17,7 +17,7 @@ class MemberGroupFixture extends CakeTestFixture
         'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
         'group_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'グループID(belongsToでGroupモデルに関連)'),
-        'index'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'グループの順序'),
+        'index_num'       => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'グループの順序'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
@@ -39,15 +39,15 @@ class MemberGroupFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'       => '1',
-            'team_id'  => '1',
-            'user_id'  => '1',
-            'group_id' => '1',
-            'index'    => 0,
-            'del_flg'  => false,
-            'deleted'  => null,
-            'created'  => 1,
-            'modified' => 1
+            'id'        => '1',
+            'team_id'   => '1',
+            'user_id'   => '1',
+            'group_id'  => '1',
+            'index_num' => 0,
+            'del_flg'   => false,
+            'deleted'   => null,
+            'created'   => 1,
+            'modified'  => 1
         ),
     );
 
