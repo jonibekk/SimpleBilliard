@@ -307,7 +307,7 @@ class EvaluationTest extends CakeTestCase
                     'goal_id'           => null,
                     'comment'           => null,
                     'evaluate_score_id' => null,
-                    'index'             => '0',
+                    'index_num'         => '0',
                     'status'            => '0',
                     'del_flg'           => false,
                     'deleted'           => null,
@@ -336,7 +336,7 @@ class EvaluationTest extends CakeTestCase
                     'evaluate_term_id'  => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
-                    'index'             => 0,
+                    'index_num'         => 0,
                     'status'            => 0
                 ],
             ],
@@ -348,7 +348,7 @@ class EvaluationTest extends CakeTestCase
                     'goal_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
-                    'index'             => 1,
+                    'index_num'         => 1,
                     'status'            => 0
                 ],
 
@@ -361,7 +361,7 @@ class EvaluationTest extends CakeTestCase
                     'comment'           => null,
                     'goal_id'           => 2,
                     'evaluate_score_id' => null,
-                    'index'             => 2,
+                    'index_num'         => 2,
                     'status'            => 0
                 ],
             ],
@@ -373,7 +373,7 @@ class EvaluationTest extends CakeTestCase
                     'goal_id'           => 3,
                     'comment'           => null,
                     'evaluate_score_id' => null,
-                    'index'             => 3,
+                    'index_num'         => 3,
                     'status'            => 0
                 ],
             ],
@@ -385,7 +385,7 @@ class EvaluationTest extends CakeTestCase
                     'goal_id'           => 4,
                     'comment'           => null,
                     'evaluate_score_id' => null,
-                    'index'             => 4,
+                    'index_num'         => 4,
                     'status'            => 0
                 ],
             ],
@@ -397,7 +397,7 @@ class EvaluationTest extends CakeTestCase
                     'goal_id'           => 5,
                     'comment'           => null,
                     'evaluate_score_id' => null,
-                    'index'             => 5,
+                    'index_num'         => 5,
                     'status'            => 0
                 ],
             ],
@@ -526,7 +526,7 @@ class EvaluationTest extends CakeTestCase
                 'evaluator_user_id' => 1,
                 'evaluate_term_id'  => $term_id,
                 'evaluate_type'     => 0,
-                'index'             => 0,
+                'index_num'         => 0,
             ],
             [
                 'team_id'           => 1,
@@ -534,7 +534,7 @@ class EvaluationTest extends CakeTestCase
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => $term_id,
                 'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
-                'index'             => 1,
+                'index_num'         => 1,
             ],
         ];
         $this->Evaluation->saveAll($eval);
@@ -562,13 +562,13 @@ class EvaluationTest extends CakeTestCase
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 2,
                 'team_id'           => 1,
-                'index'             => 0,
+                'index_num'         => 0,
             ],
             [
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 3,
                 'team_id'           => 1,
-                'index'             => 1,
+                'index_num'         => 1,
             ],
         ];
         $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);

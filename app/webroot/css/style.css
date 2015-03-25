@@ -1078,12 +1078,8 @@ textarea{
     visibility: hidden;
 }
 
-.kr-text {
+.fin-kr {
     color: #808080;
-}
-
-.fin-kr,.unfin-kr {
-    margin-left: 6px;
 }
 
 /*/KR*/
@@ -1340,6 +1336,7 @@ textarea{
 
 .post-contents a {
     color: #ddd;
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1347,6 +1344,7 @@ textarea{
 
 .comment-contents a {
     color: #c5c5c5;
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3892,6 +3890,68 @@ Temporary Properties - YOU MUST FIX
 
 .bg-lightGray {
     background-color: #f0f0f0;
+}
+
+.goal-term-search-menu {
+    border-bottom: solid 2px #e0e0e0;
+}
+
+.goal-search-elm, .goal-filter-elm {
+    background-color: #ffffff;
+    border: none;
+    color: gray;
+    border-radius: 0;
+}
+
+.goal-search-elm:focus, .goal-search-elm:active {
+    background: #e0e0e0 none;
+    border: none;
+}
+
+.goal-search-elm:hover {
+    background: #ae2f2f none;
+    border: none;
+}
+
+.goal-filter-elm:focus, .goal-filter-elm:active, .goal-filter-elm:hover, .open .dropdown-toggle.btn-default {
+    background: #e0e0e0 none;
+    border: none;
+}
+
+.goal_type_name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.goal-menu-caret {
+    width: 6px;
+    display: block;
+    float: left;
+    height: 6px;
+    margin-top: 8px;
+}
+
+.goal-filter-menu {
+    margin: 10px 0;
+}
+
+.goal-term-search-menu .selected {
+    background: #e0e0e0 none;
+}
+
+.goal-search-count {
+    padding: 4px;
+    background: #e0e0e0;
+}
+
+.goal-search-count p {
+    color: #ffffff;
+}
+
+.goal-search-count span {
+    margin-left: 15px;
 }
 
 /* tag */

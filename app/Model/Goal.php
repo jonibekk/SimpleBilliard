@@ -56,6 +56,47 @@ class Goal extends AppModel
         4 => 4,
         5 => 5,
     ];
+
+    /**
+     * 検索用オプションをセット
+     * ここ以外での各要素の設定は不要です
+     * 各タイプの最初の要素がデフォルト表示になります
+     */
+    public function getSearchOptions()
+    {
+        $res = [
+            'term'     => [
+                'present'  => __d('gl', "今期"),
+                'previous' => __d('gl', "前期"),
+                'before'   => __d('gl', "もっと前")],
+            'progress' => [
+                'all'        => __d('gl', "すべて"),
+                'complete'   => __d('gl', "達成"),
+                'incomplete' => __d('gl', "未達成")],
+            'order'    => [
+                'new'      => __d('gl', "新着順"),
+                'action'   => __d('gl', "アクションが多い順"),
+                'result'   => __d('gl', "出した成果が多い順"),
+                'follow'   => __d('gl', "フォロワーが多い順"),
+                'collabo'  => __d('gl', "コラボが多い順"),
+                'progress' => __d('gl', "進捗率が高い順")]
+        ];
+        //カテゴリ取得
+        $options = [
+            'conditions' => [
+                'GoalCategory.team_id' => $this->current_team_id,
+            ],
+            'fields'     => ['id',
+                             'name'],
+        ];
+        $goal_categories = $this->GoalCategory->find('all', $options);
+        $res['category'] = ['all' => __d('gl', 'すべて')];
+        foreach ($goal_categories as $val) {
+            $res['category'] += [$val['GoalCategory']['id'] => __d('gl', $val['GoalCategory']['name'])];
+        }
+        return $res;
+    }
+
     /**
      * Display field
      *
@@ -665,12 +706,13 @@ class Goal extends AppModel
     /**
      * 全てのゴール取得
      *
-     * @param int  $limit
-     * @param null $params
+     * @param int   $limit
+     * @param array $search_option
+     * @param null  $params
      *
      * @return array
      */
-    function getAllGoals($limit = 20, $params = null)
+    function getAllGoals($limit = 20, $search_option = null, $params = null)
     {
         $start_date = $this->Team->getTermStartDate();
         $end_date = $this->Team->getTermEndDate();
@@ -686,7 +728,8 @@ class Goal extends AppModel
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
             ],
-            'order'      => ['Goal.modified desc'],
+            'fields'     => ['Goal.user_id', 'Goal.name', 'Goal.photo_file_name',],
+            'order'      => ['Goal.created desc'],
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
@@ -723,12 +766,7 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'    => [
-                    //KeyResultは期限が今期内
-                    'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
-                    ],
-                    'fields'     => [
+                    'fields' => [
                         'KeyResult.id',
                         'KeyResult.progress',
                         'KeyResult.priority',
@@ -748,13 +786,132 @@ class Goal extends AppModel
                 ]
             ]
         ];
+        $options = $this->setFilter($options, $search_option);
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
-
         return $res;
+    }
+
+    function countGoalRes($search_option)
+    {
+        $start_date = $this->Team->getTermStartDate();
+        $end_date = $this->Team->getTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
+            ],
+            'fields'     => ['Goal.user_id'],
+        ];
+        $options = $this->setFilter($options, $search_option);
+        $res_count = $this->find('count', $options);
+        return $res_count ? $res_count : 0;
+    }
+
+    function setFilter($options, $search_option)
+    {
+        //期間指定
+        switch (viaIsSet($search_option['term'][0])) {
+            case 'previous':
+                $before_term = $this->Team->getBeforeTermStartEnd();
+                $options['conditions']['Goal.start_date >='] = $before_term['start'];
+                $options['conditions']['Goal.end_date <'] = $before_term['end'];
+                break;
+            case 'before' :
+                $before_term = $this->Team->getBeforeTermStartEnd();
+                unset($options['conditions']['Goal.start_date >=']);
+                $options['conditions']['Goal.end_date <'] = $before_term['start'];
+                break;
+        }
+        //カテゴリ指定
+        if (viaIsSet($search_option['category'][0]) && $search_option['category'][0] != 'all') {
+            $options['conditions']['Goal.goal_category_id'] = $search_option['category'][0];
+        }
+        //進捗指定
+        switch (viaIsSet($search_option['progress'][0])) {
+            case 'complete' :
+                $options['conditions']['NOT']['Goal.completed'] = null;
+                break;
+            case 'incomplete' :
+                $options['conditions']['Goal.completed'] = null;
+                break;
+        }
+        //ソート指定
+        switch (viaIsSet($search_option['order'][0])) {
+            case 'action' :
+                $options['order'] = ['Goal.action_result_count desc'];
+                break;
+            case 'result' :
+                $options['order'] = ['count_key_result desc'];
+                $options['fields'][] = 'count(KeyResult.id) as count_key_result';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'key_results',
+                        'alias'      => 'KeyResult',
+                        'conditions' => [
+                            'KeyResult.goal_id = Goal.id',
+                            'KeyResult.del_flg' => 0,
+                            'NOT'               => ['KeyResult.completed' => null],
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
+                break;
+            case 'follow' :
+                $options['order'] = ['count_follow desc'];
+                $options['fields'][] = 'count(Follower.id) as count_follow';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'followers',
+                        'alias'      => 'Follower',
+                        'conditions' => [
+                            'Follower.goal_id = Goal.id',
+                            'Follower.del_flg' => 0,
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
+                break;
+            case 'collabo' :
+                $options['order'] = ['count_collaborator desc'];
+                $options['fields'][] = 'count(Collaborator.id) as count_collaborator';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'collaborators',
+                        'alias'      => 'Collaborator',
+                        'conditions' => [
+                            'Collaborator.goal_id = Goal.id',
+                            'Collaborator.del_flg' => 0,
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
+                break;
+            case 'progress' :
+                $options['order'] = ['cal_progress desc'];
+                $options['fields'][] = '(SUM(KeyResult.priority * KeyResult.progress)/(SUM(KeyResult.priority * 100)))*100 as cal_progress';
+                $options['joins'] = [
+                    [
+                        'type'       => 'left',
+                        'table'      => 'key_results',
+                        'alias'      => 'KeyResult',
+                        'conditions' => [
+                            'KeyResult.goal_id = Goal.id',
+                            'KeyResult.del_flg' => 0,
+                        ],
+                    ],
+                ];
+                $options['group'] = ['Goal.id'];
+                break;
+        }
+        return $options;
     }
 
     function getProgress($goal)

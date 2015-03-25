@@ -43,6 +43,7 @@ class EmailsControllerTest extends ControllerTestCase
         'app.follower',
         'app.collaborator',
         'app.goal',
+        'app.goal_category',
         'app.circle_member',
         'app.oauth_token'
     );
