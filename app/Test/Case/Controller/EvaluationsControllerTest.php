@@ -73,7 +73,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             'evaluator_user_id' => 1,
             'evaluate_term_id'  => $Evaluations->Team->EvaluateTerm->getLastInsertID(),
             'evaluate_type'     => 0,
-            'index'             => 0,
+            'index_num'         => 0,
         ];
         $Evaluations->Evaluation->save($eval_data);
         $this->testAction('/evaluations/', ['method' => 'GET']);
@@ -126,7 +126,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_type'     => 0,
                 'comment'           => "a",
                 'evaluate_score_id' => 1,
-                'index'             => 0,
+                'index_num'         => 0,
                 'goal_id'           => 1,
                 'status'            => 2
             ],
@@ -139,7 +139,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_type'     => 0,
                 'comment'           => "b",
                 'evaluate_score_id' => 1,
-                'index'             => 1,
+                'index_num'         => 1,
                 'goal_id'           => 2,
                 'status'            => 2
             ],
@@ -152,7 +152,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_type'     => 0,
                 'comment'           => "c",
                 'evaluate_score_id' => 1,
-                'index'             => 2,
+                'index_num'         => 2,
                 'goal_id'           => 3,
                 'status'            => 2
             ],
@@ -165,7 +165,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_type'     => 0,
                 'comment'           => "d",
                 'evaluate_score_id' => 1,
-                'index'             => 3,
+                'index_num'         => 3,
                 'goal_id'           => 10,
                 'status'            => 2
             ],
@@ -178,7 +178,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_type'     => 0,
                 'comment'           => "e",
                 'evaluate_score_id' => 1,
-                'index'             => 0,
+                'index_num'         => 0,
                 'goal_id'           => 11,
                 'status'            => 2
             ],
@@ -191,7 +191,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluate_type'     => 0,
                 'comment'           => "f",
                 'evaluate_score_id' => 1,
-                'index'             => 1,
+                'index_num'         => 1,
                 'goal_id'           => 12,
                 'status'            => 2
             ],
@@ -212,7 +212,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'index'             => 0,
+                'index_num'         => 0,
                 'goal_id'           => 1,
             ],
             [
@@ -222,7 +222,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluator_user_id' => 1,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'index'             => 1,
+                'index_num'         => 1,
                 'goal_id'           => 2,
             ],
             [
@@ -232,7 +232,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluator_user_id' => 1,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'index'             => 2,
+                'index_num'         => 2,
                 'goal_id'           => 3,
             ],
             [
@@ -242,7 +242,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluator_user_id' => 1,
                 'evaluate_term_id'  => 1,
                 'evaluate_type'     => 0,
-                'index'             => 3,
+                'index_num'         => 3,
                 'goal_id'           => 10,
             ],
             [
@@ -252,7 +252,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => 2,
                 'evaluate_type'     => 0,
-                'index'             => 0,
+                'index_num'         => 0,
                 'goal_id'           => 11,
             ],
             [
@@ -262,7 +262,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => 2,
                 'evaluate_type'     => 0,
-                'index'             => 1,
+                'index_num'         => 1,
                 'goal_id'           => 12,
             ],
         ];
