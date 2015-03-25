@@ -491,7 +491,6 @@ class Evaluation extends AppModel
     function getEvaluateeEvalStatusAsEvaluator($term_id)
     {
         $evaluatee_list = $this->getEvaluateeListEvaluableAsEvaluator($term_id);
-        $this->log($evaluatee_list);
         $evaluatees = [];
         foreach ($evaluatee_list as $uid) {
             $user = $this->Team->TeamMember->User->getProfileAndEmail($uid);
@@ -512,7 +511,6 @@ class Evaluation extends AppModel
             ],
             'fields'     => ['evaluatee_user_id']
         ];
-        $this->log($options);
         $res = $this->find('list', $options);
         return $res;
     }
