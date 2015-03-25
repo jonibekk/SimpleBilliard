@@ -199,6 +199,20 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
+    function testCheckAvailParameterInEvalFormStatusCannotGet()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $evaluateeId = 1;
+        try {
+            $this->Evaluation->checkAvailParameterInEvalForm($termId, $evaluateeId);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
     function testAddRegisters()
     {
         $this->_setDefault();
