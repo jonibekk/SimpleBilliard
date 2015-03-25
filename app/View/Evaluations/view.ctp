@@ -31,78 +31,120 @@
         <div class="panel-heading"><?= __d('gl', "トータル評価") ?></div>
         <div class="panel-body eval-view-panel-body">
             <? foreach($totalList as $total): ?>
-            <div class="form-group">
-                <?=
-                $this->Html->image('ajax-loader.gif',
-                                   [
-                                       'class'         => 'lazy comment-img',
-                                       'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'], 'User.photo', ['style' => 'small']),
-                                   ]
-                )
+                <?
+                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')):
                 ?>
-                <?= h($total['EvaluatorUser']['display_username']) ?>
-                <div for="#" class="col col-sm-3 eval-view-panel-title">
-                    <?= __d('gl', "本人") ?>
+                <div class="form-group">
+                    <?=
+                    $this->Html->image('ajax-loader.gif',
+                                       [
+                                           'class'         => 'lazy comment-img',
+                                           'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                                       ]
+                    )
+                    ?>
+                    <?= h($total['EvaluatorUser']['display_username']) ?>
+                    <div for="#" class="col col-sm-3 eval-view-panel-title">
+                        <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR):?>
+                            <?= __d('gl', "評価者") ?>
+                        <? else: ?>
+                            <?= __d('gl', "本人") ?>
+                        <? endif;?>
+                    </div>
+                    <div class="col col-sm-12">
+                        <?=
+                        $this->Form->input("0.Evaluation.id", [
+                            'label' => false,
+                            'class' => 'form-control col-xxs-10 mb_12px',
+                            'type'  => 'hidden',
+                            'value' => $total['Evaluation']['id']
+                        ])
+                        ?>
+                        <?=
+                        $this->Form->input("0.Evaluation.index", [
+                            'label' => false,
+                            'class' => 'form-control col-xxs-10 mb_12px',
+                            'type'  => 'hidden',
+                            'value' => $total['Evaluation']['index']
+                        ])
+                        ?>
+                        <?=
+                        $this->Form->input("0.Evaluation.comment", [
+                            'type'                     => 'textarea',
+                            'rows'                     => 2,
+                            'default'                  => $total['Evaluation']['comment'],
+                            'label'                    => __d('gl', "評価コメント"),
+                            'placeholder'              => __d('gl', "コメントを書いてください"),
+                            'required'                 => false,
+                            'data-bv-notempty'         => "true",
+                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
+                        ])
+                        ?>
+                        <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][comment]"
+                               data-bv-result="NOT_VALIDATED" style="display: none;"><?= __d('gl', "入力必須項目です。") ?>
+                        </small>
+                        <?=
+                        $this->Form->input("0.Evaluation.evaluate_score_id", [
+                            'type'                     => 'select',
+                            'default'                  => $total['Evaluation']['evaluate_score_id'],
+                            'options'                  => $scoreList,
+                            'id'                       => '',
+                            'label'                    => __d('gl', "評価スコア"),
+                            'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3',
+                            'wrapInput'                => false,
+                            'required'                 => false,
+                            'data-bv-notempty'         => "true",
+                            'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
+                        ])
+                        ?>
+                        <small class="help-block" data-bv-validator="notEmpty"
+                               data-bv-for="data[0][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
+                               style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
+                        </small>
+                    </div>
                 </div>
-                <div class="col col-sm-12">
-                    <?=
-                    $this->Form->input("0.Evaluation.id", [
-                        'label' => false,
-                        'class' => 'form-control col-xxs-10 mb_12px',
-                        'type'  => 'hidden',
-                        'value' => $total['Evaluation']['id']
-                    ])
-                    ?>
-                    <?=
-                    $this->Form->input("0.Evaluation.index", [
-                        'label' => false,
-                        'class' => 'form-control col-xxs-10 mb_12px',
-                        'type'  => 'hidden',
-                        'value' => $total['Evaluation']['index']
-                    ])
-                    ?>
-                    <?=
-                    $this->Form->input("0.Evaluation.comment", [
-                        'type'                     => 'textarea',
-                        'rows'                     => 2,
-                        'default'                  => $total['Evaluation']['comment'],
-                        'label'                    => __d('gl', "評価コメント"),
-                        'placeholder'              => __d('gl', "コメントを書いてください"),
-                        'required'                 => false,
-                        'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
-                    ])
-                    ?>
-                    <small class="help-block" data-bv-validator="notEmpty" data-bv-for="data[0][Evaluation][comment]"
-                           data-bv-result="NOT_VALIDATED" style="display: none;"><?= __d('gl', "入力必須項目です。") ?>
-                    </small>
-                    <?=
-                    $this->Form->input("0.Evaluation.evaluate_score_id", [
-                        'type'                     => 'select',
-                        'default'                  => $total['Evaluation']['evaluate_score_id'],
-                        'options'                  => $scoreList,
-                        'id'                       => '',
-                        'label'                    => __d('gl', "評価スコア"),
-                        'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3',
-                        'wrapInput'                => false,
-                        'required'                 => false,
-                        'data-bv-notempty'         => "true",
-                        'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
-                    ])
-                    ?>
-                    <small class="help-block" data-bv-validator="notEmpty"
-                           data-bv-for="data[0][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
-                           style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
-                    </small>
-                </div>
-            </div>
-                <? if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')):
-                    ?>
+                <?
+                $saveIndex++;
+                ?>
+                <?
+                break;?>
+
                     <?
-                    $saveIndex++;
+                    else:
                     ?>
-                    <?
-                    break;?>
+                        <?=
+                        $this->Html->image('ajax-loader.gif',
+                                           [
+                                               'class'         => 'lazy comment-img',
+                                               'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                                           ]
+                        )
+                        ?>
+                        <?= h($total['EvaluatorUser']['display_username']) ?>
+                        <div for="#" class="col col-sm-3 eval-view-panel-title">
+                            <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_ONESELF):?>
+                                <?= __d('gl', "本人") ?>
+                            <? else: ?>
+                                <?= __d('gl', "評価者") ?>
+                            <? endif;?>
+                        </div>
+                        <div class="form-group">
+                            <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
+                                <?= __d('gl', "評価コメント") ?>
+                            </label>
+                            <div class="col col-sm-8">
+                                <?= h($total['Evaluation']['comment']) ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
+                                <?= __d('gl', "評価スコア") ?>
+                            </label>
+                            <div class="col col-sm-8">
+                                <?= h($scoreList[$total['Evaluation']['evaluate_score_id']]) ?>
+                            </div>
+                        </div>
+
                 <? endif;?>
             <? endforeach;?>
         </div>
@@ -270,8 +312,23 @@
 
             <? foreach($goal as $evalIndex => $eval):?>
             <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')):?>
+            <?=
+            $this->Html->image('ajax-loader.gif',
+                               [
+                                   'class'         => 'lazy comment-img',
+                                   'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                               ]
+            )
+            ?>
+            <?= h($eval['EvaluatorUser']['display_username']) ?>
             <div class="form-group">
-                <div for="#" class="col col-sm-3 eval-view-panel-title"><?= __d('gl', "本人") ?></div>
+                <div for="#" class="col col-sm-3 eval-view-panel-title">
+                    <? if($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR):?>
+                        <?= __d('gl', "評価者") ?>
+                    <? else: ?>
+                        <?= __d('gl', "本人") ?>
+                    <? endif;?>
+                </div>
 
                 <div class="col col-sm-12">
                     <?=
@@ -329,9 +386,45 @@
                 $saveIndex++;
                 break;
                 ?>
-            <?
-            endif;
-            ?>
+                <?
+                else:
+                    ?>
+                    <?=
+                    $this->Html->image('ajax-loader.gif',
+                                       [
+                                           'class'         => 'lazy comment-img',
+                                           'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                                       ]
+                    )
+                    ?>
+                    <?= h($eval['EvaluatorUser']['display_username']) ?>
+                    <div for="#" class="col col-sm-3 eval-view-panel-title">
+                        <? if($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR):?>
+                            <?= __d('gl', "評価者") ?>
+                        <? else: ?>
+                            <?= __d('gl', "本人") ?>
+                        <? endif;?>
+                    </div>
+                    <div class="form-group">
+                        <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
+                            <?= __d('gl', "評価コメント") ?>
+                        </label>
+                        <div class="col col-sm-8">
+                            <?= h($eval['Evaluation']['comment']) ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
+                            <?= __d('gl', "評価スコア") ?>
+                        </label>
+                        <div class="col col-sm-8">
+                            <?= h($scoreList[$eval['Evaluation']['evaluate_score_id']]) ?>
+                        </div>
+                    </div>
+
+                <?
+                endif;
+                ?>
             <? endforeach ?>
         </div>
         <?
