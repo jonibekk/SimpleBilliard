@@ -216,7 +216,7 @@ class Evaluation extends AppModel
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal' => [
-                    'KeyResult' => [
+                    'KeyResult'    => [
                         'conditions' => [
                             'NOT' => [
                                 'completed' => null
@@ -227,7 +227,7 @@ class Evaluation extends AppModel
                     'MyCollabo',
                     'ActionResult' => [
                         'conditions' => [
-                            'user_id'     => $evaluateeId,
+                            'user_id' => $evaluateeId,
                         ],
                         'fields'     => [
                             'id'
