@@ -299,6 +299,14 @@ class Evaluation extends AppModel
         }
         if (!empty($all_evaluations)) {
             $res = $this->saveAll($all_evaluations);
+            //set my_turn
+            $this->updateAll(['Evaluation.my_turn_flg' => true],
+                             ['Evaluation.team_id'          => $this->current_team_id,
+                              'Evaluation.evaluate_term_id' => $term_id,
+                              'Evaluation.index_num'        => 0,
+                             ]
+            );
+
             return (bool)$res;
         }
         return false;
