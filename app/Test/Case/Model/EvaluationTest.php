@@ -584,7 +584,7 @@ class EvaluationTest extends CakeTestCase
                 'my_tarn' => false
             ]
         ];
-        $actual = $this->Evaluation->getMyEvalStatus($term_id);
+        $actual = $this->Evaluation->getEvalStatus($term_id, 1);
         $this->assertEquals($expected, $actual);
     }
 

@@ -436,17 +436,17 @@ class Evaluation extends AppModel
         return $record;
     }
 
-    function getMyEvalStatus($term_id)
+    function getEvalStatus($term_id, $user_id)
     {
         $options = [
             'conditions' => [
-                'evaluatee_user_id' => $this->my_uid,
+                'evaluatee_user_id' => $user_id,
                 'evaluate_term_id'  => $term_id,
                 'team_id'           => $this->current_team_id,
                 'goal_id'           => null,
             ],
-            'fields'     => ['id', 'evaluate_type', 'status',],
-            'order'      => ['index_num' => 'asc']
+            'fields'     => ['id', 'evaluate_type', 'status', 'evaluator_user_id', 'evaluatee_user_id'],
+            'order'      => ['index_num' => 'asc'],
         ];
         $data = $this->find('all', $options);
         $data = Hash::combine($data, '{n}.Evaluation.id', '{n}.Evaluation');
@@ -456,8 +456,17 @@ class Evaluation extends AppModel
         foreach ($data as $val) {
             $name = self::$TYPE[$val['evaluate_type']];
             if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
-                $name .= $evaluator_index;
+                if ($val['evaluator_user_id'] == $this->my_uid) {
+                    $name = __d('gl', "あなた");
+                }
+                else {
+                    $name .= $evaluator_index;
+                }
                 $evaluator_index++;
+            }
+            //自己評価で被評価者が自分以外の場合は「メンバー」
+            elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
+                $name = __d('gl', 'メンバー');
             }
             $res[] = [
                 'name'    => $name,
@@ -468,6 +477,37 @@ class Evaluation extends AppModel
                 $already_exists_incomplete = true;
             }
         }
+        $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
+        $res = array_merge(['flow' => $res], $user);
+        return $res;
+    }
+
+    function getEvaluateeEvalStatusAsEvaluator($term_id)
+    {
+        $evaluatee_list = $this->getEvaluateeListEvaluableAsEvaluator($term_id);
+        $this->log($evaluatee_list);
+        $evaluatees = [];
+        foreach ($evaluatee_list as $uid) {
+            $user = $this->Team->TeamMember->User->getProfileAndEmail($uid);
+            $evaluation = $this->getEvalStatus($term_id, $uid);
+            $evaluatees[] = array_merge($user, $evaluation);
+        }
+        return $evaluatees;
+    }
+
+    function getEvaluateeListEvaluableAsEvaluator($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluator_user_id' => $this->my_uid,
+                'evaluate_term_id'  => $term_id,
+                'team_id'           => $this->current_team_id,
+                'evaluate_type'     => self::TYPE_EVALUATOR
+            ],
+            'fields'     => ['evaluatee_user_id']
+        ];
+        $this->log($options);
+        $res = $this->find('list', $options);
         return $res;
     }
 

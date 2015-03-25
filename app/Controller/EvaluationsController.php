@@ -32,12 +32,17 @@ class EvaluationsController extends AppController
         }
 
         //get evaluation setting.
-        $eval_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $my_eval_status = $this->Evaluation->getMyEvalStatus($eval_term_id);
+        $eval_term_id = $this->Team->EvaluateTerm->getLatestTermId();
+        $my_eval_status = $this->Evaluation->getEvalStatus($eval_term_id, $this->Auth->user('id'));
         $total_incomplete_count = $this->Team->Evaluation->getMyTurnCount();
         $is_myself_evaluations_incomplete = $this->Evaluation->isMySelfEvalIncomplete($eval_term_id);
-
-        $this->set(compact('eval_term_id', 'total_incomplete_count', 'is_myself_evaluations_incomplete',
+        $total_incomplete_count_as_evaluator = $total_incomplete_count;
+        if ($is_myself_evaluations_incomplete) {
+            $total_incomplete_count_as_evaluator--;
+        }
+        $evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($eval_term_id);
+        $this->set(compact('total_incomplete_count_as_evaluator', 'eval_term_id', 'evaluatees',
+                           'total_incomplete_count', 'is_myself_evaluations_incomplete',
                            'my_eval_status'));
     }
 
