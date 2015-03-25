@@ -18,12 +18,12 @@ class Evaluator extends AppModel
      * @var array
      */
     public $validate = [
-        'index'   => [
+        'index_num' => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
         ],
-        'del_flg' => [
+        'del_flg'   => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -66,7 +66,7 @@ class Evaluator extends AppModel
             ],
             'order'      => [
                 'evaluatee_user_id' => 'asc',
-                'index'             => 'asc',
+                'index_num'         => 'asc',
             ],
         ];
         $res = $this->find('all', $options);

@@ -337,10 +337,10 @@ class TeamMember extends AppModel
                 foreach ($row_v['Group'] as $k => $v) {
                     $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
                     $member_groups[] = [
-                        'group_id' => $group['Group']['id'],
-                        'index'    => $k,
-                        'team_id'  => $this->current_team_id,
-                        'user_id'  => $row_v['User']['id'],
+                        'group_id'  => $group['Group']['id'],
+                        'index_num' => $k,
+                        'team_id'   => $this->current_team_id,
+                        'user_id'   => $row_v['User']['id'],
                     ];
                 }
                 unset($this->csv_datas[$row_k]['Group']);
@@ -380,7 +380,7 @@ class TeamMember extends AppModel
             foreach ($row_v['Evaluator'] as $r_k => $r_v) {
                 if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
                     $save_evaluator_data[] = [
-                        'index'             => $r_k,
+                        'index_num'         => $r_k,
                         'team_id'           => $this->current_team_id,
                         'evaluatee_user_id' => $row_v['User']['id'],
                         'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
@@ -434,8 +434,8 @@ class TeamMember extends AppModel
                 foreach ($row_v['Group'] as $k => $v) {
                     $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
                     $this->csv_datas[$row_k]['MemberGroup'][] = [
-                        'group_id' => $group['Group']['id'],
-                        'index'    => $k
+                        'group_id'  => $group['Group']['id'],
+                        'index_num' => $k
                     ];
                 }
                 unset($this->csv_datas[$row_k]['Group']);
@@ -512,7 +512,7 @@ class TeamMember extends AppModel
             //MemberGroupの登録
             if (viaIsSet($row_v['MemberGroup'])) {
                 foreach ($row_v['MemberGroup'] as $k => $v) {
-                    $row_v['MemberGroup'][$k]['index'] = $k;
+                    $row_v['MemberGroup'][$k]['index_num'] = $k;
                     $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
                     $row_v['MemberGroup'][$k]['team_id'] = $this->current_team_id;
                 }
@@ -560,7 +560,7 @@ class TeamMember extends AppModel
             foreach ($row_v['Evaluator'] as $r_k => $r_v) {
                 if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
                     $save_evaluator_data[] = [
-                        'index'             => $r_k,
+                        'index_num'         => $r_k,
                         'team_id'           => $this->current_team_id,
                         'evaluatee_user_id' => $row_v['User']['id'],
                         'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],

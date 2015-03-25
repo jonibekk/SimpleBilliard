@@ -23,12 +23,12 @@ class EvaluateScore extends AppModel
      * @var array
      */
     public $validate = [
-        'index'   => [
+        'index_num' => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
         ],
-        'del_flg' => [
+        'del_flg'   => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -63,7 +63,7 @@ class EvaluateScore extends AppModel
                 'name',
             ],
             'order'      => [
-                'index' => 'asc'
+                'index_num' => 'asc'
             ]
         ];
         $res = $this->find('list', $options);

@@ -108,11 +108,6 @@ class GoalApprovalController extends AppController
     /*
      * 承認前ページの「全ゴール - 自分のゴール」件数
      */
-    public $unapproved_cnt = 0;
-
-    /*
-     * 承認前ページの「全ゴール - 自分のゴール」件数
-     */
     public $done_cnt = 0;
 
     /*
@@ -159,9 +154,6 @@ class GoalApprovalController extends AppController
         $this->my_evaluation_flg = $this->TeamMember->getEvaluationEnableFlg($this->user_id, $this->team_id);
         $this->goal_user_ids = $this->getCollaboratorUserId();
 
-        $this->unapproved_cnt = $this->Collaborator->countCollaboGoal(
-            $this->team_id, $this->user_id, $this->goal_user_ids, $this->goal_status['unapproved']);
-
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
             $this->team_id, $this->user_id, $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
@@ -187,12 +179,11 @@ class GoalApprovalController extends AppController
             }
         }
 
-        $unapproved_cnt = $this->unapproved_cnt;
         $done_cnt = $this->done_cnt;
         $kr = new KeyResult();
         $value_unit_list = $kr::$UNIT;
 
-        $this->set(compact('value_unit_list', 'goal_info', 'unapproved_cnt', 'done_cnt'));
+        $this->set(compact('value_unit_list', 'goal_info', 'done_cnt'));
     }
 
     /*
@@ -213,12 +204,11 @@ class GoalApprovalController extends AppController
             }
         }
 
-        $unapproved_cnt = $this->unapproved_cnt;
         $done_cnt = $this->done_cnt;
         $kr = new KeyResult();
         $value_unit_list = $kr::$UNIT;
 
-        $this->set(compact('value_unit_list', 'goal_info', 'unapproved_cnt', 'done_cnt'));
+        $this->set(compact('value_unit_list', 'goal_info', 'done_cnt'));
     }
 
     /*

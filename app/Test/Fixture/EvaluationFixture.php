@@ -22,8 +22,9 @@ class EvaluationFixture extends CakeTestFixture
         'goal_id'           => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ゴールID(belongsToでGoalモデルに関連)'),
         'comment'           => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '評価コメント', 'charset' => 'utf8'),
         'evaluate_score_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'スコアID(belongsToでEvaluateScoreモデルに関連)'),
-        'index'             => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '評価順'),
+        'index_num'         => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '評価順'),
         'status'            => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '評価ステータス(0:未入力,1:下書き,2:評価済)'),
+        'my_turn_flg'       => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 4, 'unsigned' => false),
         'del_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
         'deleted'           => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
         'created'           => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '追加した日付時刻'),
@@ -55,7 +56,7 @@ class EvaluationFixture extends CakeTestFixture
             'evaluate_type'     => 0,
             'comment'           => 'あいうえお',
             'evaluate_score_id' => 1,
-            'index'             => 0,
+            'index_num'         => 0,
         ],
         [
             'team_id'           => 1,
@@ -65,7 +66,7 @@ class EvaluationFixture extends CakeTestFixture
             'evaluate_type'     => 0,
             'comment'           => 'かきくけこ',
             'evaluate_score_id' => 1,
-            'index'             => 1,
+            'index_num'         => 1,
             'goal_id'           => 1,
         ],
         [
@@ -76,7 +77,7 @@ class EvaluationFixture extends CakeTestFixture
             'evaluate_type'     => 0,
             'comment'           => 'さしすせそ',
             'evaluate_score_id' => 1,
-            'index'             => 2,
+            'index_num'         => 2,
             'goal_id'           => 2,
         ],
         [
@@ -87,7 +88,7 @@ class EvaluationFixture extends CakeTestFixture
             'evaluate_type'     => 0,
             'comment'           => 'たちつてと',
             'evaluate_score_id' => 1,
-            'index'             => 3,
+            'index_num'         => 3,
             'goal_id'           => 3,
         ],
         [
@@ -98,7 +99,7 @@ class EvaluationFixture extends CakeTestFixture
             'evaluate_type'     => 0,
             'comment'           => 'なにぬねの',
             'evaluate_score_id' => 1,
-            'index'             => 0,
+            'index_num'         => 0,
             'goal_id'           => 10,
         ],
         [
@@ -109,7 +110,7 @@ class EvaluationFixture extends CakeTestFixture
             'evaluate_type'     => 0,
             'comment'           => 'はひふへほ',
             'evaluate_score_id' => 1,
-            'index'             => 1,
+            'index_num'         => 1,
             'goal_id'           => 11,
         ],
         [
@@ -120,7 +121,7 @@ class EvaluationFixture extends CakeTestFixture
             'evaluate_type'     => 0,
             'comment'           => 'まみむめも',
             'evaluate_score_id' => 1,
-            'index'             => 2,
+            'index_num'         => 2,
             'goal_id'           => 12,
         ],
     ];
