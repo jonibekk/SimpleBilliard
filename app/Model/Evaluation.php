@@ -243,12 +243,18 @@ class Evaluation extends AppModel
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal' => [
-                    'KeyResult',
+                    'KeyResult'    => [
+                        'conditions' => [
+                            'NOT' => [
+                                'completed' => null
+                            ]
+                        ]
+                    ],
                     'GoalCategory',
                     'MyCollabo',
                     'ActionResult' => [
                         'conditions' => [
-                            'user_id' => $evaluateeId
+                            'user_id' => $evaluateeId,
                         ],
                         'fields'     => [
                             'id'
@@ -531,8 +537,9 @@ class Evaluation extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id'     => $this->current_team_id,
-                'my_turn_flg' => true,
+                'evaluator_user_id' => $this->my_uid,
+                'team_id'           => $this->current_team_id,
+                'my_turn_flg'       => true,
             ],
         ];
         $count = $this->find('count', $options);
