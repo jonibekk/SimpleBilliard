@@ -460,4 +460,16 @@ class Evaluation extends AppModel
         return $res['Evaluation']['status'];
     }
 
+    function getMyTurnCount()
+    {
+        $options = [
+            'conditions' => [
+                'team_id'     => $this->current_team_id,
+                'my_turn_flg' => true,
+            ],
+        ];
+        $count = $this->find('count', $options);
+        return $count;
+    }
+
 }
