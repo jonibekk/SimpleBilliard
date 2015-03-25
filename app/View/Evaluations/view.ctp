@@ -46,6 +46,22 @@
                 </div>
                 <div class="col col-sm-12">
                     <?=
+                    $this->Form->input("0.Evaluation.id", [
+                        'label' => false,
+                        'class' => 'form-control col-xxs-10 mb_12px',
+                        'type'  => 'hidden',
+                        'value' => $total['Evaluation']['id']
+                    ])
+                    ?>
+                    <?=
+                    $this->Form->input("0.Evaluation.index", [
+                        'label' => false,
+                        'class' => 'form-control col-xxs-10 mb_12px',
+                        'type'  => 'hidden',
+                        'value' => $total['Evaluation']['index']
+                    ])
+                    ?>
+                    <?=
                     $this->Form->input("0.Evaluation.comment", [
                         'type'                     => 'textarea',
                         'rows'                     => 2,
@@ -78,14 +94,6 @@
                            data-bv-for="data[0][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
                            style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
                     </small>
-                    <?=
-                    $this->Form->input("0.Evaluation.id", [
-                        'label' => false,
-                        'class' => 'form-control col-xxs-10 mb_12px',
-                        'type'  => 'hidden',
-                        'value' => $total['Evaluation']['id']
-                    ])
-                    ?>
                 </div>
             </div>
                 <? if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')):
@@ -261,10 +269,27 @@
             </div>
 
             <? foreach($goal as $evalIndex => $eval):?>
+            <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')):?>
             <div class="form-group">
                 <div for="#" class="col col-sm-3 eval-view-panel-title"><?= __d('gl', "本人") ?></div>
 
                 <div class="col col-sm-12">
+                    <?=
+                    $this->Form->input("{$saveIndex}.Evaluation.id", [
+                        'label' => false,
+                        'class' => 'form-control col-xxs-10 mb_12px',
+                        'type'  => 'hidden',
+                        'value' => $eval['Evaluation']['id']
+                    ]);
+                    ?>
+                    <?=
+                    $this->Form->input("{$saveIndex}.Evaluation.index", [
+                        'label' => false,
+                        'class' => 'form-control col-xxs-10 mb_12px',
+                        'type'  => 'hidden',
+                        'value' => $eval['Evaluation']['index']
+                    ]);
+                    ?>
                     <?=
                     $this->Form->input("{$saveIndex}.Evaluation.comment", [
                         'type'                     => 'textarea',
@@ -300,20 +325,13 @@
                     </small>
                 </div>
             </div>
-                <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')):?>
-                    <?=
-                    $this->Form->input("{$saveIndex}.Evaluation.id", [
-                        'label' => false,
-                        'class' => 'form-control col-xxs-10 mb_12px',
-                        'type'  => 'hidden',
-                        'value' => $eval['Evaluation']['id']
-                    ]);
-                    $saveIndex++;
-                    break;
-                    ?>
                 <?
-                endif;
+                $saveIndex++;
+                break;
                 ?>
+            <?
+            endif;
+            ?>
             <? endforeach ?>
         </div>
         <?

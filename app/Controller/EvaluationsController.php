@@ -66,7 +66,6 @@ class EvaluationsController extends AppController
         }
         $goalList = $evaluationList;
 
-
         // set progress
         foreach ($goalList as $goalIndex => $goal) {
             foreach ($goal as $evalKey => $eval) {
