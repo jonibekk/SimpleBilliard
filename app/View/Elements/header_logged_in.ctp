@@ -13,6 +13,9 @@
  * @var       $avail_sub_menu
  * @var       $my_member_status
  * @var       $is_evaluation_available
+ * @var       $evaluable_cnt
+ * @var       $unapproved_cnt
+ * @var       $all_alert_cnt
  */
 ?>
 <style type="text/css">
@@ -224,8 +227,9 @@
                         <li class="divider"></li>
                         <? if ($is_evaluation_available): ?>
                             <li>
-                                <? if (viaIsSet($my_member_status['TeamMember']['evaluable_count']) && $my_member_status['TeamMember']['evaluable_count'] > 0): ?>
-                                    <div class="btn btn-danger btn-xs bell-notify-box sub_cnt_alert" id="bellNum"><?= $my_member_status['TeamMember']['evaluable_count'] ?></div>
+                                <? if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
+                                    <div class="btn btn-danger btn-xs bell-notify-box sub_cnt_alert"
+                                         id="bellNum"><?= $evaluable_cnt ?></div>
                                 <? endif; ?>
 
                                 <?=

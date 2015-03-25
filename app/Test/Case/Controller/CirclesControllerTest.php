@@ -16,6 +16,7 @@ class CirclesControllerTest extends ControllerTestCase
     public $fixtures = array(
         'app.action_result',
         'app.cake_session',
+        'app.evaluation',
         'app.circle',
         'app.team',
         'app.evaluation_setting',
