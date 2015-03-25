@@ -449,7 +449,7 @@ class Evaluation extends AppModel
             'order'      => ['index_num' => 'asc']
         ];
         $res = $this->find("first", $options);
-        return $res['Evaluation']['status'];
+        return (isset($res['Evaluation']['status'])) ? $res['Evaluation']['status'] : false;
     }
 
     function getEvaluations($evaluateTermId, $evaluateeId)
@@ -490,7 +490,8 @@ class Evaluation extends AppModel
             'order'      => 'Evaluation.index_num asc',
         ];
         $res = $this->find('first', $options);
-        return $res['Evaluation']['evaluate_type'];
+
+        return (isset($res['Evaluation']['evaluate_type'])) ? $res['Evaluation']['evaluate_type'] : false;
     }
 
 }

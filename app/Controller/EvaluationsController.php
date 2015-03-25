@@ -50,6 +50,12 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+        if (empty($evaluationList)) {
+            $this->Pnotify->outError(__d('gl', "このページにはアクセスできません。"));
+            return $this->redirect($this->referer());
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
@@ -57,7 +63,6 @@ class EvaluationsController extends AppController
         $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $this->Auth->user('id'));
         $saveIndex = 0;
 
-        $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
         $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));
         if ($existTotalEval) {
             $totalList = array_shift($evaluationList);
