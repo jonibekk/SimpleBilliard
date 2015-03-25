@@ -119,6 +119,43 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction("/evaluations/view/{$termId}/1", ['method' => 'GET']);
     }
 
+    public function testViewNotExistTotal()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $records = [
+            [
+                'id'                => 1,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => 0,
+                'comment'           => "a",
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => null,
+                'status'            => 1
+            ],
+            [
+                'id'                => 2,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => 0,
+                'comment'           => "b",
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 1,
+                'status'            => 1
+            ],
+        ];
+        $Evaluations->Evaluation->saveAll($records);
+        $this->testAction("/evaluations/view/{$termId}/1", ['method' => 'GET']);
+    }
+
     public function testViewNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
