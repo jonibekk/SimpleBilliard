@@ -52,27 +52,28 @@ class EvaluationsController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
         $teamId = $this->Session->read('current_team_id');
+        $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
         $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
         $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $this->Auth->user('id'));
-        if (empty($evaluationList[0]['Evaluation']['goal_id'])) {
-            $total = $evaluationList[0];
-            unset($evaluationList[0]);
-            $goalList = $evaluationList;
-        }
+        $saveIndex = 0;
 
-        unset($evaluationList[0]);
+        $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+        $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));
+        if ($existTotalEval) {
+            $totalList = array_shift($evaluationList);
+        } else {
+            $totalList = [];
+        }
         $goalList = $evaluationList;
 
-        $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
 
         // set progress
-        foreach ($goalList as $key => $val) {
-            foreach ($val as $key2 => $val2) {
-                $goalList[$key][$key2]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($val2['Goal']);
+        foreach ($goalList as $goalIndex => $goal) {
+            foreach ($goal as $evalKey => $eval) {
+                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($eval['Goal']);
             }
         }
-        $this->set(compact('scoreList', 'totalList', 'goalList', 'evaluateTermId', 'evaluateeId', 'evaluateType'));
+        $this->set(compact('scoreList', 'totalList', 'goalList', 'evaluateTermId', 'evaluateeId', 'evaluateType', 'status', 'saveIndex'));
     }
 
     function add()

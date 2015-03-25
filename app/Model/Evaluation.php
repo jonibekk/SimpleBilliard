@@ -191,7 +191,6 @@ class Evaluation extends AppModel
 
         foreach ($data as $key => $law) {
             $this->create();
-            $law['Evaluation']['index'] = $key;
             if (!$this->save($law)) {
                 if (!empty($this->validationErrors)) {
                     throw new RuntimeException(__d('validate', "入力内容に不足があります。"));
@@ -472,7 +471,7 @@ class Evaluation extends AppModel
                         'fields'     => [
                             'id'
                         ]
-                    ]
+                    ],
                 ],
                 'EvaluatorUser'
             ]
