@@ -5,18 +5,18 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var CodeCompletionView $this
  * @var                    $eval_term_id
- * @var                    $incomplete_count
  * @var                    $is_myself_evaluations_incomplete
  * @var                    $my_eval_status
+ * @var                    $total_incomplete_count
  */
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __d('gl', "評価") ?></div>
     <div class="panel-body eval-view-panel-body">
-        <? if ($incomplete_count > 0): ?>
+        <? if ($total_incomplete_count > 0): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-                <?= __d('gl', "あと%s件の評価が完了しておりません。以下より評価を行なってください。", $incomplete_count) ?></div>
+                <?= __d('gl', "あと%s件の評価が完了しておりません。以下より評価を行なってください。", $total_incomplete_count) ?></div>
         <? endif; ?>
         <div class="form-group">
             <hr>
