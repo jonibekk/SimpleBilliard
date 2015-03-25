@@ -17,12 +17,12 @@ class MemberGroup extends AppModel
      * @var array
      */
     public $validate = [
-        'index'   => [
+        'index_num' => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
         ],
-        'del_flg' => [
+        'del_flg'   => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
