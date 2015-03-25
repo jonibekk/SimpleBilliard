@@ -27,7 +27,7 @@ class Evaluation extends AppModel
      * @var array
      */
     public $validate = [
-        'index'             => [
+        'index_num'         => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
@@ -191,6 +191,7 @@ class Evaluation extends AppModel
 
         foreach ($data as $key => $law) {
             $this->create();
+            $law['Evaluation']['index_num'] = $key;
             if (!$this->save($law)) {
                 if (!empty($this->validationErrors)) {
                     throw new RuntimeException(__d('validate', "入力内容に不足があります。"));
@@ -212,7 +213,7 @@ class Evaluation extends AppModel
                 'evaluatee_user_id' => $evaluateeId,
                 'evaluate_type'     => self::TYPE_ONESELF,
             ],
-            'order'      => 'Evaluation.index asc',
+            'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal' => [
                     'KeyResult',
@@ -395,7 +396,7 @@ class Evaluation extends AppModel
             'goal_id'           => $goal_id,
             'evaluate_term_id'  => $term_id,
             'evaluate_type'     => $type,
-            'index'             => $index,
+            'index_num'         => $index,
         ];
         return $record;
     }
@@ -410,7 +411,7 @@ class Evaluation extends AppModel
                 'goal_id'           => null,
             ],
             'fields'     => ['id', 'evaluate_type', 'status',],
-            'order'      => ['index' => 'asc']
+            'order'      => ['index_num' => 'asc']
         ];
         $data = $this->find('all', $options);
         $data = Hash::combine($data, '{n}.Evaluation.id', '{n}.Evaluation');
@@ -445,7 +446,7 @@ class Evaluation extends AppModel
                 'team_id'           => $this->current_team_id,
             ],
             'fields'     => ['status'],
-            'order'      => ['index' => 'asc']
+            'order'      => ['index_num' => 'asc']
         ];
         $res = $this->find("first", $options);
         return $res['Evaluation']['status'];
@@ -458,7 +459,7 @@ class Evaluation extends AppModel
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
             ],
-            'order'      => 'Evaluation.index asc',
+            'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal' => [
                     'KeyResult',
@@ -486,7 +487,7 @@ class Evaluation extends AppModel
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
             ],
-            'order'      => 'Evaluation.index asc',
+            'order'      => 'Evaluation.index_num asc',
         ];
         $res = $this->find('first', $options);
         return $res['Evaluation']['evaluate_type'];
