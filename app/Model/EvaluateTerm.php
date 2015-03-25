@@ -87,4 +87,16 @@ class EvaluateTerm extends AppModel
         return $res;
     }
 
+    function checkTermAvailable($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $id,
+                'team_id' => $this->current_team_id
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return (empty($res)) ? false : true;
+    }
+
 }
