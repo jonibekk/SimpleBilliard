@@ -355,19 +355,21 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals(count($expect), count($actual));
     }
 
-    function testGetEditableEvaluations()
+    function testGetEvaluations()
     {
         $this->_setDefault();
-        $this->Evaluation->deleteAll(['evaluate_term_id' => 1]);
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $evaluateTermId = 1;
         $evaluateeId = 1;
+        $goalNum = 3;
 
         $records = [
             [
                 'Evaluation' => [
-                    'evaluatee_user_id' => 1,
+                    'id' => 1,
+                    'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => 1,
+                    'evaluate_term_id'  => $evaluateTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'index_num'         => 0,
@@ -376,24 +378,52 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'evaluatee_user_id' => 1,
+                    'id' => 2,
+                    'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => 1,
+                    'evaluate_term_id'  => $evaluateTermId,
                     'goal_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
-                    'index_num'         => 1,
+                    'index_num'         => 0,
                     'status'            => 0
                 ],
 
             ],
             [
                 'Evaluation' => [
-                    'evaluatee_user_id' => 1,
+                    'id' => 3,
+                    'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => 1,
-                    'comment'           => null,
+                    'evaluate_term_id'  => $evaluateTermId,
                     'goal_id'           => 2,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'index_num'         => 1,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id' => 4,
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'goal_id'           => 3,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'index_num'         => 1,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id' => 5,
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'goal_id'           => 4,
+                    'comment'           => null,
                     'evaluate_score_id' => null,
                     'index_num'         => 2,
                     'status'            => 0
@@ -401,45 +431,24 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'evaluatee_user_id' => 1,
+                    'id' => 6,
+                    'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => 1,
-                    'goal_id'           => 3,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'goal_id'           => 5,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'index_num'         => 3,
                     'status'            => 0
                 ],
             ],
-            [
-                'Evaluation' => [
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => 1,
-                    'goal_id'           => 4,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
-                    'index_num'         => 4,
-                    'status'            => 0
-                ],
-            ],
-            [
-                'Evaluation' => [
-                    'evaluatee_user_id' => 1,
-                    'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => 1,
-                    'goal_id'           => 5,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
-                    'index_num'         => 5,
-                    'status'            => 0
-                ],
-            ],
         ];
         $this->Evaluation->saveAll($records);
-        $res = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
+        $res = $this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId);
         $this->assertNotEmpty($res, "[正常]評価登録");
-        $this->assertEquals(count($res), count($records));
+
+        // ゴールで配列をグループ化してるため、ゴール数でアサーション
+        $this->assertEquals(count($res), $goalNum);
     }
 
     /**
