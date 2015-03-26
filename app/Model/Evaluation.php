@@ -181,28 +181,6 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    function isMySelfEvalIncomplete($term_id)
-    {
-        $options = [
-            'conditions' => [
-                'evaluatee_user_id' => $this->my_uid,
-                'evaluator_user_id' => $this->my_uid,
-                'evaluate_type'     => self::TYPE_ONESELF,
-                'goal_id'           => null,
-                'team_id'           => $this->current_team_id,
-                'evaluate_term_id'  => $term_id,
-                'NOT'               => [
-                    'status' => self::TYPE_STATUS_DONE
-                ],
-            ],
-        ];
-        $res = $this->find('first', $options);
-        if (!empty($res)) {
-            return true;
-        }
-        return false;
-    }
-
     public function add($data, $saveType)
     {
         // insert status value to save data
