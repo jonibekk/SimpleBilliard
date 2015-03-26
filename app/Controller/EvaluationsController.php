@@ -60,10 +60,6 @@ class EvaluationsController extends AppController
         }
         
         $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
-        if (empty($evaluationList)) {
-            $this->Pnotify->outError(__d('gl', "このページにはアクセスできません。"));
-            return $this->redirect($this->referer());
-        }
         
         $teamId = $this->Session->read('current_team_id');
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);

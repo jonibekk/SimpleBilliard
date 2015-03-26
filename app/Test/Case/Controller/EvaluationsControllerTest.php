@@ -181,88 +181,8 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotExistEditableEvaluation()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
         $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
-        $records = [
-            [
-                'id'                => 1,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 2,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'comment'           => "a",
-                'evaluate_score_id' => 1,
-                'index_num'         => 0,
-                'goal_id'           => 1,
-                'status'            => 2
-            ],
-            [
-                'id'                => 2,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 1,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'comment'           => "b",
-                'evaluate_score_id' => 1,
-                'index_num'         => 1,
-                'goal_id'           => 2,
-                'status'            => 2
-            ],
-            [
-                'id'                => 3,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 1,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'comment'           => "c",
-                'evaluate_score_id' => 1,
-                'index_num'         => 2,
-                'goal_id'           => 3,
-                'status'            => 2
-            ],
-            [
-                'id'                => 4,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 1,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'comment'           => "d",
-                'evaluate_score_id' => 1,
-                'index_num'         => 3,
-                'goal_id'           => 10,
-                'status'            => 2
-            ],
-            [
-                'id'                => 5,
-                'team_id'           => 2,
-                'evaluatee_user_id' => 2,
-                'evaluator_user_id' => 2,
-                'evaluate_term_id'  => 2,
-                'evaluate_type'     => 0,
-                'comment'           => "e",
-                'evaluate_score_id' => 1,
-                'index_num'         => 0,
-                'goal_id'           => 11,
-                'status'            => 2
-            ],
-            [
-                'id'                => 6,
-                'team_id'           => 2,
-                'evaluatee_user_id' => 2,
-                'evaluator_user_id' => 2,
-                'evaluate_term_id'  => 2,
-                'evaluate_type'     => 0,
-                'comment'           => "f",
-                'evaluate_score_id' => 1,
-                'index_num'         => 1,
-                'goal_id'           => 12,
-                'status'            => 2
-            ],
-        ];
-        $Evaluations->Evaluation->saveAll($records);
         $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 
