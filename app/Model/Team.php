@@ -351,4 +351,15 @@ class Team extends AppModel
         return $term;
     }
 
+    function getAfterTermStartEnd($count = 1)
+    {
+        if ($count < 1) {
+            return;
+        }
+        $term['end'] = $this->getTermEndDate();
+        for ($i = 0; $i < $count; $i++) {
+            $term = $this->getTermStartEnd((strtotime("+1 day", $term['end'])));
+        }
+        return $term;
+    }
 }

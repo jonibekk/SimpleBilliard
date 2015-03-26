@@ -570,6 +570,14 @@ class TeamTest extends CakeTestCase
         $this->assertTrue(is_null($this->Team->getBeforeTermStartEnd(0)));
         $this->Team->getBeforeTermStartEnd(1);
     }
+
+    function testGetAfterTermStartEnd()
+    {
+        $this->setDefault();
+        $this->assertTrue(is_null($this->Team->getAfterTermStartEnd(0)));
+        $this->Team->getAfterTermStartEnd(1);
+    }
+
     function setDefault()
     {
         $this->Team->my_uid = 1;
