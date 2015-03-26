@@ -228,8 +228,10 @@ class Evaluation extends AppModel
             $termId = $this->getTermIdByEvaluationId($baseEvaId);
             $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
             $nextEvaluatorId = $this->getNextEvaluatorId($evaluateeId, $termId);
-            $this->log($nextEvaluatorId);
-            $this->setMyTurnFlgOn($nextEvaluatorId, $evaluateeId, $termId);
+
+            if($nextEvaluatorId) {
+                $this->setMyTurnFlgOn($nextEvaluatorId, $evaluateeId, $termId);
+            }
             $this->setMyTurnFlgOff($this->my_uid, $evaluateeId, $termId);
         }
 
@@ -567,6 +569,9 @@ class Evaluation extends AppModel
         $myIndex = Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]")[0]['index_num'];
         $nextIndex = (int)$myIndex + 1;
         $nextId = Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['evaluator_user_id'];
+        if(empty($nextId)) {
+            return null;
+        }
         return $nextId;
     }
 
