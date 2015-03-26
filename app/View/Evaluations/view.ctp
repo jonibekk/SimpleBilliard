@@ -65,7 +65,7 @@
                             'label' => false,
                             'class' => 'form-control col-xxs-10 mb_12px',
                             'type'  => 'hidden',
-                            'value' => $total['Evaluation']['index']
+                            'value' => $total['Evaluation']['index_num']
                         ])
                         ?>
                         <?=
@@ -344,7 +344,7 @@
                         'label' => false,
                         'class' => 'form-control col-xxs-10 mb_12px',
                         'type'  => 'hidden',
-                        'value' => $eval['Evaluation']['index']
+                        'value' => $eval['Evaluation']['index_num']
                     ]);
                     ?>
                     <?=
