@@ -3892,6 +3892,10 @@ Temporary Properties - YOU MUST FIX
     background-color: #f0f0f0;
 }
 
+.goal-search-menu {
+    display: inline-block;
+}
+
 .goal-term-search-menu {
     border-bottom: solid 2px #e0e0e0;
 }
