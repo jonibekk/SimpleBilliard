@@ -561,6 +561,7 @@ class EvaluationTest extends CakeTestCase
                 'evaluate_term_id'  => $term_id,
                 'evaluate_type'     => 0,
                 'index_num'         => 0,
+                'my_turn_flg'       => true,
             ],
             [
                 'team_id'           => 1,
@@ -574,18 +575,48 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->saveAll($eval);
         $expected = [
             (int)0 => [
-                'name'    => 'あなた',
-                'status'  => '0',
-                'my_tarn' => true
+                'name'      => 'あなた',
+                'status'    => '0',
+                'this_turn' => true
             ],
             (int)1 => [
-                'name'    => '評価者1',
-                'status'  => '0',
-                'my_tarn' => false
+                'name'      => '評価者1',
+                'status'    => '0',
+                'this_turn' => false
             ]
         ];
-        $actual = $this->Evaluation->getMyEvalStatus($term_id);
-        $this->assertEquals($expected, $actual);
+        $actual = $this->Evaluation->getEvalStatus($term_id, 1);
+        $this->assertEquals($expected, $actual['flow']);
+    }
+
+    function testGetEvaluateeEvalStatusAsEvaluator()
+    {
+        $this->_setDefault();
+        $eval_term = [
+            'team_id'    => 1,
+            'start_date' => 1,
+            'end_date'   => 1,
+        ];
+        $this->Evaluation->Team->EvaluateTerm->save($eval_term);
+        $term_id = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $eval = [
+            //自分の番
+            ['team_id'       => 1, 'evaluatee_user_id' => 2, 'evaluator_user_id' => 2, 'evaluate_term_id' => $term_id,
+             'evaluate_type' => Evaluation::TYPE_ONESELF, 'index_num' => 0, 'my_turn_flg' => false,],
+            ['team_id'       => 1, 'evaluatee_user_id' => 2, 'evaluator_user_id' => 1, 'evaluate_term_id' => $term_id,
+             'evaluate_type' => Evaluation::TYPE_EVALUATOR, 'index_num' => 1, 'my_turn_flg' => true,],
+            //他人の番
+            ['team_id'       => 1, 'evaluatee_user_id' => 3, 'evaluator_user_id' => 3, 'evaluate_term_id' => $term_id,
+             'evaluate_type' => Evaluation::TYPE_ONESELF, 'index_num' => 0, 'my_turn_flg' => true,],
+            ['team_id'       => 1, 'evaluatee_user_id' => 3, 'evaluator_user_id' => 1, 'evaluate_term_id' => $term_id,
+             'evaluate_type' => Evaluation::TYPE_EVALUATOR, 'index_num' => 1, 'my_turn_flg' => false,],
+        ];
+        $this->Evaluation->saveAll($eval);
+        $actual = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($term_id);
+        $this->assertCount(2, $actual[0]['flow']);
+        $this->assertCount(2, $actual[1]['flow']);
+        $this->assertTrue($actual[0]['status_text']['your_turn']);
+        $this->assertFalse($actual[1]['status_text']['your_turn']);
     }
 
     function testGetAddRecordsOfEvaluatee()

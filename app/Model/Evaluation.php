@@ -181,28 +181,6 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    function isMySelfEvalIncomplete($term_id)
-    {
-        $options = [
-            'conditions' => [
-                'evaluatee_user_id' => $this->my_uid,
-                'evaluator_user_id' => $this->my_uid,
-                'evaluate_type'     => self::TYPE_ONESELF,
-                'goal_id'           => null,
-                'team_id'           => $this->current_team_id,
-                'evaluate_term_id'  => $term_id,
-                'NOT'               => [
-                    'status' => self::TYPE_STATUS_DONE
-                ],
-            ],
-        ];
-        $res = $this->find('first', $options);
-        if (!empty($res)) {
-            return true;
-        }
-        return false;
-    }
-
     public function add($data, $saveType)
     {
         // insert status value to save data
@@ -251,7 +229,7 @@ class Evaluation extends AppModel
                         ]
                     ],
                     'GoalCategory',
-                    'MyCollabo' => [
+                    'MyCollabo'    => [
                         'conditions' => [
                             'user_id' => $this->my_uid
                         ]
@@ -446,38 +424,101 @@ class Evaluation extends AppModel
         return $record;
     }
 
-    function getMyEvalStatus($term_id)
+    function getEvalStatus($term_id, $user_id)
     {
         $options = [
             'conditions' => [
-                'evaluatee_user_id' => $this->my_uid,
+                'evaluatee_user_id' => $user_id,
                 'evaluate_term_id'  => $term_id,
                 'team_id'           => $this->current_team_id,
                 'goal_id'           => null,
             ],
-            'fields'     => ['id', 'evaluate_type', 'status',],
-            'order'      => ['index_num' => 'asc']
+            'fields'     => [
+                'id',
+                'evaluate_type',
+                'status',
+                'evaluator_user_id',
+                'evaluatee_user_id',
+                'my_turn_flg'
+            ],
+            'order'      => ['index_num' => 'asc'],
         ];
         $data = $this->find('all', $options);
         $data = Hash::combine($data, '{n}.Evaluation.id', '{n}.Evaluation');
-        $res = [];
-        $already_exists_incomplete = false;
+        $flow = [];
         $evaluator_index = 1;
+        $status_text = ['your_turn' => false, 'body' => null];
+        //update flow
         foreach ($data as $val) {
             $name = self::$TYPE[$val['evaluate_type']];
             if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
-                $name .= $evaluator_index;
+                if ($val['evaluator_user_id'] == $this->my_uid) {
+                    $name = __d('gl', "あなた");
+                }
+                else {
+                    $name .= $evaluator_index;
+                }
                 $evaluator_index++;
             }
-            $res[] = [
-                'name'    => $name,
-                'status'  => $val['status'],
-                'my_tarn' => !$already_exists_incomplete && $val['status'] != self::TYPE_STATUS_DONE ? true : false,
-            ];
-            if ($val['status'] != self::TYPE_STATUS_DONE) {
-                $already_exists_incomplete = true;
+            //自己評価で被評価者が自分以外の場合は「メンバー」
+            elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
+                $name = __d('gl', 'メンバー');
             }
+            $flow[] = [
+                'name'      => $name,
+                'status'    => $val['status'],
+                'this_turn' => $val['my_turn_flg'],
+            ];
+            //update status_text
+            if ($val['my_turn_flg'] === false) {
+                continue;
+            }
+            if ($val['evaluator_user_id'] != $this->my_uid) {
+                $status_text['body'] = __d('gl', "%sの評価待ちです", $name);
+                continue;
+            }
+            //your turn
+            $status_text['your_turn'] = true;
+            switch ($val['evaluate_type']) {
+                case self::TYPE_ONESELF:
+                    $status_text['body'] = __d('gl', "自己評価をしてください");
+                    break;
+                case self::TYPE_EVALUATOR:
+                    $status_text['body'] = __d('gl', "評価をしてください");
+                    break;
+            }
+
         }
+        $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
+        $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
+        return $res;
+    }
+
+    function getEvaluateeEvalStatusAsEvaluator($term_id)
+    {
+        $evaluatee_list = $this->getEvaluateeListEvaluableAsEvaluator($term_id);
+        $evaluatees = [];
+        foreach ($evaluatee_list as $uid) {
+            $user = $this->Team->TeamMember->User->getProfileAndEmail($uid);
+            $evaluation = $this->getEvalStatus($term_id, $uid);
+            $evaluatees[] = array_merge($user, $evaluation);
+        }
+        return $evaluatees;
+    }
+
+    function getEvaluateeListEvaluableAsEvaluator($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluator_user_id' => $this->my_uid,
+                'evaluate_term_id'  => $term_id,
+                'team_id'           => $this->current_team_id,
+                'evaluate_type'     => self::TYPE_EVALUATOR
+            ],
+            'fields'     => ['evaluatee_user_id']
+        ];
+        $res = $this->find('list', $options);
+        $res = array_unique($res);
         return $res;
     }
 
@@ -497,15 +538,19 @@ class Evaluation extends AppModel
         return viaIsSet($res['Evaluation']['status']);
     }
 
-    function getMyTurnCount()
+    function getMyTurnCount($evaluate_type = null)
     {
         $options = [
             'conditions' => [
                 'evaluator_user_id' => $this->my_uid,
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
+                'evaluate_type'     => $evaluate_type,
             ],
         ];
+        if (is_null($evaluate_type)) {
+            unset($options['conditions']['evaluate_type']);
+        }
         $count = $this->find('count', $options);
         return $count;
     }
