@@ -566,7 +566,7 @@ class Evaluation extends AppModel
         $res = $this->find("all", $options);
         $myIndex = Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]")[0]['index_num'];
         $nextIndex = (int)$myIndex + 1;
-        $nextId = Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['id'];
+        $nextId = Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['evaluator_user_id'];
         return $nextId;
     }
 
