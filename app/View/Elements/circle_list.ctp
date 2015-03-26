@@ -61,13 +61,13 @@
         <? endif; ?>
     <? endif; ?>
     <div class="clearfix develop--circle-seek">
-        <i class="fa fa-eye circle-function circle-seek-icon"></i><?=
+        <i class="fa fa-eye circle-function circle-seek-icon font_brownRed"></i><?=
         $this->Html->link(__d('gl', "公開サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                           ['class' => 'modal-ajax-get-public-circles font-dimgray']) ?>
     </div>
     <div class="clearfix develop--circle-make">
-        <i class="fa fa-plus-circle circle-function circle-make-icon"></i><a href="#" class="font-dimgray"
+        <i class="fa fa-plus-circle circle-function circle-make-icon font_brownRed"></i><a href="#" class="font-dimgray"
                                                                              data-toggle="modal"
                                                                              data-target="#modal_add_circle"><?=
             __d('gl',

@@ -137,7 +137,7 @@
                             <a class="goalsCard-activity inline-block col-xxs-2 click-show-post-modal font_gray-brownRed pointer"
                                id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
-                                <i class="fa fa-check-circle mr_1px"></i><span
+                                <i class="fa fa-check-circle mr_1px font_brownRed"></i><span
                                     class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
                             </a>
                         <? else: ?>
