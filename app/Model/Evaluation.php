@@ -251,7 +251,7 @@ class Evaluation extends AppModel
                         ]
                     ],
                     'GoalCategory',
-                    'MyCollabo' => [
+                    'MyCollabo'    => [
                         'conditions' => [
                             'user_id' => $this->my_uid
                         ]
@@ -455,14 +455,22 @@ class Evaluation extends AppModel
                 'team_id'           => $this->current_team_id,
                 'goal_id'           => null,
             ],
-            'fields'     => ['id', 'evaluate_type', 'status', 'evaluator_user_id', 'evaluatee_user_id'],
+            'fields'     => [
+                'id',
+                'evaluate_type',
+                'status',
+                'evaluator_user_id',
+                'evaluatee_user_id',
+                'my_turn_flg'
+            ],
             'order'      => ['index_num' => 'asc'],
         ];
         $data = $this->find('all', $options);
         $data = Hash::combine($data, '{n}.Evaluation.id', '{n}.Evaluation');
-        $res = [];
-        $already_exists_incomplete = false;
+        $flow = [];
         $evaluator_index = 1;
+        $status_text = ['your_turn' => false, 'body' => null];
+        //update flow
         foreach ($data as $val) {
             $name = self::$TYPE[$val['evaluate_type']];
             if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
@@ -478,17 +486,33 @@ class Evaluation extends AppModel
             elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
                 $name = __d('gl', 'メンバー');
             }
-            $res[] = [
-                'name'    => $name,
-                'status'  => $val['status'],
-                'my_tarn' => !$already_exists_incomplete && $val['status'] != self::TYPE_STATUS_DONE ? true : false,
+            $flow[] = [
+                'name'      => $name,
+                'status'    => $val['status'],
+                'this_turn' => $val['my_turn_flg'],
             ];
-            if ($val['status'] != self::TYPE_STATUS_DONE) {
-                $already_exists_incomplete = true;
+            //update status_text
+            if ($val['my_turn_flg'] === false) {
+                continue;
             }
+            if ($val['evaluator_user_id'] != $this->my_uid) {
+                $status_text['body'] = __d('gl', "%sの評価待ちです", $name);
+                continue;
+            }
+            //your turn
+            $status_text['your_turn'] = true;
+            switch ($val['evaluate_type']) {
+                case self::TYPE_ONESELF:
+                    $status_text['body'] = __d('gl', "自己評価をしてください");
+                    break;
+                case self::TYPE_EVALUATOR:
+                    $status_text['body'] = __d('gl', "評価をしてください");
+                    break;
+            }
+
         }
         $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
-        $res = array_merge(['flow' => $res], $user);
+        $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
         return $res;
     }
 
@@ -516,6 +540,7 @@ class Evaluation extends AppModel
             'fields'     => ['evaluatee_user_id']
         ];
         $res = $this->find('list', $options);
+        $res = array_unique($res);
         return $res;
     }
 
@@ -535,15 +560,19 @@ class Evaluation extends AppModel
         return viaIsSet($res['Evaluation']['status']);
     }
 
-    function getMyTurnCount()
+    function getMyTurnCount($evaluate_type = null)
     {
         $options = [
             'conditions' => [
                 'evaluator_user_id' => $this->my_uid,
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
+                'evaluate_type'     => $evaluate_type,
             ],
         ];
+        if (is_null($evaluate_type)) {
+            unset($options['conditions']['evaluate_type']);
+        }
         $count = $this->find('count', $options);
         return $count;
     }

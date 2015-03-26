@@ -576,12 +576,12 @@ class EvaluationTest extends CakeTestCase
             (int)0 => [
                 'name'    => 'あなた',
                 'status'  => '0',
-                'my_tarn' => true
+                'my_turn' => true
             ],
             (int)1 => [
                 'name'    => '評価者1',
                 'status'  => '0',
-                'my_tarn' => false
+                'my_turn' => false
             ]
         ];
         $actual = $this->Evaluation->getEvalStatus($term_id, 1);
