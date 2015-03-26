@@ -309,7 +309,7 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_new_comment_form($post_id)
+    public function ajax_get_new_comment_form($post_id, $prefix = null)
     {
         $result = [
             'error' => false,
@@ -318,7 +318,7 @@ class PostsController extends AppController
         ];
         $this->_ajaxPreProcess();
         if ($this->Post->isBelongCurrentTeam($post_id)) {
-            $this->set(compact('post_id'));
+            $this->set(compact('post_id','prefix'));
             $response = $this->render('Feed/new_comment_form');
             $html = $response->__toString();
             $result['html'] = $html;
