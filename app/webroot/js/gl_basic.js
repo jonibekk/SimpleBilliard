@@ -1324,6 +1324,9 @@ function getModalPostList(e) {
             });
 
             $modal_elm.find('.custom-radio-check').customRadioCheck();
+            $modal_elm.find('form').bootstrapValidator().on('success.form.bv', function (e) {
+                validatorCallback(e)
+            });
 
         }).success(function () {
             $('body').addClass('modal-open');
@@ -2060,6 +2063,9 @@ function initBell() {
 function validatorCallback(e) {
     switch (e.target.id) {
         case "CommentAjaxGetNewCommentFormForm":
+            addComment(e);
+            break;
+        case "ActionCommentForm":
             addComment(e);
             break;
     }
