@@ -228,13 +228,12 @@ class Evaluation extends AppModel
         return true;
     }
 
-    public function getEditableEvaluations($evaluateTermId, $evaluateeId)
+    function getEvaluations($evaluateTermId, $evaluateeId)
     {
         $options = [
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
-                'evaluate_type'     => self::TYPE_ONESELF,
             ],
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
@@ -256,11 +255,12 @@ class Evaluation extends AppModel
                             'id'
                         ]
                     ]
-                ]
+                ],
+                'EvaluatorUser'
             ]
         ];
         $res = $this->find('all', $options);
-        return $res;
+        return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
     }
 
     public function setDraftValidation()
@@ -487,35 +487,6 @@ class Evaluation extends AppModel
         ];
         $res = $this->find("first", $options);
         return (isset($res['Evaluation']['status'])) ? $res['Evaluation']['status'] : false;
-    }
-
-    function getEvaluations($evaluateTermId, $evaluateeId)
-    {
-        $options = [
-            'conditions' => [
-                'evaluate_term_id'  => $evaluateTermId,
-                'evaluatee_user_id' => $evaluateeId,
-            ],
-            'order'      => 'Evaluation.index_num asc',
-            'contain'    => [
-                'Goal' => [
-                    'KeyResult',
-                    'GoalCategory',
-                    'MyCollabo',
-                    'ActionResult' => [
-                        'conditions' => [
-                            'user_id' => $evaluateeId
-                        ],
-                        'fields'     => [
-                            'id'
-                        ]
-                    ],
-                ],
-                'EvaluatorUser'
-            ]
-        ];
-        $res = $this->find('all', $options);
-        return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
     }
 
     function getEvaluateType($evaluateTermId, $evaluateeId) {
