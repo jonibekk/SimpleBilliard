@@ -561,6 +561,7 @@ class EvaluationTest extends CakeTestCase
                 'evaluate_term_id'  => $term_id,
                 'evaluate_type'     => 0,
                 'index_num'         => 0,
+                'my_turn_flg'       => true,
             ],
             [
                 'team_id'           => 1,
@@ -574,18 +575,18 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->saveAll($eval);
         $expected = [
             (int)0 => [
-                'name'    => 'あなた',
-                'status'  => '0',
-                'my_turn' => true
+                'name'      => 'あなた',
+                'status'    => '0',
+                'this_turn' => true
             ],
             (int)1 => [
-                'name'    => '評価者1',
-                'status'  => '0',
-                'my_turn' => false
+                'name'      => '評価者1',
+                'status'    => '0',
+                'this_turn' => false
             ]
         ];
         $actual = $this->Evaluation->getEvalStatus($term_id, 1);
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual['flow']);
     }
 
     function testGetAddRecordsOfEvaluatee()
