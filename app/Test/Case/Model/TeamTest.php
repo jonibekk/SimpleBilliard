@@ -555,11 +555,11 @@ class TeamTest extends CakeTestCase
 
     function testGetTermStartEnd()
     {
-        $this->assertTrue(is_null($this->Team->getTermStartEnd(1)));
+        $this->assertTrue(is_null($this->Team->getTermStartEndByDate(1)));
 
         $this->setDefault();
         $time_offset = $this->Team->me['timezone'] * 60 * 60;
-        $term = $this->Team->getTermStartEnd(strtotime('2014/1/1') - $time_offset);
+        $term = $this->Team->getTermStartEndByDate(strtotime('2014/1/1') - $time_offset);
         $this->assertEquals('2014/01/01 00:00:00',
                             date('Y/m/d H:i:s', $term['start'] + $time_offset));
     }
