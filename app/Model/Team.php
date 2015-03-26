@@ -326,7 +326,7 @@ class Team extends AppModel
         }
     }
 
-    function getTermStartEnd($target_date)
+    function getTermStartEndByDate($target_date)
     {
         if (empty($this->current_team)) {
             $this->current_team = $this->findById($this->current_team_id);
@@ -346,9 +346,20 @@ class Team extends AppModel
         }
         $term['start'] = $this->getTermStartDate();
         for ($i = 0; $i < $count; $i++) {
-            $term = $this->getTermStartEnd((strtotime("-1 day", $term['start'])));
+            $term = $this->getTermStartEndByDate((strtotime("-1 day", $term['start'])));
         }
         return $term;
     }
 
+    function getAfterTermStartEnd($count = 1)
+    {
+        if ($count < 1) {
+            return;
+        }
+        $term['end'] = $this->getTermEndDate();
+        for ($i = 0; $i < $count; $i++) {
+            $term = $this->getTermStartEndByDate((strtotime("+1 day", $term['end'])));
+        }
+        return $term;
+    }
 }
