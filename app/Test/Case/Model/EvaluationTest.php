@@ -366,7 +366,7 @@ class EvaluationTest extends CakeTestCase
         $records = [
             [
                 'Evaluation' => [
-                    'id' => 1,
+                    'id'                => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -378,7 +378,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 2,
+                    'id'                => 2,
                     'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -392,7 +392,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 3,
+                    'id'                => 3,
                     'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -405,7 +405,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 4,
+                    'id'                => 4,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -418,7 +418,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 5,
+                    'id'                => 5,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -431,7 +431,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 6,
+                    'id'                => 6,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -631,6 +631,155 @@ class EvaluationTest extends CakeTestCase
 
         $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, 1, $evaluators, 0);
         $this->assertCount(5, $res);
+    }
+
+    function testGetTermIdByEvaluationId()
+    {
+        $this->_setDefault();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
+        $res = $this->Evaluation->find("first");
+        $expectedId = $res['Evaluation']['id'];
+        $expectedTermId = $res['Evaluation']['evaluate_term_id'];
+        $termId = $this->Evaluation->getTermIdByEvaluationId($expectedId);
+        $this->assertEquals($termId, $expectedTermId);
+    }
+
+    function testGetNextEvaluatorId()
+    {
+        $this->_setDefault();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
+
+        $options = [
+            'conditions' => [
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 1,
+                'goal_id' => null
+            ]
+        ];
+        $res = $this->Evaluation->find("first", $options);
+        $expectedId = $res['Evaluation']['id'];
+
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId(1, 1);
+        $this->assertEquals($nextEvaluatorId, $expectedId);
+    }
+
+    function _saveEvaluations() {
+        $evaluateTermId = 1;
+        $evaluateeId = 1;
+        $records = [
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => null,
+                    'index_num'         => 0,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => null,
+                    'index_num'         => 1,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 3,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => null,
+                    'index_num'         => 2,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => 1,
+                    'index_num'         => 3,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => 1,
+                    'index_num'         => 4,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 3,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => 1,
+                    'index_num'         => 5,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => 2,
+                    'index_num'         => 6,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => 2,
+                    'index_num'         => 7,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'evaluatee_user_id' => $evaluateeId,
+                    'evaluator_user_id' => 3,
+                    'evaluate_term_id'  => $evaluateTermId,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'goal_id'           => 2,
+                    'index_num'         => 8,
+                    'status'            => 0
+                ],
+            ],
+        ];
+        $this->Evaluation->saveAll($records);
     }
 
     function _setDefault()

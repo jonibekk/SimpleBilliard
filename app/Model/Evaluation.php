@@ -213,9 +213,7 @@ class Evaluation extends AppModel
         }
 
         foreach ($data as $key => $law) {
-            $this->create();
-            $law['Evaluation']['index_num'] = $key;
-            if (!$this->save($law)) {
+            if (!$this->save($law, true, ['id', 'comment', 'status', 'evaluate_score_id'])) {
                 if (!empty($this->validationErrors)) {
                     throw new RuntimeException(__d('validate', "入力内容に不足があります。"));
                 }
@@ -225,7 +223,18 @@ class Evaluation extends AppModel
             }
         }
 
+        if($saveType === "register") {
+            $baseEvaId = $data[0]['Evaluation']['id'];
+            $termId = $this->getTermIdByEvaluationId($baseEvaId);
+            $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
+            $nextEvaluatorId = $this->getNextEvaluatorId($evaluateeId, $termId);
+            $this->log($nextEvaluatorId);
+            $this->setMyTurnFlgOn($nextEvaluatorId, $evaluateeId, $termId);
+            $this->setMyTurnFlgOff($this->my_uid, $evaluateeId, $termId);
+        }
+
         return true;
+
     }
 
     function getEvaluations($evaluateTermId, $evaluateeId)
@@ -514,5 +523,66 @@ class Evaluation extends AppModel
         $count = $this->find('count', $options);
         return $count;
     }
+
+    function getTermIdByEvaluationId($evaluationId) {
+        $res = $this->find("first", [
+            'conditions' => [
+                'id' => $evaluationId
+            ],
+            'fields' => [
+                'evaluate_term_id'
+            ]
+        ]);
+        return viaIsSet($res['Evaluation']['evaluate_term_id']);
+    }
+
+    function getEvaluateeIdByEvaluationId($evaluateeId) {
+        $res = $this->find("first", [
+            'conditions' => [
+                'id' => $evaluateeId
+            ],
+            'fields' => [
+                'evaluatee_user_id'
+            ]
+        ]);
+        return viaIsSet($res['Evaluation']['evaluatee_user_id']);
+    }
+
+    function getNextEvaluatorId($evaluateeId, $termId) {
+        $options = [
+            'conditions' => [
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluate_term_id'  => $termId,
+                'goal_id' => null
+            ],
+            'order' => [
+                'index_num asc'
+            ]
+        ];
+        $res = $this->find("all", $options);
+        $myIndex = Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]")[0]['index_num'];
+        $nextIndex = (int)$myIndex + 1;
+        $nextId = Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['id'];
+        return $nextId;
+    }
+
+    function setMyTurnFlgOn($targetUserId, $evaluateeId, $termId) {
+        $options = [
+            'evaluator_user_id' => $targetUserId,
+            'evaluatee_user_id' => $evaluateeId,
+            'evaluate_term_id'  => $termId
+        ];
+        $this->updateAll(['my_turn_flg' => 1], $options);
+    }
+
+    function setMyTurnFlgOff($targetUserId, $evaluateeId, $termId) {
+        $options = [
+            'evaluator_user_id' => $targetUserId,
+            'evaluatee_user_id' => $evaluateeId,
+            'evaluate_term_id'  => $termId
+        ];
+        $this->updateAll(['my_turn_flg' => 0], $options);
+    }
+
     
 }
