@@ -137,6 +137,7 @@ class AppController extends Controller
             }
             $this->_setMyMemberStatus();
             $this->_setUnApprovedCnt($login_uid);
+            $this->_setEvaluableCnt();
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
@@ -153,7 +154,8 @@ class AppController extends Controller
     /*
      * 各種アラート件数の合計
      */
-    public function _setAllAlertCnt() {
+    public function _setAllAlertCnt()
+    {
         $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
         $this->set(compact('all_alert_cnt'));
     }
@@ -170,6 +172,12 @@ class AppController extends Controller
                                                                       $member_ids, 0);
         $this->set(compact('unapproved_cnt'));
         $this->unapproved_cnt = $unapproved_cnt;
+    }
+
+    function _setEvaluableCnt()
+    {
+        $this->evaluable_cnt = $this->Team->Evaluation->getMyTurnCount();
+        $this->set('evaluable_cnt', $this->evaluable_cnt);
     }
 
     public function _setSecurity()
@@ -224,9 +232,6 @@ class AppController extends Controller
     public function _setMyMemberStatus()
     {
         $team_member_info = $this->User->TeamMember->getWithTeam();
-        if (isset($team_member_info['TeamMember']['evaluable_count']) === true) {
-            $this->evaluable_cnt = $team_member_info['TeamMember']['evaluable_count'];
-        }
         $this->set('my_member_status', $team_member_info);
     }
 

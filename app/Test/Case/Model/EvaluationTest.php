@@ -89,7 +89,7 @@ class EvaluationTest extends CakeTestCase
 
     function testAddDrafts()
     {
-        $this->setDefault();
+        $this->_setDefault();
 
         $draftData = [
             [
@@ -163,9 +163,59 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
+    function testCheckAvailParameterInEvalFormParameterIsNull()
+    {
+        $this->_setDefault();
+        $termId = null;
+        $evaluateeId = null;
+        try {
+            $this->Evaluation->checkAvailParameterInEvalForm($termId, $evaluateeId);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testCheckAvailParameterInEvalFormTermIdIsUncorrect()
+    {
+        $this->_setDefault();
+        $termId = 1;
+        $evaluateeId = 1000;
+        try {
+            $this->Evaluation->checkAvailParameterInEvalForm($termId, $evaluateeId);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testCheckAvailParameterInEvalFormEvaluateeIdIsUncorrect()
+    {
+        $this->_setDefault();
+        $termId = 1000;
+        $evaluateeId = 1;
+        try {
+            $this->Evaluation->checkAvailParameterInEvalForm($termId, $evaluateeId);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testCheckAvailParameterInEvalFormStatusCannotGet()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $evaluateeId = 1;
+        try {
+            $this->Evaluation->checkAvailParameterInEvalForm($termId, $evaluateeId);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
     function testAddRegisters()
     {
-        $this->setDefault();
+        $this->_setDefault();
 
         $registerData = [
             [
@@ -214,7 +264,7 @@ class EvaluationTest extends CakeTestCase
 
     function testAddRegistersValidationError()
     {
-        $this->setDefault();
+        $this->_setDefault();
 
         $registerData = [
             [
@@ -248,22 +298,6 @@ class EvaluationTest extends CakeTestCase
         ];
         $this->setExpectedException('RuntimeException');
         $this->Evaluation->add($registerData, "register");
-
-    }
-
-    function setDefault()
-    {
-        $this->current_date = strtotime('2015/7/1');
-        $this->start_date = strtotime('2015/7/1');
-        $this->end_date = strtotime('2015/10/1');
-
-        $this->Evaluation->my_uid = 1;
-        $this->Evaluation->current_team_id = 1;
-        $this->notAllowEmptyArray = [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
-            ]
-        ];
 
     }
 
@@ -323,7 +357,7 @@ class EvaluationTest extends CakeTestCase
 
     function testGetEditableEvaluations()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->deleteAll(['evaluate_term_id' => 1]);
         $evaluateTermId = 1;
         $evaluateeId = 1;
@@ -415,7 +449,7 @@ class EvaluationTest extends CakeTestCase
      */
     function testSetAllowEmptyToCommentCaseOfEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['comment'] = [];
         $this->Evaluation->setAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], []);
@@ -424,7 +458,7 @@ class EvaluationTest extends CakeTestCase
 
     function testSetAllowEmptyToCommentCaseOfNotEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['comment'] = $this->notAllowEmptyArray;
         $this->Evaluation->setAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], []);
@@ -437,7 +471,7 @@ class EvaluationTest extends CakeTestCase
      */
     public function testSetNotAllowEmptyToCommentCaseOfEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['comment'] = [];
         $this->Evaluation->setNotAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], $this->notAllowEmptyArray);
@@ -446,7 +480,7 @@ class EvaluationTest extends CakeTestCase
 
     public function testSetNotAllowEmptyToCommentCaseOfNotEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['comment'] = $this->notAllowEmptyArray;
         $this->Evaluation->setNotAllowEmptyToComment();
         $this->assertEquals($this->Evaluation->validate['comment'], $this->notAllowEmptyArray);
@@ -459,7 +493,7 @@ class EvaluationTest extends CakeTestCase
      */
     public function testSetAllowEmptyToEvaluateScoreIdCaseOfEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['evaluate_score_id'] = [];
         $this->Evaluation->setAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], []);
@@ -467,7 +501,7 @@ class EvaluationTest extends CakeTestCase
 
     public function testSetAllowEmptyToEvaluateScoreIdCaseOfNotEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['evaluate_score_id'] = $this->notAllowEmptyArray;
         $this->Evaluation->setAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], []);
@@ -480,7 +514,7 @@ class EvaluationTest extends CakeTestCase
      */
     public function testSetNotAllowEmptyToEvaluateScoreIdCaseOfEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['evaluate_score_id'] = [];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $this->notAllowEmptyArray);
@@ -488,7 +522,7 @@ class EvaluationTest extends CakeTestCase
 
     public function testSetNotAllowEmptyToEvaluateScoreIdCaseOfNotEmpty()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Evaluation->validate['evaluate_score_id'] = $this->notAllowEmptyArray;
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $this->notAllowEmptyArray);
@@ -604,6 +638,14 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
         $this->Evaluation->Goal->Collaborator->current_team_id = 1;
         $this->Evaluation->Goal->Collaborator->my_uid = 1;
+        $this->current_date = strtotime('2015/7/1');
+        $this->start_date = strtotime('2015/7/1');
+        $this->end_date = strtotime('2015/10/1');
+        $this->notAllowEmptyArray = [
+            'notEmpty' => [
+                'rule' => 'notEmpty'
+            ]
+        ];
     }
 
 }

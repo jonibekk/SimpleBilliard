@@ -142,6 +142,33 @@ class Evaluation extends AppModel
         return true;
     }
 
+    /**
+     * @param $termId
+     * @param $evaluateeId
+     *
+     * @return bool
+     */
+    function checkAvailParameterInEvalForm($termId, $evaluateeId)
+    {
+        if (!$termId || !$evaluateeId) {
+            throw new RuntimeException(__d('gl', "パラメータが不正です。"));
+        }
+
+        if ($evaluateeId != $this->my_uid) {
+            throw new RuntimeException(__d('gl', "現在、自己評価以外の評価はできません。"));
+        }
+
+        if (!$this->Team->EvaluateTerm->checkTermAvailable($termId)) {
+            throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
+        }
+
+        if ($this->getStatus($termId, $evaluateeId, $this->my_uid) === null) {
+            throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
+        }
+
+        return true;
+    }
+
     function getMyEvaluation()
     {
         $options = [
@@ -216,12 +243,18 @@ class Evaluation extends AppModel
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal' => [
-                    'KeyResult',
+                    'KeyResult'    => [
+                        'conditions' => [
+                            'NOT' => [
+                                'completed' => null
+                            ]
+                        ]
+                    ],
                     'GoalCategory',
                     'MyCollabo',
                     'ActionResult' => [
                         'conditions' => [
-                            'user_id' => $evaluateeId
+                            'user_id' => $evaluateeId,
                         ],
                         'fields'     => [
                             'id'
@@ -299,6 +332,14 @@ class Evaluation extends AppModel
         }
         if (!empty($all_evaluations)) {
             $res = $this->saveAll($all_evaluations);
+            //set my_turn
+            $this->updateAll(['Evaluation.my_turn_flg' => true],
+                             ['Evaluation.team_id'          => $this->current_team_id,
+                              'Evaluation.evaluate_term_id' => $term_id,
+                              'Evaluation.index_num'        => 0,
+                             ]
+            );
+
             return (bool)$res;
         }
         return false;
@@ -494,4 +535,17 @@ class Evaluation extends AppModel
         return (isset($res['Evaluation']['evaluate_type'])) ? $res['Evaluation']['evaluate_type'] : false;
     }
 
+    function getMyTurnCount()
+    {
+        $options = [
+            'conditions' => [
+                'evaluator_user_id' => $this->my_uid,
+                'team_id'           => $this->current_team_id,
+                'my_turn_flg'       => true,
+            ],
+        ];
+        $count = $this->find('count', $options);
+        return $count;
+    }
+    
 }

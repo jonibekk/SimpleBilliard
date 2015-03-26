@@ -94,19 +94,85 @@ class EvaluationsControllerTest extends ControllerTestCase
      *
      * @return void
      */
+
     public function testView()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $records = [
+            [
+                'id'                => 1,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => 0,
+                'comment'           => "a",
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => 1,
+                'status'            => 2
+            ],
+        ];
+        $Evaluations->Evaluation->saveAll($records);
+        $this->testAction("/evaluations/view/{$termId}/1", ['method' => 'GET']);
+    }
+
+    public function testViewNotExistTotal()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $records = [
+            [
+                'id'                => 1,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => 0,
+                'comment'           => "a",
+                'evaluate_score_id' => 1,
+                'index'             => 0,
+                'goal_id'           => null,
+                'status'            => 1
+            ],
+            [
+                'id'                => 2,
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => 0,
+                'comment'           => "b",
+                'evaluate_score_id' => 1,
+                'index'             => 1,
+                'goal_id'           => 1,
+                'status'            => 1
+            ],
+        ];
+        $Evaluations->Evaluation->saveAll($records);
+        $this->testAction("/evaluations/view/{$termId}/1", ['method' => 'GET']);
+    }
+
+    public function testViewNotEnabled()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $res = $Evaluations->Evaluation->Team->EvaluationSetting->findByTeamId(1);
+        $Evaluations->Evaluation->Team->EvaluationSetting->id = $res['EvaluationSetting']['id'];
+        $Evaluations->Evaluation->Team->EvaluationSetting->saveField('enable_flg', false);
         $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 
-    public function testViewNotMatchParamater()
+    public function testViewNotMatchParameter()
     {
         $this->_getEvaluationsCommonMock();
         $this->testAction('/evaluations/view/1/2', ['method' => 'GET']);
     }
 
-    public function testViewNotExistParamater()
+    public function testViewNotExistParameter()
     {
         $this->_getEvaluationsCommonMock();
         $this->testAction('/evaluations/view/', ['method' => 'GET']);

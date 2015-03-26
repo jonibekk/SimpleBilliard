@@ -45,18 +45,26 @@ class EvaluationsController extends AppController
 
     function view($evaluateTermId = null, $evaluateeId = null)
     {
-        if (!$evaluateTermId || !$evaluateeId) {
-            $this->Pnotify->outError(__d('gl', "パラメータが不正です。"));
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        try {
+            $this->Evaluation->checkAvailViewEvaluationList();
+            if (!$this->Team->EvaluationSetting->isEnabled()) {
+                throw new RuntimeException(__d('gl', "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"));
+            }
+            $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
-
+        
         $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
         if (empty($evaluationList)) {
             $this->Pnotify->outError(__d('gl', "このページにはアクセスできません。"));
             return $this->redirect($this->referer());
         }
-
-        $this->layout = LAYOUT_ONE_COLUMN;
+        
         $teamId = $this->Session->read('current_team_id');
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
         $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
