@@ -158,7 +158,7 @@ class Evaluation extends AppModel
             throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
         }
 
-        if ($this->getStatus($termId, $evaluateeId, $this->my_uid) === null) {
+        if ($this->getStatus($termId, $evaluateeId, $this->my_uid) === false) {
             throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
         }
 
