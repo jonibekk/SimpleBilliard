@@ -61,7 +61,7 @@ class EvaluationsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
-        
+
         $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
         
         $teamId = $this->Session->read('current_team_id');

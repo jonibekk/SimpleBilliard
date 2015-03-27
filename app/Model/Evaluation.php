@@ -158,7 +158,7 @@ class Evaluation extends AppModel
             throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
         }
 
-        if ($this->getStatus($termId, $evaluateeId, $this->my_uid) === false) {
+        if ($this->getStatus($termId, $evaluateeId, $this->my_uid) === null) {
             throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
         }
 
@@ -170,15 +170,15 @@ class Evaluation extends AppModel
         $nextEvaluatorId = $this->getNextEvaluatorId($termId, $evaluateeId);
         $options = [
             'conditions' => [
-                'evaluator_user_id' => [
-                    $nextEvaluatorId, $this->my_uid
+                'OR' => [
+                    ['evaluator_user_id' => $nextEvaluatorId],
+                    ['evaluator_user_id' => $this->my_uid]
                 ],
                 'evaluatee_user_id' => $evaluateeId,
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
             ],
         ];
-
         if(empty($this->find("all", $options))) {
             throw new RuntimeException(__d('gl', "あなたが評価する順番ではありません。"));
         }
@@ -561,7 +561,7 @@ class Evaluation extends AppModel
             'order'      => ['index_num' => 'asc']
         ];
         $res = $this->find("first", $options);
-        return (isset($res['Evaluation']['status'])) ? $res['Evaluation']['status'] : false;
+        return viaIsSet($res['Evaluation']['status']);
     }
 
     function getEvaluateType($evaluateTermId, $evaluateeId) {
@@ -630,12 +630,21 @@ class Evaluation extends AppModel
             ]
         ];
         $res = $this->find("all", $options);
-        $myIndex = Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]")[0]['index_num'];
+        if(empty($res)) {
+            return null;
+        }
+
+        $myIndex = viaIsSet(Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]")[0]['index_num']);
+        if($myIndex === null) {
+            return null;
+        }
+
         $nextIndex = (int)$myIndex + 1;
-        $nextId = Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['evaluator_user_id'];
+        $nextId = viaIsSet(Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['evaluator_user_id']);
         if(empty($nextId)) {
             return null;
         }
+
         return $nextId;
     }
 
@@ -645,7 +654,7 @@ class Evaluation extends AppModel
             'evaluatee_user_id' => $evaluateeId,
             'evaluate_term_id'  => $termId
         ];
-        $this->updateAll(['my_turn_flg' => 1], $conditions);
+        $this->updateAll(['my_turn_flg' => true], $conditions);
     }
 
     function setMyTurnFlgOff($termId, $evaluateeId, $targetUserId) {
@@ -654,7 +663,7 @@ class Evaluation extends AppModel
             'evaluatee_user_id' => $evaluateeId,
             'evaluate_term_id'  => $termId
         ];
-        $this->updateAll(['my_turn_flg' => 0], $conditions);
+        $this->updateAll(['my_turn_flg' => false], $conditions);
     }
 
     
