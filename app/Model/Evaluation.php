@@ -165,6 +165,26 @@ class Evaluation extends AppModel
         return true;
     }
 
+    function checkAvailEditable($termId, $evaluateeId)
+    {
+        $nextEvaluatorId = $this->getNextEvaluatorId($evaluateeId, $termId);
+        $options = [
+            'conditions' => [
+                'evaluator_user_id' => [
+                    $nextEvaluatorId, $this->my_uid
+                ],
+                'team_id'           => $this->current_team_id,
+                'my_turn_flg'       => true,
+            ],
+        ];
+
+        if(empty($this->find("all", $options))) {
+            throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
+        }
+        return true;
+
+    }
+
     function getMyEvaluation()
     {
         $options = [
@@ -554,7 +574,7 @@ class Evaluation extends AppModel
         return viaIsSet($res['Evaluation']['evaluatee_user_id']);
     }
 
-    function getNextEvaluatorId($evaluateeId, $termId) {
+    function getNextEvaluatorId($termId, $evaluateeId) {
         $options = [
             'conditions' => [
                 'evaluatee_user_id' => $evaluateeId,
@@ -575,7 +595,7 @@ class Evaluation extends AppModel
         return $nextId;
     }
 
-    function setMyTurnFlgOn($targetUserId, $evaluateeId, $termId) {
+    function setMyTurnFlgOn($termId, $targetUserId, $evaluateeId) {
         $options = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
@@ -584,7 +604,7 @@ class Evaluation extends AppModel
         $this->updateAll(['my_turn_flg' => 1], $options);
     }
 
-    function setMyTurnFlgOff($targetUserId, $evaluateeId, $termId) {
+    function setMyTurnFlgOff($termId, $targetUserId, $evaluateeId) {
         $options = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
