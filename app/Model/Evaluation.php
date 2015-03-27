@@ -514,7 +514,6 @@ class Evaluation extends AppModel
                     $status_text['body'] = __d('gl', "評価をしてください");
                     break;
             }
-
         }
         $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
         $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
@@ -641,21 +640,21 @@ class Evaluation extends AppModel
     }
 
     function setMyTurnFlgOn($termId, $targetUserId, $evaluateeId) {
-        $options = [
+        $conditions = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
             'evaluate_term_id'  => $termId
         ];
-        $this->updateAll(['my_turn_flg' => 1], $options);
+        $this->updateAll(['my_turn_flg' => 1], $conditions);
     }
 
     function setMyTurnFlgOff($termId, $targetUserId, $evaluateeId) {
-        $options = [
+        $conditions = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
             'evaluate_term_id'  => $termId
         ];
-        $this->updateAll(['my_turn_flg' => 0], $options);
+        $this->updateAll(['my_turn_flg' => 0], $conditions);
     }
 
     
