@@ -197,7 +197,7 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    public function add($data, $saveType)
+    function add($data, $saveType)
     {
         // insert status value to save data
         if ($saveType === "draft") {
@@ -276,14 +276,14 @@ class Evaluation extends AppModel
         return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
     }
 
-    public function setDraftValidation()
+    function setDraftValidation()
     {
         $this->setAllowEmptyToComment();
         $this->setAllowEmptyToEvaluateScoreId();
         return;
     }
 
-    public function setAllowEmptyToComment()
+    function setAllowEmptyToComment()
     {
         if (isset($this->validate['comment']['notEmpty'])) {
             unset($this->validate['comment']['notEmpty']);
@@ -291,7 +291,7 @@ class Evaluation extends AppModel
         return;
     }
 
-    public function setNotAllowEmptyToComment()
+    function setNotAllowEmptyToComment()
     {
         if (isset($this->validate['comment']['notEmpty'])) {
             return;
@@ -300,7 +300,7 @@ class Evaluation extends AppModel
         return;
     }
 
-    public function setAllowEmptyToEvaluateScoreId()
+    function setAllowEmptyToEvaluateScoreId()
     {
         if (isset($this->validate['evaluate_score_id']['notEmpty'])) {
             unset($this->validate['evaluate_score_id']['notEmpty']);
@@ -308,7 +308,7 @@ class Evaluation extends AppModel
         return;
     }
 
-    public function setNotAllowEmptyToEvaluateScoreId()
+    function setNotAllowEmptyToEvaluateScoreId()
     {
         if (isset($this->validate['evaluate_score_id']['notEmpty'])) {
             return;
