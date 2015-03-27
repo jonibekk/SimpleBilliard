@@ -682,20 +682,43 @@ class EvaluationTest extends CakeTestCase
         $this->_saveEvaluations();
         $expectedEvaluatorId = 2;
 
-        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId(1, 1);
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, 1);
         $this->assertEquals($nextEvaluatorId, $expectedEvaluatorId);
+    }
+
+    function testGetNextEvaluatorIdNextIsNull()
+    {
+        $this->_setDefault();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
+        $evaluatee_user_id = 1;
+
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $this->Evaluation->evaluate_term_id,
+                'evaluatee_user_id' => $evaluatee_user_id
+            ],
+            'order' => [
+                'index_num desc',
+                'id desc'
+            ]
+        ];
+        $res = $this->Evaluation->find('first',$options);
+        $lastEvaluator = $res['Evaluation']['evaluator_user_id'];
+
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, $lastEvaluator);
+        $this->assertEquals($nextEvaluatorId, null);
     }
 
     function _saveEvaluations()
     {
-        $evaluateTermId = 1;
         $evaluateeId = 1;
         $records = [
             [
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => null,
@@ -707,7 +730,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => null,
@@ -719,7 +742,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => null,
@@ -731,7 +754,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => 1,
@@ -743,7 +766,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => 1,
@@ -755,7 +778,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => 1,
@@ -767,7 +790,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => 2,
@@ -779,7 +802,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => 2,
@@ -791,7 +814,7 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $evaluateTermId,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'goal_id'           => 2,
@@ -807,6 +830,7 @@ class EvaluationTest extends CakeTestCase
     {
         $this->Evaluation->current_team_id = 1;
         $this->Evaluation->my_uid = 1;
+        $this->Evaluation->evaluate_term_id = 1;
         $this->Evaluation->Team->TeamMember->current_team_id = 1;
         $this->Evaluation->Team->TeamMember->my_uid = 1;
         $this->Evaluation->Team->EvaluateTerm->current_team_id = 1;
