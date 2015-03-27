@@ -156,6 +156,19 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction("/evaluations/view/{$termId}/1", ['method' => 'GET']);
     }
 
+    public function testViewNotExistGoal()
+    {
+
+    }
+
+    public function testViewNotMyTern()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
+        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
+    }
+
     public function testViewNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
@@ -166,94 +179,21 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 
-    public function testViewNotMatchParameter()
+
+    public function testViewIncorrectEvaluateeId()
     {
-        $this->_getEvaluationsCommonMock();
-        $this->testAction('/evaluations/view/1/2', ['method' => 'GET']);
+
+    }
+
+    public function testViewIncorrectTermId()
+    {
+
     }
 
     public function testViewNotExistParameter()
     {
         $this->_getEvaluationsCommonMock();
         $this->testAction('/evaluations/view/', ['method' => 'GET']);
-    }
-
-    public function testViewNotExistEditableEvaluation()
-    {
-        $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
-        $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
-        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
-    }
-
-    public function testViewNotExistTotalEvaluation()
-    {
-        $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Evaluation->deleteAll(['evaluate_term_id' => 1]);
-        $records = [
-            [
-                'id'                => 1,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 2,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'index_num'         => 0,
-                'goal_id'           => 1,
-            ],
-            [
-                'id'                => 2,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 1,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'index_num'         => 1,
-                'goal_id'           => 2,
-            ],
-            [
-                'id'                => 3,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 1,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'index_num'         => 2,
-                'goal_id'           => 3,
-            ],
-            [
-                'id'                => 4,
-                'team_id'           => 1,
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 1,
-                'evaluate_term_id'  => 1,
-                'evaluate_type'     => 0,
-                'index_num'         => 3,
-                'goal_id'           => 10,
-            ],
-            [
-                'id'                => 5,
-                'team_id'           => 2,
-                'evaluatee_user_id' => 2,
-                'evaluator_user_id' => 2,
-                'evaluate_term_id'  => 2,
-                'evaluate_type'     => 0,
-                'index_num'         => 0,
-                'goal_id'           => 11,
-            ],
-            [
-                'id'                => 6,
-                'team_id'           => 2,
-                'evaluatee_user_id' => 2,
-                'evaluator_user_id' => 2,
-                'evaluate_term_id'  => 2,
-                'evaluate_type'     => 0,
-                'index_num'         => 1,
-                'goal_id'           => 12,
-            ],
-        ];
-        $Evaluations->Evaluation->saveAll($records);
-        $this->testAction('/evaluations/view/1/1', ['method' => 'GET']);
     }
 
     /**
