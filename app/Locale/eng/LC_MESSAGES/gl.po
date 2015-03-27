@@ -513,7 +513,7 @@ msgstr "%1$s%2$s commented on your post."
 
 #: Model/Notification.php:280
 msgid "%1$s%2$sも投稿にコメントしました。"
-msgstr "%1$s%2$s also commented on your post."
+msgstr "%1$s%2$s also commented on a post."
 
 #: Model/Notification.php:284
 msgid "%1$s%2$sがサークル「%3$s」に参加しました。"
