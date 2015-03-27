@@ -687,7 +687,7 @@ class EvaluationTest extends CakeTestCase
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 2,
                 'evaluate_term_id'  => 1,
-                'goal_id' => null
+                'goal_id'           => null
             ]
         ];
         $res = $this->Evaluation->find("first", $options);
@@ -697,7 +697,8 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals($nextEvaluatorId, $expectedId);
     }
 
-    function _saveEvaluations() {
+    function _saveEvaluations()
+    {
         $evaluateTermId = 1;
         $evaluateeId = 1;
         $records = [

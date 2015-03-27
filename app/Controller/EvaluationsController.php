@@ -63,7 +63,7 @@ class EvaluationsController extends AppController
         }
 
         $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
-        
+
         $teamId = $this->Session->read('current_team_id');
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
         $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
@@ -73,7 +73,8 @@ class EvaluationsController extends AppController
         $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));
         if ($existTotalEval) {
             $totalList = array_shift($evaluationList);
-        } else {
+        }
+        else {
             $totalList = [];
         }
         $goalList = $evaluationList;
@@ -84,7 +85,8 @@ class EvaluationsController extends AppController
                 $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($eval['Goal']);
             }
         }
-        $this->set(compact('scoreList', 'totalList', 'goalList', 'evaluateTermId', 'evaluateeId', 'evaluateType', 'status', 'saveIndex'));
+        $this->set(compact('scoreList', 'totalList', 'goalList', 'evaluateTermId', 'evaluateeId', 'evaluateType',
+                           'status', 'saveIndex'));
     }
 
     function add()

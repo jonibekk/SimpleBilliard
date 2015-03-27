@@ -250,7 +250,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$incorrectTermId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/{$incorrectTermId}/{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewNotExistParameter()

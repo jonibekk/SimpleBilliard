@@ -170,7 +170,7 @@ class Evaluation extends AppModel
         $nextEvaluatorId = $this->getNextEvaluatorId($termId, $evaluateeId);
         $options = [
             'conditions' => [
-                'OR' => [
+                'OR'                => [
                     ['evaluator_user_id' => $nextEvaluatorId],
                     ['evaluator_user_id' => $this->my_uid]
                 ],
@@ -179,7 +179,7 @@ class Evaluation extends AppModel
                 'my_turn_flg'       => true,
             ],
         ];
-        if(empty($this->find("all", $options))) {
+        if (empty($this->find("all", $options))) {
             throw new RuntimeException(__d('gl', "あなたが評価する順番ではありません。"));
         }
         return true;
@@ -221,13 +221,13 @@ class Evaluation extends AppModel
             }
         }
 
-        if($saveType === "register") {
+        if ($saveType === "register") {
             $baseEvaId = $data[0]['Evaluation']['id'];
             $termId = $this->getTermIdByEvaluationId($baseEvaId);
             $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
             $nextEvaluatorId = $this->getNextEvaluatorId($termId, $evaluateeId);
 
-            if($nextEvaluatorId) {
+            if ($nextEvaluatorId) {
                 $this->setMyTurnFlgOn($termId, $evaluateeId, $nextEvaluatorId);
             }
             $this->setMyTurnFlgOff($termId, $evaluateeId, $this->my_uid);
@@ -564,7 +564,8 @@ class Evaluation extends AppModel
         return viaIsSet($res['Evaluation']['status']);
     }
 
-    function getEvaluateType($evaluateTermId, $evaluateeId) {
+    function getEvaluateType($evaluateTermId, $evaluateeId)
+    {
         $options = [
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
@@ -594,61 +595,65 @@ class Evaluation extends AppModel
         return $count;
     }
 
-    function getTermIdByEvaluationId($evaluationId) {
+    function getTermIdByEvaluationId($evaluationId)
+    {
         $res = $this->find("first", [
             'conditions' => [
                 'id' => $evaluationId
             ],
-            'fields' => [
+            'fields'     => [
                 'evaluate_term_id'
             ]
         ]);
         return viaIsSet($res['Evaluation']['evaluate_term_id']);
     }
 
-    function getEvaluateeIdByEvaluationId($evaluateeId) {
+    function getEvaluateeIdByEvaluationId($evaluateeId)
+    {
         $res = $this->find("first", [
             'conditions' => [
                 'id' => $evaluateeId
             ],
-            'fields' => [
+            'fields'     => [
                 'evaluatee_user_id'
             ]
         ]);
         return viaIsSet($res['Evaluation']['evaluatee_user_id']);
     }
 
-    function getNextEvaluatorId($termId, $evaluateeId) {
+    function getNextEvaluatorId($termId, $evaluateeId)
+    {
         $options = [
             'conditions' => [
                 'evaluatee_user_id' => $evaluateeId,
                 'evaluate_term_id'  => $termId,
-                'goal_id' => null
+                'goal_id'           => null
             ],
-            'order' => [
+            'order'      => [
                 'index_num asc'
             ]
         ];
         $res = $this->find("all", $options);
-        if(empty($res)) {
+        if (empty($res)) {
             return null;
         }
 
         $myIndex = viaIsSet(Hash::extract($res, "{n}.Evaluation[evaluator_user_id={$this->my_uid}]")[0]['index_num']);
-        if($myIndex === null) {
+        if ($myIndex === null) {
             return null;
         }
 
         $nextIndex = (int)$myIndex + 1;
         $nextId = viaIsSet(Hash::extract($res, "{n}.Evaluation[index_num={$nextIndex}]")[0]['evaluator_user_id']);
-        if(empty($nextId)) {
+        if (empty($nextId)) {
             return null;
         }
 
         return $nextId;
     }
 
-    function setMyTurnFlgOn($termId, $evaluateeId, $targetUserId) {
+    function setMyTurnFlgOn($termId, $evaluateeId, $targetUserId)
+    {
         $conditions = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
@@ -657,7 +662,8 @@ class Evaluation extends AppModel
         $this->updateAll(['my_turn_flg' => true], $conditions);
     }
 
-    function setMyTurnFlgOff($termId, $evaluateeId, $targetUserId) {
+    function setMyTurnFlgOff($termId, $evaluateeId, $targetUserId)
+    {
         $conditions = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
@@ -666,5 +672,4 @@ class Evaluation extends AppModel
         $this->updateAll(['my_turn_flg' => false], $conditions);
     }
 
-    
 }
