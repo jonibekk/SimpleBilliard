@@ -173,16 +173,16 @@ class Evaluation extends AppModel
                 'evaluator_user_id' => [
                     $nextEvaluatorId, $this->my_uid
                 ],
+                'evaluatee_user_id' => $evaluateeId,
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
             ],
         ];
 
         if(empty($this->find("all", $options))) {
-            throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
+            throw new RuntimeException(__d('gl', "あなたが評価する順番ではありません。"));
         }
         return true;
-
     }
 
     function getMyEvaluation()
@@ -225,12 +225,12 @@ class Evaluation extends AppModel
             $baseEvaId = $data[0]['Evaluation']['id'];
             $termId = $this->getTermIdByEvaluationId($baseEvaId);
             $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
-            $nextEvaluatorId = $this->getNextEvaluatorId($evaluateeId, $termId);
+            $nextEvaluatorId = $this->getNextEvaluatorId($termId, $evaluateeId);
 
             if($nextEvaluatorId) {
-                $this->setMyTurnFlgOn($nextEvaluatorId, $evaluateeId, $termId);
+                $this->setMyTurnFlgOn($termId, $evaluateeId, $nextEvaluatorId);
             }
-            $this->setMyTurnFlgOff($this->my_uid, $evaluateeId, $termId);
+            $this->setMyTurnFlgOff($termId, $evaluateeId, $this->my_uid);
         }
 
         return true;
@@ -639,7 +639,7 @@ class Evaluation extends AppModel
         return $nextId;
     }
 
-    function setMyTurnFlgOn($termId, $targetUserId, $evaluateeId) {
+    function setMyTurnFlgOn($termId, $evaluateeId, $targetUserId) {
         $conditions = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
@@ -648,7 +648,7 @@ class Evaluation extends AppModel
         $this->updateAll(['my_turn_flg' => 1], $conditions);
     }
 
-    function setMyTurnFlgOff($termId, $targetUserId, $evaluateeId) {
+    function setMyTurnFlgOff($termId, $evaluateeId, $targetUserId) {
         $conditions = [
             'evaluator_user_id' => $targetUserId,
             'evaluatee_user_id' => $evaluateeId,
