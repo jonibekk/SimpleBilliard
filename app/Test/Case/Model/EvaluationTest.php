@@ -191,13 +191,6 @@ class EvaluationTest extends CakeTestCase
                     'evaluate_score_id' => 1,
                 ],
             ],
-            [
-                'Evaluation' => [
-                    'id'                => 4,
-                    'comment'           => 'たちつてと',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
         ];
         $res = $this->Evaluation->add($draftData, "draft");
         $this->assertNotEmpty($res, "[正常]下書き保存");
@@ -236,13 +229,6 @@ class EvaluationTest extends CakeTestCase
                 'Evaluation' => [
                     'id'                => 3,
                     'comment'           => 'さしすせそ',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-            [
-                'Evaluation' => [
-                    'id'                => 4,
-                    'comment'           => 'たちつてと',
                     'evaluate_score_id' => 1,
                 ],
             ],
@@ -288,15 +274,39 @@ class EvaluationTest extends CakeTestCase
                     'evaluate_score_id' => null,
                 ],
             ],
+        ];
+        $this->setExpectedException('RuntimeException');
+        $this->Evaluation->add($registerData, "register");
+    }
+
+    function testAddRegisterAsLastEvaluatorInEvaluator()
+    {
+        $this->_setDefault();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
+        $registerData = [
             [
                 'Evaluation' => [
-                    'id'                => 4,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
+                    'id'                => 3,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 6,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 9,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
                 ],
             ],
         ];
-        $this->setExpectedException('RuntimeException');
         $this->Evaluation->add($registerData, "register");
     }
 
@@ -716,6 +726,7 @@ class EvaluationTest extends CakeTestCase
         $records = [
             [
                 'Evaluation' => [
+                    'id' => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -728,6 +739,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 2,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -740,6 +752,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 3,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -752,6 +765,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 4,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -764,6 +778,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 5,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -776,6 +791,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 6,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -788,6 +804,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 7,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -800,6 +817,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 8,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
@@ -812,6 +830,7 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
+                    'id' => 9,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
