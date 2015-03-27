@@ -31,16 +31,18 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $incomplete_count = 0;
         //get evaluation setting.
-        $eval_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $my_eval_status = $this->Evaluation->getMyEvalStatus($eval_term_id);
-        $is_myself_evaluations_incomplete = $this->Evaluation->isMySelfEvalIncomplete($eval_term_id);
-        if ($is_myself_evaluations_incomplete) {
-            $incomplete_count++;
-        }
-
-        $this->set(compact('eval_term_id', 'incomplete_count', 'is_myself_evaluations_incomplete', 'my_eval_status'));
+        $eval_term_id = $this->Team->EvaluateTerm->getLatestTermId();
+        $total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
+        $total_incomplete_count_as_evaluator = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
+        $my_eval[] = $this->Evaluation->getEvalStatus($eval_term_id, $this->Auth->user('id'));
+        $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($eval_term_id);
+        $this->set(compact('total_incomplete_count_my_eval',
+                           'total_incomplete_count_as_evaluator',
+                           'my_evaluatees',
+                           'my_eval',
+                           'eval_term_id'
+                   ));
     }
 
     function view($evaluateTermId = null, $evaluateeId = null)
