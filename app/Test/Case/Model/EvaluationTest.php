@@ -87,54 +87,6 @@ class EvaluationTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testAddDrafts()
-    {
-        $this->_setDefault();
-
-        $draftData = [
-            [
-                'Evaluation' => [
-                    'id'                => 1,
-                    'comment'           => 'あいうえお',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-            [
-                'Evaluation' => [
-                    'id'                => 2,
-                    'comment'           => 'かきくけこ',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-            [
-                'Evaluation' => [
-                    'id'                => 3,
-                    'comment'           => 'さしすせそ',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-            [
-                'Evaluation' => [
-                    'id'                => 4,
-                    'comment'           => 'たちつてと',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-        ];
-        $res = $this->Evaluation->add($draftData, "draft");
-        $this->assertNotEmpty($res, "[正常]下書き保存");
-        $res = $this->Evaluation->find('all',
-                                       [
-                                           'conditions' => [
-                                               'evaluatee_user_id' => 1,
-                                               'evaluate_term_id'  => 1,
-                                               'status'            => 1
-                                           ]
-                                       ]
-        );
-        $this->assertEquals(count($res), count($draftData));
-    }
-
     function testCheckAvailViewEvaluateListNoTeamMember()
     {
         $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
@@ -211,6 +163,54 @@ class EvaluationTest extends CakeTestCase
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e));
+    }
+
+    function testAddDrafts()
+    {
+        $this->_setDefault();
+
+        $draftData = [
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+        ];
+        $res = $this->Evaluation->add($draftData, "draft");
+        $this->assertNotEmpty($res, "[正常]下書き保存");
+        $res = $this->Evaluation->find('all',
+                                       [
+                                           'conditions' => [
+                                               'evaluatee_user_id' => 1,
+                                               'evaluate_term_id'  => 1,
+                                               'status'            => 1
+                                           ]
+                                       ]
+        );
+        $this->assertEquals(count($res), count($draftData));
     }
 
     function testAddRegisters()
@@ -298,7 +298,6 @@ class EvaluationTest extends CakeTestCase
         ];
         $this->setExpectedException('RuntimeException');
         $this->Evaluation->add($registerData, "register");
-
     }
 
     function testCheckAvailViewEvaluateListTrue()
@@ -681,20 +680,10 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $this->_saveEvaluations();
-
-        $options = [
-            'conditions' => [
-                'evaluatee_user_id' => 1,
-                'evaluator_user_id' => 2,
-                'evaluate_term_id'  => 1,
-                'goal_id'           => null
-            ]
-        ];
-        $res = $this->Evaluation->find("first", $options);
-        $expectedId = $res['Evaluation']['id'];
+        $expectedEvaluatorId = 2;
 
         $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId(1, 1);
-        $this->assertEquals($nextEvaluatorId, $expectedId);
+        $this->assertEquals($nextEvaluatorId, $expectedEvaluatorId);
     }
 
     function _saveEvaluations()
