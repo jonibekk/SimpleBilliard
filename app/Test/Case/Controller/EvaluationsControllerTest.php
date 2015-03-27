@@ -127,6 +127,41 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
     }
 
+    public function testViewNotEnabled()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $records = [
+            [
+                'team_id'           => $Evaluations->Evaluation->current_team_id,
+                'evaluatee_user_id' => $Evaluations->Evaluation->my_uid,
+                'evaluator_user_id' => $Evaluations->Evaluation->my_uid,
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => 0,
+                'index_num'         => 0,
+                'my_turn_flg'       => true,
+                'goal_id'           => null,
+            ],
+            [
+                'team_id'           => $Evaluations->Evaluation->current_team_id,
+                'evaluatee_user_id' => $Evaluations->Evaluation->my_uid,
+                'evaluator_user_id' => $Evaluations->Evaluation->my_uid,
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => 0,
+                'index_num'         => 1,
+                'my_turn_flg'       => true,
+                'goal_id'           => 1,
+            ],
+        ];
+        $Evaluations->Evaluation->saveAll($records);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $res = $Evaluations->Evaluation->Team->EvaluationSetting->findByTeamId(1);
+        $Evaluations->Evaluation->Team->EvaluationSetting->id = $res['EvaluationSetting']['id'];
+        $Evaluations->Evaluation->Team->EvaluationSetting->saveField('enable_flg', false);
+        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+    }
+
     public function testViewNotExistTotal()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
