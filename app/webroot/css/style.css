@@ -632,6 +632,10 @@ textarea{
     padding-bottom: 8px;
 }
 
+.pl_1px {
+    padding-left: 1px;
+}
+
 .pl_2px {
     padding-left: 2px;
 }
