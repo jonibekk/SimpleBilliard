@@ -212,7 +212,7 @@ class Evaluation extends AppModel
         }
 
         foreach ($data as $key => $law) {
-            if (!$this->save($law, true, ['id', 'comment', 'status', 'evaluate_score_id'])) {
+            if (!$this->save($law)) {
                 if (!empty($this->validationErrors)) {
                     throw new RuntimeException(__d('validate', "入力内容に不足があります。"));
                 }

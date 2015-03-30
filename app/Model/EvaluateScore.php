@@ -67,7 +67,7 @@ class EvaluateScore extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
-        return [null => "選択してください"] + $res;
+        return [null => __d('gl', "選択してください")] + $res;
     }
 
 }
