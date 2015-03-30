@@ -83,7 +83,8 @@ class EvaluateScoreTest extends CakeTestCase
 
     function testGetScoreList()
     {
-        $this->EvaluateScore->deleteAll(['team_id' => 1]);
+        $teamId = 1;
+        $this->EvaluateScore->deleteAll(['team_id' => $teamId]);
         $data = [
             [
                 'team_id'     => 1,
@@ -123,7 +124,8 @@ class EvaluateScoreTest extends CakeTestCase
             ]
         ];
         $this->EvaluateScore->saveAll($data);
-        $expected = 4;
+        // plus 1 because add null index in getScoreList()
+        $expected = count(Hash::extract($data, "{n}[team_id={$teamId}]")) + 1;
 
         $res = $this->EvaluateScore->getScoreList(1);
         $this->assertEquals(count($res), $expected);
