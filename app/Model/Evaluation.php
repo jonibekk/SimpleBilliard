@@ -547,6 +547,7 @@ class Evaluation extends AppModel
                 'my_turn_flg'       => true,
                 'evaluate_type'     => $evaluate_type,
             ],
+            'group' => 'evaluatee_user_id'
         ];
         if (is_null($evaluate_type)) {
             unset($options['conditions']['evaluate_type']);
