@@ -51,22 +51,22 @@ class EvaluationsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         try {
+            // check authorities
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
                 throw new RuntimeException(__d('gl', "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"));
             }
-            $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
             $this->Evaluation->checkAvailEditable($evaluateTermId, $evaluateeId);
+
+            // get evaluation list
+            $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
 
-        $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
-
-        $teamId = $this->Session->read('current_team_id');
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
-        $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
+        $scoreList = $this->Evaluation->EvaluateScore->getScoreList($this->Session->read('current_team_id'));
         $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $this->Auth->user('id'));
         $saveIndex = 0;
 
@@ -85,8 +85,15 @@ class EvaluationsController extends AppController
                 $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($eval['Goal']);
             }
         }
-        $this->set(compact('scoreList', 'totalList', 'goalList', 'evaluateTermId', 'evaluateeId', 'evaluateType',
-                           'status', 'saveIndex'));
+        $this->set(compact('scoreList',
+                           'totalList',
+                           'goalList',
+                           'evaluateTermId',
+                           'evaluateeId',
+                           'evaluateType',
+                           'status',
+                           'saveIndex'
+                   ));
     }
 
     function add()

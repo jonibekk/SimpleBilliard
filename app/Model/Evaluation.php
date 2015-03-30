@@ -167,6 +167,7 @@ class Evaluation extends AppModel
 
     function checkAvailEditable($termId, $evaluateeId)
     {
+        $this->checkAvailParameterInEvalForm($termId, $evaluateeId);
         $nextEvaluatorId = $this->getNextEvaluatorId($termId, $evaluateeId);
         $options = [
             'conditions' => [
