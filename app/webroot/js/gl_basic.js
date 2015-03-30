@@ -1031,19 +1031,55 @@ $(function () {
 
 });
 
+//入力途中での警告表示
+//静的ページのにはすべて適用
+function setChangeWarningForAllStaticPage() {
+    //オートコンプリートでchangeしてしまうのを待つ
+    setTimeout(function () {
+        $("select,input,textarea").change(function () {
+            $(document).on('submit', 'form', function () {
+                $(window).off('beforeunload');
+            });
+            $("input[type=submit]").click(function () {
+                $(window).off('beforeunload');
+            });
+            if (!$(this).hasClass('disable-change-warning')) {
+                $(window).on('beforeunload', function () {
+                    return cake.message.notice.a;
+                });
+            }
+        });
+    }, 100);
+}
+
+//入力途中での警告表示
+//Ajaxエレメント中の適用したい要素にchange-warningクラスを指定
+function setChangeWarningForAjax() {
+    var flag = true;
+    $(".change-warning").keyup(function (e) {
+        console.log('keyup');
+        $(document).on('submit', 'form', function () {
+            flag = false;
+        });
+        $("input[type=submit]").click(function () {
+            flag = false
+        });
+        $(window).on('beforeunload', function () {
+            if (e.target.value !== "" && flag) {
+                return cake.message.notice.a;
+            }
+        })
+    })
+}
+
+
+$(function () {
+    $(document).ajaxComplete(setChangeWarningForAjax);
+});
+
 $(document).ready(function () {
-    //入力途中での警告表示
-    //TODO 後で対応する。issue #1349
-    //$("input,select,textarea").change(function () {
-    //    if (!$(this).hasClass('disable-change-warning')) {
-    //        $(window).on('beforeunload', function () {
-    //            return cake.message.notice.a;
-    //        });
-    //    }
-    //});
-    $("input[type=submit]").click(function () {
-        $(window).off('beforeunload');
-    });
+
+    setChangeWarningForAllStaticPage();
 
     //noinspection JSUnresolvedFunction
     var client = new ZeroClipboard($('.copy_me'));

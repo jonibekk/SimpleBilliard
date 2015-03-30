@@ -51,7 +51,7 @@
                     'rows'           => 1,
                     'required'       => true,
                     'placeholder'    => __d('gl', "何か投稿しよう"),
-                    'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align',
+                    'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align change-warning',
                     'target_show_id' => "PostFormFooter",
                     'target-id'      => "PostSubmit",
                     "required"       => false
