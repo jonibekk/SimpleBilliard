@@ -1034,22 +1034,25 @@ $(function () {
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
+    var flag = true;
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
         $("select,input,textarea").change(function () {
             $(document).on('submit', 'form', function () {
-                $(window).off('beforeunload');
+                flag = false;
             });
             $("input[type=submit]").click(function () {
-                $(window).off('beforeunload');
+                flag = false;
             });
             if (!$(this).hasClass('disable-change-warning')) {
                 $(window).on('beforeunload', function () {
-                    return cake.message.notice.a;
+                    if (flag) {
+                        return cake.message.notice.a;
+                    }
                 });
             }
         });
-    }, 100);
+    }, 2000);
 }
 
 //入力途中での警告表示
@@ -1057,7 +1060,6 @@ function setChangeWarningForAllStaticPage() {
 function setChangeWarningForAjax() {
     var flag = true;
     $(".change-warning").keyup(function (e) {
-        console.log('keyup');
         $(document).on('submit', 'form', function () {
             flag = false;
         });
