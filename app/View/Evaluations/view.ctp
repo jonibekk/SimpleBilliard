@@ -40,6 +40,7 @@
                                        [
                                            'class'         => 'lazy comment-img',
                                            'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                                           'style'         => 'margin-right: 100%'
                                        ]
                     )
                     ?>
@@ -117,6 +118,7 @@
                                            [
                                                'class'         => 'lazy comment-img',
                                                'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                                               'style'         => 'margin-right: 100%'
                                            ]
                         )
                         ?>
@@ -317,11 +319,13 @@
                                [
                                    'class'         => 'lazy comment-img',
                                    'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                                   'style'         => 'margin-right: 100%'
                                ]
             )
             ?>
-            <?= h($eval['EvaluatorUser']['display_username']) ?>
+
             <div class="form-group">
+                <?= h($eval['EvaluatorUser']['display_username']) ?>
                 <div for="#" class="col col-sm-3 eval-view-panel-title">
                     <? if($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR):?>
                         <?= __d('gl', "評価者") ?>
@@ -394,6 +398,7 @@
                                        [
                                            'class'         => 'lazy comment-img',
                                            'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'], 'User.photo', ['style' => 'small']),
+                                           'style'         => 'margin-right: 100%'
                                        ]
                     )
                     ?>
