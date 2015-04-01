@@ -96,6 +96,8 @@ class Notification extends AppModel
         $notify = $this->getNotify($data['model_id'], $data['type']);
 
         //既に存在する通知リストを取得
+        //TODO create()
+        //:108に移動すべきと思われ、NewとEditが混在
         $this->create();
         if (!empty($notify)) {
             unset($notify['Notification']['modified']);
@@ -125,6 +127,8 @@ class Notification extends AppModel
                 'team_id'         => $this->current_team_id
             ];
         }
+        //TODO create()
+        //残すべきと思われ、単純なNew、ループにも対応
         $this->NotifyToUser->create();
         $this->NotifyToUser->saveAll($notify_user_data);
         $this->Team->TeamMember->incrementNotifyUnreadCount($user_ids);
@@ -178,6 +182,8 @@ class Notification extends AppModel
                             'team_id' => $this->current_team_id,
                         ]
                     ];
+                    //TODO create()
+                    //削除すべきと思われ、既存のnotifyをforeach
                     $this->create();
                     $this->saveAll($notify);
                     $saved_notify_ids[] = $notify['Notification']['id'];
@@ -205,6 +211,8 @@ class Notification extends AppModel
                         ]
                     ]
                 ];
+                //TODO create()
+                //残すべきと思われ、新規のの$uidをforeach
                 $this->create();
                 $this->saveAll($save_data);
                 $saved_notify_ids[] = $this->getLastInsertID();

@@ -320,6 +320,8 @@ class TeamMember extends AppModel
                 $this->csv_datas[$k]['User'] = $user['User'];
             }
             //save
+            //TODO create()
+            //NewとUpdateが混在、要調査
             $this->create();
             $this->save($this->csv_datas[$k]['TeamMember']);
         }
@@ -346,7 +348,8 @@ class TeamMember extends AppModel
                 unset($this->csv_datas[$row_k]['Group']);
             }
         }
-
+        //TODO create()
+        //NewとUpdateとが混在、要調査
         $this->User->MemberGroup->create();
         $this->User->MemberGroup->saveAll($member_groups);
 
@@ -389,6 +392,8 @@ class TeamMember extends AppModel
             }
         }
         if (viaIsSet($save_evaluator_data)) {
+            //TODO create()
+            //NewとEditが混在、要調査
             $this->Team->Evaluator->create();
             $this->Team->Evaluator->saveAll($save_evaluator_data);
         }
@@ -470,6 +475,8 @@ class TeamMember extends AppModel
             else {
                 //なければ、ユーザ情報(User,Email)を登録。
                 //create User
+                //TODO create
+                //残すべきと思われ、ユーザーが存在しないことが前提
                 $this->User->create();
                 $row_v['User']['no_pass_flg'] = true;
                 $row_v['User']['default_team_id'] = $this->current_team_id;
@@ -477,6 +484,8 @@ class TeamMember extends AppModel
                 $user = $this->User->save($row_v['User']);
                 $row_v['Email']['user_id'] = $user['User']['id'];
                 //create Email
+                //TODO create
+                //残すべきと思われ、ユーザーが存在しないことが前提
                 $this->User->Email->create();
                 $email = $this->User->Email->save($row_v['Email']);
                 $this->csv_datas[$row_k]['Email'] = $email['Email'];
@@ -502,6 +511,8 @@ class TeamMember extends AppModel
                 }
                 else {
                     $row_v['LocalName']['user_id'] = $user['User']['id'];
+                    //TODO create()
+                    //残すべき、LocalNameがないことが前提
                     $this->User->LocalName->create();
                     $local_name = $this->User->LocalName->save($row_v['LocalName']);
                 }
@@ -516,6 +527,8 @@ class TeamMember extends AppModel
                     $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
                     $row_v['MemberGroup'][$k]['team_id'] = $this->current_team_id;
                 }
+                //TODO create()
+                //消去すべき、:440で作成済み
                 $this->User->MemberGroup->create();
                 $this->User->MemberGroup->saveAll($row_v['MemberGroup']);
             }
@@ -527,6 +540,8 @@ class TeamMember extends AppModel
                 $row_v['TeamMember']['team_id'] = $this->current_team_id;
                 $row_v['TeamMember']['invitation_flg'] = true;
                 $row_v['TeamMember']['active_flg'] = false;
+                //TODO create()
+                //残すべき、findもid代入もしていない
                 $this->create();
                 $team_member = $this->save($row_v['TeamMember']);
                 $this->csv_datas[$row_k]['TeamMember'] = $team_member['TeamMember'];
@@ -569,6 +584,8 @@ class TeamMember extends AppModel
             }
         }
         if (viaIsSet($save_evaluator_data)) {
+            //TODO create()
+            //残すべき、findもid代入もしていない
             $this->Team->Evaluator->create();
             $this->Team->Evaluator->saveAll($save_evaluator_data);
         }

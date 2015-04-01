@@ -63,6 +63,9 @@ class Group extends AppModel
             'name'    => $name,
             'team_id' => $team_id
         ];
+        //TODO create()
+        //NewとEditの用法が混ざってる!
+        //残すべきと思われ、$team_idが指定されているusageはない
         $this->create();
         $res = $this->save($data);
         return $res;
