@@ -31,50 +31,69 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $incomplete_count = 0;
         //get evaluation setting.
-        $eval_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $my_eval_status = $this->Evaluation->getMyEvalStatus($eval_term_id);
-        $is_myself_evaluations_incomplete = $this->Evaluation->isMySelfEvalIncomplete($eval_term_id);
-        if ($is_myself_evaluations_incomplete) {
-            $incomplete_count++;
-        }
-
-        $this->set(compact('eval_term_id', 'incomplete_count', 'is_myself_evaluations_incomplete', 'my_eval_status'));
+        $eval_term_id = $this->Team->EvaluateTerm->getLatestTermId();
+        $total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
+        $total_incomplete_count_as_evaluator = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
+        $my_eval[] = $this->Evaluation->getEvalStatus($eval_term_id, $this->Auth->user('id'));
+        $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($eval_term_id);
+        $this->set(compact('total_incomplete_count_my_eval',
+                           'total_incomplete_count_as_evaluator',
+                           'my_evaluatees',
+                           'my_eval',
+                           'eval_term_id'
+                   ));
     }
 
     function view($evaluateTermId = null, $evaluateeId = null)
     {
-        if (!$evaluateTermId || !$evaluateeId) {
-            $this->Pnotify->outError(__d('gl', "パラメータが不正です。"));
-            return $this->redirect($this->referer());
-        }
-
-        if ($evaluateeId != $this->Auth->user('id')) {
-            $this->Pnotify->outError(__d('gl', "この期間は自己評価しかできません。"));
-            return $this->redirect($this->referer());
-        }
 
         $this->layout = LAYOUT_ONE_COLUMN;
-        $teamId = $this->Session->read('current_team_id');
-        $scoreList = [null => "選択してください"] + $this->Evaluation->EvaluateScore->getScoreList($teamId);
-        $evaluationList = $this->Evaluation->getEditableEvaluations($evaluateTermId, $evaluateeId);
-        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $this->Auth->user('id'));
-        if (empty($evaluationList[0]['Evaluation']['goal_id'])) {
-            $total = $evaluationList[0];
-            unset($evaluationList[0]);
-            $goalList = $evaluationList;
-        }
-        else {
-            $total = [];
-            $goalList = $evaluationList;
+
+        try {
+            // check authorities
+            $this->Evaluation->checkAvailViewEvaluationList();
+            if (!$this->Team->EvaluationSetting->isEnabled()) {
+                throw new RuntimeException(__d('gl', "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"));
+            }
+            $this->Evaluation->checkAvailEditable($evaluateTermId, $evaluateeId);
+
+            // get evaluation list
+            $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
         }
 
-        // set progress
-        foreach ($goalList as $key => $val) {
-            $goalList[$key]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($val['Goal']);
+        $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
+        $scoreList = $this->Evaluation->EvaluateScore->getScoreList($this->Session->read('current_team_id'));
+        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $this->Auth->user('id'));
+        $saveIndex = 0;
+
+        $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));
+        if ($existTotalEval) {
+            $totalList = array_shift($evaluationList);
         }
-        $this->set(compact('scoreList', 'total', 'goalList', 'evaluateTermId', 'evaluateeId', 'status'));
+        else {
+            $totalList = [];
+        }
+        $goalList = $evaluationList;
+
+        // set progress
+        foreach ($goalList as $goalIndex => $goal) {
+            foreach ($goal as $evalKey => $eval) {
+                $goalList[$goalIndex][$evalKey]['Goal']['progress'] = $this->Evaluation->Goal->getProgress($eval['Goal']);
+            }
+        }
+        $this->set(compact('scoreList',
+                           'totalList',
+                           'goalList',
+                           'evaluateTermId',
+                           'evaluateeId',
+                           'evaluateType',
+                           'status',
+                           'saveIndex'
+                   ));
     }
 
     function add()

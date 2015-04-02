@@ -39,7 +39,7 @@ $this->Form->input('body', [
     'rows'        => 1,
     'required'    => true,
     'placeholder' => __d('gl', "コメントする"),
-    'class'       => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align',
+    'class'       => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align change-warning',
     'target-id'   => "{$prefix}CommentSubmit_{$post_id}",
     'required'    => 'false'
 ])

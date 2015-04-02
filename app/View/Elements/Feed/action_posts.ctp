@@ -281,7 +281,7 @@
                     <a href="#" class="btn btn-link click-comment-all"
                        id="ActionComments_<?= $post['Post']['id'] ?>"
                        parent-id="ActionComments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_comment', $post['Post']['id']]) ?>"
+                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'],$post['Post']['comment_count'] - 3]) ?>"
                         >
                         <i class="fa fa-comment-o"></i>&nbsp;<?=
                         __d('gl', "他%s件のコメントを見る",

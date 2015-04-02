@@ -67,6 +67,7 @@ class Goal extends AppModel
         $res = [
             'term'     => [
                 'present'  => __d('gl', "今期"),
+                'next'     => __d('gl', "来期"),
                 'previous' => __d('gl', "前期"),
                 'before'   => __d('gl', "もっと前")],
             'progress' => [
@@ -820,6 +821,11 @@ class Goal extends AppModel
                 $before_term = $this->Team->getBeforeTermStartEnd();
                 $options['conditions']['Goal.start_date >='] = $before_term['start'];
                 $options['conditions']['Goal.end_date <'] = $before_term['end'];
+                break;
+            case 'next':
+                $next_term = $this->Team->getAfterTermStartEnd();
+                $options['conditions']['Goal.start_date >='] = $next_term['start'];
+                $options['conditions']['Goal.end_date <'] = $next_term['end'];
                 break;
             case 'before' :
                 $before_term = $this->Team->getBeforeTermStartEnd();

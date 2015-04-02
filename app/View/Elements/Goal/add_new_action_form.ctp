@@ -25,7 +25,7 @@ $this->Form->input('ActionResult.name', [
                                           'label'          => false,
                                           'rows'           => 1,
                                           'placeholder'    => __d('gl', "今日やったアクションを共有しよう！"),
-                                          'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px add-select-options',
+                                          'class'          => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px add-select-options change-warning',
                                           'id'             => "ActionFormName_" . $goal_id,
                                           'target-id'      => "ActionFormSubmit_" . $goal_id,
                                           'select-id'      => "ActionKeyResultId_" . $goal_id,

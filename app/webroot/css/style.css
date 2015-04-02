@@ -632,6 +632,10 @@ textarea{
     padding-bottom: 8px;
 }
 
+.pl_1px {
+    padding-left: 1px;
+}
+
 .pl_2px {
     padding-left: 2px;
 }
@@ -3890,6 +3894,10 @@ Temporary Properties - YOU MUST FIX
 
 .bg-lightGray {
     background-color: #f0f0f0;
+}
+
+.goal-search-menu {
+    display: inline-block;
 }
 
 .goal-term-search-menu {
