@@ -609,14 +609,10 @@ class Goal extends AppModel
      */
     function getGoal($id)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.id'            => $id,
                 'Goal.team_id'       => $this->current_team_id,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
             ],
             'contain'    => [
                 'Purpose',
@@ -661,11 +657,6 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'    => [
-                    //KeyResultは期限が今期内
-                    'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
-                    ],
                     'fields'     => [
                         'KeyResult.id',
                         'KeyResult.progress',
