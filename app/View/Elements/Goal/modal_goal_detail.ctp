@@ -25,15 +25,23 @@
                 </div>
                 <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                     <div class="col col-xxs-6">
-                        <? if (empty($goal['MyFollow'])) {
+                        <? if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
                             $follow_class = 'follow-off';
                             $follow_style = null;
                             $follow_text = __d('gl', "フォロー");
+                            $follow_disabled = null;
+                        }
+                        elseif (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+                            $follow_class = 'follow-off';
+                            $follow_style = null;
+                            $follow_text = __d('gl', "フォロー");
+                            $follow_disabled = "disabled";
                         }
                         else {
                             $follow_class = 'follow-on';
                             $follow_style = 'display:none;';
                             $follow_text = __d('gl', "フォロー中");
+                            $follow_disabled = null;
                         } ?>
                         <? if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
                             $collabo_class = 'collabo-on';
@@ -45,9 +53,8 @@
                             $collabo_class = 'collabo-off';
                             $collabo_style = null;
                             $collabo_text = __d('gl', "コラボる");
-                            $follow_disabled = null;
                         } ?>
-                        <a class="btn btn-white bd-circle_22px pull-right mt_16px toggle-follow font_verydark-white <?= $follow_class ?>"
+                        <a class="btn btn-white bd-circle_22px pull-right mt_16px toggle-follow font_verydark <?= $follow_class ?>"
                            href="#" <?= $follow_disabled ?>="<?= $follow_disabled ?>"
                         data-class="toggle-follow"
                         goal-id="<?= $goal['Goal']['id'] ?>">
