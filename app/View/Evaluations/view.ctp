@@ -74,6 +74,7 @@
                             <?=
                             $this->Form->input("0.Evaluation.comment", [
                                 'type'                     => 'textarea',
+                                'class'                    => 'form-control eva-val',
                                 'rows'                     => 2,
                                 'default'                  => $total['Evaluation']['comment'],
                                 'label'                    => __d('gl', "評価コメント"),
@@ -92,9 +93,8 @@
                                 'type'                     => 'select',
                                 'default'                  => $total['Evaluation']['evaluate_score_id'],
                                 'options'                  => $scoreList,
-                                'id'                       => '',
                                 'label'                    => __d('gl', "評価スコア"),
-                                'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3',
+                                'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3 eva-val',
                                 'wrapInput'                => false,
                                 'required'                 => false,
                                 'data-bv-notempty'         => "true",
@@ -201,11 +201,12 @@
             'value' => true
         ]) ?>
             <?= $this->Form->button(__d('gl', "確定"), [
-            'div'   => false,
-            'class' => 'btn btn-primary eval-view-btn-submit',
-            'id'    => 'evaluation-register-submit',
-            'name'  => 'is_register',
-            'value' => true
+            'div'     => false,
+            'class'   => 'btn btn-primary eval-view-btn-submit',
+            'id'      => 'evaluation-register-submit',
+            'name'    => 'is_register',
+            'disabled' => true,
+            'value'   => true
         ]) ?>
         <?
         endif;
@@ -369,6 +370,7 @@
                                 'label'                    => __d('gl', "評価コメント"),
                                 'placeholder'              => __d('gl', "コメントを書いてください"),
                                 'required'                 => false,
+                                'class'                    => 'form-control eva-val',
                                 'data-bv-notempty'         => "true",
                                 'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
                             ])
@@ -384,7 +386,7 @@
                                 'default'                  => $eval['Evaluation']['evaluate_score_id'],
                                 'options'                  => $scoreList,
                                 'label'                    => __d('gl', "評価スコア"),
-                                'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3',
+                                'class'                    => 'form-control col-xxs-12 col-sm-4 col-md-3 eva-val',
                                 'wrapInput'                => false,
                                 'required'                 => false,
                                 'data-bv-notempty'         => "true",
@@ -496,6 +498,7 @@
             'class' => 'btn btn-primary eval-view-btn-submit',
             'id'    => 'evaluation-register-submit',
             'name'  => 'is_register',
+            'disabled' => true,
             'value' => true
         ]) ?>
         <?
