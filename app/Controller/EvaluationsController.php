@@ -48,6 +48,12 @@ class EvaluationsController extends AppController
         }
         $total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
         $total_incomplete_count_as_evaluator = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
+        $current_total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
+        $current_total_incomplete_count_my_evaluatees = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
+        $previous_total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
+        $previous_total_incomplete_count_my_evaluatees = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
+        $before_total_incomplete_count_my_eval  = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
+        $before_total_incomplete_count_my_evaluatees = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
         $my_eval[] = $this->Evaluation->getEvalStatus($eval_term_id, $this->Auth->user('id'));
         $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($eval_term_id);
         $this->set(compact('total_incomplete_count_my_eval',
