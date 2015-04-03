@@ -45,8 +45,8 @@ class EvaluateTerm extends AppModel
 
     function getCurrentTermId()
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'start_date >=' => $start_date,
@@ -99,8 +99,8 @@ class EvaluateTerm extends AppModel
     {
         $data = [
             'team_id'    => $this->current_team_id,
-            'start_date' => $this->Team->getTermStartDate(),
-            'end_date'   => $this->Team->getTermEndDate() - 1,
+            'start_date' => $this->Team->getCurrentTermStartDate(),
+            'end_date'   => $this->Team->getCurrentTermEndDate() - 1,
         ];
         $res = $this->save($data);
         return $res;

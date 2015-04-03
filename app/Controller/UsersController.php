@@ -830,8 +830,8 @@ class UsersController extends AppController
         $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
         if (!$start_date && !$end_date) {
             //デフォルトで今期
-            $start_date = $this->User->TeamMember->Team->getTermStartDate();
-            $end_date = $this->User->TeamMember->Team->getTermEndDate();
+            $start_date = $this->User->TeamMember->Team->getCurrentTermStartDate();
+            $end_date = $this->User->TeamMember->Team->getCurrentTermEndDate();
         }
         $post_count = $this->Post->getCount($type, $start_date, $end_date);
         $this->_ajaxPreProcess();
@@ -855,8 +855,8 @@ class UsersController extends AppController
         $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
         if (!$start_date && !$end_date) {
             //デフォルトで今期
-            $start_date = $this->User->TeamMember->Team->getTermStartDate();
-            $end_date = $this->User->TeamMember->Team->getTermEndDate();
+            $start_date = $this->User->TeamMember->Team->getCurrentTermStartDate();
+            $end_date = $this->User->TeamMember->Team->getCurrentTermEndDate();
         }
         $action_count = $this->Goal->ActionResult->getCount($type, $start_date, $end_date);
         $this->_ajaxPreProcess();
