@@ -32,6 +32,8 @@ class EvaluationsController extends AppController
         }
 
         //get evaluation setting.
+        $term_param = viaIsSet($this->request->data['named']['term']);
+        $term_name = $term_param ? $term_param : 'present';
         $eval_term_id = $this->Team->EvaluateTerm->getLatestTermId();
         $total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
         $total_incomplete_count_as_evaluator = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);

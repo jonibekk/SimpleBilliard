@@ -15,6 +15,17 @@
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="panel-heading"><?= __d('gl', "評価") ?></div>
     <div class="panel-body eval-view-panel-body">
+        <div class="goal-search-menu">
+            <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
+                <? foreach (['present' => __d('gl', "今期"),'previous' => __d('gl', "前期"),'before' => __d('gl', "もっと前")] as $key => $val): ?>
+                    <? if($val === '今期'): ?>
+                        <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>" class="btn btn-default goal-search-elm selected" role="button"><?= $val ?></a>
+                    <? else: ?>
+                        <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>" class="btn btn-default goal-search-elm" role="button"><?= $val ?></a>
+                    <? endif; ?>
+                <? endforeach; ?>
+            </div>
+        </div>
         <? if ($total_incomplete_count_my_eval + $total_incomplete_count_as_evaluator > 0): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
                 <?= __d('gl', "あと%s件の評価が完了しておりません。以下より評価を行なってください。",
