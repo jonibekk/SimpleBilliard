@@ -76,6 +76,25 @@ class EvaluateTerm extends AppModel
         return null;
     }
 
+    function getPreviousTermId()
+    {
+        $start_end = $this->Team->getBeforeTermStartEnd();
+        $start_date = $start_end['start'];
+        $end_date = $start_end['end'];
+        $options = [
+            'conditions' => [
+                'start_date >=' => $start_date,
+                'end_date <='   => $end_date,
+                'team_id'       => $this->current_team_id
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['EvaluateTerm']['id'])) {
+            return $res['EvaluateTerm']['id'];
+        }
+        return null;
+    }
+
     function saveTerm()
     {
         $data = [

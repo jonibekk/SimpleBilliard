@@ -18,11 +18,8 @@
         <div class="goal-search-menu">
             <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
                 <? foreach (['present' => __d('gl', "今期"),'previous' => __d('gl', "前期"),'before' => __d('gl', "もっと前")] as $key => $val): ?>
-                    <? if($val === '今期'): ?>
-                        <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>" class="btn btn-default goal-search-elm selected" role="button"><?= $val ?></a>
-                    <? else: ?>
-                        <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>" class="btn btn-default goal-search-elm" role="button"><?= $val ?></a>
-                    <? endif; ?>
+                    <? $selected = $key == $term_name ? 'selected' : ''; ?>
+                    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>" class="btn btn-default goal-search-elm <?= $selected ?>" role="button"><?= $val ?></a>
                 <? endforeach; ?>
             </div>
         </div>
@@ -32,6 +29,7 @@
                         $total_incomplete_count_my_eval + $total_incomplete_count_as_evaluator) ?></div>
         <? endif; ?>
         <div class="form-group">
+            <? if(!empty($my_eval[0])):?>
             <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                 <p class="font_bold"><?= __d('gl', "自分") ?></p>
                 <? if ($total_incomplete_count_my_eval > 0): ?>
@@ -39,6 +37,8 @@
                 <? endif; ?>
             </div>
             <?= $this->element('Evaluation/index_items', ['evaluatees' => $my_eval, 'eval_term_id' => $eval_term_id]) ?>
+            <? endif;?>
+            <? if(!empty($my_evaluatees)): ?>
             <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                 <p class="font_bold"><?= __d('gl', "あなたが評価するメンバー") ?></p>
                 <? if ($total_incomplete_count_as_evaluator > 0): ?>
@@ -47,6 +47,7 @@
             </div>
             <?= $this->element('Evaluation/index_items',
                                ['evaluatees' => $my_evaluatees, 'eval_term_id' => $eval_term_id]) ?>
+            <? endif;?>
         </div>
     </div>
 </div>

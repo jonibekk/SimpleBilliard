@@ -516,6 +516,9 @@ class Evaluation extends AppModel
                     break;
             }
         }
+        if(empty($flow)) {
+            return [];
+        }
         $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
         $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
         return $res;
