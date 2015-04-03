@@ -41,7 +41,7 @@ if (!isset($id_prefix)) {
                                    target-id="<?= $id_prefix ?>CommentEditForm_<?= $comment['id'] ?>"
                                    opend-text="<?= __d('gl', "編集をやめる") ?>"
                                    closed-text="<?= __d('gl', "コメントを編集") ?>"
-                                   ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_comment_form', $comment['id']]) ?>"
+                                   ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_comment_form', $comment['id'], $id_prefix]) ?>"
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
