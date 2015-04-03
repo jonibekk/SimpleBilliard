@@ -33,6 +33,11 @@ ul {
     cursor: pointer;
 }
 
+.cl_both {
+    clear: both;
+}
+
+
 /*=== Header部のリファクタリング ===*/
 .nav-icons > a {
     float: left;
