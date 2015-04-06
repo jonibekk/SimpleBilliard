@@ -170,6 +170,16 @@ class CirclesControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetCircleMembers()
+    {
+        $this->_getCirclesCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+        $this->testAction('/circles/ajax_get_circle_members/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testJoinSuccess()
     {
         $this->_getCirclesCommonMock();

@@ -129,7 +129,7 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getMembers($circle_id, $with_admin = false)
+    public function getMembers($circle_id, $with_admin = false, $order = 'CircleMember.modified', $order_direction = "desc")
     {
         $options = [
             'conditions' => [
@@ -137,6 +137,7 @@ class CircleMember extends AppModel
                 'CircleMember.team_id'   => $this->current_team_id,
                 'CircleMember.admin_flg' => false,
             ],
+            'order'      => [$order => $order_direction],
             'contain'    => [
                 'User' => [
                     'fields' => $this->User->profileFields
@@ -290,6 +291,7 @@ class CircleMember extends AppModel
         $conditions = [
             'CircleMember.circle_id' => $circle_list,
             'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id'   => $this->my_uid,
         ];
 
         $res = $this->updateAll(['modified' => "'" . time() . "'"], $conditions);

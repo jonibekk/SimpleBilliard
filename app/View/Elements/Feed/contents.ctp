@@ -34,29 +34,16 @@
             <? if ($current_circle): ?>
                 <span> ･ </span>
                 <span class="feed-current-filter"><?= h($current_circle['Circle']['name']) ?></span>
-                <span class="feed-circle-user-number">
-        <?
-        $title = '<ul class="user-list-in-tooltip">';
-        if (!empty($circle_members)) {
-            foreach ($circle_members as $member) {
-                $img = $this->Upload->uploadImage($member, 'User.photo', ['style' => 'small'],
-                                                  ['width' => '16px', 'height' => '16px']);
-                $username = h($member['User']['display_username']);
-                $title .= "<li>{$img}&nbsp;{$username}</li>";
-            }
-        }
-        $title .= "</ul>";
-        ?>
-                    <a href="#" data-triger="click" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                       data-original-title='<?= $title ?>'>
-                        <i class="fa fa-user"></i>&nbsp;<?= count($circle_members) ?></a>
-                    </span>
+                <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $current_circle['Circle']['id']]) ?>"
+                     class="modal-ajax-get"> <span class="feed-circle-user-number"><i
+                            class="fa fa-user"></i>&nbsp;<?= count($circle_members) ?>
+                    </span></a>
             <? endif; ?>
         </div>
     </div>
 </div>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span
-        class="num"></span><?=__d('gl',"件の新しい投稿があります。")?></a>
+        class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
     <div class="panel panel-default">
