@@ -23,7 +23,7 @@
 
         <? if ($created): ?>
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                <?= $this->TimeEx->elapsedTime(h($created), $type) ?>
+                <?= $this->TimeEx->elapsedTime(h($created), viaIsSet($type)) ?>
             </div>
         <? endif; ?>
     </div>
