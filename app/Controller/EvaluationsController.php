@@ -34,30 +34,20 @@ class EvaluationsController extends AppController
         //get evaluation setting.
         $term_param = viaIsSet($this->request->params['named']['term']);
         $term_name = $term_param ? $term_param : 'present';
-        switch($term_name)
-        {
+        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+        switch ($term_name) {
             case 'present':
-                $eval_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+                $eval_term_id = $current_term_id;
                 break;
             case 'previous':
-                $eval_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-                break;
-            case 'before':
-                $eval_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+                $eval_term_id = $previous_term_id;
                 break;
         }
-        $total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
-        $total_incomplete_count_as_evaluator = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
-        $current_total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
-        $current_total_incomplete_count_my_evaluatees = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
-        $previous_total_incomplete_count_my_eval = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
-        $previous_total_incomplete_count_my_evaluatees = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
-        $before_total_incomplete_count_my_eval  = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF);
-        $before_total_incomplete_count_my_evaluatees = $this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR);
+        $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
         $my_eval[] = $this->Evaluation->getEvalStatus($eval_term_id, $this->Auth->user('id'));
         $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($eval_term_id);
-        $this->set(compact('total_incomplete_count_my_eval',
-                           'total_incomplete_count_as_evaluator',
+        $this->set(compact('incomplete_number_list',
                            'my_evaluatees',
                            'my_eval',
                            'eval_term_id',
