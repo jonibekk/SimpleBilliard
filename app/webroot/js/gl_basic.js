@@ -2116,3 +2116,40 @@ function hideCommentNotifyErrorBox(notifyBox) {
     }
     errorBox.css("display", "none");
 }
+
+$(function () {
+    if ($('#evaluation-form')[0]) {
+        var eva = [];
+        $(".eva-val").each(function () {
+            eva[this.id] = this.value;
+        });
+        $(".eva-val").change(function () {
+            eva[this.id] = this.value;
+            if (isNull(eva)) {
+                $('.eval-view-btn-submit').removeAttr('disabled');
+            }
+            else {
+                $('.eval-view-btn-submit').attr('disabled', true);
+            }
+        });
+        $("textarea.eva-val").keyup(function () {
+                eva[this.id] = this.value;
+                if (isNull(eva)) {
+                    $('.eval-view-btn-submit').removeAttr('disabled');
+                }
+                else {
+                    $('.eval-view-btn-submit').attr('disabled', true);
+                }
+            }
+        );
+    }
+    function isNull(val) {
+        for (var i in val) {
+            if (val[i] == '') {
+                return false;
+            }
+        }
+        return true;
+    }
+});
+
