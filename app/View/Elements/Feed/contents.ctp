@@ -68,7 +68,8 @@
     </div>
 <? endif; ?>
 <?
-if (!isset($this->request->params['post_id']) || empty($this->request->params['post_id'])):
+//ポストが存在する　かつ　パーマリンクでない
+if (!empty($posts)&&(!isset($this->request->params['post_id']) || empty($this->request->params['post_id']))):
     ?>
     <?
     $next_page_num = 2;
