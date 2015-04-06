@@ -162,7 +162,7 @@ class CirclesController extends AppController
     public function ajax_get_circle_members($circle_id)
     {
         $this->_ajaxPreProcess();
-        $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
+        $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true, 'CircleMember.modified', 'desc');
         $this->set(compact('circle_members'));
 
         //エレメントの出力を変数に格納する
