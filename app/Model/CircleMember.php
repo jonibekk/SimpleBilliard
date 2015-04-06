@@ -290,6 +290,7 @@ class CircleMember extends AppModel
         $conditions = [
             'CircleMember.circle_id' => $circle_list,
             'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id'   => $this->my_uid,
         ];
 
         $res = $this->updateAll(['modified' => "'" . time() . "'"], $conditions);
