@@ -126,11 +126,29 @@
                         <?= __d('gl', "なし") ?>
                     <? endif; ?>
                 </div>
-                <div class="col col-xxs-12">
+                <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __d('gl', '詳細') ?></span></div>
                     <div>
                         <?= $this->TextEx->autoLink($goal['Goal']['description']) ?>
                     </div>
+                </div>
+                <div class="col col-xxs-12">
+                    <div><i class="fa fa-key"></i><span class="pl_2px"><?= __d('gl', "出したい成果") ?>
+                            &nbsp;(<?= count($goal['KeyResult']) ?>)</span></div>
+                    <? if (isset($goal['KeyResult']) && !empty($goal['KeyResult'])): ?>
+                        <? foreach ($goal['KeyResult'] as $key_result): ?>
+                            <div class="col col-xxs-12 dot-omission">
+                                <? if ($key_result['completed']): ?>
+                                    <span class="fin-kr tag-sm tag-info"><?= __d('gl', "完了") ?></span>
+                                <? else: ?>
+                                    <span class="unfin-kr tag-sm tag-danger"><?= __d('gl', "未完了") ?></span>
+                                <? endif; ?>
+                                <?= h($key_result['name']) ?>
+                            </div>
+                        <? endforeach ?>
+                    <? else: ?>
+                        <?= __d('gl', "なし") ?>
+                    <? endif; ?>
                 </div>
             <? endif; ?>
         </div>

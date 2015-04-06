@@ -4005,3 +4005,10 @@ Temporary Properties - YOU MUST FIX
 .eval-view-btn-submit {
     padding: 8px 33px;
 }
+
+.dot-omission {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+}

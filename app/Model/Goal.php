@@ -611,8 +611,8 @@ class Goal extends AppModel
     {
         $options = [
             'conditions' => [
-                'Goal.id'            => $id,
-                'Goal.team_id'       => $this->current_team_id,
+                'Goal.id'      => $id,
+                'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
                 'Purpose',
@@ -657,12 +657,14 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'    => [
-                    'fields'     => [
+                    'fields' => [
                         'KeyResult.id',
+                        'KeyResult.name',
                         'KeyResult.progress',
                         'KeyResult.priority',
                         'KeyResult.completed',
                     ],
+                    'order'  => ['KeyResult.completed' => 'asc'],
                 ],
                 'User'         => [
                     'fields' => $this->User->profileFields,
