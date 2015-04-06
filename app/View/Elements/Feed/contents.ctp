@@ -33,7 +33,9 @@
             <? endif; ?>
             <? if ($current_circle): ?>
                 <span> ･ </span>
-                <span class="feed-current-filter"><?= h($current_circle['Circle']['name']) ?></span>
+                <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $current_circle['Circle']['id']]) ?>"
+                     class="modal-ajax-get font_lightgray">  <span
+                        class="feed-current-filter"><?= h($current_circle['Circle']['name']) ?></span> </a>
                 <span class="feed-circle-user-number">
         <?
         $title = '<ul class="user-list-in-tooltip">';
@@ -56,7 +58,7 @@
     </div>
 </div>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span
-        class="num"></span><?=__d('gl',"件の新しい投稿があります。")?></a>
+        class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
     <div class="panel panel-default">
