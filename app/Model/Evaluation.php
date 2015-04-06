@@ -582,7 +582,7 @@ class Evaluation extends AppModel
         return (isset($res['Evaluation']['evaluate_type'])) ? $res['Evaluation']['evaluate_type'] : false;
     }
 
-    function getMyTurnCount($evaluate_type = null, $term_id = null)
+    function getMyTurnCount($evaluate_type = null, $term_id = null, $is_all = true)
     {
         $options = [
             'conditions' => [
@@ -597,8 +597,8 @@ class Evaluation extends AppModel
         if (is_null($evaluate_type)) {
             unset($options['conditions']['evaluate_type']);
         }
-        if (is_null($term_id)) {
-            $options['conditions']['evaluate_term_id'] = $this->Team->EvaluateTerm->getCurrentTermId();
+        if (is_null($term_id) && $is_all === true) {
+            unset($options['conditions']['evaluate_term_id']);
         }
         $count = $this->find('count', $options);
         return $count;
@@ -688,12 +688,12 @@ class Evaluation extends AppModel
 
         return [
             'present'  => [
-                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $current_term_id),
-                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $current_term_id)
+                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $current_term_id, false),
+                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $current_term_id, false)
             ],
             'previous' => [
-                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $previous_term_id),
-                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $previous_term_id)
+                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $previous_term_id, false),
+                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $previous_term_id, false)
             ]
         ];
     }
