@@ -1308,7 +1308,7 @@ function evFollowGoal() {
                 }
                 else {
                     $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
-                        $(this).children('span').text(cake.message.info.d);
+                        $(this).children('span').text(cake.message.info.z);
                         $(this).children('i').show();
                         $(this).removeClass('follow-on');
                         $(this).addClass('follow-off');

@@ -33,6 +33,11 @@ ul {
     cursor: pointer;
 }
 
+.cl_both {
+    clear: both;
+}
+
+
 /*=== Header部のリファクタリング ===*/
 .nav-icons > a {
     float: left;
@@ -1146,8 +1151,8 @@ textarea{
     border-radius: 50%;
 }
 
-.bd-circle_20 {
-    border-radius: 20% / 50%;
+.bd-circle_22px {
+    border-radius: 22px;
 }
 
 .bd-radius_4px {

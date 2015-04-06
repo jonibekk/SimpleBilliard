@@ -28,7 +28,7 @@
                 <? endif; ?>
             </div>
             <?= $this->element('Evaluation/index_items', ['evaluatees' => $my_eval, 'eval_term_id' => $eval_term_id]) ?>
-            <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
+            <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px cl_both">
                 <p class="font_bold"><?= __d('gl', "あなたが評価するメンバー") ?></p>
                 <? if ($total_incomplete_count_as_evaluator > 0): ?>
                     <p><?= __d('gl', "未完了:%s", $total_incomplete_count_as_evaluator) ?></p>
