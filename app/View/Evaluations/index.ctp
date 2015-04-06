@@ -4,7 +4,7 @@
  * @package       app.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var CodeCompletionView $this
- * @var                    $eval_term_id
+ * @var                    $selected_tab_term_id
  * @var                    $my_eval
  * @var                    $my_evaluatees
  * @var                    $total_incomplete_count_my_eval
@@ -55,7 +55,7 @@
                     <? endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
-                                   ['evaluatees' => $my_eval, 'eval_term_id' => $eval_term_id]) ?>
+                                   ['evaluatees' => $my_eval, 'eval_term_id' => $selected_tab_term_id]) ?>
             <? endif; ?>
             <? if (!empty($my_evaluatees)): ?>
                 <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
@@ -65,7 +65,7 @@
                     <? endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
-                                   ['evaluatees' => $my_evaluatees, 'eval_term_id' => $eval_term_id]) ?>
+                                   ['evaluatees' => $my_evaluatees, 'eval_term_id' => $selected_tab_term_id]) ?>
             <? endif; ?>
         </div>
     </div>

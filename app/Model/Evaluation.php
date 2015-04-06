@@ -592,7 +592,7 @@ class Evaluation extends AppModel
                 'evaluate_type'     => $evaluate_type,
                 'evaluate_term_id'  => $term_id
             ],
-            'group'      => 'evaluatee_user_id'
+            'group'      => ['evaluate_term_id', 'evaluatee_user_id']
         ];
         if (is_null($evaluate_type)) {
             unset($options['conditions']['evaluate_type']);

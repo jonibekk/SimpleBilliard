@@ -31,26 +31,25 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        //get evaluation setting.
+        //get evaluation term
         $term_param = viaIsSet($this->request->params['named']['term']);
         $term_name = $term_param ? $term_param : 'present';
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         switch ($term_name) {
             case 'present':
-                $eval_term_id = $current_term_id;
+                $selected_tab_term_id = $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
                 break;
             case 'previous':
-                $eval_term_id = $previous_term_id;
+                $selected_tab_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
                 break;
         }
+
         $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
-        $my_eval[] = $this->Evaluation->getEvalStatus($eval_term_id, $this->Auth->user('id'));
-        $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($eval_term_id);
+        $my_eval[] = $this->Evaluation->getEvalStatus($selected_tab_term_id, $this->Auth->user('id'));
+        $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($selected_tab_term_id);
         $this->set(compact('incomplete_number_list',
                            'my_evaluatees',
                            'my_eval',
-                           'eval_term_id',
+                           'selected_tab_term_id',
                            'term_name'
                    ));
     }
