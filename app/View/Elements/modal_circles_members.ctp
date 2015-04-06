@@ -1,3 +1,14 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: t-tsunekawa
+ * Date: 2015/04/3
+ * Time: 3:19 PM
+ *
+ * @var View
+ * @var $circle_members
+ */
+?>
 <!-- START app/View/Elements/modal_circles_members.ctp -->
 <div class="modal-dialog">
     <div class="modal-content">
@@ -13,7 +24,7 @@
                     <? foreach ($circle_members as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user' => $user['User'], 'created' => $user['CircleMember']['modified'],'type' => 'rough']) ?>
+                                       ['user' => $user['User'], 'created' => $user['CircleMember']['modified'], 'type' => 'rough']) ?>
                     <? endforeach ?>
                 </div>
             <? else: ?>
