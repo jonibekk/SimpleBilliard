@@ -584,9 +584,6 @@ class PostsController extends AppController
 
         // ogp取得
         $ogp = $this->Ogp->getOgpByUrlInText($body);
-//        echo "<pre>";
-//        print_r($ogp);
-//        exit;
         // ogpが取得できない場合
         $notExistOgp = !isset($ogp['title']) || !isset($ogp['description']);
         if ($notExistOgp) {
