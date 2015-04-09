@@ -464,6 +464,7 @@ class Goal extends AppModel
         $term = $this->Team->getBeforeTermStartEnd(1);
         $start_date = $term['start'];
         $end_date = $term['end'];
+
         $options = [
             'conditions' => [
                 'Goal.user_id'       => $this->my_uid,
@@ -490,9 +491,9 @@ class Goal extends AppModel
                 'Goal.id'
             ],
         ];
-        $goal_list = $this->find('all', $options);
+        $res= $this->find('all', $options);
         $goal_ids = [];
-        foreach ($goal_list as $record) {
+        foreach ($res as $record) {
             if ($record[0]['cal'] == null || $record[0]['cal'] == 0) {
                 $goal_ids[] = $record['Goal']['id'];
             }
@@ -508,11 +509,6 @@ class Goal extends AppModel
                     ]
                 ],
                 'KeyResult'  => [
-                    //KeyResultは期限が今期内
-                    'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
-                    ]
                 ],
                 'Purpose',
                 'Evaluation' => [

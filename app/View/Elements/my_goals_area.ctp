@@ -78,5 +78,15 @@
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
     </a>
 <? endif; ?>
+<div id="FollowGoals">
+    <div class="col col-xxs-12 goals-column-head mt_32px">
+        <span class="font_18px font_gargoyleGray goals-column-title">
+            <?= __d('gl', '前期の未評価のあなたのゴール') ?>
+            (<?= $my_previous_goals_count ?>)
+        </span>
+
+    </div>
+    <?= $this->element('Goal/my_goal_area_items', ['goals' => $my_previous_goals, 'type' => 'my_prev']) ?>
+</div>
 
 <!-- END app/View/Elements/my_goals_area.ctp -->
