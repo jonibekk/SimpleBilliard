@@ -85,6 +85,37 @@
                         <? endif; ?>
                     </ul>
                 </div>
+            <? elseif
+            ($type == 'my_prev'
+            ): ?>
+                <div class="pull-right goals-column-function bd-radius_4px dropdown">
+                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                       data-toggle="dropdown"
+                       id="download">
+                        <i class="fa fa-cog"></i><i class="fa fa-caret-down goals-column-fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                        aria-labelledby="dropdownMenu1">
+                        <?
+                        //目的のみの場合とそうでない場合でurlが違う
+                        $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
+                        $del_url = ['controll er' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
+                        if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
+                            $edit_url = ['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3];
+                            $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
+                        }
+                        ?>
+                        <? if (!empty($goal['Goal'])): ?>
+                            <li role="presentation">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
+                                   class="modal-ajax-get-add-key-result">
+                                    <i class="fa fa-plus-circle"></i><span class="ml_2px">
+                                            <?= __d('gl', "出したい成果を追加") ?></span>
+                                </a>
+                            </li>
+                        <? endif; ?>
+                    </ul>
+                </div>
             <? endif; ?>
 
             <? if (empty($goal['Goal'])): ?>
