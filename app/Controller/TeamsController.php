@@ -45,8 +45,8 @@ class TeamsController extends AppController
             $this->redirect($this->referer());
         }
         $team = $this->Team->findById($team_id);
-        $term_start_date = $this->Team->getTermStartDate();
-        $term_end_date = $this->Team->getTermEndDate();
+        $term_start_date = $this->Team->getCurrentTermStartDate();
+        $term_end_date = $this->Team->getCurrentTermEndDate();
         $term_end_date = $term_end_date - 1;
         //get evaluation setting
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();

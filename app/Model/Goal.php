@@ -309,8 +309,8 @@ class Goal extends AppModel
 
     function getAddData($id)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.id' => $id,
@@ -363,8 +363,8 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.user_id'       => $user_id,
                 'Goal.team_id'       => $team_id,
-                'Goal.start_date >=' => $this->Team->getTermStartDate(),
-                'Goal.end_date <'    => $this->Team->getTermEndDate(),
+                'Goal.start_date >=' => $this->Team->getCurrentTermStartDate(),
+                'Goal.end_date <'    => $this->Team->getCurrentTermEndDate(),
                 'Goal.del_flg'       => 0,
             ],
         ];
@@ -381,8 +381,8 @@ class Goal extends AppModel
      */
     function getMyGoals($limit = null, $page = 1)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.user_id'       => $this->my_uid,
@@ -561,8 +561,8 @@ class Goal extends AppModel
 
     function getByGoalId($goal_ids)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.id'            => $goal_ids,
@@ -708,8 +708,8 @@ class Goal extends AppModel
      */
     function getAllGoals($limit = 20, $search_option = null, $params = null)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
 
         $page = 1;
         if (isset($params['named']['page']) || !empty($params['named']['page'])) {
@@ -791,8 +791,8 @@ class Goal extends AppModel
 
     function countGoalRes($search_option)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.team_id'       => $this->current_team_id,
@@ -987,10 +987,10 @@ class Goal extends AppModel
     function getAllUserGoal($start_date = null, $end_date = null)
     {
         if (!$start_date) {
-            $start_date = $this->Team->getTermStartDate();
+            $start_date = $this->Team->getCurrentTermStartDate();
         }
         if (!$end_date) {
-            $end_date = $this->Team->getTermEndDate();
+            $end_date = $this->Team->getCurrentTermEndDate();
         }
         $team_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
         $options = [
@@ -1023,8 +1023,8 @@ class Goal extends AppModel
 
     function filterThisTermIds($gids)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'id'            => $gids,
