@@ -33,6 +33,11 @@ ul {
     cursor: pointer;
 }
 
+.cl_both {
+    clear: both;
+}
+
+
 /*=== Header部のリファクタリング ===*/
 .nav-icons > a {
     float: left;
@@ -1146,8 +1151,8 @@ textarea{
     border-radius: 50%;
 }
 
-.bd-circle_20 {
-    border-radius: 20% / 50%;
+.bd-circle_22px {
+    border-radius: 22px;
 }
 
 .bd-radius_4px {
@@ -4004,4 +4009,11 @@ Temporary Properties - YOU MUST FIX
 
 .eval-view-btn-submit {
     padding: 8px 33px;
+}
+
+.dot-omission {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
 }
