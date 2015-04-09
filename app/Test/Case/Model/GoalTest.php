@@ -478,7 +478,6 @@ class GoalTest extends CakeTestCase
     function testGetMyPreviousGoals()
     {
         $this->setDefault();
-        $this->Goal->getMyPreviousGoals();
         $term = $this->Goal->Team->getBeforeTermStartEnd(1);
         $goal_data = [
             'user_id'    => 1,
@@ -488,5 +487,6 @@ class GoalTest extends CakeTestCase
             'end_date'   => $term['end'],
         ];
         $this->Goal->save($goal_data);
+        $this->Goal->getMyPreviousGoals();
     }
 }
