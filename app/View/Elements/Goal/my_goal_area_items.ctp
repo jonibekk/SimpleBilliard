@@ -26,7 +26,7 @@
                         <?
                         //目的のみの場合とそうでない場合でurlが違う
                         $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
-                        $del_url = ['controll er' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
+                        $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
                             $edit_url = ['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3];
                             $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
