@@ -452,6 +452,98 @@ class Goal extends AppModel
     }
 
     /**
+     * 自分が作成した前期の未評価ゴール取得
+     *
+     * @param null $limit
+     * @param int  $page
+     *
+     * @return array
+     */
+    function getMyPreviousGoals($limit = null, $page = 1)
+    {
+        $term = $this->Team->getBeforeTermStartEnd(1);
+        $start_date = $term['start'];
+        $end_date = $term['end'];
+        $options = [
+            'conditions' => [
+                'Goal.user_id'       => $this->my_uid,
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
+            ],
+            'fields'     => [
+                'Goal.id',
+                'SUM(Evaluation.status) as cal',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'left',
+                    'table'      => 'evaluations',
+                    'alias'      => 'Evaluation',
+                    'conditions' => [
+                        'Evaluation.goal_id = Goal.id',
+                        'Evaluation.del_flg' => 0,
+                    ],
+                ],
+            ],
+            'group'      => [
+                'Goal.id'
+            ],
+        ];
+        $goal_list = $this->find('all', $options);
+        $goal_ids = [];
+        foreach ($goal_list as $record) {
+            if ($record[0]['cal'] == null || $record[0]['cal'] == 0) {
+                $goal_ids[] = $record['Goal']['id'];
+            }
+        }
+        $options = [
+            'conditions' => [
+                'Goal.id'            => $goal_ids,
+            ],
+            'contain'    => [
+                'MyCollabo'  => [
+                    'conditions' => [
+                        'MyCollabo.user_id' => $this->my_uid
+                    ]
+                ],
+                'KeyResult'  => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
+                'Purpose',
+                'Evaluation' => [
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id' => $this->my_uid,
+                    ],
+                    'fields'     => ['Evaluation.id'],
+                    'limit'      => 1,
+                ]
+            ],
+            'limit'      => $limit,
+            'page'       => $page
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        //目的一覧を取得
+        if (!empty($purposes = $this->Purpose->getPurposesNoGoal())) {
+            foreach ($purposes as $key => $val) {
+                $purposes[$key]['Goal'] = [];
+            }
+            /** @noinspection PhpParamsInspection */
+            $res = array_merge($purposes, $res);
+        }
+
+        return $res;
+    }
+    /**
      * 期限が近→遠　で並べ替え
      *
      * @param     $goals
