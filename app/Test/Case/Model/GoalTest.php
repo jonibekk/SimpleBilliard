@@ -503,6 +503,14 @@ class GoalTest extends CakeTestCase
             'team_id' => 1,
             'goal_id' => $goal_id,
         ];
+        $key_results = [
+            'goal_id'    => $goal_id,
+            'team_id'    => 1,
+            'user_id'    => 1,
+            'start_date' => $this->start_date+1,
+            'end_date'   => $this->end_date-1,
+        ];
+        $this->Goal->KeyResult->save($key_results);
         $this->Goal->Collaborator->create();
         $this->Goal->Collaborator->save($collabo);
         $this->Goal->getMyPreviousGoals();
