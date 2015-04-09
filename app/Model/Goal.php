@@ -465,6 +465,7 @@ class Goal extends AppModel
         $start_date = $term['start'];
         $end_date = $term['end'];
 
+        //自分がリーダーの未評価前期ゴールリストを取得
         $options = [
             'conditions' => [
                 'Goal.user_id'       => $this->my_uid,
@@ -498,6 +499,41 @@ class Goal extends AppModel
                 $goal_ids[] = $record['Goal']['id'];
             }
         }
+
+         //自分がコラボってるの未評価前期ゴールリストを取得
+        $options = [
+            'conditions' => [
+                'Goal.id'       => $this->Collaborator->getCollaboGoalList($this->my_uid, false),
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
+            ],
+            'fields'     => [
+                'Goal.id',
+                'SUM(Evaluation.status) as cal',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'left',
+                    'table'      => 'evaluations',
+                    'alias'      => 'Evaluation',
+                    'conditions' => [
+                        'Evaluation.goal_id = Goal.id',
+                        'Evaluation.del_flg' => 0,
+                    ],
+                ],
+            ],
+            'group'      => [
+                'Goal.id'
+            ],
+        ];
+        $res= $this->find('all', $options);
+        foreach ($res as $record) {
+            if ($record[0]['cal'] == null || $record[0]['cal'] == 0) {
+                $goal_ids[] = $record['Goal']['id'];
+            }
+        }
+
+        //ゴール付加情報を取得
         $options = [
             'conditions' => [
                 'Goal.id'            => $goal_ids,

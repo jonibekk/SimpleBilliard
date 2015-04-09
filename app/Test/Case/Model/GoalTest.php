@@ -474,4 +474,19 @@ class GoalTest extends CakeTestCase
             }
         }
     }
+
+    function testGetMyPreviousGoals()
+    {
+        $this->setDefault();
+        $this->Goal->getMyPreviousGoals();
+        $term = $this->Goal->Team->getBeforeTermStartEnd(1);
+        $goal_data = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'purpose_id' => 1,
+            'start_date' => $term['start'],
+            'end_date'   => $term['end'],
+        ];
+        $this->Goal->save($goal_data);
+    }
 }
