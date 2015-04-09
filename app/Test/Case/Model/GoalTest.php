@@ -468,7 +468,7 @@ class GoalTest extends CakeTestCase
         $this->setDefault();
         $options = $this->Goal->getSearchOptions();
         foreach ($options as $type => $val) {
-            foreach($val as $key => $value) {
+            foreach ($val as $key => $value) {
                 $search_option[$type][0] = $key;
                 $this->Goal->getAllGoals(null, $search_option);
             }
@@ -483,8 +483,8 @@ class GoalTest extends CakeTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => $term['start']+1,
-            'end_date'   => $term['end']-1,
+            'start_date' => $term['start'] + 1,
+            'end_date'   => $term['end'] - 1,
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
@@ -492,8 +492,8 @@ class GoalTest extends CakeTestCase
             'user_id'    => 2,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => $term['start']+1,
-            'end_date'   => $term['end']-1,
+            'start_date' => $term['start'] + 1,
+            'end_date'   => $term['end'] - 1,
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
@@ -507,9 +507,16 @@ class GoalTest extends CakeTestCase
             'goal_id'    => $goal_id,
             'team_id'    => 1,
             'user_id'    => 1,
-            'start_date' => $this->start_date+1,
-            'end_date'   => $this->end_date-1,
+            'start_date' => $this->start_date + 1,
+            'end_date'   => $this->end_date - 1,
         ];
+        $this->Goal->KeyResult->save($key_results);
+        $purpose = [
+            'name'    => 'test',
+            'user_id' => 1,
+            'team_id' => 1,
+        ];
+        $this->Goal->Purpose->save($purpose);
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->Collaborator->create();
         $this->Goal->Collaborator->save($collabo);
