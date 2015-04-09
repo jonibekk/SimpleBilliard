@@ -483,10 +483,28 @@ class GoalTest extends CakeTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => $term['start'],
-            'end_date'   => $term['end'],
+            'start_date' => $term['start']+1,
+            'end_date'   => $term['end']-1,
         ];
+        $this->Goal->create();
         $this->Goal->save($goal_data);
+        $goal_data = [
+            'user_id'    => 2,
+            'team_id'    => 1,
+            'purpose_id' => 1,
+            'start_date' => $term['start']+1,
+            'end_date'   => $term['end']-1,
+        ];
+        $this->Goal->create();
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+        $collabo = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'goal_id' => $goal_id,
+        ];
+        $this->Goal->Collaborator->create();
+        $this->Goal->Collaborator->save($collabo);
         $this->Goal->getMyPreviousGoals();
     }
 }
