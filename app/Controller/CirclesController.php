@@ -126,12 +126,12 @@ class CirclesController extends AppController
     {
         $this->_ajaxPreProcess();
         $joined_circles = array_merge(
-            $this->Circle->getPublicCircles('joined',strtotime("-1 week"),null,'Circle.created desc'),
-            $this->Circle->getPublicCircles('joined',null,strtotime("-1 week"),'Circle.modified desc')
+            $this->Circle->getPublicCircles('joined', strtotime("-1 week"), null, 'Circle.created desc'),
+            $this->Circle->getPublicCircles('joined', null, strtotime("-1 week"), 'Circle.modified desc')
         );
         $non_joined_circles = array_merge(
-            $this->Circle->getPublicCircles('non-joined',strtotime("-1 week"),null,'Circle.created desc'),
-            $this->Circle->getPublicCircles('non-joined',null,strtotime("-1 week"),'Circle.modified desc')
+            $this->Circle->getPublicCircles('non-joined', strtotime("-1 week"), null, 'Circle.created desc'),
+            $this->Circle->getPublicCircles('non-joined', null, strtotime("-1 week"), 'Circle.modified desc')
         );
         $this->set(compact('joined_circles', 'non_joined_circles'));
         //エレメントの出力を変数に格納する
@@ -157,6 +157,20 @@ class CirclesController extends AppController
             $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定の保存に失敗しました。"));
         }
         $this->redirect($this->referer());
+    }
+
+    public function ajax_get_circle_members($circle_id)
+    {
+        $this->_ajaxPreProcess();
+        $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true, 'CircleMember.modified', 'desc');
+        $this->set(compact('circle_members'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_circles_members');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
     }
 
 }

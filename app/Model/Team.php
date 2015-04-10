@@ -226,7 +226,7 @@ class Team extends AppModel
         return $res;
     }
 
-    function getTermStartDate()
+    function getCurrentTermStartDate()
     {
         if ($this->current_term_start_date) {
             return $this->current_term_start_date;
@@ -236,7 +236,7 @@ class Team extends AppModel
         return $this->current_term_start_date;
     }
 
-    function getTermEndDate()
+    function getCurrentTermEndDate()
     {
         if ($this->current_term_end_date) {
             return $this->current_term_end_date;
@@ -344,7 +344,7 @@ class Team extends AppModel
         if ($count < 1) {
             return;
         }
-        $term['start'] = $this->getTermStartDate();
+        $term['start'] = $this->getCurrentTermStartDate();
         for ($i = 0; $i < $count; $i++) {
             $term = $this->getTermStartEndByDate((strtotime("-1 day", $term['start'])));
         }
@@ -356,7 +356,7 @@ class Team extends AppModel
         if ($count < 1) {
             return;
         }
-        $term['end'] = $this->getTermEndDate();
+        $term['end'] = $this->getCurrentTermEndDate();
         for ($i = 0; $i < $count; $i++) {
             $term = $this->getTermStartEndByDate((strtotime("+1 day", $term['end'])));
         }

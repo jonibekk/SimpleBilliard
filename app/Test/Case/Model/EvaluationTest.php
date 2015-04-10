@@ -607,6 +607,21 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals($expected, $actual['flow']);
     }
 
+    function testGetMyEvalStatusHasNoFlow()
+    {
+        $this->_setDefault();
+        $eval_term = [
+            'team_id'    => 1,
+            'start_date' => 1,
+            'end_date'   => 1,
+        ];
+        $this->Evaluation->Team->EvaluateTerm->save($eval_term);
+        $term_id = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $actual = $this->Evaluation->getEvalStatus($term_id, 1);
+        $expected = [];
+        $this->assertEquals($actual, $expected);
+    }
+
     function testGetEvaluateeEvalStatusAsEvaluator()
     {
         $this->_setDefault();

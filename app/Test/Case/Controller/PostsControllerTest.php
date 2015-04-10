@@ -52,6 +52,7 @@ class PostsControllerTest extends ControllerTestCase
         'app.post_share_circle',
         'app.circle',
         'app.circle_member',
+        'app.evaluation',
     );
 
     function testAdd()

@@ -309,8 +309,8 @@ class Goal extends AppModel
 
     function getAddData($id)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.id' => $id,
@@ -363,8 +363,8 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.user_id'       => $user_id,
                 'Goal.team_id'       => $team_id,
-                'Goal.start_date >=' => $this->Team->getTermStartDate(),
-                'Goal.end_date <'    => $this->Team->getTermEndDate(),
+                'Goal.start_date >=' => $this->Team->getCurrentTermStartDate(),
+                'Goal.end_date <'    => $this->Team->getCurrentTermEndDate(),
                 'Goal.del_flg'       => 0,
             ],
         ];
@@ -381,8 +381,8 @@ class Goal extends AppModel
      */
     function getMyGoals($limit = null, $page = 1)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.user_id'       => $this->my_uid,
@@ -451,6 +451,130 @@ class Goal extends AppModel
         return $res;
     }
 
+    /**
+     * 自分が作成した前期の未評価ゴール取得
+     *
+     * @param null $limit
+     * @param int  $page
+     *
+     * @return array
+     */
+    function getMyPreviousGoals($limit = null, $page = 1)
+    {
+        $term = $this->Team->getBeforeTermStartEnd(1);
+        $start_date = $term['start'];
+        $end_date = $term['end'];
+
+        //自分がリーダーの未評価前期ゴールリストを取得
+        $options = [
+            'conditions' => [
+                'Goal.user_id'       => $this->my_uid,
+                'Goal.team_id'       => $this->current_team_id,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
+            ],
+            'fields'     => [
+                'Goal.id',
+                'SUM(Evaluation.status) as cal',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'left',
+                    'table'      => 'evaluations',
+                    'alias'      => 'Evaluation',
+                    'conditions' => [
+                        'Evaluation.goal_id = Goal.id',
+                        'Evaluation.del_flg' => 0,
+                    ],
+                ],
+            ],
+            'group'      => [
+                'Goal.id'
+            ],
+        ];
+        $res= $this->find('all', $options);
+        $goal_ids = [];
+        foreach ($res as $record) {
+            if ($record[0]['cal'] == null || $record[0]['cal'] == 0) {
+                $goal_ids[] = $record['Goal']['id'];
+            }
+        }
+
+         //自分がコラボってるの未評価前期ゴールリストを取得
+        $options = [
+            'conditions' => [
+                'Goal.id'       => $this->Collaborator->getCollaboGoalList($this->my_uid, false),
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
+            ],
+            'fields'     => [
+                'Goal.id',
+                'SUM(Evaluation.status) as cal',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'left',
+                    'table'      => 'evaluations',
+                    'alias'      => 'Evaluation',
+                    'conditions' => [
+                        'Evaluation.goal_id = Goal.id',
+                        'Evaluation.del_flg' => 0,
+                    ],
+                ],
+            ],
+            'group'      => [
+                'Goal.id'
+            ],
+        ];
+        $res= $this->find('all', $options);
+        foreach ($res as $record) {
+            if ($record[0]['cal'] == null || $record[0]['cal'] == 0) {
+                $goal_ids[] = $record['Goal']['id'];
+            }
+        }
+
+        //ゴール付加情報を取得
+        $options = [
+            'conditions' => [
+                'Goal.id'            => $goal_ids,
+            ],
+            'contain'    => [
+                'MyCollabo'  => [
+                    'conditions' => [
+                        'MyCollabo.user_id' => $this->my_uid
+                    ]
+                ],
+                'KeyResult'  => [
+                ],
+                'Purpose',
+                'Evaluation' => [
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id' => $this->my_uid,
+                    ],
+                    'fields'     => ['Evaluation.id'],
+                    'limit'      => 1,
+                ]
+            ],
+            'limit'      => $limit,
+            'page'       => $page
+        ];
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
+        //目的一覧を取得
+        if (!empty($purposes = $this->Purpose->getPurposesNoGoal())) {
+            foreach ($purposes as $key => $val) {
+                $purposes[$key]['Goal'] = [];
+            }
+            /** @noinspection PhpParamsInspection */
+            $res = array_merge($purposes, $res);
+        }
+
+        return $res;
+    }
     /**
      * 期限が近→遠　で並べ替え
      *
@@ -561,8 +685,8 @@ class Goal extends AppModel
 
     function getByGoalId($goal_ids)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.id'            => $goal_ids,
@@ -611,8 +735,8 @@ class Goal extends AppModel
     {
         $options = [
             'conditions' => [
-                'Goal.id'            => $id,
-                'Goal.team_id'       => $this->current_team_id,
+                'Goal.id'      => $id,
+                'Goal.team_id' => $this->current_team_id,
             ],
             'contain'    => [
                 'Purpose',
@@ -657,12 +781,14 @@ class Goal extends AppModel
                     ],
                 ],
                 'KeyResult'    => [
-                    'fields'     => [
+                    'fields' => [
                         'KeyResult.id',
+                        'KeyResult.name',
                         'KeyResult.progress',
                         'KeyResult.priority',
                         'KeyResult.completed',
                     ],
+                    'order'  => ['KeyResult.completed' => 'asc'],
                 ],
                 'User'         => [
                     'fields' => $this->User->profileFields,
@@ -706,8 +832,8 @@ class Goal extends AppModel
      */
     function getAllGoals($limit = 20, $search_option = null, $params = null)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
 
         $page = 1;
         if (isset($params['named']['page']) || !empty($params['named']['page'])) {
@@ -789,8 +915,8 @@ class Goal extends AppModel
 
     function countGoalRes($search_option)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'Goal.team_id'       => $this->current_team_id,
@@ -985,10 +1111,10 @@ class Goal extends AppModel
     function getAllUserGoal($start_date = null, $end_date = null)
     {
         if (!$start_date) {
-            $start_date = $this->Team->getTermStartDate();
+            $start_date = $this->Team->getCurrentTermStartDate();
         }
         if (!$end_date) {
-            $end_date = $this->Team->getTermEndDate();
+            $end_date = $this->Team->getCurrentTermEndDate();
         }
         $team_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
         $options = [
@@ -1021,8 +1147,8 @@ class Goal extends AppModel
 
     function filterThisTermIds($gids)
     {
-        $start_date = $this->Team->getTermStartDate();
-        $end_date = $this->Team->getTermEndDate();
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
                 'id'            => $gids,

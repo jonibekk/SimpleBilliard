@@ -20,6 +20,7 @@ class CirclesControllerTest extends ControllerTestCase
         'app.circle',
         'app.team',
         'app.evaluation_setting',
+        'app.evaluate_term',
         'app.badge',
         'app.user',
         'app.notify_setting',
@@ -167,6 +168,16 @@ class CirclesControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/circles/ajax_get_public_circles_modal/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetCircleMembers()
+    {
+        $this->_getCirclesCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+        $this->testAction('/circles/ajax_get_circle_members/1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

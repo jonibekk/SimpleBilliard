@@ -289,6 +289,7 @@ class Circle extends AppModel
                 'Circle.name',
                 'Circle.photo_file_name',
                 'Circle.circle_member_count',
+                'Circle.modified',
             ],
             'contain'    => [
                 'CircleMember' => [

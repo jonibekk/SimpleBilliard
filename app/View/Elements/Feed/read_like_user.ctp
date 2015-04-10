@@ -8,6 +8,7 @@
  * @var CodeCompletionView $this
  * @var                    $user
  * @var                    $created
+ * @var                    $type
  */
 ?>
 <!-- START app/View/Elements/Feed/read_like_user.ctp -->
@@ -22,7 +23,7 @@
 
         <? if ($created): ?>
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                <?= $this->TimeEx->elapsedTime(h($created)) ?>
+                <?= $this->TimeEx->elapsedTime(h($created), viaIsSet($type)) ?>
             </div>
         <? endif; ?>
     </div>

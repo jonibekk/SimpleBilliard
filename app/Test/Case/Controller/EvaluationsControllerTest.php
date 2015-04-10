@@ -80,6 +80,29 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/', ['method' => 'GET']);
     }
 
+    /**
+     * index method
+     *
+     * @return void
+     */
+    public function testIndexPreviousTerm()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $this->_savePreviousTerm($Evaluations);
+        $eval_data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => $Evaluations->Team->EvaluateTerm->getLastInsertID(),
+            'evaluate_type'     => 0,
+            'my_turn_flg'       => true,
+            'index_num'         => 0,
+        ];
+        $Evaluations->Evaluation->save($eval_data);
+        $this->testAction('/evaluations/index/term:previous', ['method' => 'GET']);
+    }
+
     public function testIndexNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
@@ -486,5 +509,15 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations->Team->my_uid = 1;
 
         return $Evaluations;
+    }
+
+    function _savePreviousTerm(&$Evaluations)
+    {
+        $data = [
+            'team_id'    => $Evaluations->Team->current_team_id,
+            'start_date' => $Evaluations->Team->getBeforeTermStartEnd()['start'],
+            'end_date'   => $Evaluations->Team->getBeforeTermStartEnd()['end'],
+        ];
+        $Evaluations->Team->EvaluateTerm->save($data);
     }
 }
