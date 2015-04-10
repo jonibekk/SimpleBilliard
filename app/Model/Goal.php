@@ -475,7 +475,7 @@ class Goal extends AppModel
             ],
             'fields'     => [
                 'Goal.id',
-                'SUM(Evaluation.status) as cal',
+                'Evaluation.status',
             ],
             'joins'      => [
                 [
@@ -492,10 +492,10 @@ class Goal extends AppModel
                 'Goal.id'
             ],
         ];
-        $res= $this->find('all', $options);
+        $res = $this->find('all', $options);
         $goal_ids = [];
         foreach ($res as $record) {
-            if ($record[0]['cal'] == null || $record[0]['cal'] == 0) {
+            if (viaIsSet($record['Evaluation']['status']) != 2) {
                 $goal_ids[] = $record['Goal']['id'];
             }
         }
@@ -509,7 +509,7 @@ class Goal extends AppModel
             ],
             'fields'     => [
                 'Goal.id',
-                'SUM(Evaluation.status) as cal',
+                'Evaluation.status',
             ],
             'joins'      => [
                 [
@@ -526,9 +526,9 @@ class Goal extends AppModel
                 'Goal.id'
             ],
         ];
-        $res= $this->find('all', $options);
+        $res = $this->find('all', $options);
         foreach ($res as $record) {
-            if ($record[0]['cal'] == null || $record[0]['cal'] == 0) {
+            if (viaIsSet($record['Evaluation']['status']) != 2) {
                 $goal_ids[] = $record['Goal']['id'];
             }
         }
