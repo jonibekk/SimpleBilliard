@@ -2117,32 +2117,37 @@ function hideCommentNotifyErrorBox(notifyBox) {
     errorBox.css("display", "none");
 }
 
+// Be Enable or Disabled eval button
 $(function () {
+    var eva = [];
     if ($('#evaluation-form')[0]) {
-        var eva = [];
+
+        // Initialize
         $(".eva-val").each(function () {
-            eva[this.id] = this.value;
+            setKeyValToEvalList(this);
         });
+        switchSubmitBtnEnableOrEnabled();
+
+        // event catch
         $(".eva-val").change(function () {
-            eva[this.id] = this.value;
-            if (isNull(eva)) {
-                $('.eval-view-btn-submit').removeAttr('disabled');
-            }
-            else {
-                $('.eval-view-btn-submit').attr('disabled', true);
-            }
+            setKeyValToEvalList(this);
+            switchSubmitBtnEnableOrEnabled();
         });
         $("textarea.eva-val").keyup(function () {
-                eva[this.id] = this.value;
-                if (isNull(eva)) {
-                    $('.eval-view-btn-submit').removeAttr('disabled');
-                }
-                else {
-                    $('.eval-view-btn-submit').attr('disabled', true);
-                }
-            }
-        );
+            setKeyValToEvalList(this);
+            switchSubmitBtnEnableOrEnabled();
+        });
     }
+
+    function switchSubmitBtnEnableOrEnabled() {
+        if (isNull(eva)) {
+            $('.eval-view-btn-submit').removeAttr('disabled');
+        }
+        else {
+            $('.eval-view-btn-submit').attr('disabled', true);
+        }
+    }
+
     function isNull(val) {
         for (var i in val) {
             if (val[i] == '') {
@@ -2151,5 +2156,9 @@ $(function () {
         }
         return true;
     }
-});
 
+    function setKeyValToEvalList(selector) {
+        eva[selector.id] = selector.value;
+    }
+
+});
