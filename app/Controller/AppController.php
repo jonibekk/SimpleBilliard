@@ -365,7 +365,6 @@ class AppController extends Controller
 
     function _setBasicAuth()
     {
-        //test
         $this->autoRender = false;
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             header('WWW-Authenticate: Basic realm="Private Page"');
