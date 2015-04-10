@@ -24,11 +24,10 @@
                     ?>
                     <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>"
                        class="btn btn-default goal-search-elm <?= $selected ?>" role="button">
-                        <?
-                        if ($incompleteNum > 0):
+                        <? if ($incompleteNum > 0):
                             ?>
                             <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
-                                margin: 5px 0 0 33px;
+                                margin: 0 0 0 33px;
                                 color: #fff;
                                 font-size: 10px;
                                 background-color:red!important;
