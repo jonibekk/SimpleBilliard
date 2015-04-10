@@ -33,7 +33,7 @@ class EvaluationsController extends AppController
 
         //get evaluation term
         $term_param = viaIsSet($this->request->params['named']['term']);
-        $term_name = $term_param ? $term_param : 'present';
+        $term_name = $term_param ? $term_param : 'previous';
         switch ($term_name) {
             case 'present':
                 $selected_tab_term_id = $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
