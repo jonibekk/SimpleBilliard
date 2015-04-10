@@ -597,7 +597,9 @@ class PostsController extends AppController
         if (isset($ogp['image'])) {
 
             $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
-            if ($extension != "png" || $extension != "jpg" || $extension != "jpeg" || $extension != "gif") {
+
+            $allowed_extensions = array("jpg","jpeg","png","gif");
+            if(!in_array($extension,$allowed_extensions)){
                 $ogp['image'] = null;
             }
             $requestData['site_photo'] = $ogp['image'];
