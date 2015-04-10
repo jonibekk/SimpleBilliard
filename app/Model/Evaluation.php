@@ -168,19 +168,14 @@ class Evaluation extends AppModel
     function checkAvailEditable($termId, $evaluateeId)
     {
         $this->checkAvailParameterInEvalForm($termId, $evaluateeId);
-        $nextEvaluatorId = $this->getNextEvaluatorId($termId, $evaluateeId);
         $options = [
             'conditions' => [
-                'OR'                => [
-                    ['evaluator_user_id' => $nextEvaluatorId],
-                    ['evaluator_user_id' => $this->my_uid]
-                ],
+                'evaluator_user_id' => $this->my_uid,
                 'evaluatee_user_id' => $evaluateeId,
                 'team_id'           => $this->current_team_id,
-                'my_turn_flg'       => true,
             ],
         ];
-        if (empty($this->find("all", $options))) {
+        if (empty($this->find("first", $options))) {
             throw new RuntimeException(__d('gl', "あなたが評価する順番ではありません。"));
         }
         return true;

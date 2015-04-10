@@ -25,6 +25,9 @@
     'url'           => ['controller' => 'evaluations', 'action' => 'add'],
     'data-bv-live'  => "disabled"
 ]) ?>
+
+<!---- Total Evaluations ---->
+
 <? if (!empty($totalList)): ?>
 
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
@@ -50,6 +53,8 @@
                         <div for="#" class="col col-sm-3 eval-view-panel-title">
                             <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
                                 <?= __d('gl', "評価者") ?>
+                            <? elseif($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                                <?= __d('gl', "最終評価者") ?>
                             <? else: ?>
                                 <?= __d('gl', "本人") ?>
                             <? endif;?>
@@ -61,14 +66,6 @@
                                 'class' => 'form-control col-xxs-10 mb_12px',
                                 'type'  => 'hidden',
                                 'value' => $total['Evaluation']['id']
-                            ])
-                            ?>
-                            <?=
-                            $this->Form->input("0.Evaluation.index", [
-                                'label' => false,
-                                'class' => 'form-control col-xxs-10 mb_12px',
-                                'type'  => 'hidden',
-                                'value' => $total['Evaluation']['index_num']
                             ])
                             ?>
                             <?=
@@ -110,8 +107,6 @@
                     <?
                     $saveIndex++;
                     ?>
-                    <?
-                    break;?>
 
                 <?
                 else:
@@ -131,6 +126,8 @@
                     <div for="#" class="col col-sm-3 eval-view-panel-title">
                         <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_ONESELF): ?>
                             <?= __d('gl', "本人") ?>
+                        <? elseif($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                            <?= __d('gl', "最終評価者") ?>
                         <? else: ?>
                             <?= __d('gl', "評価者") ?>
                         <? endif;?>
@@ -141,7 +138,11 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <?= h($total['Evaluation']['comment']) ?>
+                            <? if($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                <?= __d('gl', "未確定です。") ?>
+                            <? else: ?>
+                                <?= h($total['Evaluation']['comment']) ?>
+                            <? endif ?>
                         </div>
                     </div>
                     <div class="form-group">
@@ -150,7 +151,11 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <?= h($scoreList[$total['Evaluation']['evaluate_score_id']]) ?>
+                            <? if($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                <?= __d('gl', "未確定です。") ?>
+                            <? else: ?>
+                                <?= h($scoreList[$total['Evaluation']['evaluate_score_id']]) ?>
+                            <? endif ?>
                         </div>
                     </div>
 
@@ -177,6 +182,10 @@
 
     </div>
 <? endif; ?>
+
+
+
+<!---- Goal Evaluations ---->
 
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
     <div class="text-align_c p_8px bg-lightGray">
@@ -340,6 +349,8 @@
                         <div for="#" class="col col-sm-3 eval-view-panel-title">
                             <? if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
                                 <?= __d('gl', "評価者") ?>
+                            <? elseif($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                                <?= __d('gl', "最終評価者") ?>
                             <? else: ?>
                                 <?= __d('gl', "本人") ?>
                             <? endif; ?>
@@ -352,14 +363,6 @@
                                 'class' => 'form-control col-xxs-10 mb_12px',
                                 'type'  => 'hidden',
                                 'value' => $eval['Evaluation']['id']
-                            ]);
-                            ?>
-                            <?=
-                            $this->Form->input("{$saveIndex}.Evaluation.index", [
-                                'label' => false,
-                                'class' => 'form-control col-xxs-10 mb_12px',
-                                'type'  => 'hidden',
-                                'value' => $eval['Evaluation']['index_num']
                             ]);
                             ?>
                             <?=
@@ -402,7 +405,6 @@
                     </div>
                     <?
                     $saveIndex++;
-                    break;
                     ?>
                 <?
                 else:
@@ -422,6 +424,8 @@
                     <div for="#" class="col col-sm-3 eval-view-panel-title">
                         <? if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
                             <?= __d('gl', "評価者") ?>
+                        <? elseif($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                            <?= __d('gl', "最終評価者") ?>
                         <? else: ?>
                             <?= __d('gl', "本人") ?>
                         <? endif;?>
@@ -432,7 +436,11 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <?= h($eval['Evaluation']['comment']) ?>
+                            <? if($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                <?= __d('gl', "未確定です。") ?>
+                            <? else: ?>
+                                <?= h($eval['Evaluation']['comment']) ?>
+                            <? endif ?>
                         </div>
                     </div>
                     <div class="form-group">
@@ -441,7 +449,11 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <?= h($scoreList[$eval['Evaluation']['evaluate_score_id']]) ?>
+                            <? if($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                <?= __d('gl', "未確定です。") ?>
+                            <? else: ?>
+                                <?= h($scoreList[$eval['Evaluation']['evaluate_score_id']]) ?>
+                            <? endif ?>
                         </div>
                     </div>
 
