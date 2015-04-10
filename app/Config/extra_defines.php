@@ -36,3 +36,5 @@ define('GOOGLE_CLIENT_SECRET_ID', null);
 define('PUSHER_ID', '98763');
 define('PUSHER_KEY', 'cfa05829683ced581f02');
 define('PUSHER_SECRET', '5f88d7065071f0439be4');
+define('BASIC_AUTH_ID', 'test');
+define('BASIC_AUTH_PASS', 'test');
