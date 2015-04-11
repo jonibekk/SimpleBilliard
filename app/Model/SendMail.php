@@ -123,8 +123,6 @@ class SendMail extends AppModel
             'team_id'         => $team_id,
             'notification_id' => $notify_id,
         ];
-        //TODO create()
-        //残すべきと思われ、単純なNew
         $this->create();
         $res = $this->save($data);
         if ($to_uid) {

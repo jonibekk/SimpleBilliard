@@ -960,9 +960,6 @@ class Goal extends AppModel
         }
         $goal['Goal']['completed'] = null;
         unset($goal['Goal']['modified']);
-        //TODO create()
-        //削除してもよいと思われ、動作確認済み
-        $this->create();
         $this->save($goal);
         return true;
     }

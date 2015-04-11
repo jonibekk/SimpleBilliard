@@ -116,8 +116,6 @@ class MemberType extends AppModel
             'name'    => $name,
             'team_id' => $team_id
         ];
-        //TODO create()
-        //削除すべきと思われ、$team_idが指定されているusagesなし
         $this->create();
         return $this->save($data);
     }

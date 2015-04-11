@@ -475,8 +475,6 @@ class User extends AppModel
             $data['User']['active_flg'] = true;
         }
         //データを保存
-        //TODO create()
-        //残すべき、2つのusageどちらもID指定なし
         $this->create();
         if ($this->saveAll($data, ['validate' => false])) {
             //プライマリメールアドレスを登録

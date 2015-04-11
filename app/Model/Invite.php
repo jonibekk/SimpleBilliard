@@ -64,8 +64,6 @@ class Invite extends AppModel
         if ($message) {
             $data['Invite']['message'] = $message;
         }
-        //TODO create()
-        //残すべきと思われ、実際は単純なnew
         $this->create();
         $res = $this->save($data);
         return $res;
