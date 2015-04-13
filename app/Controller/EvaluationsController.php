@@ -65,7 +65,7 @@ class EvaluationsController extends AppController
             if (!$this->Team->EvaluationSetting->isEnabled()) {
                 throw new RuntimeException(__d('gl', "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"));
             }
-            $this->Evaluation->checkAvailEditable($evaluateTermId, $evaluateeId);
+            $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
 
             // get evaluation list
             $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
