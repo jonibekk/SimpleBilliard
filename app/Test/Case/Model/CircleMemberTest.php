@@ -116,6 +116,7 @@ class CircleMemberTest extends CakeTestCase
 
     public function testUpdateModified()
     {
+        $this->CircleMember->my_uid = 1;
         $circle_list = [1, 2];
         $this->CircleMember->current_team_id = 1;
         $now = time();

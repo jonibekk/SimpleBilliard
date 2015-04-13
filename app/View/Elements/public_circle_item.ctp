@@ -47,7 +47,9 @@ if (!isset($form)) {
             <?= h($circle['Circle']['name']) ?>
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
+            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $circle['Circle']['id']]) ?>" class="modal-ajax-get">
             <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
+            </a>
             &middot;
             <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified']), 'rough') ?>
         </div>

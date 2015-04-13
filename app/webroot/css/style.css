@@ -33,6 +33,11 @@ ul {
     cursor: pointer;
 }
 
+.cl_both {
+    clear: both;
+}
+
+
 /*=== Header部のリファクタリング ===*/
 .nav-icons > a {
     float: left;
@@ -1146,8 +1151,8 @@ textarea{
     border-radius: 50%;
 }
 
-.bd-circle_20 {
-    border-radius: 20% / 50%;
+.bd-circle_22px {
+    border-radius: 22px;
 }
 
 .bd-radius_4px {
@@ -2777,10 +2782,6 @@ textarea.comment-post-form {
 }
 
 /*========== ゴールフィード ==========*/
-.goals-feed-head {
-    border-bottom: 1px solid #F0F0F0;
-}
-
 .goalsCard-actionResult {
     border-bottom: 1px solid #ccc;
     margin: 6px 0;
@@ -3900,25 +3901,37 @@ Temporary Properties - YOU MUST FIX
     display: inline-block;
 }
 
-.goal-term-search-menu {
-    border-bottom: solid 2px #e0e0e0;
-}
 
 .goal-search-elm, .goal-filter-elm {
-    background-color: #ffffff;
     border: none;
     color: gray;
     border-radius: 0;
 }
 
+.goal-search-elm {
+    background: #ffffff none;
+}
+
+.goal-filter-elm {
+    background-color: #ffffff;
+}
+
 .goal-search-elm:focus, .goal-search-elm:active {
-    background: #e0e0e0 none;
+    background: #ae2f2f none;
     border: none;
 }
 
 .goal-search-elm:hover {
     background: #ae2f2f none;
     border: none;
+}
+
+.goal-term-search-menu > .selected:hover {
+    color: gray;
+}
+
+.goal-search-elm .selected:hover {
+    color: gray;
 }
 
 .goal-filter-elm:focus, .goal-filter-elm:active, .goal-filter-elm:hover, .open .dropdown-toggle.btn-default {
@@ -3945,8 +3958,14 @@ Temporary Properties - YOU MUST FIX
     margin: 10px 0;
 }
 
-.goal-term-search-menu .selected {
-    background: #e0e0e0 none;
+.goal-search-elm {
+    border-bottom: solid 2px #e0e0e0;
+    padding-bottom: 0;
+}
+
+.goal-term-search-menu > .selected {
+    background: #ffffff none;
+    border-bottom: solid 2px #ae2f2f;
 }
 
 .goal-search-count {
@@ -4004,4 +4023,11 @@ Temporary Properties - YOU MUST FIX
 
 .eval-view-btn-submit {
     padding: 8px 33px;
+}
+
+.dot-omission {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
 }

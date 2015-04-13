@@ -516,6 +516,9 @@ class Evaluation extends AppModel
                     break;
             }
         }
+        if (empty($flow)) {
+            return [];
+        }
         $user = $this->Team->TeamMember->User->getProfileAndEmail($user_id);
         $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
         return $res;
@@ -579,7 +582,7 @@ class Evaluation extends AppModel
         return (isset($res['Evaluation']['evaluate_type'])) ? $res['Evaluation']['evaluate_type'] : false;
     }
 
-    function getMyTurnCount($evaluate_type = null)
+    function getMyTurnCount($evaluate_type = null, $term_id = null, $is_all = true)
     {
         $options = [
             'conditions' => [
@@ -587,11 +590,15 @@ class Evaluation extends AppModel
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
                 'evaluate_type'     => $evaluate_type,
+                'evaluate_term_id'  => $term_id
             ],
-            'group' => 'evaluatee_user_id'
+            'group'      => ['evaluate_term_id', 'evaluatee_user_id']
         ];
         if (is_null($evaluate_type)) {
             unset($options['conditions']['evaluate_type']);
+        }
+        if (is_null($term_id) && $is_all === true) {
+            unset($options['conditions']['evaluate_term_id']);
         }
         $count = $this->find('count', $options);
         return $count;
@@ -672,6 +679,23 @@ class Evaluation extends AppModel
             'evaluate_term_id'  => $termId
         ];
         $this->updateAll(['my_turn_flg' => false], $conditions);
+    }
+
+    function getIncompleteNumberList()
+    {
+        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+
+        return [
+            'present'  => [
+                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $current_term_id, false),
+                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $current_term_id, false)
+            ],
+            'previous' => [
+                'my_eval'       => $this->getMyTurnCount(self::TYPE_ONESELF, $previous_term_id, false),
+                'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $previous_term_id, false)
+            ]
+        ];
     }
 
 }

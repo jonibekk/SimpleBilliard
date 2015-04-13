@@ -1308,7 +1308,7 @@ function evFollowGoal() {
                 }
                 else {
                     $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
-                        $(this).children('span').text(cake.message.info.d);
+                        $(this).children('span').text(cake.message.info.z);
                         $(this).children('i').show();
                         $(this).removeClass('follow-on');
                         $(this).addClass('follow-off');
@@ -2116,3 +2116,49 @@ function hideCommentNotifyErrorBox(notifyBox) {
     }
     errorBox.css("display", "none");
 }
+
+// Be Enable or Disabled eval button
+$(function () {
+    var eva = [];
+    if ($('#evaluation-form')[0]) {
+
+        // Initialize
+        $(".eva-val").each(function () {
+            setKeyValToEvalList(this);
+        });
+        switchSubmitBtnEnableOrEnabled();
+
+        // event catch
+        $(".eva-val").change(function () {
+            setKeyValToEvalList(this);
+            switchSubmitBtnEnableOrEnabled();
+        });
+        $("textarea.eva-val").keyup(function () {
+            setKeyValToEvalList(this);
+            switchSubmitBtnEnableOrEnabled();
+        });
+    }
+
+    function switchSubmitBtnEnableOrEnabled() {
+        if (isNull(eva)) {
+            $('.eval-view-btn-submit').removeAttr('disabled');
+        }
+        else {
+            $('.eval-view-btn-submit').attr('disabled', true);
+        }
+    }
+
+    function isNull(val) {
+        for (var i in val) {
+            if (val[i] == '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function setKeyValToEvalList(selector) {
+        eva[selector.id] = selector.value;
+    }
+
+});

@@ -17,11 +17,12 @@ App::uses('AppModel', 'Model');
  * @property PostRead               $PostRead
  * @property ActionResult           $ActionResult
  * @property KeyResult              $KeyResult
+ * @property Circle                 $Circle
  */
 class Post extends AppModel
 {
     /**
-     * 投稿タイプ
+     * post type
      */
     const TYPE_NORMAL = 1;
     const TYPE_CREATE_GOAL = 2;
@@ -29,6 +30,7 @@ class Post extends AppModel
     const TYPE_BADGE = 4;
     const TYPE_KR_COMPLETE = 5;
     const TYPE_GOAL_COMPLETE = 6;
+    const TYPE_CREATE_CIRCLE = 7;
 
     static public $TYPE_MESSAGE = [
         self::TYPE_NORMAL        => null,
@@ -37,11 +39,13 @@ class Post extends AppModel
         self::TYPE_BADGE         => null,
         self::TYPE_KR_COMPLETE   => null,
         self::TYPE_GOAL_COMPLETE => null,
+        self::TYPE_CREATE_CIRCLE => null,
     ];
 
     function _setTypeMessage()
     {
         self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d('gl', "あたらしいゴールをつくりました。");
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __d('gl', "あたらしいサークルをつくりました。");
     }
 
     const SHARE_ALL = 1;
@@ -160,6 +164,7 @@ class Post extends AppModel
         'User',
         'Team',
         'Goal',
+        'Circle',
         'ActionResult',
         'KeyResult',
     ];
