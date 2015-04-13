@@ -95,14 +95,13 @@ class Notification extends AppModel
     {
         $notify = $this->getNotify($data['model_id'], $data['type']);
 
-        //既に存在する通知リストを取得
-        $this->create();
         if (!empty($notify)) {
             unset($notify['Notification']['modified']);
             $notify['Notification'] = array_merge($notify['Notification'], $data);
             $res = $this->save($notify);
         }
         else {
+            $this->create();
             $res = $this->save($data);
         }
         //from_userを保存
@@ -111,6 +110,8 @@ class Notification extends AppModel
             'user_id'         => $this->my_uid,
             'team_id'         => $this->current_team_id,
         ];
+
+        $this->NotifyFromUser->create();
         $this->NotifyFromUser->save($data);
 
         //$this->No
@@ -178,7 +179,6 @@ class Notification extends AppModel
                             'team_id' => $this->current_team_id,
                         ]
                     ];
-                    $this->create();
                     $this->saveAll($notify);
                     $saved_notify_ids[] = $notify['Notification']['id'];
                     //count_numを更新

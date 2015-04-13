@@ -58,6 +58,7 @@ class EvaluationsController extends AppController
     {
 
         $this->layout = LAYOUT_ONE_COLUMN;
+        $my_uid = $this->Auth->user('id');
 
         try {
             // check authorities
@@ -65,10 +66,11 @@ class EvaluationsController extends AppController
             if (!$this->Team->EvaluationSetting->isEnabled()) {
                 throw new RuntimeException(__d('gl', "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"));
             }
-            $this->Evaluation->checkAvailEditable($evaluateTermId, $evaluateeId);
+            $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
 
             // get evaluation list
             $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+            $isEditable = $this->Evaluation->getIsEditable($evaluateTermId, $evaluateeId);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
@@ -76,7 +78,7 @@ class EvaluationsController extends AppController
 
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($this->Session->read('current_team_id'));
-        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $this->Auth->user('id'));
+        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $my_uid);
         $saveIndex = 0;
 
         $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));
@@ -101,7 +103,8 @@ class EvaluationsController extends AppController
                            'evaluateeId',
                            'evaluateType',
                            'status',
-                           'saveIndex'
+                           'saveIndex',
+                           'isEditable'
                    ));
     }
 

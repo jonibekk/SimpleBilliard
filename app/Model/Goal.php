@@ -1077,7 +1077,6 @@ class Goal extends AppModel
         }
         $goal['Goal']['completed'] = null;
         unset($goal['Goal']['modified']);
-        $this->create();
         $this->save($goal);
         return true;
     }
