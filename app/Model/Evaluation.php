@@ -698,4 +698,15 @@ class Evaluation extends AppModel
         ];
     }
 
+    function getAllStatusesForTeamSettings($termId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+            ],
+        ];
+        $res = $this->find("all", $options);
+        return $res;
+    }
+
 }
