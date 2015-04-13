@@ -36,4 +36,20 @@ class ApprovalHistory extends AppModel
         'Collaborator',
         'User',
     ];
+
+    function add($collaborator_id, $user_id, $action_status=0, $comment='')
+    {
+        if ($action_status === 0 && empty($comment) === true) {
+            return;
+        }
+
+        $param = [
+            'collaborator_id' => $collaborator_id,
+            'user_id' => $user_id,
+            'action_status' => $action_status,
+            'comment' => $comment,
+        ];
+
+        return $this->save($param);
+    }
 }

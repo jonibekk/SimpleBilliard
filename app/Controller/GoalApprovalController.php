@@ -8,6 +8,7 @@ App::uses('AppController', 'Controller');
  * @property SessionComponent   $Session
  * @property TeamMember         $TeamMember
  * @property Collaborator       $Collaborator
+ * @property ApprovalHistory    $ApprovalHistory
  */
 class GoalApprovalController extends AppController
 {
@@ -18,6 +19,7 @@ class GoalApprovalController extends AppController
     public $uses = [
         'Collaborator',
         'TeamMember',
+        'ApprovalHistory',
     ];
 
     /*
@@ -231,6 +233,18 @@ class GoalApprovalController extends AppController
         $id = $this->request->param('id');
         if (empty($id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['hold']);
+        }
+        $this->redirect($this->referer());
+    }
+
+    /*
+     *  コメントする
+     */
+    public function comment()
+    {
+        $id = $this->request->param('id');
+        if (empty($id) === false) {
+            $this->ApprovalHistory->add($id, $this->user_id, 1, 'test');
         }
         $this->redirect($this->referer());
     }
