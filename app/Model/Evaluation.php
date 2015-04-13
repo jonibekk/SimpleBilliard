@@ -693,12 +693,74 @@ class Evaluation extends AppModel
 
     function getAllStatusesForTeamSettings($termId)
     {
+        $evaluation_statuses = [
+            0 => [
+                'label' => '自己',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+            1 => [
+                'label' => '評価者1',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+            2 => [
+                'label' => '評価者2',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+            3 => [
+                'label' => '評価者3',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+            4 => [
+                'label' => '評価者4',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+            5 => [
+                'label' => '評価者5',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+            6 => [
+                'label' => '評価者6',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+            7 => [
+                'label' => '評価者7',
+                'all_num' => null,
+                'incomplete_num' => null,
+            ],
+        ];
         $options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
+                'OR' => [
+                    ['evaluate_type' => self::TYPE_ONESELF],
+                    ['evaluate_type' => self::TYPE_EVALUATOR]
+                ]
             ],
         ];
         $res = $this->find("all", $options);
+        $groupedEvaluatee = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
+        $groupedEvaluator = [];
+        foreach($groupedEvaluatee as $key => $val) {
+            $groupedEvaluator[$key] = Hash::combine($val, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluator_user_id");
+        }
+        $groupedEvaluateType = [];
+        foreach($groupedEvaluator as $key => $val) {
+            foreach($val as $key2 => $val2) {
+                $groupedEvaluateType[$key][$key2] = Hash::combine($val2, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluate_type");
+            }
+        }
+        $oneself_all_cnt = count(Hash::extract($groupedEvaluateType, "{n}.{n}.0"));
+        $oneself_incomplete_cnt = count(Hash::extract($groupedEvaluateType, "{n}.{n}.0.{n}.Evaluation[status!=2]"));
+        $evaluation_statuses[0]['all_num'] = $oneself_all_cnt;
+        $evaluation_statuses[0]['incomplete_num'] = $oneself_incomplete_cnt;
+
         return $res;
     }
 

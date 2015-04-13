@@ -67,6 +67,8 @@ class TeamsController extends AppController
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled','unvalued','team_id'));
         //TODO ハードコーディング中! for こーへーさん
 
+        $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
+
         return $this->render();
     }
 
