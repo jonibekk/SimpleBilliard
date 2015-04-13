@@ -108,7 +108,7 @@
                             ?>
                         </div>
 
-                        <div class="panel-body ptb_8px plr_11px comment-block">
+                        <div class="panel-body comment-block">
                             <textarea name="" class="form-control addteam_input-design disabled" placeholder="コメントを書く" rows="1" cols="30" style="margin-bottom: 8px;"></textarea>
 
                             <div class="row">
