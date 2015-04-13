@@ -35,7 +35,7 @@
         <div class="panel-body eval-view-panel-body">
             <? foreach ($totalList as $total): ?>
                 <?
-                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')):
+                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isMyTurn):
                     ?>
                     <div class="form-group">
                         <?=
@@ -331,7 +331,7 @@
             </div>
 
             <? foreach ($goal as $evalIndex => $eval): ?>
-                <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id')): ?>
+                <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isMyTurn): ?>
                     <?=
                     $this->Html->image('ajax-loader.gif',
                                        [
