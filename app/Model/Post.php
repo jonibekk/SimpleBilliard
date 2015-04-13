@@ -510,6 +510,7 @@ class Post extends AppModel
                         'MyPostLike.team_id' => $this->current_team_id,
                     ],
                 ],
+                'Circle',
                 'Comment'         => [
                     'conditions'    => ['Comment.team_id' => $this->current_team_id],
                     'order'         => [
