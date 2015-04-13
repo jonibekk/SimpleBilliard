@@ -313,15 +313,17 @@ class TeamMember extends AppModel
                 ]
             ];
             $user = $this->User->Email->find('first', $options);
-            if (viaIsSet($user['User']['TeamMember'][0]['id'])) {
-                $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
-            }
             if (viaIsSet($user['User'])) {
                 $this->csv_datas[$k]['User'] = $user['User'];
             }
-            //save
-            $this->create();
-            $this->save($this->csv_datas[$k]['TeamMember']);
+            if (viaIsSet($user['User']['TeamMember'][0]['id'])) {
+                $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
+                $this->save($this->csv_datas[$k]['TeamMember']);
+            }
+            else {
+                $this->create();
+                $this->save($this->csv_datas[$k]['TeamMember']);
+            }
         }
 
         /**
@@ -346,7 +348,6 @@ class TeamMember extends AppModel
                 unset($this->csv_datas[$row_k]['Group']);
             }
         }
-
         $this->User->MemberGroup->create();
         $this->User->MemberGroup->saveAll($member_groups);
 
@@ -516,7 +517,6 @@ class TeamMember extends AppModel
                     $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
                     $row_v['MemberGroup'][$k]['team_id'] = $this->current_team_id;
                 }
-                $this->User->MemberGroup->create();
                 $this->User->MemberGroup->saveAll($row_v['MemberGroup']);
             }
             /**

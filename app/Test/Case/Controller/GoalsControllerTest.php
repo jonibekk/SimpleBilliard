@@ -53,6 +53,7 @@ class GoalsControllerTest extends ControllerTestCase
         'app.goal_category',
         'app.key_result',
         'app.collaborator',
+        'app.approval_history',
     );
 
     public $goal_id = null;
