@@ -52,6 +52,13 @@
                 <? foreach ($goal_info as $goal) { ?>
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
                         <div class="panel-body goal-set-heading clearfix">
+
+                            <? if (isset($goal['msg']) === true) { ?>
+							<p class="approval_body_text">
+							<p class="text-right"><?= $goal['msg']; ?></p>
+							</p>
+                            <? } ?>
+
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 
@@ -64,8 +71,8 @@
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
-							<p class="approval_body_text"><?= __d('gl', "役割") ?>
-								: <?= h($goal['Collaborator']['role']); ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "役割") ?>
+                                : <?= h($goal['Collaborator']['role']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
                                 : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
@@ -100,21 +107,42 @@
                             )
                             ?>
                         </div>
-                        <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
+
+                        <div class="panel-body ptb_8px plr_11px comment-block">
+                            <textarea name="" class="form-control addteam_input-design disabled" placeholder="コメントを書く" rows="1" cols="30" style="margin-bottom: 8px;"></textarea>
+
                             <div class="row">
-                                <? if (isset($goal['msg']) === true) { ?>
-                                    <p align="right"><?= $goal['msg']; ?></p>
-                                <? }
-                                else { ?>
-                                    <div class="pull-right">
+                                <div class="pull-right">
+                                    <? if (isset($goal['msg']) === true) { ?>
+                                        <a href="/goal_approval/comment/<?= $goal['Collaborator']['id']; ?>"
+                                           class="btn btn-primary"><?= __d('gl', "コメントする") ?></a>
+                                    <? } else { ?>
                                         <a href="/goal_approval/wait/<?= $goal['Collaborator']['id']; ?>"
                                            class="btn btn-link btn-lightGray bd-radius_4px"><?= __d('gl', "しない") ?></a>
                                         <a href="/goal_approval/approval/<?= $goal['Collaborator']['id']; ?>"
                                            class="btn btn-primary"><?= __d('gl', "評価対象とする") ?></a>
-                                    </div>
-                                <? } ?>
+                                    <? } ?>
+                                </div>
                             </div>
+
+                            <? for ($i=0; $i<3; $i++) { ?>
+                                <div class="font_12px comment-box" comment-id="">
+                                    <div class="col col-xxs-12">
+                                        <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
+                                        <div class="comment-body">
+
+                                            <div class="col col-xxs-12 comment-text comment-user">
+                                                <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
+                                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="">本文本文。。。。。。。。。。。。。</div>
+                                                <div class="lh_15px"><span title="">YYYY/MM/DD HH:MM:SS</span></div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            <? } ?>
                         </div>
+
                     </div>
                 <? } ?>
             <? } ?>
