@@ -13,6 +13,7 @@
 <li class="active"><a href="#account"><?= __d('gl', "メンバー招待") ?></a></li>
 <li class=""><a href="#profile"><?= __d('gl', "一括登録") ?></a></li>
 <li class=""><a href="#evaluation"><?= __d('gl', "評価設定") ?></a></li>
+<li class=""><a href="#progress"><?= __d('gl', "評価状況") ?></a></li>
 <? $this->end() ?>
 <div id="account">
     <?= $this->element('Team/invite') ?>
@@ -37,5 +38,8 @@
         }
     } ?>
     <? //TODO ハードコーディング中! for こーへーさん ?>
+</div>
+<div id="progress">
+    <?= $this->element('Team/evaluation_progress') ?>
 </div>
 <!-- END app/View/Teams/settings.ctp -->
