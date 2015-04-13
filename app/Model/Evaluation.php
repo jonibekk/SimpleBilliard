@@ -677,4 +677,17 @@ class Evaluation extends AppModel
         ];
     }
 
+    function getIsEditable($evaluateTermId, $evaluateeId)
+    {
+        $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
+        $nextEvaluatorId = $this->getNextEvaluatorId($evaluateTermId, $evaluateeId);
+        $isMyTurn   = !empty(Hash::extract($evaluationList, "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$this->my_uid}]"));
+        $isNextTurn = !empty(Hash::extract($evaluationList, "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
+        if ($isMyTurn || $isNextTurn)
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

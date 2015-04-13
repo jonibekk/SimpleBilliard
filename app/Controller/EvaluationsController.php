@@ -70,7 +70,7 @@ class EvaluationsController extends AppController
 
             // get evaluation list
             $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
-            $isMyTurn = !empty(Hash::extract($evaluationList, "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$my_uid}]"));
+            $isEditable = $this->Evaluation->getIsEditable($evaluateTermId, $evaluateeId);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
@@ -104,7 +104,7 @@ class EvaluationsController extends AppController
                            'evaluateType',
                            'status',
                            'saveIndex',
-                           'isMyTurn'
+                           'isEditable'
                    ));
     }
 

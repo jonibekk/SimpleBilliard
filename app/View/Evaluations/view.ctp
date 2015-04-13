@@ -35,7 +35,7 @@
         <div class="panel-body eval-view-panel-body">
             <? foreach ($totalList as $total): ?>
                 <?
-                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isMyTurn):
+                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable):
                     ?>
                     <div class="form-group">
                         <?=
@@ -163,30 +163,29 @@
             <? endforeach; ?>
         </div>
         <?
-        if ($status != Evaluation::TYPE_STATUS_DONE):
-            ?>
-            <div class="panel-footer clearfix">
-                <div class="disp_ib pull-right">
-                    <?= $this->Form->button(__d('gl', "下書き保存"), [
-                        'div'   => false,
-                        'class' => 'btn btn-default',
-                        'id'    => 'evaluation-draft-submit',
-                        'name'  => 'is_draft',
-                        'value' => true
-                    ]) ?>
+        if ($isEditable):
+            if ($status != Evaluation::TYPE_STATUS_DONE):
+                ?>
+                <div class="panel-footer clearfix">
+                    <div class="disp_ib pull-right">
+                        <?= $this->Form->button(__d('gl', "下書き保存"), [
+                            'div'   => false,
+                            'class' => 'btn btn-default',
+                            'id'    => 'evaluation-draft-submit',
+                            'name'  => 'is_draft',
+                            'value' => true
+                        ]) ?>
+                    </div>
                 </div>
-            </div>
-        <?
+            <?
+            endif;
         endif;
         ?>
 
     </div>
 <? endif; ?>
 
-
-
-<!---- Goal Evaluations ---->
-
+<? if($isEditable):?>
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
     <div class="text-align_c p_8px bg-lightGray">
         <?
@@ -222,6 +221,9 @@
         ?>
     </div>
 </div>
+<? endif;?>
+
+<!---- Goal Evaluations ---->
 
 <? $goalIndex = 1 ?>
 <? foreach ($goalList as $goal): ?>
@@ -331,7 +333,7 @@
             </div>
 
             <? foreach ($goal as $evalIndex => $eval): ?>
-                <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isMyTurn): ?>
+                <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable): ?>
                     <?=
                     $this->Html->image('ajax-loader.gif',
                                        [
@@ -463,26 +465,29 @@
             <? endforeach ?>
         </div>
         <?
-        if ($status != Evaluation::TYPE_STATUS_DONE):
-            ?>
-            <div class="panel-footer clearfix">
-                <div class="disp_ib pull-right">
-                    <?= $this->Form->button(__d('gl', "下書き保存"), [
-                        'div'   => false,
-                        'class' => 'btn btn-default',
-                        'id'    => 'evaluation-draft-submit',
-                        'name'  => 'is_draft',
-                        'value' => true
-                    ]) ?>
+        if ($isEditable):
+            if ($status != Evaluation::TYPE_STATUS_DONE):
+                ?>
+                <div class="panel-footer clearfix">
+                    <div class="disp_ib pull-right">
+                        <?= $this->Form->button(__d('gl', "下書き保存"), [
+                            'div'   => false,
+                            'class' => 'btn btn-default',
+                            'id'    => 'evaluation-draft-submit',
+                            'name'  => 'is_draft',
+                            'value' => true
+                        ]) ?>
+                    </div>
                 </div>
-            </div>
-        <?
+            <?
+            endif;
         endif;
         ?>
     </div>
     <? $goalIndex++ ?>
 <? endforeach ?>
 
+<? if ($isEditable):?>
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
     <div class="text-align_c p_8px bg-lightGray">
         <?
@@ -518,5 +523,6 @@
         ?>
     </div>
 </div>
+<? endif;?>
 <?= $this->Form->end() ?>
 <!-- END app/View/Evaluations/view.ctp -->
