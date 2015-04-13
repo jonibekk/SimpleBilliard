@@ -53,7 +53,7 @@
                         <div for="#" class="col col-sm-3 eval-view-panel-title">
                             <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
                                 <?= __d('gl', "評価者") ?>
-                            <? elseif($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                            <? elseif ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                 <?= __d('gl', "最終評価者") ?>
                             <? else: ?>
                                 <?= __d('gl', "本人") ?>
@@ -126,7 +126,7 @@
                     <div for="#" class="col col-sm-3 eval-view-panel-title">
                         <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_ONESELF): ?>
                             <?= __d('gl', "本人") ?>
-                        <? elseif($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                        <? elseif ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                             <?= __d('gl', "最終評価者") ?>
                         <? else: ?>
                             <?= __d('gl', "評価者") ?>
@@ -138,7 +138,7 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <? if($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                            <? if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                 <?= __d('gl', "未確定です。") ?>
                             <? else: ?>
                                 <?= h($total['Evaluation']['comment']) ?>
@@ -151,7 +151,7 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <? if($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                            <? if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                 <?= __d('gl', "未確定です。") ?>
                             <? else: ?>
                                 <?= h($scoreList[$total['Evaluation']['evaluate_score_id']]) ?>
@@ -185,43 +185,43 @@
     </div>
 <? endif; ?>
 
-<? if($isEditable):?>
-<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
-    <div class="text-align_c p_8px bg-lightGray">
-        <?
-        if ($status == Evaluation::TYPE_STATUS_DONE):
+<? if ($isEditable): ?>
+    <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
+        <div class="text-align_c p_8px bg-lightGray">
+            <?
+            if ($status == Evaluation::TYPE_STATUS_DONE):
+                ?>
+                <?= $this->Form->button(__d('gl', "修正して確定"), [
+                'div'   => false,
+                'class' => 'btn btn-primary eval-view-btn-submit',
+                'id'    => 'evaluation-register-submit',
+                'name'  => 'is_register',
+                'value' => true
+            ]) ?>
+            <?
+            else:
+                ?>
+                <?= $this->Form->button(__d('gl', "下書き保存"), [
+                'div'   => false,
+                'class' => 'btn btn-default',
+                'id'    => 'evaluation-draft-submit',
+                'name'  => 'is_draft',
+                'value' => true
+            ]) ?>
+                <?= $this->Form->button(__d('gl', "確定"), [
+                'div'      => false,
+                'class'    => 'btn btn-primary eval-view-btn-submit',
+                'id'       => 'evaluation-register-submit',
+                'name'     => 'is_register',
+                'disabled' => true,
+                'value'    => true
+            ]) ?>
+            <?
+            endif;
             ?>
-            <?= $this->Form->button(__d('gl', "修正して確定"), [
-            'div'   => false,
-            'class' => 'btn btn-primary eval-view-btn-submit',
-            'id'    => 'evaluation-register-submit',
-            'name'  => 'is_register',
-            'value' => true
-        ]) ?>
-        <?
-        else:
-            ?>
-            <?= $this->Form->button(__d('gl', "下書き保存"), [
-            'div'   => false,
-            'class' => 'btn btn-default',
-            'id'    => 'evaluation-draft-submit',
-            'name'  => 'is_draft',
-            'value' => true
-        ]) ?>
-            <?= $this->Form->button(__d('gl', "確定"), [
-            'div'     => false,
-            'class'   => 'btn btn-primary eval-view-btn-submit',
-            'id'      => 'evaluation-register-submit',
-            'name'    => 'is_register',
-            'disabled' => true,
-            'value'   => true
-        ]) ?>
-        <?
-        endif;
-        ?>
+        </div>
     </div>
-</div>
-<? endif;?>
+<? endif; ?>
 
 <!---- Goal Evaluations ---->
 
@@ -351,7 +351,7 @@
                         <div for="#" class="col col-sm-3 eval-view-panel-title">
                             <? if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
                                 <?= __d('gl', "評価者") ?>
-                            <? elseif($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                            <? elseif ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                 <?= __d('gl', "最終評価者") ?>
                             <? else: ?>
                                 <?= __d('gl', "本人") ?>
@@ -426,7 +426,7 @@
                     <div for="#" class="col col-sm-3 eval-view-panel-title">
                         <? if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
                             <?= __d('gl', "評価者") ?>
-                        <? elseif($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                        <? elseif ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                             <?= __d('gl', "最終評価者") ?>
                         <? else: ?>
                             <?= __d('gl', "本人") ?>
@@ -438,7 +438,7 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <? if($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                            <? if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                 <?= __d('gl', "未確定です。") ?>
                             <? else: ?>
                                 <?= h($eval['Evaluation']['comment']) ?>
@@ -451,7 +451,7 @@
                         </label>
 
                         <div class="col col-sm-8">
-                            <? if($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                            <? if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                 <?= __d('gl', "未確定です。") ?>
                             <? else: ?>
                                 <?= h($scoreList[$eval['Evaluation']['evaluate_score_id']]) ?>
@@ -487,42 +487,42 @@
     <? $goalIndex++ ?>
 <? endforeach ?>
 
-<? if ($isEditable):?>
-<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
-    <div class="text-align_c p_8px bg-lightGray">
-        <?
-        if ($status == Evaluation::TYPE_STATUS_DONE):
+<? if ($isEditable): ?>
+    <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
+        <div class="text-align_c p_8px bg-lightGray">
+            <?
+            if ($status == Evaluation::TYPE_STATUS_DONE):
+                ?>
+                <?= $this->Form->button(__d('gl', "修正して確定"), [
+                'div'   => false,
+                'class' => 'btn btn-primary eval-view-btn-submit',
+                'id'    => 'evaluation-register-submit',
+                'name'  => 'is_register',
+                'value' => true
+            ]) ?>
+            <?
+            else:
+                ?>
+                <?= $this->Form->button(__d('gl', "下書き保存"), [
+                'div'   => false,
+                'class' => 'btn btn-default',
+                'id'    => 'evaluation-draft-submit',
+                'name'  => 'is_draft',
+                'value' => true
+            ]) ?>
+                <?= $this->Form->button(__d('gl', "確定"), [
+                'div'      => false,
+                'class'    => 'btn btn-primary eval-view-btn-submit',
+                'id'       => 'evaluation-register-submit',
+                'name'     => 'is_register',
+                'disabled' => true,
+                'value'    => true
+            ]) ?>
+            <?
+            endif;
             ?>
-            <?= $this->Form->button(__d('gl', "修正して確定"), [
-            'div'   => false,
-            'class' => 'btn btn-primary eval-view-btn-submit',
-            'id'    => 'evaluation-register-submit',
-            'name'  => 'is_register',
-            'value' => true
-        ]) ?>
-        <?
-        else:
-            ?>
-            <?= $this->Form->button(__d('gl', "下書き保存"), [
-            'div'   => false,
-            'class' => 'btn btn-default',
-            'id'    => 'evaluation-draft-submit',
-            'name'  => 'is_draft',
-            'value' => true
-        ]) ?>
-            <?= $this->Form->button(__d('gl', "確定"), [
-            'div'   => false,
-            'class' => 'btn btn-primary eval-view-btn-submit',
-            'id'    => 'evaluation-register-submit',
-            'name'  => 'is_register',
-            'disabled' => true,
-            'value' => true
-        ]) ?>
-        <?
-        endif;
-        ?>
+        </div>
     </div>
-</div>
-<? endif;?>
+<? endif; ?>
 <?= $this->Form->end() ?>
 <!-- END app/View/Evaluations/view.ctp -->
