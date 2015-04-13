@@ -918,6 +918,7 @@ class AppSchema extends CakeSchema
         'public_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'important_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'goal_id'              => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+        'circle_id'            => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'サークルID'),
         'action_result_id'     => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'アクション結果ID'),
         'key_result_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'KR ID'),
         'photo1_file_name'     => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿画像1', 'charset' => 'utf8'),
@@ -943,7 +944,8 @@ class AppSchema extends CakeSchema
             'important_flg'    => array('column' => 'important_flg', 'unique' => 0),
             'team_id_modified' => array('column' => array('team_id', 'modified'), 'unique' => 0),
             'action_result_id' => array('column' => 'action_result_id', 'unique' => 0),
-            'key_result_id'    => array('column' => 'key_result_id', 'unique' => 0)
+            'key_result_id'    => array('column' => 'key_result_id', 'unique' => 0),
+            'circle_id'        => array('column' => 'circle_id', 'unique' => 0)
         ),
         'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
