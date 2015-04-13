@@ -142,7 +142,6 @@ class KeyResult extends AppModel
             $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
                                                        strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
         }
-
         $this->create();
         if (!$this->save($data)) {
             throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
@@ -235,7 +234,6 @@ class KeyResult extends AppModel
         //progressを元に戻し、current_valueにstart_valueをsetする
         $current_kr['KeyResult']['progress'] = 0;
         $current_kr['KeyResult']['current_value'] = $current_kr['KeyResult']['start_value'];
-        $this->create();
         $this->save($current_kr);
         return true;
     }
