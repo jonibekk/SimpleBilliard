@@ -287,7 +287,44 @@
                             </div>
                         </a>
                     </div>
+
+                <? elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
+                    <div class="col col-xxs-12 pt_10px">
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
+                           class="no-line font_verydark">
+                            <div class="site-info bd-radius_4px">
+                                <div class="media">
+                                    <div class="pull-left">
+                                        <?=
+                                        $this->Html->image('ajax-loader.gif',
+                                                           [
+                                                               'class'         => 'lazy media-object',
+                                                               'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                           "Circle.photo",
+                                                                                                           ['style' => 'medium_large']),
+                                                               'width'         => '80px',
+                                                           ]
+                                        )
+                                        ?>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Circle']['name']),
+                                                                                              0, 50,
+                                                                                              "...") ?></h4>
+                                        <? if (isset($post['Circle']['description'])): ?>
+                                            <div class="font_12px site-info-txt">
+                                                <?= mb_strimwidth(h($post['Circle']['description']), 0, 110, "...") ?>
+                                            </div>
+                                        <? endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 <? endif; ?>
+
+
+
                 <? if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
