@@ -73,7 +73,11 @@ class TeamsController extends AppController
         $all_cnt = array_sum(Hash::extract($statuses, "{n}.all_num"));
         $incomplete_cnt = array_sum(Hash::extract($statuses, "{n}.incomplete_num"));
         $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
-        $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
+        if($complete_cnt == 0) {
+            $progress_percent = 0;
+        } else {
+            $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
+        }
 
         $this->set(compact(
                        'statuses',
