@@ -694,74 +694,88 @@ class Evaluation extends AppModel
     function getAllStatusesForTeamSettings($termId)
     {
         $evaluation_statuses = [
-            0 => [
-                'label' => '自己',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "自己"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
-            1 => [
-                'label' => '評価者1',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "評価者1"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
-            2 => [
-                'label' => '評価者2',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "評価者2"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
-            3 => [
-                'label' => '評価者3',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "評価者3"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
-            4 => [
-                'label' => '評価者4',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "評価者4"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
-            5 => [
-                'label' => '評価者5',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "評価者5"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
-            6 => [
-                'label' => '評価者6',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "評価者6"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
-            7 => [
-                'label' => '評価者7',
-                'all_num' => null,
-                'incomplete_num' => null,
+            [
+                'label' => __d('gl', "評価者7"),
+                'all_num' => 0,
+                'incomplete_num' => 0,
             ],
         ];
-        $options = [
+        $own_evaluation_options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
-                'OR' => [
-                    ['evaluate_type' => self::TYPE_ONESELF],
-                    ['evaluate_type' => self::TYPE_EVALUATOR]
-                ]
+                'evaluate_type' => self::TYPE_ONESELF,
             ],
+            'group' => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ]
         ];
-        $res = $this->find("all", $options);
-        $groupedEvaluatee = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
-        $groupedEvaluator = [];
-        foreach($groupedEvaluatee as $key => $val) {
-            $groupedEvaluator[$key] = Hash::combine($val, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluator_user_id");
-        }
-        $groupedEvaluateType = [];
-        foreach($groupedEvaluator as $key => $val) {
-            foreach($val as $key2 => $val2) {
-                $groupedEvaluateType[$key][$key2] = Hash::combine($val2, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluate_type");
-            }
-        }
-        $oneself_all_cnt = count(Hash::extract($groupedEvaluateType, "{n}.{n}.0"));
-        $oneself_incomplete_cnt = count(Hash::extract($groupedEvaluateType, "{n}.{n}.0.{n}.Evaluation[status!=2]"));
+        $res = $this->find("all", $own_evaluation_options);
+        $oneself_all_cnt = count($res);
+        $oneself_incomplete_cnt = count(Hash::extract($res, "{n}.Evaluation[status!=2]"));
+
         $evaluation_statuses[0]['all_num'] = $oneself_all_cnt;
         $evaluation_statuses[0]['incomplete_num'] = $oneself_incomplete_cnt;
 
-        return $res;
+        $evaluator_options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'evaluate_type'     => self::TYPE_EVALUATOR
+            ],
+            'group' => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ]
+        ];
+        $res = $this->find("all", $evaluator_options);
+        $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
+
+        // 各評価者の件数カウント
+        foreach($combined as $groupedEvaluator) {
+            $evaluator_index = 1;
+            foreach($groupedEvaluator as $eval) {
+                $evaluation_statuses[$evaluator_index]['all_num']++;
+                if($eval['Evaluation']['status'] != self::TYPE_STATUS_DONE) {
+                    $evaluation_statuses[$evaluator_index]['incomplete_num']++;
+                }
+                $evaluator_index++;
+            }
+        }
+
+        return $evaluation_statuses;
     }
 
 }
