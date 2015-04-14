@@ -22,6 +22,8 @@ class GoalApprovalController extends AppController
         'ApprovalHistory',
     ];
 
+    public $components = ['RequestHandler'];
+
     /*
      * 処理待ち && 自分のゴールの場合
      */
@@ -243,10 +245,15 @@ class GoalApprovalController extends AppController
     public function comment()
     {
         $id = $this->request->param('id');
+        $comment = $this->request->param('comment');
         if (empty($id) === false) {
-            $this->ApprovalHistory->add($id, $this->user_id, 1, 'test');
+            $this->ApprovalHistory->add($id, $this->user_id, 1, $comment);
         }
-        $this->redirect($this->referer());
+        /*
+        $this->response->type('json');
+        $this->response->body(json_encode(['success', $comment, $id]));
+        */
+        return $this->response;
     }
 
     /*

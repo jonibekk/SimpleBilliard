@@ -25,8 +25,8 @@ Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display'
 Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 
-Router::connect("/goal_approval/:action/:id",
-				["controller" => 'goal_approval', "action" => "index", "approval", "wait", "method" => "GET"],
+Router::connect("/goal_approval/:action/:id/:comment",
+				["controller" => 'goal_approval', "action" => "index", "approval", "wait", "comment", "method" => "GET"],
 				["id"=>"[0-9]+"]
 );
 
