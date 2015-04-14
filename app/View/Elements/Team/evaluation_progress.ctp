@@ -10,7 +10,7 @@
 <div class="panel panel-default">
     <div class="panel-heading"><?= __d('gl', "評価状況") ?></div>
     <div class="panel-body">
-        <div class="form-group">
+        <div class="form-group" style="overflow:hidden">
             <div class="progress-bar progress-bar-info" role="progressbar"
                  aria-valuenow="<?= $progress_percent ?>" aria-valuemin="0"
                  aria-valuemax="100" style="width: <?= $progress_percent ?>%;">
