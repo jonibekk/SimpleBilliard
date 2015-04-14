@@ -743,6 +743,14 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->evaluate_term_id);
     }
 
+    function testGetIncompleteEvaluatees()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id);
+    }
+
     function _saveEvaluations()
     {
         $evaluateeId = 1;

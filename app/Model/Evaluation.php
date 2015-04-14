@@ -778,4 +778,28 @@ class Evaluation extends AppModel
         return $evaluation_statuses;
     }
 
+    function getIncompleteEvaluatees($termId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+            ],
+            'group' => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ],
+            'contain' => [
+                'EvaluateeUser'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $combinedEvaluatees = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
+        $incompleteEvaluatees = [];
+        foreach($combinedEvaluatees as $evaluateeId => $evaluatee) {
+            if(!empty(Hash::extract($evaluatee, "{n}.Evaluation[status!=2"))) {
+                $incompleteEvaluatees[$evaluateeId]['User'] = Hash::extract($evaluatee, "{n}.EvaluateeUser")[0];
+            }
+        }
+        return $incompleteEvaluatees;
+    }
+
 }

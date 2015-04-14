@@ -143,7 +143,20 @@ class EvaluationsController extends AppController
         $this->Evaluation->commit();
         $this->Pnotify->outSuccess($successMsg);
         return $this->redirect($this->referer());
+    }
 
+    public function ajax_get_incomplete_evaluatees()
+    {
+        $this->_ajaxPreProcess();
+        $incomplete_evaluatees = $this->Evaluation->getIncompleteEvaluatees($this->Team->EvaluateTerm->getCurrentTermId());
+        $this->set(compact('incomplete_evaluatees'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_evaluatees');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
     }
 
 }

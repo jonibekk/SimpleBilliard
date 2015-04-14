@@ -18,8 +18,9 @@
             </div>
         </div>
         <div class="form-group">
-            <a href="">
-                未完了の被評価者をみる
+            <a class="modal-ajax-get pointer"
+                href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_evaluatees']) ?>">
+                <?= __d('gl', "未完了の被評価者をみる") ?>
             </a>
         </div>
         <hr>
