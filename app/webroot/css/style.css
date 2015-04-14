@@ -1132,6 +1132,10 @@ textarea{
     line-height: 40px;
 }
 
+.lh_44px {
+    line-height: 44px;
+}
+
 /*/アイコンを揃える*/
 
 /* ボーダー */
@@ -3865,12 +3869,11 @@ Temporary Properties - YOU MUST FIX
 
 .eval-view-panel-body .form-label {
     text-align: left;
-    padding-left: 4px;
+    padding-top: 0;
 }
 
 .eval-view-panel-title {
     font-weight: bold;
-    padding-left: 4px;
 }
 
 .eval-view-panel-goal-pic {
@@ -3887,6 +3890,16 @@ Temporary Properties - YOU MUST FIX
 .eval-view-result-text,
 .eval-view-action-text {
     text-align: center;
+}
+
+.eval-view-img {
+    display: block;
+    float: left;
+    height: 48px;
+    width: 48px;
+    margin-right: 6px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
 }
 
 .none-border {
