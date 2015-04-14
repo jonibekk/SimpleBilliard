@@ -12,9 +12,9 @@
     <div class="panel-body">
         <div class="form-group">
             <div class="progress-bar progress-bar-info" role="progressbar"
-                 aria-valuenow="100" aria-valuemin="0"
-                 aria-valuemax="100" style="width: 100%;">
-                <span class="ml_12px">100%</span>
+                 aria-valuenow="<?= $progress_percent ?>" aria-valuemin="0"
+                 aria-valuemax="100" style="width: <?= $progress_percent ?>%;">
+                <span class="ml_12px"><?= $progress_percent ?>%</span>
             </div>
         </div>
         <div class="form-group">
