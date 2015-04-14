@@ -249,10 +249,17 @@ class GoalApprovalController extends AppController
         if (empty($id) === false) {
             $this->ApprovalHistory->add($id, $this->user_id, 1, $comment);
         }
-        /*
-        $this->response->type('json');
-        $this->response->body(json_encode(['success', $comment, $id]));
-        */
+        $this->redirect($this->referer());
+        //return $this->response;
+    }
+
+    public function get_history() {
+        $id = $this->request->param('id');
+        if (empty($id) === false) {
+            $comment_list = $this->ApprovalHistory->getHistory($id);
+            $this->response->type('json');
+            $this->response->body(json_encode($comment_list));
+        }
         return $this->response;
     }
 

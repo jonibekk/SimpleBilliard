@@ -28,25 +28,13 @@
     }
 </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-<script>
-    var myApp = angular.module("myApp", []);
+<script type="text/javascript">
 
-    myApp .controller("commentController", function($scope, $http){
+    var commentBtn = function(key, cb_id) {
+        comment = document.getElementById('comment_' + key).value;
+        document.getElementById('comment_box_'+key).action = '/goal_approval/comment/' + cb_id + '/' + comment;
+    }
 
-        // コメントボタンクリック時
-        $scope.goComment = function($cb_id) {
-            $http.get('goal_approval/comment/' + $cb_id + '/' + $scope.comment_area).success(function(response) {
-                // 成功時の処理
-                console.log('success comment.');
-                $scope.comment_area = "";
-            }).error(function(data) {
-                // エラー処理
-                console.log('failed comment.');
-            });
-        }
-
-    });
 </script>
 
 <div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SubHeaderMenu">
@@ -68,9 +56,9 @@
 
 <div class="approval_body_start_area">
     <div class="row">
-        <div class="col-sm-8 col-sm-offset-2" ng-controller="approvalDefaultController">
+        <div class="col-sm-8 col-sm-offset-2">
             <? if (isset($goal_info) === true && count($goal_info) > 0) { ?>
-                <? foreach ($goal_info as $goal) { ?>
+                <? foreach ($goal_info as $key => $goal) { ?>
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
                         <div class="panel-body goal-set-heading clearfix">
 
@@ -129,41 +117,46 @@
                             ?>
                         </div>
 
-                        <div class="panel-body comment-block" ng-app="myApp">
-                            <div ng-controller="commentController">
-                                <textarea ng-model="comment_area" class="form-control addteam_input-design disabled" placeholder="コメントを書く" rows="1" cols="30" style="margin-bottom: 8px;"></textarea>
+                        <form id="comment_box_<?= $key ?>" action="" method="">
 
-                                <div class="row">
-                                    <div class="pull-right">
-                                        <? if (isset($goal['msg']) === true) { ?>
-                                            <input ng-click="goComment(<?= $goal['Collaborator']['id']; ?>)" ng-disabled="!comment_area.length" type="submit" class="btn btn-primary" value="<?= __d('gl', "コメントする") ?>">
-                                        <? } else { ?>
-                                            <a href="/goal_approval/wait/<?= $goal['Collaborator']['id']; ?>"
-                                               class="btn btn-link btn-lightGray bd-radius_4px"><?= __d('gl', "しない") ?></a>
-                                            <a href="/goal_approval/approval/<?= $goal['Collaborator']['id']; ?>"
-                                               class="btn btn-primary"><?= __d('gl', "評価対象とする") ?></a>
-                                        <? } ?>
-                                    </div>
+                        <div class="panel-body comment-block">
+                            <textarea name="comment_<?= $key ?>" id="comment_<?= $key ?>" class="form-control addteam_input-design" placeholder="コメントを書く" rows="1" cols="30" style="margin-bottom: 8px;"></textarea>
+
+                            <div class="row">
+                                <div class="pull-right">
+                                    <? if (isset($goal['msg']) === true) { ?>
+                                        <input type="submit" class="btn btn-primary" value="<?= __d('gl', "コメントする") ?>" onclick="commentBtn(<?= $key ?>, <?= $goal['Collaborator']['id']; ?>)">
+                                    <? } else { ?>
+                                        <a href="/goal_approval/wait/<?= $goal['Collaborator']['id']; ?>/"
+                                           class="btn btn-link btn-lightGray bd-radius_4px"><?= __d('gl', "しない") ?></a>
+                                        <a href="/goal_approval/approval/<?= $goal['Collaborator']['id']; ?>"
+                                           class="btn btn-primary"><?= __d('gl', "評価対象とする") ?></a>
+                                    <? } ?>
                                 </div>
+                            </div>
 
-                                <? for ($i=0; $i<3; $i++) { ?>
-                                    <div class="font_12px comment-box" comment-id="">
-                                        <div class="col col-xxs-12">
-                                            <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
-                                            <div class="comment-body">
+                            <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
+                            <? foreach ($goal['ApprovalHistory'] as $history) { ?>
+                                <div class="font_12px comment-box">
+                                    <div class="col col-xxs-12">
+                                        <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
+                                        <div class="comment-body">
 
-                                                <div class="col col-xxs-12 comment-text comment-user">
-                                                    <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
-                                                    <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="">本文本文。。。。。。。。。。。。。</div>
-                                                    <div class="lh_15px"><span title="">YYYY/MM/DD HH:MM:SS</span></div>
-                                                </div>
-
+                                            <div class="col col-xxs-12 comment-text comment-user">
+                                                <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
+                                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
+                                                <div class="lh_15px"><span title="">YYYY/MM/DD HH:MM:SS</span></div>
                                             </div>
+
                                         </div>
                                     </div>
-                                <? } ?>
-                            </div>
+                                </div>
+                            <? } ?>
+                            <? } ?>
                         </div>
+
+                        </form>
+
 
                     </div>
                 <? } ?>

@@ -30,6 +30,7 @@ Router::connect("/goal_approval/:action/:id/:comment",
 				["id"=>"[0-9]+"]
 );
 
+
 /**
  * トップページの言語切り換えの為のルーティング設定。
  * PagesControllerにのみ影響する。

@@ -52,4 +52,17 @@ class ApprovalHistory extends AppModel
 
         return $this->save($param);
     }
+
+    function getHistory ($collaborator_id) {
+        $options = [
+            'conditions' => [
+                'collaborator_id' => $collaborator_id,
+            ],
+            'fields'     => [
+                'id', 'user_id', 'comment', 'created'
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }

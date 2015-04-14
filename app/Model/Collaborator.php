@@ -65,6 +65,10 @@ class Collaborator extends AppModel
         'User',
     ];
 
+    public $hasMany = [
+        'ApprovalHistory',
+    ];
+
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -168,6 +172,11 @@ class Collaborator extends AppModel
                 'User' => [
                     'fields' => $this->User->profileFields
                 ],
+                'ApprovalHistory' => [
+                    'fields'       => ['id', 'comment'],
+                    'order' => ['ApprovalHistory.created DESC'],
+                    //'limit' => 1,
+                ]
             ],
             'type'       => 'inner',
             'order'      => ['Collaborator.created'],
