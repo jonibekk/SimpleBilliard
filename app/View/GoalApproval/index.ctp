@@ -28,31 +28,6 @@
     }
 </style>
 
-<script type="text/javascript">
-
-    var commentBtn = function(key, cb_id) {
-        var comment = document.getElementById('comment_' + key).value;
-
-        document.getElementById('comment').value = comment;
-        document.getElementById('collaborator_id').value = cb_id;
-        document.getElementById('action_status').value = 1;
-        document.getElementById('form_name').action = '/goal_approval/comment';
-
-    }
-
-    /*
-    var waitBtn = function(key, cb_id) {
-        var comment = document.getElementById('comment_' + key).value;
-        var url = '/goal_approval/wait/' + cb_id + '/';
-        if (comment != "") {
-            url = url + comment;
-        }
-        document.getElementById('comment_box_' + key).action = url;
-    }
-    */
-
-</script>
-
 <div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SubHeaderMenu">
     <div class="col col-xxs-6 text-align_r">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
@@ -74,113 +49,105 @@
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
             <? if (isset($goal_info) === true && count($goal_info) > 0) { ?>
-                <form id="form_name" action="" method="post">
 
-                    <input type="hidden" id="collaborator_id" name="collaborator_id" value="">
-                    <input type="hidden" id="comment" name="comment" value="">
-                    <input type="hidden" id="action_status" name="action_status" value="">
-                    <? foreach ($goal_info as $key => $goal) { ?>
-                        <div class="panel panel-default" id="AddGoalFormPurposeWrap">
-                            <div class="panel-body goal-set-heading clearfix">
+                <? foreach ($goal_info as $key => $goal) { ?>
+                    <div class="panel panel-default" id="AddGoalFormPurposeWrap">
+                        <div class="panel-body goal-set-heading clearfix">
 
-                                <? if (isset($goal['msg']) === true) { ?>
+                            <? if (isset($goal['msg']) === true) { ?>
 							<p class="approval_body_text">
 							<p class="text-right"><?= $goal['msg']; ?></p>
 							</p>
                             <? } ?>
 
-                                <p class="approval_body_text"><?= __d('gl', "名前") ?>
-                                    : <?= h($goal['User']['display_username']); ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "名前") ?>
+                                : <?= h($goal['User']['display_username']); ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
-                                    : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
+                                : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>
-                                    : <?= h($goal['Goal']['name']); ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>
+                                : <?= h($goal['Goal']['name']); ?></p>
 
-                                <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
-                                        __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
+                            <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
+                                    __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "役割") ?>
-                                    : <?= h($goal['Collaborator']['role']); ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "役割") ?>
+                                : <?= h($goal['Collaborator']['role']); ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "単位") ?>
-                                    : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "単位") ?>
+                                : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "達成時") ?>
-                                    : <?= (double)$goal['Goal']['target_value']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "達成時") ?>
+                                : <?= (double)$goal['Goal']['target_value']; ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "開始時") ?>
-                                    : <?= (double)$goal['Goal']['start_value']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "開始時") ?>
+                                : <?= (double)$goal['Goal']['start_value']; ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "期限日") ?>
-                                    :                         <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "期限日") ?>
+                                :                         <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "重要度") ?>
-                                    : <?= $goal['Collaborator']['priority']; ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "重要度") ?>
+                                : <?= $goal['Collaborator']['priority']; ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "目的") ?>
-                                    : <?= h($goal['Goal']['Purpose']['name']); ?></p>
+                            <p class="approval_body_text"><?= __d('gl', "目的") ?>
+                                : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
-                                <p class="approval_body_text"><?= __d('gl', "詳細") ?>
-                                    : <?= $this->TextEx->autoLink($goal['Goal']['description']); ?></p>
-                                <?=
-                                $this->Html->image('ajax-loader.gif',
-                                                   [
-                                                       'class'         => 'lazy',
-                                                       'data-original' => $this->Upload->uploadUrl($goal,
-                                                                                                   "Goal.photo",
-                                                                                                   ['style' => 'medium']),
-                                                       'width'         => '48px',
-                                                       'error-img'     => "/img/no-image-link.png",
-                                                   ]
-                                )
-                                ?>
+                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>
+                                : <?= $this->TextEx->autoLink($goal['Goal']['description']); ?></p>
+                            <?=
+                            $this->Html->image('ajax-loader.gif',
+                                               [
+                                                   'class'         => 'lazy',
+                                                   'data-original' => $this->Upload->uploadUrl($goal,
+                                                                                               "Goal.photo",
+                                                                                               ['style' => 'medium']),
+                                                   'width'         => '48px',
+                                                   'error-img'     => "/img/no-image-link.png",
+                                               ]
+                            )
+                            ?>
+                        </div>
+
+
+                        <div class="panel-body comment-block">
+                            <?= $this->Form->create('ApprovalHistory', ['url' => ['controller'=>'goal_approval', 'action'=>'index'], 'type' => 'post', 'novalidate' => true]); ?>
+                            <?= $this->Form->input('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>1, 'cols'=>30, 'style'=>'margin-bottom: 8px;', 'placeholder'=>'コメントを書く'])?>
+                            <?= $this->Form->hidden('collaborator_id', ['value'=>$goal['Collaborator']['id']]); ?>
+
+                            <div class="row">
+                                <div class="pull-right">
+                                    <? if (isset($goal['msg']) === true) { ?>
+                                        <?= $this->Form->submit(__d('gl', "コメントする"), ['class' => 'btn btn-primary', 'div'=>false]) ?>
+                                    <? } else { ?>
+                                        <?= $this->Form->submit(__d('gl', "しない"), ['class' => 'btn btn-lightGray', 'div'=>false]) ?>
+                                        <?= $this->Form->submit(__d('gl', "評価対象とする"), ['class' => 'btn btn-primary', 'div'=>false]) ?>
+                                    <? } ?>
+                                </div>
                             </div>
 
+                            <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
+                                <? foreach ($goal['ApprovalHistory'] as $history) { ?>
+                                    <div class="font_12px comment-box">
+                                        <div class="col col-xxs-12">
+                                            <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
+                                            <div class="comment-body">
 
-                            <div class="panel-body comment-block">
-                                <textarea name="comment_<?= $key ?>" id="comment_<?= $key ?>" class="form-control addteam_input-design" placeholder="コメントを書く" rows="1" cols="30" style="margin-bottom: 8px;"></textarea>
-
-                                <div class="row">
-                                    <div class="pull-right">
-                                        <? if (isset($goal['msg']) === true) { ?>
-                                            <input type="submit" class="btn btn-primary" value="<?= __d('gl', "コメントする") ?>" onclick="commentBtn(<?= $key ?>, <?= $goal['Collaborator']['id']; ?>)">
-                                        <? } else { ?>
-                                            <!--
-                                        <a href="/goal_approval/wait/<?= $goal['Collaborator']['id']; ?>/"
-                                           class="btn btn-link btn-lightGray bd-radius_4px"><?= __d('gl', "しない") ?></a>
-                                         -->
-                                            <input type="submit" class="btn btn-lightGray" value="<?= __d('gl', "しない") ?>" onclick="waitBtn(<?= $key ?>, <?= $goal['Collaborator']['id']; ?>)">
-                                            <a href="/goal_approval/approval/<?= $goal['Collaborator']['id']; ?>"
-                                               class="btn btn-primary"><?= __d('gl', "評価対象とする") ?></a>
-                                        <? } ?>
-                                    </div>
-                                </div>
-
-                                <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
-                                    <? foreach ($goal['ApprovalHistory'] as $history) { ?>
-                                        <div class="font_12px comment-box">
-                                            <div class="col col-xxs-12">
-                                                <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
-                                                <div class="comment-body">
-
-                                                    <div class="col col-xxs-12 comment-text comment-user">
-                                                        <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
-                                                        <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
-                                                        <div class="lh_15px"><span title="">YYYY/MM/DD HH:MM:SS</span></div>
-                                                    </div>
-
+                                                <div class="col col-xxs-12 comment-text comment-user">
+                                                    <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
+                                                    <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
+                                                    <div class="lh_15px"><span title="">YYYY/MM/DD HH:MM:SS</span></div>
                                                 </div>
+
                                             </div>
                                         </div>
-                                    <? } ?>
+                                    </div>
                                 <? } ?>
-                            </div>
-
+                            <? } ?>
+                            <? echo $this->Form->end(); ?>
                         </div>
-                    <? } ?>
-                </form>
+                    </div>
+                <? } ?>
             <? } ?>
         </div>
     </div>

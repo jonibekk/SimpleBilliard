@@ -25,14 +25,6 @@ Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display'
 Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 
-/*
-Router::connect("/goal_approval/:action/:id/:comment",
-				["controller" => 'goal_approval', "action" => "index", "approval", "wait", "comment", "method" => "POST"],
-				["id"=>"[0-9]+"]
-);
-*/
-
-
 /**
  * トップページの言語切り換えの為のルーティング設定。
  * PagesControllerにのみ影響する。

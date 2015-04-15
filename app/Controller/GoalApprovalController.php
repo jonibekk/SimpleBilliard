@@ -22,8 +22,6 @@ class GoalApprovalController extends AppController
         'ApprovalHistory',
     ];
 
-    public $components = ['RequestHandler'];
-
     /*
      * 処理待ち && 自分のゴールの場合
      */
@@ -172,6 +170,10 @@ class GoalApprovalController extends AppController
      */
     public function index()
     {
+        if(isset($this->request->data['comment_btn'])) {
+            print 'ok';
+            exit;
+        }
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
             $this->team_id, $this->goal_user_ids, $this->goal_status['unapproved']);
         foreach ($goal_info as $key => $val) {
