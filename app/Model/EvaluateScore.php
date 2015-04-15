@@ -70,4 +70,19 @@ class EvaluateScore extends AppModel
         return [null => __d('gl', "選択してください")] + $res;
     }
 
+    function getScore($teamId)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+            ],
+            'order'      => [
+                'index_num' => 'asc'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $res = ['EvaluateScore' => Hash::extract($res, '{n}.EvaluateScore')];
+        return $res;
+    }
+
 }

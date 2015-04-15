@@ -148,6 +148,68 @@
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', 'リーダ評価 ゴール コメント必須') ?></label>
             <?= $this->Form->input("leader_goal_comment_required_flg", ['default' => false,]) ?>
         </div>
+        <h3><?php echo __d('team', '評価定義') ?></h3>
+        <table class="evaluation_select_value table table-striped">
+            <tr>
+                <th>
+                    <?php echo __d('team', '名前') ?>
+                </th>
+                <th>
+                    <?php echo __d('team', '表示順') ?>
+                </th>
+                <th>
+                    <?php echo __d('team', '説明') ?>
+                </th>
+            </tr>
+            <? foreach ($this->request->data['EvaluateScore'] as $es_key => $evaluation_select_value) : ?>
+                <tr class="evaluation_select"
+                    index="<?php echo $es_key ?>">
+                    <td>
+                        <?= $this->Form
+                            ->input("EvaluateScore.$es_key.name",
+                                    array(
+                                        'wrapInput'   => false,
+                                        'type'        => 'text',
+                                        'div'         => false,
+                                        'label'       => false,
+                                        'class'       => 'form-control',
+                                        'placeholder' => __d('team', '名前'),
+                                    ))
+                        ?>
+                    </td>
+                    <td>
+                        <?= $this->Form
+                            ->input("EvaluateScore.$es_key.index_num",
+                                    array(
+                                        'wrapInput'   => false,
+                                        'type'        => 'number',
+                                        'div'         => false,
+                                        'label'       => false,
+                                        'class'       => 'form-control',
+                                        'placeholder' => __d('team', '表示順'),
+                                    ))
+                        ?>
+
+                    </td>
+                    <td>
+                        <?= $this->Form
+                            ->input("EvaluateScore.$es_key.description",
+                                    array(
+                                        'wrapInput'   => false,
+                                        'type'        => 'textarea',
+                                        'rows'        => 3,
+                                        'div'         => false,
+                                        'label'       => false,
+                                        'class'       => 'form-control',
+                                        'placeholder' => __d('team', '定義の説明を書きましょう'),
+                                    ))
+                        ?>
+                    </td>
+                    <?= $this->Form->hidden("EvaluateScore.$es_key.id") ?>
+                    <?= $this->Form->hidden("EvaluateScore.$es_key.team_id") ?>
+                </tr>
+            <?php endforeach; ?>
+        </table>
         <div class="form-actions">
             <?= $this->Form->submit(__d('gl', '評価設定を保存'), ['class' => 'btn btn-primary']) ?>
         </div>

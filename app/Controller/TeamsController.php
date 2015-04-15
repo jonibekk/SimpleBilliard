@@ -51,7 +51,8 @@ class TeamsController extends AppController
         //get evaluation setting
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
-        $this->request->data = array_merge($this->request->data, $eval_setting);
+        $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
+        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
@@ -67,7 +68,7 @@ class TeamsController extends AppController
         $team_id = [1, 1111111];
         $unvalued = $this->Goal->Collaborator->tempCountUnvalued($team_id);
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
-                           'unvalued', 'team_id'));
+                           'unvalued', 'team_id', 'eval_scores'));
         //TODO ハードコーディング中! for こーへーさん
 
         return $this->render();
@@ -76,7 +77,9 @@ class TeamsController extends AppController
     function save_evaluation_setting()
     {
         $this->request->allowMethod(['post', 'put']);
-        if ($this->Team->EvaluationSetting->save($this->request->data)) {
+        if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])
+            && $this->Team->Evaluation->EvaluateScore->saveAll($this->request->data['EvaluateScore'])
+        ) {
             $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
         }
         else {
