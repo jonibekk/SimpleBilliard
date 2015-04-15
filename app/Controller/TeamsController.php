@@ -73,9 +73,9 @@ class TeamsController extends AppController
         return $this->render();
     }
 
-    function save_evaluation_setting($eval_setting_id = null)
+    function save_evaluation_setting()
     {
-//        $this->request->allowMethod('post');
+        $this->request->allowMethod(['post', 'put']);
         if ($this->Team->EvaluationSetting->save($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
         }
