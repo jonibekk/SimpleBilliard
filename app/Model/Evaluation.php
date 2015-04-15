@@ -237,7 +237,7 @@ class Evaluation extends AppModel
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
-                            'user_id' => $this->my_uid
+                            'user_id' => $evaluateeId
                         ]
                     ],
                     'ActionResult' => [
