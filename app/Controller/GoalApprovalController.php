@@ -232,9 +232,11 @@ class GoalApprovalController extends AppController
      */
     public function wait()
     {
-        $id = $this->request->param('id');
+        $id = $this->request->param('collaborator_id');
+        $comment = $this->request->param('comment');
         if (empty($id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['hold']);
+            $this->ApprovalHistory->add($id, $this->user_id, 1, $comment);
         }
         $this->redirect($this->referer());
     }
