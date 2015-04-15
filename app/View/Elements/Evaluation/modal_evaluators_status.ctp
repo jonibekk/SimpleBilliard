@@ -2,30 +2,29 @@
 /**
  * Created by PhpStorm.
  * User: saeki
- * Date: 15/04/14
- * Time: 17:35
+ * Date: 15/04/15
+ * Time: 10:35
  */
-
 ?>
-<!-- START app/View/Elements/Elements/modal_incomplete_evaluatees.ctp -->
+<!-- START app/View/Elements/Elements/modal_evaluators_status.ctp -->
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "未完了の被評価者(%s)", count($incomplete_evaluatees)) ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "%sの評価状況", $evaluatee['EvaluateeUser']['display_username']) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
-            <? if (!empty($incomplete_evaluatees)): ?>
+            <? if (!empty($evaluators)): ?>
                 <div class="row borderBottom">
-                    <? foreach ($incomplete_evaluatees as $user): ?>
+                    <? foreach ($evaluators as $user): ?>
                         <?=
-                        $this->element('Evaluation/incomplete_user',
-                                       ['user' => $user['User']]) ?>
+                        $this->element('Evaluation/evaluators_status',
+                                       ['user' => $user]) ?>
                     <? endforeach ?>
                 </div>
             <? else: ?>
-                <?= __d('gl', "全員の評価が完了しています。") ?>
+                <?= __d('gl', "まだ、この投稿を読んだ人はいません。") ?>
             <? endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
@@ -33,4 +32,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Elements/modal_incomplete_evaluatees.ctp -->
+<!-- END app/View/Elements/Elements/modal_evaluators_status.ctp -->

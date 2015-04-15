@@ -159,4 +159,19 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_evaluators_status($evaluatee_id)
+    {
+        $this->_ajaxPreProcess();
+        $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
+        $evaluators = $this->Evaluation->getEvaluators($this->Team->EvaluateTerm->getCurrentTermId(), $evaluatee_id);
+        $this->set(compact('evaluators', 'evaluatee'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_evaluators_status');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
 }

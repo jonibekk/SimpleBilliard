@@ -802,4 +802,23 @@ class Evaluation extends AppModel
         return $incompleteEvaluatees;
     }
 
+    function getEvaluators($termId, $evaluateeId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'evaluatee_user_id' => $evaluateeId
+            ],
+            'group' => [
+                'evaluator_user_id'
+            ],
+            'contain' => [
+                'EvaluatorUser'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }
