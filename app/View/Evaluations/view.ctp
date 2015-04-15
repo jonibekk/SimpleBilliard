@@ -264,7 +264,7 @@
                         <div class="eval-view-result-number">
                             <div style="margin:0 auto;width:100px;">
                                 <a class="develop--forbiddenLink" href="#">
-                                    <?= count($goal[0]['Goal']['KeyResult']) ?>
+                                    <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]")) ?>
                                 </a>
                             </div>
                         </div>
@@ -317,7 +317,7 @@
                     <? if (empty($goal[0]['Goal']['KeyResult'])): ?>
                         <?= __d('gl', "なし") ?>
                     <? else: ?>
-                        <? foreach ($goal[0]['Goal']['KeyResult'] as $kr): ?>
+                        <? foreach (Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]") as $kr): ?>
                             <p><?= h($kr['name']) ?></p>
                         <? endforeach; ?>
                     <? endif; ?>
