@@ -361,6 +361,32 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/download_team_members_csv', ['method' => 'GET']);
     }
 
+    function testSaveEvaluationSettingFail()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'EvaluationSetting' => [
+                'team_id'    => 1,
+                'enable_flg' => 'test',
+            ]
+        ];
+        $this->testAction('/teams/save_evaluation_setting', ['method' => 'POST', 'data' => $data]);
+        $this->assertTrue(!empty($Teams->Team->EvaluationSetting->validationErrors));
+    }
+
+    function testSaveEvaluationSettingSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'EvaluationSetting' => [
+                'team_id'    => 1,
+                'enable_flg' => true,
+            ]
+        ];
+        $this->testAction('/teams/save_evaluation_setting', ['method' => 'POST', 'data' => $data]);
+        $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
