@@ -106,7 +106,7 @@
         </div>
         <div class="form-group">
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', '評価者評価 トータル コメント 必須') ?></label>
-            <?= $this->Form->input("evaluator_comment_required_flg", ['default' => true,]) ?>
+            <?= $this->Form->input("evaluator_comment_required_flg", ['default' => false,]) ?>
         </div>
         <div class="form-group">
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', '最終評価者評価') ?></label>
@@ -134,7 +134,7 @@
         </div>
         <div class="form-group">
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', 'リーダ評価 ゴール スコア') ?></label>
-            <?= $this->Form->input("leader_goal_score_flg", ['default' => true,]) ?>
+            <?= $this->Form->input("leader_goal_score_flg", ['default' => false,]) ?>
         </div>
         <div class="form-group">
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', 'リーダ評価 ゴール スコア必須') ?></label>
@@ -146,7 +146,7 @@
         </div>
         <div class="form-group">
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', 'リーダ評価 ゴール コメント必須') ?></label>
-            <?= $this->Form->input("leader_goal_comment_required_flg", ['default' => true,]) ?>
+            <?= $this->Form->input("leader_goal_comment_required_flg", ['default' => false,]) ?>
         </div>
         <div class="form-actions">
             <?= $this->Form->submit(__d('gl', '評価設定を保存'), ['class' => 'btn btn-primary']) ?>
