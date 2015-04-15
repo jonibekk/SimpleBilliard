@@ -210,8 +210,8 @@
                 </tr>
             <?php endforeach; ?>
         </table>
-        <div class="form-actions">
-            <?= $this->Form->submit(__d('gl', '評価設定を保存'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group">
+            <?= $this->Form->submit(__d('gl', '評価設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
         </div>
         <?= $this->Form->end() ?>
 
