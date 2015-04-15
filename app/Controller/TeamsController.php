@@ -88,6 +88,14 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    function ajax_get_score_elm()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('Team/eval_score_form_elm');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
     function start_evaluation()
     {
         $this->request->allowMethod('post');

@@ -149,16 +149,16 @@
             <?= $this->Form->input("leader_goal_comment_required_flg", ['default' => false,]) ?>
         </div>
         <h3><?php echo __d('team', '評価定義') ?></h3>
-        <table class="evaluation_select_value table table-striped">
+        <table class="table table-striped" id="EvaluateScoreTable">
             <tr>
                 <th>
-                    <?php echo __d('team', '名前') ?>
+                    <?php echo __d('gl', '名前') ?>
                 </th>
                 <th>
-                    <?php echo __d('team', '表示順') ?>
+                    <?php echo __d('gl', '表示順') ?>
                 </th>
                 <th>
-                    <?php echo __d('team', '説明') ?>
+                    <?php echo __d('gl', '説明') ?>
                 </th>
             </tr>
             <? foreach ($this->request->data['EvaluateScore'] as $es_key => $evaluation_select_value) : ?>
@@ -212,6 +212,8 @@
         </table>
         <div class="form-group">
             <?= $this->Form->submit(__d('gl', '評価設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
+            <?= $this->Html->link(__d('gl', "定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
+                                  ['target-id' => 'EvaluateScoreTable', 'class' => 'btn btn-default pull-left ajax-get']) ?>
         </div>
         <?= $this->Form->end() ?>
 

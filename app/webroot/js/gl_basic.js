@@ -145,6 +145,7 @@ $(document).ready(function () {
     });
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
+    $(document).on("click", ".ajax-get", evAjaxGet);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -315,6 +316,18 @@ function imageLazyOn($elm_obj) {
         });
     }
 }
+function evAjaxGet(e) {
+    e.preventDefault();
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+
+    $.get($obj.attr('href'), function (data) {
+        $('#' + target_id).append(data);
+    });
+    return false;
+}
+
 function evToggleAjaxGet() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'ajax-url');
