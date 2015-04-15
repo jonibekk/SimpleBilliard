@@ -223,6 +223,9 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'NOT' => [
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
@@ -237,7 +240,7 @@ class Evaluation extends AppModel
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
-                            'user_id' => $this->my_uid
+                            'user_id' => $evaluateeId
                         ]
                     ],
                     'ActionResult' => [
