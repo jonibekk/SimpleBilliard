@@ -22,6 +22,7 @@ class PostsController extends AppController
      */
     public function add()
     {
+
         $this->request->allowMethod('post');
 
         // ogbをインサートデータに追加
@@ -575,6 +576,7 @@ class PostsController extends AppController
      */
     function _addOgpIndexes($requestData, $body)
     {
+
         // テキストが空の場合
         if (!$body) {
             return $requestData;
@@ -582,7 +584,6 @@ class PostsController extends AppController
 
         // ogp取得
         $ogp = $this->Ogp->getOgpByUrlInText($body);
-
         // ogpが取得できない場合
         $notExistOgp = !isset($ogp['title']) || !isset($ogp['description']);
         if ($notExistOgp) {
@@ -594,7 +595,15 @@ class PostsController extends AppController
         // ogpが取得できた場合
         $requestData['site_info'] = json_encode($ogp);
         if (isset($ogp['image'])) {
+
+            $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
+
+            $allowed_extensions = array("jpg","jpeg","png","gif");
+            if(!in_array($extension,$allowed_extensions)){
+                $ogp['image'] = null;
+            }
             $requestData['site_photo'] = $ogp['image'];
+
         }
         return $requestData;
     }

@@ -453,11 +453,9 @@ class Post extends AppModel
             }
             //特定ゴール指定
             elseif ($this->orgParams['goal_id']) {
-                if ($this->Goal->Collaborator->isCollaborated($this->orgParams['goal_id'])) {
-                    //アクションのみの場合
-                    if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                        $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION);
-                    }
+                //アクションのみの場合
+                if ($this->orgParams['type'] == self::TYPE_ACTION) {
+                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION);
                 }
             }
             //ゴールのみの場合
