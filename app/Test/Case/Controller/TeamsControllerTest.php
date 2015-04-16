@@ -348,6 +348,14 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/ajax_upload_update_members_csv/', ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+    function testAjaxGetScoreElm()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_score_elm/index:1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
 
     function testDownloadAddMembersCsvFormat()
     {
