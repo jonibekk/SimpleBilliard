@@ -45,7 +45,7 @@
 
                     <div class="">
                         <?=
-                        $this->Html->link(__d('gl', "評価データをダウンロード"), ['action' => 'download_evaluations_csv'],
+                        $this->Html->link(__d('gl', "評価データをダウンロード"), ['action' => 'download_final_evaluations_csv'],
                                           ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>

@@ -275,8 +275,19 @@ class TeamsController extends AppController
 
     }
 
-    function download_evaluations_csv()
+    function download_final_evaluations_csv()
     {
+        $team_id = $this->Session->read('current_team_id');
+        $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
+        $this->layout = false;
+        $filename = 'final_evaluations_' . date('YmdHis');
+
+        //見出し
+        $th = $this->Team->TeamMember->_getCsvHeadingEvaluation();
+//        $td = $this->Team->TeamMember->getAllMembersCsvData();
+        $td = [];
+
+        $this->set(compact('filename', 'th', 'td'));
 
     }
 
