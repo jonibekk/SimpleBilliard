@@ -56,7 +56,8 @@ class EvaluateScore extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id' => $teamId,
+                'team_id'    => $teamId,
+                'active_flg' => true,
             ],
             'fields'     => [
                 'id',
