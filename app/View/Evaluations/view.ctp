@@ -39,19 +39,19 @@
                     ?>
                     <div class="form-group col-xxs-12 mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
-                            <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                            <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
+                            <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                                <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
                             <? else: ?>
-                            <?=
-                            $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'lazy eval-view-img',
-                                                   'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
-                                                                                               'User.photo',
-                                                                                               ['style' => 'medium']),
-                                               ]
-                            )
-                            ?>
+                                <?=
+                                $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'lazy eval-view-img',
+                                                       'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
+                                                                                                   'User.photo',
+                                                                                                   ['style' => 'medium']),
+                                                   ]
+                                )
+                                ?>
                             <? endif;?>
                         </div>
                         <div class="col-xxs-9">
@@ -66,8 +66,8 @@
                                     <? endif;?>
                                 </div>
                                 <div class="col col-xxs-12 col-sm-4 col-md-3">
-                                    <? if($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):?>
-                                    <?= h($total['EvaluatorUser']['display_username']) ?>
+                                    <? if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                                        <?= h($total['EvaluatorUser']['display_username']) ?>
                                     <? endif ?>
                                 </div>
                             </div>
@@ -86,7 +86,8 @@
                                     'class'                    => 'form-control eva-val',
                                     'rows'                     => 2,
                                     'default'                  => $total['Evaluation']['comment'],
-                                    'label'                    => __d('gl', "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
+                                    'label'                    => __d('gl',
+                                                                      "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
                                     'placeholder'              => __d('gl', "コメントを書いてください"),
                                     'required'                 => false,
                                     'data-bv-notempty'         => "true",
@@ -95,7 +96,8 @@
                                 ?>
                                 <small class="help-block" data-bv-validator="notEmpty"
                                        data-bv-for="data[0][Evaluation][comment]"
-                                       data-bv-result="NOT_VALIDATED" style="display: none;"><?= __d('gl', "入力必須項目です。") ?>
+                                       data-bv-result="NOT_VALIDATED" style="display: none;"><?= __d('gl',
+                                                                                                     "入力必須項目です。") ?>
                                 </small>
                             </div>
                             <div class="col-xxs-12">
@@ -113,7 +115,8 @@
                                 ])
                                 ?>
                                 <small class="help-block" data-bv-validator="notEmpty"
-                                       data-bv-for="data[0][Evaluation][evaluate_score_id]" data-bv-result="NOT_VALIDATED"
+                                       data-bv-for="data[0][Evaluation][evaluate_score_id]"
+                                       data-bv-result="NOT_VALIDATED"
                                        style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
                                 </small>
                             </div>
@@ -128,19 +131,19 @@
                     ?>
                     <div class="col-xxs-12  mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
-                            <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                            <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                 <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
                             <? else: ?>
-                            <?=
-                            $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'lazy eval-view-img',
-                                                   'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
-                                                                                               'User.photo',
-                                                                                               ['style' => 'medium']),
-                                               ]
-                            )
-                            ?>
+                                <?=
+                                $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'lazy eval-view-img',
+                                                       'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
+                                                                                                   'User.photo',
+                                                                                                   ['style' => 'medium']),
+                                                   ]
+                                )
+                                ?>
                             <? endif ?>
                         </div>
                         <div class="col-xxs-9">
@@ -155,13 +158,14 @@
                                     <? endif;?>
                                 </div>
                                 <div class="col col-xxs-12 col-sm-4 col-md-3">
-                                    <? if($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):?>
-                                    <?= h($total['EvaluatorUser']['display_username']) ?>
+                                    <? if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                                        <?= h($total['EvaluatorUser']['display_username']) ?>
                                     <? endif ?>
                                 </div>
                             </div>
                             <div class="form-group col-xxs-12">
-                                <label for="0EvaluationComment" class="col-xxs-12 col-sm-4 col-md-3 control-label form-label">
+                                <label for="0EvaluationComment"
+                                       class="col-xxs-12 col-sm-4 col-md-3 control-label form-label">
                                     <?= __d('gl', "<i class='fa fa-comment-o mr_2px'></i>評価コメント") ?>
                                 </label>
 
@@ -174,7 +178,8 @@
                                 </div>
                             </div>
                             <div class="form-group col-xxs-12">
-                                <label for="0EvaluationComment" class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
+                                <label for="0EvaluationComment"
+                                       class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
                                     <?= __d('gl', "<i class='fa fa-paw mr_2px'></i>評価スコア") ?>
                                 </label>
 
@@ -182,7 +187,7 @@
                                     <? if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
                                     <? else: ?>
-                                        <?= h($scoreList[$total['Evaluation']['evaluate_score_id']]) ?>
+                                        <?= h($total['EvaluateScore']['name']) ?>
                                     <? endif ?>
                                 </div>
                             </div>
@@ -282,8 +287,9 @@
                 <div class="col-xxs-6">
                     <div><?= h($goal[0]['Goal']['GoalCategory']['name']) ?></div>
                     <div>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal[0]['Goal']['id']]) ?>" class="modal-ajax-get">
-                           <p class="font_bold font_verydark"><?= h($goal[0]['Goal']['name']) ?></p>
+                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal[0]['Goal']['id']]) ?>"
+                           class="modal-ajax-get">
+                            <p class="font_bold font_verydark"><?= h($goal[0]['Goal']['name']) ?></p>
                         </a>
                     </div>
                 </div>
@@ -388,7 +394,8 @@
                                         <?= __d('gl', "本人") ?>
                                     <? endif; ?>
                                 </div>
-                                <div class="col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
+                                <div
+                                    class="col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
                             </div>
                             <div class="col col-xxs-12">
                                 <?=
@@ -404,7 +411,8 @@
                                     'type'                     => 'textarea',
                                     'rows'                     => 2,
                                     'default'                  => $eval['Evaluation']['comment'],
-                                    'label'                    => __d('gl', "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
+                                    'label'                    => __d('gl',
+                                                                      "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
                                     'placeholder'              => __d('gl', "コメントを書いてください"),
                                     'required'                 => false,
                                     'class'                    => 'form-control eva-val',
@@ -451,7 +459,7 @@
                                                [
                                                    'class'         => 'lazy eval-view-img',
                                                    'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'],
-                                                                                              'User.photo',
+                                                                                               'User.photo',
                                                                                                ['style' => 'medium']),
                                                ]
                             )
@@ -468,10 +476,12 @@
                                         <?= __d('gl', "本人") ?>
                                     <? endif;?>
                                 </div>
-                                <div class="col col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
+                                <div
+                                    class="col col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
                             </div>
                             <div class="form-group">
-                                <label for="0EvaluationComment" class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
+                                <label for="0EvaluationComment"
+                                       class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
                                     <?= __d('gl', "<i class='fa fa-comment-o mr_2px'></i>評価コメント") ?>
                                 </label>
 
@@ -484,7 +494,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="0EvaluationComment" class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
+                                <label for="0EvaluationComment"
+                                       class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
                                     <?= __d('gl', "<i class='fa fa-paw mr_2px'></i>評価スコア") ?>
                                 </label>
 
@@ -492,7 +503,7 @@
                                     <? if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
                                     <? else: ?>
-                                        <?= h($scoreList[$eval['Evaluation']['evaluate_score_id']]) ?>
+                                        <?= h($eval['EvaluateScore']['name']) ?>
                                     <? endif ?>
                                 </div>
                             </div>
