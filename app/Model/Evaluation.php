@@ -230,13 +230,7 @@ class Evaluation extends AppModel
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal' => [
-                    'KeyResult'    => [
-                        'conditions' => [
-                            'NOT' => [
-                                'completed' => null
-                            ]
-                        ]
-                    ],
+                    'KeyResult',
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
