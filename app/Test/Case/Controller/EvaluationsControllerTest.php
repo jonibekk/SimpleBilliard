@@ -438,6 +438,24 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
     }
 
+    public function testAjaxGetIncompleteEvaluatees()
+    {
+        $this->_getEvaluationsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/evaluations/ajax_get_incomplete_evaluatees/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    public function testAjaxGetEvaluatorsStatus()
+    {
+        $this->_getEvaluationsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/evaluations/ajax_get_evaluators_status/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function _getEvaluationsCommonMock()
     {
         /**
