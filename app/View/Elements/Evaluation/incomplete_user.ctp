@@ -20,8 +20,8 @@
                 <?= __d('gl', "詳細を見る") ?>
             </a>
         </div>
-        <div class="font_12px font_bold modalFeedTextPadding">
-            <?= __d('gl', "残り") ?> : <?= h($user['incomplete_count']) ?>
+        <div class="font_12px modalFeedTextPadding">
+            <?= __d('gl', "残り") ?> <?= h($user['incomplete_count']) ?>
             <? if($user['incomplete_count'] == 1):?>
                 (<?= __d('gl', "最終評価のみ") ?>)
             <? endif ?>
