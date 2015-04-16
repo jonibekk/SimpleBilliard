@@ -163,7 +163,10 @@ class EvaluationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
-        $evaluators = $this->Evaluation->getEvaluators($this->Team->EvaluateTerm->getLatestTermId(), $evaluatee_id);
+
+        $res = $this->Evaluation->getEvaluators($this->Team->EvaluateTerm->getLatestTermId(), $evaluatee_id);
+        $evaluators = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
+
         $this->set(compact('evaluators', 'evaluatee'));
 
         //エレメントの出力を変数に格納する

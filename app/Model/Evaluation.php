@@ -124,6 +124,53 @@ class Evaluation extends AppModel
     }
 
     /**
+     * afterFind callback
+     *
+     * @param array $results Result data
+     * @param mixed $primary Primary query
+     *
+     * @return array
+     */
+    public function afterFind($results, $primary = false)
+    {
+        if (empty($results)) {
+            return $results;
+        }
+
+        // データに評価タイプ名を追加する
+        /** @noinspection PhpUnusedParameterInspection */
+        $this
+            ->dataIter($results,
+                function (&$entity, &$model) {
+                    $entity = $this->setEvaluatorTypeName($entity);
+                });
+        return $results;
+    }
+
+    public function setEvaluatorTypeName($row)
+    {
+        if (!isset($row[$this->alias]['evaluate_type']) || !isset($row[$this->alias]['index_num'])) {
+            return $row;
+        }
+
+        $evaluate_type = $row[$this->alias]['evaluate_type'];
+        $index_num = (string)$row[$this->alias]['index_num'];
+        $evaluator_type_name = '';
+
+        if($evaluate_type == self::TYPE_ONESELF) {
+            $evaluator_type_name = __d('gl', "自己");
+        } else if($evaluate_type == self::TYPE_FINAL_EVALUATOR) {
+            $evaluator_type_name = __d('gl', "最終評価者");
+        } else if($evaluate_type == self::TYPE_EVALUATOR) {
+            $evaluator_type_name = __d('gl', "評価者{$index_num}");
+        }
+        $row[$this->alias]['evaluator_type_name'] = $evaluator_type_name;
+
+        return $row;
+
+    }
+
+    /**
      * 評価リストの閲覧権限チェック
      * ・評価画面の表示条件
      * 　チームの評価機能がon かつ 自分の評価フラグがon
