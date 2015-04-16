@@ -62,9 +62,10 @@ class TeamsController extends AppController
             $eval_start_button_enabled = false;
         }
         //TODO ハードコーディング中! for こーへーさん
-        $team_id = [1,1111111];
+        $team_id = [1, 1111111];
         $unvalued = $this->Goal->Collaborator->tempCountUnvalued($team_id);
-        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled','unvalued','team_id'));
+        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
+                           'unvalued', 'team_id'));
         //TODO ハードコーディング中! for こーへーさん
 
         return $this->render();
@@ -267,6 +268,16 @@ class TeamsController extends AppController
         $td = $this->Team->TeamMember->getAllMembersCsvData();
 
         $this->set(compact('filename', 'th', 'td'));
+    }
+
+    function ajax_upload_final_evaluations_csv()
+    {
+
+    }
+
+    function download_evaluations_csv()
+    {
+
     }
 
     public function ajax_switch_team($team_id = null)

@@ -21,7 +21,7 @@
             <div class="modal-body">
                 <?=
                 $this->Form->create('Team', [
-                    'url'           => ['controller' => 'teams', 'action' => 'ajax_upload_update_members_csv'],
+                    'url'           => ['controller' => 'teams', 'action' => 'ajax_upload_final_evaluations_csv'],
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
@@ -45,7 +45,7 @@
 
                     <div class="">
                         <?=
-                        $this->Html->link(__d('gl', "評価データをダウンロード"), ['action' => 'download_team_members_csv'],
+                        $this->Html->link(__d('gl', "評価データをダウンロード"), ['action' => 'download_evaluations_csv'],
                                           ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>
