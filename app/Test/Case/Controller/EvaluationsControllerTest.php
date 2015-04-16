@@ -469,9 +469,10 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAjaxGetEvaluatorsStatus()
     {
         $this->_getEvaluationsCommonMock();
+        $evaluateeId = 1;
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/evaluations/ajax_get_evaluators_status/', ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
