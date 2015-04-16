@@ -162,7 +162,6 @@ class GoalApprovalController extends AppController
         );
 
         $this->layout = LAYOUT_ONE_COLUMN;
-
     }
 
     /*
@@ -170,12 +169,25 @@ class GoalApprovalController extends AppController
      */
     public function index()
     {
-        if(isset($this->request->data['comment_btn'])) {
-            print 'ok';
-            exit;
+
+        if (isset($this->request->data['GoalApproval']) === true) {
+            $data = $this->request->data['GoalApproval'];
+
+            if (isset($this->request->data['comment_btn']) === true) {
+                $this->comment($data);
+
+            } else if (isset($this->request->data['wait_btn']) === true) {
+                $this->wait($data);
+
+            } else if (isset($this->request->data['approval_btn']) === true) {
+                $this->approval($data);
+
+            }
         }
+
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
             $this->team_id, $this->goal_user_ids, $this->goal_status['unapproved']);
+
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
@@ -201,6 +213,7 @@ class GoalApprovalController extends AppController
             $this->team_id, $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
         );
+
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['msg'] = '自分のゴール';
@@ -220,11 +233,12 @@ class GoalApprovalController extends AppController
     /*
      * 承認する
      */
-    public function approval()
+    public function approval($data)
     {
-        $id = $this->request->param('id');
-        if (empty($id) === false) {
-            $this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['approval']);
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        if (empty($cb_id) === false) {
+            $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['approval']);
+            $this->comment($data);
         }
         $this->redirect($this->referer());
     }
@@ -232,13 +246,12 @@ class GoalApprovalController extends AppController
     /*
      * 承認しない
      */
-    public function wait()
+    public function wait($data)
     {
-        $id = $this->request->param('collaborator_id');
-        $comment = $this->request->param('comment');
-        if (empty($id) === false) {
-            $this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['hold']);
-            $this->ApprovalHistory->add($id, $this->user_id, 1, $comment);
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        if (empty($cb_id) === false) {
+            $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
+            $this->comment($data);
         }
         $this->redirect($this->referer());
     }
@@ -246,15 +259,16 @@ class GoalApprovalController extends AppController
     /*
      *  コメントする
      */
-    public function comment()
+    public function comment($data)
     {
-        $id = $this->request->param('id');
-        $comment = $this->request->param('comment');
-        if (empty($id) === false) {
-            $this->ApprovalHistory->add($id, $this->user_id, 1, $comment);
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        $comment = isset($data['comment']) === true ? $data['comment'] : '';
+
+        if (empty($cb_id) === false && empty($comment) === false) {
+            $this->ApprovalHistory->add($cb_id, $this->user_id, 1, $comment);
         }
+
         $this->redirect($this->referer());
-        //return $this->response;
     }
 
     public function get_history() {

@@ -111,17 +111,17 @@
 
 
                         <div class="panel-body comment-block">
-                            <?= $this->Form->create('ApprovalHistory', ['url' => ['controller'=>'goal_approval', 'action'=>'index'], 'type' => 'post', 'novalidate' => true]); ?>
+                            <?= $this->Form->create('GoalApproval', ['url' => ['controller'=>'goal_approval', 'action'=>'index'], 'type' => 'post', 'novalidate' => true]); ?>
                             <?= $this->Form->input('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>1, 'cols'=>30, 'style'=>'margin-bottom: 8px;', 'placeholder'=>'コメントを書く'])?>
                             <?= $this->Form->hidden('collaborator_id', ['value'=>$goal['Collaborator']['id']]); ?>
 
                             <div class="row">
                                 <div class="pull-right">
                                     <? if (isset($goal['msg']) === true) { ?>
-                                        <?= $this->Form->submit(__d('gl', "コメントする"), ['class' => 'btn btn-primary', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
                                     <? } else { ?>
-                                        <?= $this->Form->submit(__d('gl', "しない"), ['class' => 'btn btn-lightGray', 'div'=>false]) ?>
-                                        <?= $this->Form->submit(__d('gl', "評価対象とする"), ['class' => 'btn btn-primary', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "しない"), ['name' => 'wait_btn', 'class' => 'btn btn-lightGray', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>
@@ -136,7 +136,7 @@
                                                 <div class="col col-xxs-12 comment-text comment-user">
                                                     <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
                                                     <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
-                                                    <div class="lh_15px"><span title="">YYYY/MM/DD HH:MM:SS</span></div>
+                                                    <div class="lh_15px"><span title=""><?= date('Y/m/d G:i:s', $history['created']); ?></span></div>
                                                 </div>
 
                                             </div>
@@ -144,7 +144,7 @@
                                     </div>
                                 <? } ?>
                             <? } ?>
-                            <? echo $this->Form->end(); ?>
+                            <?= $this->Form->end(); ?>
                         </div>
                     </div>
                 <? } ?>

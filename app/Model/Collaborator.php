@@ -173,7 +173,7 @@ class Collaborator extends AppModel
                     'fields' => $this->User->profileFields
                 ],
                 'ApprovalHistory' => [
-                    'fields'       => ['id', 'comment'],
+                    'fields'       => ['id', 'comment', 'created'],
                     'order' => ['ApprovalHistory.created DESC'],
                     //'limit' => 1,
                 ]
