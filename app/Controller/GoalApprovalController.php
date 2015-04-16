@@ -283,16 +283,6 @@ class GoalApprovalController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function get_history() {
-        $id = $this->request->param('id');
-        if (empty($id) === false) {
-            $comment_list = $this->ApprovalHistory->getHistory($id);
-            $this->response->type('json');
-            $this->response->body(json_encode($comment_list));
-        }
-        return $this->response;
-    }
-
     /*
      * リストに表示するゴールのUserIDを取得
      */

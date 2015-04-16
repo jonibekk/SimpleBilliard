@@ -137,11 +137,12 @@
                                 <? foreach ($goal['ApprovalHistory'] as $history) { ?>
                                     <div class="font_12px comment-box" comment-id="">
                                         <div class="col col-xxs-12">
-                                            <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
+                                            <?= $this->Html->image('ajax-loader.gif', [ 'class' => 'lazy comment-img',
+                                                                   'data-original' => $this->Upload->uploadUrl($history['User'], 'User.photo', ['style' => 'small'])]) ?>
                                             <div class="comment-body">
 
                                                 <div class="col col-xxs-12 comment-text comment-user">
-                                                    <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
+                                                    <div class="mb_2px lh_12px font_bold font_verydark"><?=$history['User']['local_username'];?></div>
                                                     <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
                                                     <div class="lh_15px"><span title=""><?= date('Y/m/d G:i:s', $history['created']); ?></span></div>
                                                 </div>
