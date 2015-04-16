@@ -27,7 +27,7 @@
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
-            'id'            => '',
+            'id'            => 'EvaluationSettingForm',
             'url'           => ['controller' => 'teams', 'action' => 'save_evaluation_setting']
         ]); ?>
         <?= $this->Form->hidden('id') ?>
@@ -166,44 +166,57 @@
                 <tr class="evaluation_select"
                     index="<?php echo $es_key ?>">
                     <td>
-                        <?= $this->Form
-                            ->input("EvaluateScore.$es_key.name",
-                                    [
-                                        'wrapInput'   => false,
-                                        'type'        => 'text',
-                                        'div'         => false,
-                                        'label'       => false,
-                                        'class'       => 'form-control',
-                                        'placeholder' => __d('team', '名前'),
-                                    ])
-                        ?>
+                        <div class="form-group">
+                            <?= $this->Form
+                                ->input("EvaluateScore.$es_key.name",
+                                        [
+                                            'wrapInput'                => false,
+                                            'type'                     => 'text',
+                                            'div'                      => false,
+                                            'label'                    => false,
+                                            'class'                    => 'form-control',
+                                            'placeholder'              => __d('team', '名前'),
+                                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
+                                            'required'                 => true,
+                                        ])
+                            ?>
+                        </div>
                     </td>
                     <td>
-                        <?= $this->Form
-                            ->input("EvaluateScore.$es_key.index_num",
-                                    [
-                                        'wrapInput'   => false,
-                                        'type'        => 'number',
-                                        'div'         => false,
-                                        'label'       => false,
-                                        'class'       => 'form-control',
-                                        'placeholder' => __d('team', '表示順'),
-                                    ])
-                        ?>
+                        <div class="form-group">
+                            <?= $this->Form
+                                ->input("EvaluateScore.$es_key.index_num",
+                                        [
+                                            'wrapInput'                => false,
+                                            'type'                     => 'number',
+                                            'div'                      => false,
+                                            'label'                    => false,
+                                            'class'                    => 'form-control',
+                                            'placeholder'              => __d('team', '表示順'),
+                                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
+                                            'data-bv-integer-message'  => __d('gl', "数字を入力してください。"),
+                                            'required'                 => true,
+                                        ])
+                            ?>
+                        </div>
                     </td>
                     <td>
-                        <?= $this->Form
-                            ->input("EvaluateScore.$es_key.description",
-                                    [
-                                        'wrapInput'   => false,
-                                        'type'        => 'textarea',
-                                        'rows'        => 3,
-                                        'div'         => false,
-                                        'label'       => false,
-                                        'class'       => 'form-control',
-                                        'placeholder' => __d('team', '定義の説明を書きましょう'),
-                                    ])
-                        ?>
+                        <div class="form-group">
+                            <?= $this->Form
+                                ->input("EvaluateScore.$es_key.description",
+                                        [
+                                            'wrapInput'                => false,
+                                            'type'                     => 'textarea',
+                                            'rows'                     => 3,
+                                            'div'                      => false,
+                                            'label'                    => false,
+                                            'class'                    => 'form-control',
+                                            'placeholder'              => __d('team', '定義の説明を書きましょう'),
+                                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
+                                            'required'                 => true,
+                                        ])
+                            ?>
+                        </div>
                     </td>
                     <td>
                         <a class="modal-ajax-get"
@@ -219,7 +232,7 @@
             <? $index = count($this->request->data['EvaluateScore']);
             $max_index = $index + 9; ?>
             <?= $this->Html->link(__d('gl', "定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
-                                  ['target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default pull-left ajax-get']) ?>
+                                  ['id' => 'AddScoreButton', 'target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default pull-left']) ?>
         </div>
         <? for ($i = $index; $i <= $max_index; $i++): ?>
             <? $this->Form->unlockField("EvaluateScore.$i.name") ?>
@@ -274,3 +287,38 @@
 <?= $this->element('modal_add_members_by_csv') ?>
 <?= $this->element('modal_edit_members_by_csv') ?>
 <? $this->end() ?>
+<? $this->start('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#EvaluationSettingForm').bootstrapValidator({
+            live: 'enabled',
+            feedbackIcons: {}
+        })
+            .on('click', '#AddScoreButton', function (e) {
+                e.preventDefault();
+                var $obj = $(this);
+                var target_selector = $obj.attr("target-selector");
+                var index = parseInt($obj.attr("index"));
+
+                $.get($obj.attr('href') + "/index:" + index, function (data) {
+                    $(target_selector).append(data);
+                    $(data).find("input,textarea").each(function (i, val) {
+//                        $(val).bootstrapValidator();
+                        $('#EvaluationSettingForm').bootstrapValidator('addField', $(val).attr('name'));
+                    });
+//
+                    if ($obj.attr('max_index') != undefined && index >= parseInt($obj.attr('max_index'))) {
+                        $obj.attr('disabled', 'disabled');
+//                        return false;
+                    }
+                    //increment
+                    $obj.attr('index', index + 1);
+                });
+
+//                return false;
+
+            });
+    });
+</script>
+<? $this->end() ?>
+
