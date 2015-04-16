@@ -831,6 +831,10 @@ class Evaluation extends AppModel
         $options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
+                'NOT' => [
+                    ['status' => self::TYPE_STATUS_DONE],
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'group' => [
                 'evaluatee_user_id', 'evaluator_user_id'
@@ -842,11 +846,11 @@ class Evaluation extends AppModel
         $res = $this->find('all', $options);
         $combinedEvaluatees = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
         $incompleteEvaluatees = [];
-        foreach($combinedEvaluatees as $evaluateeId => $evaluatee) {
-            if(!empty(Hash::extract($evaluatee, "{n}.Evaluation[status!=2"))) {
-                $incompleteEvaluatees[$evaluateeId]['User'] = Hash::extract($evaluatee, "{n}.EvaluateeUser")[0];
-            }
+        foreach($combinedEvaluatees as $evaluateeId => $evaluatees) {
+            $evaluatees = Hash::insert($evaluatees, '{n}.EvaluateeUser.incomplete_count', (string)count($evaluatees));
+            $incompleteEvaluatees[$evaluateeId]['User'] = Hash::extract($evaluatees, "{n}.EvaluateeUser")[0];
         }
+        $incompleteEvaluatees = Hash::sort($incompleteEvaluatees, '{n}.User.incomplete_count', 'desc');
         return $incompleteEvaluatees;
     }
 
@@ -855,7 +859,10 @@ class Evaluation extends AppModel
         $options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
-                'evaluatee_user_id' => $evaluateeId
+                'evaluatee_user_id' => $evaluateeId,
+                'NOT' => [
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'group' => [
                 'evaluator_user_id'
