@@ -115,41 +115,43 @@
                         </div>
 
                         <div class="panel-body comment-block">
-                            <textarea name="" class="form-control addteam_input-design disabled" placeholder="コメントを書く" rows="1" cols="30" style="margin-bottom: 8px;"></textarea>
+                            <?= $this->Form->create('GoalApproval', ['url' => ['controller'=>'goal_approval', 'action'=>'done'], 'type' => 'post', 'novalidate' => true]); ?>
+                            <?= $this->Form->input('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>1, 'cols'=>30, 'style'=>'margin-bottom: 8px;', 'placeholder'=>'コメントを書く'])?>
+                            <?= $this->Form->hidden('collaborator_id', ['value'=>$goal['Collaborator']['id']]); ?>
 
                             <div class="row">
                                 <div class="pull-right">
                                     <? if (isset($goal['msg']) === true) { ?>
-                                        <a href="/goal_approval/comment/<?= $goal['Collaborator']['id']; ?>"
-                                           class="btn btn-primary"><?= __d('gl', "コメントする") ?></a>
+                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
                                     <? } else { ?>
                                         <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-                                            <a href="/goal_approval/wait/<?= $goal['Collaborator']['id']; ?>"
-                                               class="btn btn-primary"><?= __d('gl', "評価対象としない") ?></a>
+                                            <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
                                         <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-                                            <a href="/goal_approval/approval/<?= $goal['Collaborator']['id']; ?>"
-                                               class="btn btn-primary"><?= __d('gl', "評価対象とする") ?></a>
+                                            <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
                                         <? } ?>
                                     <? } ?>
                                 </div>
                             </div>
 
-                            <? for ($i=0; $i<3; $i++) { ?>
-                                <div class="font_12px comment-box" comment-id="">
-                                    <div class="col col-xxs-12">
-                                        <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
-                                        <div class="comment-body">
+                            <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
+                                <? foreach ($goal['ApprovalHistory'] as $history) { ?>
+                                    <div class="font_12px comment-box" comment-id="">
+                                        <div class="col col-xxs-12">
+                                            <img src="" class="lazy comment-img" data-original="" alt="" style="display: block;">
+                                            <div class="comment-body">
 
-                                            <div class="col col-xxs-12 comment-text comment-user">
-                                                <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
-                                                <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align" id="">本文本文。。。。。。。。。。。。。</div>
-                                                <div class="lh_15px"><span title="">YYYY/MM/DD HH:MM:SS</span></div>
+                                                <div class="col col-xxs-12 comment-text comment-user">
+                                                    <div class="mb_2px lh_12px font_bold font_verydark">投稿者名</div>
+                                                    <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
+                                                    <div class="lh_15px"><span title=""><?= date('Y/m/d G:i:s', $history['created']); ?></span></div>
+                                                </div>
+
                                             </div>
-
                                         </div>
                                     </div>
-                                </div>
+                                <? } ?>
                             <? } ?>
+                            <?= $this->Form->end(); ?>
                         </div>
 
                     </div>

@@ -172,17 +172,7 @@ class GoalApprovalController extends AppController
 
         if (isset($this->request->data['GoalApproval']) === true) {
             $data = $this->request->data['GoalApproval'];
-
-            if (isset($this->request->data['comment_btn']) === true) {
-                $this->comment($data);
-
-            } else if (isset($this->request->data['wait_btn']) === true) {
-                $this->wait($data);
-
-            } else if (isset($this->request->data['approval_btn']) === true) {
-                $this->approval($data);
-
-            }
+            $this->changeStatus($data);
         }
 
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
@@ -209,6 +199,11 @@ class GoalApprovalController extends AppController
      */
     public function done()
     {
+        if (isset($this->request->data['GoalApproval']) === true) {
+            $data = $this->request->data['GoalApproval'];
+            $this->changeStatus($data);
+        }
+
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
             $this->team_id, $this->goal_user_ids,
             [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
@@ -228,6 +223,23 @@ class GoalApprovalController extends AppController
         $value_unit_list = $kr::$UNIT;
 
         $this->set(compact('value_unit_list', 'goal_info', 'done_cnt'));
+    }
+
+    /*
+     * 認定状態変更コントロール
+     */
+    public function changeStatus($data)
+    {
+        if (isset($this->request->data['comment_btn']) === true) {
+            $this->comment($data);
+
+        } else if (isset($this->request->data['wait_btn']) === true) {
+            $this->wait($data);
+
+        } else if (isset($this->request->data['approval_btn']) === true) {
+            $this->approval($data);
+
+        }
     }
 
     /*
