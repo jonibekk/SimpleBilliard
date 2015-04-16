@@ -359,6 +359,22 @@ class TeamsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testToInactive()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/to_inactive/1', ['method' => 'POST']);
+    }
+
+    function testAjaxGetConfirmInactiveScoreModal()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_confirm_inactive_score_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testDownloadAddMembersCsvFormat()
     {
         $this->_getTeamsCommonMock(null, true);
