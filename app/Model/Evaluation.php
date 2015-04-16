@@ -613,7 +613,11 @@ class Evaluation extends AppModel
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
                 'evaluate_type'     => $evaluate_type,
-                'evaluate_term_id'  => $term_id
+                'evaluate_term_id'  => $term_id,
+                'NOT' => [
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'group'      => ['evaluate_term_id', 'evaluatee_user_id']
         ];
