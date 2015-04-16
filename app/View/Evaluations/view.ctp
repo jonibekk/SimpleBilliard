@@ -38,7 +38,7 @@
                 if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable):
                     ?>
                     <div class="form-group col-xxs-12 mb_32px">
-                        <div class="col-xxs-3 col-xs-2 col-md-1 text-align_c">
+                        <div class="col-xxs-3 col-xs-2 col-md-1">
                             <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                             <i class="fa fa-user user-icon fa-3x"></i>
                             <? else: ?>
@@ -123,7 +123,7 @@
                 else:
                     ?>
                     <div class="col-xxs-12  mb_32px">
-                        <div class="col-xxs-3 col-xs-2 col-md-1 text-align_c">
+                        <div class="col-xxs-3 col-xs-2 col-md-1">
                             <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                 <i class="fa fa-user user-icon fa-3x"></i>
                             <? else: ?>
