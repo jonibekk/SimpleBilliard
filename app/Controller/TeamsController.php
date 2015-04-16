@@ -67,7 +67,7 @@ class TeamsController extends AppController
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled','unvalued','team_id'));
         //TODO ハードコーディング中! for こーへーさん
 
-        $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
+        $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
 
         // 全体progressカウント
         $all_cnt = array_sum(Hash::extract($statuses, "{n}.all_num"));

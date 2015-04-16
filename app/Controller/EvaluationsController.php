@@ -148,7 +148,7 @@ class EvaluationsController extends AppController
     public function ajax_get_incomplete_evaluatees()
     {
         $this->_ajaxPreProcess();
-        $incomplete_evaluatees = $this->Evaluation->getIncompleteEvaluatees($this->Team->EvaluateTerm->getCurrentTermId());
+        $incomplete_evaluatees = $this->Evaluation->getIncompleteEvaluatees($this->Team->EvaluateTerm->getLatestTermId());
         $this->set(compact('incomplete_evaluatees'));
 
         //エレメントの出力を変数に格納する
@@ -163,7 +163,7 @@ class EvaluationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
-        $evaluators = $this->Evaluation->getEvaluators($this->Team->EvaluateTerm->getCurrentTermId(), $evaluatee_id);
+        $evaluators = $this->Evaluation->getEvaluators($this->Team->EvaluateTerm->getLatestTermId(), $evaluatee_id);
         $this->set(compact('evaluators', 'evaluatee'));
 
         //エレメントの出力を変数に格納する
