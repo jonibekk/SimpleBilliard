@@ -163,68 +163,8 @@
                 <th></th>
             </tr>
             <? foreach ($this->request->data['EvaluateScore'] as $es_key => $evaluation_select_value) : ?>
-                <tr class="evaluation_select"
-                    index="<?php echo $es_key ?>">
-                    <td>
-                        <div class="form-group">
-                            <?= $this->Form
-                                ->input("EvaluateScore.$es_key.name",
-                                        [
-                                            'wrapInput'                => false,
-                                            'type'                     => 'text',
-                                            'div'                      => false,
-                                            'label'                    => false,
-                                            'class'                    => 'form-control',
-                                            'placeholder'              => __d('team', '名前'),
-                                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                                            'required'                 => true,
-                                        ])
-                            ?>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <?= $this->Form
-                                ->input("EvaluateScore.$es_key.index_num",
-                                        [
-                                            'wrapInput'                => false,
-                                            'type'                     => 'number',
-                                            'div'                      => false,
-                                            'label'                    => false,
-                                            'class'                    => 'form-control',
-                                            'placeholder'              => __d('team', '表示順'),
-                                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                                            'data-bv-integer-message'  => __d('gl', "数字を入力してください。"),
-                                            'required'                 => true,
-                                        ])
-                            ?>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <?= $this->Form
-                                ->input("EvaluateScore.$es_key.description",
-                                        [
-                                            'wrapInput'                => false,
-                                            'type'                     => 'textarea',
-                                            'rows'                     => 3,
-                                            'div'                      => false,
-                                            'label'                    => false,
-                                            'class'                    => 'form-control',
-                                            'placeholder'              => __d('team', '定義の説明を書きましょう'),
-                                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                                            'required'                 => true,
-                                        ])
-                            ?>
-                        </div>
-                    </td>
-                    <td>
-                        <a class="modal-ajax-get"
-                           href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_confirm_inactive_score_modal', $evaluation_select_value['id']]) ?>"><i
-                                class="fa fa-trash font_lightGray-gray"></i></a>
-                    </td>
-                    <?= $this->Form->hidden("EvaluateScore.$es_key.id") ?>
-                </tr>
+                <?= $this->element('Team/eval_score_form_elm',
+                                   ['index' => $es_key, 'id' => $evaluation_select_value['id'], 'type' => 'exists']) ?>
             <?php endforeach; ?>
         </table>
         <div class="form-group">
