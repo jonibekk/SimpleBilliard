@@ -300,23 +300,18 @@
                 var target_selector = $obj.attr("target-selector");
                 var index = parseInt($obj.attr("index"));
 
+
                 $.get($obj.attr('href') + "/index:" + index, function (data) {
                     $(target_selector).append(data);
                     $(data).find("input,textarea").each(function (i, val) {
-//                        $(val).bootstrapValidator();
                         $('#EvaluationSettingForm').bootstrapValidator('addField', $(val).attr('name'));
                     });
-//
                     if ($obj.attr('max_index') != undefined && index >= parseInt($obj.attr('max_index'))) {
                         $obj.attr('disabled', 'disabled');
-//                        return false;
                     }
                     //increment
                     $obj.attr('index', index + 1);
                 });
-
-//                return false;
-
             });
     });
 </script>
