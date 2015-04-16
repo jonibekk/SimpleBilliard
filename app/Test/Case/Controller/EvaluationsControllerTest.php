@@ -103,6 +103,25 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->testAction('/evaluations/index/term:previous', ['method' => 'GET']);
     }
 
+    public function testIndexPresentTerm()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $presentTermId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $this->_savePreviousTerm($Evaluations);
+        $eval_data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => $presentTermId,
+            'evaluate_type'     => 0,
+            'my_turn_flg'       => true,
+            'index_num'         => 0,
+        ];
+        $Evaluations->Evaluation->save($eval_data);
+        $this->testAction('/evaluations/index/term:present', ['method' => 'GET']);
+    }
+
     public function testIndexNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
