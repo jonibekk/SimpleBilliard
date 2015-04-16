@@ -189,7 +189,6 @@
                                         'placeholder' => __d('team', '表示順'),
                                     ))
                         ?>
-
                     </td>
                     <td>
                         <?= $this->Form
@@ -206,15 +205,21 @@
                         ?>
                     </td>
                     <?= $this->Form->hidden("EvaluateScore.$es_key.id") ?>
-                    <?= $this->Form->hidden("EvaluateScore.$es_key.team_id") ?>
                 </tr>
             <?php endforeach; ?>
         </table>
         <div class="form-group">
             <?= $this->Form->submit(__d('gl', '評価設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
+            <? $index = count($this->request->data['EvaluateScore']);
+            $max_index = $index + 9; ?>
             <?= $this->Html->link(__d('gl', "定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
-                                  ['target-id' => 'EvaluateScoreTable', 'class' => 'btn btn-default pull-left ajax-get']) ?>
+                                  ['target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default pull-left ajax-get']) ?>
         </div>
+        <? for ($i = $index; $i <= $max_index; $i++): ?>
+            <? $this->Form->unlockField("EvaluateScore.$i.name") ?>
+            <? $this->Form->unlockField("EvaluateScore.$i.index_num") ?>
+            <? $this->Form->unlockField("EvaluateScore.$i.description") ?>
+        <? endfor ?>
         <?= $this->Form->end() ?>
 
 

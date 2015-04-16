@@ -4,14 +4,19 @@
  * User: bigplants
  *
  * @var CodeCompletionView $this
+ * @var                    $index
  */
+if (!viaIsSet($index) || !is_numeric($index)) {
+    $index = 0;
+}
 ?>
+
 <!-- START app/View/Elements/Team/eval_score_form_elm.ctp -->
 <tr class="evaluation_select"
-    index="<?php echo $es_key ?>">
+    index="<?php echo $index ?>">
     <td>
         <?= $this->Form
-            ->input("EvaluateScore.$es_key.name",
+            ->input("EvaluateScore.$index.name",
                     array(
                         'wrapInput'   => false,
                         'type'        => 'text',
@@ -24,7 +29,7 @@
     </td>
     <td>
         <?= $this->Form
-            ->input("EvaluateScore.$es_key.index_num",
+            ->input("EvaluateScore.$index.index_num",
                     array(
                         'wrapInput'   => false,
                         'type'        => 'number',
@@ -38,7 +43,7 @@
     </td>
     <td>
         <?= $this->Form
-            ->input("EvaluateScore.$es_key.description",
+            ->input("EvaluateScore.$index.description",
                     array(
                         'wrapInput'   => false,
                         'type'        => 'textarea',
@@ -50,7 +55,5 @@
                     ))
         ?>
     </td>
-    <?= $this->Form->hidden("EvaluateScore.$es_key.id") ?>
-    <?= $this->Form->hidden("EvaluateScore.$es_key.team_id") ?>
 </tr>
 <!-- END app/View/Elements/Team/eval_score_form_elm.ctp -->

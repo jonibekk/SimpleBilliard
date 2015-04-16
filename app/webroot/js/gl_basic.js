@@ -145,7 +145,7 @@ $(document).ready(function () {
     });
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
-    $(document).on("click", ".ajax-get", evAjaxGet);
+    $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -316,14 +316,22 @@ function imageLazyOn($elm_obj) {
         });
     }
 }
-function evAjaxGet(e) {
+function evAjaxGetElmWithIndex(e) {
     e.preventDefault();
-    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'target-selector');
+    attrUndefinedCheck(this, 'index');
     var $obj = $(this);
-    var target_id = $obj.attr("target-id");
+    var target_selector = $obj.attr("target-selector");
+    var index = parseInt($obj.attr("index"));
 
-    $.get($obj.attr('href'), function (data) {
-        $('#' + target_id).append(data);
+    $.get($obj.attr('href') + "/index:" + index, function (data) {
+        $(target_selector).append(data);
+        if ($obj.attr('max_index') != undefined && index >= parseInt($obj.attr('max_index'))) {
+            $obj.attr('disabled', 'disabled');
+            return false;
+        }
+        //increment
+        $obj.attr('index', index + 1);
     });
     return false;
 }

@@ -78,7 +78,8 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod(['post', 'put']);
         if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])
-            && $this->Team->Evaluation->EvaluateScore->saveAll($this->request->data['EvaluateScore'])
+            && $this->Team->Evaluation->EvaluateScore->saveScores($this->request->data['EvaluateScore'],
+                                                                  $this->Session->read('current_team_id'))
         ) {
             $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
         }
@@ -91,6 +92,9 @@ class TeamsController extends AppController
     function ajax_get_score_elm()
     {
         $this->_ajaxPreProcess();
+        if (viaIsSet($this->request->params['named']['index'])) {
+            $this->set(['index' => $this->request->params['named']['index']]);
+        }
         $response = $this->render('Team/eval_score_form_elm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
