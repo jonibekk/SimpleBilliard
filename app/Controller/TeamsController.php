@@ -89,6 +89,23 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    function to_inactive($id)
+    {
+        $this->request->allowMethod(['post']);
+        $this->Team->Evaluation->EvaluateScore->setToInactive($id);
+        $this->Pnotify->outSuccess(__d('gl', "スコア定義を削除しました。"));
+        return $this->redirect($this->referer());
+    }
+
+    function ajax_get_confirm_inactive_score_modal($id)
+    {
+        $this->_ajaxPreProcess();
+        $this->set(compact('id'));
+        $response = $this->render('Team/confirm_to_inactive_score_modal');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
     function ajax_get_score_elm()
     {
         $this->_ajaxPreProcess();

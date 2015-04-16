@@ -74,7 +74,8 @@ class EvaluateScore extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id' => $teamId,
+                'team_id'    => $teamId,
+                'active_flg' => true,
             ],
             'order'      => [
                 'index_num' => 'asc'
@@ -90,6 +91,12 @@ class EvaluateScore extends AppModel
         $datas = Hash::insert($datas, '{n}.team_id', $team_id);
         $res = $this->saveAll($datas);
         return $res;
+    }
+
+    function setToInactive($id)
+    {
+        $this->id = $id;
+        return $this->saveField('active_flg', false);
     }
 
 }

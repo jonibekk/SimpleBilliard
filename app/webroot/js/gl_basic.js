@@ -146,6 +146,7 @@ $(document).ready(function () {
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
     $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
+    $(document).on("click", ".click-target-remove", evTargetRemove);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -315,6 +316,13 @@ function imageLazyOn($elm_obj) {
             }
         });
     }
+}
+function evTargetRemove() {
+    attrUndefinedCheck(this, 'target-selector');
+    var $obj = $(this);
+    var target_selector = $obj.attr("target-selector");
+    $(target_selector).remove();
+    return false;
 }
 function evAjaxGetElmWithIndex(e) {
     e.preventDefault();

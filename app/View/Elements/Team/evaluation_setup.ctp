@@ -160,6 +160,7 @@
                 <th>
                     <?php echo __d('gl', '説明') ?>
                 </th>
+                <th></th>
             </tr>
             <? foreach ($this->request->data['EvaluateScore'] as $es_key => $evaluation_select_value) : ?>
                 <tr class="evaluation_select"
@@ -167,33 +168,33 @@
                     <td>
                         <?= $this->Form
                             ->input("EvaluateScore.$es_key.name",
-                                    array(
+                                    [
                                         'wrapInput'   => false,
                                         'type'        => 'text',
                                         'div'         => false,
                                         'label'       => false,
                                         'class'       => 'form-control',
                                         'placeholder' => __d('team', '名前'),
-                                    ))
+                                    ])
                         ?>
                     </td>
                     <td>
                         <?= $this->Form
                             ->input("EvaluateScore.$es_key.index_num",
-                                    array(
+                                    [
                                         'wrapInput'   => false,
                                         'type'        => 'number',
                                         'div'         => false,
                                         'label'       => false,
                                         'class'       => 'form-control',
                                         'placeholder' => __d('team', '表示順'),
-                                    ))
+                                    ])
                         ?>
                     </td>
                     <td>
                         <?= $this->Form
                             ->input("EvaluateScore.$es_key.description",
-                                    array(
+                                    [
                                         'wrapInput'   => false,
                                         'type'        => 'textarea',
                                         'rows'        => 3,
@@ -201,8 +202,13 @@
                                         'label'       => false,
                                         'class'       => 'form-control',
                                         'placeholder' => __d('team', '定義の説明を書きましょう'),
-                                    ))
+                                    ])
                         ?>
+                    </td>
+                    <td>
+                        <a class="modal-ajax-get"
+                           href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_confirm_inactive_score_modal', $evaluation_select_value['id']]) ?>"><i
+                                class="fa fa-trash font_lightGray-gray"></i></a>
                     </td>
                     <?= $this->Form->hidden("EvaluateScore.$es_key.id") ?>
                 </tr>

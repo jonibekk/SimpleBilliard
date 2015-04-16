@@ -13,7 +13,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
 
 <!-- START app/View/Elements/Team/eval_score_form_elm.ctp -->
 <tr class="evaluation_select"
-    index="<?php echo $index ?>">
+    index="<?php echo $index ?>" id="AddScore_<?= $index ?>">
     <td>
         <?= $this->Form
             ->input("EvaluateScore.$index.name",
@@ -54,6 +54,10 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                         'placeholder' => __d('team', '定義の説明を書きましょう'),
                     ))
         ?>
+    </td>
+    <td>
+        <a href="#" class="click-target-remove" target-selector="#AddScore_<?= $index ?>"><i
+                class="fa fa-times font_lightGray-gray"></i></a>
     </td>
 </tr>
 <!-- END app/View/Elements/Team/eval_score_form_elm.ctp -->
