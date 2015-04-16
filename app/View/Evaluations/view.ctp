@@ -40,7 +40,7 @@
                     <div class="form-group col-xxs-12 mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
                             <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                            <i class="fa fa-user user-icon fa-3x"></i>
+                            <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
                             <? else: ?>
                             <?=
                             $this->Html->image('ajax-loader.gif',
@@ -65,7 +65,11 @@
                                         <?= __d('gl', "本人") ?>
                                     <? endif;?>
                                 </div>
-                                <div class="col col-xxs-12 col-sm-4 col-md-3"><?= h($total['EvaluatorUser']['display_username']) ?></div>
+                                <div class="col col-xxs-12 col-sm-4 col-md-3">
+                                    <? if($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):?>
+                                    <?= h($total['EvaluatorUser']['display_username']) ?>
+                                    <? endif ?>
+                                </div>
                             </div>
                             <div class="col col-xxs-12">
                                 <?=
@@ -125,7 +129,7 @@
                     <div class="col-xxs-12  mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
                             <? if($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                <i class="fa fa-user user-icon fa-3x"></i>
+                                <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
                             <? else: ?>
                             <?=
                             $this->Html->image('ajax-loader.gif',
@@ -150,7 +154,11 @@
                                         <?= __d('gl', "評価者") ?>
                                     <? endif;?>
                                 </div>
-                                <div class="col col-xxs-12 col-sm-4 col-md-3"><?= h($total['EvaluatorUser']['display_username']) ?></div>
+                                <div class="col col-xxs-12 col-sm-4 col-md-3">
+                                    <? if($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):?>
+                                    <?= h($total['EvaluatorUser']['display_username']) ?>
+                                    <? endif ?>
+                                </div>
                             </div>
                             <div class="form-group col-xxs-12">
                                 <label for="0EvaluationComment" class="col-xxs-12 col-sm-4 col-md-3 control-label form-label">
