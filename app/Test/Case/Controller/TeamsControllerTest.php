@@ -18,6 +18,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.member_type',
         'app.evaluation_setting',
         'app.evaluation',
+        'app.evaluate_score',
         'app.action_result',
         'app.goal',
         'app.follower',
@@ -348,6 +349,7 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/ajax_upload_update_members_csv/', ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxGetScoreElm()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -389,6 +391,13 @@ class TeamsControllerTest extends ControllerTestCase
             'EvaluationSetting' => [
                 'team_id'    => 1,
                 'enable_flg' => true,
+            ],
+            'EvaluateScore'     => [
+                [
+                    'name'        => 'test',
+                    'index_num'   => 1,
+                    'description' => 'desc'
+                ]
             ]
         ];
         $this->testAction('/teams/save_evaluation_setting', ['method' => 'POST', 'data' => $data]);
