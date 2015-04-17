@@ -223,21 +223,18 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'NOT'               => [
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
-                'Goal' => [
-                    'KeyResult'    => [
-                        'conditions' => [
-                            'NOT' => [
-                                'completed' => null
-                            ]
-                        ]
-                    ],
+                'Goal'          => [
+                    'KeyResult',
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
-                            'user_id' => $this->my_uid
+                            'user_id' => $evaluateeId
                         ]
                     ],
                     'ActionResult' => [
@@ -249,7 +246,10 @@ class Evaluation extends AppModel
                         ]
                     ]
                 ],
-                'EvaluatorUser'
+                'EvaluatorUser',
+                'EvaluateScore' => [
+                    'fields' => ['EvaluateScore.name']
+                ],
             ]
         ];
         $res = $this->find('all', $options);
@@ -569,7 +569,11 @@ class Evaluation extends AppModel
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
                 'evaluate_type'     => $evaluate_type,
-                'evaluate_term_id'  => $term_id
+                'evaluate_term_id'  => $term_id,
+                'NOT'               => [
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'group'      => ['evaluate_term_id', 'evaluatee_user_id']
         ];

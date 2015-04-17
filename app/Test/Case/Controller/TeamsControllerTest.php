@@ -18,6 +18,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.member_type',
         'app.evaluation_setting',
         'app.evaluation',
+        'app.evaluate_score',
         'app.action_result',
         'app.goal',
         'app.follower',
@@ -349,6 +350,31 @@ class TeamsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetScoreElm()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_score_elm/index:1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testToInactive()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/to_inactive/1', ['method' => 'POST']);
+    }
+
+    function testAjaxGetConfirmInactiveScoreModal()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_confirm_inactive_score_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testDownloadAddMembersCsvFormat()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -359,6 +385,39 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $this->_getTeamsCommonMock(null, true);
         $this->testAction('/teams/download_team_members_csv', ['method' => 'GET']);
+    }
+
+    function testSaveEvaluationSettingFail()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'EvaluationSetting' => [
+                'team_id'    => 1,
+                'enable_flg' => 'test',
+            ]
+        ];
+        $this->testAction('/teams/save_evaluation_setting', ['method' => 'POST', 'data' => $data]);
+        $this->assertTrue(!empty($Teams->Team->EvaluationSetting->validationErrors));
+    }
+
+    function testSaveEvaluationSettingSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'EvaluationSetting' => [
+                'team_id'    => 1,
+                'enable_flg' => true,
+            ],
+            'EvaluateScore'     => [
+                [
+                    'name'        => 'test',
+                    'index_num'   => 1,
+                    'description' => 'desc'
+                ]
+            ]
+        ];
+        $this->testAction('/teams/save_evaluation_setting', ['method' => 'POST', 'data' => $data]);
+        $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
     }
 
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
