@@ -136,6 +136,10 @@ class Circle extends AppModel
         }
         if ($res = $this->saveAll($data)) {
             $this->CircleMember->updateCounterCache(['circle_id' => $this->getLastInsertID()]);
+
+            if (viaIsSet($data['Circle']['public_flg'])) {
+                $this->PostShareCircle->Post->createCirclePost($this->getLastInsertID(), $this->my_uid);
+            }
         }
         return $res;
     }

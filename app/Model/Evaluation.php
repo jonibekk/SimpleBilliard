@@ -282,7 +282,7 @@ class Evaluation extends AppModel
             ],
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
-                'Goal' => [
+                'Goal'          => [
                     'KeyResult',
                     'GoalCategory',
                     'MyCollabo'    => [
@@ -299,7 +299,10 @@ class Evaluation extends AppModel
                         ]
                     ]
                 ],
-                'EvaluatorUser'
+                'EvaluatorUser',
+                'EvaluateScore' => [
+                    'fields' => ['EvaluateScore.name']
+                ],
             ]
         ];
         $res = $this->find('all', $options);

@@ -1,6 +1,17 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
- 
+required_plugins = %w( vagrant-omnibus vagrant-cachier )
+required_plugins.each do |plugin|
+ unless Vagrant.has_plugin? plugin
+   required_plugins.each do |plugin|
+     system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+   end
+
+   puts "Please rerun `vagrant up`or`vagrant reload`."
+   exit
+ end
+end
+
 Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/precise32"
   # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
@@ -10,6 +21,9 @@ Vagrant.configure("2") do |config|
     vb.memory = 2048
     vb.cpus = 2
   end
+
+  config.cache.scope = :box
+  config.omnibus.chef_version = '11.4.4'
 
   src_dir = './'
   doc_root = '/vagrant_data/app/webroot'
@@ -25,5 +39,5 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "deploy_cake_local"
     chef.json = {doc_root: doc_root,app_root: app_root}
   end
- 
+
 end

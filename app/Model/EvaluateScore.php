@@ -56,7 +56,8 @@ class EvaluateScore extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id' => $teamId,
+                'team_id'    => $teamId,
+                'active_flg' => true,
             ],
             'fields'     => [
                 'id',
@@ -68,6 +69,35 @@ class EvaluateScore extends AppModel
         ];
         $res = $this->find('list', $options);
         return [null => __d('gl', "選択してください")] + $res;
+    }
+
+    function getScore($teamId)
+    {
+        $options = [
+            'conditions' => [
+                'team_id'    => $teamId,
+                'active_flg' => true,
+            ],
+            'order'      => [
+                'index_num' => 'asc'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $res = ['EvaluateScore' => Hash::extract($res, '{n}.EvaluateScore')];
+        return $res;
+    }
+
+    function saveScores($datas, $team_id)
+    {
+        $datas = Hash::insert($datas, '{n}.team_id', $team_id);
+        $res = $this->saveAll($datas);
+        return $res;
+    }
+
+    function setToInactive($id)
+    {
+        $this->id = $id;
+        return $this->saveField('active_flg', false);
     }
 
 }

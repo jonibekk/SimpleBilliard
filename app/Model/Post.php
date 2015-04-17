@@ -508,6 +508,7 @@ class Post extends AppModel
                         'MyPostLike.team_id' => $this->current_team_id,
                     ],
                 ],
+                'Circle',
                 'Comment'         => [
                     'conditions'    => ['Comment.team_id' => $this->current_team_id],
                     'order'         => [
@@ -883,6 +884,31 @@ class Post extends AppModel
                 break;
         }
 
+        return $this->save($data);
+    }
+
+    /**
+     * Description : Added a new method for insertion of new public circles in the post table
+     *
+     * @param      $circle_id
+     * @param null $uid
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    function createCirclePost($circle_id, $uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+
+        $data = [
+            'user_id'    => $uid,
+            'team_id'    => $this->current_team_id,
+            'type'       => self::TYPE_CREATE_CIRCLE,
+            'public_flg' => true,
+            'circle_id'  => $circle_id,
+        ];
         return $this->save($data);
     }
 

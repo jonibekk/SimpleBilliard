@@ -47,7 +47,7 @@
         <? endif; ?>
         <div class="form-group">
             <? if (!empty($my_eval[0])): ?>
-                <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
+                <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                     <p class="font_bold"><?= __d('gl', "自分") ?></p>
                     <? if ((int)$incomplete_number_list[$term_name]['my_eval'] > 0): ?>
                         <p><?= __d('gl', "未完了:1") ?></p>
@@ -57,7 +57,7 @@
                                    ['evaluatees' => $my_eval, 'eval_term_id' => $selected_tab_term_id]) ?>
             <? endif; ?>
             <? if (!empty($my_evaluatees)): ?>
-                <div for="#" class="col col-sm-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
+                <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                     <p class="font_bold"><?= __d('gl', "あなたが評価するメンバー") ?></p>
                     <? if ((int)$incomplete_number_list[$term_name]['my_evaluatees'] > 0): ?>
                         <p><?= __d('gl', "未完了:%s", (int)$incomplete_number_list[$term_name]['my_evaluatees']) ?></p>
