@@ -23,6 +23,12 @@
                 <?= __d('gl', "未完了の被評価者をみる") ?>
             </a>
         </div>
+        <div class="form-group">
+            <a class="modal-ajax-get pointer"
+               href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_evaluators']) ?>">
+                <?= __d('gl', "未完了の評価者をみる") ?>
+            </a>
+        </div>
         <hr>
         <div class="form-group">
             <label for="TeamName" class="col control-label form-label"><?= __d('gl', "未完了数") ?></label>

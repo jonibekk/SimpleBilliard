@@ -159,6 +159,20 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_incomplete_evaluators()
+    {
+        $this->_ajaxPreProcess();
+        $incomplete_evaluators = $this->Evaluation->getIncompleteEvaluators($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('incomplete_evaluators'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_evaluators');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_evaluators_status($evaluatee_id)
     {
         $this->_ajaxPreProcess();
@@ -172,6 +186,22 @@ class EvaluationsController extends AppController
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Evaluation/modal_evaluators_status');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_evaluatees_by_evaluator($evaluator_id) {
+        $this->_ajaxPreProcess();
+        $evaluator = $this->Evaluation->EvaluatorUser->findById($evaluator_id);
+
+        $res = $this->Evaluation->getEvaluateesByEvaluator($this->Team->EvaluateTerm->getLatestTermId(), $evaluator_id);
+        $incomplete_evaluatees = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
+        $this->set(compact('incomplete_evaluatees', 'evaluator'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_evaluatees_by_evaluator');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);

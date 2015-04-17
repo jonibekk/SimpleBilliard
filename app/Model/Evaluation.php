@@ -843,7 +843,8 @@ class Evaluation extends AppModel
                 'evaluate_term_id' => $termId,
                 'NOT'              => [
                     ['status' => self::TYPE_STATUS_DONE],
-                    ['evaluate_type' => self::TYPE_LEADER]
+                    ['evaluate_type' => self::TYPE_LEADER],
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
                 ]
             ],
             'group'      => [
@@ -862,6 +863,35 @@ class Evaluation extends AppModel
         }
         $incompleteEvaluatees = Hash::sort($incompleteEvaluatees, '{n}.User.incomplete_count', 'desc');
         return $incompleteEvaluatees;
+    }
+
+    function getIncompleteEvaluators($termId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $termId,
+                'my_turn_flg'      => true,
+                'NOT'              => [
+                    ['status' => self::TYPE_STATUS_DONE],
+                    ['evaluate_type' => self::TYPE_LEADER],
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                ]
+            ],
+            'group'      => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ],
+            'contain'    => [
+                'EvaluatorUser'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluator_user_id");
+        $incompleteEvaluators = [];
+        foreach ($combined as $evaluatorId => $evaluators) {
+            $evaluators = Hash::insert($evaluators, '{n}.EvaluatorUser.incomplete_count', (string)count($evaluators));
+            $incompleteEvaluators[$evaluatorId]['User'] = Hash::extract($evaluators, "{n}.EvaluatorUser")[0];
+        }
+        return $incompleteEvaluators;
     }
 
     function getEvaluators($termId, $evaluateeId)
@@ -885,5 +915,38 @@ class Evaluation extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+    function getEvaluateesByEvaluator($termId, $evaluatorId){
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'evaluator_user_id' => $evaluatorId,
+                'my_turn_flg'       => true,
+                'NOT'               => [
+                    ['evaluate_type' => self::TYPE_LEADER],
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                ]
+            ],
+            'group'      => [
+                'evaluatee_user_id'
+            ],
+            'contain'    => [
+                'EvaluateeUser'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
+
+        $incompleteEvaluatees = [];
+        foreach ($combined as $evaluateeId => $evaluatees) {
+            $incompleteEvaluatees[$evaluateeId]['Evaluation'] = Hash::extract($evaluatees, "{n}.Evaluation")[0];
+            $incompleteEvaluatees[$evaluateeId]['User'] = Hash::extract($evaluatees, "{n}.EvaluateeUser")[0];
+        }
+
+        return $incompleteEvaluatees;
+    }
+
+
 
 }

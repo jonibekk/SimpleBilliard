@@ -2,26 +2,25 @@
 /**
  * Created by PhpStorm.
  * User: saeki
- * Date: 15/04/14
- * Time: 17:35
+ * Date: 15/04/17
+ * Time: 15:12
  */
-
 ?>
-<!-- START app/View/Elements/Elements/modal_incomplete_evaluatees.ctp -->
+<!-- START app/View/Elements/Elements/modal_evaluatees_by_evaluator.ctp -->
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "未完了の被評価者(%s)", count($incomplete_evaluatees)) ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "%sの未評価者", $evaluator['EvaluatorUser']['display_username']) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
             <? if (!empty($incomplete_evaluatees)): ?>
                 <div class="row borderBottom">
                     <? foreach ($incomplete_evaluatees as $user): ?>
                         <?=
-                        $this->element('Evaluation/incomplete_evaluatee',
-                                       ['user' => $user['User']]) ?>
+                        $this->element('Evaluation/evaluatee_by_evaluator',
+                                       ['user' => $user]) ?>
                     <? endforeach ?>
                 </div>
             <? else: ?>
@@ -33,4 +32,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Elements/modal_incomplete_evaluatees.ctp -->
+<!-- END app/View/Elements/Elements/modal_evaluatees_by_evaluator.ctp -->
