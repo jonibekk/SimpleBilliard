@@ -727,7 +727,7 @@ class AppSchema extends CakeSchema
         'type'            => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 3, 'unsigned' => true, 'key' => 'index', 'comment' => 'タイプ(1:ゴール,2:投稿,3:etc ...)'),
         'from_user_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '通知元ユーザID(belongsToでUserモデルに関連)'),
         'body'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '通知本文', 'charset' => 'utf8'),
-        'item_name'       => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アイテム名(投稿内容、コメント内容等)', 'charset' => 'utf8'),
+        'item_name'       => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アイテム名(投稿内容、コメント内容等)', 'charset' => 'utf8'),
         'model_id'        => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'モデルID(feedならpost_id,circleならcircle_id)'),
         'url_data'        => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'URLデータ(json)', 'charset' => 'utf8'),
         'count_num'       => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'メッセージ内で利用する件数'),
