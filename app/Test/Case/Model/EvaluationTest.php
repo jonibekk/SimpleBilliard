@@ -751,6 +751,14 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id);
     }
 
+    function testGetIncompleteEvaluators()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getIncompleteEvaluators($this->Evaluation->evaluate_term_id);
+    }
+
     function testGetEvaluators()
     {
         $this->_setDefault();
@@ -765,6 +773,14 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluateTerm->saveTerm();
         $this->_saveEvaluations();
         $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->evaluate_term_id, 1);
+    }
+
+    function testGetIncompleteOneselfEvaluators()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->evaluate_term_id);
     }
 
     function _saveEvaluations()

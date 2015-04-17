@@ -466,6 +466,15 @@ class EvaluationsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    public function testAjaxGetIncompleteEvaluators()
+    {
+        $this->_getEvaluationsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/evaluations/ajax_get_incomplete_evaluators/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     public function testAjaxGetEvaluatorsStatus()
     {
         $this->_getEvaluationsCommonMock();
@@ -482,7 +491,16 @@ class EvaluationsControllerTest extends ControllerTestCase
         $evaluatorId = 1;
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluatorId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    public function testAjaxGetIncompleteOneself()
+    {
+        $this->_getEvaluationsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction("/evaluations/ajax_get_incomplete_oneself", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
