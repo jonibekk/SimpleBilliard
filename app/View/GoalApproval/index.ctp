@@ -49,6 +49,15 @@
 
 </style>
 
+<script type="text/javascript">
+    var is_comment = function(str, button_no) {
+        if (str.length > 0) {
+            var button_name = 'modify_btn_' + button_no;
+            document.getElementById(button_name).disabled = "";
+        }
+    }
+</script>
+
 <div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SubHeaderMenu">
     <div class="col col-xxs-6 text-align_r">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
@@ -143,14 +152,14 @@
                                 </div>
                             </div>
 
-                            <?= $this->Form->textarea('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>3, 'cols'=>30, 'style'=>'margin-top: 10px; margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
+                            <?= $this->Form->textarea('comment', ['label'=>false, 'onkeyup' => 'is_comment(value,'.$goal['Collaborator']['id']. ')', 'class'=>'form-control addteam_input-design', 'rows'=>3, 'cols'=>30, 'style'=>'margin-top: 10px; margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
 
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if ($goal['my_goal'] === true) { ?>
                                         <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } else { ?>
-                                        <?= $this->Form->button(__d('gl', "修正を依頼"), ['name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "修正を依頼"), ['id' => 'modify_btn_'. $goal['Collaborator']['id'], 'name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false, 'disabled']) ?>
                                     <? } ?>
                                 </div>
                             </div>
