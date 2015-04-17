@@ -1080,11 +1080,18 @@ class TeamMember extends AppModel
         return $csv_data;
     }
 
-    function getAllEvaluationsCsvData($team_id = null)
+    /**
+     * @param      $term_id
+     * @param null $team_id
+     *
+     * @return array
+     */
+    function getAllEvaluationsCsvData($term_id, $team_id = null)
     {
         if (!$team_id) {
             $team_id = $this->current_team_id;
         }
+
         $options = [
             'conditions' => [
                 'TeamMember.team_id'               => $team_id,
