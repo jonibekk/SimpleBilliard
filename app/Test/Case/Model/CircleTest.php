@@ -66,11 +66,6 @@ class CircleTest extends CakeTestCase
         parent::tearDown();
     }
 
-    //ダミーテスト
-    function testDummy()
-    {
-    }
-
     public function testUpdateModifiedIfEmpty()
     {
         $circle_list = [];
@@ -89,4 +84,26 @@ class CircleTest extends CakeTestCase
         $this->Circle->getPublicCircles($type = 'joined');
         $this->Circle->getPublicCircles($type = 'non-joined');
     }
+
+    public function testAddCircles()
+    {
+        $this->_setDefault();
+        $data = [
+            'Circle' => [
+                'name'       => 'test',
+                'public_flg' => true,
+            ]
+        ];
+        $res = $this->Circle->add($data);
+        $this->assertTrue($res);
+    }
+
+    function _setDefault()
+    {
+        $this->Circle->my_uid = 1;
+        $this->Circle->current_team_id = 1;
+        $this->Circle->PostShareCircle->Post->my_uid = 1;
+        $this->Circle->PostShareCircle->Post->current_team_id = 1;
+    }
+
 }

@@ -489,6 +489,28 @@ class PostTest extends CakeTestCase
         $this->assertEquals($comment_num, $res[0]['unread_count']);
     }
 
+    function testCreateCirclePost()
+    {
+        $this->_setDefault();
+
+        $expected = [
+            'Post' => [
+                'user_id'    => '1',
+                'team_id'    => '1',
+                'type'       => (int)7,
+                'public_flg' => true,
+                'circle_id'  => (int)1,
+            ]
+        ];
+
+        $actual = $this->Post->createCirclePost(1);
+        unset($actual['Post']['created']);
+        unset($actual['Post']['modified']);
+        unset($actual['Post']['id']);
+
+        $this->assertEquals($expected, $actual);
+    }
+
     function _setDefault()
     {
         $uid = '1';
