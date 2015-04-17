@@ -50,6 +50,9 @@ class TeamsController extends AppController
         $term_end_date = $term_end_date - 1;
         //get evaluation setting
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
+        $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
+        $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
+        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
@@ -62,12 +65,59 @@ class TeamsController extends AppController
             $eval_start_button_enabled = false;
         }
         //TODO ハードコーディング中! for こーへーさん
-        $team_id = [1,1111111];
+        $team_id = [1, 1111111];
         $unvalued = $this->Goal->Collaborator->tempCountUnvalued($team_id);
-        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled','unvalued','team_id'));
+        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
+                           'unvalued', 'team_id', 'eval_scores'));
         //TODO ハードコーディング中! for こーへーさん
 
         return $this->render();
+    }
+
+    function save_evaluation_setting()
+    {
+        $this->request->allowMethod(['post', 'put']);
+        $this->Team->begin();
+        if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])
+            && $this->Team->Evaluation->EvaluateScore->saveScores($this->request->data['EvaluateScore'],
+                                                                  $this->Session->read('current_team_id'))
+        ) {
+            $this->Team->commit();
+            $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
+        }
+        else {
+            $this->Team->rollback();
+            $this->Pnotify->outError(__d('gl', "評価設定が保存できませんでした。"));
+        }
+        return $this->redirect($this->referer());
+    }
+
+    function to_inactive($id)
+    {
+        $this->request->allowMethod(['post']);
+        $this->Team->Evaluation->EvaluateScore->setToInactive($id);
+        $this->Pnotify->outSuccess(__d('gl', "スコア定義を削除しました。"));
+        return $this->redirect($this->referer());
+    }
+
+    function ajax_get_confirm_inactive_score_modal($id)
+    {
+        $this->_ajaxPreProcess();
+        $this->set(compact('id'));
+        $response = $this->render('Team/confirm_to_inactive_score_modal');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_score_elm()
+    {
+        $this->_ajaxPreProcess();
+        if (viaIsSet($this->request->params['named']['index'])) {
+            $this->set(['index' => $this->request->params['named']['index']]);
+        }
+        $response = $this->render('Team/eval_score_form_elm');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
     }
 
     function start_evaluation()
