@@ -26,6 +26,16 @@
     .approval_body_start_area {
         margin-top: 40px;
     }
+
+    .approval_botton_area {
+        text-align: center;
+    }
+
+    .approval_button_size {
+        width: 97%;
+        margin-bottom: 10px;
+    }
+
 </style>
 
 <div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SubHeaderMenu">
@@ -116,22 +126,23 @@
 
                         <div class="panel-body comment-block">
                             <?= $this->Form->create('GoalApproval', ['url' => ['controller'=>'goal_approval', 'action'=>'done'], 'type' => 'post', 'novalidate' => true]); ?>
-                            <?= $this->Form->input('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>1, 'cols'=>30, 'style'=>'margin-bottom: 8px;', 'placeholder'=>'コメントを書く'])?>
                             <?= $this->Form->hidden('collaborator_id', ['value'=>$goal['Collaborator']['id']]); ?>
 
                             <div class="row">
-                                <div class="pull-right">
+                                <div class="approval_botton_area">
                                     <? if (isset($goal['msg']) === true) { ?>
-                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
                                     <? } else { ?>
                                         <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
+                                            <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
                                         <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary', 'div'=>false]) ?>
+                                            <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
                                         <? } ?>
                                     <? } ?>
                                 </div>
                             </div>
+
+                            <?= $this->Form->input('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>1, 'cols'=>30, 'style'=>'margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
 
                             <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
                                 <? foreach ($goal['ApprovalHistory'] as $history) { ?>
