@@ -748,12 +748,12 @@ class Evaluation extends AppModel
     function getAllStatusesForTeamSettings($termId)
     {
         $evaluation_statuses = [
-            [
+            'oneself' => [
                 'label'          => __d('gl', "自己"),
                 'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
-            [
+            'evaluator' => [
                 'label'          => __d('gl', "評価者"),
                 'all_num'        => 0,
                 'incomplete_num' => 0,
@@ -775,8 +775,8 @@ class Evaluation extends AppModel
         $oneself_incomplete_cnt = count(Hash::extract($res, "{n}.Evaluation[status!=2]"));
 
         // Set oneself count
-        $evaluation_statuses[0]['all_num'] = $oneself_all_cnt;
-        $evaluation_statuses[0]['incomplete_num'] = $oneself_incomplete_cnt;
+        $evaluation_statuses['oneself']['all_num'] = $oneself_all_cnt;
+        $evaluation_statuses['oneself']['incomplete_num'] = $oneself_incomplete_cnt;
 
         // Get evaluator evaluations
         $evaluator_options = [
@@ -794,9 +794,9 @@ class Evaluation extends AppModel
         // Increment
         foreach ($combined as $groupedEvaluator) {
             foreach ($groupedEvaluator as $eval) {
-                $evaluation_statuses[1]['all_num']++;
+                $evaluation_statuses['evaluator']['all_num']++;
                 if ($eval['Evaluation']['status'] != self::TYPE_STATUS_DONE) {
-                    $evaluation_statuses[1]['incomplete_num']++;
+                    $evaluation_statuses['evaluator']['incomplete_num']++;
                 }
             }
         }
@@ -914,6 +914,27 @@ class Evaluation extends AppModel
         }
 
         return $incompleteEvaluatees;
+    }
+
+    function getIncompleteOneselfEvaluators($termId) {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'my_turn_flg'       => true,
+                'evaluate_type'     => self::TYPE_ONESELF,
+            ],
+            'group'      => [
+                'evaluator_user_id'
+            ],
+            'contain'    => [
+                'EvaluatorUser'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        $this->log($res);
+
+        return $res;
     }
 
 

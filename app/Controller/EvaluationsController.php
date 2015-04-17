@@ -207,4 +207,18 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_incomplete_oneself() {
+        $this->_ajaxPreProcess();
+
+        $oneself_incomplete_users = $this->Evaluation->getIncompleteOneselfEvaluators($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('oneself_incomplete_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_oneself_evaluators');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
 }

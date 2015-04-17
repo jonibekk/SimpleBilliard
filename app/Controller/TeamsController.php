@@ -71,8 +71,8 @@ class TeamsController extends AppController
         $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
 
         // 全体progressカウント
-        $all_cnt = array_sum(Hash::extract($statuses, "{n}.all_num"));
-        $incomplete_cnt = array_sum(Hash::extract($statuses, "{n}.incomplete_num"));
+        $all_cnt = array_sum(Hash::extract($statuses, "{s}.all_num"));
+        $incomplete_cnt = array_sum(Hash::extract($statuses, "{s}.incomplete_num"));
         $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
         if ($complete_cnt == 0) {
             $progress_percent = 0;
