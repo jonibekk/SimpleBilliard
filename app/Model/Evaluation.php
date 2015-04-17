@@ -165,27 +165,6 @@ class Evaluation extends AppModel
         return true;
     }
 
-    function checkAvailEditable($termId, $evaluateeId)
-    {
-        $this->checkAvailParameterInEvalForm($termId, $evaluateeId);
-        $nextEvaluatorId = $this->getNextEvaluatorId($termId, $evaluateeId);
-        $options = [
-            'conditions' => [
-                'OR'                => [
-                    ['evaluator_user_id' => $nextEvaluatorId],
-                    ['evaluator_user_id' => $this->my_uid]
-                ],
-                'evaluatee_user_id' => $evaluateeId,
-                'team_id'           => $this->current_team_id,
-                'my_turn_flg'       => true,
-            ],
-        ];
-        if (empty($this->find("all", $options))) {
-            throw new RuntimeException(__d('gl', "あなたが評価する順番ではありません。"));
-        }
-        return true;
-    }
-
     function getMyEvaluation()
     {
         $options = [
@@ -244,21 +223,18 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'NOT' => [
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal' => [
-                    'KeyResult'    => [
-                        'conditions' => [
-                            'NOT' => [
-                                'completed' => null
-                            ]
-                        ]
-                    ],
+                    'KeyResult',
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
-                            'user_id' => $this->my_uid
+                            'user_id' => $evaluateeId
                         ]
                     ],
                     'ActionResult' => [
@@ -590,7 +566,11 @@ class Evaluation extends AppModel
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
                 'evaluate_type'     => $evaluate_type,
-                'evaluate_term_id'  => $term_id
+                'evaluate_term_id'  => $term_id,
+                'NOT' => [
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
             ],
             'group'      => ['evaluate_term_id', 'evaluatee_user_id']
         ];
@@ -696,6 +676,20 @@ class Evaluation extends AppModel
                 'my_evaluatees' => $this->getMyTurnCount(self::TYPE_EVALUATOR, $previous_term_id, false)
             ]
         ];
+    }
+
+    function getIsEditable($evaluateTermId, $evaluateeId)
+    {
+        $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
+        $nextEvaluatorId = $this->getNextEvaluatorId($evaluateTermId, $evaluateeId);
+        $isMyTurn = !empty(Hash::extract($evaluationList,
+                                         "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$this->my_uid}]"));
+        $isNextTurn = !empty(Hash::extract($evaluationList,
+                                           "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
+        if ($isMyTurn || $isNextTurn) {
+            return true;
+        }
+        return false;
     }
 
 }
