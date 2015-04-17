@@ -14,8 +14,10 @@
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <? if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
+            <? if ((isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
+
+                <? if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
                 <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                     <div class="col col-xxs-12">
                         <div class="pull-right">
@@ -43,7 +45,40 @@
                         </div>
                     </div>
                 </div>
+                    <?  elseif (isset($post['Circle']['id'])): ?>
+                    <div class="panel-body pt_10px plr_11px pb_8px bd-b">
+                        <div class="col col-xxs-12">
+                            <div class="pull-right">
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', $post['Circle']['id']]) ?>"
+                                   class="no-line font_verydark modal-ajax-get">
+                                    <?=
+                                    $this->Html->image('ajax-loader.gif',
+                                                       [
+                                                           'class'         => 'lazy media-object',
+                                                           'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                       "Circle.photo",
+                                                                                                       ['style' => 'small']),
+                                                           'width'         => '32px',
+                                                           'error-img'     => "/img/no-image-link.png",
+                                                       ]
+                                    )
+                                    ?>
+                                </a>
+                            </div>
+                            <div class="ln_contain w_88per">
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', $post['Circle']['id']]) ?>"
+                                   class="no-line font_verydark modal-ajax-get">
+                                    <i class="fa fa-circle-o font_gray"></i>&nbsp;<?= h($post['Circle']['name']) ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <? endif; ?>
+
+
+
                 <!--END Goal Post Header -->
+
             <? endif; ?>
             <div class="panel-body pt_10px plr_11px pb_8px">
                 <div class="col col-xxs-12 feed-user">
