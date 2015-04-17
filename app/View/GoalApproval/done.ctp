@@ -73,10 +73,8 @@
                 <? foreach ($goal_info as $goal) { ?>
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
 
-                        <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-                        <p class="approval_status_box"><?= __d('gl', "評価対象") ?></p>
-                        <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-                        <p class="approval_status_box"><?= __d('gl', "評価対象外") ?></p>
+                        <? if (isset($goal['status']) === true) { ?>
+                            <div class="approval_status_box"><?= $goal['status']; ?></div>
                         <? } ?>
 
                         <div class="panel-body goal-set-heading clearfix">
@@ -136,7 +134,7 @@
 
                             <div class="row">
                                 <div class="approval_botton_area">
-                                    <? if (isset($goal['msg']) === true) { ?>
+                                    <? if ($goal['my_goal'] === true) { ?>
                                         <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } else { ?>
                                         <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>

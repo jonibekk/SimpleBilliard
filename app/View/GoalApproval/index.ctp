@@ -74,8 +74,8 @@
                 <? foreach ($goal_info as $key => $goal) { ?>
 
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
-                        <? if (isset($goal['msg']) === true) { ?>
-                            <div class="approval_status_box"><?= $goal['msg']; ?></div>
+                        <? if (isset($goal['status']) === true) { ?>
+                            <div class="approval_status_box"><?= $goal['status']; ?></div>
                         <? } ?>
 
                         <div class="panel-body goal-set-heading clearfix">
@@ -136,7 +136,7 @@
 
                             <div class="row">
                                 <div class="approval_botton_area">
-                                    <? if (isset($goal['msg']) === true) { ?>
+                                    <? if ($goal['my_goal'] === true) { ?>
                                         <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } else { ?>
                                         <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
@@ -149,7 +149,7 @@
 
                             <div class="row">
                                 <div class="approval_botton_area">
-                                    <? if (isset($goal['msg']) === false) { ?>
+                                    <? if ($goal['my_goal'] === false) { ?>
                                         <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>

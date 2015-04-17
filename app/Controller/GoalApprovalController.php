@@ -28,24 +28,19 @@ class GoalApprovalController extends AppController
     const WAIT_MY_GOAL_MSG = 0;
 
     /*
-     * 処理済み && 自分のゴールが承認されたの場合
+     * 処理待ち && メンバーのゴール && valued_flag=3 の場合
      */
-    const APPROVAL_MY_GOAL_YES_MSG = 1;
+    const MODIFY_MEMBER_GOAL_MSG = 1;
 
     /*
-     * 処理済み && 自分のゴールが保留の場合
+     * 処理済み && メンバーのゴール && valued_flag=1 の場合
      */
-    const APPROVAL_MY_GOAL_NG_MSG = 2;
+    const APPROVAL_MEMBER_GOAL_MSG = 2;
 
     /*
-     * 処理済み && メンバーのゴールが承認されたの場合
+     * 処理済み && メンバーのゴール && valued_flag=2 の場合
      */
-    const APPROVAL_MEMBER_GOAL_YES_MSG = 3;
-
-    /*
-     * 処理済み && メンバーのゴールが保留の場合
-     */
-    const APPROVAL_MEMBER_GOAL_NG_MSG = 4;
+    const NOT_APPROVAL_MEMBER_GOAL_MSG = 3;
 
     /*
      * 処理済み用のメッセージリスト
@@ -127,10 +122,9 @@ class GoalApprovalController extends AppController
     {
         $this->approval_msg_list = [
             self::WAIT_MY_GOAL_MSG             => __d('gl', "認定待ち"),
-            self::APPROVAL_MY_GOAL_YES_MSG     => __d('gl', "コーチが承認しました"),
-            self::APPROVAL_MY_GOAL_NG_MSG      => __d('gl', "コーチが保留しました"),
-            self::APPROVAL_MEMBER_GOAL_YES_MSG => __d('gl', "承認しました"),
-            self::APPROVAL_MEMBER_GOAL_NG_MSG  => __d('gl', "保留にしました"),
+            self::MODIFY_MEMBER_GOAL_MSG       => __d('gl', "修正待ち"),
+            self::APPROVAL_MEMBER_GOAL_MSG     => __d('gl', "評価対象"),
+            self::NOT_APPROVAL_MEMBER_GOAL_MSG => __d('gl', "評価対象外"),
         ];
     }
 
@@ -183,11 +177,18 @@ class GoalApprovalController extends AppController
             $this->team_id, $this->goal_user_ids, [$this->goal_status['unapproved'], $this->goal_status['modify']]);
 
         foreach ($goal_info as $key => $val) {
+            $goal_info[$key]['my_goal'] = false;
+
             if ($this->user_id === $val['User']['id']) {
-                $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
+                $goal_info[$key]['my_goal'] = true;
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
                 if ($this->my_evaluation_flg === false) {
                     unset($goal_info[$key]);
                 }
+            }
+
+            if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '3') {
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::MODIFY_MEMBER_GOAL_MSG];
             }
         }
 
@@ -214,11 +215,20 @@ class GoalApprovalController extends AppController
         );
 
         foreach ($goal_info as $key => $val) {
+            $goal_info[$key]['my_goal'] = false;
+
             if ($this->user_id === $val['User']['id']) {
-                $goal_info[$key]['msg'] = '自分のゴール';
+                $goal_info[$key]['my_goal'] = true;
                 if ($this->my_evaluation_flg === false) {
                     unset($goal_info[$key]);
                 }
+            }
+
+            if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '1') {
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
+
+            } else if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '2') {
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
             }
         }
 
