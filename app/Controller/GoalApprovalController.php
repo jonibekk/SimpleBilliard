@@ -294,6 +294,8 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         $comment = isset($data['comment']) === true ? $data['comment'] : '';
 
+        // 現状はコメントがある時、履歴を追加している。
+        // 今後はコメントなくてもアクションステータスを格納する必要あり。
         if (empty($cb_id) === false && empty($comment) === false) {
             $this->ApprovalHistory->add($cb_id, $this->user_id, 1, $comment);
         }
