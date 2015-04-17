@@ -157,12 +157,18 @@ class Evaluation extends AppModel
         $index_num = (string)$row[$this->alias]['index_num'];
         $evaluator_type_name = '';
 
-        if($evaluate_type == self::TYPE_ONESELF) {
+        if ($evaluate_type == self::TYPE_ONESELF) {
             $evaluator_type_name = __d('gl', "自己");
-        } else if($evaluate_type == self::TYPE_FINAL_EVALUATOR) {
-            $evaluator_type_name = __d('gl', "最終評価者");
-        } else if($evaluate_type == self::TYPE_EVALUATOR) {
-            $evaluator_type_name = __d('gl', "評価者{$index_num}");
+        }
+        else {
+            if ($evaluate_type == self::TYPE_FINAL_EVALUATOR) {
+                $evaluator_type_name = __d('gl', "最終評価者");
+            }
+            else {
+                if ($evaluate_type == self::TYPE_EVALUATOR) {
+                    $evaluator_type_name = __d('gl', "評価者{$index_num}");
+                }
+            }
         }
         $row[$this->alias]['evaluator_type_name'] = $evaluator_type_name;
 
@@ -270,7 +276,7 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
-                'NOT' => [
+                'NOT'               => [
                     ['evaluate_type' => self::TYPE_LEADER]
                 ]
             ],
@@ -614,7 +620,7 @@ class Evaluation extends AppModel
                 'my_turn_flg'       => true,
                 'evaluate_type'     => $evaluate_type,
                 'evaluate_term_id'  => $term_id,
-                'NOT' => [
+                'NOT'               => [
                     ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
                     ['evaluate_type' => self::TYPE_LEADER]
                 ]
@@ -743,43 +749,43 @@ class Evaluation extends AppModel
     {
         $evaluation_statuses = [
             [
-                'label' => __d('gl', "自己"),
-                'all_num' => 0,
+                'label'          => __d('gl', "自己"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             [
-                'label' => __d('gl', "評価者1"),
-                'all_num' => 0,
+                'label'          => __d('gl', "評価者1"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             [
-                'label' => __d('gl', "評価者2"),
-                'all_num' => 0,
+                'label'          => __d('gl', "評価者2"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             [
-                'label' => __d('gl', "評価者3"),
-                'all_num' => 0,
+                'label'          => __d('gl', "評価者3"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             [
-                'label' => __d('gl', "評価者4"),
-                'all_num' => 0,
+                'label'          => __d('gl', "評価者4"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             [
-                'label' => __d('gl', "評価者5"),
-                'all_num' => 0,
+                'label'          => __d('gl', "評価者5"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             [
-                'label' => __d('gl', "評価者6"),
-                'all_num' => 0,
+                'label'          => __d('gl', "評価者6"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             [
-                'label' => __d('gl', "評価者7"),
-                'all_num' => 0,
+                'label'          => __d('gl', "評価者7"),
+                'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
         ];
@@ -787,10 +793,10 @@ class Evaluation extends AppModel
         // Get only oneself evaluation
         $own_evaluation_options = [
             'conditions' => [
-                'evaluate_term_id'  => $termId,
-                'evaluate_type' => self::TYPE_ONESELF,
+                'evaluate_term_id' => $termId,
+                'evaluate_type'    => self::TYPE_ONESELF,
             ],
-            'group' => [
+            'group'      => [
                 'evaluatee_user_id', 'evaluator_user_id'
             ]
         ];
@@ -805,10 +811,10 @@ class Evaluation extends AppModel
         // Get evaluator evaluations
         $evaluator_options = [
             'conditions' => [
-                'evaluate_term_id'  => $termId,
-                'evaluate_type'     => self::TYPE_EVALUATOR
+                'evaluate_term_id' => $termId,
+                'evaluate_type'    => self::TYPE_EVALUATOR
             ],
-            'group' => [
+            'group'      => [
                 'evaluatee_user_id', 'evaluator_user_id'
             ]
         ];
@@ -816,11 +822,11 @@ class Evaluation extends AppModel
         $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
 
         // Increment
-        foreach($combined as $groupedEvaluator) {
+        foreach ($combined as $groupedEvaluator) {
             $evaluator_index = 1;
-            foreach($groupedEvaluator as $eval) {
+            foreach ($groupedEvaluator as $eval) {
                 $evaluation_statuses[$evaluator_index]['all_num']++;
-                if($eval['Evaluation']['status'] != self::TYPE_STATUS_DONE) {
+                if ($eval['Evaluation']['status'] != self::TYPE_STATUS_DONE) {
                     $evaluation_statuses[$evaluator_index]['incomplete_num']++;
                 }
                 $evaluator_index++;
@@ -834,23 +840,23 @@ class Evaluation extends AppModel
     {
         $options = [
             'conditions' => [
-                'evaluate_term_id'  => $termId,
-                'NOT' => [
+                'evaluate_term_id' => $termId,
+                'NOT'              => [
                     ['status' => self::TYPE_STATUS_DONE],
                     ['evaluate_type' => self::TYPE_LEADER]
                 ]
             ],
-            'group' => [
+            'group'      => [
                 'evaluatee_user_id', 'evaluator_user_id'
             ],
-            'contain' => [
+            'contain'    => [
                 'EvaluateeUser'
             ]
         ];
         $res = $this->find('all', $options);
         $combinedEvaluatees = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
         $incompleteEvaluatees = [];
-        foreach($combinedEvaluatees as $evaluateeId => $evaluatees) {
+        foreach ($combinedEvaluatees as $evaluateeId => $evaluatees) {
             $evaluatees = Hash::insert($evaluatees, '{n}.EvaluateeUser.incomplete_count', (string)count($evaluatees));
             $incompleteEvaluatees[$evaluateeId]['User'] = Hash::extract($evaluatees, "{n}.EvaluateeUser")[0];
         }
@@ -864,14 +870,14 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $termId,
                 'evaluatee_user_id' => $evaluateeId,
-                'NOT' => [
+                'NOT'               => [
                     ['evaluate_type' => self::TYPE_LEADER]
                 ]
             ],
-            'group' => [
+            'group'      => [
                 'evaluator_user_id'
             ],
-            'contain' => [
+            'contain'    => [
                 'EvaluatorUser'
             ]
         ];

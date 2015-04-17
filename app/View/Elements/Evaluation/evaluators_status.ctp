@@ -14,12 +14,15 @@
     ?>
     <div class="comment-body modal-comment" style="margin-top:5px;">
         <div class="font_12px font_bold modalFeedTextPadding">
-            <?= h($user['EvaluatorUser']['display_username']) ?> ・ <span><?= h($user['Evaluation']['evaluator_type_name']) ?></span>
+            <?= h($user['EvaluatorUser']['display_username']) ?> ・
+            <span><?= h($user['Evaluation']['evaluator_type_name']) ?></span>
+
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                <? if($user['Evaluation']['status'] == Evaluation::TYPE_STATUS_DONE): ?>
-                    <?= __d('gl', "完了") ?>(<?= $this->TimeEx->elapsedTime(h($user['Evaluation']['modified']), viaIsSet($type)) ?>)
+                <? if ($user['Evaluation']['status'] == Evaluation::TYPE_STATUS_DONE): ?>
+                    <?= __d('gl', "完了") ?>(<?= $this->TimeEx->elapsedTime(h($user['Evaluation']['modified']),
+                                                                          viaIsSet($type)) ?>)
                 <? else: ?>
-                <span style="color:red"><?= __d('gl', "未完了") ?></span>
+                    <span style="color:red"><?= __d('gl', "未完了") ?></span>
                 <? endif; ?>
             </div>
         </div>

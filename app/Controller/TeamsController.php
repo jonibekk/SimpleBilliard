@@ -62,9 +62,10 @@ class TeamsController extends AppController
             $eval_start_button_enabled = false;
         }
         //TODO ハードコーディング中! for こーへーさん
-        $team_id = [1,1111111];
+        $team_id = [1, 1111111];
         $unvalued = $this->Goal->Collaborator->tempCountUnvalued($team_id);
-        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled','unvalued','team_id'));
+        $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
+                           'unvalued', 'team_id'));
         //TODO ハードコーディング中! for こーへーさん
 
         $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
@@ -73,9 +74,10 @@ class TeamsController extends AppController
         $all_cnt = array_sum(Hash::extract($statuses, "{n}.all_num"));
         $incomplete_cnt = array_sum(Hash::extract($statuses, "{n}.incomplete_num"));
         $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
-        if($complete_cnt == 0) {
+        if ($complete_cnt == 0) {
             $progress_percent = 0;
-        } else {
+        }
+        else {
             $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
         }
 

@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
             <a class="modal-ajax-get pointer"
-                href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_evaluatees']) ?>">
+               href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_evaluatees']) ?>">
                 <?= __d('gl', "未完了の被評価者をみる") ?>
             </a>
         </div>
@@ -27,16 +27,16 @@
         <div class="form-group">
             <label for="TeamName" class="col control-label form-label"><?= __d('gl', "未完了数") ?></label>
         </div>
-        <? foreach($statuses as $status):?>
-        <div class="form-group">
-            <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
-                <?= $status['label'] ?>
-            </label>
+        <? foreach ($statuses as $status): ?>
+            <div class="form-group">
+                <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
+                    <?= $status['label'] ?>
+                </label>
 
-            <div class="col col-sm-8">
-                <?= $status['incomplete_num'] ?>/<?= $status['all_num'] ?>
+                <div class="col col-sm-8">
+                    <?= $status['incomplete_num'] ?>/<?= $status['all_num'] ?>
+                </div>
             </div>
-        </div>
-        <? endforeach;?>
+        <? endforeach; ?>
     </div>
-<!-- END app/View/Elements/Team/evaluation_progress.ctp -->
+    <!-- END app/View/Elements/Team/evaluation_progress.ctp -->
