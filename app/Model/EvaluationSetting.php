@@ -22,147 +22,147 @@ class EvaluationSetting extends AppModel
     public $validate = [
         'enable_flg'                          => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_flg'                            => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_goal_score_flg'                 => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_goal_score_required_flg'        => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_goal_comment_flg'               => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_goal_comment_required_flg'      => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_score_flg'                      => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_score_required_flg'             => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_comment_flg'                    => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'self_comment_required_flg'           => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_flg'                       => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_goal_score_flg'            => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_goal_score_reuqired_flg'   => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_goal_comment_flg'          => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_goal_comment_required_flg' => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_score_flg'                 => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_score_required_flg'        => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_comment_flg'               => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'evaluator_comment_required_flg'      => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'final_flg'                           => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'final_score_flg'                     => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'final_score_required_flg'            => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'final_comment_flg'                   => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'final_comment_required_flg'          => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'leader_flg'                          => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'leader_goal_score_flg'               => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'leader_goal_score_reuqired_flg'      => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'leader_goal_comment_flg'             => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'leader_goal_comment_required_flg'    => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule' => ['boolean'], 'allowEmpty' => true,
             ],
         ],
         'del_flg'                             => [
