@@ -134,9 +134,7 @@
 
                             <div class="row">
                                 <div class="approval_botton_area">
-                                    <? if ($goal['my_goal'] === true) { ?>
-                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
-                                    <? } else { ?>
+                                    <? if ($goal['my_goal'] === false) { ?>
                                         <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
                                             <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                         <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
@@ -147,6 +145,14 @@
                             </div>
 
                             <?= $this->Form->textarea('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>3, 'cols'=>30, 'style'=>'margin-top: 10px; margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
+
+                            <div class="row">
+                                <div class="approval_botton_area">
+                                    <? if ($goal['my_goal'] === true) { ?>
+                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
+                                    <? } ?>
+                                </div>
+                            </div>
 
                             <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
                                 <? foreach ($goal['ApprovalHistory'] as $history) { ?>
