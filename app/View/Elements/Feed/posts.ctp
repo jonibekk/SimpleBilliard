@@ -14,8 +14,10 @@
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <? foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <? if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
+            <? if ((isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
+
+                <? if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
                 <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                     <div class="col col-xxs-12">
                         <div class="pull-right">
@@ -43,7 +45,40 @@
                         </div>
                     </div>
                 </div>
+                    <?  elseif (isset($post['Circle']['id'])): ?>
+                    <div class="panel-body pt_10px plr_11px pb_8px bd-b">
+                        <div class="col col-xxs-12">
+                            <div class="pull-right">
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', $post['Circle']['id']]) ?>"
+                                   class="no-line font_verydark modal-ajax-get">
+                                    <?=
+                                    $this->Html->image('ajax-loader.gif',
+                                                       [
+                                                           'class'         => 'lazy media-object',
+                                                           'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                       "Circle.photo",
+                                                                                                       ['style' => 'small']),
+                                                           'width'         => '32px',
+                                                           'error-img'     => "/img/no-image-link.png",
+                                                       ]
+                                    )
+                                    ?>
+                                </a>
+                            </div>
+                            <div class="ln_contain w_88per">
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', $post['Circle']['id']]) ?>"
+                                   class="no-line font_verydark modal-ajax-get">
+                                    <i class="fa fa-circle-o font_gray"></i>&nbsp;<?= h($post['Circle']['name']) ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <? endif; ?>
+
+
+
                 <!--END Goal Post Header -->
+
             <? endif; ?>
             <div class="panel-body pt_10px plr_11px pb_8px">
                 <div class="col col-xxs-12 feed-user">
@@ -287,7 +322,44 @@
                             </div>
                         </a>
                     </div>
+
+                <? elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
+                    <div class="col col-xxs-12 pt_10px">
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
+                           class="no-line font_verydark">
+                            <div class="site-info bd-radius_4px">
+                                <div class="media">
+                                    <div class="pull-left">
+                                        <?=
+                                        $this->Html->image('ajax-loader.gif',
+                                                           [
+                                                               'class'         => 'lazy media-object',
+                                                               'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                           "Circle.photo",
+                                                                                                           ['style' => 'medium_large']),
+                                                               'width'         => '80px',
+                                                           ]
+                                        )
+                                        ?>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Circle']['name']),
+                                                                                              0, 50,
+                                                                                              "...") ?></h4>
+                                        <? if (isset($post['Circle']['description'])): ?>
+                                            <div class="font_12px site-info-txt">
+                                                <?= mb_strimwidth(h($post['Circle']['description']), 0, 110, "...") ?>
+                                            </div>
+                                        <? endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 <? endif; ?>
+
+
+
                 <? if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
