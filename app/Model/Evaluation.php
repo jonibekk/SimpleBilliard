@@ -754,37 +754,7 @@ class Evaluation extends AppModel
                 'incomplete_num' => 0,
             ],
             [
-                'label'          => __d('gl', "評価者1"),
-                'all_num'        => 0,
-                'incomplete_num' => 0,
-            ],
-            [
-                'label'          => __d('gl', "評価者2"),
-                'all_num'        => 0,
-                'incomplete_num' => 0,
-            ],
-            [
-                'label'          => __d('gl', "評価者3"),
-                'all_num'        => 0,
-                'incomplete_num' => 0,
-            ],
-            [
-                'label'          => __d('gl', "評価者4"),
-                'all_num'        => 0,
-                'incomplete_num' => 0,
-            ],
-            [
-                'label'          => __d('gl', "評価者5"),
-                'all_num'        => 0,
-                'incomplete_num' => 0,
-            ],
-            [
-                'label'          => __d('gl', "評価者6"),
-                'all_num'        => 0,
-                'incomplete_num' => 0,
-            ],
-            [
-                'label'          => __d('gl', "評価者7"),
+                'label'          => __d('gl', "評価者"),
                 'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
@@ -823,13 +793,11 @@ class Evaluation extends AppModel
 
         // Increment
         foreach ($combined as $groupedEvaluator) {
-            $evaluator_index = 1;
             foreach ($groupedEvaluator as $eval) {
-                $evaluation_statuses[$evaluator_index]['all_num']++;
+                $evaluation_statuses[1]['all_num']++;
                 if ($eval['Evaluation']['status'] != self::TYPE_STATUS_DONE) {
-                    $evaluation_statuses[$evaluator_index]['incomplete_num']++;
+                    $evaluation_statuses[1]['incomplete_num']++;
                 }
-                $evaluator_index++;
             }
         }
 
@@ -891,6 +859,7 @@ class Evaluation extends AppModel
             $evaluators = Hash::insert($evaluators, '{n}.EvaluatorUser.incomplete_count', (string)count($evaluators));
             $incompleteEvaluators[$evaluatorId]['User'] = Hash::extract($evaluators, "{n}.EvaluatorUser")[0];
         }
+        $incompleteEvaluators = Hash::sort($incompleteEvaluators, '{n}.User.incomplete_count', 'desc');
         return $incompleteEvaluators;
     }
 
