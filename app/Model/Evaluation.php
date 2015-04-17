@@ -783,6 +783,8 @@ class Evaluation extends AppModel
                 'incomplete_num' => 0,
             ],
         ];
+
+        // Get only oneself evaluation
         $own_evaluation_options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
@@ -796,9 +798,11 @@ class Evaluation extends AppModel
         $oneself_all_cnt = count($res);
         $oneself_incomplete_cnt = count(Hash::extract($res, "{n}.Evaluation[status!=2]"));
 
+        // Set oneself count
         $evaluation_statuses[0]['all_num'] = $oneself_all_cnt;
         $evaluation_statuses[0]['incomplete_num'] = $oneself_incomplete_cnt;
 
+        // Get evaluator evaluations
         $evaluator_options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
@@ -811,7 +815,7 @@ class Evaluation extends AppModel
         $res = $this->find("all", $evaluator_options);
         $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
 
-        // 各評価者の件数カウント
+        // Increment
         foreach($combined as $groupedEvaluator) {
             $evaluator_index = 1;
             foreach($groupedEvaluator as $eval) {
