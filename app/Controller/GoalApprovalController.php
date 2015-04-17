@@ -126,7 +126,7 @@ class GoalApprovalController extends AppController
     private function _setMsg()
     {
         $this->approval_msg_list = [
-            self::WAIT_MY_GOAL_MSG             => __d('gl', "承認待ち中"),
+            self::WAIT_MY_GOAL_MSG             => __d('gl', "認定待ち"),
             self::APPROVAL_MY_GOAL_YES_MSG     => __d('gl', "コーチが承認しました"),
             self::APPROVAL_MY_GOAL_NG_MSG      => __d('gl', "コーチが保留しました"),
             self::APPROVAL_MEMBER_GOAL_YES_MSG => __d('gl', "承認しました"),

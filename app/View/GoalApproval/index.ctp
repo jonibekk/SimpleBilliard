@@ -31,9 +31,20 @@
         text-align: center;
     }
 
-    .approval_button_size {
+    .approval_button {
+        color: #ffffff;
         width: 97%;
         margin-bottom: 10px;
+    }
+
+    .approval_status_box {
+        text-align: center;
+        background-color: #696969;
+        color: #ffffff;
+        font-size: 12px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        letter-spacing: 0.2em;
     }
 
 </style>
@@ -61,14 +72,13 @@
             <? if (isset($goal_info) === true && count($goal_info) > 0) { ?>
 
                 <? foreach ($goal_info as $key => $goal) { ?>
-                    <div class="panel panel-default" id="AddGoalFormPurposeWrap">
-                        <div class="panel-body goal-set-heading clearfix">
 
-                            <? if (isset($goal['msg']) === true) { ?>
-							<p class="approval_body_text">
-							<p class="text-right"><?= $goal['msg']; ?></p>
-							</p>
-                            <? } ?>
+                    <div class="panel panel-default" id="AddGoalFormPurposeWrap">
+                        <? if (isset($goal['msg']) === true) { ?>
+                            <div class="approval_status_box"><?= $goal['msg']; ?></div>
+                        <? } ?>
+
+                        <div class="panel-body goal-set-heading clearfix">
 
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
@@ -127,10 +137,10 @@
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if (isset($goal['msg']) === true) { ?>
-                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } else { ?>
-                                        <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button_size', 'div'=>false]) ?>
-                                        <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>
@@ -140,7 +150,7 @@
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if (isset($goal['msg']) === false) { ?>
-                                        <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button_size', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>

@@ -31,9 +31,19 @@
         text-align: center;
     }
 
-    .approval_button_size {
+    .approval_button {
         width: 97%;
         margin-bottom: 10px;
+    }
+
+    .approval_status_box {
+        text-align: center;
+        background-color: #696969;
+        color: #ffffff;
+        font-size: 12px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        letter-spacing: 0.2em;
     }
 
 </style>
@@ -62,18 +72,14 @@
             <? if (isset($goal_info) === true && count($goal_info) > 0) { ?>
                 <? foreach ($goal_info as $goal) { ?>
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
+
+                        <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
+                        <p class="approval_status_box"><?= __d('gl', "評価対象") ?></p>
+                        <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
+                        <p class="approval_status_box"><?= __d('gl', "評価対象外") ?></p>
+                        <? } ?>
+
                         <div class="panel-body goal-set-heading clearfix">
-
-                            <p class="approval_body_text">
-                                <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-
-                            <p class="text-right"><?= __d('gl', "評価対象") ?></p>
-                            <? } else {
-                                if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-                                    <p class="text-right"><?= __d('gl', "評価対象ではない") ?></p>
-                                <? }
-                            } ?>
-                            </p>
 
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= $goal['User']['display_username']; ?></p>
@@ -131,12 +137,12 @@
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if (isset($goal['msg']) === true) { ?>
-                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } else { ?>
                                         <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
+                                            <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                         <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
+                                            <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                         <? } ?>
                                     <? } ?>
                                 </div>
