@@ -136,9 +136,9 @@
                                 <div class="approval_botton_area">
                                     <? if ($goal['my_goal'] === false) { ?>
                                         <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
+                                            <?= $this->Form->button(__d('gl', "評価対象にしない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                         <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
+                                            <?= $this->Form->button(__d('gl', "評価対象にする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                         <? } ?>
                                     <? } ?>
                                 </div>

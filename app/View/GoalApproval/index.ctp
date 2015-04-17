@@ -137,8 +137,8 @@
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if ($goal['my_goal'] === false) { ?>
-                                        <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
-                                        <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "評価対象にする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "評価対象にしない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>
@@ -150,7 +150,7 @@
                                     <? if ($goal['my_goal'] === true) { ?>
                                         <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } else { ?>
-                                        <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "修正を依頼"), ['name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>
