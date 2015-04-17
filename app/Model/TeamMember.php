@@ -1156,63 +1156,20 @@ class TeamMember extends AppModel
     {
 
         $record = [
-            'email'                 => __d('gl', "メール(*)"),
-            'member_no'             => __d('gl', "メンバーID(*)"),
-            'first_name'            => __d('gl', "ローマ字名(*)"),
-            'last_name'             => __d('gl', "ローマ字姓(*)"),
-            'admin_flg'             => __d('gl', "管理者(*)"),
-            'evaluation_enable_flg' => __d('gl', "評価対象(*)"),
-            'member_type'           => __d('gl', "メンバータイプ"),
-            'language'              => __d('gl', "ローカル姓名の言語コード"),
-            'local_first_name'      => __d('gl', "ローカル名"),
-            'local_last_name'       => __d('gl', "ローカル姓"),
-            'phone_no'              => __d('gl', "電話"),
-            'gender'                => __d('gl', "性別"),
-            'birth_year'            => __d('gl', "誕生年"),
-            'birth_month'           => __d('gl', "誕生月"),
-            'birth_day'             => __d('gl', "誕生日"),
-            'group.1'               => __d('gl', "グループ1"),
-            'group.2'               => __d('gl', "グループ2"),
-            'group.3'               => __d('gl', "グループ3"),
-            'group.4'               => __d('gl', "グループ4"),
-            'group.5'               => __d('gl', "グループ5"),
-            'group.6'               => __d('gl', "グループ6"),
-            'group.7'               => __d('gl', "グループ7"),
-            'coach_member_no'       => __d('gl', "コーチID"),
-            'evaluator_member_no.1' => __d('gl', "評価者1"),
-            'evaluator_member_no.2' => __d('gl', "評価者2"),
-            'evaluator_member_no.3' => __d('gl', "評価者3"),
-            'evaluator_member_no.4' => __d('gl', "評価者4"),
-            'evaluator_member_no.5' => __d('gl', "評価者5"),
-            'evaluator_member_no.6' => __d('gl', "評価者6"),
-            'evaluator_member_no.7' => __d('gl', "評価者7"),
-            'goal_count'            => __d('gl', "ゴール数"),
-            'goal_progress'         => __d('gl', "ゴール全体の進捗率(%)"),
-            'action_count'          => __d('gl', "アクション数"),
-            'post_count'            => __d('gl', "投稿数"),
+            'member_no'          => __d('gl', "メンバーID(*)"),
+            'member_type'        => __d('gl', "メンバータイプ"),
+            'user_name'          => __d('gl', "メンバー姓名"),
+            'coach_user_name'    => __d('gl', "コーチ姓名"),
+            'goal_count'         => __d('gl', "ゴール数"),
+            'kr_count'           => __d('gl', "出した成果数"),
+            'action_count'       => __d('gl', "アクション数"),
+            'goal_progress'      => __d('gl', "ゴール全体の進捗率(%)"),
+            'total.self.score'   => __d('gl', '本人によるスコア'),
+            'total.self.comment' => __d('gl', '本人によるコメント'),
         ];
-        //goal
-        $goal = [];
-        for ($i = 1; $i <= 20; $i++) {
-            $goal["goal.$i.name"] = __d('gl', 'ゴール%sの名前', $i);
-            $goal["goal.$i.category"] = __d('gl', 'ゴール%sのカテゴリ', $i);
-            $goal["goal.$i.role"] = __d('gl', 'ゴール%sでの役割', $i);
-            $goal["goal.$i.evaluation.self.score"] = __d('gl', 'ゴール%sでの本人によるスコア', $i);
-            $goal["goal.$i.evaluation.self.comment"] = __d('gl', 'ゴール%sでの本人によるコメント', $i);
-            $goal["goal.$i.evaluation.leader.score"] = __d('gl', 'ゴール%sでのリーダによるスコア', $i);
-            $goal["goal.$i.evaluation.leader.comment"] = __d('gl', 'ゴール%sでのリーダによるコメント', $i);
-            //evaluator
-            for ($ek = 1; $ek <= 7; $ek++) {
-                $goal["goal.$i.evaluation.evaluator.$ek.score"] = __d('gl', 'ゴール%sでの評価者%sによるスコア', $i, $ek);
-                $goal["goal.$i.evaluation.evaluator.$ek.comment"] = __d('gl', 'ゴール%sでの評価者%sによるコメント', $i, $ek);
-            }
-        }
-        $record = array_merge($record, $goal);
-        //total
-        $record["total.self.score"] = __d('gl', '本人によるスコア');
-        $record["total.self.comment"] = __d('gl', '本人によるコメント');
         //evaluator
         for ($ek = 1; $ek <= 7; $ek++) {
+            $record["total.evaluator.$ek.name"] = __d('gl', '評価者%sの姓名', $ek);
             $record["total.evaluator.$ek.score"] = __d('gl', '評価者%sによるスコア', $ek);
             $record["total.evaluator.$ek.comment"] = __d('gl', '評価者%sによるコメント', $ek);
         }
