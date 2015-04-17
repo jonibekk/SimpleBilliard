@@ -140,7 +140,7 @@
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if (isset($goal['msg']) === false) { ?>
-                                        <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => '', 'class' => 'btn btn-lightGray approval_button_size', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => 'modify_btn', 'class' => 'btn btn-lightGray approval_button_size', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>

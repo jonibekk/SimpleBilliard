@@ -158,7 +158,7 @@ class GoalApprovalController extends AppController
 
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
             $this->team_id, $this->user_id, $this->goal_user_ids,
-            [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
+            [$this->goal_status['approval'], $this->goal_status['hold']]
         );
 
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -173,10 +173,14 @@ class GoalApprovalController extends AppController
         if (isset($this->request->data['GoalApproval']) === true) {
             $data = $this->request->data['GoalApproval'];
             $this->changeStatus($data);
+
+            if (isset($this->request->data['modify_btn']) === true) {
+                $this->modify($data);
+            }
         }
 
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->team_id, $this->goal_user_ids, $this->goal_status['unapproved']);
+            $this->team_id, $this->goal_user_ids, [$this->goal_status['unapproved'], $this->goal_status['modify']]);
 
         foreach ($goal_info as $key => $val) {
             if ($this->user_id === $val['User']['id']) {
@@ -206,7 +210,7 @@ class GoalApprovalController extends AppController
 
         $goal_info = $this->Collaborator->getCollaboGoalDetail(
             $this->team_id, $this->goal_user_ids,
-            [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
+            [$this->goal_status['approval'], $this->goal_status['hold']]
         );
 
         foreach ($goal_info as $key => $val) {
@@ -265,6 +269,20 @@ class GoalApprovalController extends AppController
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
             $this->comment($data);
         }
+        $this->redirect($this->referer());
+    }
+
+    /*
+     * 修正依頼をする
+     */
+    public function modify($data)
+    {
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        if (empty($cb_id) === false) {
+            $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['modify']);
+            $this->comment($data);
+        }
+
         $this->redirect($this->referer());
     }
 
