@@ -142,7 +142,7 @@
                                 </div>
                             </div>
 
-                            <?= $this->Form->input('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>1, 'cols'=>30, 'style'=>'margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
+                            <?= $this->Form->textarea('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>3, 'cols'=>30, 'style'=>'margin-top: 10px; margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
 
                             <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
                                 <? foreach ($goal['ApprovalHistory'] as $history) { ?>

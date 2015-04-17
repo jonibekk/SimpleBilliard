@@ -129,18 +129,18 @@
                                     <? if (isset($goal['msg']) === true) { ?>
                                         <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
                                     <? } else { ?>
-                                        <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-lightGray approval_button_size', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "評価対象としない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button_size', 'div'=>false]) ?>
                                         <?= $this->Form->button(__d('gl', "評価対象とする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button_size', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>
 
-                            <?= $this->Form->input('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>1, 'cols'=>30, 'style'=>'margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
+                            <?= $this->Form->textarea('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>3, 'cols'=>30, 'style'=>'margin-top: 10px; margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
 
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if (isset($goal['msg']) === false) { ?>
-                                        <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => 'modify_btn', 'class' => 'btn btn-lightGray approval_button_size', 'div'=>false]) ?>
+                                        <?= $this->Form->button(__d('gl', "修正依頼をする"), ['name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button_size', 'div'=>false]) ?>
                                     <? } ?>
                                 </div>
                             </div>
