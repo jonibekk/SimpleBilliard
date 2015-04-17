@@ -223,13 +223,13 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
-                'NOT' => [
+                'NOT'               => [
                     ['evaluate_type' => self::TYPE_LEADER]
                 ]
             ],
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
-                'Goal' => [
+                'Goal'          => [
                     'KeyResult',
                     'GoalCategory',
                     'MyCollabo'    => [
@@ -246,7 +246,10 @@ class Evaluation extends AppModel
                         ]
                     ]
                 ],
-                'EvaluatorUser'
+                'EvaluatorUser',
+                'EvaluateScore' => [
+                    'fields' => ['EvaluateScore.name']
+                ],
             ]
         ];
         $res = $this->find('all', $options);
@@ -567,7 +570,7 @@ class Evaluation extends AppModel
                 'my_turn_flg'       => true,
                 'evaluate_type'     => $evaluate_type,
                 'evaluate_term_id'  => $term_id,
-                'NOT' => [
+                'NOT'               => [
                     ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
                     ['evaluate_type' => self::TYPE_LEADER]
                 ]

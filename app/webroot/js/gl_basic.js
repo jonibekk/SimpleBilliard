@@ -145,6 +145,8 @@ $(document).ready(function () {
     });
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
+    $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
+    $(document).on("click", ".click-target-remove", evTargetRemove);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -315,6 +317,33 @@ function imageLazyOn($elm_obj) {
         });
     }
 }
+function evTargetRemove() {
+    attrUndefinedCheck(this, 'target-selector');
+    var $obj = $(this);
+    var target_selector = $obj.attr("target-selector");
+    $(target_selector).remove();
+    return false;
+}
+function evAjaxGetElmWithIndex(e) {
+    e.preventDefault();
+    attrUndefinedCheck(this, 'target-selector');
+    attrUndefinedCheck(this, 'index');
+    var $obj = $(this);
+    var target_selector = $obj.attr("target-selector");
+    var index = parseInt($obj.attr("index"));
+
+    $.get($obj.attr('href') + "/index:" + index, function (data) {
+        $(target_selector).append(data);
+        if ($obj.attr('max_index') != undefined && index >= parseInt($obj.attr('max_index'))) {
+            $obj.attr('disabled', 'disabled');
+            return false;
+        }
+        //increment
+        $obj.attr('index', index + 1);
+    });
+    return false;
+}
+
 function evToggleAjaxGet() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'ajax-url');
