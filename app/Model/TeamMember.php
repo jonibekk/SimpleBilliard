@@ -1080,6 +1080,71 @@ class TeamMember extends AppModel
         return $csv_data;
     }
 
+    function getAllEvaluationsCsvData($team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id'               => $team_id,
+                'TeamMember.active_flg'            => true,
+                'TeamMember.evaluation_enable_flg' => true,
+            ],
+            'fields'     => ['member_no', 'coach_user_id'],
+            'order'      => ['TeamMember.member_no ASC'],
+            'contain'    => [
+                'User'       => [
+                    'fields' => $this->User->profileFields,
+                ],
+                'MemberType' => [
+                    'fields' => ['name']
+                ],
+                'CoachUser'  => [
+                    'fields' => $this->User->profileFields,
+                ]
+            ]
+        ];
+        $all_users = $this->find('all', $options);
+        //convert csv data
+        $csv_data = [];
+        foreach ($all_users as $k => $v) {
+            if (!viaIsSet($v['User']['id'])) {
+                unset($all_users[$k]);
+                continue;
+            }
+            $csv_data[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
+            $csv_data[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
+            $csv_data[$k]['user_name'] = viaIsSet($v['User']['display_username']) ? $v['User']['display_username'] : null;
+            $csv_data[$k]['coach_user_name'] = viaIsSet($v['CoachUser']['display_username']) ? $v['CoachUser']['display_username'] : null;
+        }
+        //goal_count
+        //kr_count
+        //action_count
+        //goal_progress
+        //total.self.score
+        //total.self.comment
+
+        ////evaluator
+        //total.evaluator.$ek.name
+        //total.evaluator.$ek.score
+        //total.evaluator.$ek.comment
+
+        //total.final.score
+        //total.final.comment
+
+        //add all colum
+        $default_csv = $this->_getCsvHeadingEvaluation();
+        foreach ($default_csv as $k => $v) {
+            $default_csv[$k] = null;
+        }
+        foreach ($csv_data as $k => $v) {
+            $csv_data[$k] = Hash::merge($default_csv, $v);
+        }
+
+        return $csv_data;
+    }
+
     /**
      * get CSV heading
      *

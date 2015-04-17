@@ -333,8 +333,7 @@ class TeamsController extends AppController
 
         //見出し
         $th = $this->Team->TeamMember->_getCsvHeadingEvaluation();
-//        $td = $this->Team->TeamMember->getAllMembersCsvData();
-        $td = [];
+        $td = $this->Team->TeamMember->getAllEvaluationsCsvData();
 
         $this->set(compact('filename', 'th', 'td'));
 
