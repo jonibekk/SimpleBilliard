@@ -10,6 +10,8 @@ App::uses('AppModel', 'Model');
  */
 class EvaluateTerm extends AppModel
 {
+    const STATUS_EVAL_IN_PROGRESS = 0;
+    const STATUS_EVAL_FINISHED = 1;
 
     /**
      * Validation rules

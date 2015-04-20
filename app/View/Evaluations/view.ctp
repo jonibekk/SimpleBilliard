@@ -35,7 +35,7 @@
         <div class="panel-body eval-view-panel-body">
             <? foreach ($totalList as $total): ?>
                 <?
-                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable):
+                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable && $total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):
                     ?>
                     <div class="form-group col-xxs-12 mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
