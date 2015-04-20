@@ -53,6 +53,7 @@ class ApprovalHistory extends AppModel
         return $this->save($param);
     }
 
+    /*
     function getHistory ($collaborator_id) {
         $options = [
             'conditions' => [
@@ -65,4 +66,5 @@ class ApprovalHistory extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+    */
 }
