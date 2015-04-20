@@ -424,7 +424,9 @@ class Post extends AppModel
             //サークル指定
             if ($this->orgParams['circle_id']) {
                 //サークル所属チェック
-                if (empty($this->User->CircleMember->isBelong($this->orgParams['circle_id']))) {
+                $is_secret = $this->Circle->isSecret($this->orgParams['circle_id']);
+
+                if ($is_secret && empty($this->User->CircleMember->isBelong($this->orgParams['circle_id']))) {
                     throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
                 }
                 $p_list = array_merge($p_list,
