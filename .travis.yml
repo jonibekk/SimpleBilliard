@@ -11,6 +11,9 @@ cache:
   - apt
   - composer
 
+services:
+  - redis-server
+
 git:
   submodules: false
 before_script:
@@ -30,6 +33,8 @@ before_script:
   - sudo apt-get install php-pear php5-dev
   - pecl install oauth
   - echo "extension=oauth.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - wget http://pecl.php.net/get/APC-3.1.9.tgz ; tar -xzf APC-3.1.9.tgz ; sh -c "cd APC-3.1.9 && phpize && ./configure && make && sudo make install"
+  - echo "extension=apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
