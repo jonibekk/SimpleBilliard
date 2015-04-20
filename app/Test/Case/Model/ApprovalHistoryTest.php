@@ -95,4 +95,15 @@ class ApprovalHistoryTest extends CakeTestCase
         $this->assertEquals($res['ApprovalHistory']['comment'], 'test');
     }
 
+    public function testAddEmpty()
+    {
+        $cb_id = 999;
+        $user_id = 888;
+        $action_status = 0;
+        $comment = '';
+        $this->ApprovalHistory->add($cb_id, $user_id, $action_status, $comment);
+        $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
+        $this->assertEmpty($res);
+    }
+
 }
