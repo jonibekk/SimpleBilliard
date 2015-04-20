@@ -51,9 +51,11 @@
 
 <script type="text/javascript">
     var is_comment = function(str, button_no) {
+        var button_name = 'modify_btn_' + button_no;
         if (str.length > 0) {
-            var button_name = 'modify_btn_' + button_no;
             document.getElementById(button_name).disabled = "";
+        } else {
+            document.getElementById(button_name).disabled = "disabled";
         }
     }
 </script>
