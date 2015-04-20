@@ -23,6 +23,7 @@ define('S3_LOGS_BUCKET', null);
 define('S3_ASSETS_BUCKET', null);
 define('REDIS_SESSION_HOST', 'localhost');
 define('REDIS_CACHE_HOST', 'localhost');
+define('REDIS_HOST', 'localhost');
 define('SES_FROM_ADDRESS', 'support@goalous.com');
 define('SES_FROM_ADDRESS_NEWS', 'news@goalous.com');
 define('SES_FROM_ADDRESS_NOTICE', 'notice@goalous.com');
