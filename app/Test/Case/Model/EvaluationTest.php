@@ -813,6 +813,7 @@ class EvaluationTest extends CakeTestCase
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
+                    'my_turn_flg'       => true,
                     'goal_id'           => null,
                     'index_num'         => 1,
                     'status'            => 0
@@ -858,6 +859,7 @@ class EvaluationTest extends CakeTestCase
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
+                    'my_turn_flg'       => true,
                     'goal_id'           => 1,
                     'index_num'         => 4,
                     'status'            => 0
@@ -903,6 +905,7 @@ class EvaluationTest extends CakeTestCase
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
+                    'my_turn_flg'       => true,
                     'goal_id'           => 2,
                     'index_num'         => 7,
                     'status'            => 0
