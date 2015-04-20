@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.cache.scope = :box
-  config.omnibus.chef_version = '11.4.4'
+  config.omnibus.chef_version = '12'
 
   src_dir = './'
   doc_root = '/vagrant_data/app/webroot'
@@ -34,6 +34,7 @@ Vagrant.configure("2") do |config|
     chef.cookbooks_path = "cookbooks"
     chef.add_recipe "apt"
     chef.add_recipe "php_nginx"
+    chef.add_recipe "redisio"
     chef.add_recipe "local_db"
     chef.add_recipe "local_etc"
     chef.add_recipe "deploy_cake_local"
