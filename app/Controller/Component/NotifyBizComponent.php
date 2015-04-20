@@ -363,7 +363,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([$comment['Comment']['body']]) : null;
+        json_encode([trim($comment['Comment']['body'])]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
     }
 
