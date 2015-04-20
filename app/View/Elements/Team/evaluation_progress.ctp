@@ -36,7 +36,7 @@
         <? foreach ($statuses as $type => $status): ?>
             <div class="form-group">
                 <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
-                    <? if($type == 'oneself'): ?>
+                    <? if($type == Evaluation::TYPE_ONESELF): ?>
                         <a class="modal-ajax-get pointer"
                            href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_oneself']) ?>">
                         <?= $status['label'] ?>
