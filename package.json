@@ -3,33 +3,37 @@
   "version": "1.0.0",
   "description": "Automate the frontend-tasks with Grunt for Goalous",
   "main": "index.js",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "coffeelint": "^1.9.*",
     "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^0.5.*",
+    "grunt-autoprefixer": "^2.2.*",
+    "grunt-coffeelint": "^0.0.*",
     "grunt-contrib-coffee": "^0.13.*",
+    "grunt-contrib-concat": "^0.5.*",
+    "grunt-contrib-connect": "^0.10.1",
     "grunt-contrib-copy": "^0.8.*",
     "grunt-contrib-cssmin": "^0.12.*",
     "grunt-contrib-less": "^1.0.*",
     "grunt-contrib-uglify": "^0.8.*",
     "grunt-contrib-watch": "^0.6.*",
-    "grunt-autoprefixer": "^2.2.*",
-    "grunt-coffeelint": "^0.0.*",
     "grunt-docco": "^0.3.*",
+    "grunt-require-dir": "^0.3.0",
+    "grunt-styledocco": "^0.2.1",
     "grunt-styleguide": "^0.2.*",
-    "coffeelint": "^1.9.*"
+    "load-grunt-config": "^0.17.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-  "type": "git",
-  "url": "https://github.com/IsaoCorp/goalous2"
+    "type": "git",
+    "url": "https://github.com/IsaoCorp/goalous2"
   },
   "author": "ISAOcorp",
   "license": "Copyright (c) 2015 ISAO corp.",
   "bugs": {
-   "url": "https://github.com/IsaoCorp/goalous2/issues"
+    "url": "https://github.com/IsaoCorp/goalous2/issues"
   },
   "homepage": "https://github.com/IsaoCorp/goalous2"
 }

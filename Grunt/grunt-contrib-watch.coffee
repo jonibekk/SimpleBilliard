@@ -1,0 +1,12 @@
+module.exports = (grunt) ->
+  watch:
+    options:
+      spawn: false
+      livereload: true
+
+    coffee:
+      files: ['coffee/**/*.coffee']
+      tasks: ['jstask']
+    less:
+      files: ['less/**/*.less']
+      tasks: ['csstask']

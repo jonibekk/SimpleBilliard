@@ -28,9 +28,11 @@ composer.lock
 /.idea/inspectionProfiles
 !/.idea/inspectionProfiles/Project_Default.xml
 /.idea/dataSources.local.xml
-# for Grunt
+# for npm, Grunt
 /Grunt/node_modules
 /Grunt/dest
+/node_modules
+/npm-debug.log
 # Copied for min files
 /app/webroot/css/goalous.min.css
 /app/webroot/js/goalous.min.js
