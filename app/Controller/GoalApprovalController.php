@@ -307,6 +307,7 @@ class GoalApprovalController extends AppController
         // 現状はコメントがある時、履歴を追加している。
         // 今後はコメントなくてもアクションステータスを格納する必要あり。
         if (empty($cb_id) === false && empty($comment) === false) {
+            // Todo: 第３パラメータに「1」がハードコーディングされているが、履歴表示の実装の時、定数化する
             $this->ApprovalHistory->add($cb_id, $this->user_id, 1, $comment);
         }
 
