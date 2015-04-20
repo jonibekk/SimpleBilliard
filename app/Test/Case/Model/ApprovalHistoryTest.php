@@ -84,9 +84,15 @@ class ApprovalHistoryTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    public function testAdd()
     {
-
+        $cb_id = 999;
+        $user_id = 888;
+        $action_status = 0;
+        $comment = 'test';
+        $this->ApprovalHistory->add($cb_id, $user_id, $action_status, $comment);
+        $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
+        $this->assertEquals($res['ApprovalHistory']['comment'], 'test');
     }
 
 }
