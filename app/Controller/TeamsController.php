@@ -71,6 +71,26 @@ class TeamsController extends AppController
                            'unvalued', 'team_id', 'eval_scores'));
         //TODO ハードコーディング中! for こーへーさん
 
+        $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
+
+        // 全体progressカウント
+        $all_cnt = array_sum(Hash::extract($statuses, "{s}.all_num"));
+        $incomplete_cnt = array_sum(Hash::extract($statuses, "{s}.incomplete_num"));
+        $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
+        if ($complete_cnt == 0) {
+            $progress_percent = 0;
+        }
+        else {
+            $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
+        }
+
+        $this->set(compact(
+                       'statuses',
+                       'all_cnt',
+                       'incomplete_cnt',
+                       'progress_percent'
+                   ));
+
         return $this->render();
     }
 
