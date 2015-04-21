@@ -11,6 +11,16 @@
  * @var                    $term_end_date
  * @var                    $eval_enabled
  * @var                    $eval_start_button_enabled
+ * @var                    $current_eval_is_available
+ * @var                    $current_term_start_date
+ * @var                    $current_term_end_date
+ * @var                    $current_eval_is_frozen
+ * @var                    $current_term_id
+ * @var                    $previous_eval_is_available
+ * @var                    $previous_term_start_date
+ * @var                    $previous_term_end_date
+ * @var                    $previous_eval_is_frozen
+ * @var                    $previous_term_id
  */
 ?>
 <!-- START app/View/Elements/Team/evaluation_setup.ctp -->
@@ -216,14 +226,14 @@
                 <?=
                 $this->Form->postLink(__d('gl', "今期の評価の凍結を解除する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status',],
-                                      ['class' => 'btn btn-warning', 'data' => ['evaluate_term_id' => $current_term_id]],
-                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+                                      ['class' => 'btn btn-default', 'data' => ['evaluate_term_id' => $current_term_id]],
+                                      __d('gl', "今期の評価の凍結を解除します。よろしいですか？")) ?>
             <? else: ?>
                 <?=
                 $this->Form->postLink(__d('gl', "今期の評価を凍結する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status',],
                                       ['class' => 'btn btn-primary', 'data' => ['evaluate_term_id' => $current_term_id]],
-                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+                                      __d('gl', "今期の評価を凍結します。よろしいですか？")) ?>
             <? endif; ?>
         <? endif; ?>
         <? if($previous_eval_is_available): ?>
@@ -233,14 +243,14 @@
                 <?=
                 $this->Form->postLink(__d('gl', "前期の評価の凍結を解除する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status',],
-                                      ['class' => 'btn btn-warning', 'data' => ['evaluate_term_id' => $previous_term_id]],
-                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+                                      ['class' => 'btn btn-default', 'data' => ['evaluate_term_id' => $previous_term_id]],
+                                      __d('gl', "前期の評価の凍結を解除します。よろしいですか？")) ?>
             <? else: ?>
                 <?=
                 $this->Form->postLink(__d('gl', "前期の評価を凍結する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status',],
                                       ['class' => 'btn btn-primary', 'data' => ['evaluate_term_id' => $previous_term_id]],
-                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+                                      __d('gl', "前期の評価を凍結します。よろしいですか？")) ?>
             <? endif; ?>
         <? endif; ?>
     </div>
