@@ -423,7 +423,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testFreezeEvaluation()
     {
         $this->_getTeamsCommonMock();
-        $this->testAction('/teams/freeze_evaluation', ['method' => 'POST']);
+        $this->testAction('/teams/change_freeze_status', ['method' => 'POST']);
     }
 
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
