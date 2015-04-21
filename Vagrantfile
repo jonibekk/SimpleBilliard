@@ -6,8 +6,7 @@ required_plugins.each do |plugin|
    required_plugins.each do |plugin|
      system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
    end
-
-   puts "Please rerun `vagrant up`or`vagrant reload`."
+   print "\e[32m\e[1m*** Please rerun `vagrant up`or`vagrant reload`.\e[0m\n"
    exit
  end
 end
@@ -22,8 +21,13 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
 
-  config.cache.auto_detect = false
-  config.omnibus.chef_version = '12'
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.auto_detect = false
+  end
+
+  if Vagrant.has_plugin?("vagrant-omnibus")
+    config.omnibus.chef_version = '12'
+  end
 
   src_dir = './'
   doc_root = '/vagrant_data/app/webroot'
