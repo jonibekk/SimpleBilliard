@@ -128,4 +128,17 @@ class EvaluateTerm extends AppModel
         return $res;
     }
 
+    function checkFrozenEvaluateTerm($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $id,
+                'team_id' => $this->current_team_id,
+                'evaluate_status' => self::STATUS_EVAL_FINISHED
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return (empty($res)) ? false : true;
+    }
+
 }
