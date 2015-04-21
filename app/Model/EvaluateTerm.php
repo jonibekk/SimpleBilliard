@@ -10,8 +10,10 @@ App::uses('AppModel', 'Model');
  */
 class EvaluateTerm extends AppModel
 {
-    const STATUS_EVAL_IN_PROGRESS = 0;
-    const STATUS_EVAL_FINISHED = 1;
+    const STATUS_EVAL_NOT_STARTED = 0;
+    const STATUS_EVAL_IN_PROGRESS = 1;
+    const STATUS_EVAL_FROZEN = 2;
+    const STATUS_EVAL_FINISHED = 3;
 
     /**
      * Validation rules
