@@ -31,32 +31,32 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        //get evaluation term
+        // Set selected term
+        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         $term_param = viaIsSet($this->request->params['named']['term']);
-        $term_name = $term_param ? $term_param : 'previous';
-        switch ($term_name) {
-            case 'present':
-                $selected_tab_term_id = $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-                break;
-            case 'previous':
-                $selected_tab_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-                break;
+        $selected_term_name = $term_param ? $term_param : 'previous';
+        if($selected_term_name == 'present'){
+            $selected_tab_term_id = $current_term_id;
+        } elseif($selected_term_name == 'previous') {
+            $selected_tab_term_id = $previous_term_id;
         }
 
         $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
         $my_eval[] = $this->Evaluation->getEvalStatus($selected_tab_term_id, $this->Auth->user('id'));
         $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($selected_tab_term_id);
 
-        // Check evaluate frozen
-        $latestTermId = $this->Evaluation->EvaluateTerm->getLatestTermId();
-        $eval_is_frozen = $this->Evaluation->EvaluateTerm->checkFrozenEvaluateTerm($latestTermId);
+        // Get term frozen status
+        $isFrozens = [];
+        $isFrozens['present'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
+        $isFrozens['previous'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
 
         $this->set(compact('incomplete_number_list',
                            'my_evaluatees',
                            'my_eval',
                            'selected_tab_term_id',
-                           'term_name',
-                           'eval_is_frozen'
+                           'selected_term_name',
+                           'isFrozens'
                    ));
     }
 
