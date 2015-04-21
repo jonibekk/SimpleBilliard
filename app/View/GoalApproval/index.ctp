@@ -47,6 +47,13 @@
         letter-spacing: 0.2em;
     }
 
+    .approval_badge {
+        margin: -20px 0 0 -4px;
+        color: #fff;
+        font-size: 10px;
+        background-color:red;
+    }
+
 </style>
 
 <script type="text/javascript">
@@ -64,15 +71,19 @@
     <div class="col col-xxs-6 text-align_r">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuFeed">
-            <?= __d('gl', "処理待ち") ?> <? if ($unapproved_cnt > 0) {
-                echo $unapproved_cnt;
-            } ?></a>
+            <?= __d('gl', "処理待ち") ?>
+            <? if ($unapproved_cnt > 0) { ?>
+            <span class="btn btn-danger btn-xs bell-notify-box approval_badge">
+            <? echo $unapproved_cnt; ?>
+            <? } ?>
+            </span>
+        </a>
     </div>
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
            id="SubHeaderMenuGoal" href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'done']) ?>">
             <?= __d('gl', "処理済み") ?> <? if ($done_cnt > 0) {
-                echo $done_cnt;
+                echo '('. $done_cnt. ')';
             } ?></a>
     </div>
 </div>
