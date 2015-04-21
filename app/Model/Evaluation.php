@@ -736,6 +736,11 @@ class Evaluation extends AppModel
 
     function getIsEditable($evaluateTermId, $evaluateeId)
     {
+        // check frozen
+        $evalIsFrozen = $this->EvaluateTerm->checkFrozenEvaluateTerm($evaluateTermId);
+        if($evalIsFrozen) return false;
+
+        // check my turn
         $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
         $nextEvaluatorId = $this->getNextEvaluatorId($evaluateTermId, $evaluateeId);
         $isMyTurn = !empty(Hash::extract($evaluationList,

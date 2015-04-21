@@ -27,9 +27,11 @@
                         <?= $v['this_turn'] ? '<b>' . $v['name'] . '</b>' : $v['name'] ?>
                     </span>
                 <? endforeach ?>
-                <? if ($user['status_text']['body']): ?>
+                <? if ($user['status_text']['body'] && !$eval_is_frozen): ?>
                     <? $text_class = $user['status_text']['your_turn'] ? 'font_brownRed' : 'font_verydark' ?>
                     <p class="<?= $text_class ?>"><?= $user['status_text']['body'] ?></p>
+                <? else: ?>
+                    <p class="font_verydark"></p>
                 <? endif; ?>
             </div>
         </div>

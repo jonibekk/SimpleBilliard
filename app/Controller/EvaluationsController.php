@@ -46,11 +46,17 @@ class EvaluationsController extends AppController
         $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
         $my_eval[] = $this->Evaluation->getEvalStatus($selected_tab_term_id, $this->Auth->user('id'));
         $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($selected_tab_term_id);
+
+        // Check evaluate frozen
+        $latestTermId = $this->Evaluation->EvaluateTerm->getLatestTermId();
+        $eval_is_frozen = $this->Evaluation->EvaluateTerm->checkFrozenEvaluateTerm($latestTermId);
+
         $this->set(compact('incomplete_number_list',
                            'my_evaluatees',
                            'my_eval',
                            'selected_tab_term_id',
-                           'term_name'
+                           'term_name',
+                           'eval_is_frozen'
                    ));
     }
 

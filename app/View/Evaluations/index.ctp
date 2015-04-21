@@ -24,7 +24,7 @@
                     ?>
                     <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>"
                        class="btn btn-default goal-search-elm <?= $selected ?>" role="button">
-                        <? if ($incompleteNum > 0):
+                        <? if ($incompleteNum > 0 && !$eval_is_frozen):
                             ?>
                             <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
                                 margin: 0 0 0 33px;
@@ -40,10 +40,15 @@
                 <? endforeach; ?>
             </div>
         </div>
-        <? if ((int)$incomplete_number_list[$term_name]['my_eval'] + (int)$incomplete_number_list[$term_name]['my_evaluatees'] > 0): ?>
+        <? if($eval_is_frozen): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-                <?= __d('gl', "あと%s件の評価が完了しておりません。以下より評価を行なってください。",
-                        (int)$incomplete_number_list[$term_name]['my_eval'] + (int)$incomplete_number_list[$term_name]['my_evaluatees']) ?></div>
+                <?= __d('gl', "評価は凍結されています。") ?></div>
+        <? else:?>
+            <? if ((int)$incomplete_number_list[$term_name]['my_eval'] + (int)$incomplete_number_list[$term_name]['my_evaluatees'] > 0): ?>
+                <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
+                    <?= __d('gl', "あと%s件の評価が完了しておりません。以下より評価を行なってください。",
+                            (int)$incomplete_number_list[$term_name]['my_eval'] + (int)$incomplete_number_list[$term_name]['my_evaluatees']) ?></div>
+            <? endif; ?>
         <? endif; ?>
         <div class="form-group">
             <? if (!empty($my_eval[0])): ?>
@@ -54,7 +59,7 @@
                     <? endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
-                                   ['evaluatees' => $my_eval, 'eval_term_id' => $selected_tab_term_id]) ?>
+                                   ['evaluatees' => $my_eval, 'eval_term_id' => $selected_tab_term_id, 'eval_is_frozen' => $eval_is_frozen]) ?>
             <? endif; ?>
             <? if (!empty($my_evaluatees)): ?>
                 <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
@@ -64,7 +69,7 @@
                     <? endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
-                                   ['evaluatees' => $my_evaluatees, 'eval_term_id' => $selected_tab_term_id]) ?>
+                                   ['evaluatees' => $my_evaluatees, 'eval_term_id' => $selected_tab_term_id, 'eval_is_frozen' => $eval_is_frozen]) ?>
             <? endif; ?>
         </div>
     </div>

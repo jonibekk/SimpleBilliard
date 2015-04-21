@@ -176,7 +176,11 @@ class AppController extends Controller
 
     function _setEvaluableCnt()
     {
-        $this->evaluable_cnt = $this->Team->Evaluation->getMyTurnCount();
+        $latestTermId = $this->Team->EvaluateTerm->getLatestTermId();
+        $evaluate_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($latestTermId);
+        if(!$evaluate_is_frozen) {
+            $this->evaluable_cnt = $this->Team->Evaluation->getMyTurnCount();
+        }
         $this->set('evaluable_cnt', $this->evaluable_cnt);
     }
 
