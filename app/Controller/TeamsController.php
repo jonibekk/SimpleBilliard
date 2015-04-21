@@ -84,11 +84,15 @@ class TeamsController extends AppController
             $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
         }
 
+        // Check frozen
+        $eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($latest_term_id);
+
         $this->set(compact(
                        'statuses',
                        'all_cnt',
                        'incomplete_cnt',
-                       'progress_percent'
+                       'progress_percent',
+                       'eval_is_frozen'
                    ));
 
         return $this->render();

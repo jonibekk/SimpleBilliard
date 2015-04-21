@@ -203,9 +203,19 @@
             <div class="alert alert-danger" role="alert">
                 <?= __d('gl', "現在、評価設定が有効では無い為、評価を開始する事ができません。") ?>
             </div>
+        <? elseif ($eval_is_frozen): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= __d('gl', "評価は凍結されています。") ?>
+            </div>
         <? elseif (!$eval_start_button_enabled): ?>
             <div class="alert alert-info" role="alert">
                 <?= __d('gl', "評価期間中です。") ?>
+            </div>
+            <div class="col-sm-9">
+                <?=
+                $this->Form->postLink(__d('gl', "評価を凍結する"),
+                                      ['controller' => 'teams', 'action' => 'freeze_evaluation',],
+                                      ['class' => 'btn btn-primary'], __d('gl', "取り消しができません。よろしいですか？")) ?>
             </div>
         <? endif; ?>
     </div>
