@@ -35,6 +35,7 @@ App::uses('HelpsController', 'Controller');
  * @property Goal                         $Goal
  * @property Team                         $Team
  * @property NotifyBizComponent           $NotifyBiz
+ * @property Notification                 $Notification
  */
 class AppController extends Controller
 {
@@ -79,6 +80,7 @@ class AppController extends Controller
         'Post',
         'Goal',
         'Team',
+        'Notification',
     ];
 
     /**

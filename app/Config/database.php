@@ -30,6 +30,18 @@ class DATABASE_CONFIG
         'database'   => 'myapp_bench',
     );
 
+    public $redis = array(
+        'datasource'  => 'Redis.RedisSource',
+        'host'        => REDIS_HOST,
+        'port'        => 6379,
+        'password'    => '',
+        'database'    => 0,
+        'timeout'     => 0,
+        'persistent'  => false,
+        'unix_socket' => '',
+        'prefix'      => '',
+    );
+
     public function __construct()
     {
         //opsworksの環境の場合はdb設定をopsworks側で管理されているものに置き換える
