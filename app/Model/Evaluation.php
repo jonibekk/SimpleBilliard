@@ -636,6 +636,17 @@ class Evaluation extends AppModel
         if (is_null($term_id) && $is_all === true) {
             unset($options['conditions']['evaluate_term_id']);
         }
+
+        // freeze
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        if($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId)) {
+            $options['conditions']['NOT'][] = ['evaluate_term_id' => $currentTermId];
+        }
+        if($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId)) {
+            $options['conditions']['NOT'][] = ['evaluate_term_id' => $previousTermId];
+        }
+
         $count = $this->find('count', $options);
         return $count;
     }
