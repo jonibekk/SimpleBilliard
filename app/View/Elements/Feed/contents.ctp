@@ -40,11 +40,13 @@
 
                         >
                         <i class="fa fa-heart font_rougeOrange" ></i>
+
                         <span class="ml_5px">
                             <?= $this->Html->link(__d('gl', 'Join Circle'),
                                                   ['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']]
                                                   ) ?>
                         </span>
+
                     </a>
                 </div>
 

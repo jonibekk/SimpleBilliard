@@ -259,7 +259,7 @@ class AppController extends Controller
     public function _setCurrentCircle()
     {
         $current_circle = null;
-        if (viaIsSet($this->request->params['circle_id'])) {
+        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
             $current_circle = $this->User->CircleMember->Circle->getPublicCircleById($this->request->params['circle_id']);
         }
         $this->set('current_circle', $current_circle);
