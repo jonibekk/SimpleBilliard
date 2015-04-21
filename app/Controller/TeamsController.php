@@ -339,4 +339,16 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "チームを「%s」に切り換えました。", $my_teams[$team_id]));
         return $this->render();
     }
+
+    function freeze_evaluation()
+    {
+        $this->request->allowMethod('post');
+        $termId = $this->Team->EvaluateTerm->getLatestTermId();
+        if (!$this->Team->EvaluateTerm->freezeEvaluateTerm($termId)) {
+            $this->Pnotify->outError(__d('gl', "評価を凍結できませんでした。"));
+            return $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
+        return $this->redirect($this->referer());
+    }
 }

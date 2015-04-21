@@ -420,6 +420,12 @@ class TeamsControllerTest extends ControllerTestCase
         $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
     }
 
+    function testFreezeEvaluation()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/freeze_evaluation', ['method' => 'POST']);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
