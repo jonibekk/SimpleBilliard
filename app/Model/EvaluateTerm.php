@@ -120,4 +120,12 @@ class EvaluateTerm extends AppModel
         return (empty($res)) ? false : true;
     }
 
+    function freezeEvaluateTerm($id)
+    {
+        $this->id = $id;
+        $saveData = ['evaluate_status' => self::STATUS_EVAL_FINISHED];
+        $res = $this->save($saveData);
+        return $res;
+    }
+
 }
