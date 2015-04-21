@@ -37,6 +37,8 @@ before_script:
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - wget http://pecl.php.net/get/redis-2.2.7.tgz ; tar -xzf redis-2.2.7.tgz ; sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
+  - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
