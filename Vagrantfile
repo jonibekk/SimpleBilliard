@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
 
-  config.cache.scope = :box
+  config.cache.auto_detect = false
   config.omnibus.chef_version = '12'
 
   src_dir = './'
