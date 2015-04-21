@@ -493,6 +493,7 @@ class PostsController extends AppController
     function feed()
     {
         $this->_setMyCircle();
+        $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
@@ -672,10 +673,10 @@ class PostsController extends AppController
             throw new NotFoundException(__('gl', "Invalid Request"));
         }
         if ($this->Post->Circle->CircleMember->joinNewMember($circle_id)) {
-            $this->Pnotify->outSuccess(__d('gl',""));
+            $this->Pnotify->outSuccess(__d('gl', "success"));
         }
         else {
-            $this->Pnotify->outError(__d('gl',""));
+            $this->Pnotify->outError(__d('gl', "error"));
         }
         return $this->redirect($this->request->referer());
 

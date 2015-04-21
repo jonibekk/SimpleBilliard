@@ -358,4 +358,17 @@ class Circle extends AppModel
         return $this->find('first', $options);
     }
 
+    function getPublicCircleById($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'         => $id,
+                'public_flg' => true,
+                'team_id'    => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }
