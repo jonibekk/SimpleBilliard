@@ -88,12 +88,12 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
-    function testFreezeEvaluateTerm()
+    function testChangeFreezeStatus()
     {
         $this->EvaluateTerm->current_team_id = 1;
         $this->EvaluateTerm->saveTerm();
         $latestTermId = $this->EvaluateTerm->getLastInsertID();
-        $this->EvaluateTerm->freezeEvaluateTerm($latestTermId);
+        $this->EvaluateTerm->changeFreezeStatus($latestTermId);
         $res = $this->EvaluateTerm->findById($latestTermId);
         $this->assertEquals($res['EvaluateTerm']['evaluate_status'], EvaluateTerm::STATUS_EVAL_FINISHED);
     }

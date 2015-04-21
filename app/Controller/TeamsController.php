@@ -55,6 +55,7 @@ class TeamsController extends AppController
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
 
         $eval_start_button_enabled = true;
@@ -84,15 +85,33 @@ class TeamsController extends AppController
             $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
         }
 
-        // Check frozen
-        $eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($latest_term_id);
+        // Get term info
+        $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
+        $current_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($current_term_id);
+        $current_term_start_date = $this->Team->getCurrentTermStartDate();
+        $current_term_end_date = $this->Team->getCurrentTermEndDate() - 1;
+        $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
+        $previous_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($previous_term_id);
+        $previous_term = $this->Team->getBeforeTermStartEnd();
+        $previous_term_start_date = $previous_term['start'];
+        $previous_term_end_date = $previous_term['end'] - 1;
 
         $this->set(compact(
                        'statuses',
                        'all_cnt',
                        'incomplete_cnt',
                        'progress_percent',
-                       'eval_is_frozen'
+                       'eval_is_frozen',
+                       'current_term_id',
+                       'current_eval_is_frozen',
+                       'current_eval_is_available',
+                       'current_term_start_date',
+                       'current_term_end_date',
+                       'previous_term_id',
+                       'previous_eval_is_frozen',
+                       'previous_eval_is_available',
+                       'previous_term_start_date',
+                       'previous_term_end_date'
                    ));
 
         return $this->render();
@@ -364,12 +383,14 @@ class TeamsController extends AppController
         return $this->render();
     }
 
-    function freeze_evaluation()
+    function change_freeze_status()
     {
         $this->request->allowMethod('post');
-        $termId = $this->Team->EvaluateTerm->getLatestTermId();
-        if (!$this->Team->EvaluateTerm->freezeEvaluateTerm($termId)) {
-            $this->Pnotify->outError(__d('gl', "評価を凍結できませんでした。"));
+        $termId = viaIsSet($this->request->data['evaluate_term_id']);
+        try {
+            $this->Team->EvaluateTerm->changeFreezeStatus($termId);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e);
             return $this->redirect($this->referer());
         }
         $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));

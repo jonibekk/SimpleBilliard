@@ -203,20 +203,45 @@
             <div class="alert alert-danger" role="alert">
                 <?= __d('gl', "現在、評価設定が有効では無い為、評価を開始する事ができません。") ?>
             </div>
-        <? elseif ($eval_is_frozen): ?>
-            <div class="alert alert-danger" role="alert">
-                <?= __d('gl', "評価は凍結されています。") ?>
-            </div>
         <? elseif (!$eval_start_button_enabled): ?>
             <div class="alert alert-info" role="alert">
                 <?= __d('gl', "評価期間中です。") ?>
             </div>
-            <div class="col-sm-9">
+        <? endif; ?>
+        <h3><?php echo __d('team', '評価凍結設定') ?></h3>
+        <? if($current_eval_is_available): ?>
+            <h4><?= __d('gl', "今期") ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
+                    - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
+            <? if($current_eval_is_frozen): ?>
                 <?=
-                $this->Form->postLink(__d('gl', "評価を凍結する"),
-                                      ['controller' => 'teams', 'action' => 'freeze_evaluation',],
-                                      ['class' => 'btn btn-primary'], __d('gl', "取り消しができません。よろしいですか？")) ?>
-            </div>
+                $this->Form->postLink(__d('gl', "今期の評価の凍結を解除する"),
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status',],
+                                      ['class' => 'btn btn-warning', 'data' => ['evaluate_term_id' => $current_term_id]],
+                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+            <? else: ?>
+                <?=
+                $this->Form->postLink(__d('gl', "今期の評価を凍結する"),
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status',],
+                                      ['class' => 'btn btn-primary', 'data' => ['evaluate_term_id' => $current_term_id]],
+                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+            <? endif; ?>
+        <? endif; ?>
+        <? if($previous_eval_is_available): ?>
+            <h4><?= __d('gl', "前期") ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
+                    - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
+            <? if($previous_eval_is_frozen): ?>
+                <?=
+                $this->Form->postLink(__d('gl', "前期の評価の凍結を解除する"),
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status',],
+                                      ['class' => 'btn btn-warning', 'data' => ['evaluate_term_id' => $previous_term_id]],
+                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+            <? else: ?>
+                <?=
+                $this->Form->postLink(__d('gl', "前期の評価を凍結する"),
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status',],
+                                      ['class' => 'btn btn-primary', 'data' => ['evaluate_term_id' => $previous_term_id]],
+                                      __d('gl', "取り消しができません。よろしいですか？")) ?>
+            <? endif; ?>
         <? endif; ?>
     </div>
     <? if ($eval_enabled && $eval_start_button_enabled): ?>
