@@ -598,8 +598,8 @@ class PostsController extends AppController
 
             $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
 
-            $allowed_extensions = array("jpg","jpeg","png","gif");
-            if(!in_array($extension,$allowed_extensions)){
+            $allowed_extensions = array("jpg", "jpeg", "png", "gif");
+            if (!in_array($extension, $allowed_extensions)) {
                 $ogp['image'] = null;
             }
             $requestData['site_photo'] = $ogp['image'];
@@ -662,6 +662,23 @@ class PostsController extends AppController
             'post_id'           => $postId
         ];
         $this->NotifyBiz->commentPush($socketId, $data);
+    }
+
+    public function join_circle()
+    {
+        $circle_id = $this->request->params['named']['circle_id'];
+
+        if (!$circle_id) {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
+        if ($this->Post->Circle->CircleMember->joinNewMember($circle_id)) {
+            $this->Pnotify->outSuccess(__d('gl',""));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl',""));
+        }
+        return $this->redirect($this->request->referer());
+
     }
 
 }
