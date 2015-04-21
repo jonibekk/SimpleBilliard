@@ -35,6 +35,8 @@ before_script:
   - echo "extension=oauth.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - wget http://pecl.php.net/get/apcu-4.0.2.tgz ; tar -xzf apcu-4.0.2.tgz ; sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
@@ -85,7 +87,7 @@ before_script:
     }
     }" > app/Config/database.php
 #  - mysql cakephp_test < app/Config/sql/mysql.sql
-  
+
 script:
   - mkdir -p build/logs
   - cd ./app
