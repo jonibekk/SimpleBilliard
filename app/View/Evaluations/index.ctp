@@ -9,6 +9,10 @@
  * @var                    $my_evaluatees
  * @var                    $total_incomplete_count_my_eval
  * @var                    $total_incomplete_count_as_evaluator
+ * @var                    $selected_term_name
+ * @var                    $incomplete_number_list
+ * @var                    $isFrozens
+ * @var                    $selected_term_name
  */
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
@@ -40,10 +44,10 @@
                 <? endforeach; ?>
             </div>
         </div>
-        <? if($isFrozens[$selected_term_name]): ?>
+        <? if ($isFrozens[$selected_term_name]): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
                 <?= __d('gl', "評価は凍結されています。") ?></div>
-        <? else:?>
+        <? else: ?>
             <? if ((int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
                 <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
                     <?= __d('gl', "あと%s件の評価が完了しておりません。以下より評価を行なってください。",
@@ -65,7 +69,8 @@
                 <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                     <p class="font_bold"><?= __d('gl', "あなたが評価するメンバー") ?></p>
                     <? if ((int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
-                        <p><?= __d('gl', "未完了:%s", (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></p>
+                        <p><?= __d('gl', "未完了:%s",
+                                   (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></p>
                     <? endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',

@@ -7,6 +7,7 @@
  *
  * @var $evaluatees
  * @var $eval_term_id
+ * @var $eval_is_frozen
  */
 ?>
 <!-- START app/View/Elements/Evaluation/index_items.ctp -->

@@ -219,10 +219,10 @@
             </div>
         <? endif; ?>
         <h3><?php echo __d('team', '評価凍結設定') ?></h3>
-        <? if($current_eval_is_available): ?>
+        <? if ($current_eval_is_available): ?>
             <h4><?= __d('gl', "今期") ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
-                    - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
-            <? if($current_eval_is_frozen): ?>
+                - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
+            <? if ($current_eval_is_frozen): ?>
                 <?=
                 $this->Form->postLink(__d('gl', "今期の評価の凍結を解除する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status',],
@@ -236,10 +236,10 @@
                                       __d('gl', "今期の評価を凍結します。よろしいですか？")) ?>
             <? endif; ?>
         <? endif; ?>
-        <? if($previous_eval_is_available): ?>
+        <? if ($previous_eval_is_available): ?>
             <h4><?= __d('gl', "前期") ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
-                    - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
-            <? if($previous_eval_is_frozen): ?>
+                - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
+            <? if ($previous_eval_is_frozen): ?>
                 <?=
                 $this->Form->postLink(__d('gl', "前期の評価の凍結を解除する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status',],

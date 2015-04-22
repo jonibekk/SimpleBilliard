@@ -127,19 +127,20 @@ class EvaluateTerm extends AppModel
         // Check freezable
         $options = [
             'conditions' => [
-                'id' => $id,
+                'id'      => $id,
                 'team_id' => $this->current_team_id,
             ]
         ];
         $res = $this->find('first', $options);
-        if(empty($res)) {
+        if (empty($res)) {
             throw new RuntimeException(__d('gl', "この期間は凍結できません。"));
         }
 
         $isFrozen = $this->checkFrozenEvaluateTerm($id);
-        if($isFrozen) {
+        if ($isFrozen) {
             $expect_status = self::STATUS_EVAL_IN_PROGRESS;
-        } else {
+        }
+        else {
             $expect_status = self::STATUS_EVAL_FROZEN;
         }
 
@@ -153,8 +154,8 @@ class EvaluateTerm extends AppModel
     {
         $options = [
             'conditions' => [
-                'id'      => $id,
-                'team_id' => $this->current_team_id,
+                'id'              => $id,
+                'team_id'         => $this->current_team_id,
                 'evaluate_status' => self::STATUS_EVAL_FROZEN
             ]
         ];

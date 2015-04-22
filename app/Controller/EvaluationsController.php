@@ -6,6 +6,8 @@ App::uses('Evaluation', 'Model');
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
+ *
+ * @var $selected_tab_term_id
  */
 class EvaluationsController extends AppController
 {
@@ -36,9 +38,11 @@ class EvaluationsController extends AppController
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         $term_param = viaIsSet($this->request->params['named']['term']);
         $selected_term_name = $term_param ? $term_param : 'previous';
-        if($selected_term_name == 'present'){
+        $selected_tab_term_id = '';
+        if ($selected_term_name == 'present') {
             $selected_tab_term_id = $current_term_id;
-        } elseif($selected_term_name == 'previous') {
+        }
+        elseif ($selected_term_name == 'previous') {
             $selected_tab_term_id = $previous_term_id;
         }
 
@@ -197,7 +201,8 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_evaluatees_by_evaluator($evaluator_id) {
+    public function ajax_get_evaluatees_by_evaluator($evaluator_id)
+    {
         $this->_ajaxPreProcess();
         $evaluator = $this->Evaluation->EvaluatorUser->findById($evaluator_id);
 
@@ -213,7 +218,8 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_incomplete_oneself() {
+    public function ajax_get_incomplete_oneself()
+    {
         $this->_ajaxPreProcess();
 
         $oneself_incomplete_users = $this->Evaluation->getIncompleteOneselfEvaluators($this->Team->EvaluateTerm->getLatestTermId());

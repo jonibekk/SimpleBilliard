@@ -640,10 +640,10 @@ class Evaluation extends AppModel
         // freeze
         $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
         $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
-        if($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId)) {
+        if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId)) {
             $options['conditions']['NOT'][] = ['evaluate_term_id' => $currentTermId];
         }
-        if($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId)) {
+        if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId)) {
             $options['conditions']['NOT'][] = ['evaluate_term_id' => $previousTermId];
         }
 
@@ -749,7 +749,9 @@ class Evaluation extends AppModel
     {
         // check frozen
         $evalIsFrozen = $this->EvaluateTerm->checkFrozenEvaluateTerm($evaluateTermId);
-        if($evalIsFrozen) return false;
+        if ($evalIsFrozen) {
+            return false;
+        }
 
         // check my turn
         $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
@@ -767,7 +769,7 @@ class Evaluation extends AppModel
     function getAllStatusesForTeamSettings($termId)
     {
         $evaluation_statuses = [
-            self::TYPE_ONESELF => [
+            self::TYPE_ONESELF   => [
                 'label'          => __d('gl', "自己"),
                 'all_num'        => 0,
                 'incomplete_num' => 0,
@@ -904,7 +906,8 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    function getEvaluateesByEvaluator($termId, $evaluatorId){
+    function getEvaluateesByEvaluator($termId, $evaluatorId)
+    {
         $options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
@@ -935,12 +938,13 @@ class Evaluation extends AppModel
         return $incompleteEvaluatees;
     }
 
-    function getIncompleteOneselfEvaluators($termId) {
+    function getIncompleteOneselfEvaluators($termId)
+    {
         $options = [
             'conditions' => [
-                'evaluate_term_id'  => $termId,
-                'my_turn_flg'       => true,
-                'evaluate_type'     => self::TYPE_ONESELF,
+                'evaluate_term_id' => $termId,
+                'my_turn_flg'      => true,
+                'evaluate_type'    => self::TYPE_ONESELF,
             ],
             'group'      => [
                 'evaluator_user_id'
@@ -954,7 +958,5 @@ class Evaluation extends AppModel
 
         return $res;
     }
-
-
 
 }
