@@ -140,7 +140,7 @@ class EvaluateTerm extends AppModel
         if($isFrozen) {
             $expect_status = self::STATUS_EVAL_IN_PROGRESS;
         } else {
-            $expect_status = self::STATUS_EVAL_FINISHED;
+            $expect_status = self::STATUS_EVAL_FROZEN;
         }
 
         $this->id = $id;
@@ -155,7 +155,7 @@ class EvaluateTerm extends AppModel
             'conditions' => [
                 'id'      => $id,
                 'team_id' => $this->current_team_id,
-                'evaluate_status' => self::STATUS_EVAL_FINISHED
+                'evaluate_status' => self::STATUS_EVAL_FROZEN
             ]
         ];
         $res = $this->find('first', $options);
