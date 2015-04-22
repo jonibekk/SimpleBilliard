@@ -182,7 +182,7 @@ class Collaborator extends AppModel
                 ]
             ],
             'type'       => 'inner',
-            'order'      => ['Collaborator.created'],
+            'order'      => ['Collaborator.created DESC'],
         ];
         if (is_array($approval_flg)) {
             unset($options['conditions']['Collaborator.valued_flg']);

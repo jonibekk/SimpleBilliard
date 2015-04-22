@@ -173,8 +173,7 @@ class GoalApprovalController extends AppController
             }
         }
 
-        $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->team_id, $this->goal_user_ids, [$this->goal_status['unapproved'], $this->goal_status['modify']]);
+        $goal_info = $this->getGoalInfo([$this->goal_status['unapproved'], $this->goal_status['modify']]);
 
         foreach ($goal_info as $key => $val) {
             $goal_info[$key]['my_goal'] = false;
@@ -209,10 +208,7 @@ class GoalApprovalController extends AppController
             $this->changeStatus($data);
         }
 
-        $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->team_id, $this->goal_user_ids,
-            [$this->goal_status['approval'], $this->goal_status['hold']]
-        );
+        $goal_info = $this->getGoalInfo([$this->goal_status['approval'], $this->goal_status['hold']]);
 
         foreach ($goal_info as $key => $val) {
             $goal_info[$key]['my_goal'] = false;
@@ -330,6 +326,33 @@ class GoalApprovalController extends AppController
             $goal_user_ids = $this->member_ids;
         }
         return $goal_user_ids;
+    }
+
+    /*
+     * リストに表示するゴールのUserIDを取得
+     */
+    public function getGoalInfo($goal_status)
+    {
+        $goal_info = [];
+        if ($this->user_type === 1) {
+            $goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, $this->user_id, $goal_status);
+
+        } elseif ($this->user_type === 2) {
+            $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, $this->member_ids, $goal_status);
+
+            $my_goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, $this->user_id, $goal_status);
+
+            $goal_info = array_merge($member_goal_info, $my_goal_info);
+
+        } elseif ($this->user_type === 3) {
+            $goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, $this->user_id, $goal_status);
+        }
+
+        return $goal_info;
     }
 
     /*
