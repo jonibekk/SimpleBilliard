@@ -492,6 +492,7 @@ class PostsController extends AppController
 
     function feed()
     {
+        $params = $this->request->params;
         $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
@@ -514,7 +515,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id','user_status'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id','user_status','params'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {

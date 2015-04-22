@@ -14,7 +14,13 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
+
+<?php
+if($params['action']=='feed' && $params['controller']=='posts' && $user_status=='joined')
+{
+?>
 <?= $this->element("Feed/common_form") ?>
+<?php } ?>
 <div class="feed-share-range">
     <div class="panel-body ptb_10px plr_11px">
         <div class="col col-xxs-12 font_12px">
