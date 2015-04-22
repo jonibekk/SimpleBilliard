@@ -55,6 +55,7 @@ class TeamsController extends AppController
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
 
         $eval_start_button_enabled = true;
@@ -88,7 +89,9 @@ class TeamsController extends AppController
                        'statuses',
                        'all_cnt',
                        'incomplete_cnt',
-                       'progress_percent'
+                       'progress_percent',
+                       'current_term_id',
+                       'previous_term_id'
                    ));
 
         return $this->render();
@@ -136,6 +139,16 @@ class TeamsController extends AppController
             $this->set(['index' => $this->request->params['named']['index']]);
         }
         $response = $this->render('Team/eval_score_form_elm');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_final_eval_modal($term_id)
+    {
+        $this->_ajaxPreProcess();
+        $term = $this->Team->EvaluateTerm->findById($term_id);
+        $this->set(compact('term_id', 'term'));
+        $response = $this->render('Team/modal_final_evaluation_by_csv');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }
@@ -339,12 +352,12 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
     }
 
-    function ajax_upload_final_evaluations_csv()
+    function ajax_upload_final_evaluations_csv($term_id)
     {
 
     }
 
-    function download_final_evaluations_csv()
+    function download_final_evaluations_csv($term_id)
     {
         $team_id = $this->Session->read('current_team_id');
         $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
@@ -353,7 +366,7 @@ class TeamsController extends AppController
 
         //見出し
         $th = $this->Team->TeamMember->_getCsvHeadingEvaluation();
-        $td = $this->Team->TeamMember->getAllEvaluationsCsvData(null, $team_id);
+        $td = $this->Team->TeamMember->getAllEvaluationsCsvData($term_id, $team_id);
 
         $this->set(compact('filename', 'th', 'td'));
 

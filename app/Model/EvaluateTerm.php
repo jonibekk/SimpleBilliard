@@ -99,6 +99,16 @@ class EvaluateTerm extends AppModel
         return null;
     }
 
+    function getPreviousTerm()
+    {
+
+    }
+
+    function getCurrentTerm()
+    {
+
+    }
+
     function saveTerm()
     {
         $data = [

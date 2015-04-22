@@ -11,6 +11,8 @@
  * @var                    $term_end_date
  * @var                    $eval_enabled
  * @var                    $eval_start_button_enabled
+ * @var                    $previous_term_id
+ * @var                    $current_term_id
  */
 ?>
 <!-- START app/View/Elements/Team/final_evaluation.ctp -->
@@ -39,13 +41,14 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
-                <a href="#" class="btn btn-default" data-toggle="modal"
-                   data-target="#ModalFinalEvaluationByCsv"><?= __d('gl', '最終評価を行う') ?></a>
+                <a href="<?= $this->Html->url(['action' => 'ajax_get_final_eval_modal', $previous_term_id]) ?>"
+                   class="btn btn-primary modal-ajax-get" <?= $previous_term_id ? null : 'disabled' ?>>
+                    <?= __d('gl', '前期の最終評価を行う') ?></a>
+                <a href="<?= $this->Html->url(['action' => 'ajax_get_final_eval_modal', $current_term_id]) ?>"
+                   class="btn btn-primary modal-ajax-get" <?= $current_term_id ? null : 'disabled' ?>>
+                    <?= __d('gl', '今期の最終評価を行う') ?></a>
             </div>
         </div>
     </div>
 </div>
 <!-- END app/View/Elements/Team/final_evaluation.ctp -->
-<? $this->start('modal') ?>
-<?= $this->element('modal_final_evaluation_by_csv') ?>
-<? $this->end() ?>
