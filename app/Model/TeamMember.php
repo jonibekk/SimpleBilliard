@@ -1136,7 +1136,8 @@ class TeamMember extends AppModel
         $goal_ids = [];
         foreach ($all_users as $k => $v) {
             if (isset($evaluations[$v['User']['id']])) {
-                $goals = Hash::combine($evaluations[$v['User']['id']], '{n}.id', '{n}.goal_id', '{n}.goal_id');
+                $goals = Hash::combine($evaluations[$v['User']['id']], '{n}.Evaluation.id', '{n}.Evaluation.goal_id',
+                                       '{n}.Evaluation.goal_id');
                 unset($goals[0]);
                 //set goal_count
                 $csv_data[$k]['goal_count'] = count($goals);
@@ -1160,14 +1161,50 @@ class TeamMember extends AppModel
         }
         //total.self.score
         //total.self.comment
+        foreach ($all_users as $k => $v) {
+            if (!viaIsSet($evaluations[$v['User']['id']])) {
+                continue;
+            }
+            foreach ($evaluations[$v['User']['id']] as $eval) {
+                if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_ONESELF && empty($eval['Evaluation']['goal_id'])) {
+                    $csv_data[$k]['total.self.score'] = $eval['EvaluateScore']['name'];
+                    $csv_data[$k]['total.self.comment'] = $eval['Evaluation']['comment'];
+                }
+            }
+        }
 
         ////evaluator
         //total.evaluator.$ek.name
         //total.evaluator.$ek.score
         //total.evaluator.$ek.comment
+        foreach ($all_users as $k => $v) {
+            if (!viaIsSet($evaluations[$v['User']['id']])) {
+                continue;
+            }
+            $ek = 1;
+            foreach ($evaluations[$v['User']['id']] as $eval) {
+                if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR && empty($eval['Evaluation']['goal_id'])) {
+                    $csv_data[$k]["total.evaluator.$ek.name"] = $eval['EvaluatorUser']['display_username'];
+                    $csv_data[$k]["total.evaluator.$ek.score"] = $eval['EvaluateScore']['name'];
+                    $csv_data[$k]["total.evaluator.$ek.comment"] = $eval['Evaluation']['comment'];
+                    $ek++;
+                }
+            }
+        }
 
         //total.final.score
         //total.final.comment
+        foreach ($all_users as $k => $v) {
+            if (!viaIsSet($evaluations[$v['User']['id']])) {
+                continue;
+            }
+            foreach ($evaluations[$v['User']['id']] as $eval) {
+                if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR && empty($eval['Evaluation']['goal_id'])) {
+                    $csv_data[$k]["total.final.score"] = $eval['EvaluateScore']['name'];
+                    $csv_data[$k]["total.final.comment"] = $eval['Evaluation']['comment'];
+                }
+            }
+        }
 
         //add all colum
         $default_csv = $this->_getCsvHeadingEvaluation();
@@ -1177,7 +1214,6 @@ class TeamMember extends AppModel
         foreach ($csv_data as $k => $v) {
             $csv_data[$k] = Hash::merge($default_csv, $v);
         }
-
         return $csv_data;
     }
 

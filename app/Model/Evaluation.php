@@ -316,16 +316,26 @@ class Evaluation extends AppModel
         }
         $options = [
             'conditions' => [
-                'evaluate_term_id' => $term_id,
-                'team_id'          => $team_id,
+                'Evaluation.evaluate_term_id' => $term_id,
+                'Evaluation.team_id'          => $team_id,
             ],
             'order'      => [
-                'evaluatee_user_id ASC',
-                'index_num ASC'
+                'Evaluation.evaluatee_user_id ASC',
+                'Evaluation.index_num ASC'
+            ],
+            'contain'    => [
+                'EvaluatorUser' => [
+                    'fields' => $this->EvaluateeUser->profileFields
+                ],
+                'EvaluateScore' => [
+                    'fields' => [
+                        'EvaluateScore.name'
+                    ]
+                ]
             ]
         ];
         $res = $this->find('all', $options);
-        $res = Hash::combine($res, '{n}.Evaluation.id', '{n}.Evaluation', '{n}.Evaluation.evaluatee_user_id');
+        $res = Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Evaluation.evaluatee_user_id');
         return $res;
     }
 
