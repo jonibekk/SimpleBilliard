@@ -688,6 +688,26 @@ class EvaluationTest extends CakeTestCase
         $this->assertCount(5, $res);
     }
 
+    function testGetMyTurnCountCaseCurrentTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $currentTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($currentTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
+    function testGetMyTurnCountCasePreviousTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
+        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
     function testGetTermIdByEvaluationId()
     {
         $this->_setDefault();
@@ -1071,6 +1091,8 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->current_team_id = 1;
         $this->Evaluation->my_uid = 1;
         $this->Evaluation->evaluate_term_id = 1;
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
         $this->Evaluation->Team->TeamMember->current_team_id = 1;
         $this->Evaluation->Team->TeamMember->my_uid = 1;
         $this->Evaluation->Team->EvaluateTerm->current_team_id = 1;
