@@ -211,4 +211,17 @@ class ActionResult extends AppModel
                                 ['ActionResult.goal_id' => $goal_id, 'ActionResult.team_id' => $this->current_team_id]);
         return $res;
     }
+
+    function getActionCount($goal_ids, $user_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_ids,
+                'user_id' => $user_id,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
 }

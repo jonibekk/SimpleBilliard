@@ -309,6 +309,26 @@ class Evaluation extends AppModel
         return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
     }
 
+    function getAllEvaluations($term_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $term_id,
+                'team_id'          => $team_id,
+            ],
+            'order'      => [
+                'evaluatee_user_id ASC',
+                'index_num ASC'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Evaluation.id', '{n}.Evaluation', '{n}.Evaluation.evaluatee_user_id');
+        return $res;
+    }
+
     function setDraftValidation()
     {
         $this->setAllowEmptyToComment();

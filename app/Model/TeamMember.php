@@ -12,7 +12,6 @@ App::uses('AppModel', 'Model');
  */
 class TeamMember extends AppModel
 {
-
     public $myTeams = [];
     /**
      * Validation rules
@@ -1092,13 +1091,18 @@ class TeamMember extends AppModel
             $team_id = $this->current_team_id;
         }
 
+        /**
+         * @var Goal $Goal
+         */
+        $Goal = ClassRegistry::init('Goal');
+
         $options = [
             'conditions' => [
                 'TeamMember.team_id'               => $team_id,
                 'TeamMember.active_flg'            => true,
                 'TeamMember.evaluation_enable_flg' => true,
             ],
-            'fields'     => ['member_no', 'coach_user_id'],
+            'fields'     => ['user_id', 'member_no', 'coach_user_id'],
             'order'      => ['TeamMember.member_no ASC'],
             'contain'    => [
                 'User'       => [
@@ -1125,10 +1129,35 @@ class TeamMember extends AppModel
             $csv_data[$k]['user_name'] = viaIsSet($v['User']['display_username']) ? $v['User']['display_username'] : null;
             $csv_data[$k]['coach_user_name'] = viaIsSet($v['CoachUser']['display_username']) ? $v['CoachUser']['display_username'] : null;
         }
-        //goal_count
-        //kr_count
-        //action_count
-        //goal_progress
+
+        //get evaluation
+        $evaluations = $this->Team->Evaluation->getAllEvaluations($term_id);
+
+        $goal_ids = [];
+        foreach ($all_users as $k => $v) {
+            if (isset($evaluations[$v['User']['id']])) {
+                $goals = Hash::combine($evaluations[$v['User']['id']], '{n}.id', '{n}.goal_id', '{n}.goal_id');
+                unset($goals[0]);
+                //set goal_count
+                $csv_data[$k]['goal_count'] = count($goals);
+                $goal_ids[$v['User']['id']] = array_keys($goals);
+            }
+        }
+        //set kr_count and action count
+        foreach ($all_users as $k => $v) {
+            if (!isset($goal_ids[$v['User']['id']]) || empty($goal_ids[$v['User']['id']])) {
+                $csv_data[$k]['kr_count'] = 0;
+                $csv_data[$k]['action_count'] = 0;
+                $csv_data[$k]['goal_progress'] = 0;
+                continue;
+            }
+            $kr_count = $Goal->KeyResult->getKrCount($goal_ids[$v['User']['id']], $v['User']['id']);
+            $csv_data[$k]['kr_count'] = $kr_count;
+            $action_count = $Goal->ActionResult->getActionCount($goal_ids[$v['User']['id']], $v['User']['id']);
+            $csv_data[$k]['action_count'] = $action_count;
+            //goal_progress()
+            $csv_data[$k]['goal_progress'] = $Goal->KeyResult->getGoalTotalProgress($goal_ids[$v['User']['id']]);
+        }
         //total.self.score
         //total.self.comment
 

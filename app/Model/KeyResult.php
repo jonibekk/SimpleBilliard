@@ -167,6 +167,33 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    function getKrCount($goal_ids, $user_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_ids,
+                'user_id' => $user_id,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
+    function getGoalTotalProgress($goal_ids)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_ids,
+            ],
+            'fields'     => ['floor(sum(KeyResult.progress) / count(*)) as progress'],
+        ];
+        $res = $this->find('all', $options);
+        if (viaIsSet($res[0][0]['progress'])) {
+            return $res[0][0]['progress'];
+        }
+        return 0;
+    }
+
     /**
      * キーリザルト変更権限
      * コラボレータならtrueを返す
