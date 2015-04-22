@@ -143,7 +143,82 @@ class EvaluationsController extends AppController
         $this->Evaluation->commit();
         $this->Pnotify->outSuccess($successMsg);
         return $this->redirect($this->referer());
+    }
 
+    public function ajax_get_incomplete_evaluatees()
+    {
+        $this->_ajaxPreProcess();
+        $incomplete_evaluatees = $this->Evaluation->getIncompleteEvaluatees($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('incomplete_evaluatees'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_evaluatees');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_incomplete_evaluators()
+    {
+        $this->_ajaxPreProcess();
+        $incomplete_evaluators = $this->Evaluation->getIncompleteEvaluators($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('incomplete_evaluators'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_evaluators');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_evaluators_status($evaluatee_id)
+    {
+        $this->_ajaxPreProcess();
+        $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
+
+        $res = $this->Evaluation->getEvaluators($this->Team->EvaluateTerm->getLatestTermId(), $evaluatee_id);
+        $evaluators = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
+
+        $this->set(compact('evaluators', 'evaluatee'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_evaluators_status');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_evaluatees_by_evaluator($evaluator_id) {
+        $this->_ajaxPreProcess();
+        $evaluator = $this->Evaluation->EvaluatorUser->findById($evaluator_id);
+
+        $res = $this->Evaluation->getEvaluateesByEvaluator($this->Team->EvaluateTerm->getLatestTermId(), $evaluator_id);
+        $incomplete_evaluatees = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
+        $this->set(compact('incomplete_evaluatees', 'evaluator'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_evaluatees_by_evaluator');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_incomplete_oneself() {
+        $this->_ajaxPreProcess();
+
+        $oneself_incomplete_users = $this->Evaluation->getIncompleteOneselfEvaluators($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('oneself_incomplete_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_oneself_evaluators');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
     }
 
 }
