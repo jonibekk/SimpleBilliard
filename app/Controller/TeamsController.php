@@ -65,13 +65,8 @@ class TeamsController extends AppController
         ) {
             $eval_start_button_enabled = false;
         }
-        //TODO ハードコーディング中! for こーへーさん
-        $team_id = [1, 1111111];
-        $unvalued = $this->Goal->Collaborator->tempCountUnvalued($team_id);
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
-                           'unvalued', 'team_id', 'eval_scores'));
-        //TODO ハードコーディング中! for こーへーさん
-
+                           'eval_scores'));
         $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
 
         // 全体progressカウント

@@ -25,22 +25,7 @@
     <?= $this->element('Team/batch_setup') ?>
 </div>
 <div id="evaluation">
-    <? //TODO ハードコーディング中! for こーへーさん ?>
     <?= $this->element('Team/evaluation_setup') ?>
-    <? if (in_array($this->Session->read('current_team_id'), $team_id)) {
-        foreach ($unvalued as $data) {
-            if (is_int($data)) {
-                echo('count' . '=>' . $data . '<br>');
-            }
-            else {
-                foreach ($data as $filed => $val) {
-                    echo($filed . '=>' . $val . '<br>');
-                }
-            }
-            echo('<br>');
-        }
-    } ?>
-    <? //TODO ハードコーディング中! for こーへーさん ?>
 </div>
 <div id="final_evaluation">
     <?= $this->element('Team/final_evaluation') ?>
