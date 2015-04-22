@@ -523,4 +523,43 @@ class GoalTest extends CakeTestCase
         $this->Goal->Collaborator->save($collabo);
         $this->Goal->getMyPreviousGoals();
     }
+
+    function testIsPresentTermGoalPatternTrue() {
+
+        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
+        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
+
+        $goal_data = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'purpose_id' => 1,
+            'start_date' => strtotime('2015/2/1'),
+            'end_date'   => strtotime('2015/3/1'),
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+
+        $res = $this->Goal->isPresentTermGoal($goal_id);
+        $this->assertTrue($res);
+    }
+
+    function testIsPresentTermGoalPatternFalse() {
+
+        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
+        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
+
+        $goal_data = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'purpose_id' => 1,
+            'start_date' => strtotime('2016/1/1'),
+            'end_date'   => strtotime('2016/3/1'),
+        ];
+        $this->Goal->save($goal_data);
+        $goal_id = $this->Goal->getLastInsertID();
+
+        $res = $this->Goal->isPresentTermGoal($goal_id);
+        $this->assertFalse($res);
+
+    }
 }

@@ -388,6 +388,86 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
     }
 
+    function testGetGoalInfoType1()
+    {
+        $GoalApproval = $this->_getGoalApprovalCommonMock();
+        $GoalApproval->user_type = 1;
+        $GoalApproval->team_id = 1;
+        $GoalApproval->user_id = 999;
+        $valued_flg = 0;
+
+        $params = [
+            'user_id'    => $GoalApproval->user_id,
+            'team_id'    => $GoalApproval->team_id,
+            'goal_id'    => 888,
+            'valued_flg' => $valued_flg,
+            'type'       => 0,
+            'priority'   => 1,
+        ];
+        $GoalApproval->Collaborator->save($params);
+
+        $res = $GoalApproval->getGoalInfo($valued_flg);
+        $this->assertCount(1, $res);
+    }
+
+    function testGetGoalInfoType2()
+    {
+        $GoalApproval = $this->_getGoalApprovalCommonMock();
+        $GoalApproval->user_type = 2;
+        $GoalApproval->team_id = 1;
+        $GoalApproval->user_id = 999;
+        $valued_flg = 0;
+
+        $params = [
+            'user_id'    => $GoalApproval->user_id,
+            'team_id'    => $GoalApproval->team_id,
+            'goal_id'    => 999,
+            'valued_flg' => $valued_flg,
+            'type'       => 0,
+            'priority'   => 1,
+        ];
+        $GoalApproval->Collaborator->save($params);
+
+        $GoalApproval->Collaborator->create();
+        $member_id = 888;
+        $GoalApproval->member_ids = [$member_id];
+        $params = [
+            'user_id'    => $member_id,
+            'team_id'    => $GoalApproval->team_id,
+            'goal_id'    => 888,
+            'valued_flg' => $valued_flg,
+            'type'       => 0,
+            'priority'   => 1,
+        ];
+        $GoalApproval->Collaborator->save($params);
+
+        $res = $GoalApproval->getGoalInfo($valued_flg);
+        $this->assertCount(2, $res);
+    }
+
+    function testGetGoalInfoType3()
+    {
+        $GoalApproval = $this->_getGoalApprovalCommonMock();
+        $GoalApproval->user_type = 3;
+        $GoalApproval->team_id = 1;
+        $member_id = 888;
+        $GoalApproval->member_ids = [$member_id];
+        $valued_flg = 0;
+
+        $params = [
+            'user_id'    => $member_id,
+            'team_id'    => $GoalApproval->team_id,
+            'goal_id'    => 888,
+            'valued_flg' => $valued_flg,
+            'type'       => 0,
+            'priority'   => 1,
+        ];
+        $GoalApproval->Collaborator->save($params);
+
+        $res = $GoalApproval->getGoalInfo($valued_flg);
+        $this->assertCount(1, $res);
+    }
+
     function _getGoalApprovalCommonMock()
     {
         /**
