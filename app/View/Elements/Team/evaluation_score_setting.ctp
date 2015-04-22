@@ -39,8 +39,6 @@
             'id'            => 'EvaluationSettingForm',
             'url'           => ['controller' => 'teams', 'action' => 'save_evaluation_scores']
         ]); ?>
-        <?= $this->Form->hidden('id') ?>
-        <?= $this->Form->hidden('team_id', ['value' => $this->Session->read('current_team_id')]) ?>
         <table class="table table-striped" id="EvaluateScoreTable">
             <tr>
                 <th>
@@ -60,6 +58,7 @@
             <?php endforeach; ?>
         </table>
         <div class="form-group">
+            <?= $this->Form->submit(__d('gl', '評価スコア設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
             <? $index = count($this->request->data['EvaluateScore']);
             $max_index = $index + 9; ?>
             <?= $this->Html->link(__d('gl', "定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
@@ -70,16 +69,9 @@
             <? $this->Form->unlockField("EvaluateScore.$i.index_num") ?>
             <? $this->Form->unlockField("EvaluateScore.$i.description") ?>
         <? endfor ?>
-    </div>
-    <div class="panel-footer">
-        <div class="row">
-            <div class="col-sm-9 col-sm-offset-3">
-                <?= $this->Form->submit(__d('gl', '評価スコア設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
-            </div>
-        </div>
-    </div>
+        <?= $this->Form->end() ?>
 
-    <?= $this->Form->end() ?>
+    </div>
 </div>
 <!-- END app/View/Elements/Team/evaluation_score_setting.ctp -->
 <? $this->start('script') ?>
