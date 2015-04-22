@@ -759,6 +759,17 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals($nextEvaluatorId, null);
     }
 
+    function testGetIsEditableCaseTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLatestTermId();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($termId);
+        $this->Evaluation->getIsEditable($termId, null);
+    }
+
     function testGetAllStatusesForTeamSettings()
     {
         $this->_setDefault();
