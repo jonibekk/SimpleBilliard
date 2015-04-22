@@ -124,6 +124,59 @@ class Evaluation extends AppModel
     }
 
     /**
+     * afterFind callback
+     *
+     * @param array $results Result data
+     * @param mixed $primary Primary query
+     *
+     * @return array
+     */
+    public function afterFind($results, $primary = false)
+    {
+        if (empty($results)) {
+            return $results;
+        }
+
+        // データに評価タイプ名を追加する
+        /** @noinspection PhpUnusedParameterInspection */
+        $this
+            ->dataIter($results,
+                function (&$entity, &$model) {
+                    $entity = $this->setEvaluatorTypeName($entity);
+                });
+        return $results;
+    }
+
+    public function setEvaluatorTypeName($row)
+    {
+        if (!isset($row[$this->alias]['evaluate_type']) || !isset($row[$this->alias]['index_num'])) {
+            return $row;
+        }
+
+        $evaluate_type = $row[$this->alias]['evaluate_type'];
+        $index_num = (string)$row[$this->alias]['index_num'];
+        $evaluator_type_name = '';
+
+        if ($evaluate_type == self::TYPE_ONESELF) {
+            $evaluator_type_name = __d('gl', "自己");
+        }
+        else {
+            if ($evaluate_type == self::TYPE_FINAL_EVALUATOR) {
+                $evaluator_type_name = __d('gl', "最終評価者");
+            }
+            else {
+                if ($evaluate_type == self::TYPE_EVALUATOR) {
+                    $evaluator_type_name = __d('gl', "評価者{$index_num}");
+                }
+            }
+        }
+        $row[$this->alias]['evaluator_type_name'] = $evaluator_type_name;
+
+        return $row;
+
+    }
+
+    /**
      * 評価リストの閲覧権限チェック
      * ・評価画面の表示条件
      * 　チームの評価機能がon かつ 自分の評価フラグがon
@@ -694,5 +747,198 @@ class Evaluation extends AppModel
         }
         return false;
     }
+
+    function getAllStatusesForTeamSettings($termId)
+    {
+        $evaluation_statuses = [
+            self::TYPE_ONESELF => [
+                'label'          => __d('gl', "自己"),
+                'all_num'        => 0,
+                'incomplete_num' => 0,
+            ],
+            self::TYPE_EVALUATOR => [
+                'label'          => __d('gl', "評価者"),
+                'all_num'        => 0,
+                'incomplete_num' => 0,
+            ],
+        ];
+
+        // Get only oneself evaluation
+        $own_evaluation_options = [
+            'conditions' => [
+                'evaluate_term_id' => $termId,
+                'evaluate_type'    => self::TYPE_ONESELF,
+            ],
+            'group'      => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ]
+        ];
+        $res = $this->find("all", $own_evaluation_options);
+        $oneself_all_cnt = count($res);
+        $oneself_incomplete_cnt = count(Hash::extract($res, "{n}.Evaluation[status!=2]"));
+
+        // Set oneself count
+        $evaluation_statuses[self::TYPE_ONESELF]['all_num'] = $oneself_all_cnt;
+        $evaluation_statuses[self::TYPE_ONESELF]['incomplete_num'] = $oneself_incomplete_cnt;
+
+        // Get evaluator evaluations
+        $evaluator_options = [
+            'conditions' => [
+                'evaluate_term_id' => $termId,
+                'evaluate_type'    => self::TYPE_EVALUATOR
+            ],
+            'group'      => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ]
+        ];
+        $res = $this->find("all", $evaluator_options);
+        $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
+
+        // Increment
+        foreach ($combined as $groupedEvaluator) {
+            foreach ($groupedEvaluator as $eval) {
+                $evaluation_statuses[self::TYPE_EVALUATOR]['all_num']++;
+                if ($eval['Evaluation']['status'] != self::TYPE_STATUS_DONE) {
+                    $evaluation_statuses[self::TYPE_EVALUATOR]['incomplete_num']++;
+                }
+            }
+        }
+
+        return $evaluation_statuses;
+    }
+
+    function getIncompleteEvaluatees($termId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $termId,
+                'NOT'              => [
+                    ['status' => self::TYPE_STATUS_DONE],
+                    ['evaluate_type' => self::TYPE_LEADER],
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                ]
+            ],
+            'group'      => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ],
+            'contain'    => [
+                'EvaluateeUser'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $combinedEvaluatees = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
+        $incompleteEvaluatees = [];
+        foreach ($combinedEvaluatees as $evaluateeId => $evaluatees) {
+            $evaluatees = Hash::insert($evaluatees, '{n}.EvaluateeUser.incomplete_count', (string)count($evaluatees));
+            $incompleteEvaluatees[$evaluateeId]['User'] = Hash::extract($evaluatees, "{n}.EvaluateeUser")[0];
+        }
+        $incompleteEvaluatees = Hash::sort($incompleteEvaluatees, '{n}.User.incomplete_count', 'desc');
+        return $incompleteEvaluatees;
+    }
+
+    function getIncompleteEvaluators($termId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $termId,
+                'my_turn_flg'      => true,
+                'NOT'              => [
+                    ['status' => self::TYPE_STATUS_DONE],
+                    ['evaluate_type' => self::TYPE_LEADER],
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                ]
+            ],
+            'group'      => [
+                'evaluatee_user_id', 'evaluator_user_id'
+            ],
+            'contain'    => [
+                'EvaluatorUser'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluator_user_id");
+        $incompleteEvaluators = [];
+        foreach ($combined as $evaluatorId => $evaluators) {
+            $evaluators = Hash::insert($evaluators, '{n}.EvaluatorUser.incomplete_count', (string)count($evaluators));
+            $incompleteEvaluators[$evaluatorId]['User'] = Hash::extract($evaluators, "{n}.EvaluatorUser")[0];
+        }
+        $incompleteEvaluators = Hash::sort($incompleteEvaluators, '{n}.User.incomplete_count', 'desc');
+        return $incompleteEvaluators;
+    }
+
+    function getEvaluators($termId, $evaluateeId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'NOT'               => [
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
+            ],
+            'group'      => [
+                'evaluator_user_id'
+            ],
+            'contain'    => [
+                'EvaluatorUser'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    function getEvaluateesByEvaluator($termId, $evaluatorId){
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'evaluator_user_id' => $evaluatorId,
+                'my_turn_flg'       => true,
+                'NOT'               => [
+                    ['evaluate_type' => self::TYPE_LEADER],
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                ]
+            ],
+            'group'      => [
+                'evaluatee_user_id'
+            ],
+            'contain'    => [
+                'EvaluateeUser'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        $combined = Hash::combine($res, "{n}.Evaluation.id", "{n}", "{n}.Evaluation.evaluatee_user_id");
+
+        $incompleteEvaluatees = [];
+        foreach ($combined as $evaluateeId => $evaluatees) {
+            $incompleteEvaluatees[$evaluateeId]['Evaluation'] = Hash::extract($evaluatees, "{n}.Evaluation")[0];
+            $incompleteEvaluatees[$evaluateeId]['User'] = Hash::extract($evaluatees, "{n}.EvaluateeUser")[0];
+        }
+
+        return $incompleteEvaluatees;
+    }
+
+    function getIncompleteOneselfEvaluators($termId) {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'my_turn_flg'       => true,
+                'evaluate_type'     => self::TYPE_ONESELF,
+            ],
+            'group'      => [
+                'evaluator_user_id'
+            ],
+            'contain'    => [
+                'EvaluatorUser'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
+
 
 }
