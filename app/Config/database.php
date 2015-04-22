@@ -54,5 +54,9 @@ class DATABASE_CONFIG
             $this->default['login'] = $ow->db->username;
             $this->default['password'] = $ow->db->password;
         }
+        //set prefix of redis
+        if (isset($this->redis)) {
+            $this->redis['prefix'] = ENV_NAME . ":";
+        }
     }
 }
