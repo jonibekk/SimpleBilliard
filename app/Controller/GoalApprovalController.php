@@ -338,20 +338,20 @@ class GoalApprovalController extends AppController
         $goal_info = [];
         if ($this->user_type === 1) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->user_id, $goal_status);
+                $this->team_id, [$this->user_id], $goal_status);
 
         } elseif ($this->user_type === 2) {
             $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, $this->member_ids, $goal_status);
 
             $my_goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->user_id, $goal_status);
+                $this->team_id, [$this->user_id], $goal_status);
 
             $goal_info = array_merge($member_goal_info, $my_goal_info);
 
         } elseif ($this->user_type === 3) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->user_id, $goal_status);
+                $this->team_id, $this->member_ids, $goal_status);
         }
 
         return $goal_info;
