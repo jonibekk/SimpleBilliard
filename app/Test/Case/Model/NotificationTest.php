@@ -130,35 +130,4 @@ class NotificationTest extends CakeTestCase
         $this->Notification->getTitle(Notification::TYPE_CIRCLE_ADD_USER, $from_user_names, $count_num, $item_name);
         $this->Notification->getTitle(999, "abc", $count_num, $item_name);
     }
-
-    function testGetFromRedis()
-    {
-        $this->Notification->getFromRedis(10);
-    }
-
-    function testSetNotifications()
-    {
-        $this->Notification->setNotifications(1, 1);
-    }
-
-    function testGetCountNewFromRedis()
-    {
-        $this->Notification->getCountNewFromRedis();
-    }
-
-    function testResetCountNewFromRedis()
-    {
-        $this->Notification->resetCountNewFromRedis();
-    }
-
-    function testIncCountNewAtRedis()
-    {
-        $this->Notification->incCountNewAtRedis(1);
-    }
-
-    function testChangeReadStatusAtRedis()
-    {
-        $this->Notification->changeReadStatusAtRedis(1);
-    }
-
 }
