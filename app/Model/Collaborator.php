@@ -222,7 +222,14 @@ class Collaborator extends AppModel
             ],
             'type'       => 'inner',
         ];
-        return $this->find('count', $options);
+
+        $res = $this->find('all', $options);
+        foreach ($res as $key => $val) {
+            if ($this->Goal->isPresentTermGoal($val['Goal']['id']) === false) {
+                unset($res[$key]);
+            }
+        }
+        return count($res);
     }
 
     function getLeaderUid($goal_id)

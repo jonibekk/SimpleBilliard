@@ -189,6 +189,7 @@ class GoalApprovalController extends AppController
             if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '3') {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::MODIFY_MEMBER_GOAL_MSG];
             }
+
         }
 
         $done_cnt = $this->done_cnt;
@@ -212,6 +213,7 @@ class GoalApprovalController extends AppController
 
         foreach ($goal_info as $key => $val) {
             $goal_info[$key]['my_goal'] = false;
+            $goal_info[$key]['is_present_term'] = $this->Goal->isPresentTermGoal($val['Goal']['id']);
 
             if ($this->user_id === $val['User']['id']) {
                 $goal_info[$key]['my_goal'] = true;

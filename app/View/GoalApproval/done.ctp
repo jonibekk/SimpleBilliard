@@ -142,6 +142,7 @@
                             <?= $this->Form->create('GoalApproval', ['url' => ['controller'=>'goal_approval', 'action'=>'done'], 'type' => 'post', 'novalidate' => true]); ?>
                             <?= $this->Form->hidden('collaborator_id', ['value'=>$goal['Collaborator']['id']]); ?>
 
+                            <? if ($goal['is_present_term'] === true) { ?>
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if ($goal['my_goal'] === false) { ?>
@@ -163,6 +164,7 @@
                                     <? } ?>
                                 </div>
                             </div>
+                            <? } ?>
 
                             <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
                                 <? foreach ($goal['ApprovalHistory'] as $history) { ?>
