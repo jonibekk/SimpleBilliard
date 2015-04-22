@@ -13,6 +13,8 @@
  * @var                    $eval_start_button_enabled
  * @var                    $previous_term_id
  * @var                    $current_term_id
+ * @var                    $previous_eval_is_frozen
+ * @var                    $current_eval_is_frozen
  */
 ?>
 <!-- START app/View/Elements/Team/final_evaluation.ctp -->
@@ -42,10 +44,10 @@
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
                 <a href="<?= $this->Html->url(['action' => 'ajax_get_final_eval_modal', $previous_term_id]) ?>"
-                   class="btn btn-primary modal-ajax-get" <?= $previous_term_id ? null : 'disabled' ?>>
+                   class="btn btn-primary modal-ajax-get" <?= $previous_term_id && $previous_eval_is_frozen ? null : 'disabled' ?>>
                     <?= __d('gl', '前期の最終評価を行う') ?></a>
                 <a href="<?= $this->Html->url(['action' => 'ajax_get_final_eval_modal', $current_term_id]) ?>"
-                   class="btn btn-primary modal-ajax-get" <?= $current_term_id ? null : 'disabled' ?>>
+                   class="btn btn-primary modal-ajax-get" <?= $current_term_id && $current_eval_is_frozen ? null : 'disabled' ?>>
                     <?= __d('gl', '今期の最終評価を行う') ?></a>
             </div>
         </div>
