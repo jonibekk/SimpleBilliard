@@ -32,6 +32,7 @@
                                       ['class' => 'font_lightgray']) ?>
             <? endif; ?>
             <? if ($current_circle): ?>
+            <?php if($user_status!='admin') { ?>
                 <div class="col col-xxs-6 col-xs-4 mr_5px">
                     <a class="btn btn-white font_verydark bd-circle_22px toggle-join p_8px"
                        href="#"
@@ -40,16 +41,22 @@
 
                         >
                         <i class="fa fa-heart font_rougeOrange" ></i>
-
+                        <?php if($user_status!='joined') { ?>
                         <span class="ml_5px">
                             <?= $this->Html->link(__d('gl', 'Join Circle'),
                                                   ['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']]
                                                   ) ?>
                         </span>
-
+                        <?php } else  { ?>
+                            <span class="ml_5px">
+                            <?= $this->Html->link(__d('gl', 'Leave Circle'),
+                                                  ['controller' => 'posts', 'action' => 'unjoin_circle',"circle_id"=>$current_circle['Circle']['id']]
+                            ) ?>
+                        </span>
+                            <?php } ?>
                     </a>
                 </div>
-
+                <?php } ?>
                 <span> ･ </span>
                 <span class="feed-current-filter"><?= h($current_circle['Circle']['name']) ?></span>
                 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $current_circle['Circle']['id']]) ?>"

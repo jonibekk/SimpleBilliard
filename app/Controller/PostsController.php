@@ -498,6 +498,8 @@ class PostsController extends AppController
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
+        $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
+
         $this->_setViewValOnRightColumn();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
@@ -512,7 +514,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id','user_status'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
@@ -673,13 +675,38 @@ class PostsController extends AppController
             throw new NotFoundException(__('gl', "Invalid Request"));
         }
         if ($this->Post->Circle->CircleMember->joinNewMember($circle_id)) {
-            $this->Pnotify->outSuccess(__d('gl', "success"));
+            $this->Pnotify->outSuccess(__d('gl', "You have joined the circle"));
         }
         else {
-            $this->Pnotify->outError(__d('gl', "error"));
+            $this->Pnotify->outError(__d('gl', "Error in joining the circle"));
         }
         return $this->redirect($this->request->referer());
 
+    }
+
+    public function unjoin_circle()
+    {
+        $circle_id = $this->request->params['named']['circle_id'];
+
+        if (!$circle_id) {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
+        $this->Post->Circle->CircleMember->unjoinMember($circle_id);
+        $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
+        return $this->redirect($this->request->referer());
+    }
+
+    public function _userCircleStatus($circle_id)
+    {
+       if($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id))
+       {
+          return 'admin';
+       }
+       else if ($this->Post->Circle->CircleMember->isBelong($circle_id,$this->Auth->user('id')))
+       {
+            return 'joined';
+       }
+        return 'not_joined';
     }
 
 }
