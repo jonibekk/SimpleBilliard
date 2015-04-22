@@ -420,6 +420,24 @@ class TeamsControllerTest extends ControllerTestCase
         $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
     }
 
+    function testChangeFreezeStatusSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+
+        $Teams->Team->EvaluateTerm->saveTerm();
+        $termId = $Teams->Team->EvaluateTerm->getLastInsertID();
+        $data = ['evaluate_term_id' => $termId];
+        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testChangeFreezeStatusFailed()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $termId = null;
+        $data = ['evaluate_term_id' => $termId];
+        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');

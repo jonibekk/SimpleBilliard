@@ -88,6 +88,54 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
+    function testChangeFreezeStatusCaseFrozen()
+    {
+        $this->EvaluateTerm->current_team_id = 1;
+        $this->EvaluateTerm->saveTerm();
+        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $frozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_FROZEN];
+        $this->EvaluateTerm->save($frozenData);
+
+        $this->EvaluateTerm->changeFreezeStatus($latestTermId);
+        $res = $this->EvaluateTerm->findById($latestTermId);
+        $this->assertEquals($res['EvaluateTerm']['evaluate_status'], EvaluateTerm::STATUS_EVAL_IN_PROGRESS);
+    }
+
+    function testChangeFreezeStatusCaseNotFrozen()
+    {
+        $this->EvaluateTerm->current_team_id = 1;
+        $this->EvaluateTerm->saveTerm();
+        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $frozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_FROZEN];
+        $this->EvaluateTerm->save($frozenData);
+
+        $this->EvaluateTerm->changeFreezeStatus($latestTermId);
+        $res = $this->EvaluateTerm->findById($latestTermId);
+        $this->assertEquals($res['EvaluateTerm']['evaluate_status'], EvaluateTerm::STATUS_EVAL_IN_PROGRESS);
+    }
+
+    function testCheckFrozenEvaluateTermCaseFrozen()
+    {
+        $this->EvaluateTerm->current_team_id = 1;
+        $this->EvaluateTerm->saveTerm();
+        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $frozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_FROZEN];
+        $this->EvaluateTerm->save($frozenData);
+        $res = $this->EvaluateTerm->checkFrozenEvaluateTerm($latestTermId);
+        $this->assertEquals($res, true);
+    }
+
+    function testCheckFrozenEvaluateTermCaseNotFrozen()
+    {
+        $this->EvaluateTerm->current_team_id = 1;
+        $this->EvaluateTerm->saveTerm();
+        $latestTermId = $this->EvaluateTerm->getLastInsertID();
+        $notFrozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_IN_PROGRESS];
+        $this->EvaluateTerm->save($notFrozenData);
+        $res = $this->EvaluateTerm->checkFrozenEvaluateTerm($latestTermId);
+        $this->assertEquals($res, false);
+    }
+
     function _setDefault()
     {
         $this->EvaluateTerm->current_team_id = 1;

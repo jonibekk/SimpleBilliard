@@ -122,4 +122,45 @@ class EvaluateTerm extends AppModel
         return (empty($res)) ? false : true;
     }
 
+    function changeFreezeStatus($id)
+    {
+        // Check freezable
+        $options = [
+            'conditions' => [
+                'id'      => $id,
+                'team_id' => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (empty($res)) {
+            throw new RuntimeException(__d('gl', "この期間は凍結できません。"));
+        }
+
+        $isFrozen = $this->checkFrozenEvaluateTerm($id);
+        if ($isFrozen) {
+            $expect_status = self::STATUS_EVAL_IN_PROGRESS;
+        }
+        else {
+            $expect_status = self::STATUS_EVAL_FROZEN;
+        }
+
+        $this->id = $id;
+        $saveData = ['evaluate_status' => $expect_status];
+        $res = $this->save($saveData);
+        return $res;
+    }
+
+    function checkFrozenEvaluateTerm($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'              => $id,
+                'team_id'         => $this->current_team_id,
+                'evaluate_status' => self::STATUS_EVAL_FROZEN
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return (empty($res)) ? false : true;
+    }
+
 }
