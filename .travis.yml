@@ -71,6 +71,18 @@ before_script:
       'database' => 'cakephp_test',
       'prefix' => ''
     );
+    public \$redis = array(
+        'datasource'  => 'Redis.RedisSource',
+        'host'        => 'localhost',
+        'port'        => 6379,
+        'password'    => '',
+        'database'    => 0,
+        'timeout'     => 0,
+        'persistent'  => false,
+        'unix_socket' => '',
+        'prefix'      => '',
+    );
+
     public function __construct() {
       \$db = 'mysql';
       if (!empty(\$_SERVER['DB'])) {
