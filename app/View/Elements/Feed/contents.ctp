@@ -16,10 +16,14 @@
 <!-- START app/View/Elements/Feed/contents.ctp -->
 
 <?php
-if($params['action']=='feed' && $params['controller']=='posts' && $user_status=='joined')
+if(isset($user_status))
+{
+if(  isset($params['action']) && $params['controller']=='posts' && $params['action']=='feed' && $user_status=='joined')
 {
 ?>
 <?= $this->element("Feed/common_form") ?>
+<?php } }  else { ?>
+    <?= $this->element("Feed/common_form") ?>
 <?php } ?>
 <div class="feed-share-range">
     <div class="panel-body ptb_10px plr_11px">
@@ -38,31 +42,6 @@ if($params['action']=='feed' && $params['controller']=='posts' && $user_status==
                                       ['class' => 'font_lightgray']) ?>
             <? endif; ?>
             <? if ($current_circle): ?>
-            <?php if($user_status!='admin') { ?>
-                <div class="col col-xxs-6 col-xs-4 mr_5px">
-                    <a class="btn btn-white font_verydark bd-circle_22px toggle-join p_8px"
-                       href="#"
-                       data-class="toggle-follow"
-                       goal-id="<?= $current_circle['Circle']['id'] ?>"
-
-                        >
-                        <i class="fa fa-heart font_rougeOrange" ></i>
-                        <?php if($user_status!='joined') { ?>
-                        <span class="ml_5px">
-                            <?= $this->Html->link(__d('gl', 'Join Circle'),
-                                                  ['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']]
-                                                  ) ?>
-                        </span>
-                        <?php } else  { ?>
-                            <span class="ml_5px">
-                            <?= $this->Html->link(__d('gl', 'Leave Circle'),
-                                                  ['controller' => 'posts', 'action' => 'unjoin_circle',"circle_id"=>$current_circle['Circle']['id']]
-                            ) ?>
-                        </span>
-                            <?php } ?>
-                    </a>
-                </div>
-                <?php } ?>
                 <span> ･ </span>
                 <span class="feed-current-filter"><?= h($current_circle['Circle']['name']) ?></span>
                 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $current_circle['Circle']['id']]) ?>"
@@ -73,8 +52,25 @@ if($params['action']=='feed' && $params['controller']=='posts' && $user_status==
         </div>
     </div>
 </div>
-<a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;"><span
-        class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
+<a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
+    <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
+<? if ($current_circle): ?>
+<div class="panel panel-default">
+    <div class="panel-body ptb_10px plr_11px ">
+        <div class="col col-xxs-12">
+            <?php if($user_status!='joined') { ?>
+            Join this Circle to post or comment.
+            <?= $this->Html->link(__d('gl', 'Join Circle'),['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']],
+                ['class'=>'btn btn-primary pull-right']) ?>
+            <?php } else { ?>
+                <?= $this->Html->link(__d('gl', 'Joined Circle'),['controller' => 'posts', 'action' => 'unjoin_circle',"circle_id"=>$current_circle['Circle']['id']],
+                                      ['class'=>'btn btn-primary pull-right']) ?>
+            <?php } ?>
+
+        </div>
+    </div>
+</div>
+<? endif; ?>
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
     <div class="panel panel-default">
