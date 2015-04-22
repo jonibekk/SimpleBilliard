@@ -116,10 +116,7 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod(['post', 'put']);
         $this->Team->begin();
-        if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])
-            && $this->Team->Evaluation->EvaluateScore->saveScores($this->request->data['EvaluateScore'],
-                                                                  $this->Session->read('current_team_id'))
-        ) {
+        if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
             $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
         }
@@ -128,6 +125,24 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__d('gl', "評価設定が保存できませんでした。"));
         }
         return $this->redirect($this->referer());
+    }
+
+    function save_evaluation_scores()
+    {
+        $this->request->allowMethod(['post', 'put']);
+        $this->Team->begin();
+        if ($this->Team->Evaluation->EvaluateScore->saveScores($this->request->data['EvaluateScore'],
+                                                               $this->Session->read('current_team_id'))
+        ) {
+            $this->Team->commit();
+            $this->Pnotify->outSuccess(__d('gl', "評価スコア設定を保存しました。"));
+        }
+        else {
+            $this->Team->rollback();
+            $this->Pnotify->outError(__d('gl', "評価スコア設定が保存できませんでした。"));
+        }
+        return $this->redirect($this->referer());
+
     }
 
     function to_inactive($id)
