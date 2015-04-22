@@ -55,21 +55,19 @@ if(  isset($params['action']) && $params['controller']=='posts' && $params['acti
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
     <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
 <? if ($current_circle): ?>
+    <?php if($user_status!='joined') { ?>
 <div class="panel panel-default">
     <div class="panel-body ptb_10px plr_11px ">
         <div class="col col-xxs-12">
-            <?php if($user_status!='joined') { ?>
-            Join this Circle to post or comment.
-            <?= $this->Html->link(__d('gl', 'Join Circle'),['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']],
-                ['class'=>'btn btn-primary pull-right']) ?>
-            <?php } else { ?>
-                <?= $this->Html->link(__d('gl', 'Joined Circle'),['controller' => 'posts', 'action' => 'unjoin_circle',"circle_id"=>$current_circle['Circle']['id']],
-                                      ['class'=>'btn btn-primary pull-right']) ?>
-            <?php } ?>
 
+            Join this Circle to post or comment.
+                <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']])?>" class='btn btn-primary pull-right'>
+                <i class="fa fa-user-plus"></i> <?=__d('gl', 'Join Circle')?>
+                </a>
         </div>
     </div>
 </div>
+    <?php }?>
 <? endif; ?>
 <?= $this->element("Feed/posts") ?>
 <? if (empty($posts)): ?>
