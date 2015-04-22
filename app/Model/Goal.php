@@ -1160,4 +1160,24 @@ class Goal extends AppModel
         return $res;
     }
 
+    function isPresentTermGoal ($goal_id) {
+        $options = [
+            'fields' => ['start_date', 'end_date'],
+            'conditions' => ['id' => $goal_id],
+        ];
+        $res = $this->find('first', $options);
+
+        $start_date = $res['Goal']['start_date'];
+        $end_date = $res['Goal']['end_date'];
+
+        $is_present_term_flag = false;
+        if (intval($start_date) >= $this->Team->getCurrentTermStartDate()
+            && intval($end_date) <= $this->Team->getCurrentTermEndDate()) {
+            $is_present_term_flag = true;
+        }
+
+        return $is_present_term_flag;
+
+    }
+
 }
