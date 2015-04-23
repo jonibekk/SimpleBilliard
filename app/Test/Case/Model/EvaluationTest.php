@@ -688,6 +688,30 @@ class EvaluationTest extends CakeTestCase
         $this->assertCount(5, $res);
     }
 
+    function testGetMyTurnCountCaseCurrentTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $currentTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($currentTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
+    function testGetMyTurnCountCasePreviousTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
+        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
     function testGetTermIdByEvaluationId()
     {
         $this->_setDefault();
@@ -733,6 +757,17 @@ class EvaluationTest extends CakeTestCase
 
         $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
+    }
+
+    function testGetIsEditableCaseTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLatestTermId();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($termId);
+        $this->Evaluation->getIsEditable($termId, null);
     }
 
     function testGetAllStatusesForTeamSettings()
