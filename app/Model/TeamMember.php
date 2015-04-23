@@ -1152,7 +1152,7 @@ class TeamMember extends AppModel
                 $csv_data[$k]['goal_progress'] = 0;
                 continue;
             }
-            $kr_count = $Goal->KeyResult->getKrCount($goal_ids[$v['User']['id']], $v['User']['id']);
+            $kr_count = $Goal->KeyResult->getKrCount($goal_ids[$v['User']['id']]);
             $csv_data[$k]['kr_count'] = $kr_count;
             $action_count = $Goal->ActionResult->getActionCount($goal_ids[$v['User']['id']], $v['User']['id']);
             $csv_data[$k]['action_count'] = $action_count;

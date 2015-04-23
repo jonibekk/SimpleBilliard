@@ -167,12 +167,11 @@ class KeyResult extends AppModel
         return $res;
     }
 
-    function getKrCount($goal_ids, $user_id)
+    function getKrCount($goal_ids)
     {
         $options = [
             'conditions' => [
                 'goal_id' => $goal_ids,
-                'user_id' => $user_id,
             ],
         ];
         $res = $this->find('count', $options);
