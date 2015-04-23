@@ -50,6 +50,8 @@ class TeamMember extends AppModel
     private $csv_member_ids = [];
     private $csv_coach_ids = [];
     private $csv_evaluator_ids = [];
+    private $all_users = [];
+    private $evaluations = [];
 
     /**
      * 現在有効なチーム一覧を取得
@@ -980,60 +982,41 @@ class TeamMember extends AppModel
         if (!$team_id) {
             $team_id = $this->current_team_id;
         }
-        $options = [
-            'conditions' => ['TeamMember.team_id' => $team_id,],
-            'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
-            'order'      => ['TeamMember.member_no ASC'],
-            'contain'    => [
-                'User'       => [
-                    'fields'       => ['first_name', 'last_name'],
-                    'MemberGroup'  => [
-                        'conditions' => ['MemberGroup.team_id' => $team_id],
-                        'fields'     => ['group_id'],
-                        'Group'      => [
-                            'fields' => ['name']
-                        ]
-                    ],
-                    'PrimaryEmail' => [
-                        'fields' => ['email'],
-                    ],
-                ],
-                'MemberType' => [
-                    'fields' => ['name']
-                ],
-            ]
-        ];
-        $all_users = $this->find('all', $options);
 
+        $this->setAllMembers($team_id);
         //convert csv data
-        $csv_data = [];
-        foreach ($all_users as $k => $v) {
+        foreach ($this->all_users as $k => $v) {
             if (!viaIsSet($v['User']['id'])) {
-                unset($all_users[$k]);
+                unset($this->all_users[$k]);
                 continue;
             }
-            $csv_data[$k]['email'] = viaIsSet($v['User']['PrimaryEmail']['email']) ? $v['User']['PrimaryEmail']['email'] : null;
-            $csv_data[$k]['first_name'] = viaIsSet($v['User']['first_name']) ? $v['User']['first_name'] : null;
-            $csv_data[$k]['last_name'] = viaIsSet($v['User']['last_name']) ? $v['User']['last_name'] : null;
-            $csv_data[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
-            $csv_data[$k]['active_flg'] = viaIsSet($v['TeamMember']['active_flg']) && $v['TeamMember']['active_flg'] ? 'ON' : 'OFF';
-            $csv_data[$k]['admin_flg'] = viaIsSet($v['TeamMember']['admin_flg']) && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
-            $csv_data[$k]['evaluation_enable_flg'] = viaIsSet($v['TeamMember']['evaluation_enable_flg']) && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
-            $csv_data[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
+            $this->csv_datas[$k]['email'] = viaIsSet($v['User']['PrimaryEmail']['email']) ? $v['User']['PrimaryEmail']['email'] : null;
+            $this->csv_datas[$k]['first_name'] = viaIsSet($v['User']['first_name']) ? $v['User']['first_name'] : null;
+            $this->csv_datas[$k]['last_name'] = viaIsSet($v['User']['last_name']) ? $v['User']['last_name'] : null;
+            $this->csv_datas[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
+            $this->csv_datas[$k]['active_flg'] = viaIsSet($v['TeamMember']['active_flg']) && $v['TeamMember']['active_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['admin_flg'] = viaIsSet($v['TeamMember']['admin_flg']) && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['evaluation_enable_flg'] = viaIsSet($v['TeamMember']['evaluation_enable_flg']) && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
             //group
             if (viaIsSet($v['User']['MemberGroup'])) {
                 foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
                     $key_index = $g_k + 1;
-                    $csv_data[$k]['group.' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
+                    $this->csv_datas[$k]['group.' . $key_index] = viaIsSet($g_v['Group']['name']) ? $g_v['Group']['name'] : null;
                 }
             }
-            //coach after
-
-            //evaluator after
         }
 
-        //set coach member #
-        foreach ($all_users as $k => $v) {
+        $this->setCoachNumberForCsvData($team_id);
+        $this->setEvaluatorNumberForCsvData($team_id);
+        $this->addDefaultSellForCsvData('before_update');
+
+        return $this->csv_datas;
+    }
+
+    function setCoachNumberForCsvData($team_id)
+    {
+        foreach ($this->all_users as $k => $v) {
             if (!viaIsSet($v['TeamMember']['coach_user_id'])) {
                 continue;
             }
@@ -1041,11 +1024,16 @@ class TeamMember extends AppModel
                 'conditions' => ['team_id' => $team_id, 'user_id' => $v['TeamMember']['coach_user_id']],
                 'fields'     => ['member_no']
             ];
+            $this->log($options);
             $coach_member = $this->find('first', $options);
-            $csv_data[$k]['coach_member_no'] = viaIsSet($coach_member['TeamMember']['member_no']) ? $coach_member['TeamMember']['member_no'] : null;
+            $this->csv_datas[$k]['coach_member_no'] = viaIsSet($coach_member['TeamMember']['member_no']) ? $coach_member['TeamMember']['member_no'] : null;
         }
-        //set evaluator member #
-        foreach ($all_users as $k => $v) {
+        return;
+    }
+
+    function setEvaluatorNumberForCsvData($team_id)
+    {
+        foreach ($this->all_users as $k => $v) {
             $options = [
                 'conditions' => ['team_id' => $team_id, 'evaluatee_user_id' => $v['User']['id']],
                 'fields'     => ['evaluator_user_id'],
@@ -1063,46 +1051,24 @@ class TeamMember extends AppModel
             foreach ($evaluators as $r_k => $r_v) {
                 $key_index = $r_k + 1;
                 if (viaIsSet($r_v['EvaluatorUser']['TeamMember'][0]['member_no'])) {
-                    $csv_data[$k]['evaluator_member_no.' . $key_index] = $r_v['EvaluatorUser']['TeamMember'][0]['member_no'];
+                    $this->csv_datas[$k]['evaluator_member_no.' . $key_index] = $r_v['EvaluatorUser']['TeamMember'][0]['member_no'];
                 }
             }
         }
-        //add all colum
-        $default_csv = $this->_getCsvHeading(false);
-        foreach ($default_csv as $k => $v) {
-            $default_csv[$k] = null;
-        }
-        foreach ($csv_data as $k => $v) {
-            $csv_data[$k] = Hash::merge($default_csv, $v);
-        }
-
-        return $csv_data;
+        return;
     }
 
-    /**
-     * @param      $term_id
-     * @param null $team_id
-     *
-     * @return array
-     */
-    function getAllEvaluationsCsvData($term_id, $team_id = null)
+    function setAllMembers($team_id = null, $type = 'before_update')
     {
         if (!$team_id) {
             $team_id = $this->current_team_id;
         }
 
-        /**
-         * @var Goal $Goal
-         */
-        $Goal = ClassRegistry::init('Goal');
-
         $options = [
             'conditions' => [
-                'TeamMember.team_id'               => $team_id,
-                'TeamMember.active_flg'            => true,
-                'TeamMember.evaluation_enable_flg' => true,
+                'TeamMember.team_id' => $team_id,
             ],
-            'fields'     => ['user_id', 'member_no', 'coach_user_id'],
+            'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
             'order'      => ['TeamMember.member_no ASC'],
             'contain'    => [
                 'User'       => [
@@ -1116,106 +1082,182 @@ class TeamMember extends AppModel
                 ]
             ]
         ];
-        $all_users = $this->find('all', $options);
-        //convert csv data
-        $csv_data = [];
-        foreach ($all_users as $k => $v) {
+        switch ($type) {
+            case 'before_update':
+                $options['contain']['User'] = [
+                    'fields'       => ['first_name', 'last_name'],
+                    'MemberGroup'  => [
+                        'conditions' => ['MemberGroup.team_id' => $team_id],
+                        'fields'     => ['group_id'],
+                        'Group'      => [
+                            'fields' => ['name']
+                        ]
+                    ],
+                    'PrimaryEmail' => [
+                        'fields' => ['email'],
+                    ],
+                ];
+                break;
+            case 'final_evaluation':
+                $options['conditions'] += [
+                    'TeamMember.active_flg'            => true,
+                    'TeamMember.evaluation_enable_flg' => true,
+                ];
+                break;
+        }
+        $this->all_users = $this->find('all', $options);
+        return;
+    }
+
+    function setUserInfoForCsvData()
+    {
+        foreach ($this->all_users as $k => $v) {
             if (!viaIsSet($v['User']['id'])) {
-                unset($all_users[$k]);
+                unset($this->all_users[$k]);
                 continue;
             }
-            $csv_data[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
-            $csv_data[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
-            $csv_data[$k]['user_name'] = viaIsSet($v['User']['display_username']) ? $v['User']['display_username'] : null;
-            $csv_data[$k]['coach_user_name'] = viaIsSet($v['CoachUser']['display_username']) ? $v['CoachUser']['display_username'] : null;
+
+            $this->csv_datas[$k]['member_no'] = viaIsSet($v['TeamMember']['member_no']) ? $v['TeamMember']['member_no'] : null;
+            $this->csv_datas[$k]['member_type'] = viaIsSet($v['MemberType']['name']) ? $v['MemberType']['name'] : null;
+            $this->csv_datas[$k]['user_name'] = viaIsSet($v['User']['display_username']) ? $v['User']['display_username'] : null;
+            $this->csv_datas[$k]['coach_user_name'] = viaIsSet($v['CoachUser']['display_username']) ? $v['CoachUser']['display_username'] : null;
         }
+        return;
+    }
 
-        //get evaluation
-        $evaluations = $this->Team->Evaluation->getAllEvaluations($term_id);
+    function setEvaluations($term_id)
+    {
+        $this->evaluations = $this->Team->Evaluation->getAllEvaluations($term_id);
+        return;
+    }
 
+    function setGoalEvaluationForCsvData()
+    {
+        /**
+         * @var Goal $Goal
+         */
+        $Goal = ClassRegistry::init('Goal');
         $goal_ids = [];
-        foreach ($all_users as $k => $v) {
-            if (isset($evaluations[$v['User']['id']])) {
-                $goals = Hash::combine($evaluations[$v['User']['id']], '{n}.Evaluation.id', '{n}.Evaluation.goal_id',
+        foreach ($this->all_users as $k => $v) {
+            if (isset($this->evaluations[$v['User']['id']])) {
+                $goals = Hash::combine($this->evaluations[$v['User']['id']], '{n}.Evaluation.id',
+                                       '{n}.Evaluation.goal_id',
                                        '{n}.Evaluation.goal_id');
                 unset($goals[0]);
                 //set goal_count
-                $csv_data[$k]['goal_count'] = count($goals);
+                $this->csv_datas[$k]['goal_count'] = count($goals);
                 $goal_ids[$v['User']['id']] = array_keys($goals);
             }
         }
         //set kr_count and action count
-        foreach ($all_users as $k => $v) {
+        foreach ($this->all_users as $k => $v) {
             if (!isset($goal_ids[$v['User']['id']]) || empty($goal_ids[$v['User']['id']])) {
-                $csv_data[$k]['kr_count'] = 0;
-                $csv_data[$k]['action_count'] = 0;
-                $csv_data[$k]['goal_progress'] = 0;
+                $this->csv_datas[$k]['kr_count'] = 0;
+                $this->csv_datas[$k]['action_count'] = 0;
+                $this->csv_datas[$k]['goal_progress'] = 0;
                 continue;
             }
             $kr_count = $Goal->KeyResult->getKrCount($goal_ids[$v['User']['id']]);
-            $csv_data[$k]['kr_count'] = $kr_count;
+            $this->csv_datas[$k]['kr_count'] = $kr_count;
             $action_count = $Goal->ActionResult->getActionCount($goal_ids[$v['User']['id']], $v['User']['id']);
-            $csv_data[$k]['action_count'] = $action_count;
+            $this->csv_datas[$k]['action_count'] = $action_count;
             //goal_progress()
             $all_goal_progress = $Goal->getAllUserGoalProgress($goal_ids[$v['User']['id']], $v['User']['id']);
-            $csv_data[$k]['goal_progress'] = $all_goal_progress;
+            $this->csv_datas[$k]['goal_progress'] = $all_goal_progress;
         }
-        //total.self.score
-        //total.self.comment
-        foreach ($all_users as $k => $v) {
-            if (!viaIsSet($evaluations[$v['User']['id']])) {
+        return;
+    }
+
+    function setTotalSelfEvaluationForCsvData()
+    {
+        foreach ($this->all_users as $k => $v) {
+            if (!viaIsSet($this->evaluations[$v['User']['id']])) {
                 continue;
             }
-            foreach ($evaluations[$v['User']['id']] as $eval) {
+            foreach ($this->evaluations[$v['User']['id']] as $eval) {
                 if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_ONESELF && empty($eval['Evaluation']['goal_id'])) {
-                    $csv_data[$k]['total.self.score'] = $eval['EvaluateScore']['name'];
-                    $csv_data[$k]['total.self.comment'] = $eval['Evaluation']['comment'];
+                    $this->csv_datas[$k]['total.self.score'] = $eval['EvaluateScore']['name'];
+                    $this->csv_datas[$k]['total.self.comment'] = $eval['Evaluation']['comment'];
                 }
             }
         }
+        return;
+    }
 
-        ////evaluator
-        //total.evaluator.$ek.name
-        //total.evaluator.$ek.score
-        //total.evaluator.$ek.comment
-        foreach ($all_users as $k => $v) {
-            if (!viaIsSet($evaluations[$v['User']['id']])) {
+    function setTotalEvaluatorEvaluationForCsvData()
+    {
+        foreach ($this->all_users as $k => $v) {
+            if (!viaIsSet($this->evaluations[$v['User']['id']])) {
                 continue;
             }
             $ek = 1;
-            foreach ($evaluations[$v['User']['id']] as $eval) {
+            foreach ($this->evaluations[$v['User']['id']] as $eval) {
                 if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR && empty($eval['Evaluation']['goal_id'])) {
-                    $csv_data[$k]["total.evaluator.$ek.name"] = $eval['EvaluatorUser']['display_username'];
-                    $csv_data[$k]["total.evaluator.$ek.score"] = $eval['EvaluateScore']['name'];
-                    $csv_data[$k]["total.evaluator.$ek.comment"] = $eval['Evaluation']['comment'];
+                    $this->csv_datas[$k]["total.evaluator.$ek.name"] = $eval['EvaluatorUser']['display_username'];
+                    $this->csv_datas[$k]["total.evaluator.$ek.score"] = $eval['EvaluateScore']['name'];
+                    $this->csv_datas[$k]["total.evaluator.$ek.comment"] = $eval['Evaluation']['comment'];
                     $ek++;
                 }
             }
         }
+        return;
+    }
 
-        //total.final.score
-        //total.final.comment
-        foreach ($all_users as $k => $v) {
-            if (!viaIsSet($evaluations[$v['User']['id']])) {
+    function setTotalFinalEvaluationForCsvData()
+    {
+        foreach ($this->all_users as $k => $v) {
+            if (!viaIsSet($this->evaluations[$v['User']['id']])) {
                 continue;
             }
-            foreach ($evaluations[$v['User']['id']] as $eval) {
+            foreach ($this->evaluations[$v['User']['id']] as $eval) {
                 if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR && empty($eval['Evaluation']['goal_id'])) {
-                    $csv_data[$k]["total.final.score"] = $eval['EvaluateScore']['name'];
-                    $csv_data[$k]["total.final.comment"] = $eval['Evaluation']['comment'];
+                    $this->csv_datas[$k]["total.final.score"] = $eval['EvaluateScore']['name'];
+                    $this->csv_datas[$k]["total.final.comment"] = $eval['Evaluation']['comment'];
                 }
             }
         }
+        return;
+    }
 
-        //add all colum
-        $default_csv = $this->_getCsvHeadingEvaluation();
+    function addDefaultSellForCsvData($type = 'before_update')
+    {
+        switch ($type) {
+            case 'before_update':
+                $default_csv = $this->_getCsvHeading(false);
+                break;
+            case 'evaluation':
+                $default_csv = $this->_getCsvHeadingEvaluation();
+                break;
+            default:
+                return;
+        }
         foreach ($default_csv as $k => $v) {
             $default_csv[$k] = null;
         }
-        foreach ($csv_data as $k => $v) {
-            $csv_data[$k] = Hash::merge($default_csv, $v);
+        foreach ($this->csv_datas as $k => $v) {
+            $this->csv_datas[$k] = Hash::merge($default_csv, $v);
         }
-        return $csv_data;
+        return;
+    }
+
+    /**
+     * @param      $term_id
+     * @param null $team_id
+     *
+     * @return array
+     */
+    function getAllEvaluationsCsvData($term_id, $team_id = null)
+    {
+        $this->setAllMembers($team_id, 'final_evaluation');
+        $this->setEvaluations($term_id);
+        $this->setUserInfoForCsvData();
+        $this->setGoalEvaluationForCsvData();
+        $this->setTotalSelfEvaluationForCsvData();
+        $this->setTotalEvaluatorEvaluationForCsvData();
+        $this->setTotalFinalEvaluationForCsvData();
+        $this->addDefaultSellForCsvData('evaluation');
+
+        return $this->csv_datas;
     }
 
     /**
