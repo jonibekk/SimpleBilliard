@@ -589,6 +589,7 @@ class TeamMember extends AppModel
         ];
 
         $before_csv_data = $this->getAllMembersCsvData();
+        $this->csv_datas = [];
         //emails
         $before_emails = array_column($before_csv_data, 'email');
 
@@ -597,7 +598,6 @@ class TeamMember extends AppModel
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
             return $res;
         }
-
         //row validation
         foreach ($csv_data as $key => $row) {
             //set line no
@@ -674,7 +674,6 @@ class TeamMember extends AppModel
             //evaluator id check(after check)
             $this->csv_evaluator_ids[] = $filtered_evaluators;
         }
-
         //require least 1 or more admin and active check
         $exists_admin_active = false;
         foreach ($this->csv_datas as $k => $v) {
