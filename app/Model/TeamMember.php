@@ -1024,7 +1024,6 @@ class TeamMember extends AppModel
                 'conditions' => ['team_id' => $team_id, 'user_id' => $v['TeamMember']['coach_user_id']],
                 'fields'     => ['member_no']
             ];
-            $this->log($options);
             $coach_member = $this->find('first', $options);
             $this->csv_datas[$k]['coach_member_no'] = viaIsSet($coach_member['TeamMember']['member_no']) ? $coach_member['TeamMember']['member_no'] : null;
         }

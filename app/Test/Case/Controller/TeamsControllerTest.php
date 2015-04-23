@@ -446,14 +446,21 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testAjaxGetFinalEvalModal()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'start_date' => 0,
+            'end_date'   => 10000000000,
+            'team_id'    => 1
+        ];
+        $Teams->Team->EvaluateTerm->save($data);
+        $term_id = $Teams->Team->EvaluateTerm->getLastInsertID();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/ajax_get_final_eval_modal/1', ['method' => 'GET']);
+        $this->testAction("/teams/ajax_get_final_eval_modal/{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testSaveEvaluationScores()
+    function testSaveEvaluationScoresSuccess()
     {
         $this->_getTeamsCommonMock(null, true);
         $data = [
@@ -466,6 +473,14 @@ class TeamsControllerTest extends ControllerTestCase
                 ]
             ]
         ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/save_evaluation_scores', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testSaveEvaluationScoresFail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = ['EvaluateScore' => []];
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/save_evaluation_scores', ['method' => 'POST', 'data' => $data]);
     }
@@ -555,6 +570,7 @@ class TeamsControllerTest extends ControllerTestCase
                            ->will($this->returnValueMap($session_value_map)
                            );
         }
+        $Teams->Team->TeamMember->csv_datas = [];
         $Teams->Team->current_team_id = 1;
         $Teams->Team->uid = 1;
         $Teams->Team->TeamMember->current_team_id = 1;
