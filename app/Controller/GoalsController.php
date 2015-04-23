@@ -115,7 +115,14 @@ class GoalsController extends AppController
                     // pusherに通知
                     $socketId = viaIsSet($this->request->data['socket_id']);
                     $this->NotifyBiz->push($socketId, "all");
-                    //TODO 一旦、トップにリダイレクト
+
+                    // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
+                    $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
+                        $this->Auth->user('id'), $this->Session->read('current_team_id'));
+                    if (isset($coach_id['TeamMember']['coach_user_id']) === true
+                        && is_null($coach_id['TeamMember']['coach_user_id']) === false) {
+                        $this->redirect("/goal_approval");
+                    }
                     $this->redirect("/");
                     break;
             }
