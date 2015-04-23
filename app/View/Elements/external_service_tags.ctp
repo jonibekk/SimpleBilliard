@@ -8,21 +8,6 @@
  **/
 ?>
 <!-- START app/View/Elements/external_service_tags.ctp -->
-<? if (GOOGLE_ANALYTICS_ID): ?>
-    <!-- start Google Analytics -->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', '<?= GOOGLE_ANALYTICS_ID?>', 'auto');
-        ga('require', 'displayfeatures');
-        ga('send', 'pageview');
-
-    </script>
-    <!-- end Google Analytics -->
-<? endif; ?>
 <!-- start VWO and Mixpanel Integration Code-->
 <script type="text/javascript">
     var _vis_opt_queue = window._vis_opt_queue || [], _vis_counter = 0, mixpanel = window.mixpanel || [];

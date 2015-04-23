@@ -17,6 +17,7 @@
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
+<?=$this->element('google_tag_manager')?>
 <?
 if ($this->Session->read('Auth.User.id')) {
     echo $this->element('header_logged_in');
