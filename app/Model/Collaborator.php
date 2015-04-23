@@ -65,6 +65,10 @@ class Collaborator extends AppModel
         'User',
     ];
 
+    public $hasMany = [
+        'ApprovalHistory',
+    ];
+
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -168,9 +172,17 @@ class Collaborator extends AppModel
                 'User' => [
                     'fields' => $this->User->profileFields
                 ],
+                'ApprovalHistory' => [
+                    'User' => [
+                        'fields' => $this->User->profileFields
+                    ],
+                    'fields'       => ['user_id', 'comment', 'created'],
+                    'order' => ['ApprovalHistory.created DESC'],
+                    //'limit' => 1,
+                ]
             ],
             'type'       => 'inner',
-            'order'      => ['Collaborator.created'],
+            'order'      => ['Collaborator.created DESC'],
         ];
         if (is_array($approval_flg)) {
             unset($options['conditions']['Collaborator.valued_flg']);
@@ -210,7 +222,14 @@ class Collaborator extends AppModel
             ],
             'type'       => 'inner',
         ];
-        return $this->find('count', $options);
+
+        $res = $this->find('all', $options);
+        foreach ($res as $key => $val) {
+            if ($this->Goal->isPresentTermGoal($val['Goal']['id']) === false) {
+                unset($res[$key]);
+            }
+        }
+        return count($res);
     }
 
     function getLeaderUid($goal_id)

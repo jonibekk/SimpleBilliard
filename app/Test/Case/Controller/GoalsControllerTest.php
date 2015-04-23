@@ -273,6 +273,32 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction("/goals/add/{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
     }
 
+    function testAddPostMode3GoApprovalPage()
+    {
+        $Goal = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goal);
+        $data = [
+            'Goal'         => [
+                'description' => 'test',
+            ],
+            'Collaborator' => [
+                [
+                    'id'       => $this->collabo_id,
+                    'priority' => 3
+                ]
+            ]
+        ];
+
+        $team_member = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'coach_user_id' => 999,
+        ];
+        $Goal->User->TeamMember->save($team_member);
+
+        $this->testAction("/goals/add/{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
+    }
+
     function testAddPostEmpty()
     {
         $this->_getGoalsCommonMock();
