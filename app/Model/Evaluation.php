@@ -233,12 +233,12 @@ class Evaluation extends AppModel
     function add($data, $saveType)
     {
         // insert status value to save data
-        if ($saveType === "draft") {
-            $data = Hash::insert($data, '{n}.Evaluation.status', 1);
+        if ($saveType == self::TYPE_STATUS_DRAFT) {
+            $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DRAFT);
             $this->setDraftValidation();
         }
         else {
-            $data = Hash::insert($data, '{n}.Evaluation.status', 2);
+            $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DONE);
             $this->setNotAllowEmptyToComment();
             $this->setNotAllowEmptyToEvaluateScoreId();
         }
@@ -254,7 +254,8 @@ class Evaluation extends AppModel
             }
         }
 
-        if ($saveType === "register") {
+        // Move turn flg to next
+        if ($saveType == self::TYPE_STATUS_DONE) {
             $baseEvaId = $data[0]['Evaluation']['id'];
             $termId = $this->getTermIdByEvaluationId($baseEvaId);
             $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
@@ -606,6 +607,7 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => $this->my_uid
             ],
             'order'      => 'Evaluation.index_num asc',
         ];
