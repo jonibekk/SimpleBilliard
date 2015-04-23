@@ -1814,4 +1814,148 @@ class TeamMemberTest extends CakeTestCase
         $this->assertFalse($flg);
     }
 
+    function testAddDefaultSellForCsvData()
+    {
+        $this->TeamMember->addDefaultSellForCsvData('test');
+        $this->assertEmpty($this->TeamMember->csv_datas);
+    }
+
+    function testSetTotalFinalEvaluationForCsvDataContinue()
+    {
+        $reflectionClass = new ReflectionClass($this->TeamMember);
+        $property = $reflectionClass->getProperty('all_users');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
+
+        $this->TeamMember->setTotalFinalEvaluationForCsvData();
+    }
+
+    function testSetTotalFinalEvaluationForCsvDataIterator()
+    {
+        App::uses('Evaluation', 'Model');
+        $reflectionClass = new ReflectionClass($this->TeamMember);
+        $property = $reflectionClass->getProperty('all_users');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
+        $evaluations = [
+            1 => [
+                [
+                    'Evaluation'    => [
+                        'evaluate_type' => Evaluation::TYPE_FINAL_EVALUATOR,
+                        'goal_id'       => null,
+                        'comment'       => 'nice!'
+                    ],
+                    'EvaluateScore' => [
+                        'name' => 'score_name',
+                    ]
+                ]
+            ]
+        ];
+        $property = $reflectionClass->getProperty('evaluations');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, $evaluations);
+
+        $this->TeamMember->setTotalFinalEvaluationForCsvData();
+
+        $expected = [
+            (int) 0 => [
+                'total.final.score' => 'score_name',
+                'total.final.comment' => 'nice!'
+            ]
+        ];
+        $actual = $this->TeamMember->csv_datas;
+        $this->assertEquals($expected,$actual);
+    }
+    function testSetTotalEvaluatorEvaluationForCsvDataContinue()
+    {
+        $reflectionClass = new ReflectionClass($this->TeamMember);
+        $property = $reflectionClass->getProperty('all_users');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
+        $this->TeamMember->setTotalEvaluatorEvaluationForCsvData();
+    }
+
+    function testSetTotalEvaluatorEvaluationForCsvDataIterator()
+    {
+        App::uses('Evaluation', 'Model');
+        $reflectionClass = new ReflectionClass($this->TeamMember);
+        $property = $reflectionClass->getProperty('all_users');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
+        $evaluations = [
+            1 => [
+                [
+                    'Evaluation'    => [
+                        'evaluate_type' => Evaluation::TYPE_EVALUATOR,
+                        'goal_id'       => null,
+                        'comment'       => 'nice!'
+                    ],
+                    'EvaluateScore' => [
+                        'name' => 'score_name',
+                    ],
+                    'EvaluatorUser'=>[
+                        'display_username'=>'test user'
+                    ]
+                ]
+            ]
+        ];
+        $property = $reflectionClass->getProperty('evaluations');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, $evaluations);
+
+        $this->TeamMember->setTotalEvaluatorEvaluationForCsvData();
+
+        $expected = [
+            (int) 0 => [
+                'total.evaluator.1.name' => 'test user',
+                'total.evaluator.1.score' => 'score_name',
+                'total.evaluator.1.comment' => 'nice!'
+            ]
+        ];
+        $actual = $this->TeamMember->csv_datas;
+        $this->assertEquals($expected,$actual);
+    }
+
+    function testSetTotalSelfEvaluationForCsvDataContinue()
+    {
+        $reflectionClass = new ReflectionClass($this->TeamMember);
+        $property = $reflectionClass->getProperty('all_users');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
+        $this->TeamMember->setTotalSelfEvaluationForCsvData();
+    }
+
+    function testSetGoalEvaluationForCsvData()
+    {
+        $reflectionClass = new ReflectionClass($this->TeamMember);
+        $property = $reflectionClass->getProperty('all_users');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
+        $this->TeamMember->setGoalEvaluationForCsvData();
+        debug($this->TeamMember->csv_datas);
+        $expected = [
+            (int) 0 => [
+                'kr_count' => (int) 0,
+                'action_count' => (int) 0,
+                'goal_progress' => (int) 0
+            ]
+        ];
+        $actual = $this->TeamMember->csv_datas;
+        $this->assertEquals($expected,$actual);
+    }
+
+    function testSetUserInfoForCsvDataContinue()
+    {
+        $reflectionClass = new ReflectionClass($this->TeamMember);
+        $property = $reflectionClass->getProperty('all_users');
+        $property->setAccessible(true);
+        $property->setValue($this->TeamMember, [['User' => ['id' => null]]]);
+        $this->TeamMember->setUserInfoForCsvData();
+    }
+
+    function testSetAllMembers()
+    {
+        $this->TeamMember->current_team_id=1;
+        $this->TeamMember->setAllMembers(null,'final_evaluation');
+    }
 }
