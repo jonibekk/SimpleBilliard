@@ -1157,7 +1157,8 @@ class TeamMember extends AppModel
             $action_count = $Goal->ActionResult->getActionCount($goal_ids[$v['User']['id']], $v['User']['id']);
             $csv_data[$k]['action_count'] = $action_count;
             //goal_progress()
-            $csv_data[$k]['goal_progress'] = $Goal->KeyResult->getGoalTotalProgress($goal_ids[$v['User']['id']]);
+            $all_goal_progress = $Goal->getAllUserGoalProgress($goal_ids[$v['User']['id']], $v['User']['id']);
+            $csv_data[$k]['goal_progress'] = $all_goal_progress;
         }
         //total.self.score
         //total.self.comment
