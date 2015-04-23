@@ -192,14 +192,14 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($draftData, "draft");
+        $res = $this->Evaluation->add($draftData, Evaluation::TYPE_STATUS_DRAFT);
         $this->assertNotEmpty($res, "[正常]下書き保存");
         $res = $this->Evaluation->find('all',
                                        [
                                            'conditions' => [
                                                'evaluatee_user_id' => 1,
                                                'evaluate_term_id'  => 1,
-                                               'status'            => 1
+                                               'status'            => Evaluation::TYPE_STATUS_DRAFT
                                            ]
                                        ]
         );
@@ -233,7 +233,7 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($registerData, "register");
+        $res = $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
         $this->assertNotEmpty($res, "[正常]評価登録");
         $res = $this->Evaluation->find(
             'all',
@@ -241,7 +241,7 @@ class EvaluationTest extends CakeTestCase
                 'conditions' => [
                     'evaluatee_user_id' => 1,
                     'evaluate_term_id'  => 1,
-                    'status'            => 2
+                    'status'            => Evaluation::TYPE_STATUS_DONE
                 ]
             ]
         );
@@ -276,38 +276,7 @@ class EvaluationTest extends CakeTestCase
             ],
         ];
         $this->setExpectedException('RuntimeException');
-        $this->Evaluation->add($registerData, "register");
-    }
-
-    function testAddRegisterAsLastEvaluatorInEvaluator()
-    {
-        $this->_setDefault();
-        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
-        $this->_saveEvaluations();
-        $registerData = [
-            [
-                'Evaluation' => [
-                    'id'                => 3,
-                    'comment'           => 'あいうえお',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-            [
-                'Evaluation' => [
-                    'id'                => 6,
-                    'comment'           => 'かきくけこ',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-            [
-                'Evaluation' => [
-                    'id'                => 9,
-                    'comment'           => 'さしすせそ',
-                    'evaluate_score_id' => 1,
-                ],
-            ],
-        ];
-        $this->Evaluation->add($registerData, "register");
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
     }
 
     function testCheckAvailViewEvaluateListTrue()
