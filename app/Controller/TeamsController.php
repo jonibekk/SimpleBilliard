@@ -399,7 +399,6 @@ class TeamsController extends AppController
         $td = $this->Team->TeamMember->getAllEvaluationsCsvData($term_id, $team_id);
 
         $this->set(compact('filename', 'th', 'td'));
-
     }
 
     public function ajax_switch_team($team_id = null)

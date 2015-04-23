@@ -438,6 +438,38 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testDownloadFinalEvaluationsCsv()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/download_final_evaluations_csv/1', ['method' => 'GET']);
+    }
+
+    function testAjaxGetFinalEvalModal()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_final_eval_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testSaveEvaluationScores()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'EvaluateScore' => [
+                [
+                    'team_id'     => 1,
+                    'name'        => 'test',
+                    'index_num'   => 1,
+                    'description' => 'desc'
+                ]
+            ]
+        ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/save_evaluation_scores', ['method' => 'POST', 'data' => $data]);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
