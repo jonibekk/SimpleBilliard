@@ -1214,7 +1214,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e));
     }
 
-    function testunjoin_circle()
+    function testUnJoinCircle()
     {
         $this->_getPostsCommonMock();
         $data = [
