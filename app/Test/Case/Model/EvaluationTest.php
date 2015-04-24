@@ -248,6 +248,68 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals(count($res), count($registerData));
     }
 
+    function testAddRegisterAsEvaluatorHadNextEvaluator()
+    {
+        $this->_setDefault();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
+        $registerData = [
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 5,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 8,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+        ];
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
+    }
+
+    function testAddRegisterAsLastEvaluatorInEvaluator()
+    {
+        $this->_setDefault();
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
+        $registerData = [
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 6,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 9,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+        ];
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
+    }
+
     function testAddRegistersValidationError()
     {
         $this->_setDefault();
@@ -276,7 +338,7 @@ class EvaluationTest extends CakeTestCase
             ],
         ];
         $this->setExpectedException('RuntimeException');
-        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
+        $this->Evaluation->add($registerData, "register");
     }
 
     function testCheckAvailViewEvaluateListTrue()
