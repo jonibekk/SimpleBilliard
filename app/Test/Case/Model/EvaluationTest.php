@@ -192,14 +192,14 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($draftData, "draft");
+        $res = $this->Evaluation->add($draftData, Evaluation::TYPE_STATUS_DRAFT);
         $this->assertNotEmpty($res, "[正常]下書き保存");
         $res = $this->Evaluation->find('all',
                                        [
                                            'conditions' => [
                                                'evaluatee_user_id' => 1,
                                                'evaluate_term_id'  => 1,
-                                               'status'            => 1
+                                               'status'            => Evaluation::TYPE_STATUS_DRAFT
                                            ]
                                        ]
         );
@@ -233,7 +233,7 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($registerData, "register");
+        $res = $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
         $this->assertNotEmpty($res, "[正常]評価登録");
         $res = $this->Evaluation->find(
             'all',
@@ -241,42 +241,42 @@ class EvaluationTest extends CakeTestCase
                 'conditions' => [
                     'evaluatee_user_id' => 1,
                     'evaluate_term_id'  => 1,
-                    'status'            => 2
+                    'status'            => Evaluation::TYPE_STATUS_DONE
                 ]
             ]
         );
         $this->assertEquals(count($res), count($registerData));
     }
 
-    function testAddRegistersValidationError()
+    function testAddRegisterAsEvaluatorHadNextEvaluator()
     {
         $this->_setDefault();
-
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
         $registerData = [
             [
                 'Evaluation' => [
-                    'id'                => 1,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
-                ],
-            ],
-            [
-                'Evaluation' => [
                     'id'                => 2,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id'                => 3,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
+                    'id'                => 5,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 8,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
                 ],
             ],
         ];
-        $this->setExpectedException('RuntimeException');
-        $this->Evaluation->add($registerData, "register");
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
     }
 
     function testAddRegisterAsLastEvaluatorInEvaluator()
@@ -307,6 +307,37 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
+    }
+
+    function testAddRegistersValidationError()
+    {
+        $this->_setDefault();
+
+        $registerData = [
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+        ];
+        $this->setExpectedException('RuntimeException');
         $this->Evaluation->add($registerData, "register");
     }
 
@@ -688,6 +719,30 @@ class EvaluationTest extends CakeTestCase
         $this->assertCount(5, $res);
     }
 
+    function testGetMyTurnCountCaseCurrentTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $currentTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($currentTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
+    function testGetMyTurnCountCasePreviousTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
+        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
     function testGetTermIdByEvaluationId()
     {
         $this->_setDefault();
@@ -733,6 +788,17 @@ class EvaluationTest extends CakeTestCase
 
         $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
+    }
+
+    function testGetIsEditableCaseTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLatestTermId();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($termId);
+        $this->Evaluation->getIsEditable($termId, null);
     }
 
     function testGetAllStatusesForTeamSettings()

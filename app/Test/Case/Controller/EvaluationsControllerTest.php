@@ -345,7 +345,10 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostDraft()
     {
         $data = [
-            'is_draft' => true,
+            'status' => Evaluation::TYPE_STATUS_DRAFT,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_ONESELF
+            ],
             [
                 'Evaluation' => [
                     'id'                => 1,
@@ -384,10 +387,53 @@ class EvaluationsControllerTest extends ControllerTestCase
      *
      * @return void
      */
-    public function testAddPostRegister()
+    public function testAddPostRegisterCaseOneself()
     {
         $data = [
-            'is_register' => true,
+            'status' => Evaluation::TYPE_STATUS_DONE,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_ONESELF
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+        ];
+
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    public function testAddPostRegisterCaseEvaluator()
+    {
+        $data = [
+            'status' => Evaluation::TYPE_STATUS_DONE,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_EVALUATOR
+            ],
             [
                 'Evaluation' => [
                     'id'                => 1,
@@ -424,7 +470,10 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostRegisterValidationError()
     {
         $data = [
-            'is_register' => true,
+            'status' => Evaluation::TYPE_STATUS_DONE,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_ONESELF
+            ],
             [
                 'Evaluation' => [
                     'id'                => 1,

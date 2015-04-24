@@ -420,6 +420,71 @@ class TeamsControllerTest extends ControllerTestCase
         $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
     }
 
+    function testChangeFreezeStatusSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+
+        $Teams->Team->EvaluateTerm->saveTerm();
+        $termId = $Teams->Team->EvaluateTerm->getLastInsertID();
+        $data = ['evaluate_term_id' => $termId];
+        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testChangeFreezeStatusFailed()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $termId = null;
+        $data = ['evaluate_term_id' => $termId];
+        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testDownloadFinalEvaluationsCsv()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/download_final_evaluations_csv/1', ['method' => 'GET']);
+    }
+
+    function testAjaxGetFinalEvalModal()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'start_date' => 0,
+            'end_date'   => 10000000000,
+            'team_id'    => 1
+        ];
+        $Teams->Team->EvaluateTerm->save($data);
+        $term_id = $Teams->Team->EvaluateTerm->getLastInsertID();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction("/teams/ajax_get_final_eval_modal/{$term_id}", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testSaveEvaluationScoresSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'EvaluateScore' => [
+                [
+                    'team_id'     => 1,
+                    'name'        => 'test',
+                    'index_num'   => 1,
+                    'description' => 'desc'
+                ]
+            ]
+        ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/save_evaluation_scores', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testSaveEvaluationScoresFail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = ['EvaluateScore' => []];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/save_evaluation_scores', ['method' => 'POST', 'data' => $data]);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
@@ -505,6 +570,7 @@ class TeamsControllerTest extends ControllerTestCase
                            ->will($this->returnValueMap($session_value_map)
                            );
         }
+        $Teams->Team->TeamMember->csv_datas = [];
         $Teams->Team->current_team_id = 1;
         $Teams->Team->uid = 1;
         $Teams->Team->TeamMember->current_team_id = 1;

@@ -4,17 +4,24 @@
  * User: saeki
  * Date: 15/04/15
  * Time: 18:42
+ * @var $user
  */
 ?>
 <!-- START app/View/Elements/Evaluation/evaluators_status.ctp -->
 <div class="col col-xxs-12 mpTB0">
-    <?=
-    $this->Upload->uploadImage($user['EvaluatorUser'], 'User.photo', ['style' => 'small'],
-                               ['class' => 'comment-img'])
-    ?>
+    <? if($user['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+        <i class="fa fa-user user-icon fa-2x text-align_c comment-img mt_5px"></i>
+    <? else: ?>
+        <?=
+        $this->Upload->uploadImage($user['EvaluatorUser'], 'User.photo', ['style' => 'small'],
+                                   ['class' => 'comment-img'])
+        ?>
+    <? endif;?>
     <div class="comment-body modal-comment" style="margin-top:5px;">
         <div class="font_12px font_bold modalFeedTextPadding">
-            <?= h($user['EvaluatorUser']['display_username']) ?> ・
+            <? if($user['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                <?= h($user['EvaluatorUser']['display_username']) ?> ・
+            <? endif ?>
             <span><?= h($user['Evaluation']['evaluator_type_name']) ?></span>
 
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
