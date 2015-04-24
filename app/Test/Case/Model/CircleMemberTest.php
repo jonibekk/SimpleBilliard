@@ -143,5 +143,4 @@ class CircleMemberTest extends CakeTestCase
         $this->assertTrue(!empty($res));
     }
 
-
 }
