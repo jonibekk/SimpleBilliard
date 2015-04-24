@@ -1932,7 +1932,6 @@ class TeamMemberTest extends CakeTestCase
         $property->setAccessible(true);
         $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
         $this->TeamMember->setGoalEvaluationForCsvData();
-        debug($this->TeamMember->csv_datas);
         $expected = [
             (int) 0 => [
                 'kr_count' => (int) 0,
