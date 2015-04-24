@@ -300,7 +300,7 @@ class CircleMember extends AppModel
 
     function joinNewMember($circle_id)
     {
-        if (!empty($this->User->CircleMember->isBelong($circle_id))) {
+        if (!empty($this->isBelong($circle_id))) {
             return;
         }
         $options = [

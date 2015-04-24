@@ -133,4 +133,15 @@ class CircleMemberTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    public function testJoinNewMemberSuccess()
+    {
+        $circle_id = '18';
+        $this->CircleMember->my_uid = 1;
+        $this->CircleMember->current_team_id = 1;
+
+        $res = $this->CircleMember->joinNewMember($circle_id);
+        $this->assertTrue(!empty($res));
+    }
+
+
 }
