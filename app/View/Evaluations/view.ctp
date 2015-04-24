@@ -7,6 +7,10 @@
  * @var                    $scoreList
  * @var                    $goalList
  * @var                    $evaluateeId
+ * @var                    $isEditable
+ * @var                    $saveIndex
+ * @var                    $status
+ * @var                    $evaluateType
  */
 ?>
 <!-- START app/View/Evaluations/view.ctp -->
@@ -207,8 +211,8 @@
                             'div'   => false,
                             'class' => 'btn btn-default',
                             'id'    => 'evaluation-draft-submit',
-                            'name'  => 'is_draft',
-                            'value' => true
+                            'name'  => 'status',
+                            'value' => Evaluation::TYPE_STATUS_DRAFT,
                         ]) ?>
                     </div>
                 </div>
@@ -231,8 +235,8 @@
                 'div'   => false,
                 'class' => 'btn btn-primary eval-view-btn-submit',
                 'id'    => 'evaluation-register-submit',
-                'name'  => 'is_register',
-                'value' => true
+                'name'  => 'status',
+                'value' => Evaluation::TYPE_STATUS_DONE,
             ]) ?>
             <?
             else:
@@ -241,16 +245,16 @@
                 'div'   => false,
                 'class' => 'btn btn-default',
                 'id'    => 'evaluation-draft-submit',
-                'name'  => 'is_draft',
-                'value' => true
+                'name'  => 'status',
+                'value' => Evaluation::TYPE_STATUS_DRAFT,
             ]) ?>
                 <?= $this->Form->button(__d('gl', "確定"), [
                 'div'      => false,
                 'class'    => 'btn btn-primary eval-view-btn-submit',
                 'id'       => 'evaluation-register-submit',
-                'name'     => 'is_register',
+                'name'  => 'status',
+                'value' => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
-                'value'    => true
             ]) ?>
             <?
             endif;
@@ -525,8 +529,8 @@
                             'div'   => false,
                             'class' => 'btn btn-default',
                             'id'    => 'evaluation-draft-submit',
-                            'name'  => 'is_draft',
-                            'value' => true
+                            'name'  => 'status',
+                            'value' => Evaluation::TYPE_STATUS_DRAFT,
                         ]) ?>
                     </div>
                 </div>
@@ -548,8 +552,8 @@
                 'div'   => false,
                 'class' => 'btn btn-primary eval-view-btn-submit',
                 'id'    => 'evaluation-register-submit',
-                'name'  => 'is_register',
-                'value' => true
+                'name'  => 'status',
+                'value'  => Evaluation::TYPE_STATUS_DONE
             ]) ?>
             <?
             else:
@@ -558,16 +562,16 @@
                 'div'   => false,
                 'class' => 'btn btn-default',
                 'id'    => 'evaluation-draft-submit',
-                'name'  => 'is_draft',
-                'value' => true
+                'name'  => 'status',
+                'value'  => Evaluation::TYPE_STATUS_DRAFT
             ]) ?>
                 <?= $this->Form->button(__d('gl', "確定"), [
                 'div'      => false,
                 'class'    => 'btn btn-primary eval-view-btn-submit',
                 'id'       => 'evaluation-register-submit',
-                'name'     => 'is_register',
+                'name'  => 'status',
+                'value'  => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
-                'value'    => true
             ]) ?>
             <?
             endif;
@@ -575,5 +579,13 @@
         </div>
     </div>
 <? endif; ?>
+<?=
+$this->Form->input("evaluate_type", [
+    'label' => false,
+    'class' => 'form-control col-xxs-10 mb_12px',
+    'type'  => 'hidden',
+    'value' => $evaluateType
+])
+?>
 <?= $this->Form->end() ?>
 <!-- END app/View/Evaluations/view.ctp -->

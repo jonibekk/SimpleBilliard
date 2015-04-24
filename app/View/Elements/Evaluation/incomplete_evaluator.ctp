@@ -4,6 +4,7 @@
  * User: saeki
  * Date: 15/04/17
  * Time: 15:07
+ * @var $user
  */
 ?>
 <!-- START app/View/Elements/Evaluation/incomplete_evaluator.ctp -->

@@ -55,6 +55,7 @@ class TeamsController extends AppController
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
 
         $eval_start_button_enabled = true;
@@ -64,13 +65,8 @@ class TeamsController extends AppController
         ) {
             $eval_start_button_enabled = false;
         }
-        //TODO ハードコーディング中! for こーへーさん
-        $team_id = [1, 1111111];
-        $unvalued = $this->Goal->Collaborator->tempCountUnvalued($team_id);
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
-                           'unvalued', 'team_id', 'eval_scores'));
-        //TODO ハードコーディング中! for こーへーさん
-
+                           'eval_scores'));
         $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
 
         // 全体progressカウント
@@ -84,11 +80,33 @@ class TeamsController extends AppController
             $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
         }
 
+        // Get term info
+        $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
+        $current_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($current_term_id);
+        $current_term_start_date = $this->Team->getCurrentTermStartDate();
+        $current_term_end_date = $this->Team->getCurrentTermEndDate() - 1;
+        $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
+        $previous_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($previous_term_id);
+        $previous_term = $this->Team->getBeforeTermStartEnd();
+        $previous_term_start_date = $previous_term['start'];
+        $previous_term_end_date = $previous_term['end'] - 1;
+
         $this->set(compact(
                        'statuses',
                        'all_cnt',
                        'incomplete_cnt',
-                       'progress_percent'
+                       'progress_percent',
+                       'eval_is_frozen',
+                       'current_term_id',
+                       'current_eval_is_frozen',
+                       'current_eval_is_available',
+                       'current_term_start_date',
+                       'current_term_end_date',
+                       'previous_term_id',
+                       'previous_eval_is_frozen',
+                       'previous_eval_is_available',
+                       'previous_term_start_date',
+                       'previous_term_end_date'
                    ));
 
         return $this->render();
@@ -98,10 +116,7 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod(['post', 'put']);
         $this->Team->begin();
-        if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])
-            && $this->Team->Evaluation->EvaluateScore->saveScores($this->request->data['EvaluateScore'],
-                                                                  $this->Session->read('current_team_id'))
-        ) {
+        if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
             $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
         }
@@ -110,6 +125,24 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__d('gl', "評価設定が保存できませんでした。"));
         }
         return $this->redirect($this->referer());
+    }
+
+    function save_evaluation_scores()
+    {
+        $this->request->allowMethod(['post', 'put']);
+        $this->Team->begin();
+        if ($this->Team->Evaluation->EvaluateScore->saveScores($this->request->data['EvaluateScore'],
+                                                               $this->Session->read('current_team_id'))
+        ) {
+            $this->Team->commit();
+            $this->Pnotify->outSuccess(__d('gl', "評価スコア設定を保存しました。"));
+        }
+        else {
+            $this->Team->rollback();
+            $this->Pnotify->outError(__d('gl', "評価スコア設定が保存できませんでした。"));
+        }
+        return $this->redirect($this->referer());
+
     }
 
     function to_inactive($id)
@@ -136,6 +169,16 @@ class TeamsController extends AppController
             $this->set(['index' => $this->request->params['named']['index']]);
         }
         $response = $this->render('Team/eval_score_form_elm');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_final_eval_modal($term_id)
+    {
+        $this->_ajaxPreProcess();
+        $term = $this->Team->EvaluateTerm->findById($term_id);
+        $this->set(compact('term_id', 'term'));
+        $response = $this->render('Team/modal_final_evaluation_by_csv');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }
@@ -339,6 +382,25 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
     }
 
+    function ajax_upload_final_evaluations_csv($term_id)
+    {
+
+    }
+
+    function download_final_evaluations_csv($term_id)
+    {
+        $team_id = $this->Session->read('current_team_id');
+        $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
+        $this->layout = false;
+        $filename = 'final_evaluations_' . date('YmdHis');
+
+        //見出し
+        $th = $this->Team->TeamMember->_getCsvHeadingEvaluation();
+        $td = $this->Team->TeamMember->getAllEvaluationsCsvData($term_id, $team_id);
+
+        $this->set(compact('filename', 'th', 'td'));
+    }
+
     public function ajax_switch_team($team_id = null)
     {
         $this->layout = 'ajax';
@@ -358,5 +420,19 @@ class TeamsController extends AppController
         $this->_switchTeam($team_id, $this->Auth->user('id'));
         $this->Pnotify->outSuccess(__d('gl', "チームを「%s」に切り換えました。", $my_teams[$team_id]));
         return $this->render();
+    }
+
+    function change_freeze_status()
+    {
+        $this->request->allowMethod('post');
+        $termId = viaIsSet($this->request->data['evaluate_term_id']);
+        try {
+            $this->Team->EvaluateTerm->changeFreezeStatus($termId);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e);
+            return $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
+        return $this->redirect($this->referer());
     }
 }

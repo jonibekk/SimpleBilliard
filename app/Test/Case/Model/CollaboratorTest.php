@@ -212,11 +212,4 @@ class CollaboratorTest extends CakeTestCase
         $actual = $this->Collaborator->getLeaderUid(111111);
         $this->assertEquals(null, $actual);
     }
-
-    //TODO ハードコーディング中! for こーへーさん
-    function testTempCountUnvalued()
-    {
-        $this->Collaborator->tempCountUnvalued();
-    }
-
 }

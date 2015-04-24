@@ -233,12 +233,12 @@ class Evaluation extends AppModel
     function add($data, $saveType)
     {
         // insert status value to save data
-        if ($saveType === "draft") {
-            $data = Hash::insert($data, '{n}.Evaluation.status', 1);
+        if ($saveType == self::TYPE_STATUS_DRAFT) {
+            $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DRAFT);
             $this->setDraftValidation();
         }
         else {
-            $data = Hash::insert($data, '{n}.Evaluation.status', 2);
+            $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DONE);
             $this->setNotAllowEmptyToComment();
             $this->setNotAllowEmptyToEvaluateScoreId();
         }
@@ -254,7 +254,8 @@ class Evaluation extends AppModel
             }
         }
 
-        if ($saveType === "register") {
+        // Move turn flg to next
+        if ($saveType == self::TYPE_STATUS_DONE) {
             $baseEvaId = $data[0]['Evaluation']['id'];
             $termId = $this->getTermIdByEvaluationId($baseEvaId);
             $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
@@ -307,6 +308,36 @@ class Evaluation extends AppModel
         ];
         $res = $this->find('all', $options);
         return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
+    }
+
+    function getAllEvaluations($term_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'Evaluation.evaluate_term_id' => $term_id,
+                'Evaluation.team_id'          => $team_id,
+            ],
+            'order'      => [
+                'Evaluation.evaluatee_user_id ASC',
+                'Evaluation.index_num ASC'
+            ],
+            'contain'    => [
+                'EvaluatorUser' => [
+                    'fields' => $this->EvaluateeUser->profileFields
+                ],
+                'EvaluateScore' => [
+                    'fields' => [
+                        'EvaluateScore.name'
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Evaluation.evaluatee_user_id');
+        return $res;
     }
 
     function setDraftValidation()
@@ -606,6 +637,7 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => $this->my_uid
             ],
             'order'      => 'Evaluation.index_num asc',
         ];
@@ -636,6 +668,17 @@ class Evaluation extends AppModel
         if (is_null($term_id) && $is_all === true) {
             unset($options['conditions']['evaluate_term_id']);
         }
+
+        // freeze
+        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId)) {
+            $options['conditions']['NOT'][] = ['evaluate_term_id' => $currentTermId];
+        }
+        if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previousTermId)) {
+            $options['conditions']['NOT'][] = ['evaluate_term_id' => $previousTermId];
+        }
+
         $count = $this->find('count', $options);
         return $count;
     }
@@ -736,6 +779,13 @@ class Evaluation extends AppModel
 
     function getIsEditable($evaluateTermId, $evaluateeId)
     {
+        // check frozen
+        $evalIsFrozen = $this->EvaluateTerm->checkFrozenEvaluateTerm($evaluateTermId);
+        if ($evalIsFrozen) {
+            return false;
+        }
+
+        // check my turn
         $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
         $nextEvaluatorId = $this->getNextEvaluatorId($evaluateTermId, $evaluateeId);
         $isMyTurn = !empty(Hash::extract($evaluationList,
@@ -751,7 +801,7 @@ class Evaluation extends AppModel
     function getAllStatusesForTeamSettings($termId)
     {
         $evaluation_statuses = [
-            self::TYPE_ONESELF => [
+            self::TYPE_ONESELF   => [
                 'label'          => __d('gl', "自己"),
                 'all_num'        => 0,
                 'incomplete_num' => 0,
@@ -888,7 +938,8 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    function getEvaluateesByEvaluator($termId, $evaluatorId){
+    function getEvaluateesByEvaluator($termId, $evaluatorId)
+    {
         $options = [
             'conditions' => [
                 'evaluate_term_id'  => $termId,
@@ -919,12 +970,13 @@ class Evaluation extends AppModel
         return $incompleteEvaluatees;
     }
 
-    function getIncompleteOneselfEvaluators($termId) {
+    function getIncompleteOneselfEvaluators($termId)
+    {
         $options = [
             'conditions' => [
-                'evaluate_term_id'  => $termId,
-                'my_turn_flg'       => true,
-                'evaluate_type'     => self::TYPE_ONESELF,
+                'evaluate_term_id' => $termId,
+                'my_turn_flg'      => true,
+                'evaluate_type'    => self::TYPE_ONESELF,
             ],
             'group'      => [
                 'evaluator_user_id'
@@ -938,7 +990,5 @@ class Evaluation extends AppModel
 
         return $res;
     }
-
-
 
 }
