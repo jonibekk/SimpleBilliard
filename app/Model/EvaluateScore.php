@@ -89,6 +89,9 @@ class EvaluateScore extends AppModel
 
     function saveScores($datas, $team_id)
     {
+        if (empty($datas)) {
+            return false;
+        }
         $datas = Hash::insert($datas, '{n}.team_id', $team_id);
         $res = $this->saveAll($datas);
         return $res;

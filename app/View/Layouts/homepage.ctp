@@ -107,6 +107,7 @@
 
 </head>
 <body>
+<?=$this->element('google_tag_manager')?>
 <header id="header">
 
     <!--NewRelic Header-->

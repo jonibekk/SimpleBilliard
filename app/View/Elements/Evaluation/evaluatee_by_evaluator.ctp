@@ -4,6 +4,7 @@
  * User: saeki
  * Date: 15/04/17
  * Time: 15:44
+ * @var $user
  */
 ?>
 <!-- START app/View/Elements/Evaluation/evaluatee_by_evaluator.ctp -->
