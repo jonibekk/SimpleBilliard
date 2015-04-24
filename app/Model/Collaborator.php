@@ -203,12 +203,12 @@ class Collaborator extends AppModel
     function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
     {
         $options = [
-            'fields'     => ['id'],
+            'fields'     => ['id', 'valued_flg'],
             'conditions' => [
                 'Collaborator.team_id'    => $team_id,
                 'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
-                'User.id !='              => $user_id
+                //'User.id !='              => $user_id
             ],
             'contain'    => [
                 'Goal' => [
@@ -226,6 +226,9 @@ class Collaborator extends AppModel
         $res = $this->find('all', $options);
         foreach ($res as $key => $val) {
             if ($this->Goal->isPresentTermGoal($val['Goal']['id']) === false) {
+                unset($res[$key]);
+            }
+            if ($val['User']['id'] === $user_id && $val['Collaborator']['valued_flg'] !== '3') {
                 unset($res[$key]);
             }
         }
