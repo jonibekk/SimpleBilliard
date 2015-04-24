@@ -192,14 +192,14 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($draftData, "draft");
+        $res = $this->Evaluation->add($draftData, Evaluation::TYPE_STATUS_DRAFT);
         $this->assertNotEmpty($res, "[正常]下書き保存");
         $res = $this->Evaluation->find('all',
                                        [
                                            'conditions' => [
                                                'evaluatee_user_id' => 1,
                                                'evaluate_term_id'  => 1,
-                                               'status'            => 1
+                                               'status'            => Evaluation::TYPE_STATUS_DRAFT
                                            ]
                                        ]
         );
@@ -233,7 +233,7 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($registerData, "register");
+        $res = $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
         $this->assertNotEmpty($res, "[正常]評価登録");
         $res = $this->Evaluation->find(
             'all',
@@ -241,42 +241,42 @@ class EvaluationTest extends CakeTestCase
                 'conditions' => [
                     'evaluatee_user_id' => 1,
                     'evaluate_term_id'  => 1,
-                    'status'            => 2
+                    'status'            => Evaluation::TYPE_STATUS_DONE
                 ]
             ]
         );
         $this->assertEquals(count($res), count($registerData));
     }
 
-    function testAddRegistersValidationError()
+    function testAddRegisterAsEvaluatorHadNextEvaluator()
     {
         $this->_setDefault();
-
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
         $registerData = [
             [
                 'Evaluation' => [
-                    'id'                => 1,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
-                ],
-            ],
-            [
-                'Evaluation' => [
                     'id'                => 2,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id'                => 3,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
+                    'id'                => 5,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 8,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
                 ],
             ],
         ];
-        $this->setExpectedException('RuntimeException');
-        $this->Evaluation->add($registerData, "register");
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
     }
 
     function testAddRegisterAsLastEvaluatorInEvaluator()
@@ -307,6 +307,37 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
+    }
+
+    function testAddRegistersValidationError()
+    {
+        $this->_setDefault();
+
+        $registerData = [
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+        ];
+        $this->setExpectedException('RuntimeException');
         $this->Evaluation->add($registerData, "register");
     }
 
