@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
   end
 
   if Vagrant.has_plugin?("vagrant-omnibus")
-    config.omnibus.chef_version = '12'
+    config.omnibus.chef_version = '11.4.4'
   end
 
   src_dir = './'
