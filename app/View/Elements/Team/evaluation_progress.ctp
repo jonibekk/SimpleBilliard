@@ -4,6 +4,8 @@
  * User: saeki
  * Date: 15/04/13
  * Time: 15:18
+ * @var $progress_percent
+ * @var $statuses
  */
 ?>
 <!-- START app/View/Elements/Team/evaluation_progress.ctp -->

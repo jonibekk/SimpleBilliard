@@ -26,7 +26,7 @@ define('ELASTICACHE_CACHE_HOST', null);
 define('SES_FROM_ADDRESS', 'support@goalous.com');
 define('SES_FROM_ADDRESS_NEWS', 'news@goalous.com');
 define('SES_FROM_ADDRESS_NOTICE', 'notice@goalous.com');
-define('GOOGLE_ANALYTICS_ID', null);
+define('GOOGLE_TAG_MANAGER_ID', null);
 define('MIXPANEL_TOKEN', null);
 define('VWO_ID', null);
 define('FACEBOOK_APP_ID', null);

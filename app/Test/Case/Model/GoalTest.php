@@ -562,4 +562,14 @@ class GoalTest extends CakeTestCase
         $this->assertFalse($res);
 
     }
+
+    function testGetAllUserGoalProgress()
+    {
+        $this->Goal->current_team_id=1;
+        $goals = $this->Goal->getGoalAndKr(1,1);
+        $goals['KeyResult'][0]['progress']=100;
+        $this->Goal->KeyResult->save($goals['KeyResult'][0]);
+
+        $this->Goal->getAllUserGoalProgress(1,1);
+    }
 }
