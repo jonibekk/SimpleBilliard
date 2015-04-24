@@ -272,6 +272,68 @@ class TeamMember extends AppModel
      *
      * @return array
      */
+    function updateFinalEvaluationFromCsv($csv, $term_id)
+    {
+        $res = [
+            'error'         => false,
+            'success_count' => 0,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+        $validate = $this->validateUpdateFinalEvaluationCsvData($csv, $term_id);
+        if ($validate['error']) {
+            return array_merge($res, $validate);
+        }
+        //update process
+
+        //TODO 保存処理はまだ。最終評価のidを検索して更新する
+
+        /**
+         * 評価者は最後に登録
+         * 評価者IDはメンバーIDを検索し、セット
+         */
+        //評価者紐付けを解除
+        $this->Team->Evaluator->deleteAll(['Evaluator.team_id' => $this->current_team_id]);
+
+        $save_evaluator_data = [];
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (!viaIsSet($row_v['Evaluator'])) {
+                continue;
+            }
+            foreach ($row_v['Evaluator'] as $r_k => $r_v) {
+                if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
+                    $save_evaluator_data[] = [
+                        'index_num'         => $r_k,
+                        'team_id'           => $this->current_team_id,
+                        'evaluatee_user_id' => $row_v['User']['id'],
+                        'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
+                    ];
+                }
+            }
+        }
+        if (viaIsSet($save_evaluator_data)) {
+            $this->Team->Evaluator->create();
+            $this->Team->Evaluator->saveAll($save_evaluator_data);
+        }
+
+        $res['success_count'] = count($this->csv_datas);
+        return $res;
+    }
+
+    /**
+     * update members from csv
+     * return data as:
+     * $res = [
+     * 'error'         => false,
+     * 'success_count' => 0,
+     * 'error_line_no' => 0,
+     * 'error_msg'     => null,
+     * ];
+     *
+     * @param array $csv
+     *
+     * @return array
+     */
     function updateMembersFromCsv($csv)
     {
         $res = [
@@ -739,6 +801,72 @@ class TeamMember extends AppModel
                     return $res;
                 }
             }
+        }
+        $res['error'] = false;
+        $this->_setValidateFromBackUp();
+        return $res;
+    }
+
+    function validateUpdateFinalEvaluationCsvData($csv_data, $term_id)
+    {
+        $this->_setCsvValidateRule(false);
+
+        $res = [
+            'error'         => true,
+            'error_line_no' => 0,
+            'error_msg'     => null,
+        ];
+
+        $this->setAllMembers(null, 'final_evaluation');
+
+        $before_csv_data = $this->csv_datas();
+        $this->csv_datas = [];
+        //emails
+        $before_member_nunmbers = array_column($before_csv_data, 'member_no');
+
+        //レコード数が同一である事を確認
+        if (count($csv_data) - 1 !== count($before_csv_data)) {
+            $res['error_msg'] = __d('validate', "レコード数が一致しません。");
+            return $res;
+        }
+        //row validation
+        foreach ($csv_data as $key => $row) {
+            //set line no
+            $res['error_line_no'] = $key + 1;
+
+            //key name set
+            if (!($row = copyKeyName($this->_getCsvHeadingEvaluation(), $row))) {
+                $res['error_msg'] = __d('gl', "項目数が一致しません。");
+                return $res;
+            }
+            if ($key === 0) {
+                if (!empty(array_diff($row, $this->_getCsvHeadingEvaluation()))) {
+                    $res['error_msg'] = __d('gl', "見出しが一致しません。");
+                    return $res;
+                }
+                continue;
+            }
+            $row = Hash::expand($row);
+            $this->set($row);
+            //TODO バリデーションルールはまだ用意していない
+            if (!$this->validates()) {
+                $res['error_msg'] = current(array_shift($this->validationErrors));
+                return $res;
+            }
+
+            $this->csv_emails[] = $row['email'];
+            $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
+
+            $this->csv_member_ids[] = $row['member_no'];
+        }
+        //member id duplicate check
+        if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
+            $duplicate_member_ids = array_filter(array_count_values($this->csv_member_ids), 'isOver2');
+            $duplicate_member_id = key($duplicate_member_ids);
+            //set line no
+            $res['error_line_no'] = array_search($duplicate_member_id, $this->csv_member_ids) + 2;
+            $res['error_msg'] = __d('gl', "重複したメンバーIDが含まれています。");
+            return $res;
         }
         $res['error'] = false;
         $this->_setValidateFromBackUp();
@@ -1562,6 +1690,17 @@ class TeamMember extends AppModel
         }
         $this->validateBackup = $this->validate;
         $this->validate = $validate;
+    }
+
+    function _setCsvValidateRuleFinalEval()
+    {
+        //TODO ルール設定まだしてない
+        $validate_rules = [
+
+        ];
+
+        $this->validateBackup = $this->validate;
+        $this->validate = $validate_rules;
     }
 
     function _setValidateFromBackUp()

@@ -384,7 +384,34 @@ class TeamsController extends AppController
 
     function ajax_upload_final_evaluations_csv($term_id)
     {
-
+        $this->request->allowMethod('post');
+        $result = [
+            'error' => false,
+            'css'   => 'alert-success',
+            'title' => __d('gl', "正常に最終評価が完了しました。"),
+            'msg'   => '',
+        ];
+        $this->_ajaxPreProcess('post');
+        $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
+        $this->Team->TeamMember->begin();
+        $save_res = $this->Team->TeamMember->updateFinalEvaluationFromCsv($csv, $term_id);
+        if ($save_res['error']) {
+            $this->Team->TeamMember->rollback();
+            $result['error'] = true;
+            $result['css'] = 'alert-danger';
+            $result['msg'] = $save_res['error_msg'];
+            if ($save_res['error_line_no'] == 0) {
+                $result['title'] = __d('gl', "更新データに誤りがあります。");
+            }
+            else {
+                $result['title'] = __d('gl', "%s行目でエラーがあります(行番号は見出し含む)。", $save_res['error_line_no']);
+            }
+        }
+        else {
+            $this->Team->TeamMember->commit();
+            $result['msg'] = __d('gl', "%s人の最終評価を更新しました。", $save_res['success_count']);
+        }
+        return $this->_ajaxGetResponse($result);
     }
 
     function download_final_evaluations_csv($term_id)
