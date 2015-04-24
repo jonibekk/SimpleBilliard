@@ -689,7 +689,6 @@ class PostsController extends AppController
             throw new NotFoundException(__('gl', "Invalid Request"));
         }
         $this->Post->Circle->CircleMember->unjoinMember($circle_id);
-        $this->log('Unjoined');
         $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
         return $this->redirect($this->request->referer());
     }
@@ -698,15 +697,12 @@ class PostsController extends AppController
     {
        if($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id))
        {
-           $this->log('admin');
           return 'admin';
        }
        else if ($this->Post->Circle->CircleMember->isBelong($circle_id,$this->Auth->user('id')))
        {
-           $this->log('joined');
             return 'joined';
        }
-        $this->log('not_joined');
         return 'not_joined';
     }
 
