@@ -499,7 +499,7 @@ class PostsController extends AppController
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
-        $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
+        $user_status = $this->userCircleStatus($this->request->params['circle_id']);
 
         $this->_setViewValOnRightColumn();
         //サークル指定の場合はメンバーリスト取得
@@ -668,10 +668,8 @@ class PostsController extends AppController
         $this->NotifyBiz->commentPush($socketId, $data);
     }
 
-    public function join_circle()
+    public function join_circle($circle_id = null)
     {
-        $circle_id = $this->request->params['named']['circle_id'];
-
         if (!$circle_id) {
             throw new NotFoundException(__('gl', "Invalid Request"));
         }
@@ -685,28 +683,30 @@ class PostsController extends AppController
 
     }
 
-    public function unjoin_circle()
+    public function unjoin_circle($circle_id)
     {
-        $circle_id = $this->request->params['named']['circle_id'];
-
         if (!$circle_id) {
             throw new NotFoundException(__('gl', "Invalid Request"));
         }
         $this->Post->Circle->CircleMember->unjoinMember($circle_id);
+        $this->log('Unjoined');
         $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
         return $this->redirect($this->request->referer());
     }
 
-    public function _userCircleStatus($circle_id)
+    public function userCircleStatus($circle_id)
     {
        if($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id))
        {
+           $this->log('admin');
           return 'admin';
        }
        else if ($this->Post->Circle->CircleMember->isBelong($circle_id,$this->Auth->user('id')))
        {
+           $this->log('joined');
             return 'joined';
        }
+        $this->log('not_joined');
         return 'not_joined';
     }
 

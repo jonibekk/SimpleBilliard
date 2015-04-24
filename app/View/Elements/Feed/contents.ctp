@@ -62,9 +62,9 @@ if(  isset($params['action']) && $params['controller']=='posts' && $params['acti
                     <ul aria-labelledby="dropdownMenu1" role="menu" class="dropdown-menu dropdown-menu-right frame-arrow-icon">
                         <li>
                             <?php if($user_status!='joined') { ?>
-                        <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']])?>">Join Circle</a>
+                        <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'join_circle',$current_circle['Circle']['id']])?>">Join Circle</a>
                             <?php } else { ?>
-                                <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle',"circle_id"=>$current_circle['Circle']['id']])?>">Leave Circle</a>
+                                <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle',$current_circle['Circle']['id']])?>">Leave Circle</a>
                             <?php }?>
                         </li>
                     </ul>
@@ -83,7 +83,7 @@ if(  isset($params['action']) && $params['controller']=='posts' && $params['acti
         <div class="col col-xxs-12">
 
             Join this Circle to post or comment.
-                <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'join_circle',"circle_id"=>$current_circle['Circle']['id']])?>" class='btn btn-primary pull-right'>
+                <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'join_circle',$current_circle['Circle']['id']])?>" class='btn btn-primary pull-right'>
                 <i class="fa fa-user-plus"></i> <?=__d('gl', 'Join Circle')?>
                 </a>
         </div>

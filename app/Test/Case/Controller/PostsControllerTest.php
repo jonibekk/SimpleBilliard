@@ -15,6 +15,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.evaluate_term',
         'app.action_result',
         'app.key_result',
         'app.purpose',
@@ -1178,6 +1179,56 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $res = $Posts->_getTotalShareUserCount($circles, $users);
         $this->assertEquals(4, $res);
+    }
+
+    function testJoinCircleSuccess()
+    {
+        $Posts = $this->_getPostsCommonMock();
+
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+        ];
+
+        $Posts->Post->Circle->save($data);
+        $circle_id = $Posts->Post->Circle->getLastInsertID();
+        $this->testAction("/posts/join_circle/{$circle_id}", ['method' => 'get']);
+    }
+
+    function testJoinCircleFailed()
+    {
+        $this->_getPostsCommonMock();
+        $data = [
+            'user_id'    => '1'
+        ];
+        $this->testAction('/posts/join_circle/1', ['method' => 'get']);
+    }
+
+    function testJoinCircleException()
+    {
+        $this->_getPostsCommonMock();
+        try{
+            $this->testAction('/posts/join_circle/', ['method' => 'get']);
+        }catch (NotFoundException $e){
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testunJoinCircle()
+    {
+        $this->_getPostsCommonMock();
+        $data = [
+            'user_id'    => '2'
+        ];
+        $circle_id = '1';
+        $this->testAction("/posts/unjoin_circle/{$circle_id}", ['method' => 'get']);
+    }
+
+    function testUserCircleStatus()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/userCircleStatus/1", ['method' => 'get']);
+
     }
 
     function _getPostsCommonMock()
