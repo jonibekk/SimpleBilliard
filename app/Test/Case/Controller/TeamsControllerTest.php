@@ -444,22 +444,6 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/download_final_evaluations_csv/1', ['method' => 'GET']);
     }
 
-    function testAjaxGetFinalEvalModal()
-    {
-        $Teams = $this->_getTeamsCommonMock(null, true);
-        $data = [
-            'start_date' => 0,
-            'end_date'   => 10000000000,
-            'team_id'    => 1
-        ];
-        $Teams->Team->EvaluateTerm->save($data);
-        $term_id = $Teams->Team->EvaluateTerm->getLastInsertID();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction("/teams/ajax_get_final_eval_modal/{$term_id}", ['method' => 'GET']);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-    }
-
     function testSaveEvaluationScoresSuccess()
     {
         $this->_getTeamsCommonMock(null, true);

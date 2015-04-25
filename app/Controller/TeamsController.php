@@ -173,16 +173,6 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    function ajax_get_final_eval_modal($term_id)
-    {
-        $this->_ajaxPreProcess();
-        $term = $this->Team->EvaluateTerm->findById($term_id);
-        $this->set(compact('term_id', 'term'));
-        $response = $this->render('Team/modal_final_evaluation_by_csv');
-        $html = $response->__toString();
-        return $this->_ajaxGetResponse($html);
-    }
-
     function start_evaluation()
     {
         $this->request->allowMethod('post');
