@@ -98,6 +98,7 @@ class Evaluation extends AppModel
     const TYPE_STATUS_DONE = 2;
 
     var $evaluationType = null;
+    public $evaluate_term_id = null;
 
     static public $TYPE = [
         self::TYPE_ONESELF         => "",
