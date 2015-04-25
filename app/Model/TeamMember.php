@@ -812,7 +812,7 @@ class TeamMember extends AppModel
 
     function validateUpdateFinalEvaluationCsvData($csv_data, $term_id)
     {
-        $this->_setCsvValidateRule(false);
+        $this->_setCsvValidateRuleFinalEval();
 
         $res = [
             'error'         => true,
@@ -820,13 +820,11 @@ class TeamMember extends AppModel
             'error_msg'     => null,
         ];
 
-        $this->setAllMembers(null, 'final_evaluation');
-
-        $before_csv_data = $this->csv_datas();
+        $before_csv_data = $this->getAllEvaluationsCsvData($term_id);
         $this->csv_datas = [];
         //member_no
         $before_member_numbers = array_column($before_csv_data, 'member_no');
-
+        $this->log($before_member_numbers);
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
@@ -851,7 +849,7 @@ class TeamMember extends AppModel
             }
 
             //member_no exists check
-            if(!in_array($res['member_no'],$before_member_numbers)){
+            if(!in_array($row['member_no'],$before_member_numbers)){
                 $res['error_msg'] = __d('gl', "存在しないメンバーIDです。");
                 return $res;
             }
