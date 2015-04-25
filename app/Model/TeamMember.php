@@ -269,6 +269,7 @@ class TeamMember extends AppModel
      * ];
      *
      * @param array $csv
+     * @param       $term_id
      *
      * @return array
      */
@@ -284,6 +285,8 @@ class TeamMember extends AppModel
         if ($validate['error']) {
             return array_merge($res, $validate);
         }
+        //TODO just test
+        return $res;
         //update process
 
         //TODO 保存処理はまだ。最終評価のidを検索して更新する
@@ -821,8 +824,8 @@ class TeamMember extends AppModel
 
         $before_csv_data = $this->csv_datas();
         $this->csv_datas = [];
-        //emails
-        $before_member_nunmbers = array_column($before_csv_data, 'member_no');
+        //member_no
+        $before_member_numbers = array_column($before_csv_data, 'member_no');
 
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
@@ -846,6 +849,16 @@ class TeamMember extends AppModel
                 }
                 continue;
             }
+
+            //member_no exists check
+            if(!in_array($res['member_no'],$before_member_numbers)){
+                $res['error_msg'] = __d('gl', "存在しないメンバーIDです。");
+                return $res;
+            }
+
+            $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
+            $this->csv_member_ids[] = $row['member_no'];
+
             $row = Hash::expand($row);
             $this->set($row);
             //TODO バリデーションルールはまだ用意していない
@@ -853,11 +866,6 @@ class TeamMember extends AppModel
                 $res['error_msg'] = current(array_shift($this->validationErrors));
                 return $res;
             }
-
-            $this->csv_emails[] = $row['email'];
-            $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
-
-            $this->csv_member_ids[] = $row['member_no'];
         }
         //member id duplicate check
         if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
@@ -1696,6 +1704,7 @@ class TeamMember extends AppModel
     {
         //TODO ルール設定まだしてない
         $validate_rules = [
+
 
         ];
 
