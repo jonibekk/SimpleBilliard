@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
   end
 
   if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.auto_detect = false
+    config.cache.auto_detect = true
   end
 
   if Vagrant.has_plugin?("vagrant-omnibus")
