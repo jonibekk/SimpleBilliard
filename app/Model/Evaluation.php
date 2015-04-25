@@ -729,6 +729,19 @@ class Evaluation extends AppModel
         return viaIsSet($res['Evaluation']['evaluatee_user_id']);
     }
 
+    function getEvaluateeIdsByTermId($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $term_id
+            ],
+            'fields'     => ['evaluatee_user_id'],
+            'group'      => ['evaluatee_user_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     function getNextEvaluatorId($termId, $evaluateeId)
     {
         $options = [

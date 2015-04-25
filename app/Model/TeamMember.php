@@ -1195,7 +1195,7 @@ class TeamMember extends AppModel
         return;
     }
 
-    function setAllMembers($team_id = null, $type = 'before_update')
+    function setAllMembers($team_id = null, $type = 'before_update', $term_id = null)
     {
         if (!$team_id) {
             $team_id = $this->current_team_id;
@@ -1236,9 +1236,9 @@ class TeamMember extends AppModel
                 ];
                 break;
             case 'final_evaluation':
+                $uids = $this->Team->Evaluation->getEvaluateeIdsByTermId($term_id);
                 $options['conditions'] += [
-                    'TeamMember.active_flg'            => true,
-                    'TeamMember.evaluation_enable_flg' => true,
+                    'TeamMember.user_id' => $uids,
                 ];
                 break;
         }
@@ -1385,7 +1385,7 @@ class TeamMember extends AppModel
      */
     function getAllEvaluationsCsvData($term_id, $team_id = null)
     {
-        $this->setAllMembers($team_id, 'final_evaluation');
+        $this->setAllMembers($team_id, 'final_evaluation', $term_id);
         $this->setEvaluations($term_id);
         $this->setUserInfoForCsvData();
         $this->setGoalEvaluationForCsvData();
