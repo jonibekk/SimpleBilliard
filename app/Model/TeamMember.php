@@ -821,17 +821,17 @@ class TeamMember extends AppModel
         ];
 
         $before_csv_data = $this->getAllEvaluationsCsvData($term_id);
-        $this->csv_datas = [];
+        $this->csv_datas = $csv_data;
         //member_no
         $before_member_numbers = array_column($before_csv_data, 'member_no');
         //レコード数が同一である事を確認
-        if (count($csv_data) - 1 !== count($before_csv_data)) {
+        if (count($this->csv_datas) - 1 !== count($before_csv_data)) {
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
             return $res;
         }
         $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
         //row validation
-        foreach ($csv_data as $key => $row) {
+        foreach ($this->csv_datas as $key => $row) {
             //set line no
             $res['error_line_no'] = $key + 1;
 
@@ -864,10 +864,6 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "定義されていないスコアです。");
                 return $res;
             }
-
-            $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
-            $this->csv_member_ids[] = $row['member_no'];
-
         }
         //member id duplicate check
         if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
