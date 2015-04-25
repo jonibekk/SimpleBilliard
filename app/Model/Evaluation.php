@@ -340,6 +340,26 @@ class Evaluation extends AppModel
         return $res;
     }
 
+    function getFinalEvaluations($term_id, $evaluatee_user_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'Evaluation.evaluate_term_id'  => $term_id,
+                'Evaluation.team_id'           => $team_id,
+                'Evaluation.evaluatee_user_id' => $evaluatee_user_id,
+                'Evaluation.evaluate_type'     => self::TYPE_FINAL_EVALUATOR,
+                'Evaluation.goal_id'           => null,
+
+            ],
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Evaluation.evaluatee_user_id', '{n}.Evaluation');
+        return $res;
+    }
+
     function setDraftValidation()
     {
         $this->setAllowEmptyToComment();

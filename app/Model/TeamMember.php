@@ -259,6 +259,26 @@ class TeamMember extends AppModel
     }
 
     /**
+     * @param array $member_numbers
+     *
+     * @return array|null [member_no => user_id,...]
+     */
+    function getUserIdsByMemberNos($member_numbers = [])
+    {
+        $options = [
+            'conditions' => [
+                'member_no' => $member_numbers
+            ],
+            'fields'     => [
+                'member_no',
+                'user_id',
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
      * update members from csv
      * return data as:
      * $res = [
@@ -285,40 +305,23 @@ class TeamMember extends AppModel
         if ($validate['error']) {
             return array_merge($res, $validate);
         }
-        //TODO just test
-        return $res;
-        //update process
-
-        //TODO 保存処理はまだ。最終評価のidを検索して更新する
-
-        /**
-         * 評価者は最後に登録
-         * 評価者IDはメンバーIDを検索し、セット
-         */
-        //評価者紐付けを解除
-        $this->Team->Evaluator->deleteAll(['Evaluator.team_id' => $this->current_team_id]);
-
-        $save_evaluator_data = [];
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            if (!viaIsSet($row_v['Evaluator'])) {
-                continue;
-            }
-            foreach ($row_v['Evaluator'] as $r_k => $r_v) {
-                if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
-                    $save_evaluator_data[] = [
-                        'index_num'         => $r_k,
-                        'team_id'           => $this->current_team_id,
-                        'evaluatee_user_id' => $row_v['User']['id'],
-                        'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
-                    ];
-                }
-            }
+        //get user ids
+        $uids = $this->getUserIdsByMemberNos(Hash::extract($this->csv_datas, '{n}.member_no'));
+        //get Evaluations
+        $evaluations = $this->Team->Evaluation->getFinalEvaluations($term_id, $uids);
+        $score_list = $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
+        //prepare save data
+        foreach ($this->csv_datas as $key => $row) {
+            $row = Hash::expand($row);
+            $save_data = [];
+            $save_data['evaluate_score_id'] = array_keys($score_list, $row['total']['final']['score'])[0];
+            $save_data['comment'] = $row['total']['final']['comment'];
+            $save_data['evaluator_user_id'] = $this->my_uid;
+            $user_id = $uids[$row['member_no']];
+            $evaluations[$user_id] = array_merge($evaluations[$user_id], $save_data);
         }
-        if (viaIsSet($save_evaluator_data)) {
-            $this->Team->Evaluator->create();
-            $this->Team->Evaluator->saveAll($save_evaluator_data);
-        }
-
+        //save evaluations
+        $this->Team->Evaluation->saveAll($evaluations);
         $res['success_count'] = count($this->csv_datas);
         return $res;
     }
@@ -821,17 +824,17 @@ class TeamMember extends AppModel
         ];
 
         $before_csv_data = $this->getAllEvaluationsCsvData($term_id);
-        $this->csv_datas = $csv_data;
+        $this->csv_datas = [];
         //member_no
         $before_member_numbers = array_column($before_csv_data, 'member_no');
         //レコード数が同一である事を確認
-        if (count($this->csv_datas) - 1 !== count($before_csv_data)) {
+        if (count($csv_data) - 1 !== count($before_csv_data)) {
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
             return $res;
         }
         $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
         //row validation
-        foreach ($this->csv_datas as $key => $row) {
+        foreach ($csv_data as $key => $row) {
             //set line no
             $res['error_line_no'] = $key + 1;
 
@@ -864,6 +867,8 @@ class TeamMember extends AppModel
                 $res['error_msg'] = __d('gl', "定義されていないスコアです。");
                 return $res;
             }
+
+            $this->csv_datas[] = $row;
         }
         //member id duplicate check
         if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
