@@ -15,6 +15,8 @@ class TeamMemberTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.evaluation',
+        'app.evaluate_score',
         'app.team_member',
         'app.member_group',
         'app.evaluator',
@@ -1678,6 +1680,133 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+    function testValidateUpdateFinalEvaluationCsvDataUnMatchColumnCount()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
+        unset($csv_data[0]['member_no']);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(33), ['member_no' => 'test']);
+        $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 1
+        ];
+        $this->assertEquals($excepted, $actual);
+
+    }
+
+    function testValidateUpdateFinalEvaluationCsvDataUnMatchTitle()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
+        $csv_data[0]['member_no'] = 'test';
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(33), ['member_no' => 'test']);
+        $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 1
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testValidateUpdateFinalEvaluationCsvDataNotExistsMember()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
+        $csv_data[1] = $this->getEmptyRowOnCsv(33);
+        $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
+        $csv_data[1] = Hash::merge($csv_data[1],
+                                   ['member_no' => 'test', 'total.final.score' => 'aaaaa']);
+        $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+
+    }
+
+    function testValidateUpdateFinalEvaluationCsvDataNotExistsScore()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
+        $csv_data[1] = $this->getEmptyRowOnCsv(33);
+        $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
+        $csv_data[1] = Hash::merge($csv_data[1],
+                                   ['member_no' => 'member_1', 'total.final.score' => 'aaaaa']);
+        $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+
+    }
+
+    function testValidateUpdateFinalEvaluationCsvDataMemberIdDuplicated()
+    {
+        $this->setDefault();
+        $eval_data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 2,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => 1,
+            'comment'           => null,
+            'evaluate_score_id' => null,
+            'evaluate_type'     => 0,
+            'goal_id'           => null,
+            'index_num'         => 0,
+            'status'            => 0
+        ];
+        $this->TeamMember->Team->Evaluation->save($eval_data);
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
+        $csv_data[1] = $this->getEmptyRowOnCsv(33);
+        $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
+        $csv_data[1] = Hash::merge($csv_data[1],
+                                   ['member_no' => 'member_1', 'total.final.score' => 'A']);
+        $csv_data[2] = $this->getEmptyRowOnCsv(33);
+        $csv_data[2] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[2]);
+        $csv_data[2] = Hash::merge($csv_data[2],
+                                   ['member_no' => 'member_1', 'total.final.score' => 'A']);
+        $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
+
+        if (viaIsSet($actual['error_msg'])) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+
+    }
+
     function testGetAllMembersCsvDataNoUser()
     {
         $data = [
@@ -1858,14 +1987,15 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->setTotalFinalEvaluationForCsvData();
 
         $expected = [
-            (int) 0 => [
-                'total.final.score' => 'score_name',
+            (int)0 => [
+                'total.final.score'   => 'score_name',
                 'total.final.comment' => 'nice!'
             ]
         ];
         $actual = $this->TeamMember->csv_datas;
-        $this->assertEquals($expected,$actual);
+        $this->assertEquals($expected, $actual);
     }
+
     function testSetTotalEvaluatorEvaluationForCsvDataContinue()
     {
         $reflectionClass = new ReflectionClass($this->TeamMember);
@@ -1893,8 +2023,8 @@ class TeamMemberTest extends CakeTestCase
                     'EvaluateScore' => [
                         'name' => 'score_name',
                     ],
-                    'EvaluatorUser'=>[
-                        'display_username'=>'test user'
+                    'EvaluatorUser' => [
+                        'display_username' => 'test user'
                     ]
                 ]
             ]
@@ -1906,14 +2036,14 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->setTotalEvaluatorEvaluationForCsvData();
 
         $expected = [
-            (int) 0 => [
-                'total.evaluator.1.name' => 'test user',
-                'total.evaluator.1.score' => 'score_name',
+            (int)0 => [
+                'total.evaluator.1.name'    => 'test user',
+                'total.evaluator.1.score'   => 'score_name',
                 'total.evaluator.1.comment' => 'nice!'
             ]
         ];
         $actual = $this->TeamMember->csv_datas;
-        $this->assertEquals($expected,$actual);
+        $this->assertEquals($expected, $actual);
     }
 
     function testSetTotalSelfEvaluationForCsvDataContinue()
@@ -1933,14 +2063,14 @@ class TeamMemberTest extends CakeTestCase
         $property->setValue($this->TeamMember, [['User' => ['id' => 1]]]);
         $this->TeamMember->setGoalEvaluationForCsvData();
         $expected = [
-            (int) 0 => [
-                'kr_count' => (int) 0,
-                'action_count' => (int) 0,
-                'goal_progress' => (int) 0
+            (int)0 => [
+                'kr_count'      => (int)0,
+                'action_count'  => (int)0,
+                'goal_progress' => (int)0
             ]
         ];
         $actual = $this->TeamMember->csv_datas;
-        $this->assertEquals($expected,$actual);
+        $this->assertEquals($expected, $actual);
     }
 
     function testSetUserInfoForCsvDataContinue()
@@ -1954,7 +2084,7 @@ class TeamMemberTest extends CakeTestCase
 
     function testSetAllMembers()
     {
-        $this->TeamMember->current_team_id=1;
-        $this->TeamMember->setAllMembers(null,'final_evaluation');
+        $this->TeamMember->current_team_id = 1;
+        $this->TeamMember->setAllMembers(null, 'final_evaluation');
     }
 }

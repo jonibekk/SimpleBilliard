@@ -869,6 +869,7 @@ class TeamMember extends AppModel
             }
 
             $this->csv_datas[] = $row;
+            $this->csv_member_ids[] = $row['member_no'];
         }
         //member id duplicate check
         if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
