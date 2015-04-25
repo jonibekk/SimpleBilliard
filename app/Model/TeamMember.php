@@ -824,12 +824,12 @@ class TeamMember extends AppModel
         $this->csv_datas = [];
         //member_no
         $before_member_numbers = array_column($before_csv_data, 'member_no');
-        $this->log($before_member_numbers);
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
             return $res;
         }
+        $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
         //row validation
         foreach ($csv_data as $key => $row) {
             //set line no
@@ -847,23 +847,27 @@ class TeamMember extends AppModel
                 }
                 continue;
             }
+            $this->set($row);
+            if (!$this->validates()) {
+                $res['error_msg'] = current(array_shift($this->validationErrors));
+                return $res;
+            }
 
             //member_no exists check
-            if(!in_array($row['member_no'],$before_member_numbers)){
+            if (!in_array($row['member_no'], $before_member_numbers)) {
                 $res['error_msg'] = __d('gl', "存在しないメンバーIDです。");
+                return $res;
+            }
+
+            //score check
+            if (!in_array($row['total.final.score'], $score_list)) {
+                $res['error_msg'] = __d('gl', "定義されていないスコアです。");
                 return $res;
             }
 
             $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
             $this->csv_member_ids[] = $row['member_no'];
 
-            $row = Hash::expand($row);
-            $this->set($row);
-            //TODO バリデーションルールはまだ用意していない
-            if (!$this->validates()) {
-                $res['error_msg'] = current(array_shift($this->validationErrors));
-                return $res;
-            }
         }
         //member id duplicate check
         if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
@@ -1702,10 +1706,13 @@ class TeamMember extends AppModel
     {
         //TODO ルール設定まだしてない
         $validate_rules = [
-
-
+            'total.final.score' => [
+                'notEmpty' => [
+                    'rule'    => 'notEmpty',
+                    'message' => __d('validate', "%sは必須項目です。", __d('gl', "最終評価者によるスコア"))
+                ],
+            ],
         ];
-
         $this->validateBackup = $this->validate;
         $this->validate = $validate_rules;
     }
