@@ -39,6 +39,7 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "apt"
     chef.add_recipe "php_nginx"
     chef.add_recipe "redisio"
+    chef.add_recipe "redisio::enable"
     chef.add_recipe "local_db"
     chef.add_recipe "local_etc"
     chef.add_recipe "deploy_cake_local"
