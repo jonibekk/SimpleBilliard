@@ -32,7 +32,6 @@ before_script:
   - echo "extension=oauth.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev --no-interaction
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
   - mkdir ./app/tmp
