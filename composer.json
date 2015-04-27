@@ -19,7 +19,8 @@
     "mixpanel/mixpanel-php": "2.*",
     "aws/aws-sdk-php": "2.6.*",
     "uservoice/uservoice": "dev-master",
-    "pragmarx/google2fa": "dev-master"
+    "pragmarx/google2fa": "dev-master",
+    "oefenweb/cakephp-redis": "dev-master"
   },
   "config": {
     "vendor-dir": "Vendor/"

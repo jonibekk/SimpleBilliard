@@ -15,7 +15,7 @@ App::uses('NotifySetting', 'Model');
 class Notification extends AppModel
 {
     public $uses = [
-        'NotifySetting'
+        'NotifySetting',
     ];
     /**
      * 通知タイプ
@@ -87,7 +87,6 @@ class Notification extends AppModel
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
-
         $this->_setTypeDefault();
     }
 
@@ -298,4 +297,5 @@ class Notification extends AppModel
         }
         return $title;
     }
+
 }
