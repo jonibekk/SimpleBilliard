@@ -161,6 +161,8 @@
                                     <? if ($goal['my_goal'] === false) { ?>
                                         <?= $this->Form->button(__d('gl', "評価対象にする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                         <?= $this->Form->button(__d('gl', "評価対象にしない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
+                                    <? } elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === '1' && $goal['Collaborator']['valued_flg'] === '3') { ?>
+                                        <a class="btn btn-primary approval_button" href="goals/add/<?= $goal['Goal']['id']; ?>/mode:3"><?=__d('gl', "ゴールを修正する")?> <i class="fa fa-chevron-right"></i></a>
                                     <? } ?>
                                 </div>
                             </div>
