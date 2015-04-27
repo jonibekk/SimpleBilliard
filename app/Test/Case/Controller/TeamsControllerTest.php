@@ -21,6 +21,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.evaluate_score',
         'app.action_result',
         'app.goal',
+        'app.key_result',
         'app.follower',
         'app.collaborator',
         'app.local_name',
@@ -350,6 +351,50 @@ class TeamsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxUploadFinalEvaluationsCsvEmpty()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'final_evaluations_csv_format_only_title.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_final_evaluations_csv/1', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadFinalEvaluationsCsvError()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'final_evaluations_csv_format_error.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_final_evaluations_csv/1', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadFinalEvaluationsCsvNoError()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'id'                => 1,
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 2,
+            'evaluate_term_id'  => 1,
+            'comment'           => null,
+            'evaluate_score_id' => null,
+            'evaluate_type'     => 3,
+            'goal_id'           => null,
+            'index_num'         => 0,
+            'status'            => 0
+        ];
+        $Teams->Team->Evaluation->save($data);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'final_evaluations_csv_format_no_error.csv';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_upload_final_evaluations_csv/1', ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxGetScoreElm()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -442,22 +487,6 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $this->_getTeamsCommonMock(null, true);
         $this->testAction('/teams/download_final_evaluations_csv/1', ['method' => 'GET']);
-    }
-
-    function testAjaxGetFinalEvalModal()
-    {
-        $Teams = $this->_getTeamsCommonMock(null, true);
-        $data = [
-            'start_date' => 0,
-            'end_date'   => 10000000000,
-            'team_id'    => 1
-        ];
-        $Teams->Team->EvaluateTerm->save($data);
-        $term_id = $Teams->Team->EvaluateTerm->getLastInsertID();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction("/teams/ajax_get_final_eval_modal/{$term_id}", ['method' => 'GET']);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testSaveEvaluationScoresSuccess()

@@ -98,6 +98,7 @@ class Evaluation extends AppModel
     const TYPE_STATUS_DONE = 2;
 
     var $evaluationType = null;
+    public $evaluate_term_id = null;
 
     static public $TYPE = [
         self::TYPE_ONESELF         => "",
@@ -337,6 +338,26 @@ class Evaluation extends AppModel
         ];
         $res = $this->find('all', $options);
         $res = Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Evaluation.evaluatee_user_id');
+        return $res;
+    }
+
+    function getFinalEvaluations($term_id, $evaluatee_user_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'Evaluation.evaluate_term_id'  => $term_id,
+                'Evaluation.team_id'           => $team_id,
+                'Evaluation.evaluatee_user_id' => $evaluatee_user_id,
+                'Evaluation.evaluate_type'     => self::TYPE_FINAL_EVALUATOR,
+                'Evaluation.goal_id'           => null,
+
+            ],
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Evaluation.evaluatee_user_id', '{n}.Evaluation');
         return $res;
     }
 
@@ -707,6 +728,19 @@ class Evaluation extends AppModel
             ]
         ]);
         return viaIsSet($res['Evaluation']['evaluatee_user_id']);
+    }
+
+    function getEvaluateeIdsByTermId($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $term_id
+            ],
+            'fields'     => ['evaluatee_user_id'],
+            'group'      => ['evaluatee_user_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
     }
 
     function getNextEvaluatorId($termId, $evaluateeId)
