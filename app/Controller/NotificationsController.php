@@ -9,6 +9,8 @@ App::uses('AppController', 'Controller');
 class NotificationsController extends AppController
 {
 
+    public $components = ['NotifyBiz'];
+
     /**
      * @return array
      */
@@ -31,15 +33,14 @@ class NotificationsController extends AppController
     }
 
     /**
-     * @param $latest_score_id
      *
      * @return array
      */
-    public function ajax_get_new_notify_count($latest_score_id)
+    public function ajax_get_new_notify_count()
     {
         $this->_ajaxPreProcess();
         // rendering
-        $html = $latest_score_id;
+        $html = 3;
         return $this->_ajaxGetResponse($html);
     }
 

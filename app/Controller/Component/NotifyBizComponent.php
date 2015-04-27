@@ -536,7 +536,7 @@ class NotifyBizComponent extends Component
      *
      * @return array
      */
-    function getNotification($limit = null, $page = 1)
+    function getNotification($limit = null, $notify_id = null)
     {
         //$this->Redis->get();
         $data = [
