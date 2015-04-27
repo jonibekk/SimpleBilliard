@@ -106,11 +106,6 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
-        $data = [];
-        for ($i = 1; $i < 1000; $i++) {
-            $data[] = $i;
-        }
-        $this->Redis->setNotifications(1234, 1, $data, 100, 'test', time());
         parent::beforeFilter();
 
         $this->_setSecurity();
