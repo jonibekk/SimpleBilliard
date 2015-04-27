@@ -1224,10 +1224,17 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction("/posts/unjoin_circle/{$circle_id}", ['method' => 'get']);
     }
 
-    function testUserCircleStatus()
+    function testUserCircleStatusAdmin()
     {
         $this->_getPostsCommonMock();
         $this->testAction("/posts/userCircleStatus/1", ['method' => 'get']);
+
+    }
+
+    function testUserCircleStatusJoined()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/userCircleStatus/2", ['method' => 'get']);
 
     }
 
