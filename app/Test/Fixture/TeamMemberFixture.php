@@ -77,7 +77,7 @@ class TeamMemberFixture extends CakeTestFixture
             'user_id'               => '2',
             'team_id'               => '1',
             'coach_user_id'         => '1',
-            'member_no'             => 'Lorem ipsum dolor sit amet',
+            'member_no'             => 'member_z',
             'job_category_id'       => '',
             'active_flg'            => 1,
             'invitation_flg'        => 1,

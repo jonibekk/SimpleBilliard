@@ -19,22 +19,23 @@ App::uses('HelpsController', 'Controller');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent                $Lang
- * @property SessionComponent             $Session
- * @property SecurityComponent            $Security
- * @property TimezoneComponent            $Timezone
- * @property CookieComponent              $Cookie
- * @property CsvComponent                 $Csv
- * @property GlEmailComponent             $GlEmail
- * @property PnotifyComponent             $Pnotify
- * @property MixpanelComponent            $Mixpanel
- * @property UservoiceComponent           $Uservoice
- * @property OgpComponent                 $Ogp
- * @property User                         $User
- * @property Post                         $Post
- * @property Goal                         $Goal
- * @property Team                         $Team
- * @property NotifyBizComponent           $NotifyBiz
+ * @property LangComponent                         $Lang
+ * @property SessionComponent                      $Session
+ * @property SecurityComponent                     $Security
+ * @property TimezoneComponent                     $Timezone
+ * @property CookieComponent                       $Cookie
+ * @property CsvComponent                          $Csv
+ * @property GlEmailComponent                      $GlEmail
+ * @property PnotifyComponent                      $Pnotify
+ * @property MixpanelComponent                     $Mixpanel
+ * @property UservoiceComponent                    $Uservoice
+ * @property OgpComponent                          $Ogp
+ * @property User                                  $User
+ * @property Post                                  $Post
+ * @property Goal                                  $Goal
+ * @property Team                                  $Team
+ * @property NotifyBizComponent                    $NotifyBiz
+ * @property RedisComponent                        $Redis
  */
 class AppController extends Controller
 {
@@ -62,6 +63,7 @@ class AppController extends Controller
         'NotifyBiz',
         'Uservoice',
         'Csv',
+        'Redis',
     ];
     public $helpers = [
         'Session',

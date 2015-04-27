@@ -17,6 +17,7 @@
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
+<?=$this->element('google_tag_manager')?>
 <?= $this->element('header_logged_in') ?>
 <div id="container" class="container">
     <div class="row">

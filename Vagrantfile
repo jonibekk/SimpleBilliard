@@ -6,8 +6,7 @@ required_plugins.each do |plugin|
    required_plugins.each do |plugin|
      system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
    end
-
-   puts "Please rerun `vagrant up`or`vagrant reload`."
+   print "\e[32m\e[1m*** Please rerun `vagrant up`or`vagrant reload`.\e[0m\n"
    exit
  end
 end
@@ -22,8 +21,13 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
 
-  config.cache.scope = :box
-  config.omnibus.chef_version = '11.4.4'
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.auto_detect = true
+  end
+
+  if Vagrant.has_plugin?("vagrant-omnibus")
+    config.omnibus.chef_version = '11.4.4'
+  end
 
   src_dir = './'
   doc_root = '/vagrant_data/app/webroot'
@@ -34,6 +38,8 @@ Vagrant.configure("2") do |config|
     chef.cookbooks_path = "cookbooks"
     chef.add_recipe "apt"
     chef.add_recipe "php_nginx"
+    chef.add_recipe "redisio"
+    chef.add_recipe "redisio::enable"
     chef.add_recipe "local_db"
     chef.add_recipe "local_etc"
     chef.add_recipe "deploy_cake_local"

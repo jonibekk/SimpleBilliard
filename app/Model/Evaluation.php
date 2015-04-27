@@ -98,6 +98,7 @@ class Evaluation extends AppModel
     const TYPE_STATUS_DONE = 2;
 
     var $evaluationType = null;
+    public $evaluate_term_id = null;
 
     static public $TYPE = [
         self::TYPE_ONESELF         => "",
@@ -233,12 +234,12 @@ class Evaluation extends AppModel
     function add($data, $saveType)
     {
         // insert status value to save data
-        if ($saveType === "draft") {
-            $data = Hash::insert($data, '{n}.Evaluation.status', 1);
+        if ($saveType == self::TYPE_STATUS_DRAFT) {
+            $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DRAFT);
             $this->setDraftValidation();
         }
         else {
-            $data = Hash::insert($data, '{n}.Evaluation.status', 2);
+            $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DONE);
             $this->setNotAllowEmptyToComment();
             $this->setNotAllowEmptyToEvaluateScoreId();
         }
@@ -254,7 +255,8 @@ class Evaluation extends AppModel
             }
         }
 
-        if ($saveType === "register") {
+        // Move turn flg to next
+        if ($saveType == self::TYPE_STATUS_DONE) {
             $baseEvaId = $data[0]['Evaluation']['id'];
             $termId = $this->getTermIdByEvaluationId($baseEvaId);
             $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
@@ -307,6 +309,56 @@ class Evaluation extends AppModel
         ];
         $res = $this->find('all', $options);
         return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
+    }
+
+    function getAllEvaluations($term_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'Evaluation.evaluate_term_id' => $term_id,
+                'Evaluation.team_id'          => $team_id,
+            ],
+            'order'      => [
+                'Evaluation.evaluatee_user_id ASC',
+                'Evaluation.index_num ASC'
+            ],
+            'contain'    => [
+                'EvaluatorUser' => [
+                    'fields' => $this->EvaluateeUser->profileFields
+                ],
+                'EvaluateScore' => [
+                    'fields' => [
+                        'EvaluateScore.name'
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Evaluation.evaluatee_user_id');
+        return $res;
+    }
+
+    function getFinalEvaluations($term_id, $evaluatee_user_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'Evaluation.evaluate_term_id'  => $term_id,
+                'Evaluation.team_id'           => $team_id,
+                'Evaluation.evaluatee_user_id' => $evaluatee_user_id,
+                'Evaluation.evaluate_type'     => self::TYPE_FINAL_EVALUATOR,
+                'Evaluation.goal_id'           => null,
+
+            ],
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Evaluation.evaluatee_user_id', '{n}.Evaluation');
+        return $res;
     }
 
     function setDraftValidation()
@@ -606,6 +658,7 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id'  => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => $this->my_uid
             ],
             'order'      => 'Evaluation.index_num asc',
         ];
@@ -675,6 +728,19 @@ class Evaluation extends AppModel
             ]
         ]);
         return viaIsSet($res['Evaluation']['evaluatee_user_id']);
+    }
+
+    function getEvaluateeIdsByTermId($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $term_id
+            ],
+            'fields'     => ['evaluatee_user_id'],
+            'group'      => ['evaluatee_user_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
     }
 
     function getNextEvaluatorId($termId, $evaluateeId)
