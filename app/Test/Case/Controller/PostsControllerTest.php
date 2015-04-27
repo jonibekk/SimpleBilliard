@@ -15,6 +15,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.goal_category',
         'app.evaluate_term',
         'app.action_result',
         'app.key_result',
@@ -1286,6 +1287,10 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
+
         /** @noinspection PhpUndefinedFieldInspection */
         /** @noinspection PhpUndefinedMethodInspection */
         //$Posts->NotifyBiz->expects($this->any())->method('sendNotify')->will($this->returnValue(true));

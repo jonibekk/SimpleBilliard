@@ -1141,6 +1141,10 @@ class GoalsControllerTest extends ControllerTestCase
                 'border_months'    => 6
             ]
         ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
+
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
