@@ -24,6 +24,4 @@ class NotificationsController extends AppController
     {
     }
 
-
-
 }
