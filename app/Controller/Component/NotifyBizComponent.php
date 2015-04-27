@@ -578,10 +578,11 @@ class NotifyBizComponent extends Component
      *
      * @param array|int $to_user_ids
      * @param int       $type
+     * @param string    $body
      *
      * @return bool
      */
-    function setNotifications($to_user_ids, $type)
+    function setNotifications($to_user_ids, $type, $body = null)
     {
 
         return true;

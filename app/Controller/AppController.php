@@ -19,23 +19,24 @@ App::uses('HelpsController', 'Controller');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent                         $Lang
- * @property SessionComponent                      $Session
- * @property SecurityComponent                     $Security
- * @property TimezoneComponent                     $Timezone
- * @property CookieComponent                       $Cookie
- * @property CsvComponent                          $Csv
- * @property GlEmailComponent                      $GlEmail
- * @property PnotifyComponent                      $Pnotify
- * @property MixpanelComponent                     $Mixpanel
- * @property UservoiceComponent                    $Uservoice
- * @property OgpComponent                          $Ogp
- * @property User                                  $User
- * @property Post                                  $Post
- * @property Goal                                  $Goal
- * @property Team                                  $Team
- * @property NotifyBizComponent                    $NotifyBiz
- * @property RedisComponent                        $Redis
+ * @property LangComponent                             $Lang
+ * @property SessionComponent                          $Session
+ * @property SecurityComponent                         $Security
+ * @property TimezoneComponent                         $Timezone
+ * @property CookieComponent                           $Cookie
+ * @property CsvComponent                              $Csv
+ * @property GlEmailComponent                          $GlEmail
+ * @property PnotifyComponent                          $Pnotify
+ * @property MixpanelComponent                         $Mixpanel
+ * @property UservoiceComponent                        $Uservoice
+ * @property OgpComponent                              $Ogp
+ * @property User                                      $User
+ * @property Post                                      $Post
+ * @property Goal                                      $Goal
+ * @property Team                                      $Team
+ * @property NotifyBizComponent                        $NotifyBiz
+ * @property RedisComponent                            $Redis
+ * @property BenchmarkComponent                        $Benchmark
  */
 class AppController extends Controller
 {
@@ -64,6 +65,7 @@ class AppController extends Controller
         'Uservoice',
         'Csv',
         'Redis',
+        //        'Benchmark',
     ];
     public $helpers = [
         'Session',
@@ -104,6 +106,11 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
+        $data = [];
+        for ($i = 1; $i < 1000; $i++) {
+            $data[] = $i;
+        }
+        $this->Redis->setNotifications(1234, 1, $data, 100, 'test', time());
         parent::beforeFilter();
 
         $this->_setSecurity();
