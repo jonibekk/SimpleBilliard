@@ -9,6 +9,8 @@ App::uses('AppController', 'Controller');
 class NotificationsController extends AppController
 {
 
+    public $components = ['NotifyBiz'];
+
     /**
      * @return array
      */
@@ -31,7 +33,7 @@ class NotificationsController extends AppController
     }
 
     /**
-     * @return int
+     * @return array
      */
     public function ajax_get_new_notify_count()
     {
@@ -46,8 +48,10 @@ class NotificationsController extends AppController
     public function ajax_get_latest_notify_items()
     {
         $this->_ajaxPreProcess();
-        // rendering
-        $html = "";
+        $notify_items = $this->NotifyBiz->getNotification();
+        $this->set(compact('notify_items'));
+        $response = $this->render('Notification/bell_notification_items');
+        $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }
 
