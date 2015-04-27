@@ -1,12 +1,12 @@
 <?php
-App::uses('NotifyController', 'Controller');
+App::uses('NotificationsController', 'Controller');
 
 /**
- * NotifyController Test Case
+ * NotificationsController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
 
  */
-class NotifyControllerTest extends ControllerTestCase
+class NotificationsControllerTest extends ControllerTestCase
 {
 
     /**
@@ -61,27 +61,27 @@ class NotifyControllerTest extends ControllerTestCase
 
     function testIndex()
     {
-        $this->testAction('/notify/', ['method' => 'GET']);
+        $this->testAction('/notifications/', ['method' => 'GET']);
     }
 
     function testAjaxGetNotifyListMore()
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/notify/ajax_get_notify_list_more', ['method' => 'GET']);
+        $this->testAction('/notifications/ajax_get_notify_list_more', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetUnreadCount()
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/notify/ajax_get_unread_count', ['method' => 'GET']);
+        $this->testAction('/notifications/ajax_get_unread_count', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetNewNotifyItems()
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/notify/ajax_get_new_notify_items', ['method' => 'GET']);
+        $this->testAction('/notifications/ajax_get_new_notify_items', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

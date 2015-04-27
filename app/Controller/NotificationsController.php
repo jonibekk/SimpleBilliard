@@ -2,10 +2,10 @@
 App::uses('AppController', 'Controller');
 
 /**
- * Notify Controller
+ * Notification Controller
  *
  */
-class NotifyController extends AppController
+class NotificationsController extends AppController
 {
 
     public function index()
