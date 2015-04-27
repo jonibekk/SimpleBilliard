@@ -64,24 +64,26 @@ class NotificationsControllerTest extends ControllerTestCase
         $this->testAction('/notifications/', ['method' => 'GET']);
     }
 
-    function testAjaxGetNotifyListMore()
+    function testAjaxGetOldNotifyMore()
     {
+        $oldest_score_id = 1;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/notifications/ajax_get_notify_list_more', ['method' => 'GET']);
+        $this->testAction("/notifications/ajax_get_old_notify_more/{$oldest_score_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetUnreadCount()
+    function testAjaxGetNewNotifyCount()
     {
+        $latest_score_id = 1;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/notifications/ajax_get_unread_count', ['method' => 'GET']);
+        $this->testAction("/notifications/ajax_get_new_notify_count/{$latest_score_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetNewNotifyItems()
+    function testAjaxGetLatestNotifyItems()
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/notifications/ajax_get_new_notify_items', ['method' => 'GET']);
+        $this->testAction('/notifications/ajax_get_latest_notify_items', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
