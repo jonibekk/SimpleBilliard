@@ -15,7 +15,7 @@
  */
 echo $body_title;
 echo "\n";
-echo __d('mail', '「%s」', $this->TextEx->replaceUrl(del_line_break($body[0])));
+echo __d('mail', '「%s」', $this->TextEx->replaceUrl($body[0]));
 echo "\n";
 echo "\n";
 echo $url;
