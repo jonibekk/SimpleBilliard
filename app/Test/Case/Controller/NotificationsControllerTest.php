@@ -74,9 +74,8 @@ class NotificationsControllerTest extends ControllerTestCase
 
     function testAjaxGetNewNotifyCount()
     {
-        $latest_score_id = 1;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/notifications/ajax_get_new_notify_count/{$latest_score_id}", ['method' => 'GET']);
+        $this->testAction("/notifications/ajax_get_new_notify_count", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

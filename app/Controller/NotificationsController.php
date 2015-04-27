@@ -31,16 +31,14 @@ class NotificationsController extends AppController
     }
 
     /**
-     * @param $latest_score_id
-     *
-     * @return array
+     * @return int
      */
-    public function ajax_get_new_notify_count($latest_score_id)
+    public function ajax_get_new_notify_count()
     {
         $this->_ajaxPreProcess();
-        // rendering
-        $html = $latest_score_id;
-        return $this->_ajaxGetResponse($html);
+        $notify_count = $this->NotifyBiz->getCountNewNotification();
+        $this->log($notify_count);
+        return $this->_ajaxGetResponse($notify_count);
     }
 
     /**
