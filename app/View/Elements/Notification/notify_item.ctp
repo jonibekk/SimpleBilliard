@@ -1,11 +1,25 @@
-<!-- START app/View/Elements/bell_notification.ctp -->
+<?php
+/**
+ * Created by PhpStorm.
+ * User: saeki
+ * Date: 15/04/27
+ * Time: 16:57
+ *
+ * @var $user
+ * @var $notification
+ *
+ */
+?>
+
+<!-- START app/View/Elements/Notification/notify_item.ctp -->
+
 <li class="divider notify-divider"></li>
 <li class="notify-card-list">
-    <a href="<?= $postUrl ?>" class="col col-xxs-12 notify-card" id="notifyCard">
+    <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card" id="notifyCard">
         <?=
         $this->Html->image(
             $this->Upload->uploadUrl(
-                $this->Session->read('Auth.User'),
+                $user,
                 'User.photo',
                 ['style' => 'medium_large']
             ),
@@ -17,17 +31,19 @@
         <div class="comment-body col-xxs-9 notify-contents">
             <div class="col col-xxs-12 comment-text comment-user">
                 <div class="mb_2px lh_12px">
-                    <?= __d('notify', "%sからコメントがありました。",
-                            '<span class="font_bold font_verydark">' . h($displayUserName) . '</span>') ?>
+                    <span class="font_bold font_verydark">
+                        <?= h($notification['title']) ?>
+                    </span>
                 </div>
             </div>
 
             <div
                 class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align notify-text notify-line-number"
                 id="CommentTextBody_67">
-                <i class="fa fa-comment-o disp_i"></i>「<?= h($comment) ?>」
+                <i class="fa fa-comment-o disp_i"></i>「<?= h($notification['body']) ?>」
             </div>
         </div>
     </a>
 </li>
-<!-- END app/View/Elements/bell_notification.ctp -->
+
+<!-- END app/View/Elements/Notification/notify_item.ctp -->
