@@ -484,7 +484,6 @@ class PostsController extends AppController
             return $this->_ajaxGetResponse($result);
         }
 
-        $this->_pushCommentToBell();
         $this->_pushCommentToPost($this->Post->id);
 
         return $this->_ajaxGetResponse($result);
@@ -606,44 +605,6 @@ class PostsController extends AppController
 
         }
         return $requestData;
-    }
-
-    function _pushCommentToBell()
-    {
-        //push通知するユーザーを定義
-        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id);
-        $findRes = $this->Post->findById($this->Post->id, array('user_id'));
-        $postUserId = viaIsSet($findRes['Post']['user_id']);
-        if ($postUserId && !in_array($postUserId,
-                                     $pushUserList) && $postUserId !== $this->Session->read('Auth.User.id')
-        ) {
-            $pushUserList[] = $postUserId;
-        }
-
-        // pusherに渡すデータを定義
-        $teamId = $this->Session->read('current_team_id');
-        $socketId = viaIsSet($this->request->data['socket_id']);
-        $comment = viaIsSet($this->request->data['Comment']['body']);
-        if (!$socketId || !$comment) {
-            return;
-        }
-        // 通知テンプレートのレンダリング
-        $view = new View();
-        $displayUserName = $this->Session->read('Auth.User.display_username');
-        $postUrl = "/post_permanent/" . $this->Post->id;
-        $html = $view->element('bell_notification_item', compact('displayUserName', 'comment', 'postUrl'));
-        $notifyId = Security::hash(time());
-        $data = array(
-            'notify_id'      => $notifyId,
-            'is_bell_notify' => true,
-            'html'           => $html,
-        );
-
-        // Pusherへ送信
-        foreach ($pushUserList as $user) {
-            $channelName = "user_" . $user . "_team_" . $teamId;
-            $this->NotifyBiz->bellPush($socketId, $channelName, $data);
-        }
     }
 
     public function _pushCommentToPost($postId)
