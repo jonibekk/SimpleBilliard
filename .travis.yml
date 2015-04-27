@@ -116,7 +116,7 @@ before_deploy:
   - php Vendor/bin/coveralls -v
 
 notifications:
-  slack: isao:Mcgs4pORm8368wH6Rwo5a6Rh
+  slack: goalous:JkI6FxdrZDzE1gILR6qTJ69p
   email: false
 
 deploy:
