@@ -7,7 +7,6 @@
  *
  * @var $user
  * @var $notification
- *
  */
 ?>
 
