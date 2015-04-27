@@ -3,8 +3,9 @@ App::uses('AppController', 'Controller');
 
 /**
  * Notification Controller
-
+ *
  */
+
 class NotificationsController extends AppController
 {
 
@@ -37,9 +38,8 @@ class NotificationsController extends AppController
     public function ajax_get_new_notify_count()
     {
         $this->_ajaxPreProcess();
-        // rendering
-        $html = 3;
-        return $this->_ajaxGetResponse($html);
+        $notify_count = $this->NotifyBiz->getCountNewNotification();
+        return $this->_ajaxGetResponse($notify_count);
     }
 
     /**
