@@ -120,7 +120,8 @@ class GoalsController extends AppController
                     $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
                         $this->Auth->user('id'), $this->Session->read('current_team_id'));
                     if (isset($coach_id['TeamMember']['coach_user_id']) === true
-                        && is_null($coach_id['TeamMember']['coach_user_id']) === false) {
+                        && is_null($coach_id['TeamMember']['coach_user_id']) === false
+                    ) {
                         $this->redirect("/goal_approval");
                     }
                     $this->redirect("/");
@@ -500,7 +501,7 @@ class GoalsController extends AppController
         ];
 
         //存在チェック
-        if (!$this->Goal->isBelongCurrentTeam($goal_id)) {
+        if (!$this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))) {
             $return['error'] = true;
             $return['msg'] = __d('gl', "存在しないゴールです。");
             return $this->_ajaxGetResponse($return);
@@ -806,7 +807,7 @@ class GoalsController extends AppController
         ];
         $this->_ajaxPreProcess();
         if (isset($this->request->params['named']['ar_count'])
-            && $this->Goal->isBelongCurrentTeam($goal_id)
+            && $this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))
         ) {
             $this->set('ar_count', $this->request->params['named']['ar_count']);
             $this->set(compact('goal_id'));

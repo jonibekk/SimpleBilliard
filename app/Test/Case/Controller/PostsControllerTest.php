@@ -1058,7 +1058,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[異常ValidationError]コメント編集");
     }
 
-    function testFeedCircle()
+    function testFeedShareUser()
     {
         /**
          * @var UsersController $Posts
@@ -1089,6 +1089,12 @@ class PostsControllerTest extends ControllerTestCase
             ]
         ];
         $Posts->Post->PostShareUser->save($share_user_data);
+        $this->testAction('/circle_feed/1');
+    }
+
+    function testFeedCircleSuccess()
+    {
+        $this->_getPostsCommonMock();
         $this->testAction('/circle_feed/1');
     }
 
@@ -1199,7 +1205,7 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $data = [
-            'user_id'    => '1'
+            'user_id' => '1'
         ];
         $this->testAction('/posts/join_circle/1', ['method' => 'get']);
     }
@@ -1207,9 +1213,9 @@ class PostsControllerTest extends ControllerTestCase
     function testJoinCircleException()
     {
         $this->_getPostsCommonMock();
-        try{
+        try {
             $this->testAction('/posts/join_circle/', ['method' => 'get']);
-        }catch (NotFoundException $e){
+        } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e));
     }
@@ -1218,7 +1224,7 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $data = [
-            'user_id'    => '2'
+            'user_id' => '2'
         ];
         $circle_id = '1';
         $this->testAction("/posts/unjoin_circle/{$circle_id}", ['method' => 'get']);

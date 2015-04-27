@@ -318,7 +318,7 @@ class PostsController extends AppController
             'html'  => null
         ];
         $this->_ajaxPreProcess();
-        if ($this->Post->isBelongCurrentTeam($post_id)) {
+        if ($this->Post->isBelongCurrentTeam($post_id, $this->Session->read('current_team_id'))) {
             $this->set(compact('post_id', 'prefix'));
             $response = $this->render('Feed/new_comment_form');
             $html = $response->__toString();
@@ -515,7 +515,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id','user_status','params'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
@@ -695,14 +695,14 @@ class PostsController extends AppController
 
     public function userCircleStatus($circle_id)
     {
-       if($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id))
-       {
-          return 'admin';
-       }
-       else if ($this->Post->Circle->CircleMember->isBelong($circle_id,$this->Auth->user('id')))
-       {
-            return 'joined';
-       }
+        if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
+            return 'admin';
+        }
+        else {
+            if ($this->Post->Circle->CircleMember->isBelong($circle_id, $this->Auth->user('id'))) {
+                return 'joined';
+            }
+        }
         return 'not_joined';
     }
 
