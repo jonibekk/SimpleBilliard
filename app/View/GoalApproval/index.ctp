@@ -102,6 +102,10 @@
 
                         <div class="panel-body goal-set-heading clearfix">
 
+                            <p class="approval_body_text">
+                                <?= $this->Html->image('ajax-loader.gif', [ 'class' => 'lazy comment-img',
+                                                                            'data-original' => $this->Upload->uploadUrl($goal['User'], 'User.photo', ['style' => 'small'])]) ?></p>
+
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 
