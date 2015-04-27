@@ -850,6 +850,15 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->evaluate_term_id);
     }
 
+    function testGetFinalEvaluations()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->evaluate_term_id, [1, 2, 3]);
+        $this->assertTrue(count($res) === 2);
+    }
+
     function _saveEvaluations()
     {
         $evaluateeId = 1;
