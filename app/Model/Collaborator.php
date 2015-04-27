@@ -208,7 +208,6 @@ class Collaborator extends AppModel
                 'Collaborator.team_id'    => $team_id,
                 'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
-                //'User.id !='              => $user_id
             ],
             'contain'    => [
                 'Goal' => [
