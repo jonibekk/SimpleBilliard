@@ -37,7 +37,6 @@ class NotificationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $notify_count = $this->NotifyBiz->getCountNewNotification();
-        $this->log($notify_count);
         return $this->_ajaxGetResponse($notify_count);
     }
 
