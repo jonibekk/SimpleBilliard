@@ -54,7 +54,7 @@ class NotificationsController extends AppController
         $this->_ajaxPreProcess();
         $notify_items = $this->NotifyBiz->getNotification();
         $this->set(compact('notify_items'));
-        $response = $this->render('Notification/notify_items');
+        $response = $this->render('Notification/notify_items_in_list_box');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }
