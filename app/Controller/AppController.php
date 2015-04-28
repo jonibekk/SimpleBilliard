@@ -108,6 +108,10 @@ class AppController extends Controller
     {
         parent::beforeFilter();
 
+        //TODO redis test
+//        $this->Redis->setNotifications(1,1,[1,2,3,4],1,'test',time());
+//        $this->log($this->Redis->getCountOfNewNotification(1,1));
+
         $this->_setSecurity();
         $this->_setAppLanguage();
         //ログイン済みの場合のみ実行する
