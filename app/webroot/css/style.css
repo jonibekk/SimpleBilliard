@@ -3807,6 +3807,7 @@ Temporary Properties - YOU MUST FIX
 
 .notify-card-list {
     clear: both;
+    overflow:hidden;
 }
 
 .notify-card-empty {
@@ -4060,5 +4061,9 @@ Temporary Properties - YOU MUST FIX
 }
 
 .read_notify {
-    background-color: #707880;
+    background-color: #DCDCDC;
+}
+
+.notify-all-view-link {
+    padding: 3px;
 }
