@@ -89,7 +89,7 @@ class RedisComponent extends Object
      * @param null|string   $notify_id
      * @param bool|int|null $unread
      */
-    public function setKeyName($key_type, $team_id, $user_id = null, $notify_id = null, $unread = 1)
+    public function setKeyName($key_type, $team_id, $user_id = null, $notify_id = null, $unread = null)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
@@ -148,11 +148,12 @@ class RedisComponent extends Object
      * @param array  $to_user_ids
      * @param int    $my_id
      * @param string $body
+     * @param string $url
      * @param int    $date
      *
      * @return bool
      */
-    public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $date)
+    public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date)
     {
         $notify_id = $this->generateId();
         $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id);
@@ -160,6 +161,7 @@ class RedisComponent extends Object
             'id'      => $notify_id,
             'user_id' => $my_id,
             'body'    => $body,
+            'url'     => $url,
             'type'    => $type,
             'date'    => $date,
         ];
@@ -170,7 +172,10 @@ class RedisComponent extends Object
         //save notification user process
         foreach ($to_user_ids as $uid) {
             //save notification user
-            $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid);
+            $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null);
+            $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), time(),
+                            $notify_id);
+            $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0);
             $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), time(),
                             $notify_id);
             //increment
@@ -213,14 +218,49 @@ class RedisComponent extends Object
         if ($notify_date === false) {
             return false;
         }
+        //delete set
         $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
         $deleted_count = $this->Db->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_id);
         if ($deleted_count === 0) {
             return false;
         }
+        //add set for unread status
         $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, $unread);
         $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_date,
                         $notify_id);
+        //add set for all
+        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
+        $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_date,
+                        $notify_id);
         return true;
+    }
+
+    function getNotification($team_id, $user_id, $limit = null, $from_date = null)
+    {
+        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
+        //delete from notification user
+        $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), 0,
+                                    time() - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION));
+
+        if ($limit === null) {
+            $limit = -1;
+        }
+        if ($from_date === null) {
+            $notify_list = $this->Db->zRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), 0, $limit);
+        }
+        else {
+            $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER),
+                                                       $from_date, -1,
+                                                       ['limit' => [1, $limit]]);
+        }
+        $res = [];
+        if (empty($notify_list)) {
+            return $res;
+        }
+        foreach ($notify_list as $notify_id) {
+            $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, $user_id, $notify_id);
+            $res[] = $this->Db->hGetAll($this->getKeyName(self::KEY_TYPE_NOTIFICATION));
+        }
+        return $res;
     }
 }
