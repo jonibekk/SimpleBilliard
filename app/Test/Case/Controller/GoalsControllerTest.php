@@ -15,6 +15,7 @@ class GoalsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.evaluate_term',
         'app.action_result',
         'app.evaluation_setting',
         'app.evaluation',
@@ -270,6 +271,32 @@ class GoalsControllerTest extends ControllerTestCase
                 ]
             ]
         ];
+        $this->testAction("/goals/add/{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddPostMode3GoApprovalPage()
+    {
+        $Goal = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goal);
+        $data = [
+            'Goal'         => [
+                'description' => 'test',
+            ],
+            'Collaborator' => [
+                [
+                    'id'       => $this->collabo_id,
+                    'priority' => 3
+                ]
+            ]
+        ];
+
+        $team_member = [
+            'user_id'       => 1,
+            'team_id'       => 1,
+            'coach_user_id' => 999,
+        ];
+        $Goal->User->TeamMember->save($team_member);
+
         $this->testAction("/goals/add/{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
     }
 
@@ -1114,6 +1141,10 @@ class GoalsControllerTest extends ControllerTestCase
                 'border_months'    => 6
             ]
         ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
+
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

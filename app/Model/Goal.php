@@ -500,10 +500,10 @@ class Goal extends AppModel
             }
         }
 
-         //自分がコラボってるの未評価前期ゴールリストを取得
+        //自分がコラボってるの未評価前期ゴールリストを取得
         $options = [
             'conditions' => [
-                'Goal.id'       => $this->Collaborator->getCollaboGoalList($this->my_uid, false),
+                'Goal.id'            => $this->Collaborator->getCollaboGoalList($this->my_uid, false),
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
             ],
@@ -536,7 +536,7 @@ class Goal extends AppModel
         //ゴール付加情報を取得
         $options = [
             'conditions' => [
-                'Goal.id'            => $goal_ids,
+                'Goal.id' => $goal_ids,
             ],
             'contain'    => [
                 'MyCollabo'  => [
@@ -575,6 +575,7 @@ class Goal extends AppModel
 
         return $res;
     }
+
     /**
      * 期限が近→遠　で並べ替え
      *
@@ -680,6 +681,37 @@ class Goal extends AppModel
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
 
+        return $res;
+    }
+
+    function getGoalAndKr($goal_ids, $user_id)
+    {
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $goal_ids,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'KeyResult'    => [
+                    'fields' => [
+                        'KeyResult.id',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
+                ],
+                'Collaborator' => [
+                    'conditions' => [
+                        'Collaborator.user_id' => $user_id
+                    ]
+                ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+        //calc progress
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
         return $res;
     }
 
@@ -1056,6 +1088,30 @@ class Goal extends AppModel
         return $res;
     }
 
+    function getAllUserGoalProgress($goal_ids, $user_id)
+    {
+        $res = 0;
+        $goals = $this->getGoalAndKr($goal_ids, $user_id);
+        if (empty($goals)) {
+            return $res;
+        }
+
+        $target_progress_total = 0;
+        $current_progress_total = 0;
+        foreach ($goals as $goal) {
+            if (!viaIsSet($goal['Collaborator'][0]['priority'])) {
+                continue;
+            }
+            $target_progress_total += $goal['Collaborator'][0]['priority'] * 100;
+            $current_progress_total += $goal['Collaborator'][0]['priority'] * $goal['Goal']['progress'];
+        }
+        if ($target_progress_total != 0) {
+            $res = round($current_progress_total / $target_progress_total, 2) * 100;
+        }
+        return $res;
+
+    }
+
     function complete($goal_id)
     {
         $goal = $this->findById($goal_id);
@@ -1158,6 +1214,28 @@ class Goal extends AppModel
         ];
         $res = $this->find('list', $options);
         return $res;
+    }
+
+    function isPresentTermGoal($goal_id)
+    {
+        $options = [
+            'fields'     => ['start_date', 'end_date'],
+            'conditions' => ['id' => $goal_id],
+        ];
+        $res = $this->find('first', $options);
+
+        $start_date = $res['Goal']['start_date'];
+        $end_date = $res['Goal']['end_date'];
+
+        $is_present_term_flag = false;
+        if (intval($start_date) >= $this->Team->getCurrentTermStartDate()
+            && intval($end_date) <= $this->Team->getCurrentTermEndDate()
+        ) {
+            $is_present_term_flag = true;
+        }
+
+        return $is_present_term_flag;
+
     }
 
 }

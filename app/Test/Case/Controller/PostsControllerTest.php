@@ -15,6 +15,8 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.goal_category',
+        'app.evaluate_term',
         'app.action_result',
         'app.key_result',
         'app.purpose',
@@ -1057,7 +1059,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[異常ValidationError]コメント編集");
     }
 
-    function testFeedCircle()
+    function testFeedShareUser()
     {
         /**
          * @var UsersController $Posts
@@ -1088,6 +1090,12 @@ class PostsControllerTest extends ControllerTestCase
             ]
         ];
         $Posts->Post->PostShareUser->save($share_user_data);
+        $this->testAction('/circle_feed/1');
+    }
+
+    function testFeedCircleSuccess()
+    {
+        $this->_getPostsCommonMock();
         $this->testAction('/circle_feed/1');
     }
 
@@ -1180,6 +1188,63 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertEquals(4, $res);
     }
 
+    function testJoinCircleSuccess()
+    {
+        $Posts = $this->_getPostsCommonMock();
+
+        $data = [
+            'name'    => 'test',
+            'team_id' => 1,
+        ];
+
+        $Posts->Post->Circle->save($data);
+        $circle_id = $Posts->Post->Circle->getLastInsertID();
+        $this->testAction("/posts/join_circle/{$circle_id}", ['method' => 'get']);
+    }
+
+    function testJoinCircleFailed()
+    {
+        $this->_getPostsCommonMock();
+        $data = [
+            'user_id' => '1'
+        ];
+        $this->testAction('/posts/join_circle/1', ['method' => 'get']);
+    }
+
+    function testJoinCircleException()
+    {
+        $this->_getPostsCommonMock();
+        try {
+            $this->testAction('/posts/join_circle/', ['method' => 'get']);
+        } catch (NotFoundException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testUnJoinCircle()
+    {
+        $this->_getPostsCommonMock();
+        $data = [
+            'user_id' => '2'
+        ];
+        $circle_id = '1';
+        $this->testAction("/posts/unjoin_circle/{$circle_id}", ['method' => 'get']);
+    }
+
+    function testUserCircleStatusAdmin()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/userCircleStatus/1", ['method' => 'get']);
+
+    }
+
+    function testUserCircleStatusJoined()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/userCircleStatus/2", ['method' => 'get']);
+
+    }
+
     function _getPostsCommonMock()
     {
         /**
@@ -1222,6 +1287,10 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
+
         /** @noinspection PhpUndefinedFieldInspection */
         /** @noinspection PhpUndefinedMethodInspection */
         //$Posts->NotifyBiz->expects($this->any())->method('sendNotify')->will($this->returnValue(true));

@@ -192,14 +192,14 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($draftData, "draft");
+        $res = $this->Evaluation->add($draftData, Evaluation::TYPE_STATUS_DRAFT);
         $this->assertNotEmpty($res, "[正常]下書き保存");
         $res = $this->Evaluation->find('all',
                                        [
                                            'conditions' => [
                                                'evaluatee_user_id' => 1,
                                                'evaluate_term_id'  => 1,
-                                               'status'            => 1
+                                               'status'            => Evaluation::TYPE_STATUS_DRAFT
                                            ]
                                        ]
         );
@@ -233,7 +233,7 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
-        $res = $this->Evaluation->add($registerData, "register");
+        $res = $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
         $this->assertNotEmpty($res, "[正常]評価登録");
         $res = $this->Evaluation->find(
             'all',
@@ -241,42 +241,42 @@ class EvaluationTest extends CakeTestCase
                 'conditions' => [
                     'evaluatee_user_id' => 1,
                     'evaluate_term_id'  => 1,
-                    'status'            => 2
+                    'status'            => Evaluation::TYPE_STATUS_DONE
                 ]
             ]
         );
         $this->assertEquals(count($res), count($registerData));
     }
 
-    function testAddRegistersValidationError()
+    function testAddRegisterAsEvaluatorHadNextEvaluator()
     {
         $this->_setDefault();
-
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->_saveEvaluations();
         $registerData = [
             [
                 'Evaluation' => [
-                    'id'                => 1,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
-                ],
-            ],
-            [
-                'Evaluation' => [
                     'id'                => 2,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
                 ],
             ],
             [
                 'Evaluation' => [
-                    'id'                => 3,
-                    'comment'           => null,
-                    'evaluate_score_id' => null,
+                    'id'                => 5,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 8,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
                 ],
             ],
         ];
-        $this->setExpectedException('RuntimeException');
-        $this->Evaluation->add($registerData, "register");
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
     }
 
     function testAddRegisterAsLastEvaluatorInEvaluator()
@@ -307,6 +307,37 @@ class EvaluationTest extends CakeTestCase
                 ],
             ],
         ];
+        $this->Evaluation->add($registerData, Evaluation::TYPE_STATUS_DONE);
+    }
+
+    function testAddRegistersValidationError()
+    {
+        $this->_setDefault();
+
+        $registerData = [
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                ],
+            ],
+        ];
+        $this->setExpectedException('RuntimeException');
         $this->Evaluation->add($registerData, "register");
     }
 
@@ -688,6 +719,30 @@ class EvaluationTest extends CakeTestCase
         $this->assertCount(5, $res);
     }
 
+    function testGetMyTurnCountCaseCurrentTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $currentTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($currentTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
+    function testGetMyTurnCountCasePreviousTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
+        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
+        $this->Evaluation->getMyTurnCount();
+    }
+
     function testGetTermIdByEvaluationId()
     {
         $this->_setDefault();
@@ -720,33 +775,105 @@ class EvaluationTest extends CakeTestCase
 
         $options = [
             'conditions' => [
-                'evaluate_term_id' => $this->Evaluation->evaluate_term_id,
+                'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                 'evaluatee_user_id' => $evaluatee_user_id
             ],
-            'order' => [
+            'order'      => [
                 'index_num desc',
                 'id desc'
             ]
         ];
-        $res = $this->Evaluation->find('first',$options);
+        $res = $this->Evaluation->find('first', $options);
         $lastEvaluator = $res['Evaluation']['evaluator_user_id'];
 
         $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
     }
 
+    function testGetIsEditableCaseTermIsFrozen()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLatestTermId();
+        $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($termId);
+        $this->Evaluation->getIsEditable($termId, null);
+    }
+
+    function testGetAllStatusesForTeamSettings()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->evaluate_term_id);
+    }
+
+    function testGetIncompleteEvaluatees()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id);
+    }
+
+    function testGetIncompleteEvaluators()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getIncompleteEvaluators($this->Evaluation->evaluate_term_id);
+    }
+
+    function testGetEvaluators()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id, 1);
+    }
+
+    function testGetEvaluateesByEvaluator()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $evaluatorId = 2;
+        $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->evaluate_term_id, $evaluatorId);
+    }
+
+    function testGetIncompleteOneselfEvaluators()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->evaluate_term_id);
+    }
+
+    function testGetFinalEvaluations()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->evaluate_term_id, [1, 2, 3]);
+        $this->assertTrue(count($res) === 2);
+    }
+
     function _saveEvaluations()
     {
         $evaluateeId = 1;
+        $secondEvaluateeId = 2;
         $records = [
             [
                 'Evaluation' => [
-                    'id' => 1,
+                    'id'                => 1,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 0,
                     'goal_id'           => null,
                     'index_num'         => 0,
                     'status'            => 0
@@ -754,12 +881,15 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 2,
+                    'id'                => 2,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'my_turn_flg'       => true,
                     'goal_id'           => null,
                     'index_num'         => 1,
                     'status'            => 0
@@ -767,12 +897,14 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 3,
+                    'id'                => 3,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 3,
                     'goal_id'           => null,
                     'index_num'         => 2,
                     'status'            => 0
@@ -780,12 +912,14 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 4,
+                    'id'                => 4,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 0,
                     'goal_id'           => 1,
                     'index_num'         => 3,
                     'status'            => 0
@@ -793,12 +927,15 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 5,
+                    'id'                => 5,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'my_turn_flg'       => true,
                     'goal_id'           => 1,
                     'index_num'         => 4,
                     'status'            => 0
@@ -806,12 +943,14 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 6,
+                    'id'                => 6,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
                     'goal_id'           => 1,
                     'index_num'         => 5,
                     'status'            => 0
@@ -819,12 +958,14 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 7,
+                    'id'                => 7,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 0,
                     'goal_id'           => 2,
                     'index_num'         => 6,
                     'status'            => 0
@@ -832,12 +973,15 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 8,
+                    'id'                => 8,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'my_turn_flg'       => true,
                     'goal_id'           => 2,
                     'index_num'         => 7,
                     'status'            => 0
@@ -845,13 +989,150 @@ class EvaluationTest extends CakeTestCase
             ],
             [
                 'Evaluation' => [
-                    'id' => 9,
+                    'id'                => 9,
+                    'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
                     'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
                     'comment'           => null,
                     'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
                     'goal_id'           => 2,
+                    'index_num'         => 8,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 10,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 0,
+                    'goal_id'           => null,
+                    'index_num'         => 0,
+                    'status'            => 2
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 11,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'goal_id'           => null,
+                    'index_num'         => 1,
+                    'status'            => 2
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 12,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 3,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 3,
+                    'goal_id'           => null,
+                    'index_num'         => 2,
+                    'status'            => 2
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 13,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 0,
+                    'goal_id'           => 3,
+                    'index_num'         => 3,
+                    'status'            => 2
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 14,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'goal_id'           => 3,
+                    'index_num'         => 4,
+                    'status'            => 2
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 15,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 3,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'goal_id'           => 3,
+                    'index_num'         => 5,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 16,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 1,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 0,
+                    'goal_id'           => 4,
+                    'index_num'         => 6,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 17,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 2,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'goal_id'           => 4,
+                    'index_num'         => 7,
+                    'status'            => 0
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 18,
+                    'team_id'           => $this->Evaluation->current_team_id,
+                    'evaluatee_user_id' => $secondEvaluateeId,
+                    'evaluator_user_id' => 3,
+                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'comment'           => null,
+                    'evaluate_score_id' => null,
+                    'evaluate_type'     => 1,
+                    'goal_id'           => 4,
                     'index_num'         => 8,
                     'status'            => 0
                 ],

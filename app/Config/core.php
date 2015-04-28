@@ -185,18 +185,18 @@ Configure::write('App.encoding', 'UTF-8');
  * the cake shell command: cake schema create Sessions
 
  */
-if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+if (REDIS_SESSION_HOST) {
     Configure::write('Session', array(
-        'defaults'      => 'cache',
-        'cookie'        => 'SID',
+        'defaults' => 'cache',
+        'cookie'   => 'SID',
         //セッションの保持時間（分）
-        'timeout'       => 60 * 24 * 30, //30days
-        'handler'       => array(
+        'timeout'  => 60 * 24 * 30, //30days
+        'handler'  => array(
             'config' => 'session'
         ),
-        'engine'        => 'Redis',
-        'server'        => ELASTICACHE_SESSION_HOST,
-        'port'          => 6379
+        'engine'   => 'Redis',
+        'server'   => REDIS_SESSION_HOST,
+        'port'     => 6379
     ));
 }
 else {
@@ -314,7 +314,7 @@ date_default_timezone_set('UTC');
  *       Please check the comments in bootstrap.php for more info on the cache engines available
  *       and their settings.
  */
-if (PUBLIC_ENV && ELASTICACHE_CACHE_HOST) {
+if (REDIS_CACHE_HOST) {
     $engine = 'Redis';
 }
 else {
@@ -323,9 +323,9 @@ else {
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
-if (Configure::read('debug') > 0) {
-    $duration = '+10 seconds';
-}
+//if (Configure::read('debug') > 0) {
+//    $duration = '+10 seconds';
+//}
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
 $prefix = 'app_';
@@ -339,19 +339,12 @@ if (PUBLIC_ENV) {
  */
 $server = null;
 $port = null;
-if (PUBLIC_ENV && ELASTICACHE_CACHE_HOST) {
-    $server = ELASTICACHE_CACHE_HOST;
+if (REDIS_CACHE_HOST) {
+    $server = REDIS_CACHE_HOST;
     $port = 6379;
 }
-//RedisではなくApcを使う。
-//file_mapがオリジナルのパスを保有してしまうので、OpsworksでRedisが使えない為。
-//travisのテストファイルの修正が面倒なので公開環境のみApcそれ意外はFileにする
-$core_cache_engine = 'File';
-if (PUBLIC_ENV) {
-    $core_cache_engine = 'Apc';
-}
 Cache::config('_cake_core_', array(
-    'engine' => $core_cache_engine,
+    'engine'    => 'Apc',
     'prefix'    => $prefix . 'cake_core:',
     'path'      => CACHE . 'persistent' . DS,
     'serialize' => ($engine === 'File'),
@@ -372,7 +365,7 @@ Cache::config('_cake_model_', array(
     'duration'  => $duration
 ));
 
-if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+if (REDIS_SESSION_HOST) {
     Cache::config('session', array(
         'engine'   => $engine,
         'server'   => $server,

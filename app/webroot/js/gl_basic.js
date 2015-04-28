@@ -1745,7 +1745,6 @@ $(document).ready(function () {
     for (var i in cake.data.c) {
         pusher.subscribe(cake.data.c[i]).bind('post_feed', function (data) {
             var isFeedNotify = viaIsSet(data.is_feed_notify);
-            var isBellNotify = viaIsSet(data.is_bell_notify);
             var isNewCommentNotify = viaIsSet(data.is_comment_notify);
             var notifyId = data.notify_id;
 
@@ -1763,14 +1762,6 @@ $(document).ready(function () {
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }
-            }
-
-            // ベル通知の場合
-            if (isBellNotify) {
-                notifyNewBell();
-                prevNotifyId = notifyId;
-                $("#bell-dropdown").append(data.html);
-                $("#notifyCardEmpty").hide();
             }
 
             // 新しいコメント通知の場合
@@ -2062,7 +2053,6 @@ function evCommentLatestView() {
                 $obj.removeAttr("disabled");
 
                 initCommentNotify($obj);
-                decrementBellUnreadNumber(postNum);
             }
             else {
                 //ローダーを削除

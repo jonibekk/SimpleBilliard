@@ -62,6 +62,7 @@ class PagesController extends AppController
 
         // ビュー変数のセット
         $this->_setMyCircle();
+        $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $this->_setViewValOnRightColumn();

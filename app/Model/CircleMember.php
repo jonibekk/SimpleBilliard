@@ -298,4 +298,29 @@ class CircleMember extends AppModel
         return $res;
     }
 
+    function joinNewMember($circle_id)
+    {
+        if (!empty($this->isBelong($circle_id))) {
+            return;
+        }
+        $options = [
+            'CircleMember' => [
+                'circle_id' => $circle_id,
+                'team_id'   => $this->current_team_id,
+                'user_id'   => $this->my_uid,
+            ]
+        ];
+        $this->create();
+        return $this->save($options);
+    }
+
+    function unjoinMember($circle_id)
+    {
+        if (empty($this->User->CircleMember->isBelong($circle_id))) {
+            return;
+        }
+        $this->deleteAll(['CircleMember.circle_id' => $circle_id, 'CircleMember.user_id' => $this->my_uid]);
+        return;
+    }
+
 }

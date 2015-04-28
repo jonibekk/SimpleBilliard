@@ -12,10 +12,10 @@
  */
 
 // Setup a 'default' cache configuration for use in the application.
-if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+if (REDIS_SESSION_HOST) {
     Cache::config('default', array(
                                'engine' => 'Redis',
-                               'server' => ELASTICACHE_SESSION_HOST,
+                               'server' => REDIS_SESSION_HOST,
                                'port'   => 6379,
                            )
     );
