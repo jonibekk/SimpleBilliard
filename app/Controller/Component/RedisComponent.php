@@ -83,12 +83,13 @@ class RedisComponent extends Object
     }
 
     /**
-     * @param string      $key_type One of $KEY_TYPES
-     * @param int         $team_id
-     * @param null|int    $user_id
-     * @param null|string $notify_id
+     * @param string        $key_type One of $KEY_TYPES
+     * @param int           $team_id
+     * @param null|int      $user_id
+     * @param null|string   $notify_id
+     * @param bool|int|null $unread
      */
-    public function setKeyName($key_type, $team_id, $user_id = null, $notify_id = null)
+    public function setKeyName($key_type, $team_id, $user_id = null, $notify_id = null, $unread = 1)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
@@ -104,6 +105,9 @@ class RedisComponent extends Object
         }
         if ($notify_id && array_key_exists('notification', $this->{$key_type})) {
             $this->{$key_type}['notification'] = $notify_id;
+        }
+        if ($unread !== null && array_key_exists('unread', $this->{$key_type})) {
+            $this->{$key_type}['unread'] = $unread;
         }
         return;
     }
@@ -121,7 +125,7 @@ class RedisComponent extends Object
         $key_name = "";
         foreach ($this->{$key_type} as $k => $v) {
             $key_name .= $k . ":";
-            if ($v) {
+            if ($v !== null) {
                 $key_name .= $v . ":";
             }
         }
@@ -168,7 +172,7 @@ class RedisComponent extends Object
             //save notification user
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid);
             $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), time(),
-                            $this->getKeyName(self::KEY_TYPE_NOTIFICATION));
+                            $notify_id);
             //increment
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $uid);
             $this->Db->incr($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT));
@@ -200,5 +204,23 @@ class RedisComponent extends Object
         $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id);
         $res = $this->Db->del($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT));
         return (bool)$res;
+    }
+
+    function changeReadStatusOfNotification($team_id, $user_id, $notify_id, $unread = 0)
+    {
+        $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id);
+        $notify_date = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_NOTIFICATION), 'date');
+        if ($notify_date === false) {
+            return false;
+        }
+        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
+        $deleted_count = $this->Db->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_id);
+        if ($deleted_count === 0) {
+            return false;
+        }
+        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, $unread);
+        $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_date,
+                        $notify_id);
+        return true;
     }
 }

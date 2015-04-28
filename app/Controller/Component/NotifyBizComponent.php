@@ -609,18 +609,6 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * increment count of new notifications from redis.
-     *
-     * @param int $user_id
-     *
-     * @return bool
-     */
-    function incCountNewNotification($user_id)
-    {
-        return true;
-    }
-
-    /**
      * change read status of notification.
      *
      * @param int $id

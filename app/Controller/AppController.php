@@ -109,8 +109,8 @@ class AppController extends Controller
         parent::beforeFilter();
 
         //TODO redis test
-//        $this->Redis->setNotifications(1,1,[1,2,3,4],1,'test',time());
-//        $this->log($this->Redis->getCountOfNewNotification(1,1));
+//        $this->Redis->setNotifications(1, 1, [1, 2, 3, 4], 1, 'test', time());
+//        $this->Redis->changeReadStatusOfNotification(1, 1, '553f150d-c910-475b-bed7-21f3c0a83204');
 
         $this->_setSecurity();
         $this->_setAppLanguage();
