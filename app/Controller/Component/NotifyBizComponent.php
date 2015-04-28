@@ -564,7 +564,7 @@ class NotifyBizComponent extends Component
                     'title'      => 'test jiroさんがあなたの投稿にコメントしました。',
                     'body'       => 'ほんと半端く良いわ！',
                     'url'        => 'http://192.168.50.4/post_permanent/2/from_notification:1',
-                    'unread_flg' => false,
+                    'unread_flg' => true,
                     'created'    => '1429643033',
                 ]
             ],

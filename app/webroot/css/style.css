@@ -4054,3 +4054,11 @@ Temporary Properties - YOU MUST FIX
 .notify-list-page {
     overflow: hidden;
 }
+
+.unread_notify {
+
+}
+
+.read_notify {
+    background-color: #707880;
+}

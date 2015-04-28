@@ -3,7 +3,6 @@ App::uses('AppController', 'Controller');
 
 /**
  * Notification Controller
-
  */
 class NotificationsController extends AppController
 {
