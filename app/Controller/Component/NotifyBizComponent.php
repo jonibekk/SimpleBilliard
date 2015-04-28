@@ -544,7 +544,7 @@ class NotifyBizComponent extends Component
                 'User'         => [
                     'id'               => 1,
                     'display_username' => 'test taro',
-                    'photo_file_name'  => null,
+                    'photo_file_name'  => "6f6e137c_s_photo.jpg",
                 ],
                 'Notification' => [
                     'title'      => 'test taroさんがあなたの投稿にコメントしました。',
@@ -558,7 +558,7 @@ class NotifyBizComponent extends Component
                 'User'         => [
                     'id'               => 2,
                     'display_username' => 'test jiro',
-                    'photo_file_name'  => null,
+                    'photo_file_name'  => "images_photo.jpeg",
                 ],
                 'Notification' => [
                     'title'      => 'test jiroさんがあなたの投稿にコメントしました。',

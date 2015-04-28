@@ -16,10 +16,11 @@
         <?= __d('gl', "お知らせ") ?>
     </div>
     <div class="panel-body">
-        <?=
-        $this->element('Notification/notify_items',
-                       ['user' => $notify_items]) ?>
-        <hr>
+        <ul class="" role="menu">
+            <?=
+            $this->element('Notification/notify_items',
+                           ['user' => $notify_items]) ?>
+        </ul>
     </div>
     <div class="panel-footer">
     </div>

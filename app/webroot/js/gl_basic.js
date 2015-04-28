@@ -2181,3 +2181,22 @@ $(function () {
     }
 
 });
+
+// 一旦、作業用にデータとってくる
+$(function(){
+    $.ajax({
+        type: 'GET',
+        url: "http://192.168.50.4/notifications/ajax_get_old_notify_more/1",
+        async: true,
+        dataType: 'json',
+        timeout: 10000,
+        success: function (data) {
+            $("#bell-dropdown").append(data);
+        },
+        error: function (ev) {
+            alert("失敗");
+        }
+
+    });
+});
+
