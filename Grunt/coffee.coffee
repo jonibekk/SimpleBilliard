@@ -6,6 +6,6 @@ module.exports = (grunt) ->
       expand: 'true'
       cwd: '<%= config.app %>/webroot/coffee/'
       src: ['**/*.coffee']
-      dest: '<%= config.app %>/webroot/js/src/'
+      dest: '<%= config.app %>/webroot/dest/js/'
       ext: '.js'
     ]

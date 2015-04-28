@@ -36,6 +36,8 @@ composer.lock
 /node_modules
 /npm-debug.log
 
+/app/webroot/dest
+/app/webroot/less/sample.less
 /app/webroot/coffee/sample.coffee
 /app/webroot/js/src
 /app/webroot/js/cat
