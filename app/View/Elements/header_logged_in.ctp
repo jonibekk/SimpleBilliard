@@ -189,7 +189,7 @@
                 </div>
                 <div class="pull-right header-function dropdown">
                     <? if ($all_alert_cnt > 0): ?>
-                        <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
+                        <div class="btn btn-danger btn-xs" style="position: absolute;
                                 margin: 5px 0 0 33px;
                                 color: #fff;
                                 font-size: 10px;

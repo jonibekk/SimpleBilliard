@@ -1809,31 +1809,6 @@ function notifyNewFeed() {
     }, 100);
 }
 
-function notifyNewBell() {
-    var notifyBox = $(".bell-notify-box");
-    var num = parseInt(notifyBox.html());
-
-    // Increment unread number
-    if (num >= 1) {
-        // top of feed
-        notifyBox.html(num + 1);
-        return;
-    }
-
-    // Case of not existing unread post yet
-    notifyBox.html("1");
-
-    // 通知をふんわり出す
-    var i = 0.2;
-    var roop = setInterval(function () {
-        notifyBox.css("opacity", i);
-        i = i + 0.2;
-        if (i > 1) {
-            clearInterval(roop);
-        }
-    }, 100);
-}
-
 function appendSocketId(form, socketId) {
     $('<input>').attr({
         type: 'hidden',
@@ -2090,32 +2065,6 @@ function initCommentNotify(notifyBox) {
     notifyBox.css("display", "none").css("opacity", 0);
 }
 
-
-$(document).ready(function () {
-    $(document).on("click", "#click-header-bell", function () {
-        initBell();
-    });
-});
-
-function decrementBellUnreadNumber($num) {
-    var bellNumBox = $(".bell-notify-box");
-    var unreadNum = bellNumBox.html();
-    var retNum;
-    if (unreadNum < 1) {
-        return;
-    }
-    retNum = parseInt(unreadNum) - $num;
-    if (retNum < 1) {
-        initBell();
-    }
-    bellNumBox.html(retNum);
-}
-
-function initBell() {
-    $(".bell-notify-box").css("opacity", 0);
-    $(".bell-notify-box").html("0");
-}
-
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
     switch (e.target.id) {
@@ -2238,3 +2187,88 @@ $(function(){
     $(document).on("click", ".click-notify-read-more", evNotifyMoreView);
 });
 
+// Auto update notify cnt
+$(function(){
+
+    setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
+
+    function setIntervalToGetNotifyCnt(sec) {
+        setInterval(function(){
+            updateNotifyCnt();
+        }, sec * 1000);
+    }
+
+    function updateNotifyCnt(){
+
+        var url = cake.url.f;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            async: true,
+            success: function (new_notify_count) {
+                if (new_notify_count != 0) {
+                    setNotifyCntToBellAndTitle(new_notify_count);
+                }
+            },
+            error: function () {
+                alert(cake.message.notice.c);
+            }
+        });
+        return false;
+    }
+
+    function setNotifyCntToBellAndTitle(cnt){
+        var $bellBox = $(".bell-notify-box");
+        var $title = $("title");
+        var $originTitle = $("title").attr("origin-title");
+        var existingBellCnt = parseInt($bellBox.html());
+        var cntIsTooMuch = "20+";
+
+        if (existingBellCnt == 0) {
+            displaySelectorFluffy($bellBox);
+        }
+
+        // set notify number
+        if(parseInt(cnt) <= 20) {
+            $bellBox.html(cnt);
+            $title.text("(" + cnt + ")" + $originTitle);
+        } else {
+            $bellBox.html(cntIsTooMuch);
+            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
+        }
+
+        if (existingBellCnt == 0) {
+            displaySelectorFluffy($bellBox);
+        }
+        return;
+    }
+
+    function displaySelectorFluffy(selector) {
+        var i = 0.2;
+        var roop = setInterval(function () {
+            selector.css("opacity", i);
+            i = i + 0.2;
+            if (i > 1) {
+                clearInterval(roop);
+            }
+        }, 100);
+    }
+
+});
+
+$(document).ready(function () {
+    $(document).on("click", "#click-header-bell", function () {
+        initBell();
+        initTitle();
+    });
+});
+
+function initBell() {
+    $(".bell-notify-box").css("opacity", 0);
+    $(".bell-notify-box").html("0");
+}
+
+function initTitle() {
+    $title = $("title");
+    $title.text($title.attr("origin-title"));
+}

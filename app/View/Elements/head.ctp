@@ -12,7 +12,7 @@
 <!-- START app/View/Elements/head.ctp -->
 <head>
     <?= $this->Html->charset(); ?>
-    <title>
+    <title origin-title="<?= $title_for_layout; ?>">
         <?= $title_for_layout; ?>
     </title>
     <?
