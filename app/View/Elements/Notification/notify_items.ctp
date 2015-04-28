@@ -9,7 +9,7 @@
  */
 ?>
 
-<!-- START app/View/Elements/Notification/bell_notification_items.ctp -->
+<!-- START app/View/Elements/Notification/notify_items.ctp -->
 
 <? foreach ($notify_items as $notify_item): ?>
     <?=
@@ -17,4 +17,4 @@
                    ['user' => $notify_item['User'], 'notification' => $notify_item['Notification']]) ?>
 <? endforeach; ?>
 
-<!-- END app/View/Elements/Notification/bell_notification_items.ctp -->
+<!-- END app/View/Elements/Notification/notify_items.ctp -->

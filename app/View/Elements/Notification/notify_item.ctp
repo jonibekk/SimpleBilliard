@@ -7,13 +7,15 @@
  *
  * @var $user
  * @var $notification
+ * @var $is_unread
  */
 ?>
 
 <!-- START app/View/Elements/Notification/notify_item.ctp -->
+<? $unread_class = $notification['unread_flg'] ? 'unread_notify' : 'read_notify'; ?>
 
 <li class="divider notify-divider"></li>
-<li class="notify-card-list">
+<li class="notify-card-list <?= $unread_class ?>">
     <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card" id="notifyCard">
         <?=
         $this->Html->image(
@@ -40,6 +42,7 @@
                 class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align notify-text notify-line-number"
                 id="CommentTextBody_67">
                 <i class="fa fa-comment-o disp_i"></i>「<?= h($notification['body']) ?>」
+                <p><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></p>
             </div>
         </div>
     </a>
