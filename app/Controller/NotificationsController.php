@@ -3,9 +3,8 @@ App::uses('AppController', 'Controller');
 
 /**
  * Notification Controller
- *
- */
 
+ */
 class NotificationsController extends AppController
 {
 
@@ -16,7 +15,9 @@ class NotificationsController extends AppController
      */
     public function index()
     {
-        return [];
+        $this->_setViewValOnRightColumn();
+        $notify_items = $this->NotifyBiz->getNotification();
+        $this->set(compact('notify_items'));
     }
 
     /**
@@ -27,8 +28,11 @@ class NotificationsController extends AppController
     public function ajax_get_old_notify_more($oldest_score_id)
     {
         $this->_ajaxPreProcess();
-        // rendering
-        $html = $oldest_score_id;
+        $limit = 20;
+        $notify_items = $this->NotifyBiz->getNotification($limit, $oldest_score_id);
+        $this->set(compact('notify_items'));
+        $response = $this->render('Notification/notify_items');
+        $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }
 
@@ -50,7 +54,7 @@ class NotificationsController extends AppController
         $this->_ajaxPreProcess();
         $notify_items = $this->NotifyBiz->getNotification();
         $this->set(compact('notify_items'));
-        $response = $this->render('Notification/bell_notification_items');
+        $response = $this->render('Notification/notify_items');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }

@@ -20,7 +20,7 @@
             $this->Upload->uploadUrl(
                 $user,
                 'User.photo',
-                ['style' => 'medium_large']
+                ['style' => 'medium']
             ),
             array(
                 'class' => array('pull-left notify-icon')
