@@ -176,4 +176,16 @@ class RedisComponent extends Object
         return true;
     }
 
+    /**
+     * @param $team_id
+     * @param $user_id
+     *
+     * @return bool|int|string
+     */
+    function getCountOfNewNotification($team_id, $user_id)
+    {
+        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id);
+        $count = $this->Db->get($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT));
+        return ($count === false) ? 0 : $count;
+    }
 }
