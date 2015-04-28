@@ -2065,18 +2065,6 @@ function initCommentNotify(notifyBox) {
     notifyBox.css("display", "none").css("opacity", 0);
 }
 
-
-$(document).ready(function () {
-    $(document).on("click", "#click-header-bell", function () {
-        initBell();
-    });
-});
-
-function initBell() {
-    $(".bell-notify-box").css("opacity", 0);
-    $(".bell-notify-box").html("0");
-}
-
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
     switch (e.target.id) {
@@ -2218,7 +2206,9 @@ $(function(){
             url: url,
             async: true,
             success: function (new_notify_count) {
-                setNotifyCntToBellAndTitle(new_notify_count);
+                if (new_notify_count != 0) {
+                    setNotifyCntToBellAndTitle(new_notify_count);
+                }
             },
             error: function () {
                 alert(cake.message.notice.c);
@@ -2265,3 +2255,20 @@ $(function(){
     }
 
 });
+
+$(document).ready(function () {
+    $(document).on("click", "#click-header-bell", function () {
+        initBell();
+        initTitle();
+    });
+});
+
+function initBell() {
+    $(".bell-notify-box").css("opacity", 0);
+    $(".bell-notify-box").html("0");
+}
+
+function initTitle() {
+    $title = $("title");
+    $title.text($title.attr("origin-title"));
+}
