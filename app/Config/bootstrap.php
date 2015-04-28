@@ -151,6 +151,8 @@ define('REQUEST_TIMESTAMP', time());
 define('MY_GOALS_DISPLAY_NUMBER', 10);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 10);
 define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 20);
+//通知情報の自動アップデート間隔(秒)
+define('NOTIFY_AUTO_UPDATE_SEC', 180); // 60 * 3
 
 /**
  * 共通関数

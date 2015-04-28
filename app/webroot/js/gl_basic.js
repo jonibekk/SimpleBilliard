@@ -2236,5 +2236,13 @@ function evNotifyMoreView() {
 
 $(function(){
     $(document).on("click", ".click-notify-read-more", evNotifyMoreView);
+
+    updateNotifyDatas(cake.notify_auto_update_sec);
 });
+
+function updateNotifyDatas(sec) {
+    setInterval(function(){
+
+    }, sec * 1000);
+}
 
