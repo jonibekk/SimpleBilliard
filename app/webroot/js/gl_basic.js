@@ -2218,7 +2218,7 @@ $(function(){
             url: url,
             async: true,
             success: function (new_notify_count) {
-                setNotifyCntToBell(new_notify_count);
+                setNotifyCntToBellAndTitle(new_notify_count);
             },
             error: function () {
                 alert(cake.message.notice.c);
@@ -2227,20 +2227,28 @@ $(function(){
         return false;
     }
 
-    function setNotifyCntToBell(cnt){
-        var bellBox = $(".bell-notify-box");
-        var existingBellCnt = parseInt(bellBox.html());
+    function setNotifyCntToBellAndTitle(cnt){
+        var $bellBox = $(".bell-notify-box");
+        var $title = $("title");
+        var $originTitle = $("title").attr("origin-title");
+        var existingBellCnt = parseInt($bellBox.html());
         var cntIsTooMuch = "20+";
 
+        if (existingBellCnt == 0) {
+            displaySelectorFluffy($bellBox);
+        }
+
         // set notify number
-        if(parseInt(cnt) > 20) {
-            bellBox.html(cntIsTooMuch);
+        if(parseInt(cnt) <= 20) {
+            $bellBox.html(cnt);
+            $title.text("(" + cnt + ")" + $originTitle);
         } else {
-            bellBox.html(cnt);
+            $bellBox.html(cntIsTooMuch);
+            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
         }
 
         if (existingBellCnt == 0) {
-            displaySelectorFluffy(bellBox);
+            displaySelectorFluffy($bellBox);
         }
         return;
     }
@@ -2255,4 +2263,5 @@ $(function(){
             }
         }, 100);
     }
+
 });
