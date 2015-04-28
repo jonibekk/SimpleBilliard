@@ -1809,31 +1809,6 @@ function notifyNewFeed() {
     }, 100);
 }
 
-function notifyNewBell() {
-    var notifyBox = $(".bell-notify-box");
-    var num = parseInt(notifyBox.html());
-
-    // Increment unread number
-    if (num >= 1) {
-        // top of feed
-        notifyBox.html(num + 1);
-        return;
-    }
-
-    // Case of not existing unread post yet
-    notifyBox.html("1");
-
-    // 通知をふんわり出す
-    var i = 0.2;
-    var roop = setInterval(function () {
-        notifyBox.css("opacity", i);
-        i = i + 0.2;
-        if (i > 1) {
-            clearInterval(roop);
-        }
-    }, 100);
-}
-
 function appendSocketId(form, socketId) {
     $('<input>').attr({
         type: 'hidden',
@@ -2097,20 +2072,6 @@ $(document).ready(function () {
     });
 });
 
-function decrementBellUnreadNumber($num) {
-    var bellNumBox = $(".bell-notify-box");
-    var unreadNum = bellNumBox.html();
-    var retNum;
-    if (unreadNum < 1) {
-        return;
-    }
-    retNum = parseInt(unreadNum) - $num;
-    if (retNum < 1) {
-        initBell();
-    }
-    bellNumBox.html(retNum);
-}
-
 function initBell() {
     $(".bell-notify-box").css("opacity", 0);
     $(".bell-notify-box").html("0");
@@ -2236,13 +2197,58 @@ function evNotifyMoreView() {
 
 $(function(){
     $(document).on("click", ".click-notify-read-more", evNotifyMoreView);
-
-    updateNotifyDatas(cake.notify_auto_update_sec);
 });
 
-function updateNotifyDatas(sec) {
-    setInterval(function(){
+// Auto update notify cnt
+$(function(){
 
-    }, sec * 1000);
-}
+    setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
 
+    function setIntervalToGetNotifyCnt(sec) {
+        setInterval(function(){
+            updateNotifyCnt();
+        }, sec * 1000);
+    }
+
+    function updateNotifyCnt(){
+
+        var url = cake.url.f;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            async: true,
+            success: function (new_notify_count) {
+                console.log(new_notify_count);
+                setNotifyCntToBell(new_notify_count);
+            },
+            error: function () {
+                alert(cake.message.notice.c);
+            }
+        });
+        return false;
+    }
+
+    function setNotifyCntToBell(cnt){
+        var bellBox = $(".bell-notify-box");
+        var existingBellCnt = parseInt(bellBox.html());
+
+        // set notify number
+        bellBox.html(cnt);
+
+        if (existingBellCnt == 0) {
+            displaySelectorFluffy(bellBox);
+        }
+        return;
+    }
+
+    function displaySelectorFluffy(selector) {
+        var i = 0.2;
+        var roop = setInterval(function () {
+            selector.css("opacity", i);
+            i = i + 0.2;
+            if (i > 1) {
+                clearInterval(roop);
+            }
+        }, 100);
+    }
+});
