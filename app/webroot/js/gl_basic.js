@@ -2218,7 +2218,6 @@ $(function(){
             url: url,
             async: true,
             success: function (new_notify_count) {
-                console.log(new_notify_count);
                 setNotifyCntToBell(new_notify_count);
             },
             error: function () {
@@ -2231,9 +2230,14 @@ $(function(){
     function setNotifyCntToBell(cnt){
         var bellBox = $(".bell-notify-box");
         var existingBellCnt = parseInt(bellBox.html());
+        var cntIsTooMuch = "20+";
 
         // set notify number
-        bellBox.html(cnt);
+        if(parseInt(cnt) > 20) {
+            bellBox.html(cntIsTooMuch);
+        } else {
+            bellBox.html(cnt);
+        }
 
         if (existingBellCnt == 0) {
             displaySelectorFluffy(bellBox);
