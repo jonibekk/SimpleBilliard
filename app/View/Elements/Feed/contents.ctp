@@ -89,6 +89,14 @@ if(  isset($params['action']) && $params['controller']=='posts' && $params['acti
         </div>
     </div>
 </div>
+        <?php if(!empty($current_circle['Circle']['description'])) : ?>
+        <div class="panel panel-default">
+            <h4 style='margin-left:15px;font-weight:bold'>About </h4>
+            <div class="panel-body ptb_10px plr_11px ">
+                <?=$current_circle['Circle']['description']; ?>
+            </div>
+        </div>
+            <?php endif; ?>
     <?php }?>
 <? endif; ?>
 <?= $this->element("Feed/posts") ?>
