@@ -2182,8 +2182,63 @@ $(function () {
 
 });
 
+function evNotifyMoreView() {
+    attrUndefinedCheck(this, 'oldest_score_id');
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var oldest_score_id = $obj.attr('oldest_score_id');
+    var get_url = $obj.attr('get-url');
+    //リンクを無効化
+    $obj.attr('disabled', 'disabled');
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    //ローダー表示
+    $obj.after($loader_html);
+    //url生成
+    var url = get_url + '/' + String(oldest_score_id);
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            if (!$.isEmptyObject(data)) {
+                //取得したhtmlをオブジェクト化
+                var $notify = $(data);
+                //一旦非表示
+                $notify.hide();
+                $(".notify-list-page").append($notify);
+                //html表示
+                $notify.show("slow", function () {
+                    //もっと見る
+                    showMore(this);
+                });
+                //ローダーを削除
+                $loader_html.remove();
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                //画像をレイジーロード
+                imageLazyOn();
+
+            } else {
+                //ローダーを削除
+                $loader_html.remove();
+                $("#ShowMoreNoData").show();
+                //もっと読む表示をやめる
+                $obj.remove();
+            }
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+
+
 // 一旦、作業用にデータとってくる
 $(function(){
+    $(document).on("click", ".click-notify-read-more", evNotifyMoreView);
     $.ajax({
         type: 'GET',
         url: "http://192.168.50.4/notifications/ajax_get_old_notify_more/1",
@@ -2191,6 +2246,7 @@ $(function(){
         dataType: 'json',
         timeout: 10000,
         success: function (data) {
+            $("#notifyCardEmpty").hide();
             $("#bell-dropdown").append(data);
         },
         error: function (ev) {

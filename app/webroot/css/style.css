@@ -4044,3 +4044,13 @@ Temporary Properties - YOU MUST FIX
     text-overflow: ellipsis;
     display: block;
 }
+
+.click-notify-read-more {
+    color: #b36e6f;
+    width: 100%;
+    height: 100%;
+}
+
+.notify-list-page {
+    overflow: hidden;
+}
