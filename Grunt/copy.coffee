@@ -1,24 +1,16 @@
 # Copies remaining files to places other tasks can use
-module.exports = dist: files: [
-  expand: true
-  dot: true
-  cwd: '<%= config.app %>'
-  dest: '<%= config.dist %>'
-  src: [
-    'content/**/**.*'
-    '.htaccess'
-    'images/{,*/}*.webp'
-    'styles/fonts/{,*/}*.*'
-  ]
-]
 module.exports = (grunt) ->
-  csscopy:
+  js:
     expand: true
-    cwd: 'dest/cssmin/'
-    src: 'goalous.min.css'
-    dest: '../app/webroot/css/'
-  jscopy:
+    cwd: '<%= config.dest %>/jsmin/'
+    dest: '<%= config.webroot %>/js/'
+    src: [
+      '*.min.js'
+    ]
+  css:
     expand: true
-    cwd: 'dest/jsmin/'
-    src: 'goalous.min.js'
-    dest: '../app/webroot/js/'
+    cwd: '<%= config.dest %>/cssmin/'
+    dest: '<%= config.webroot %>/css/'
+    src: [
+      '*.min.css'
+    ]

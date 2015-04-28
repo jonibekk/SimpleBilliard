@@ -6,5 +6,6 @@ module.exports = (grunt) ->
   require('load-grunt-config') grunt,
     init: true
     data: config:
-      app:'app'
-      dist: 'dist'
+      app: 'app'
+      webroot: 'app/webroot'
+      dest: 'app/webroot/dest'
