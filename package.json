@@ -18,10 +18,10 @@
     "grunt-contrib-uglify": "^0.8.*",
     "grunt-contrib-watch": "^0.6.*",
     "grunt-docco": "^0.3.*",
-    "grunt-require-dir": "^0.3.0",
     "grunt-styledocco": "^0.2.1",
     "grunt-styleguide": "^0.2.*",
-    "load-grunt-config": "^0.17.1"
+    "load-grunt-config": "^0.17.1",
+    "time-grunt": "^1.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,10 +1,10 @@
 module.exports = (grunt) ->
-  require('load-grunt-config')(grunt)
-    loadGruntTasks:
-      pattern: '*'
-      config: require('./package.json')
-      scope: 'devDependencies'
-    postProcess: (config) ->
-    perMerge: (config, data) ->
+  'use strict'
 
-  grunt.registerTask('default',['watch'])
+  require('time-grunt') grunt
+
+  require('load-grunt-config') grunt,
+    init: true
+    data: config:
+      app:'app'
+      dist: 'dist'
