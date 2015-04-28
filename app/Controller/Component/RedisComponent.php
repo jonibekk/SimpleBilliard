@@ -19,6 +19,11 @@ class RedisComponent extends Object
         self::KEY_TYPE_NOTIFICATION,
         self::KEY_TYPE_NOTIFICATION_COUNT,
     ];
+
+    /**
+     * Expire day of notification
+     */
+    const EXPIRE_DAY_OF_NOTIFICATION = 7;
     /**
      * Key Name: team:[team_id]:user:[user_id]:notifications:
      *
@@ -155,7 +160,8 @@ class RedisComponent extends Object
         ];
         //save notification
         $this->Db->hMset($this->getKeyName(self::KEY_TYPE_NOTIFICATION), $data);
-
+        $this->Db->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION),
+                          60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
         //save notification user process
         foreach ($to_user_ids as $uid) {
             //save notification user
