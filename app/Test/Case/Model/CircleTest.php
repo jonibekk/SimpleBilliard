@@ -106,4 +106,11 @@ class CircleTest extends CakeTestCase
         $this->Circle->PostShareCircle->Post->current_team_id = 1;
     }
 
+    function testIsSecret()
+    {
+        $this->Circle->id = 18;
+        $res = $this->Circle->isSecret($this->Circle->id);
+        $this->assertTrue(empty($res));
+    }
+
 }

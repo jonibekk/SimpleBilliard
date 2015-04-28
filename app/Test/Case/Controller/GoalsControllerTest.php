@@ -15,6 +15,7 @@ class GoalsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.evaluate_term',
         'app.action_result',
         'app.evaluation_setting',
         'app.evaluation',
@@ -290,8 +291,8 @@ class GoalsControllerTest extends ControllerTestCase
         ];
 
         $team_member = [
-            'user_id' => 1,
-            'team_id' => 1,
+            'user_id'       => 1,
+            'team_id'       => 1,
             'coach_user_id' => 999,
         ];
         $Goal->User->TeamMember->save($team_member);
@@ -1140,6 +1141,10 @@ class GoalsControllerTest extends ControllerTestCase
                 'border_months'    => 6
             ]
         ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
+
         /** @noinspection PhpUndefinedFieldInspection */
         $Goals->Goal->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

@@ -318,7 +318,7 @@ class PostsController extends AppController
             'html'  => null
         ];
         $this->_ajaxPreProcess();
-        if ($this->Post->isBelongCurrentTeam($post_id)) {
+        if ($this->Post->isBelongCurrentTeam($post_id, $this->Session->read('current_team_id'))) {
             $this->set(compact('post_id', 'prefix'));
             $response = $this->render('Feed/new_comment_form');
             $html = $response->__toString();
@@ -491,11 +491,15 @@ class PostsController extends AppController
 
     function feed()
     {
+        $params = $this->request->params;
         $this->_setMyCircle();
+        $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
+        $user_status = $this->userCircleStatus($this->request->params['circle_id']);
+
         $this->_setViewValOnRightColumn();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
@@ -510,7 +514,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
@@ -597,8 +601,8 @@ class PostsController extends AppController
 
             $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
 
-            $allowed_extensions = array("jpg","jpeg","png","gif");
-            if(!in_array($extension,$allowed_extensions)){
+            $allowed_extensions = array("jpg", "jpeg", "png", "gif");
+            if (!in_array($extension, $allowed_extensions)) {
                 $ogp['image'] = null;
             }
             $requestData['site_photo'] = $ogp['image'];
@@ -623,6 +627,44 @@ class PostsController extends AppController
             'post_id'           => $postId
         ];
         $this->NotifyBiz->commentPush($socketId, $data);
+    }
+
+    public function join_circle($circle_id = null)
+    {
+        if (!$circle_id) {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
+        if ($this->Post->Circle->CircleMember->joinNewMember($circle_id)) {
+            $this->Pnotify->outSuccess(__d('gl', "You have joined the circle"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "Error in joining the circle"));
+        }
+        return $this->redirect($this->request->referer());
+
+    }
+
+    public function unjoin_circle($circle_id)
+    {
+        if (!$circle_id) {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
+        $this->Post->Circle->CircleMember->unjoinMember($circle_id);
+        $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
+        return $this->redirect($this->request->referer());
+    }
+
+    public function userCircleStatus($circle_id)
+    {
+        if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
+            return 'admin';
+        }
+        else {
+            if ($this->Post->Circle->CircleMember->isBelong($circle_id, $this->Auth->user('id'))) {
+                return 'joined';
+            }
+        }
+        return 'not_joined';
     }
 
 }

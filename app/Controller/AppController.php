@@ -240,14 +240,12 @@ class AppController extends Controller
     public function _setMyCircle()
     {
         $my_circles = $this->User->CircleMember->getMyCircle();
-        $current_circle = null;
         if (isset($this->request->params['circle_id']) &&
             !empty($this->request->params['circle_id']) &&
             !empty($my_circles)
         ) {
             foreach ($my_circles as $key => $circle) {
                 if ($circle['Circle']['id'] == $this->request->params['circle_id']) {
-                    $current_circle = $circle;
                     //未読件数を0セット
                     if ($circle['CircleMember']['unread_count'] != 0) {
                         $this->User->CircleMember->updateUnreadCount($circle['Circle']['id']);
@@ -258,6 +256,14 @@ class AppController extends Controller
             }
         }
         $this->set('my_circles', $my_circles);
+    }
+
+    public function _setCurrentCircle()
+    {
+        $current_circle = null;
+        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+            $current_circle = $this->User->CircleMember->Circle->getPublicCircleById($this->request->params['circle_id']);
+        }
         $this->set('current_circle', $current_circle);
     }
 
