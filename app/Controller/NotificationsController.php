@@ -15,8 +15,9 @@ class NotificationsController extends AppController
      */
     public function index()
     {
+        $limit = 20;
         $this->_setViewValOnRightColumn();
-        $notify_items = $this->NotifyBiz->getNotification();
+        $notify_items = $this->NotifyBiz->getNotification($limit);
         $this->set(compact('notify_items'));
     }
 
