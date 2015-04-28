@@ -1768,7 +1768,6 @@ $(document).ready(function () {
             if (isNewCommentNotify) {
                 var postId = data.post_id;
                 var notifyBox = $("#Comments_new_" + String(postId));
-                notifyNewComment(notifyBox);
             }
         });
     }
@@ -1933,36 +1932,6 @@ function viaIsSet(data) {
     return data;
 }
 
-function notifyNewComment(notifyBox) {
-    var numInBox = notifyBox.find(".num");
-    var num = parseInt(numInBox.html());
-
-    hideCommentNotifyErrorBox(notifyBox);
-
-    // Increment unread number
-    if (num >= 1) {
-        // top of feed
-        numInBox.html(String(num + 1));
-    } else {
-        // Case of not existing unread post yet
-        numInBox.html("1");
-    }
-
-    if (notifyBox.css("display") === "none") {
-        notifyBox.css("display", "block");
-
-        // 通知をふんわり出す
-        var i = 0.2;
-        var roop = setInterval(function () {
-            notifyBox.css("opacity", i);
-            i = i + 0.2;
-            if (i > 1) {
-                clearInterval(roop);
-            }
-        }, 100);
-    }
-}
-
 $(document).ready(function () {
     $(document).on("click", ".click-comment-new", evCommentLatestView);
 });
@@ -2075,14 +2044,6 @@ function validatorCallback(e) {
             addComment(e);
             break;
     }
-}
-
-function hideCommentNotifyErrorBox(notifyBox) {
-    errorBox = notifyBox.siblings(".new-comment-error");
-    if (errorBox.attr("display") === "none") {
-        return;
-    }
-    errorBox.css("display", "none");
 }
 
 // Be Enable or Disabled eval button
@@ -2218,7 +2179,7 @@ $(function(){
     }
 
     function setNotifyCntToBellAndTitle(cnt){
-        var $bellBox = $(".bell-notify-box");
+        var $bellBox = getBellBoxSelector();
         var $title = $("title");
         var $originTitle = $("title").attr("origin-title");
         var existingBellCnt = parseInt($bellBox.html());
@@ -2257,18 +2218,69 @@ $(function(){
 });
 
 $(document).ready(function () {
+    var click_cnt = 0;
     $(document).on("click", "#click-header-bell", function () {
-        initBell();
+        click_cnt++;
+        var isExistNewNotify = isExistNewNotify();
+        initBellNum();
         initTitle();
+
+        if(isExistNewNotify || click_cnt == 1) {
+            updateListBox();
+        }
+
+        function isExistNewNotify() {
+            var newNotifyCnt = getNotifyCnt();
+            if(newNotifyCnt > 0) {
+                return true;
+            }
+            return false;
+        }
     });
 });
 
-function initBell() {
-    $(".bell-notify-box").css("opacity", 0);
-    $(".bell-notify-box").html("0");
+function initBellNum() {
+    $bellBox = getBellBoxSelector();
+    $bellBox.css("opacity", 0);
+    $bellBox.html("0");
 }
 
 function initTitle() {
     $title = $("title");
     $title.text($title.attr("origin-title"));
+}
+
+function getBellBoxSelector() {
+    return $(".bell-notify-box");
+}
+
+function getNotifyCnt() {
+    var $bellBox = getBellBoxSelector();
+    return parseInt($bellBox.html());
+}
+
+function updateListBox() {
+    $bellDropdown = $("#bell-dropdown");
+    $bellDropdown.empty();
+    var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+    //ローダー表示
+    $bellDropdown.append($loader_html);
+    var url = cake.url.g;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            //取得したhtmlをオブジェクト化
+            var $notifyItems = data;
+            $loader_html.remove();
+            $bellDropdown.append($notifyItems);
+            //画像をレイジーロード
+            imageLazyOn();
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
 }
