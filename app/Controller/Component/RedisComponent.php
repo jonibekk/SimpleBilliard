@@ -25,7 +25,7 @@ class RedisComponent extends Object
      */
     const EXPIRE_DAY_OF_NOTIFICATION = 7;
     /**
-     * Key Name: team:[team_id]:user:[user_id]:notifications:
+     * Key Name: team:[team_id]:user:[user_id]:notifications:unread:[0 or 1]:
      *
      * @var array
      */
@@ -34,6 +34,7 @@ class RedisComponent extends Object
         'team'          => null,
         'user'          => null,
         'notifications' => null,
+        'unread'        => 1,
     ];
 
     /**
@@ -166,7 +167,7 @@ class RedisComponent extends Object
         foreach ($to_user_ids as $uid) {
             //save notification user
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid);
-            $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), (string)(time() . '.1'),
+            $this->Db->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), time(),
                             $this->getKeyName(self::KEY_TYPE_NOTIFICATION));
             //increment
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $uid);
