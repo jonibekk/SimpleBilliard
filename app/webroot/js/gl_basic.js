@@ -2233,3 +2233,9 @@ function evNotifyMoreView() {
     });
     return false;
 }
+
+// 一旦、作業用にデータとってくる
+$(function(){
+    $(document).on("click", ".click-notify-read-more", evNotifyMoreView);
+});
+
