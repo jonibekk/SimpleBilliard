@@ -171,21 +171,26 @@ class RedisComponent extends Object
             'type'    => $type,
             'created' => $date,
         ];
-
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         //save notification
         $pipe->hMset($this->getKeyName(self::KEY_TYPE_NOTIFICATION), $data);
         $pipe->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION),
                       60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
+
+        $now = (string)(microtime(true) * 100);
+        $score = $now;
+//        $score = (string)bcadd((string)$now,'0.00000001',8);
+//        $this->log($now);
+//        $this->log($score);
         //save notification user process
         foreach ($to_user_ids as $uid) {
             //save notification user
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null);
-            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), microtime(true),
+            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $score,
                         $notify_id);
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0);
-            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), microtime(true),
+            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $score,
                         $notify_id);
             //increment
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $uid);
@@ -283,23 +288,29 @@ class RedisComponent extends Object
             if ($limit !== -1) {
                 $limit--;
             }
-            $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), 0, $limit);
+            $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), 0, $limit, true);
         }
         else {
             $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER),
                                                        $from_date, -1,
-                                                       ['limit' => [1, $limit]]);
+                                                       ['limit' => [1, $limit], 'withscores' => true]);
         }
         if (empty($notify_list)) {
             return null;
         }
+//        $this->log($notify_list);
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
-        foreach ($notify_list as $notify_id) {
+        foreach ($notify_list as $notify_id => $score) {
             $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, $user_id, $notify_id);
             $pipe->hGetAll($this->getKeyName(self::KEY_TYPE_NOTIFICATION));
         }
         $pipe_res = $pipe->exec();
+//        $this->log($pipe_res);
+        foreach ($pipe_res as $k => $v) {
+            $score = $notify_list[$v['id']];
+//            $this->log($score);
+        }
         return $pipe_res;
     }
 }
