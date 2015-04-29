@@ -169,7 +169,7 @@ class RedisComponent extends Object
             'body'    => $body,
             'url'     => $url,
             'type'    => $type,
-            'date'    => $date,
+            'created' => $date,
         ];
 
         /** @noinspection PhpInternalEntityUsedInspection */
@@ -269,7 +269,7 @@ class RedisComponent extends Object
      *
      * @return array|null
      */
-    function getNotification($team_id, $user_id, $limit = null, $from_date = null)
+    function getNotifications($team_id, $user_id, $limit = null, $from_date = null)
     {
         $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
         //delete from notification user

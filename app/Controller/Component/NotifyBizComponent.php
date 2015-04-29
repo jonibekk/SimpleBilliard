@@ -534,13 +534,25 @@ class NotifyBizComponent extends Component
      * ];
      *
      * @param null|int $limit
-     * @param null|int $notify_id
+     * @param null|int $from_date
      *
      * @return array
      */
-    function getNotification($limit = null, $notify_id = null)
+    function getNotification($limit = null, $from_date = null)
     {
-        //$this->Redis->get();
+        $notify_from_redis = $this->Redis->getNotifications(
+            $this->Notification->current_team_id,
+            $this->Notification->my_uid,
+            $limit,
+            $from_date
+        );
+        if (empty($notify_from_redis)) {
+            return [];
+        }
+        //fetch User
+        $user_list = Hash::extract($notify_from_redis, '{n}.user_id');
+        $users = Hash::combine($this->Notification->User->getUsersProf($user_list), '{n}.User.id', '{n}');
+
         $data = [
             [
                 'User'         => [

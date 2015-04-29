@@ -22,6 +22,7 @@ App::uses('AppModel', 'Model');
  * @property PostMention          $PostMention
  * @property PostRead             $PostRead
  * @property Post                 $Post
+ * @property Goal                 $Goal
  * @property TeamMember           $TeamMember
  * @property CircleMember         $CircleMember
  * @property LocalName            $LocalName
@@ -975,5 +976,17 @@ class User extends AppModel
         }
 
         return json_encode($my_channels);
+    }
+
+    function getUsersProf($uids)
+    {
+        $options = [
+            'conditions' => [
+                'id' => $uids
+            ],
+            'fields'     => $this->profileFields
+        ];
+        $res = $this->find('all', $options);
+        return $res;
     }
 }
