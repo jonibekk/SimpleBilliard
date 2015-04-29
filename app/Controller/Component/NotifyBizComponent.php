@@ -4,6 +4,7 @@ App::uses('ModelType', 'Model');
 /**
  * @author daikihirakata
  * @property SessionComponent $Session
+ * @property RedisComponent   $Redis
  * @property AuthComponent    $Auth
  * @property GlEmailComponent $GlEmail
  * @property Notification     $Notification
@@ -18,7 +19,8 @@ class NotifyBizComponent extends Component
     public $components = [
         'Auth',
         'Session',
-        'GlEmail'
+        'GlEmail',
+        'Redis',
     ];
 
     public $notify_option = [
@@ -532,7 +534,7 @@ class NotifyBizComponent extends Component
      * ];
      *
      * @param null|int $limit
-     * @param null|int $page
+     * @param null|int $notify_id
      *
      * @return array
      */
@@ -578,13 +580,21 @@ class NotifyBizComponent extends Component
      *
      * @param array|int $to_user_ids
      * @param int       $type
+     * @param string    $url
      * @param string    $body
      *
      * @return bool
      */
-    function setNotifications($to_user_ids, $type, $body = null)
+    function setNotifications($to_user_ids, $type, $url, $body = null)
     {
-
+        $this->Redis->setNotifications(
+            $type,
+            $this->Notification->current_team_id,
+            $to_user_ids,
+            $this->Notification->my_uid,
+            $body,
+            $url
+        );
         return true;
     }
 
@@ -595,7 +605,10 @@ class NotifyBizComponent extends Component
      */
     function getCountNewNotification()
     {
-        return 10;
+        return $this->Redis->getCountOfNewNotification(
+            $this->Notification->current_team_id,
+            $this->Notification->my_uid
+        );
     }
 
     /**
@@ -605,19 +618,25 @@ class NotifyBizComponent extends Component
      */
     function resetCountNewNotification()
     {
-        return true;
+        return $this->Redis->deleteCountOfNewNotification(
+            $this->Notification->current_team_id,
+            $this->Notification->my_uid
+        );
     }
 
     /**
      * change read status of notification.
      *
-     * @param int $id
+     * @param int $notify_id
      *
      * @return bool
      */
-    function changeReadStatusNotification($id)
+    function changeReadStatusNotification($notify_id)
     {
-        return true;
-
+        return $this->Redis->changeReadStatusOfNotification(
+            $this->Notification->current_team_id,
+            $this->Notification->my_uid,
+            $notify_id
+        );
     }
 }

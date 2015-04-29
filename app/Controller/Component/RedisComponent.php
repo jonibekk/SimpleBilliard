@@ -197,8 +197,8 @@ class RedisComponent extends Object
     }
 
     /**
-     * @param int $team_id
-     * @param int $user_id
+     * @param $team_id
+     * @param $user_id
      *
      * @return int
      */
@@ -210,8 +210,8 @@ class RedisComponent extends Object
     }
 
     /**
-     * @param int $team_id
-     * @param int $user_id
+     * @param  $team_id
+     * @param  $user_id
      *
      * @return bool
      */
@@ -223,8 +223,8 @@ class RedisComponent extends Object
     }
 
     /**
-     * @param int    $team_id
-     * @param int    $user_id
+     * @param        $team_id
+     * @param        $user_id
      * @param string $notify_id
      * @param int    $unread
      *
