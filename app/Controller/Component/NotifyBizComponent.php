@@ -578,10 +578,11 @@ class NotifyBizComponent extends Component
      *
      * @param array|int $to_user_ids
      * @param int       $type
+     * @param string    $body
      *
      * @return bool
      */
-    function setNotifications($to_user_ids, $type)
+    function setNotifications($to_user_ids, $type, $body = null)
     {
 
         return true;
@@ -603,18 +604,6 @@ class NotifyBizComponent extends Component
      * @return bool
      */
     function resetCountNewNotification()
-    {
-        return true;
-    }
-
-    /**
-     * increment count of new notifications from redis.
-     *
-     * @param int $user_id
-     *
-     * @return bool
-     */
-    function incCountNewNotification($user_id)
     {
         return true;
     }
