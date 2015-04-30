@@ -110,7 +110,8 @@ echo $this->Html->script('gl_basic');
             e: <?=MY_GOALS_DISPLAY_NUMBER?>,
             f: <?=MY_COLLABO_GOALS_DISPLAY_NUMBER?>,
             g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>,
-            h: "<?=viaIsSet($circle_id)?>"
+            h: "<?=viaIsSet($circle_id)?>",
+            i: "<?=$this->Session->read('current_team_id')?>"
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",

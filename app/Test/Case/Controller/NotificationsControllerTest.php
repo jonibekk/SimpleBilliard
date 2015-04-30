@@ -15,6 +15,7 @@ class NotificationsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.evaluate_term',
         'app.user',
         'app.team',
         'app.badge',
@@ -61,6 +62,7 @@ class NotificationsControllerTest extends ControllerTestCase
 
     function testIndex()
     {
+        $this->_getNotificationsCommonMock();
         $this->testAction('/notifications/', ['method' => 'GET']);
     }
 
@@ -74,6 +76,7 @@ class NotificationsControllerTest extends ControllerTestCase
 
     function testAjaxGetNewNotifyCount()
     {
+        $this->_getNotificationsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/notifications/ajax_get_new_notify_count", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -86,6 +89,54 @@ class NotificationsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function _getNotificationsCommonMock()
+    {
+        /**
+         * @var NotificationsController $Notifications
+         */
+        $Notifications = $this->generate('Notifications', [
+            'components' => [
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'NotifyBiz',
+                'GlEmail',
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['id', '1'],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Notifications->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Notifications->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Notifications->Auth->expects($this->any())->method('loggedIn')
+                            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Notifications->Auth->staticExpects($this->any())->method('user')
+                            ->will($this->returnValueMap($value_map)
+                            );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Notifications->Session->expects($this->any())->method('read')
+                               ->will($this->returnValueMap([['current_team_id', 1]]));
+
+        return $Notifications;
+    }
 
 }
 
