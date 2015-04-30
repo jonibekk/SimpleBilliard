@@ -36,6 +36,8 @@ class NotifyBizComponent extends Component
 
     public $is_one_on_one_notify = false;
 
+    private $initialized = false;
+
     public function __construct(ComponentCollection $collection, $settings = array())
     {
         parent::__construct($collection, $settings);
@@ -44,25 +46,17 @@ class NotifyBizComponent extends Component
 
     public function initialize(Controller $controller)
     {
-        $this->Notification = ClassRegistry::init('Notification');
-        $this->NotifySetting = ClassRegistry::init('NotifySetting');
-        $this->Post = ClassRegistry::init('Post');
-        $this->GlEmail->startup($controller);
+        $this->startup($controller);
+        $this->initialized = true;
     }
 
     public function startup(Controller $controller)
     {
-        CakeSession::start();
-        if (!isset($this->Notification)) {
+        if (!$this->initialized) {
+            CakeSession::start();
             $this->Notification = ClassRegistry::init('Notification');
-        }
-        if (!isset($this->NotifySetting)) {
             $this->NotifySetting = ClassRegistry::init('NotifySetting');
-        }
-        if (!isset($this->Post)) {
             $this->Post = ClassRegistry::init('Post');
-        }
-        if (!isset($this->GlEmail->User)) {
             $this->GlEmail->startup($controller);
         }
     }
