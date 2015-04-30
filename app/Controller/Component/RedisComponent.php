@@ -239,7 +239,7 @@ class RedisComponent extends Object
             return false;
         }
 
-        $notify_date = substr_replace((string)((float)($notify_date) * 10000), '1', -1, $unread);
+        $notify_date = substr_replace((string)((float)($notify_date) * 10000), $unread, -1, 1);
 
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
@@ -302,7 +302,6 @@ class RedisComponent extends Object
         if (empty($notify_list)) {
             return null;
         }
-        $this->log($notify_list);
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         foreach ($notify_list as $notify_id => $score) {
@@ -310,10 +309,16 @@ class RedisComponent extends Object
             $pipe->hGetAll($this->getKeyName(self::KEY_TYPE_NOTIFICATION));
         }
         $pipe_res = $pipe->exec();
-//        $this->log($pipe_res);
         foreach ($pipe_res as $k => $v) {
             $score = $notify_list[$v['id']];
-//            $this->log($score);
+            $pipe_res[$k]['score'] = $score;
+            if (substr_compare((string)$score, "1", -1, 1) === 0) {
+                $pipe_res[$k]['unread_flg'] = true;
+            }
+            else {
+                $pipe_res[$k]['unread_flg'] = false;
+
+            }
         }
         return $pipe_res;
     }
