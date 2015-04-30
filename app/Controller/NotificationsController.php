@@ -52,6 +52,7 @@ class NotificationsController extends AppController
     public function ajax_get_latest_notify_items()
     {
         $this->_ajaxPreProcess();
+        $this->NotifyBiz->resetCountNewNotification();
         $notify_items = $this->NotifyBiz->getNotification();
         $this->set(compact('notify_items'));
         $response = $this->render('Notification/notify_items_in_list_box');
