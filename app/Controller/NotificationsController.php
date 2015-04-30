@@ -37,12 +37,15 @@ class NotificationsController extends AppController
     }
 
     /**
-     * @return array
+     * @return int
      */
     public function ajax_get_new_notify_count()
     {
         $this->_ajaxPreProcess();
-        $notify_count = $this->NotifyBiz->getCountNewNotification();
+        $notify_count = 0;
+        if ($this->Auth->user('id')) {
+            $notify_count = $this->NotifyBiz->getCountNewNotification();
+        }
         return $this->_ajaxGetResponse($notify_count);
     }
 

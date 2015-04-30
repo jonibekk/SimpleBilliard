@@ -2144,22 +2144,23 @@ function evNotifyMoreView() {
     return false;
 }
 
-$(function(){
+$(function () {
     $(document).on("click", ".click-notify-read-more", evNotifyMoreView);
 });
 
 // Auto update notify cnt
-$(function(){
-
-    setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
+$(function () {
+    if (cake.data.i) {
+        setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
+    }
 
     function setIntervalToGetNotifyCnt(sec) {
-        setInterval(function(){
+        setInterval(function () {
             updateNotifyCnt();
         }, sec * 1000);
     }
 
-    function updateNotifyCnt(){
+    function updateNotifyCnt() {
 
         var url = cake.url.f;
         $.ajax({
@@ -2172,13 +2173,12 @@ $(function(){
                 }
             },
             error: function () {
-                alert(cake.message.notice.c);
             }
         });
         return false;
     }
 
-    function setNotifyCntToBellAndTitle(cnt){
+    function setNotifyCntToBellAndTitle(cnt) {
         var $bellBox = getBellBoxSelector();
         var $title = $("title");
         var $originTitle = $("title").attr("origin-title");
@@ -2190,7 +2190,7 @@ $(function(){
         }
 
         // set notify number
-        if(parseInt(cnt) <= 20) {
+        if (parseInt(cnt) <= 20) {
             $bellBox.html(cnt);
             $title.text("(" + cnt + ")" + $originTitle);
         } else {
@@ -2225,13 +2225,13 @@ $(document).ready(function () {
         initBellNum();
         initTitle();
 
-        if(isExistNewNotify || click_cnt == 1) {
+        if (isExistNewNotify || click_cnt == 1) {
             updateListBox();
         }
 
         function isExistNewNotify() {
             var newNotifyCnt = getNotifyCnt();
-            if(newNotifyCnt > 0) {
+            if (newNotifyCnt > 0) {
                 return true;
             }
             return false;
