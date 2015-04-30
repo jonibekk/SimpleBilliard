@@ -1,4 +1,4 @@
 module.exports = (grunt) ->
   dist:
     files:
-      '<%= config.app %>/webroot/dest/css/sample.css': ['<%= config.app %>/webroot/less/sample.less']
+      '<%= config.dest %>/csssrc/sample.css': ['<%= config.less %>/sample.less']

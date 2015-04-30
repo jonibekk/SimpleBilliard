@@ -4,8 +4,8 @@ module.exports = (grunt) ->
       bare:true
     files: [
       expand: 'true'
-      cwd: '<%= config.app %>/webroot/coffee/'
+      cwd: '<%= config.coffee %>'
       src: ['**/*.coffee']
-      dest: '<%= config.dest %>/js/'
+      dest: '<%= config.dest %>/jssrc/'
       ext: '.js'
     ]
