@@ -252,7 +252,10 @@ class Notification extends AppModel
 
     function getTitle($type, $from_user_names, $count_num, $item_name)
     {
-        $item_name = json_decode($item_name, true);
+        json_decode($item_name, true);
+        if (json_last_error() == JSON_ERROR_NONE) {
+            $item_name = json_decode($item_name, true);
+        }
         $title = null;
         $user_text = null;
         //カウント数はユーザ名リストを引いた数
