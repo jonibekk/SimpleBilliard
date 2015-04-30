@@ -122,6 +122,11 @@ class AppController extends Controller
                 if ($this->request->is('get')) {
                     $this->_switchTeamBeforeCheck();
                 }
+                //通知の既読ステータス
+                if (isset($this->request->params['named']['notify_id'])) {
+                    $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
+                }
+
             }
             //permission check
             $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
