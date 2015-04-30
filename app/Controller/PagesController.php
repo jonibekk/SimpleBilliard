@@ -36,8 +36,9 @@ class PagesController extends AppController
 //        for ($i = 1; $i < 1000; $i++) {
 //            $data[] = $i;
 //        }
-//        $this->Redis->setNotifications(1, 1, [1,2,3,4], 1, 'test','http://aaa.com', time());
-//        $res = $this->Redis->getNotifications(1,1,20);
+//        $this->Redis->setNotifications(1, 1, [1, 2, 3, 4], 1, 'test', 'http://aaa.com', microtime(true));
+//        $this->Redis->getNotifications(1, 1, 20);
+//        $this->Redis->changeReadStatusOfNotification(1, 1, '55418966-5c78-45ca-a718-2971c0a83204');
 //        $this->log($res);
 
         $path = func_get_args();
