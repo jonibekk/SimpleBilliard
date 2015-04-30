@@ -32,15 +32,6 @@ class PagesController extends AppController
      */
     public function display()
     {
-        //TODO redis test
-//        for ($i = 1; $i < 1000; $i++) {
-//            $data[] = $i;
-//        }
-//        $this->Redis->setNotifications(1, 1, [1, 2, 3, 4], 1, 'test_aaa', 'http://aaa.com', microtime(true));
-//        $this->Redis->getNotifications(1, 1, 20);
-//        $this->Redis->changeReadStatusOfNotification(1, 1, '5541927f-f654-4ff2-987e-2971c0a83204');
-
-        $this->NotifyBiz->getNotification(20);
         $path = func_get_args();
         $page = $subpage = null;
 

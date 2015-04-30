@@ -161,13 +161,14 @@ class RedisComponent extends Object
      */
     public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date)
     {
+        $this->Db = ConnectionManager::getDataSource('redis');
         $notify_id = $this->generateId();
         $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id);
         $data = [
             'id'      => $notify_id,
             'user_id' => $my_id,
             'body'    => $body,
-            'url'     => $url,
+            'url'     => Router::url(array_merge($url, ['notify_id' => $notify_id]), true),
             'type'    => $type,
             'created' => $date,
         ];
@@ -193,7 +194,6 @@ class RedisComponent extends Object
             $pipe->incr($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT));
         }
         $pipe->exec();
-
         return true;
     }
 

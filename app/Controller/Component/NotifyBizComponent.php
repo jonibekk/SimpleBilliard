@@ -32,7 +32,7 @@ class NotifyBizComponent extends Component
     ];
     public $notify_settings = [];
 
-    public $has_send_mail_interval_time = true;
+    public $has_send_mail_interval_time = false;
 
     public $is_one_on_one_notify = false;
 
@@ -66,7 +66,6 @@ class NotifyBizComponent extends Component
 
         switch ($notify_type) {
             case Notification::TYPE_FEED_POST:
-                $this->is_one_on_one_notify = true;
                 $this->_setFeedPostOption($model_id);
                 break;
             case Notification::TYPE_FEED_COMMENTED_ON_MY_POST:
@@ -79,11 +78,9 @@ class NotifyBizComponent extends Component
                 $this->_setCircleUserJoinOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $this->has_send_mail_interval_time = false;
                 $this->_setCircleChangePrivacyOption($model_id);
                 break;
             case Notification::TYPE_CIRCLE_ADD_USER:
-                $this->has_send_mail_interval_time = false;
                 $this->_setCircleAddUserOption($model_id, $to_user_list);
                 break;
             default:
@@ -98,6 +95,7 @@ class NotifyBizComponent extends Component
         else {
             //通常のアプリ通知データ保存
             $this->_saveNotifications();
+
             //通常の通知メール送信
             $this->_sendNotifyEmail();
         }
@@ -214,9 +212,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED);
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_POST;
-//        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home'];
-//        $this->notify_option['url_data'] = ['team_id'=>$this->Session->read('current_team_id')];
-        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'display', 'home', 'team_id' => $this->Post->current_team_id];
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
@@ -389,6 +385,17 @@ class NotifyBizComponent extends Component
             'count_num' => $this->notify_option['count_num'],
             'item_name' => $this->notify_option['item_name'],
         ];
+
+        //TODO save to redis.
+        $this->Redis->setNotifications(
+            $this->notify_option['notify_type'],
+            $this->Notification->current_team_id,
+            $uids,
+            $this->Notification->my_uid,
+            json_decode($this->notify_option['item_name'])[0],
+            $this->notify_option['url_data'],
+            microtime(true)
+        );
         $this->Notification->saveNotify($data, $uids);
     }
 
