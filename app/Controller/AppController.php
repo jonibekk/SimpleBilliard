@@ -143,6 +143,7 @@ class AppController extends Controller
             $this->_setUnApprovedCnt($login_uid);
             $this->_setEvaluableCnt();
             $this->_setAllAlertCnt();
+            $this->_setNotifyCnt();
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
@@ -564,6 +565,13 @@ class AppController extends Controller
     public function _setAvailEvaluation()
     {
         $this->set('is_evaluation_available', $this->Team->EvaluationSetting->isEnabled());
+    }
+
+    public function _setNotifyCnt()
+    {
+        $this->NotifyBiz->startup($this);
+        $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
+        $this->set(compact("new_notify_cnt"));
     }
 
 }

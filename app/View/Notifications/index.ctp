@@ -6,6 +6,7 @@
  * Time: 14:22
  *
  * @var $notify_items
+ * @var $isExistMoreNotify
  */
 ?>
 
@@ -21,6 +22,7 @@
             $this->element('Notification/notify_items',
                            ['user' => $notify_items]) ?>
         </ul>
+        <? if($isExistMoreNotify): ?>
         <div class="feed-read-more">
             <div class="panel-read-more-body">
                 <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
@@ -32,6 +34,7 @@
                     <?= __d('gl', "もっと見る ▼") ?></a>
             </div>
         </div>
+        <? endif; ?>
     </div>
     <div class="panel-footer">
     </div>

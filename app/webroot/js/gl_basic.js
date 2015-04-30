@@ -2128,17 +2128,18 @@ function evNotifyMoreView() {
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
-
             } else {
                 //ローダーを削除
                 $loader_html.remove();
-                $("#ShowMoreNoData").show();
                 //もっと読む表示をやめる
-                $obj.remove();
+                $(".feed-read-more").remove();
             }
         },
         error: function () {
-            alert(cake.message.notice.c);
+            //ローダーを削除
+            $loader_html.remove();
+            $obj.removeAttr('disabled');
+            $("#ShowMoreNoData").hide();
         }
     });
     return false;
@@ -2151,6 +2152,7 @@ $(function(){
 // Auto update notify cnt
 $(function(){
 
+    setNotifyCntToBellAndTitle(cake.new_notify_cnt);
     setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
 
     function setIntervalToGetNotifyCnt(sec) {
@@ -2185,8 +2187,8 @@ $(function(){
         var existingBellCnt = parseInt($bellBox.html());
         var cntIsTooMuch = "20+";
 
-        if (existingBellCnt == 0) {
-            displaySelectorFluffy($bellBox);
+        if(cnt == 0) {
+            return;
         }
 
         // set notify number
