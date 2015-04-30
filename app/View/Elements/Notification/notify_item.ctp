@@ -15,7 +15,7 @@
 <? $unread_class = $notification['unread_flg'] ? 'unread_notify' : 'read_notify'; ?>
 
 <li class="divider notify-divider"></li>
-<li class="notify-card-list <?= $unread_class ?>">
+<li class="notify-card-list <?= $unread_class ?>" data-score="<?=$notification['score']?>">
     <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card" id="notifyCard">
         <?=
         $this->Html->image(

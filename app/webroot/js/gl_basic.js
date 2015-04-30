@@ -2093,11 +2093,10 @@ $(function () {
 });
 
 function evNotifyMoreView() {
-    attrUndefinedCheck(this, 'oldest_score_id');
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var oldest_score_id = $obj.attr('oldest_score_id');
+    var oldest_score_id = $("ul.notify-list-page").children("li.notify-card-list:last").attr("data-score");
     var get_url = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -2111,9 +2110,9 @@ function evNotifyMoreView() {
         url: url,
         async: true,
         success: function (data) {
-            if (!$.isEmptyObject(data)) {
+            if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
-                var $notify = $(data);
+                var $notify = $(data.html);
                 //一旦非表示
                 $notify.hide();
                 $(".notify-list-page").append($notify);
@@ -2128,6 +2127,13 @@ function evNotifyMoreView() {
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
+                if(parseInt(data.item_cnt) < cake.new_notify_cnt) {
+                    //ローダーを削除
+                    $loader_html.remove();
+                    //もっと読む表示をやめる
+                    $(".feed-read-more").remove();
+                }
+
             } else {
                 //ローダーを削除
                 $loader_html.remove();

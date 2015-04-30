@@ -35,8 +35,13 @@ class NotificationsController extends AppController
         }
         $this->set(compact('notify_items'));
         $response = $this->render('Notification/notify_items');
+
         $html = $response->__toString();
-        return $this->_ajaxGetResponse($html);
+        $result = array(
+            'html' => $html,
+            'item_cnt' => count($notify_items)
+        );
+        return $this->_ajaxGetResponse($result);
     }
 
     /**

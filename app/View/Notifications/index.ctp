@@ -27,7 +27,6 @@
             <div class="panel-read-more-body">
                 <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
                 <a href="#" class="btn btn-link click-notify-read-more"
-                   oldest_score_id="1"
                    get-url="<?=
                    $this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_old_notify_more']) ?>"
                     >
