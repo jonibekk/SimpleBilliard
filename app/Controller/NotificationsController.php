@@ -33,7 +33,6 @@ class NotificationsController extends AppController
         if(count($notify_items) === 0) {
             return $this->_ajaxGetResponse("");
         }
-        $this->log(count($notify_items));
         $this->set(compact('notify_items'));
         $response = $this->render('Notification/notify_items');
         $html = $response->__toString();
