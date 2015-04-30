@@ -64,7 +64,15 @@ class NotificationsControllerTest extends ControllerTestCase
         $this->testAction('/notifications/', ['method' => 'GET']);
     }
 
-    function testAjaxGetOldNotifyMore()
+    function testAjaxGetOldNotifyMoreCaseItemCntIsZero()
+    {
+        $oldest_score_id = 1;
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction("/notifications/ajax_get_old_notify_more/{$oldest_score_id}", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetOldNotifyMoreCaseItemCntIsMany()
     {
         $oldest_score_id = 1;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';

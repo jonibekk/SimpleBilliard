@@ -1768,6 +1768,7 @@ $(document).ready(function () {
             if (isNewCommentNotify) {
                 var postId = data.post_id;
                 var notifyBox = $("#Comments_new_" + String(postId));
+                notifyNewComment(notifyBox);
             }
         });
     }
@@ -1930,6 +1931,44 @@ function viaIsSet(data) {
     var isExist = typeof( data ) !== 'undefined';
     if (!isExist) return false;
     return data;
+}
+
+function notifyNewComment(notifyBox) {
+    var numInBox = notifyBox.find(".num");
+    var num = parseInt(numInBox.html());
+
+    hideCommentNotifyErrorBox(notifyBox);
+
+    // Increment unread number
+    if (num >= 1) {
+        // top of feed
+        numInBox.html(String(num + 1));
+    } else {
+        // Case of not existing unread post yet
+        numInBox.html("1");
+    }
+
+    if (notifyBox.css("display") === "none") {
+        notifyBox.css("display", "block");
+
+        // 通知をふんわり出す
+        var i = 0.2;
+        var roop = setInterval(function () {
+            notifyBox.css("opacity", i);
+            i = i + 0.2;
+            if (i > 1) {
+                clearInterval(roop);
+            }
+        }, 100);
+    }
+}
+
+function hideCommentNotifyErrorBox(notifyBox) {
+    errorBox = notifyBox.siblings(".new-comment-error");
+    if (errorBox.attr("display") === "none") {
+        return;
+    }
+    errorBox.css("display", "none");
 }
 
 $(document).ready(function () {
