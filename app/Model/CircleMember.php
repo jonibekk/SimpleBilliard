@@ -45,15 +45,27 @@ class CircleMember extends AppModel
 
     public $new_joined_circle_list = [];
 
-    public function getMyCircleList()
+    public function getMyCircleList($check_hide_status = null)
     {
-        $options = [
-            'conditions' => [
-                'user_id' => $this->my_uid,
-                'team_id' => $this->current_team_id,
-            ],
-            'fields'     => ['circle_id'],
-        ];
+        if (!is_null($check_hide_status)) {
+            $options = [
+                'conditions' => [
+                    'user_id'               => $this->my_uid,
+                    'team_id'               => $this->current_team_id,
+                    'show_for_all_feed_flg' => $check_hide_status
+                ],
+                'fields'     => ['circle_id'],
+            ];
+        }
+        else {
+            $options = [
+                'conditions' => [
+                    'user_id' => $this->my_uid,
+                    'team_id' => $this->current_team_id,
+                ],
+                'fields'     => ['circle_id'],
+            ];
+        }
         $res = $this->find('list', $options);
         return $res;
     }
