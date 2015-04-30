@@ -549,41 +549,21 @@ class NotifyBizComponent extends Component
         if (empty($notify_from_redis)) {
             return [];
         }
+        $data = [];
+        foreach ($notify_from_redis as $v) {
+            $data[]['Notification'] = $v;
+        }
         //fetch User
         $user_list = Hash::extract($notify_from_redis, '{n}.user_id');
         $users = Hash::combine($this->Notification->User->getUsersProf($user_list), '{n}.User.id', '{n}');
-
-        $data = [
-            [
-                'User'         => [
-                    'id'               => 1,
-                    'display_username' => 'test taro',
-                    'photo_file_name'  => null,
-                ],
-                'Notification' => [
-                    'title'      => 'test taroさんがあなたの投稿にコメントしました。',
-                    'body'       => 'この通知機能マジ最高だね！',
-                    'url'        => 'http://192.168.50.4/post_permanent/1/from_notification:1',
-                    'unread_flg' => false,
-                    'created'    => '1429643033',
-                ]
-            ],
-            [
-                'User'         => [
-                    'id'               => 2,
-                    'display_username' => 'test jiro',
-                    'photo_file_name'  => null,
-                ],
-                'Notification' => [
-                    'title'      => 'test jiroさんがあなたの投稿にコメントしました。',
-                    'body'       => 'ほんと半端く良いわ！',
-                    'url'        => 'http://192.168.50.4/post_permanent/2/from_notification:1',
-                    'unread_flg' => true,
-                    'created'    => '1429643033',
-                ]
-            ],
-        ];
-
+        //merge users to notification data
+        foreach ($data as $k => $v) {
+            $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
+            //get title
+            $title = $this->Notification->getTitle($data[$k]['Notification']['type'],
+                                                   $data[$k]['User']['display_username'], 1, 'test');
+            $data[$k]['Notification']['title'] = $title;
+        }
         return $data;
     }
 

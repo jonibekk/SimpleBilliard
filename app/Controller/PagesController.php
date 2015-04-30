@@ -40,6 +40,7 @@ class PagesController extends AppController
 //        $this->Redis->getNotifications(1, 1, 20);
 //        $this->Redis->changeReadStatusOfNotification(1, 1, '5541927f-f654-4ff2-987e-2971c0a83204');
 
+        $this->NotifyBiz->getNotification(20);
         $path = func_get_args();
         $page = $subpage = null;
 
