@@ -27,6 +27,10 @@ class CircleMember extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
+        'status'=>[
+            'rule'=>['inList', array('0', '1')],
+            'message' => 'Invalid Status'
+        ]
     ];
 
     /**
@@ -335,4 +339,27 @@ class CircleMember extends AppModel
         return;
     }
 
+    function show_hide_stats($userid,$circle_id)
+    {
+        $options = [
+            'conditions' => [
+                'CircleMember.user_id'   => $userid,
+                'CircleMember.circle_id' => $circle_id
+            ]
+        ];
+
+         return $this->find('first', $options);
+    }
+
+    function circle_status_toggle($circle_id,$status)
+    {
+        $conditions = [
+            'CircleMember.circle_id' => $circle_id,
+            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id'=>$this->my_uid
+        ];
+
+        $res = $this->updateAll(['CircleMember.show_for_all_feed_flg' => $status], $conditions);
+        return $res;
+    }
 }
