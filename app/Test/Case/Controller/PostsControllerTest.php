@@ -1241,12 +1241,6 @@ class PostsControllerTest extends ControllerTestCase
 
     }
 
-    function testcircleHideStatus()
-    {
-        $this->_getPostsCommonMock();
-        $this->testAction("/posts/circleHideStatus/20", ['method' => 'get']);
-    }
-
     function testcircleToggleStatusSuccess()
     {
         $this->_getPostsCommonMock();

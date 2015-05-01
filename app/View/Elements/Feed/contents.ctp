@@ -65,20 +65,18 @@ if(  isset($params['action']) && $params['controller']=='posts' && $params['acti
                         <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'join_circle',$current_circle['Circle']['id']])?>">Join Circle</a>
                             <?php } else { ?>
                                 <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle',$current_circle['Circle']['id']])?>">Leave Circle</a>
-                            <?php }?>
+                            <?php } ?>
                         </li>
+                        <?php if($user_status=='joined'): ?>
                         <li>
                             <?php if($circle_status=='1') {
                                 echo $this->Html->link('Hide', 'circleToggleStatus/'.$current_circle['Circle']['id'].'/0');
-                                ?>
-<!--                                <a href="--><?//=$this->Html->url(['controller' => 'posts', 'action' => 'circleToggleStatus','show'])?><!--">Show</a>-->
-
-                            <?php } else {
+                             }
+                            else {
                                 echo $this->Html->link('Show', 'circleToggleStatus/'.$current_circle['Circle']['id'].'/1');
-                                ?>
-<!--                                <a href="--><?//=$this->Html->url(['controller' => 'posts', 'action' => 'circleToggleStatus','hide'])?><!--">Hide</a>-->
-                            <?php }?>
+                            } ?>
                         </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <?php } ?>
