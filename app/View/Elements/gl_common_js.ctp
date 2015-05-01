@@ -118,7 +118,7 @@ echo $this->Html->script('gl_basic');
             socket_id: ""
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
-        new_notify_cnt: <?=$new_notify_cnt?>
+        new_notify_cnt: <?=viaIsSet($new_notify_cnt)?>
     };
 
 
