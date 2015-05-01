@@ -30,9 +30,11 @@ class NotificationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER, $oldest_score);
+        $this->log($notify_items);
         if (count($notify_items) === 0) {
             return $this->_ajaxGetResponse("");
         }
+        $this->log('success');
         $this->set(compact('notify_items'));
         $response = $this->render('Notification/notify_items');
 

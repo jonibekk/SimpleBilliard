@@ -77,6 +77,13 @@ class NotificationsControllerTest extends ControllerTestCase
     function testAjaxGetOldNotifyMoreCaseItemCntIsMany()
     {
         $oldest_score_id = 1;
+        $Notifications = $this->_getNotificationsCommonMock();
+        $return_value_map = [
+            [20, $oldest_score_id, 1]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Notifications->NotifyBiz->expects($this->any())->method('getNotification')
+                                 ->will($this->returnValueMap($return_value_map));
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/notifications/ajax_get_old_notify_more/{$oldest_score_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
