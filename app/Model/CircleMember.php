@@ -27,8 +27,8 @@ class CircleMember extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
-        'status'=>[
-            'rule'=>['inList', array('0', '1')],
+        'status'    => [
+            'rule'    => ['inList', array('0', '1')],
             'message' => 'Invalid Status'
         ]
     ];
@@ -339,7 +339,7 @@ class CircleMember extends AppModel
         return;
     }
 
-    function show_hide_stats($userid,$circle_id)
+    function show_hide_stats($userid, $circle_id)
     {
         $options = [
             'conditions' => [
@@ -347,16 +347,16 @@ class CircleMember extends AppModel
                 'CircleMember.circle_id' => $circle_id
             ]
         ];
-
-         return $this->find('first', $options);
+        $res = $this->find('first', $options);
+        return viaIsSet($res['CircleMember']['show_for_all_feed_flg']);
     }
 
-    function circle_status_toggle($circle_id,$status)
+    function circle_status_toggle($circle_id, $status)
     {
         $conditions = [
             'CircleMember.circle_id' => $circle_id,
             'CircleMember.team_id'   => $this->current_team_id,
-            'CircleMember.user_id'=>$this->my_uid
+            'CircleMember.user_id'   => $this->my_uid
         ];
 
         $res = $this->updateAll(['CircleMember.show_for_all_feed_flg' => $status], $conditions);
