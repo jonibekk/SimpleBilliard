@@ -1,7 +1,16 @@
 module.exports = (grunt) ->
+
+  #
+  # using autoprefixer
+  # expand is
+  # flatten is
   multiple_files:
     expand: true
     flatten: true
-    src: '<%= config.dest %>/csssrc/**/*.css' # -> src/css/file1.css, src/css/file2.css
-    dest: '<%= config.dest %>/csspre/'     # -> dest/css/file1.css, dest/css/file2.css
+
+      # app/webroot/dest/csssrc/**/*.css ->
+    src: '<%= config.dest %>/csssrc/**/*.css'
+
+      # -> app/webroot/dest/csspre/**/*.css
+    dest: '<%= config.dest %>/csspre/'
     ext: '.css'

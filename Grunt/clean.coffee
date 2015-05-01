@@ -7,10 +7,12 @@ module.exports = (grunt) ->
     "<%= config.dest %>"
 
   # Todo : clean the directory for docs
-  #   styledocco:
-  #     "<%= config.docs %>/styledocco"
-  #   docco:
-  #     "<%= config.docs %>/docco"
+  styledocco:
+    "<%= config.docs %>/styledocco"
+  docco:
+    "<%= config.docs %>/docco"
+  gruntDocs:
+    "<%= config.docs %>/grunt"
 
   # Todo : clean the files the past version
   #   jsRelease:

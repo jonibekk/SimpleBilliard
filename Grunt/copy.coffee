@@ -14,6 +14,18 @@ module.exports = (grunt) ->
     ]
 
   #
+  #  [*.js.src]
+  #  dest/jssrc -> app/webroot/js
+  #
+  jsMap:
+    expand: true
+    cwd: '<%= config.dest %>/jssrc/'
+    dest: '<%= config.webroot %>/js/'
+    src: [
+      '*.css.map'
+    ]
+
+  #
   # [*.min.css]
   # dest/cssmin -> app/webroot/css
   #
@@ -23,4 +35,16 @@ module.exports = (grunt) ->
     dest: '<%= config.webroot %>/css/'
     src: [
       '*.min.css'
+    ]
+
+  #
+  # [*.css.map]
+  # dest/csssrc -> app/webroot/css
+  #
+  cssMap:
+    expand: true
+    cwd: '<%= config.dest %>/csssrc/'
+    dest: '<%= config.webroot %>/css/'
+    src: [
+      '*.css.map'
     ]

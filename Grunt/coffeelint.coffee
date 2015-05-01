@@ -1,10 +1,23 @@
 module.exports = (grunt) ->
-  coffeelint:
+
+  #
+  # setting of coffeelint
+  # coffeescript is checked, based on coffeelint.json.
+  #
+  # release is for Goalous
+  # gruntlint is for gruntfiles
+  #
+  release:
     files:
-      src: ['<%= config.app %>/webroot/coffee/**/*.coffee']
+      src: ['<%= config.coffee %>/**/*.coffee']
     options:
-      indentation:
-        value: 2
-        level: 'warn'
-      'no_trailing_semicolons':
-        level: 'warn'
+      configFile: 'coffeelint.json'
+
+  gruntlint:
+    files:
+      src: [
+        'gruntfile.coffee'
+        '<%= config.grunt %>/**/*.coffee'
+      ]
+    options:
+      configFile: 'coffeelint.json'

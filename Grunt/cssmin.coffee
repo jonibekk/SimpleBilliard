@@ -1,4 +1,10 @@
 module.exports = (grunt) ->
+
+  #
+  # Setting of cssmin.
+  # *.css -> *.min.css
+  # excluding minified css (!*.min.css)
+  # expand is
   target:
     files:[
       expand: true

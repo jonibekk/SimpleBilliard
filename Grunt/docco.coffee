@@ -1,14 +1,21 @@
 module.exports = (grunt) ->
 
+  #
+  # make coffee docs for Goalous
+  #
   release:
-    src: ['<%= config.app %>/webroot/coffee/**/*.coffee']
+    src: ['<%= config.coffee %>/**/*.coffee']
     options:
       output: '<%= config.docs %>/docco'
 
-  gruntdocs:
+  #
+  # make coffee docs for Grunt
+  # If you change the gruntfile.coffee or grunt/**/*.coffee, you MUST use ```grunt gruntdocs``` on terminal, or I'll never forgive you.
+  #
+  gruntDocs:
     src: [
       'gruntfile.coffee'
       '<%= config.grunt %>/**/*.coffee'
     ]
     options:
-      output: '<%= config.docs %>/docco'
+      output: '<%= config.docs %>/grunt'
