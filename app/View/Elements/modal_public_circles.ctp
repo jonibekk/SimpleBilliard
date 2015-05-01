@@ -42,8 +42,10 @@
                 <? if (!empty($non_joined_circles)): ?>
                     <div class="row borderBottom">
                         <? foreach ($non_joined_circles as $key => $circle): ?>
+                        <a href="<?=$this->Html->url(['controller' => '/', 'action' => 'circle_feed',$non_joined_circles[$key]['Circle']['id']])?>">
                             <?=
                             $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
+                            </a>
                         <? endforeach ?>
                     </div>
                 <? else: ?>
@@ -55,8 +57,10 @@
                     <div class="row borderBottom">
                         <? foreach ($joined_circles as $circle): ?>
                             <? ++$key ?>
+                        <a href="<?=$this->Html->url(['controller' => '/', 'action' => 'circle_feed',$joined_circles[$key]['Circle']['id']])?>">
                             <?=
                             $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
+                            </a>
                         <? endforeach ?>
                     </div>
                 <? else: ?>
