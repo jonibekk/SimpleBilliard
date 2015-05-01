@@ -248,17 +248,6 @@ class Goal extends AppModel
         }
         //新規の場合はデフォルトKRを追加
         if ($add_new) {
-            $kr['name'] = __d('gl', "出したい成果の名前を入れてください");
-            $kr['priority'] = 3;
-            $kr['current_value'] = 0;
-            $kr['start_value'] = 0;
-            $kr['target_value'] = 100;
-            $kr['value_unit'] = KeyResult::UNIT_PERCENT;
-            $kr['start_date'] = $data['Goal']['start_date'];
-            $kr['end_date'] = $data['Goal']['end_date'];
-            $kr['team_id'] = $this->current_team_id;
-            $kr['user_id'] = $this->my_uid;
-            $data['KeyResult'][0] = $kr;
             //コラボレータをタイプ　リーダーで保存
             $data['Collaborator'][0]['user_id'] = $this->my_uid;
             $data['Collaborator'][0]['team_id'] = $this->current_team_id;

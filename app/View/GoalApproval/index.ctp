@@ -102,6 +102,10 @@
 
                         <div class="panel-body goal-set-heading clearfix">
 
+                            <p class="approval_body_text">
+                                <?= $this->Html->image('ajax-loader.gif', [ 'class' => 'lazy comment-img',
+                                                                            'data-original' => $this->Upload->uploadUrl($goal['User'], 'User.photo', ['style' => 'small'])]) ?></p>
+
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 
@@ -161,6 +165,8 @@
                                     <? if ($goal['my_goal'] === false) { ?>
                                         <?= $this->Form->button(__d('gl', "評価対象にする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                         <?= $this->Form->button(__d('gl', "評価対象にしない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
+                                    <? } elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === '1' && $goal['Collaborator']['valued_flg'] === '3') { ?>
+                                        <a class="btn btn-primary approval_button" href="goals/add/<?= $goal['Goal']['id']; ?>/mode:3"><?=__d('gl', "ゴールを修正する")?> <i class="fa fa-chevron-right"></i></a>
                                     <? } ?>
                                 </div>
                             </div>
@@ -169,7 +175,7 @@
 
                             <div class="row">
                                 <div class="approval_botton_area">
-                                    <? if ($goal['my_goal'] === true) { ?>
+                                    <? if ($goal['my_goal'] === true || ($goal['my_goal'] === false && $goal['Collaborator']['type'] === '0')) { ?>
                                         <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
                                     <? } else { ?>
                                         <?= $this->Form->button(__d('gl', "修正を依頼"), ['id' => 'modify_btn_'. $goal['Collaborator']['id'], 'name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false, 'disabled']) ?>
