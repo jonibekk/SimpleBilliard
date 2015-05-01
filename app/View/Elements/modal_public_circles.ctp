@@ -57,7 +57,7 @@
                     <div class="row borderBottom">
                         <? foreach ($joined_circles as $circle): ?>
                             <? ++$key ?>
-                        <a href="<?=$this->Html->url(['controller' => '/', 'action' => 'circle_feed',$joined_circles[$key]['Circle']['id']])?>">
+                        <a href="<?=$this->Html->url(['controller' => '/', 'action' => 'circle_feed',$circle['Circle']['id']])?>">
                             <?=
                             $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
                             </a>
