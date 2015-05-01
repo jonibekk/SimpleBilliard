@@ -15,7 +15,7 @@ class NotificationsController extends AppController
         $this->_setViewValOnRightColumn();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER);
         $isExistMoreNotify = true;
-        if(count($notify_items) < NOTIFY_PAGE_ITEMS_NUMBER) {
+        if (count($notify_items) < NOTIFY_PAGE_ITEMS_NUMBER) {
             $isExistMoreNotify = false;
         }
         $this->set(compact('notify_items', 'isExistMoreNotify'));
@@ -30,7 +30,7 @@ class NotificationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER, $oldest_score);
-        if(count($notify_items) === 0) {
+        if (count($notify_items) === 0) {
             return $this->_ajaxGetResponse("");
         }
         $this->set(compact('notify_items'));
@@ -38,19 +38,22 @@ class NotificationsController extends AppController
 
         $html = $response->__toString();
         $result = array(
-            'html' => $html,
+            'html'     => $html,
             'item_cnt' => count($notify_items)
         );
         return $this->_ajaxGetResponse($result);
     }
 
     /**
-     * @return array
+     * @return int
      */
     public function ajax_get_new_notify_count()
     {
         $this->_ajaxPreProcess();
-        $notify_count = $this->NotifyBiz->getCountNewNotification();
+        $notify_count = 0;
+        if ($this->Auth->user('id')) {
+            $notify_count = $this->NotifyBiz->getCountNewNotification();
+        }
         return $this->_ajaxGetResponse($notify_count);
     }
 
@@ -60,6 +63,7 @@ class NotificationsController extends AppController
     public function ajax_get_latest_notify_items()
     {
         $this->_ajaxPreProcess();
+        $this->NotifyBiz->resetCountNewNotification();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_BELL_BOX_ITEMS_NUMBER);
         $this->set(compact('notify_items'));
         $response = $this->render('Notification/notify_items_in_list_box');
