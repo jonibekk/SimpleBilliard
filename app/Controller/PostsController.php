@@ -671,9 +671,9 @@ class PostsController extends AppController
         return 'not_joined';
     }
 
-    function circleToggleStatus($circle_id, $status)
+    function circle_toggle_status($circle_id, $status)
     {
-        $this->Post->Circle->CircleMember->set($status);
+        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg'=>$status]);
 
         if ($this->Post->Circle->CircleMember->validates()) {
             $this->Post->Circle->CircleMember->circle_status_toggle($circle_id, $status);

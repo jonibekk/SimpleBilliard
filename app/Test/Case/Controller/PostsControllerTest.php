@@ -1241,16 +1241,21 @@ class PostsControllerTest extends ControllerTestCase
 
     }
 
-    function testcircleToggleStatusSuccess()
+    function testCircleToggleStatusSuccess()
     {
         $this->_getPostsCommonMock();
-        $this->testAction("/posts/circleToggleStatus/20/1", ['method' => 'get']);
+        $this->testAction("/posts/circle_toggle_status/20/1", ['method' => 'get']);
     }
 
-    function testcircleToggleStatusFailure()
+    function testCircleToggleStatusFailure()
     {
         $this->_getPostsCommonMock();
-        $this->testAction("/posts/circleToggleStatus/20/1111", ['method' => 'get']);
+        try {
+            $this->testAction("/posts/circle_toggle_status/20/1111", ['method' => 'get']);
+        }
+        catch (NotFoundException $e) {
+        }
+        $this->assertFalse(isset($e), "Invalid Status Request");
     }
 
     function _getPostsCommonMock()

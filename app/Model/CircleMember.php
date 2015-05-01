@@ -27,8 +27,8 @@ class CircleMember extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
-        'status'    => [
-            'rule'    => ['inList', array('0', '1')],
+        'show_for_all_feed_flg'    => [
+            'rule'    => ['boolean'],
             'message' => 'Invalid Status'
         ]
     ];
