@@ -1,5 +1,10 @@
 # Copies remaining files to places other tasks can use
 module.exports = (grunt) ->
+
+  #
+  #  [*.min.js]
+  #  dest/jsmin -> app/webroot/js
+  #
   js:
     expand: true
     cwd: '<%= config.dest %>/jsmin/'
@@ -7,6 +12,11 @@ module.exports = (grunt) ->
     src: [
       '*.min.js'
     ]
+
+  #
+  # [*.min.css]
+  # dest/cssmin -> app/webroot/css
+  #
   css:
     expand: true
     cwd: '<%= config.dest %>/cssmin/'
