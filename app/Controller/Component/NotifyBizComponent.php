@@ -402,7 +402,7 @@ class NotifyBizComponent extends Component
             $this->Notification->current_team_id,
             $uids,
             $this->Notification->my_uid,
-            json_decode($this->notify_option['item_name'])[0],
+            $this->notify_option['item_name'],
             $this->notify_option['url_data'],
             microtime(true)
         );
@@ -578,7 +578,8 @@ class NotifyBizComponent extends Component
             $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
             //get title
             $title = $this->Notification->getTitle($data[$k]['Notification']['type'],
-                                                   $data[$k]['User']['display_username'], 1, 'test');
+                                                   $data[$k]['User']['display_username'], 1,
+                                                   $data[$k]['Notification']['body']);
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
