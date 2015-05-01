@@ -1205,9 +1205,7 @@ class PostsControllerTest extends ControllerTestCase
     function testJoinCircleFailed()
     {
         $this->_getPostsCommonMock();
-        $data = [
-            'user_id' => '1'
-        ];
+
         $this->testAction('/posts/join_circle/1', ['method' => 'get']);
     }
 
@@ -1224,9 +1222,7 @@ class PostsControllerTest extends ControllerTestCase
     function testUnJoinCircle()
     {
         $this->_getPostsCommonMock();
-        $data = [
-            'user_id' => '2'
-        ];
+
         $circle_id = '1';
         $this->testAction("/posts/unjoin_circle/{$circle_id}", ['method' => 'get']);
     }
@@ -1243,6 +1239,24 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
         $this->testAction("/posts/userCircleStatus/2", ['method' => 'get']);
 
+    }
+
+    function testcircleHideStatus()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/circleHideStatus/20", ['method' => 'get']);
+    }
+
+    function testcircleToggleStatusSuccess()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/circleToggleStatus/20/1", ['method' => 'get']);
+    }
+
+    function testcircleToggleStatusFailure()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/circleToggleStatus/20/1111", ['method' => 'get']);
     }
 
     function _getPostsCommonMock()
