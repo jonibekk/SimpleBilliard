@@ -317,6 +317,7 @@ class TeamMember extends AppModel
             $save_data['evaluate_score_id'] = array_keys($score_list, $row['total']['final']['score'])[0];
             $save_data['comment'] = $row['total']['final']['comment'];
             $save_data['evaluator_user_id'] = $this->my_uid;
+            $save_data['status'] = Evaluation::TYPE_STATUS_DONE;
             $user_id = $uids[$row['member_no']];
             $evaluations[$user_id] = array_merge($evaluations[$user_id], $save_data);
         }
