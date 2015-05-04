@@ -92,17 +92,8 @@ class Notification extends AppModel
 
     function saveNotify($data, $user_ids)
     {
-        $notify = $this->getNotify($data['model_id'], $data['type']);
-
-        if (!empty($notify)) {
-            unset($notify['Notification']['modified']);
-            $notify['Notification'] = array_merge($notify['Notification'], $data);
-            $res = $this->save($notify);
-        }
-        else {
-            $this->create();
-            $res = $this->save($data);
-        }
+        $this->create();
+        $res = $this->save($data);
         //from_userを保存
         $data = [
             'notification_id' => $this->id,
@@ -113,7 +104,6 @@ class Notification extends AppModel
         $this->NotifyFromUser->create();
         $this->NotifyFromUser->save($data);
 
-        //$this->No
         //関連する通知ユーザを削除
         $this->NotifyToUser->deleteAll(['NotifyToUser.notification_id' => $this->id]);
         //保存データ
