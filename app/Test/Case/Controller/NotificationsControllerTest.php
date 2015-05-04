@@ -66,9 +66,57 @@ class NotificationsControllerTest extends ControllerTestCase
         $this->testAction('/notifications/', ['method' => 'GET']);
     }
 
-    function testAjaxGetOldNotifyMore()
+    function testAjaxGetOldNotifyMoreCaseItemCntIsZero()
     {
         $oldest_score_id = 1;
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction("/notifications/ajax_get_old_notify_more/{$oldest_score_id}", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetOldNotifyMoreCaseItemCntIsMany()
+    {
+        $oldest_score_id = 1;
+        $Notifications = $this->_getNotificationsCommonMock();
+        $return_value_map = [
+            [NOTIFY_PAGE_ITEMS_NUMBER, (string)$oldest_score_id, [
+                [
+                    'User'         => [
+                        'id'               => 1,
+                        'display_username' => 'test taro',
+                        'photo_file_name'  => null,
+                    ],
+                    'Notification' => [
+                        'title'      => 'test taroさんがあなたの投稿にコメントしました。',
+                        'url'        => 'http://192.168.50.4/post_permanent/1/from_notification:1',
+                        'unread_flg' => false,
+                        'created'    => '1429643033',
+                        'score'      => 1000,
+                        'body'       => 'testA',
+                    ]
+                ],
+                [
+                    'User'         => [
+                        'id'               => 2,
+                        'display_username' => 'test jiro',
+                        'photo_file_name'  => null,
+                    ],
+                    'Notification' => [
+                        'title'      => 'test jiroさんがあなたの投稿にコメントしました。',
+                        'url'        => 'http://192.168.50.4/post_permanent/2/from_notification:1',
+                        'unread_flg' => false,
+                        'created'    => '1429643033',
+                        'score'      => 1001,
+                        'body'       => 'testB',
+                    ]
+                ],
+
+            ]]
+        ];
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Notifications->NotifyBiz->expects($this->any())->method('getNotification')
+                                 ->will($this->returnValueMap($return_value_map));
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/notifications/ajax_get_old_notify_more/{$oldest_score_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -97,9 +145,9 @@ class NotificationsControllerTest extends ControllerTestCase
         $Notifications = $this->generate('Notifications', [
             'components' => [
                 'Session',
-                'Auth'     => ['user', 'loggedIn'],
-                'Security' => ['_validateCsrf', '_validatePost'],
-                'NotifyBiz',
+                'Auth'      => ['user', 'loggedIn'],
+                'Security'  => ['_validateCsrf', '_validatePost'],
+                'NotifyBiz' => ['getNotification'],
                 'GlEmail',
             ]
         ]);
