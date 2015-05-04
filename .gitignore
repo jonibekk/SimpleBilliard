@@ -34,7 +34,7 @@ composer.lock
 /Grunt-past/node_modules
 /Grunt-past/dest
 /node_modules
-/npm-debug.log
+npm-debug.log
 
 /app/webroot/dest
 /app/webroot/less/sample.less
