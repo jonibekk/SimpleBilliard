@@ -93,6 +93,7 @@ class NotificationsControllerTest extends ControllerTestCase
                         'created'    => '1429643033',
                         'score'      => 1000,
                         'body'       => 'testA',
+                        'type'       => 1,
                     ]
                 ],
                 [
@@ -108,6 +109,7 @@ class NotificationsControllerTest extends ControllerTestCase
                         'created'    => '1429643033',
                         'score'      => 1001,
                         'body'       => 'testB',
+                        'type'       => 1,
                     ]
                 ],
 
