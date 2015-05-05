@@ -74,11 +74,4 @@ class SendMailToUserTest extends CakeTestCase
         $this->SendMailToUser->getToUserList(1);
     }
 
-    public function testGetInvalidSendUserList()
-    {
-        $this->SendMailToUser->my_uid = 1;
-        $this->SendMailToUser->current_team_id = 1;
-        $this->SendMailToUser->getInvalidSendUserList(1);
-    }
-
 }

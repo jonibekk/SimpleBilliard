@@ -32,10 +32,6 @@ class NotifyBizComponent extends Component
     ];
     public $notify_settings = [];
 
-    public $has_send_mail_interval_time = false;
-
-    public $is_one_on_one_notify = false;
-
     private $initialized = false;
 
     public function __construct(ComponentCollection $collection, $settings = array())
@@ -96,19 +92,11 @@ class NotifyBizComponent extends Component
             default:
                 break;
         }
-        if ($this->is_one_on_one_notify) {
-            //ユーザ個別ののアプリ通知データ保存
-            $notify_ids = $this->_saveOneOnOneNotifications();
-            //ユーザ個別の通知メール送信
-            $this->_sendOneOnOneNotifyEmail($notify_ids);
-        }
-        else {
-            //通常のアプリ通知データ保存
-            $this->_saveNotifications();
+        //通常のアプリ通知データ保存
+        $this->_saveNotifications();
 
-            //通常の通知メール送信
-            $this->_sendNotifyEmail();
-        }
+        //通常の通知メール送信
+        $this->_sendNotifyEmail();
     }
 
     public function push($socketId, $share)
@@ -409,51 +397,13 @@ class NotifyBizComponent extends Component
         $this->Notification->saveNotify($data, $uids);
     }
 
-    private function _saveOneOnOneNotifications()
-    {
-        //通知onのユーザを取得
-        $uids = [];
-        foreach ($this->notify_settings as $user_id => $val) {
-            if ($val['app']) {
-                $uids[] = $user_id;
-            }
-        }
-        if (empty($uids)) {
-            return [];
-        }
-        $data = [
-            'team_id'   => $this->Notification->current_team_id,
-            'type'      => $this->notify_option['notify_type'],
-            'model_id'  => $this->notify_option['model_id'],
-            'count_num' => $this->notify_option['count_num'],
-            'url_data'  => json_encode($this->notify_option['url_data']),
-            'item_name' => $this->notify_option['item_name'],
-        ];
-        $res = $this->Notification->saveNotifyOneOnOne($data, $uids);
-        return $res;
-    }
-
-    private function _getSendNotifyUserList($notify_ids)
+    private function _getSendNotifyUserList()
     {
         //メール通知onのユーザを取得
         $uids = [];
         foreach ($this->notify_settings as $user_id => $val) {
             if ($val['email']) {
                 $uids[] = $user_id;
-            }
-        }
-        if (empty($uids)) {
-            return $uids;
-        }
-        //インターバルありの場合
-        if ($this->has_send_mail_interval_time) {
-            //送信できないユーザIDリスト
-            $invalid_uids = $this->GlEmail->SendMail->SendMailToUser->getInvalidSendUserList($notify_ids);
-            //送信できないユーザを除外
-            foreach ($uids as $key => $val) {
-                if (in_array($val, $invalid_uids)) {
-                    unset($uids[$key]);
-                }
             }
         }
         return $uids;
@@ -464,23 +414,9 @@ class NotifyBizComponent extends Component
         if (!$this->Notification->id) {
             return;
         }
-        $uids = $this->_getSendNotifyUserList($this->Notification->id);
+        $uids = $this->_getSendNotifyUserList();
         $this->notify_option['notification_id'] = $this->Notification->id;
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
-    }
-
-    private function _sendOneOnOneNotifyEmail($notify_ids)
-    {
-        $uids = $this->_getSendNotifyUserList($notify_ids);
-
-        $notify_to_users = $this->Notification->NotifyToUser->getNotifyIdUserIdList($notify_ids);
-        foreach ($notify_to_users as $notification_id => $user_id) {
-            if (!in_array($user_id, $uids)) {
-                continue;
-            }
-            $this->notify_option['notification_id'] = $notification_id;
-            $this->GlEmail->sendMailNotify($this->notify_option, $user_id);
-        }
     }
 
     /**

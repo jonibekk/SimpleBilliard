@@ -67,9 +67,4 @@ class NotifyToUserTest extends CakeTestCase
 
         parent::tearDown();
     }
-
-    function testGetNotifyIdUserIdList()
-    {
-        $this->NotifyToUser->getNotifyIdUserIdList([1]);
-    }
 }
