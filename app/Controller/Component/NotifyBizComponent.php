@@ -375,15 +375,6 @@ class NotifyBizComponent extends Component
         if (empty($uids)) {
             return;
         }
-        $data = [
-            'team_id'   => $this->Notification->current_team_id,
-            'type'      => $this->notify_option['notify_type'],
-            'model_id'  => $this->notify_option['model_id'],
-            'url_data'  => json_encode($this->notify_option['url_data']),
-            'count_num' => $this->notify_option['count_num'],
-            'item_name' => $this->notify_option['item_name'],
-        ];
-
         //TODO save to redis.
         $this->Redis->setNotifications(
             $this->notify_option['notify_type'],
@@ -394,7 +385,7 @@ class NotifyBizComponent extends Component
             $this->notify_option['url_data'],
             microtime(true)
         );
-        $this->Notification->saveNotify($data, $uids);
+        return true;
     }
 
     private function _getSendNotifyUserList()
@@ -411,11 +402,7 @@ class NotifyBizComponent extends Component
 
     private function _sendNotifyEmail()
     {
-        if (!$this->Notification->id) {
-            return;
-        }
         $uids = $this->_getSendNotifyUserList();
-        $this->notify_option['notification_id'] = $this->Notification->id;
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 

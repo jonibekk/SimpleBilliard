@@ -49,27 +49,6 @@ class NotificationTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testSaveNotify()
-    {
-        $uid = 1;
-        $team_id = 1;
-        $this->Notification->my_uid = $uid;
-        $this->Notification->current_team_id = $team_id;
-        $data = [
-            'model_id' => 1,
-            'type'     => 1,
-            'team_id'  => $team_id
-        ];
-        $this->Notification->save($data);
-        $this->Notification->saveNotify($data, [$uid]);
-        $data = [
-            'model_id' => 1,
-            'type'     => 99,
-            'team_id'  => $team_id
-        ];
-        $this->Notification->saveNotify($data, [$uid]);
-    }
-
     function testGetTitle()
     {
         $from_user_names = ['aaa', 'bbb'];
