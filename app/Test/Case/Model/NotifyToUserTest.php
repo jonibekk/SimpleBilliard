@@ -67,4 +67,9 @@ class NotifyToUserTest extends CakeTestCase
 
         parent::tearDown();
     }
+
+    function testDummy()
+    {
+
+    }
 }

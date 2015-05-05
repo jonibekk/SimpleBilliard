@@ -90,36 +90,6 @@ class Notification extends AppModel
         $this->_setTypeDefault();
     }
 
-    function saveNotify($data, $user_ids)
-    {
-        $this->create();
-        $res = $this->save($data);
-        //from_userを保存
-        $data = [
-            'notification_id' => $this->id,
-            'user_id'         => $this->my_uid,
-            'team_id'         => $this->current_team_id,
-        ];
-
-        $this->NotifyFromUser->create();
-        $this->NotifyFromUser->save($data);
-
-        //関連する通知ユーザを削除
-        $this->NotifyToUser->deleteAll(['NotifyToUser.notification_id' => $this->id]);
-        //保存データ
-        $notify_user_data = [];
-        foreach ($user_ids as $uid) {
-            $notify_user_data[] = [
-                'notification_id' => $this->id,
-                'user_id'         => $uid,
-                'team_id'         => $this->current_team_id
-            ];
-        }
-        $this->NotifyToUser->create();
-        $this->NotifyToUser->saveAll($notify_user_data);
-        return $res;
-    }
-
     function getTitle($type, $from_user_names, $count_num, $item_name)
     {
         json_decode($item_name, true);

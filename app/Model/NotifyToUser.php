@@ -40,29 +40,4 @@ class NotifyToUser extends AppModel
         'Team',
     );
 
-    /**
-     * 通知IDと送信ユーザIDのリストを返却
-     *
-     * @param $notify_ids
-     *
-     * @return array
-     * key = notification_id
-     * value = user_id
-     */
-    function getNotifyIdUserIdList($notify_ids)
-    {
-        $primary_backup = $this->primaryKey;
-        $this->primaryKey = "notification_id";
-        $options = [
-            'conditions' => [
-                'notification_id' => $notify_ids,
-            ],
-            'fields'     => [
-                'user_id'
-            ],
-        ];
-        $res = $this->find('list', $options);
-        $this->primaryKey = $primary_backup;
-        return $res;
-    }
 }
