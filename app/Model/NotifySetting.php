@@ -11,8 +11,8 @@ class NotifySetting extends AppModel
     /**
      * 通知設定タイプ
      */
-    const TYPE_FEED = "feed";
-    const TYPE_CIRCLE = "circle";
+    const TYPE_FEED = "feed_post";
+    const TYPE_CIRCLE = "circle_user_join";
 
     /**
      * Validation rules
@@ -20,31 +20,7 @@ class NotifySetting extends AppModel
      * @var array
      */
     public $validate = [
-        'feed_app_flg'     => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
-        ],
-        'feed_email_flg'   => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
-        ],
-        'circle_app_flg'   => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
-        ],
-        'circle_email_flg' => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
-        ],
-        'del_flg'          => [
+        'del_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
