@@ -72,28 +72,28 @@ class NotifySettingTest extends CakeTestCase
         $uid = 1000000;
         $uid2 = 9999999;
         $this->NotifySetting->my_uid = 1;
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app' => true, 'email' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定なし");
-        $data = ['feed_app_flg' => false, 'feed_email_flg' => false, 'user_id' => $uid];
+        $data = ['feed_post_app_flg' => false, 'feed_post_email_flg' => false, 'user_id' => $uid];
         $this->NotifySetting->save($data);
         $notifi_setting_id = $this->NotifySetting->getLastInsertID();
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app' => false, 'email' => false]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、off");
-        $data = ['id' => $notifi_setting_id, 'feed_app_flg' => true, 'feed_email_flg' => true];
+        $data = ['id' => $notifi_setting_id, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true];
         $this->NotifySetting->create();
         $this->NotifySetting->save($data);
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app' => true, 'email' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、on");
-        $res = $this->NotifySetting->getAppEmailNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid  => ['app' => true, 'email' => true],
             $uid2 => ['app' => true, 'email' => true]

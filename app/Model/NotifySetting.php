@@ -11,8 +11,12 @@ class NotifySetting extends AppModel
     /**
      * 通知設定タイプ
      */
-    const TYPE_FEED = "feed";
-    const TYPE_CIRCLE = "circle";
+    const TYPE_FEED_POST = 'feed_post';
+    const TYPE_FEED_COMMENTED_ON_MY_POST = 'feed_commented_on_my_post';
+    const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST = 'feed_commented_on_my_commented_post';
+    const TYPE_CIRCLE_USER_JOIN = 'circle_user_join';
+    const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 'circle_changed_privacy_setting';
+    const TYPE_CIRCLE_ADD_USER = 'circle_add_user';
 
     /**
      * Validation rules

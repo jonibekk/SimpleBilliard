@@ -208,7 +208,7 @@ class NotifyBizComponent extends Component
 
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
-                                                                                NotifySetting::TYPE_FEED);
+                                                                                NotifySetting::TYPE_FEED_POST);
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_POST;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = null;
@@ -236,7 +236,7 @@ class NotifyBizComponent extends Component
         }
         //サークルメンバーの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
-                                                                                NotifySetting::TYPE_CIRCLE);
+                                                                                NotifySetting::TYPE_CIRCLE_USER_JOIN);
         $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_USER_JOIN;
         //通知先ユーザ分を-1
         $this->notify_option['count_num'] = count($circle_member_list);
@@ -266,7 +266,7 @@ class NotifyBizComponent extends Component
         $privacy_name = Circle::$TYPE_PUBLIC[$circle['Circle']['public_flg']];
         //サークルメンバーの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
-                                                                                NotifySetting::TYPE_CIRCLE);
+                                                                                NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING);
         $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
@@ -288,7 +288,8 @@ class NotifyBizComponent extends Component
             return;
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($user_id, NotifySetting::TYPE_CIRCLE);
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($user_id,
+                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
         $this->notify_option['notify_type'] = Notification::TYPE_CIRCLE_ADD_USER;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
@@ -319,7 +320,7 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($commented_user_list,
-                                                                                NotifySetting::TYPE_FEED);
+                                                                                NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['notify_type'] = Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
@@ -349,7 +350,7 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($post['Post']['user_id'],
-                                                                                NotifySetting::TYPE_FEED);
+                                                                                NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];

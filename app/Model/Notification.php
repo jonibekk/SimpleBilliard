@@ -50,12 +50,12 @@ class Notification extends AppModel
 
     public function _setTypeDefault()
     {
-        self::$TYPE[self::TYPE_FEED_POST]['notify_type'] = NotifySetting::TYPE_FEED;
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_POST]['notify_type'] = NotifySetting::TYPE_FEED;
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['notify_type'] = NotifySetting::TYPE_FEED;
-        self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['notify_type'] = NotifySetting::TYPE_CIRCLE;
-        self::$TYPE[self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING]['notify_type'] = NotifySetting::TYPE_CIRCLE;
-        self::$TYPE[self::TYPE_CIRCLE_ADD_USER]['notify_type'] = NotifySetting::TYPE_CIRCLE;
+        self::$TYPE[self::TYPE_FEED_POST]['notify_type'] = NotifySetting::TYPE_FEED_POST;
+        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_POST]['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST;
+        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
+        self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['notify_type'] = NotifySetting::TYPE_CIRCLE_USER_JOIN;
+        self::$TYPE[self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING]['notify_type'] = NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING;
+        self::$TYPE[self::TYPE_CIRCLE_ADD_USER]['notify_type'] = NotifySetting::TYPE_CIRCLE_ADD_USER;
     }
 
     /**
