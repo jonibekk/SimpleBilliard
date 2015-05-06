@@ -24,34 +24,44 @@ class NotifySetting extends AppModel
      * @var array
      */
     public $validate = [
-        'feed_app_flg'     => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
+        'feed_post_app_flg'                             => [
+            'boolean' => ['rule' => ['boolean'],],
         ],
-        'feed_email_flg'   => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
+        'feed_post_email_flg'                           => [
+            'boolean' => ['rule' => ['boolean'],],
         ],
-        'circle_app_flg'   => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
+        'feed_commented_on_my_post_app_flg'             => [
+            'boolean' => ['rule' => ['boolean'],],
         ],
-        'circle_email_flg' => [
-            'boolean' => [
-                'rule'       => ['boolean'],
-                'allowEmpty' => true,
-            ],
+        'feed_commented_on_my_post_email_flg'           => [
+            'boolean' => ['rule' => ['boolean'],],
         ],
-        'del_flg'          => [
-            'boolean' => [
-                'rule' => ['boolean'],
-            ],
+        'feed_commented_on_my_commented_post_app_flg'   => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'feed_commented_on_my_commented_post_email_flg' => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'circle_user_join_app_flg'                      => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'circle_user_join_email_flg'                    => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'circle_changed_privacy_setting_app_flg'        => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'circle_changed_privacy_setting_email_flg'      => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'circle_add_user_app_flg'                       => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'circle_add_user_email_flg'                     => [
+            'boolean' => ['rule' => ['boolean'],],
+        ],
+        'del_flg'                                       => [
+            'boolean' => ['rule' => ['boolean'],],
         ],
     ];
 
