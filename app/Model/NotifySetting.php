@@ -53,14 +53,18 @@ class NotifySetting extends AppModel
 
     public function _setFieldRealName()
     {
-        self::$TYPE[self::TYPE_FEED_POST]['field_real_name'] = __d('gl', "自分が閲覧可能な投稿があったとき");
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_POST]['field_real_name'] = __d('gl', "自分の投稿に「コメント」されたとき");
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['field_real_name'] = __d('gl',
-                                                                                             "自分のコメントした投稿に「コメント」されたとき");
-        self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['field_real_name'] = __d('gl', "自分が管理者の公開サークルに誰かが参加したとき");
-        self::$TYPE[self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING]['field_real_name'] = __d('gl',
-                                                                                        "自分が所属するサークルのプライバシー設定が変更になったとき");
-        self::$TYPE[self::TYPE_CIRCLE_ADD_USER]['field_real_name'] = __d('gl', "自分が新たにサークルメンバーに追加させたとき");
+        self::$TYPE[self::TYPE_FEED_POST]['field_real_name']
+            = __d('gl', "自分が閲覧可能な投稿があったとき");
+        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_POST]['field_real_name']
+            = __d('gl', "自分の投稿に「コメント」されたとき");
+        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['field_real_name']
+            = __d('gl', "自分のコメントした投稿に「コメント」されたとき");
+        self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['field_real_name']
+            = __d('gl', "自分が管理者の公開サークルに誰かが参加したとき");
+        self::$TYPE[self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING]['field_real_name']
+            = __d('gl', "自分が所属するサークルのプライバシー設定が変更になったとき");
+        self::$TYPE[self::TYPE_CIRCLE_ADD_USER]['field_real_name']
+            = __d('gl', "自分が新たにサークルメンバーに追加させたとき");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -177,6 +181,57 @@ class NotifySetting extends AppModel
             }
         }
         return $res_data;
+    }
+
+    function getTitle($type, $from_user_names, $count_num, $item_name)
+    {
+        json_decode($item_name, true);
+        if (json_last_error() == JSON_ERROR_NONE) {
+            $item_name = json_decode($item_name, true);
+        }
+        $title = null;
+        $user_text = null;
+        //カウント数はユーザ名リストを引いた数
+        $count_num -= count($from_user_names);
+        if (!is_array($from_user_names)) {
+            $from_user_names = [$from_user_names];
+        }
+        foreach ($from_user_names as $key => $name) {
+            if ($key !== 0) {
+                $user_text .= __d('gl', "、");
+            }
+            $user_text .= __d('gl', '%sさん', $name);
+        }
+        switch ($type) {
+            case self::TYPE_FEED_POST:
+                $title = __d('gl', '%1$s%2$sが投稿しました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                break;
+            case self::TYPE_FEED_COMMENTED_ON_MY_POST:
+                $title = __d('gl', '%1$s%2$sがあなたの投稿にコメントしました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                break;
+            case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
+                $title = __d('gl', '%1$s%2$sも投稿にコメントしました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                break;
+            case self::TYPE_CIRCLE_USER_JOIN:
+                $title = __d('gl', '%1$s%2$sがサークル「%3$s」に参加しました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
+                             $item_name[0]);
+                break;
+            case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
+                $title = __d('gl', '%1$sがサークル「%2$s」のプライバシー設定を「%3$s」に変更しました。', $user_text,
+                             $item_name[0], $item_name[1]);
+                break;
+            case self::TYPE_CIRCLE_ADD_USER:
+                $title = __d('gl', '%1$sがサークル「%2$s」にあなたを追加しました。', $user_text,
+                             $item_name[0]);
+                break;
+            default:
+                break;
+        }
+        return $title;
     }
 
 }

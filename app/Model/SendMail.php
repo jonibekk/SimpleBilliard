@@ -179,20 +179,4 @@ class SendMail extends AppModel
         return $res;
     }
 
-    public function isNotifySentBefore($notification_id, $before_hours = 3)
-    {
-        $options = [
-            'conditions' => [
-                'notification_id' => $notification_id,
-                'modified >'      => REQUEST_TIMESTAMP - (60 * 60 * $before_hours),
-            ],
-        ];
-        $res = $this->find('first', $options);
-        //指定時刻以内の送信履歴あり
-        if (!empty($res)) {
-            return true;
-        }
-        //指定時刻以内の送信履歴なし
-        return false;
-    }
 }

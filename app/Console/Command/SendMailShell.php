@@ -4,7 +4,7 @@ App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 App::uses('LangComponent', 'Controller/Component');
-App::uses('Notification', 'Model');
+App::uses('NotifySetting', 'Model');
 
 /**
  * SendMailShell
@@ -159,15 +159,15 @@ class SendMailShell extends AppShell
         $this->item = json_decode($data['SendMail']['item'], true);
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
-        $notify_option = Notification::$TYPE[$this->item['type']];
+        $notify_option = NotifySetting::$TYPE[$this->item['type']];
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
             $from_user_names = [];
             $from_user_names[] = $data['FromUser']['display_username'];
-            $subject = $this->User->Notification->getTitle($this->item['type'],
-                                                           $from_user_names,
-                                                           $this->item['count_num'],
-                                                           $this->item['item_name']
+            $subject = $this->User->NotifySetting->getTitle($this->item['type'],
+                                                            $from_user_names,
+                                                            $this->item['count_num'],
+                                                            $this->item['item_name']
             );
             $options = [
                 'to'       => $data['ToUser']['PrimaryEmail']['email'],
