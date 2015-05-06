@@ -13,7 +13,6 @@
  */
 ?>
 <!-- START app/View/Elements/User/notify_setting.ctp -->
-<? $this->log(NotifySetting::$TYPE) ?>
 <div id="profile">
     <div class="panel panel-default">
         <div class="panel-heading"><?= __d('gl', "通知") ?></div>
