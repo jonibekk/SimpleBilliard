@@ -191,8 +191,7 @@ class NotifySetting extends AppModel
 
     function getTitle($type, $from_user_names, $count_num, $item_name)
     {
-        json_decode($item_name, true);
-        if (json_last_error() == JSON_ERROR_NONE) {
+        if (!is_array($item_name)) {
             $item_name = json_decode($item_name, true);
         }
         $title = null;
