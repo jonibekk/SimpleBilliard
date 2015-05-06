@@ -23,31 +23,37 @@ class NotifySetting extends AppModel
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_post',
+            'icon_class'      => 'fa-comment-o',
         ],
         self::TYPE_FEED_COMMENTED_ON_MY_POST           => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_post',
+            'icon_class'      => 'fa-comment-o',
         ],
         self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_commented_post',
+            'icon_class'      => 'fa-comment-o',
         ],
         self::TYPE_CIRCLE_USER_JOIN                    => [
             'mail_template'   => "notify_not_use_body",
             'field_real_name' => null,
             'field_prefix'    => 'circle_user_join',
+            'icon_class'      => 'fa-circle-o',
         ],
         self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [
             'mail_template'   => "notify_not_use_body",
             'field_real_name' => null,
             'field_prefix'    => 'circle_changed_privacy_setting',
+            'icon_class'      => 'fa-circle-o',
         ],
         self::TYPE_CIRCLE_ADD_USER                     => [
             'mail_template'   => "notify_not_use_body",
             'field_real_name' => null,
             'field_prefix'    => 'circle_add_user',
+            'icon_class'      => 'fa-circle-o',
         ],
     ];
 

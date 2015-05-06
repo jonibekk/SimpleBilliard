@@ -42,7 +42,8 @@
                 id="CommentTextBody_67">
                 <? if (in_array($notification['type'],
                                 [NotifySetting::TYPE_FEED_POST, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST])): ?>
-                    <i class="fa fa-comment-o disp_i"></i>「<?= h(json_decode($notification['body'])[0]) ?>」
+                    <? if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?><i
+                        class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> disp_i"></i><? endif; ?>「<?= h(json_decode($notification['body'])[0]) ?>」
                 <? endif; ?>
                 <p><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></p>
             </div>
