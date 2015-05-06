@@ -44,9 +44,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         'app.job_category',
         'app.team_member',
         'app.member_type',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
+
         'app.thread',
         'app.message',
         'app.evaluator',
@@ -104,8 +102,8 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $GoalApproval->user_id = $user_id;
         $GoalApproval->request->data = [
-            'GoalApproval' =>'',
-            'modify_btn' => '',
+            'GoalApproval' => '',
+            'modify_btn'   => '',
         ];
 
         $this->testAction('/goal_approval/index', ['method' => 'GET']);
@@ -151,7 +149,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $GoalApproval->user_id = $user_id;
         $GoalApproval->request->data = [
-            'GoalApproval' =>'',
+            'GoalApproval' => '',
         ];
         $this->testAction('/goal_approval/done', ['method' => 'GET']);
     }

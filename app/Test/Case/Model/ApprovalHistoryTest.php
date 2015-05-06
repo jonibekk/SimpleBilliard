@@ -45,9 +45,7 @@ class ApprovalHistoryTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
+
         'app.oauth_token',
         'app.team_member',
         'app.job_category',

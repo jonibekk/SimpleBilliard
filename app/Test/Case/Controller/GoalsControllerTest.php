@@ -42,9 +42,7 @@ class GoalsControllerTest extends ControllerTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
+
         'app.thread',
         'app.message',
         'app.email',

@@ -15,7 +15,6 @@ App::uses('AppModel', 'Model');
  * @property Comment              $Comment
  * @property Email                $Email
  * @property GivenBadge           $GivenBadge
- * @property Notification         $Notification
  * @property NotifySetting        $NotifySetting
  * @property OauthToken           $OauthToken
  * @property PostLike             $PostLike
@@ -220,7 +219,6 @@ class User extends AppModel
         'Comment',
         'Email',
         'GivenBadge',
-        'Notification',
         'OauthToken',
         'PostLike',
         'PostMention',

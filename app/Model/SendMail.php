@@ -8,7 +8,6 @@ App::uses('AppModel', 'Model');
  * @property User           $FromUser
  * @property User           $ToUser
  * @property Team           $Team
- * @property Notification   $Notification
  * @property SendMailToUser $SendMailToUser
  */
 class SendMail extends AppModel
@@ -96,7 +95,6 @@ class SendMail extends AppModel
         'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
         'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
         'Team',
-        'Notification',
     ];
 
     public $hasMany = [

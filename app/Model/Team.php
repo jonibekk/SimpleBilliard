@@ -13,7 +13,6 @@ App::uses('AppModel', 'Model');
  * @property Group                          $Group
  * @property Invite                         $Invite
  * @property JobCategory                    $JobCategory
- * @property Notification                   $Notification
  * @property PostLike                       $PostLike
  * @property PostMention                    $PostMention
  * @property PostRead                       $PostRead
@@ -112,7 +111,6 @@ class Team extends AppModel
         'Group',
         'Invite',
         'JobCategory',
-        'Notification',
         'PostLike',
         'PostMention',
         'PostRead',
@@ -267,7 +265,7 @@ class Team extends AppModel
         return $this->setCurrentTermStartEndFromParam($start_term_month, $border_months, $now);
     }
 
-    function setCurrentTermStartEndFromParam($start_term_month, $border_months,$target_date = null)
+    function setCurrentTermStartEndFromParam($start_term_month, $border_months, $target_date = null)
     {
         if (!$target_date) {
             $target_date = REQUEST_TIMESTAMP;

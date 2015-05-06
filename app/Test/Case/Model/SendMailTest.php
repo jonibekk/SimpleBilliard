@@ -18,7 +18,7 @@ class SendMailTest extends CakeTestCase
         'app.local_name',
         'app.send_mail',
         'app.send_mail_to_user',
-        'app.notify_from_user',
+
         'app.team',
         'app.image',
         'app.user',
@@ -35,7 +35,7 @@ class SendMailTest extends CakeTestCase
         'app.post_read',
         'app.images_post',
         'app.comment_read',
-        'app.notification',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
