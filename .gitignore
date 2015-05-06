@@ -28,6 +28,7 @@ composer.lock
 /.idea/inspectionProfiles
 !/.idea/inspectionProfiles/Project_Default.xml
 /.idea/dataSources.local.xml
+/.idea/jsLibraryMappings.xml
 # for npm, Grunt-past
 /Grunt-past
 /Grunt-past/less/
