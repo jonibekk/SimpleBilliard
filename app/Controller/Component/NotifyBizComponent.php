@@ -374,13 +374,19 @@ class NotifyBizComponent extends Component
         if (empty($uids)) {
             return;
         }
+        //to be short text
+        $item = json_decode($this->notify_option['item_name']);
+        foreach ($item as $k => $v) {
+            $item[$k] = mb_strimwidth($v, 0, 40, "...");
+        }
+        $item = json_encode($item);
         //TODO save to redis.
         $this->Redis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
             $uids,
             $this->NotifySetting->my_uid,
-            $this->notify_option['item_name'],
+            $item,
             $this->notify_option['url_data'],
             microtime(true)
         );
