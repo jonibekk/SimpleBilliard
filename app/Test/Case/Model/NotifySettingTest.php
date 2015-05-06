@@ -77,7 +77,7 @@ class NotifySettingTest extends CakeTestCase
             $uid => ['app' => true, 'email' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定なし");
-        $data = ['feed_app_flg' => false, 'feed_email_flg' => false, 'user_id' => $uid];
+        $data = ['feed_post_app_flg' => false, 'feed_post_email_flg' => false, 'user_id' => $uid];
         $this->NotifySetting->save($data);
         $notifi_setting_id = $this->NotifySetting->getLastInsertID();
         $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
@@ -85,7 +85,7 @@ class NotifySettingTest extends CakeTestCase
             $uid => ['app' => false, 'email' => false]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、off");
-        $data = ['id' => $notifi_setting_id, 'feed_app_flg' => true, 'feed_email_flg' => true];
+        $data = ['id' => $notifi_setting_id, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true];
         $this->NotifySetting->create();
         $this->NotifySetting->save($data);
         $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
