@@ -152,10 +152,10 @@ define('REQUEST_TIMESTAMP', time());
 define('MY_GOALS_DISPLAY_NUMBER', 10);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 10);
 define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 20);
-//通知情報の自動アップデート間隔(秒)
-define('NOTIFY_AUTO_UPDATE_SEC', 180); // 3分
-//通知リストボックス(ベルのアイコンのところ)内の要素数
+//通知リストボックス(ベルのアイコンのところ)内のアイテム数
 define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 5);
+//通知リストページの1ブロックのアイテム数
+define('NOTIFY_PAGE_ITEMS_NUMBER', 20);
 
 /**
  * 共通関数

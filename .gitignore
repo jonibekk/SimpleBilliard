@@ -28,12 +28,16 @@ composer.lock
 /.idea/inspectionProfiles
 !/.idea/inspectionProfiles/Project_Default.xml
 /.idea/dataSources.local.xml
+/.idea/jsLibraryMappings.xml
+# for npm
+/node_modules
+npm-debug.log
 # for Grunt
-/Grunt/node_modules
-/Grunt/dest
-# Copied for min files
-/app/webroot/css/goalous.min.css
-/app/webroot/js/goalous.min.js
+/app/webroot/dest
 # Docs of CSS & JS
 /docs/docco
 /docs/styledocco
+/docs/grunt
+# for dest files of min.css and min.js
+/app/webroot/css/goalous.min.css
+/app/webroot/js/goalous.min.js

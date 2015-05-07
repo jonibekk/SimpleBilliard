@@ -45,7 +45,7 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
-        $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
         $share = explode(",", viaIsSet($this->request->data['Post']['share']));
@@ -466,9 +466,9 @@ class PostsController extends AppController
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
                                                  $this->Post->Comment->id);
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                                                  $this->Post->id, $this->Post->Comment->id);
                 $result['msg'] = __d('gl', "コメントしました。");
             }
@@ -500,6 +500,9 @@ class PostsController extends AppController
         $circle_id = viaIsSet($this->request->params['circle_id']);
         $user_status = $this->userCircleStatus($this->request->params['circle_id']);
 
+        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
+                                                                            $this->request->params['circle_id']);
+
         $this->_setViewValOnRightColumn();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
@@ -514,7 +517,8 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params',
+                           'circle_status'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
@@ -665,6 +669,19 @@ class PostsController extends AppController
             }
         }
         return 'not_joined';
+    }
+
+    function circle_toggle_status($circle_id, $status)
+    {
+        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg'=>$status]);
+
+        if ($this->Post->Circle->CircleMember->validates()) {
+            $this->Post->Circle->CircleMember->circle_status_toggle($circle_id, $status);
+            return $this->redirect($this->request->referer());
+        }
+        else {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
     }
 
 }

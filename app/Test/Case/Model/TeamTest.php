@@ -36,7 +36,7 @@ class TeamTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
+
         'app.thread'
     );
 

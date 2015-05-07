@@ -43,9 +43,7 @@ class GoalTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
+
         'app.thread',
         'app.message',
         'app.email',
@@ -524,7 +522,8 @@ class GoalTest extends CakeTestCase
         $this->Goal->getMyPreviousGoals();
     }
 
-    function testIsPresentTermGoalPatternTrue() {
+    function testIsPresentTermGoalPatternTrue()
+    {
 
         $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
         $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
@@ -543,7 +542,8 @@ class GoalTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
-    function testIsPresentTermGoalPatternFalse() {
+    function testIsPresentTermGoalPatternFalse()
+    {
 
         $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
         $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
@@ -565,11 +565,11 @@ class GoalTest extends CakeTestCase
 
     function testGetAllUserGoalProgress()
     {
-        $this->Goal->current_team_id=1;
-        $goals = $this->Goal->getGoalAndKr(1,1);
-        $goals['KeyResult'][0]['progress']=100;
+        $this->Goal->current_team_id = 1;
+        $goals = $this->Goal->getGoalAndKr(1, 1);
+        $goals['KeyResult'][0]['progress'] = 100;
         $this->Goal->KeyResult->save($goals['KeyResult'][0]);
 
-        $this->Goal->getAllUserGoalProgress(1,1);
+        $this->Goal->getAllUserGoalProgress(1, 1);
     }
 }

@@ -30,7 +30,7 @@ class CircleMemberTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.notification',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -150,6 +150,30 @@ class CircleMemberTest extends CakeTestCase
         $this->CircleMember->current_team_id = 1;
         $res = $this->CircleMember->unjoinMember($circle_id);
         $this->assertTrue(empty($res));
+    }
+
+    public function testShowHideStats()
+    {
+        $result = $this->CircleMember->show_hide_stats('user_id','circle_id');
+
+        $expected = array(
+            array('CircleMember' => array('user_id' => 11), array('circle_id' => '20'))
+                );
+
+        $this->assertNotEquals($expected,$result);
+    }
+
+    public function testCircleStatusToggle()
+    {
+        $this->CircleMember->my_uid = 1;
+        $result = $this->CircleMember->show_hide_stats('circle_id','status');
+
+        $expected = array(
+            array('CircleMember' => array('circle_id' => 20), array('status' => '1')),
+            array('CircleMember' => array('circle_id' => 8), array('status' => '0')),
+        );
+
+        $this->assertNotEquals($expected,$result);
     }
 
 }

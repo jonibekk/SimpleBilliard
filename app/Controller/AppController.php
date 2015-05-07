@@ -148,6 +148,7 @@ class AppController extends Controller
             $this->_setUnApprovedCnt($login_uid);
             $this->_setEvaluableCnt();
             $this->_setAllAlertCnt();
+            $this->_setNotifyCnt();
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
@@ -177,6 +178,8 @@ class AppController extends Controller
     {
         $login_user_team_id = $this->Session->read('current_team_id');
         $member_ids = $this->Team->TeamMember->selectUserIdFromTeamMembersTB($login_uid, $login_user_team_id);
+        array_push($member_ids, $login_uid);
+
         $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
                                                                       $member_ids, [0, 3]);
         $this->set(compact('unapproved_cnt'));
@@ -576,6 +579,12 @@ class AppController extends Controller
     public function _setAvailEvaluation()
     {
         $this->set('is_evaluation_available', $this->Team->EvaluationSetting->isEnabled());
+    }
+
+    public function _setNotifyCnt()
+    {
+        $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
+        $this->set(compact("new_notify_cnt"));
     }
 
 }

@@ -1768,6 +1768,7 @@ $(document).ready(function () {
             if (isNewCommentNotify) {
                 var postId = data.post_id;
                 var notifyBox = $("#Comments_new_" + String(postId));
+                notifyNewComment(notifyBox);
             }
         });
     }
@@ -1932,6 +1933,44 @@ function viaIsSet(data) {
     return data;
 }
 
+function notifyNewComment(notifyBox) {
+    var numInBox = notifyBox.find(".num");
+    var num = parseInt(numInBox.html());
+
+    hideCommentNotifyErrorBox(notifyBox);
+
+    // Increment unread number
+    if (num >= 1) {
+        // top of feed
+        numInBox.html(String(num + 1));
+    } else {
+        // Case of not existing unread post yet
+        numInBox.html("1");
+    }
+
+    if (notifyBox.css("display") === "none") {
+        notifyBox.css("display", "block");
+
+        // 通知をふんわり出す
+        var i = 0.2;
+        var roop = setInterval(function () {
+            notifyBox.css("opacity", i);
+            i = i + 0.2;
+            if (i > 1) {
+                clearInterval(roop);
+            }
+        }, 100);
+    }
+}
+
+function hideCommentNotifyErrorBox(notifyBox) {
+    errorBox = notifyBox.siblings(".new-comment-error");
+    if (errorBox.attr("display") === "none") {
+        return;
+    }
+    errorBox.css("display", "none");
+}
+
 $(document).ready(function () {
     $(document).on("click", ".click-comment-new", evCommentLatestView);
 });
@@ -2093,11 +2132,10 @@ $(function () {
 });
 
 function evNotifyMoreView() {
-    attrUndefinedCheck(this, 'oldest_score_id');
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var oldest_score_id = $obj.attr('oldest_score_id');
+    var oldest_score_id = $("ul.notify-list-page").children("li.notify-card-list:last").attr("data-score");
     var get_url = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -2111,9 +2149,9 @@ function evNotifyMoreView() {
         url: url,
         async: true,
         success: function (data) {
-            if (!$.isEmptyObject(data)) {
+            if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
-                var $notify = $(data);
+                var $notify = $(data.html);
                 //一旦非表示
                 $notify.hide();
                 $(".notify-list-page").append($notify);
@@ -2128,17 +2166,25 @@ function evNotifyMoreView() {
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
+                if (parseInt(data.item_cnt) < cake.new_notify_cnt) {
+                    //ローダーを削除
+                    $loader_html.remove();
+                    //もっと読む表示をやめる
+                    $(".feed-read-more").remove();
+                }
 
             } else {
                 //ローダーを削除
                 $loader_html.remove();
-                $("#ShowMoreNoData").show();
                 //もっと読む表示をやめる
-                $obj.remove();
+                $(".feed-read-more").remove();
             }
         },
         error: function () {
-            alert(cake.message.notice.c);
+            //ローダーを削除
+            $loader_html.remove();
+            $obj.removeAttr('disabled');
+            $("#ShowMoreNoData").hide();
         }
     });
     return false;
@@ -2153,6 +2199,8 @@ $(function () {
     if (cake.data.i) {
         setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
     }
+
+    setNotifyCntToBellAndTitle(cake.new_notify_cnt);
 
     function setIntervalToGetNotifyCnt(sec) {
         setInterval(function () {
@@ -2185,8 +2233,8 @@ $(function () {
         var existingBellCnt = parseInt($bellBox.html());
         var cntIsTooMuch = "20+";
 
-        if (existingBellCnt == 0) {
-            displaySelectorFluffy($bellBox);
+        if (cnt == 0) {
+            return;
         }
 
         // set notify number

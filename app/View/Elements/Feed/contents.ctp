@@ -71,6 +71,18 @@ else { ?>
                                         Circle</a>
                                 <?php } ?>
                             </li>
+                            <?php if ($user_status == 'joined'): ?>
+                                <li>
+                                    <?php if ($circle_status == '1') {
+                                        echo $this->Html->link('Hide',
+                                                               'circle_toggle_status/' . $current_circle['Circle']['id'] . '/0');
+                                    }
+                                    else {
+                                        echo $this->Html->link('Show',
+                                                               'circle_toggle_status/' . $current_circle['Circle']['id'] . '/1');
+                                    } ?>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 <?php } ?>

@@ -15,7 +15,7 @@
 <? $unread_class = $notification['unread_flg'] ? 'unread_notify' : 'read_notify'; ?>
 
 <li class="divider notify-divider"></li>
-<li class="notify-card-list <?= $unread_class ?>">
+<li class="notify-card-list <?= $unread_class ?>" data-score="<?= $notification['score'] ?>">
     <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card" id="notifyCard">
         <?=
         $this->Html->image(
@@ -37,11 +37,14 @@
                     </span>
                 </div>
             </div>
-
             <div
                 class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align notify-text notify-line-number"
                 id="CommentTextBody_67">
-                <i class="fa fa-comment-o disp_i"></i>「<?= h($notification['body']) ?>」
+                <? if (in_array($notification['type'],
+                                [NotifySetting::TYPE_FEED_POST, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST])): ?>
+                    <? if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?><i
+                        class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> disp_i"></i><? endif; ?>「<?= h(json_decode($notification['body'])[0]) ?>」
+                <? endif; ?>
                 <p><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></p>
             </div>
         </div>

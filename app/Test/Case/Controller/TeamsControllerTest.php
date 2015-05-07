@@ -41,7 +41,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.post_read',
         'app.images_post',
         'app.comment_read',
-        'app.notification',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
