@@ -39,3 +39,4 @@ define('PUSHER_KEY', 'cfa05829683ced581f02');
 define('PUSHER_SECRET', '5f88d7065071f0439be4');
 define('BASIC_AUTH_ID', 'test');
 define('BASIC_AUTH_PASS', 'test');
+define('NOTIFY_AUTO_UPDATE_SEC', 5);
