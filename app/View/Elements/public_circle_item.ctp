@@ -44,11 +44,15 @@ if (!isset($form)) {
             <? if ($circle['Circle']['created'] > strtotime("-1 week")): ?>
                 <span class="circle-new">New</span>
             <? endif; ?>
-            <?= h($circle['Circle']['name']) ?>
+            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
+               class="link-dark-gray">
+                <?= h($circle['Circle']['name']) ?>
+            </a>
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $circle['Circle']['id']]) ?>" class="modal-ajax-get">
-            <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
+            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $circle['Circle']['id']]) ?>"
+               class="modal-ajax-get">
+                <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
             </a>
             &middot;
             <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified']), 'rough') ?>
