@@ -1255,7 +1255,7 @@ class PostsControllerTest extends ControllerTestCase
         }
         catch (NotFoundException $e) {
         }
-        $this->assertFalse(isset($e), "Invalid Status Request");
+        $this->assertTrue(isset($e), "Invalid Status Request");
     }
 
     function _getPostsCommonMock()
