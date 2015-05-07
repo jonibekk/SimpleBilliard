@@ -6,6 +6,8 @@ App::uses('Evaluation', 'Model');
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
+ *
+ * @var $selected_tab_term_id
  */
 class EvaluationsController extends AppController
 {
@@ -31,26 +33,34 @@ class EvaluationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        //get evaluation term
+        // Set selected term
+        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         $term_param = viaIsSet($this->request->params['named']['term']);
-        $term_name = $term_param ? $term_param : 'previous';
-        switch ($term_name) {
-            case 'present':
-                $selected_tab_term_id = $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-                break;
-            case 'previous':
-                $selected_tab_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-                break;
+        $selected_term_name = $term_param ? $term_param : 'previous';
+        $selected_tab_term_id = '';
+        if ($selected_term_name == 'present') {
+            $selected_tab_term_id = $current_term_id;
+        }
+        elseif ($selected_term_name == 'previous') {
+            $selected_tab_term_id = $previous_term_id;
         }
 
         $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
         $my_eval[] = $this->Evaluation->getEvalStatus($selected_tab_term_id, $this->Auth->user('id'));
         $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($selected_tab_term_id);
+
+        // Get term frozen status
+        $isFrozens = [];
+        $isFrozens['present'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
+        $isFrozens['previous'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
+
         $this->set(compact('incomplete_number_list',
                            'my_evaluatees',
                            'my_eval',
                            'selected_tab_term_id',
-                           'term_name'
+                           'selected_term_name',
+                           'isFrozens'
                    ));
     }
 
@@ -112,38 +122,119 @@ class EvaluationsController extends AppController
     {
         $this->request->allowMethod('post', 'put');
 
-        // case of saving draft
-        if (isset($this->request->data['is_draft'])) {
-            $saveType = "draft";
-            unset($this->request->data['is_draft']);
-            $successMsg = __d('gl', "下書きを保存しました。");
+        $status = viaIsSet($this->request->data['status']);
+        $evalType = viaIsSet($this->request->data['Evaluation']['evaluate_type']);
 
-            // case of registering
-        }
-        else {
-            $saveType = "register";
-            unset($this->request->data['is_register']);
-            $successMsg = __d('gl', "自己評価を登録しました。");
-        }
+        unset($this->request->data['status']);
+        unset($this->request->data['Evaluation']);
 
         // 保存処理実行
         try {
             $this->Evaluation->begin();
-            $this->Evaluation->add($this->request->data, $saveType);
+            $this->Evaluation->add($this->request->data, $status);
         } catch (RuntimeException $e) {
             $this->Evaluation->rollback();
             // saving as draft
-            if ($saveType === "register") {
-                $this->Evaluation->add($this->request->data, "draft");
+            if ($status === Evaluation::TYPE_STATUS_DONE) {
+                $this->Evaluation->add($this->request->data, Evaluation::TYPE_STATUS_DRAFT);
             }
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
 
         $this->Evaluation->commit();
-        $this->Pnotify->outSuccess($successMsg);
-        return $this->redirect($this->referer());
 
+        // Set saved message
+        $savedMsg = "";
+        if($status == Evaluation::TYPE_STATUS_DRAFT) {
+            $savedMsg = $successMsg = __d('gl', "下書きを保存しました。");
+        } else if($status == Evaluation::TYPE_STATUS_DONE) {
+            if ($evalType == Evaluation::TYPE_ONESELF) {
+                $savedMsg = __d('gl', "自己評価を確定しました。");
+            } else if($evalType == Evaluation::TYPE_EVALUATOR) {
+                $savedMsg = __d('gl', "評価者の評価を確定しました。");
+            }
+        }
+        $this->Pnotify->outSuccess($savedMsg);
+        return $this->redirect($this->referer());
+    }
+
+    public function ajax_get_incomplete_evaluatees()
+    {
+        $this->_ajaxPreProcess();
+        $incomplete_evaluatees = $this->Evaluation->getIncompleteEvaluatees($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('incomplete_evaluatees'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_evaluatees');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_incomplete_evaluators()
+    {
+        $this->_ajaxPreProcess();
+        $incomplete_evaluators = $this->Evaluation->getIncompleteEvaluators($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('incomplete_evaluators'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_evaluators');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_evaluators_status($evaluatee_id)
+    {
+        $this->_ajaxPreProcess();
+        $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
+
+        $res = $this->Evaluation->getEvaluators($this->Team->EvaluateTerm->getLatestTermId(), $evaluatee_id);
+        $evaluators = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
+
+        $this->set(compact('evaluators', 'evaluatee'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_evaluators_status');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_evaluatees_by_evaluator($evaluator_id)
+    {
+        $this->_ajaxPreProcess();
+        $evaluator = $this->Evaluation->EvaluatorUser->findById($evaluator_id);
+
+        $res = $this->Evaluation->getEvaluateesByEvaluator($this->Team->EvaluateTerm->getLatestTermId(), $evaluator_id);
+        $incomplete_evaluatees = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
+        $this->set(compact('incomplete_evaluatees', 'evaluator'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_evaluatees_by_evaluator');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_incomplete_oneself()
+    {
+        $this->_ajaxPreProcess();
+
+        $oneself_incomplete_users = $this->Evaluation->getIncompleteOneselfEvaluators($this->Team->EvaluateTerm->getLatestTermId());
+        $this->set(compact('oneself_incomplete_users'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Evaluation/modal_incomplete_oneself_evaluators');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
     }
 
 }

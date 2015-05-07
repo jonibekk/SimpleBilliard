@@ -35,7 +35,7 @@ class CirclesControllerTest extends ControllerTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.notification',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',

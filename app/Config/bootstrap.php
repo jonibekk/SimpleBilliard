@@ -12,10 +12,10 @@
  */
 
 // Setup a 'default' cache configuration for use in the application.
-if (PUBLIC_ENV && ELASTICACHE_SESSION_HOST) {
+if (REDIS_SESSION_HOST) {
     Cache::config('default', array(
                                'engine' => 'Redis',
-                               'server' => ELASTICACHE_SESSION_HOST,
+                               'server' => REDIS_SESSION_HOST,
                                'port'   => 6379,
                            )
     );
@@ -148,9 +148,14 @@ define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
 define('S3_TRIM_PATH', '/upload/');
 //リクエストされた時点のタイムスタンプ
 define('REQUEST_TIMESTAMP', time());
+//右カラム各要素の表示数
 define('MY_GOALS_DISPLAY_NUMBER', 10);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 10);
 define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 20);
+//通知リストボックス(ベルのアイコンのところ)内のアイテム数
+define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 5);
+//通知リストページの1ブロックのアイテム数
+define('NOTIFY_PAGE_ITEMS_NUMBER', 20);
 
 /**
  * 共通関数

@@ -41,7 +41,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         'app.post_read',
         'app.images_post',
         'app.comment_read',
-        'app.notification',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -101,6 +101,25 @@ class EvaluationsControllerTest extends ControllerTestCase
         ];
         $Evaluations->Evaluation->save($eval_data);
         $this->testAction('/evaluations/index/term:previous', ['method' => 'GET']);
+    }
+
+    public function testIndexPresentTerm()
+    {
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $presentTermId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $this->_savePreviousTerm($Evaluations);
+        $eval_data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_term_id'  => $presentTermId,
+            'evaluate_type'     => 0,
+            'my_turn_flg'       => true,
+            'index_num'         => 0,
+        ];
+        $Evaluations->Evaluation->save($eval_data);
+        $this->testAction('/evaluations/index/term:present', ['method' => 'GET']);
     }
 
     public function testIndexNotEnabled()
@@ -326,7 +345,10 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostDraft()
     {
         $data = [
-            'is_draft' => true,
+            'status'     => Evaluation::TYPE_STATUS_DRAFT,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_ONESELF
+            ],
             [
                 'Evaluation' => [
                     'id'                => 1,
@@ -365,10 +387,53 @@ class EvaluationsControllerTest extends ControllerTestCase
      *
      * @return void
      */
-    public function testAddPostRegister()
+    public function testAddPostRegisterCaseOneself()
     {
         $data = [
-            'is_register' => true,
+            'status'     => Evaluation::TYPE_STATUS_DONE,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_ONESELF
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 1,
+                    'comment'           => 'あいうえお',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 2,
+                    'comment'           => 'かきくけこ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 3,
+                    'comment'           => 'さしすせそ',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+            [
+                'Evaluation' => [
+                    'id'                => 4,
+                    'comment'           => 'たちつてと',
+                    'evaluate_score_id' => 1,
+                ],
+            ],
+        ];
+
+        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    public function testAddPostRegisterCaseEvaluator()
+    {
+        $data = [
+            'status'     => Evaluation::TYPE_STATUS_DONE,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_EVALUATOR
+            ],
             [
                 'Evaluation' => [
                     'id'                => 1,
@@ -405,7 +470,10 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostRegisterValidationError()
     {
         $data = [
-            'is_register' => true,
+            'status'     => Evaluation::TYPE_STATUS_DONE,
+            'Evaluation' => [
+                'evaluate_type' => Evaluation::TYPE_ONESELF
+            ],
             [
                 'Evaluation' => [
                     'id'                => 1,
@@ -436,6 +504,53 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+    }
+
+    public function testAjaxGetIncompleteEvaluatees()
+    {
+        $this->_getEvaluationsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/evaluations/ajax_get_incomplete_evaluatees/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    public function testAjaxGetIncompleteEvaluators()
+    {
+        $this->_getEvaluationsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/evaluations/ajax_get_incomplete_evaluators/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    public function testAjaxGetEvaluatorsStatus()
+    {
+        $this->_getEvaluationsCommonMock();
+        $evaluateeId = 1;
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    public function testAjaxGetEvaluateesByEvaluator()
+    {
+        $this->_getEvaluationsCommonMock();
+        $evaluatorId = 1;
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    public function testAjaxGetIncompleteOneself()
+    {
+        $this->_getEvaluationsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction("/evaluations/ajax_get_incomplete_oneself", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function _getEvaluationsCommonMock()

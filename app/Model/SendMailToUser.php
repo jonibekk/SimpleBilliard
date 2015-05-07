@@ -47,27 +47,4 @@ class SendMailToUser extends AppModel
         return $res;
     }
 
-    public function getInvalidSendUserList($notification_id, $before_hours = 3)
-    {
-
-        $options = [
-            'conditions' => [
-                'notification_id' => $notification_id,
-                'team_id'         => $this->current_team_id,
-            ],
-        ];
-        $send_mail_list = $this->SendMail->find('list', $options);
-        $options = [
-            'conditions' => [
-                'send_mail_id' => $send_mail_list,
-                'modified >'   => REQUEST_TIMESTAMP - (60 * 60 * $before_hours),
-            ],
-            'fields'     => [
-                'user_id'
-            ]
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
 }

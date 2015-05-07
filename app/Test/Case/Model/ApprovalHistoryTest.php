@@ -45,9 +45,7 @@ class ApprovalHistoryTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
+
         'app.oauth_token',
         'app.team_member',
         'app.job_category',
@@ -84,9 +82,26 @@ class ApprovalHistoryTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    public function testAdd()
     {
+        $cb_id = 999;
+        $user_id = 888;
+        $action_status = 0;
+        $comment = 'test';
+        $this->ApprovalHistory->add($cb_id, $user_id, $action_status, $comment);
+        $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
+        $this->assertEquals($res['ApprovalHistory']['comment'], 'test');
+    }
 
+    public function testAddEmpty()
+    {
+        $cb_id = 999;
+        $user_id = 888;
+        $action_status = 0;
+        $comment = '';
+        $this->ApprovalHistory->add($cb_id, $user_id, $action_status, $comment);
+        $res = $this->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => $cb_id]]);
+        $this->assertEmpty($res);
     }
 
 }

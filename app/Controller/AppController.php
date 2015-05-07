@@ -19,22 +19,24 @@ App::uses('HelpsController', 'Controller');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent                $Lang
- * @property SessionComponent             $Session
- * @property SecurityComponent            $Security
- * @property TimezoneComponent            $Timezone
- * @property CookieComponent              $Cookie
- * @property CsvComponent                 $Csv
- * @property GlEmailComponent             $GlEmail
- * @property PnotifyComponent             $Pnotify
- * @property MixpanelComponent            $Mixpanel
- * @property UservoiceComponent           $Uservoice
- * @property OgpComponent                 $Ogp
- * @property User                         $User
- * @property Post                         $Post
- * @property Goal                         $Goal
- * @property Team                         $Team
- * @property NotifyBizComponent           $NotifyBiz
+ * @property LangComponent                             $Lang
+ * @property SessionComponent                          $Session
+ * @property SecurityComponent                         $Security
+ * @property TimezoneComponent                         $Timezone
+ * @property CookieComponent                           $Cookie
+ * @property CsvComponent                              $Csv
+ * @property GlEmailComponent                          $GlEmail
+ * @property PnotifyComponent                          $Pnotify
+ * @property MixpanelComponent                         $Mixpanel
+ * @property UservoiceComponent                        $Uservoice
+ * @property OgpComponent                              $Ogp
+ * @property User                                      $User
+ * @property Post                                      $Post
+ * @property Goal                                      $Goal
+ * @property Team                                      $Team
+ * @property NotifyBizComponent                        $NotifyBiz
+ * @property RedisComponent                            $Redis
+ * @property BenchmarkComponent                        $Benchmark
  */
 class AppController extends Controller
 {
@@ -62,6 +64,8 @@ class AppController extends Controller
         'NotifyBiz',
         'Uservoice',
         'Csv',
+        'Redis',
+        //        'Benchmark',
     ];
     public $helpers = [
         'Session',
@@ -118,6 +122,11 @@ class AppController extends Controller
                 if ($this->request->is('get')) {
                     $this->_switchTeamBeforeCheck();
                 }
+                //通知の既読ステータス
+                if (isset($this->request->params['named']['notify_id'])) {
+                    $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
+                }
+
             }
             //permission check
             $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
@@ -139,6 +148,7 @@ class AppController extends Controller
             $this->_setUnApprovedCnt($login_uid);
             $this->_setEvaluableCnt();
             $this->_setAllAlertCnt();
+            $this->_setNotifyCnt();
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
@@ -168,8 +178,10 @@ class AppController extends Controller
     {
         $login_user_team_id = $this->Session->read('current_team_id');
         $member_ids = $this->Team->TeamMember->selectUserIdFromTeamMembersTB($login_uid, $login_user_team_id);
+        array_push($member_ids, $login_uid);
+
         $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
-                                                                      $member_ids, 0);
+                                                                      $member_ids, [0, 3]);
         $this->set(compact('unapproved_cnt'));
         $this->unapproved_cnt = $unapproved_cnt;
     }
@@ -238,14 +250,12 @@ class AppController extends Controller
     public function _setMyCircle()
     {
         $my_circles = $this->User->CircleMember->getMyCircle();
-        $current_circle = null;
         if (isset($this->request->params['circle_id']) &&
             !empty($this->request->params['circle_id']) &&
             !empty($my_circles)
         ) {
             foreach ($my_circles as $key => $circle) {
                 if ($circle['Circle']['id'] == $this->request->params['circle_id']) {
-                    $current_circle = $circle;
                     //未読件数を0セット
                     if ($circle['CircleMember']['unread_count'] != 0) {
                         $this->User->CircleMember->updateUnreadCount($circle['Circle']['id']);
@@ -256,6 +266,21 @@ class AppController extends Controller
             }
         }
         $this->set('my_circles', $my_circles);
+    }
+
+    public function _setCurrentCircle()
+    {
+        $current_circle = null;
+        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+
+            $is_secret = $this->User->CircleMember->Circle->isSecret($this->request->params['circle_id']);
+            $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($this->request->params['circle_id'],
+                                                                   $this->Session->read('current_team_id'));
+            $is_belong_circle_member = $this->User->CircleMember->isBelong($this->request->params['circle_id']);
+            if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
+                $current_circle = $this->User->CircleMember->Circle->findById($this->request->params['circle_id']);
+            }
+        }
         $this->set('current_circle', $current_circle);
     }
 
@@ -554,6 +579,12 @@ class AppController extends Controller
     public function _setAvailEvaluation()
     {
         $this->set('is_evaluation_available', $this->Team->EvaluationSetting->isEnabled());
+    }
+
+    public function _setNotifyCnt()
+    {
+        $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
+        $this->set(compact("new_notify_cnt"));
     }
 
 }

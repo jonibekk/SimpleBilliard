@@ -115,7 +115,20 @@ class GoalsController extends AppController
                     // pusherに通知
                     $socketId = viaIsSet($this->request->data['socket_id']);
                     $this->NotifyBiz->push($socketId, "all");
-                    //TODO 一旦、トップにリダイレクト
+
+                    // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
+                    foreach($this->request->data['Collaborator'] as $val){
+                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], 0);
+                    }
+
+                    // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
+                    $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
+                        $this->Auth->user('id'), $this->Session->read('current_team_id'));
+                    if (isset($coach_id['TeamMember']['coach_user_id']) === true
+                        && is_null($coach_id['TeamMember']['coach_user_id']) === false
+                    ) {
+                        $this->redirect("/goal_approval");
+                    }
                     $this->redirect("/");
                     break;
             }
@@ -493,7 +506,7 @@ class GoalsController extends AppController
         ];
 
         //存在チェック
-        if (!$this->Goal->isBelongCurrentTeam($goal_id)) {
+        if (!$this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))) {
             $return['error'] = true;
             $return['msg'] = __d('gl', "存在しないゴールです。");
             return $this->_ajaxGetResponse($return);
@@ -799,7 +812,7 @@ class GoalsController extends AppController
         ];
         $this->_ajaxPreProcess();
         if (isset($this->request->params['named']['ar_count'])
-            && $this->Goal->isBelongCurrentTeam($goal_id)
+            && $this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))
         ) {
             $this->set('ar_count', $this->request->params['named']['ar_count']);
             $this->set(compact('goal_id'));

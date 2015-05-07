@@ -29,7 +29,7 @@ class PostShareUserTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
+
         'app.post_like',
         'app.post_mention',
         'app.post_read',

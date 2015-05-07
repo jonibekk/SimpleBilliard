@@ -38,9 +38,7 @@ class CollaboratorTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -195,6 +193,25 @@ class CollaboratorTest extends CakeTestCase
         $this->assertEquals(0, $cnt);
     }
 
+    function testcountCollaboGoalModifyStatus()
+    {
+        $team_id = 999;
+        $user_id = 888;
+        $goal_id = 777;
+        $valued_flg = 3;
+        $params = [
+            'user_id'    => $user_id,
+            'team_id'    => $team_id,
+            'goal_id'    => $goal_id,
+            'valued_flg' => $valued_flg,
+            'type'       => 0,
+            'priority'   => 1,
+        ];
+        $this->Collaborator->save($params);
+        $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
+        $this->assertEquals(0, $cnt);
+    }
+
     function testGetLeaderUidNotNull()
     {
         $this->Collaborator->my_uid = 1;
@@ -212,11 +229,4 @@ class CollaboratorTest extends CakeTestCase
         $actual = $this->Collaborator->getLeaderUid(111111);
         $this->assertEquals(null, $actual);
     }
-
-    //TODO ハードコーディング中! for こーへーさん
-    function testTempCountUnvalued()
-    {
-        $this->Collaborator->tempCountUnvalued();
-    }
-
 }

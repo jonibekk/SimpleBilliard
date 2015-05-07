@@ -167,6 +167,17 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    function getKrCount($goal_ids)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_ids,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
     /**
      * キーリザルト変更権限
      * コラボレータならtrueを返す

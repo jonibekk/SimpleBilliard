@@ -65,6 +65,10 @@ class Collaborator extends AppModel
         'User',
     ];
 
+    public $hasMany = [
+        'ApprovalHistory',
+    ];
+
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -168,9 +172,17 @@ class Collaborator extends AppModel
                 'User' => [
                     'fields' => $this->User->profileFields
                 ],
+                'ApprovalHistory' => [
+                    'User' => [
+                        'fields' => $this->User->profileFields
+                    ],
+                    'fields'       => ['user_id', 'comment', 'created'],
+                    'order' => ['ApprovalHistory.created DESC'],
+                    //'limit' => 1,
+                ]
             ],
             'type'       => 'inner',
-            'order'      => ['Collaborator.created'],
+            'order'      => ['Collaborator.created DESC'],
         ];
         if (is_array($approval_flg)) {
             unset($options['conditions']['Collaborator.valued_flg']);
@@ -191,12 +203,11 @@ class Collaborator extends AppModel
     function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
     {
         $options = [
-            'fields'     => ['id'],
+            'fields'     => ['id', 'type', 'valued_flg'],
             'conditions' => [
                 'Collaborator.team_id'    => $team_id,
                 'Collaborator.user_id'    => $goal_user_id,
                 'Collaborator.valued_flg' => $approval_flg,
-                'User.id !='              => $user_id
             ],
             'contain'    => [
                 'Goal' => [
@@ -210,7 +221,24 @@ class Collaborator extends AppModel
             ],
             'type'       => 'inner',
         ];
-        return $this->find('count', $options);
+
+        $res = [];
+        foreach ($this->find('all', $options) as $key => $val) {
+            if ($this->Goal->isPresentTermGoal($val['Goal']['id']) === false) {
+                continue;
+            }
+            // 自分のゴール + 修正待ち以外
+            if ($val['User']['id'] === $user_id && $val['Collaborator']['valued_flg'] !== '3') {
+                continue;
+            }
+            // 自分のゴール + 修正待ち + コラボレーター
+            if ($val['User']['id'] === $user_id && $val['Collaborator']['valued_flg'] === '3'
+                && $val['Collaborator']['type'] === '0') {
+                continue;
+            }
+            $res[] = $val;
+        }
+        return count($res);
     }
 
     function getLeaderUid($goal_id)
@@ -233,54 +261,4 @@ class Collaborator extends AppModel
         }
         return null;
     }
-
-    //TODO ハードコーディング中! for こーへーさん
-    function tempCountUnvalued($team_id = [1,1111111])
-    {
-        $options = [
-            'conditions' => [
-                'team_id'    => $team_id,
-                'valued_flg' => 0,
-            ],
-            'fields'     => [
-                'user_id'
-            ],
-            'contain'    => [
-                'User' => [
-                    'fields'     => [
-                        'User.last_name',
-                        'User.first_name',
-                    ],
-                    'TeamMember' => [
-                        'conditions' => [
-                            'team_id' => $team_id,
-                            'evaluation_enable_flg' => 1,
-                            'NOT'                   => [
-                                'TeamMember.coach_user_id' => null,
-                            ],
-                        ],
-                        'fields'     => [
-                            'TeamMember.coach_user_id',
-                            'evaluation_enable_flg'
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $data = $this->find('all', $options);
-
-        $i = 0;
-        foreach ($data as $collabo) {
-            if (!empty($collabo['User']['TeamMember'])) {
-                $res[$i] = [];
-                $coach = $this->User->findById($collabo['User']['TeamMember'][0]['coach_user_id']);
-                $res[$i] += ['評価対象者' => $collabo['User']['display_last_name'] . $collabo['User']['display_first_name']];
-                $res[$i] += ['コーチ' => $coach['User']['display_last_name'] . $coach['User']['display_first_name']];
-                $i++;
-            }
-        }
-        $res['count'] = $i;
-        return $res;
-    }
-
 }

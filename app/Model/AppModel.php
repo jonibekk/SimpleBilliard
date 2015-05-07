@@ -205,12 +205,12 @@ class AppModel extends Model
         ));
     }
 
-    public function isBelongCurrentTeam($id)
+    public function isBelongCurrentTeam($id, $team_id)
     {
         $options = [
             'conditions' => [
                 $this->alias . '.' . $this->primaryKey => $id,
-                $this->alias . '.' . 'team_id'         => $this->current_team_id,
+                $this->alias . '.' . 'team_id'         => $team_id,
             ],
             'fields'     => [
                 'id'

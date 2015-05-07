@@ -37,7 +37,7 @@ class SendMailToUserTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
+
         'app.thread',
         'app.message',
         'app.email',
@@ -72,13 +72,6 @@ class SendMailToUserTest extends CakeTestCase
     function testGetToUserList()
     {
         $this->SendMailToUser->getToUserList(1);
-    }
-
-    public function testGetInvalidSendUserList()
-    {
-        $this->SendMailToUser->my_uid = 1;
-        $this->SendMailToUser->current_team_id = 1;
-        $this->SendMailToUser->getInvalidSendUserList(1);
     }
 
 }

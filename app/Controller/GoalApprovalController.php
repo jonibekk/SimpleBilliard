@@ -8,6 +8,7 @@ App::uses('AppController', 'Controller');
  * @property SessionComponent   $Session
  * @property TeamMember         $TeamMember
  * @property Collaborator       $Collaborator
+ * @property ApprovalHistory    $ApprovalHistory
  */
 class GoalApprovalController extends AppController
 {
@@ -18,6 +19,7 @@ class GoalApprovalController extends AppController
     public $uses = [
         'Collaborator',
         'TeamMember',
+        'ApprovalHistory',
     ];
 
     /*
@@ -26,24 +28,19 @@ class GoalApprovalController extends AppController
     const WAIT_MY_GOAL_MSG = 0;
 
     /*
-     * 処理済み && 自分のゴールが承認されたの場合
+     * 処理待ち && メンバーのゴール && valued_flag=3 の場合
      */
-    const APPROVAL_MY_GOAL_YES_MSG = 1;
+    const MODIFY_MEMBER_GOAL_MSG = 1;
 
     /*
-     * 処理済み && 自分のゴールが保留の場合
+     * 処理済み && メンバーのゴール && valued_flag=1 の場合
      */
-    const APPROVAL_MY_GOAL_NG_MSG = 2;
+    const APPROVAL_MEMBER_GOAL_MSG = 2;
 
     /*
-     * 処理済み && メンバーのゴールが承認されたの場合
+     * 処理済み && メンバーのゴール && valued_flag=2 の場合
      */
-    const APPROVAL_MEMBER_GOAL_YES_MSG = 3;
-
-    /*
-     * 処理済み && メンバーのゴールが保留の場合
-     */
-    const APPROVAL_MEMBER_GOAL_NG_MSG = 4;
+    const NOT_APPROVAL_MEMBER_GOAL_MSG = 3;
 
     /*
      * 処理済み用のメッセージリスト
@@ -124,11 +121,10 @@ class GoalApprovalController extends AppController
     private function _setMsg()
     {
         $this->approval_msg_list = [
-            self::WAIT_MY_GOAL_MSG             => __d('gl', "承認待ち中です"),
-            self::APPROVAL_MY_GOAL_YES_MSG     => __d('gl', "コーチが承認しました"),
-            self::APPROVAL_MY_GOAL_NG_MSG      => __d('gl', "コーチが保留しました"),
-            self::APPROVAL_MEMBER_GOAL_YES_MSG => __d('gl', "承認しました"),
-            self::APPROVAL_MEMBER_GOAL_NG_MSG  => __d('gl', "保留にしました"),
+            self::WAIT_MY_GOAL_MSG             => __d('gl', "認定待ち"),
+            self::MODIFY_MEMBER_GOAL_MSG       => __d('gl', "修正待ち"),
+            self::APPROVAL_MEMBER_GOAL_MSG     => __d('gl', "評価対象"),
+            self::NOT_APPROVAL_MEMBER_GOAL_MSG => __d('gl', "評価対象外"),
         ];
     }
 
@@ -156,11 +152,10 @@ class GoalApprovalController extends AppController
 
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
             $this->team_id, $this->user_id, $this->goal_user_ids,
-            [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
+            [$this->goal_status['approval'], $this->goal_status['hold']]
         );
 
         $this->layout = LAYOUT_ONE_COLUMN;
-
     }
 
     /*
@@ -168,15 +163,33 @@ class GoalApprovalController extends AppController
      */
     public function index()
     {
-        $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->team_id, $this->goal_user_ids, $this->goal_status['unapproved']);
+
+        if (isset($this->request->data['GoalApproval']) === true) {
+            $data = $this->request->data['GoalApproval'];
+            $this->changeStatus($data);
+
+            if (isset($this->request->data['modify_btn']) === true) {
+                $this->modify($data);
+            }
+        }
+
+        $goal_info = $this->getGoalInfo([$this->goal_status['unapproved'], $this->goal_status['modify']]);
+
         foreach ($goal_info as $key => $val) {
+            $goal_info[$key]['my_goal'] = false;
+
             if ($this->user_id === $val['User']['id']) {
-                $goal_info[$key]['msg'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
+                $goal_info[$key]['my_goal'] = true;
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::WAIT_MY_GOAL_MSG];
                 if ($this->my_evaluation_flg === false) {
                     unset($goal_info[$key]);
                 }
             }
+
+            if ($val['Collaborator']['valued_flg'] === '3') {
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::MODIFY_MEMBER_GOAL_MSG];
+            }
+
         }
 
         $done_cnt = $this->done_cnt;
@@ -191,16 +204,29 @@ class GoalApprovalController extends AppController
      */
     public function done()
     {
-        $goal_info = $this->Collaborator->getCollaboGoalDetail(
-            $this->team_id, $this->goal_user_ids,
-            [$this->goal_status['approval'], $this->goal_status['hold'], $this->goal_status['modify']]
-        );
+        if (isset($this->request->data['GoalApproval']) === true) {
+            $data = $this->request->data['GoalApproval'];
+            $this->changeStatus($data);
+        }
+
+        $goal_info = $this->getGoalInfo([$this->goal_status['approval'], $this->goal_status['hold']]);
+
         foreach ($goal_info as $key => $val) {
+            $goal_info[$key]['my_goal'] = false;
+            $goal_info[$key]['is_present_term'] = $this->Goal->isPresentTermGoal($val['Goal']['id']);
+
             if ($this->user_id === $val['User']['id']) {
-                $goal_info[$key]['msg'] = '自分のゴール';
+                $goal_info[$key]['my_goal'] = true;
                 if ($this->my_evaluation_flg === false) {
                     unset($goal_info[$key]);
                 }
+            }
+
+            if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '1') {
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
+
+            } else if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '2') {
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
             }
         }
 
@@ -212,13 +238,31 @@ class GoalApprovalController extends AppController
     }
 
     /*
+     * 認定状態変更コントロール
+     */
+    public function changeStatus($data)
+    {
+        if (isset($this->request->data['comment_btn']) === true) {
+            $this->comment($data);
+
+        } else if (isset($this->request->data['wait_btn']) === true) {
+            $this->wait($data);
+
+        } else if (isset($this->request->data['approval_btn']) === true) {
+            $this->approval($data);
+
+        }
+    }
+
+    /*
      * 承認する
      */
-    public function approval()
+    public function approval($data)
     {
-        $id = $this->request->param('id');
-        if (empty($id) === false) {
-            $this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['approval']);
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        if (empty($cb_id) === false) {
+            $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['approval']);
+            $this->comment($data);
         }
         $this->redirect($this->referer());
     }
@@ -226,12 +270,45 @@ class GoalApprovalController extends AppController
     /*
      * 承認しない
      */
-    public function wait()
+    public function wait($data)
     {
-        $id = $this->request->param('id');
-        if (empty($id) === false) {
-            $this->Collaborator->changeApprovalStatus(intval($id), $this->goal_status['hold']);
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        if (empty($cb_id) === false) {
+            $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
+            $this->comment($data);
         }
+        $this->redirect($this->referer());
+    }
+
+    /*
+     * 修正依頼をする
+     */
+    public function modify($data)
+    {
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        if (empty($cb_id) === false) {
+            $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['modify']);
+            $this->comment($data);
+        }
+
+        $this->redirect($this->referer());
+    }
+
+    /*
+     *  コメントする
+     */
+    public function comment($data)
+    {
+        $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
+        $comment = isset($data['comment']) === true ? $data['comment'] : '';
+
+        // 現状はコメントがある時、履歴を追加している。
+        // 今後はコメントなくてもアクションステータスを格納する必要あり。
+        if (empty($cb_id) === false && empty($comment) === false) {
+            // Todo: 第３パラメータに「1」がハードコーディングされているが、履歴表示の実装の時、定数化する
+            $this->ApprovalHistory->add($cb_id, $this->user_id, 1, $comment);
+        }
+
         $this->redirect($this->referer());
     }
 
@@ -251,6 +328,33 @@ class GoalApprovalController extends AppController
             $goal_user_ids = $this->member_ids;
         }
         return $goal_user_ids;
+    }
+
+    /*
+     * リストに表示するゴールのUserIDを取得
+     */
+    public function getGoalInfo($goal_status)
+    {
+        $goal_info = [];
+        if ($this->user_type === 1) {
+            $goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, [$this->user_id], $goal_status);
+
+        } elseif ($this->user_type === 2) {
+            $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, $this->member_ids, $goal_status);
+
+            $my_goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, [$this->user_id], $goal_status);
+
+            $goal_info = array_merge($member_goal_info, $my_goal_info);
+
+        } elseif ($this->user_type === 3) {
+            $goal_info = $this->Collaborator->getCollaboGoalDetail(
+                $this->team_id, $this->member_ids, $goal_status);
+        }
+
+        return $goal_info;
     }
 
     /*

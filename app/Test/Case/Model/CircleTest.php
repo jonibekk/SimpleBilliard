@@ -31,7 +31,7 @@ class CircleTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.notification',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -104,6 +104,13 @@ class CircleTest extends CakeTestCase
         $this->Circle->current_team_id = 1;
         $this->Circle->PostShareCircle->Post->my_uid = 1;
         $this->Circle->PostShareCircle->Post->current_team_id = 1;
+    }
+
+    function testIsSecret()
+    {
+        $this->Circle->id = 18;
+        $res = $this->Circle->isSecret($this->Circle->id);
+        $this->assertTrue(empty($res));
     }
 
 }

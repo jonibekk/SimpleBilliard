@@ -187,11 +187,14 @@ class GlEmailComponent extends Component
         }
         $url = Router::url(array_merge($data['url_data'], ['from' => 'email']), true);
         $item = [
-            'url' => $url,
+            'url'       => $url,
+            'type'      => $data['notify_type'],
+            'count_num' => $data['count_num'],
+            'item_name' => json_decode($data['item_name']),
+            'model_id'  => $data['model_id'],
         ];
-
         $this->SendMail->saveMailData($send_to_users, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
-                                      $this->SendMail->SendMailToUser->current_team_id, $data['notification_id']);
+                                      $this->SendMail->SendMailToUser->current_team_id);
         //メール送信を実行
         $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
 

@@ -36,62 +36,35 @@
         $this->Form->hidden('NotifySetting.id',
                             ['value' => isset($this->request->data['NotifySetting']['id']) ? $this->request->data['NotifySetting']['id'] : null]) ?>
         <div class="panel-body notify-setting-panel-body">
-            <div class="form-group">
-                <label class="col col-sm-3 col-xxs-12 control-label form-label"><?= __d('gl', '自分の投稿への反応') ?></label>
-                <?
-                //TODO 現状、アプリ内通知は必須の為、コメントアウト
-                //                echo $this->Form->input("NotifySetting.feed_app_flg",
-                //                                   [
-                //                                       'label'       => false,
-                //                                       'beforeInput' => '<i class="fa fa-bell-o icon-before-input" data-toggle="tooltip" title="' .
-                //                                           __d('gl', "アプリ通知") . '"></i>&nbsp;',
-                //                                       'div'         => false,
-                //                                       'type'        => 'checkbox',
-                //                                       'class'       => 'bt-switch',
-                //                                       'default'     => true,
-                //                                   ])
-                ?>
-                <?=
-                $this->Form->input("NotifySetting.feed_email_flg",
-                                   [
-                                       'label'       => false,
-                                       'beforeInput' => '<i class="fa fa-envelope-o icon-before-input" data-toggle="tooltip" title="' .
-                                           __d('gl', "メール通知") . '"></i>&nbsp;',
-                                       'div'         => false,
-                                       'type'        => 'checkbox',
-                                       'class'       => 'bt-switch',
-                                       'default'     => true,
-                                   ])
-                ?>
-            </div>
-            <div class="form-group">
-                <label class="col col-sm-3 col-xxs-12 control-label form-label"><?= __d('gl', 'サークルの更新') ?></label>
-                <?
-                //TODO 現状、アプリ内通知は必須の為、コメントアウト
-                //                echo $this->Form->input("NotifySetting.circle_app_flg",
-                //                                   [
-                //                                       'label'       => false,
-                //                                       'beforeInput' => '<i class="fa fa-bell-o icon-before-input" data-toggle="tooltip" title="' .
-                //                                           __d('gl', "アプリ通知") . '"></i>&nbsp;',
-                //                                       'div'         => false,
-                //                                       'type'        => 'checkbox',
-                //                                       'class'       => 'bt-switch',
-                //                                       'default'     => true,
-                //                                   ])
-                ?>
-                <?=
-                $this->Form->input("NotifySetting.circle_email_flg",
-                                   [
-                                       'label'       => false,
-                                       'beforeInput' => '<i class="fa fa-envelope-o icon-before-input" data-toggle="tooltip" title="' .
-                                           __d('gl', "メール通知") . '"></i>&nbsp;',
-                                       'div'         => false,
-                                       'type'        => 'checkbox',
-                                       'class'       => 'bt-switch',
-                                       'default'     => true,
-                                   ])
-                ?>
-            </div>
+            <? foreach (NotifySetting::$TYPE as $k => $v): ?>
+                <div class="form-group">
+                    <label class="col col-sm-3 col-xxs-12 control-label form-label"><?= $v['field_real_name'] ?></label>
+                    <?=
+                    $this->Form->input("NotifySetting.{$v['field_prefix']}_app_flg",
+                                       [
+                                           'label'       => false,
+                                           'beforeInput' => '<i class="fa fa-bell-o icon-before-input" data-toggle="tooltip" title="' .
+                                               __d('gl', "アプリ通知") . '"></i>&nbsp;',
+                                           'div'         => false,
+                                           'type'        => 'checkbox',
+                                           'class'       => 'bt-switch',
+                                           'default'     => true,
+                                       ])
+                    ?>
+                    <?=
+                    $this->Form->input("NotifySetting.{$v['field_prefix']}_email_flg",
+                                       [
+                                           'label'       => false,
+                                           'beforeInput' => '<i class="fa fa-envelope-o icon-before-input" data-toggle="tooltip" title="' .
+                                               __d('gl', "メール通知") . '"></i>&nbsp;',
+                                           'div'         => false,
+                                           'type'        => 'checkbox',
+                                           'class'       => 'bt-switch',
+                                           'default'     => true,
+                                       ])
+                    ?>
+                </div>
+            <? endforeach; ?>
         </div>
         <div class="panel-footer setting_pannel-footer">
             <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>

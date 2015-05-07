@@ -15,13 +15,13 @@ App::uses('AppModel', 'Model');
  * @property Comment              $Comment
  * @property Email                $Email
  * @property GivenBadge           $GivenBadge
- * @property Notification         $Notification
  * @property NotifySetting        $NotifySetting
  * @property OauthToken           $OauthToken
  * @property PostLike             $PostLike
  * @property PostMention          $PostMention
  * @property PostRead             $PostRead
  * @property Post                 $Post
+ * @property Goal                 $Goal
  * @property TeamMember           $TeamMember
  * @property CircleMember         $CircleMember
  * @property LocalName            $LocalName
@@ -219,7 +219,6 @@ class User extends AppModel
         'Comment',
         'Email',
         'GivenBadge',
-        'Notification',
         'OauthToken',
         'PostLike',
         'PostMention',
@@ -975,5 +974,17 @@ class User extends AppModel
         }
 
         return json_encode($my_channels);
+    }
+
+    function getUsersProf($uids)
+    {
+        $options = [
+            'conditions' => [
+                'id' => $uids
+            ],
+            'fields'     => $this->profileFields
+        ];
+        $res = $this->find('all', $options);
+        return $res;
     }
 }

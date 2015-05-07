@@ -342,4 +342,19 @@ class Circle extends AppModel
         return $res;
     }
 
+    /**
+     * @param $circle_id
+     *
+     * @return array|null
+     */
+    function isSecret($circle_id)
+    {
+        $options = [
+            'conditions' => [
+                'id'         => $circle_id,
+                'public_flg' => false
+            ]
+        ];
+        return $this->find('first', $options);
+    }
 }
