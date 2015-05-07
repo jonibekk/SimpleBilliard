@@ -190,7 +190,8 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
     margin-right: 0;
 }
 
-.dropdown-menu li a {
+.dropdown-menu li a ,
+.notify-list-page li a{
     color: #231814;
 }
 
@@ -3821,14 +3822,15 @@ Temporary Properties - YOU MUST FIX
     vertical-align: top;
 }
 
-.dropdown-menu .notify-card {
+.notify-card {
     display: block;
     padding: 12px 8px 8px;
 }
 
 .dropdown-menu .notify-card:hover,
-    /* .dropdown-menu > li > a.notify-card:active,*/
-.dropdown-menu .notify-card:focus {
+.dropdown-menu .notify-card:focus,
+.notify-list-page .notify-card:hover,
+.notify-list-page .notify-card:focus {
     color: #000;
     background-color: #f0f0f0;
 }
@@ -3843,7 +3845,8 @@ Temporary Properties - YOU MUST FIX
     overflow: hidden;
 }
 
-.dropdown-menu .notify-divider {
+.dropdown-menu .notify-divider,
+.notify-list-page .notify-divider {
     clear: both;
     margin: 0;
 }
@@ -4054,6 +4057,7 @@ Temporary Properties - YOU MUST FIX
 
 .notify-list-page {
     overflow: hidden;
+    padding-left: 0;
 }
 
 .unread_notify {
@@ -4061,9 +4065,15 @@ Temporary Properties - YOU MUST FIX
 }
 
 .read_notify {
-    background-color: #DCDCDC;
+    background-color: #F2EFEF;
 }
 
 .notify-all-view-link {
     padding: 3px;
+}
+
+.notify-list-page .divider {
+    height: 1px;
+    overflow: hidden;
+    background-color: #e5e5e5;
 }

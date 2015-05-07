@@ -110,13 +110,15 @@ echo $this->Html->script('gl_basic');
             e: <?=MY_GOALS_DISPLAY_NUMBER?>,
             f: <?=MY_COLLABO_GOALS_DISPLAY_NUMBER?>,
             g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>,
-            h: "<?=viaIsSet($circle_id)?>"
+            h: "<?=viaIsSet($circle_id)?>",
+            i: "<?=$this->Session->read('current_team_id')?>"
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
             socket_id: ""
         },
-        notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>
+        notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
+        new_notify_cnt: <?=viaIsSet($new_notify_cnt)?>
     };
 
 

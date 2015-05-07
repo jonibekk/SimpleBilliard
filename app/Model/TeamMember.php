@@ -242,22 +242,6 @@ class TeamMember extends AppModel
                                 ['TeamMember.team_id' => $team_id, 'TeamMember.user_id' => $user_ids]);
     }
 
-    function incrementNotifyUnreadCount($user_ids)
-    {
-        if (empty($user_ids)) {
-            return false;
-        }
-
-        $conditions = [
-            'TeamMember.user_id' => $user_ids,
-            'TeamMember.team_id' => $this->current_team_id,
-        ];
-
-        $res = $this->updateAll(['TeamMember.notify_unread_count' => 'TeamMember.notify_unread_count + 1'],
-                                $conditions);
-        return $res;
-    }
-
     /**
      * @param array $member_numbers
      *
@@ -317,6 +301,7 @@ class TeamMember extends AppModel
             $save_data['evaluate_score_id'] = array_keys($score_list, $row['total']['final']['score'])[0];
             $save_data['comment'] = $row['total']['final']['comment'];
             $save_data['evaluator_user_id'] = $this->my_uid;
+            $save_data['status'] = Evaluation::TYPE_STATUS_DONE;
             $user_id = $uids[$row['member_no']];
             $evaluations[$user_id] = array_merge($evaluations[$user_id], $save_data);
         }

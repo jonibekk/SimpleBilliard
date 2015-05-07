@@ -39,7 +39,7 @@ class PostsControllerTest extends ControllerTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
+
         'app.post_like',
         'app.post_mention',
         'app.post_read',
@@ -1136,7 +1136,7 @@ class PostsControllerTest extends ControllerTestCase
             ]
         ];
         $Posts->Post->PostShareUser->save($share_user_data);
-        $this->testAction('/post_permanent/1');
+        $this->testAction('/post_permanent/1/notify_id:1234');
     }
 
     function testFeedPermanentLinkNotShare()
