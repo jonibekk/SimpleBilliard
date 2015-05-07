@@ -20,6 +20,11 @@ module.exports = (grunt) ->
   grunt.registerTask 'gruntdocs', ['coffeelint:gruntlint','docco:gruntDocs','concat:gruntDocs','clean:gruntDocs']
 
   #
+  # alltask (!watch)
+  #
+  grunt.registerTask 'all', ['js','css','gruntdocs']
+
+  #
   # setting of watch task.
   #
   grunt.registerTask 'default', ['watch']
