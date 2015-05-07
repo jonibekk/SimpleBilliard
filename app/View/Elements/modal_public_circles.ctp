@@ -42,7 +42,7 @@
                 <? if (!empty($non_joined_circles)): ?>
                     <div class="row borderBottom">
                         <? foreach ($non_joined_circles as $key => $circle): ?>
-                        <a href="<?=$this->Html->url(['controller' => '/', 'action' => 'circle_feed',$non_joined_circles[$key]['Circle']['id']])?>">
+                        <a href="<?=$this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $non_joined_circles[$key]['Circle']['id']]) ?>">
                             <?=
                             $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
                             </a>
