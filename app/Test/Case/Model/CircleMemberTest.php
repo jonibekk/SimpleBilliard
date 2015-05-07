@@ -152,4 +152,28 @@ class CircleMemberTest extends CakeTestCase
         $this->assertTrue(empty($res));
     }
 
+    public function testShowHideStats()
+    {
+        $result = $this->CircleMember->show_hide_stats('user_id','circle_id');
+
+        $expected = array(
+            array('CircleMember' => array('user_id' => 11), array('circle_id' => '20'))
+                );
+
+        $this->assertNotEquals($expected,$result);
+    }
+
+    public function testCircleStatusToggle()
+    {
+        $this->CircleMember->my_uid = 1;
+        $result = $this->CircleMember->show_hide_stats('circle_id','status');
+
+        $expected = array(
+            array('CircleMember' => array('circle_id' => 20), array('status' => '1')),
+            array('CircleMember' => array('circle_id' => 8), array('status' => '0')),
+        );
+
+        $this->assertNotEquals($expected,$result);
+    }
+
 }
