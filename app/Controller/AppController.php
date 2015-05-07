@@ -272,7 +272,14 @@ class AppController extends Controller
     {
         $current_circle = null;
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
-            $current_circle = $this->User->CircleMember->Circle->getPublicCircleById($this->request->params['circle_id']);
+
+            $is_secret = $this->User->CircleMember->Circle->isSecret($this->request->params['circle_id']);
+            $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($this->request->params['circle_id'],
+                                                                   $this->Session->read('current_team_id'));
+            $is_belong_circle_member = $this->User->CircleMember->isBelong($this->request->params['circle_id']);
+            if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
+                $current_circle = $this->User->CircleMember->Circle->findById($this->request->params['circle_id']);
+            }
         }
         $this->set('current_circle', $current_circle);
     }
