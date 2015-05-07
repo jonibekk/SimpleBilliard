@@ -27,6 +27,10 @@ class CircleMember extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
+        'show_for_all_feed_flg'    => [
+            'rule'    => ['boolean'],
+            'message' => 'Invalid Status'
+        ]
     ];
 
     /**
@@ -45,15 +49,27 @@ class CircleMember extends AppModel
 
     public $new_joined_circle_list = [];
 
-    public function getMyCircleList()
+    public function getMyCircleList($check_hide_status = null)
     {
-        $options = [
-            'conditions' => [
-                'user_id' => $this->my_uid,
-                'team_id' => $this->current_team_id,
-            ],
-            'fields'     => ['circle_id'],
-        ];
+        if (!is_null($check_hide_status)) {
+            $options = [
+                'conditions' => [
+                    'user_id'               => $this->my_uid,
+                    'team_id'               => $this->current_team_id,
+                    'show_for_all_feed_flg' => $check_hide_status
+                ],
+                'fields'     => ['circle_id'],
+            ];
+        }
+        else {
+            $options = [
+                'conditions' => [
+                    'user_id' => $this->my_uid,
+                    'team_id' => $this->current_team_id,
+                ],
+                'fields'     => ['circle_id'],
+            ];
+        }
         $res = $this->find('list', $options);
         return $res;
     }
@@ -298,4 +314,52 @@ class CircleMember extends AppModel
         return $res;
     }
 
+    function joinNewMember($circle_id)
+    {
+        if (!empty($this->isBelong($circle_id))) {
+            return;
+        }
+        $options = [
+            'CircleMember' => [
+                'circle_id' => $circle_id,
+                'team_id'   => $this->current_team_id,
+                'user_id'   => $this->my_uid,
+            ]
+        ];
+        $this->create();
+        return $this->save($options);
+    }
+
+    function unjoinMember($circle_id)
+    {
+        if (empty($this->User->CircleMember->isBelong($circle_id))) {
+            return;
+        }
+        $this->deleteAll(['CircleMember.circle_id' => $circle_id, 'CircleMember.user_id' => $this->my_uid]);
+        return;
+    }
+
+    function show_hide_stats($userid, $circle_id)
+    {
+        $options = [
+            'conditions' => [
+                'CircleMember.user_id'   => $userid,
+                'CircleMember.circle_id' => $circle_id
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return viaIsSet($res['CircleMember']['show_for_all_feed_flg']);
+    }
+
+    function circle_status_toggle($circle_id, $status)
+    {
+        $conditions = [
+            'CircleMember.circle_id' => $circle_id,
+            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id'   => $this->my_uid
+        ];
+
+        $res = $this->updateAll(['CircleMember.show_for_all_feed_flg' => $status], $conditions);
+        return $res;
+    }
 }

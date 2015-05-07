@@ -36,7 +36,7 @@ class NotifySettingTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
+
         'app.thread',
         'app.message',
         'app.email',
@@ -72,32 +72,50 @@ class NotifySettingTest extends CakeTestCase
         $uid = 1000000;
         $uid2 = 9999999;
         $this->NotifySetting->my_uid = 1;
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app' => true, 'email' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定なし");
-        $data = ['feed_app_flg' => false, 'feed_email_flg' => false, 'user_id' => $uid];
+        $data = ['feed_post_app_flg' => false, 'feed_post_email_flg' => false, 'user_id' => $uid];
         $this->NotifySetting->save($data);
         $notifi_setting_id = $this->NotifySetting->getLastInsertID();
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app' => false, 'email' => false]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、off");
-        $data = ['id' => $notifi_setting_id, 'feed_app_flg' => true, 'feed_email_flg' => true];
+        $data = ['id' => $notifi_setting_id, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true];
         $this->NotifySetting->create();
         $this->NotifySetting->save($data);
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app' => true, 'email' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、on");
-        $res = $this->NotifySetting->getAppEmailNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED);
+        $res = $this->NotifySetting->getAppEmailNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid  => ['app' => true, 'email' => true],
             $uid2 => ['app' => true, 'email' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");
     }
+
+    function testGetTitle()
+    {
+        $from_user_names = ['aaa', 'bbb'];
+        $count_num = 1;
+        $item_name = json_encode(['ccc', 'ddd']);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, $from_user_names,
+                                       $count_num, $item_name);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $from_user_names, $count_num,
+                                       $item_name);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING, $from_user_names, $count_num,
+                                       $item_name);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_USER_JOIN, $from_user_names, $count_num, $item_name);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_ADD_USER, $from_user_names, $count_num, $item_name);
+        $this->NotifySetting->getTitle(999, "abc", $count_num, $item_name);
+    }
+
 }

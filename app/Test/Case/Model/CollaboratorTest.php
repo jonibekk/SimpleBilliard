@@ -38,9 +38,7 @@ class CollaboratorTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-        'app.notification',
-        'app.notify_to_user',
-        'app.notify_from_user',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -194,6 +192,7 @@ class CollaboratorTest extends CakeTestCase
         $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
         $this->assertEquals(0, $cnt);
     }
+
     function testcountCollaboGoalModifyStatus()
     {
         $team_id = 999;
@@ -210,7 +209,6 @@ class CollaboratorTest extends CakeTestCase
         ];
         $this->Collaborator->save($params);
         $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
-        debug($cnt);
         $this->assertEquals(0, $cnt);
     }
 

@@ -85,7 +85,9 @@ echo $this->Html->script('gl_basic');
             b: "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
             c: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow'])?>",
             d: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
-            e: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>"
+            e: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>",
+            f: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_notify_count'])?>",
+            g: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_notify_items'])?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
@@ -108,12 +110,15 @@ echo $this->Html->script('gl_basic');
             e: <?=MY_GOALS_DISPLAY_NUMBER?>,
             f: <?=MY_COLLABO_GOALS_DISPLAY_NUMBER?>,
             g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>,
-            h: "<?=viaIsSet($circle_id)?>"
+            h: "<?=viaIsSet($circle_id)?>",
+            i: "<?=$this->Session->read('current_team_id')?>"
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
             socket_id: ""
-        }
+        },
+        notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
+        new_notify_cnt: <?=viaIsSet($new_notify_cnt)?>
     };
 
 

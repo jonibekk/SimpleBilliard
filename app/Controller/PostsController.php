@@ -45,7 +45,7 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
-        $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
         $share = explode(",", viaIsSet($this->request->data['Post']['share']));
@@ -318,7 +318,7 @@ class PostsController extends AppController
             'html'  => null
         ];
         $this->_ajaxPreProcess();
-        if ($this->Post->isBelongCurrentTeam($post_id)) {
+        if ($this->Post->isBelongCurrentTeam($post_id, $this->Session->read('current_team_id'))) {
             $this->set(compact('post_id', 'prefix'));
             $response = $this->render('Feed/new_comment_form');
             $html = $response->__toString();
@@ -466,9 +466,9 @@ class PostsController extends AppController
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
                                                  $this->Post->Comment->id);
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                                                  $this->Post->id, $this->Post->Comment->id);
                 $result['msg'] = __d('gl', "コメントしました。");
             }
@@ -484,7 +484,6 @@ class PostsController extends AppController
             return $this->_ajaxGetResponse($result);
         }
 
-        $this->_pushCommentToBell();
         $this->_pushCommentToPost($this->Post->id);
 
         return $this->_ajaxGetResponse($result);
@@ -492,11 +491,18 @@ class PostsController extends AppController
 
     function feed()
     {
+        $params = $this->request->params;
         $this->_setMyCircle();
+        $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
+        $user_status = $this->userCircleStatus($this->request->params['circle_id']);
+
+        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
+                                                                            $this->request->params['circle_id']);
+
         $this->_setViewValOnRightColumn();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
@@ -511,7 +517,8 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id'));
+        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params',
+                           'circle_status'));
         try {
             $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
         } catch (RuntimeException $e) {
@@ -598,52 +605,14 @@ class PostsController extends AppController
 
             $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
 
-            $allowed_extensions = array("jpg","jpeg","png","gif");
-            if(!in_array($extension,$allowed_extensions)){
+            $allowed_extensions = array("jpg", "jpeg", "png", "gif");
+            if (!in_array($extension, $allowed_extensions)) {
                 $ogp['image'] = null;
             }
             $requestData['site_photo'] = $ogp['image'];
 
         }
         return $requestData;
-    }
-
-    function _pushCommentToBell()
-    {
-        //push通知するユーザーを定義
-        $pushUserList = $this->Post->Comment->getCommentedUniqueUsersList($this->Post->id);
-        $findRes = $this->Post->findById($this->Post->id, array('user_id'));
-        $postUserId = viaIsSet($findRes['Post']['user_id']);
-        if ($postUserId && !in_array($postUserId,
-                                     $pushUserList) && $postUserId !== $this->Session->read('Auth.User.id')
-        ) {
-            $pushUserList[] = $postUserId;
-        }
-
-        // pusherに渡すデータを定義
-        $teamId = $this->Session->read('current_team_id');
-        $socketId = viaIsSet($this->request->data['socket_id']);
-        $comment = viaIsSet($this->request->data['Comment']['body']);
-        if (!$socketId || !$comment) {
-            return;
-        }
-        // 通知テンプレートのレンダリング
-        $view = new View();
-        $displayUserName = $this->Session->read('Auth.User.display_username');
-        $postUrl = "/post_permanent/" . $this->Post->id;
-        $html = $view->element('bell_notification_item', compact('displayUserName', 'comment', 'postUrl'));
-        $notifyId = Security::hash(time());
-        $data = array(
-            'notify_id'      => $notifyId,
-            'is_bell_notify' => true,
-            'html'           => $html,
-        );
-
-        // Pusherへ送信
-        foreach ($pushUserList as $user) {
-            $channelName = "user_" . $user . "_team_" . $teamId;
-            $this->NotifyBiz->bellPush($socketId, $channelName, $data);
-        }
     }
 
     public function _pushCommentToPost($postId)
@@ -662,6 +631,57 @@ class PostsController extends AppController
             'post_id'           => $postId
         ];
         $this->NotifyBiz->commentPush($socketId, $data);
+    }
+
+    public function join_circle($circle_id = null)
+    {
+        if (!$circle_id) {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
+        if ($this->Post->Circle->CircleMember->joinNewMember($circle_id)) {
+            $this->Pnotify->outSuccess(__d('gl', "You have joined the circle"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "Error in joining the circle"));
+        }
+        return $this->redirect($this->request->referer());
+
+    }
+
+    public function unjoin_circle($circle_id)
+    {
+        if (!$circle_id) {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
+        $this->Post->Circle->CircleMember->unjoinMember($circle_id);
+        $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
+        return $this->redirect($this->request->referer());
+    }
+
+    public function userCircleStatus($circle_id)
+    {
+        if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
+            return 'admin';
+        }
+        else {
+            if ($this->Post->Circle->CircleMember->isBelong($circle_id, $this->Auth->user('id'))) {
+                return 'joined';
+            }
+        }
+        return 'not_joined';
+    }
+
+    function circle_toggle_status($circle_id, $status)
+    {
+        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg'=>$status]);
+
+        if ($this->Post->Circle->CircleMember->validates()) {
+            $this->Post->Circle->CircleMember->circle_status_toggle($circle_id, $status);
+            return $this->redirect($this->request->referer());
+        }
+        else {
+            throw new NotFoundException(__('gl', "Invalid Request"));
+        }
     }
 
 }

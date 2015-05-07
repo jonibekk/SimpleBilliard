@@ -8,7 +8,6 @@ App::uses('AppModel', 'Model');
  * @property User           $FromUser
  * @property User           $ToUser
  * @property Team           $Team
- * @property Notification   $Notification
  * @property SendMailToUser $SendMailToUser
  */
 class SendMail extends AppModel
@@ -96,7 +95,6 @@ class SendMail extends AppModel
         'FromUser' => ['className' => 'User', 'foreignKey' => 'from_user_id',],
         'ToUser'   => ['className' => 'User', 'foreignKey' => 'to_user_id',],
         'Team',
-        'Notification',
     ];
 
     public $hasMany = [
@@ -114,14 +112,13 @@ class SendMail extends AppModel
      *
      * @return bool
      */
-    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null, $notify_id = null)
+    public function saveMailData($to_uid = null, $tmpl_type, $item = [], $from_uid = null, $team_id = null)
     {
         $data = [
-            'template_type'   => $tmpl_type,
-            'item'            => (!empty($item)) ? json_encode($item) : null,
-            'from_user_id'    => $from_uid,
-            'team_id'         => $team_id,
-            'notification_id' => $notify_id,
+            'template_type' => $tmpl_type,
+            'item'          => (!empty($item)) ? json_encode($item) : null,
+            'from_user_id'  => $from_uid,
+            'team_id'       => $team_id,
         ];
         $this->create();
         $res = $this->save($data);
@@ -148,6 +145,8 @@ class SendMail extends AppModel
      *
      * @param      $id
      * @param null $lang
+     * @param bool $with_notify_from_user
+     * @param null $to_user_id
      *
      * @return array|null
      */
@@ -162,37 +161,14 @@ class SendMail extends AppModel
         $options = [
             'conditions' => ['SendMail.id' => $id],
             'contain'    => [
-                'FromUser'     => [
+                'FromUser' => [
                     'fields' => $this->SendMailToUser->User->profileFields,
                     'PrimaryEmail'
                 ],
                 'Team',
-                'Notification' => []
             ]
         ];
         $res = $this->find('first', $options);
-        if ($with_notify_from_user && !empty($res['Notification'])) {
-            $options = [
-                'conditions' => [
-                    'NotifyFromUser.notification_id' => $res['Notification']['id'],
-                ],
-                'limit'      => 2,
-                'order'      => ['MAX(NotifyFromUser.modified) desc'],
-                'group'      => ['NotifyFromUser.user_id'],
-                'contain'    => [
-                    'User' => [
-                        'fields' => $this->SendMailToUser->User->profileFields,
-                    ]
-                ]
-            ];
-            if ($to_user_id) {
-                $options['conditions']['NOT']['NotifyFromUser.user_id'] = $to_user_id;
-            }
-            $from_users = $this->Notification->NotifyFromUser->find('all', $options);
-            if (!empty($from_users)) {
-                $res['NotifyFromUser'] = $from_users;
-            }
-        }
 
         if ($lang) {
             $this->me['language'] = $lang_backup;
@@ -201,20 +177,4 @@ class SendMail extends AppModel
         return $res;
     }
 
-    public function isNotifySentBefore($notification_id, $before_hours = 3)
-    {
-        $options = [
-            'conditions' => [
-                'notification_id' => $notification_id,
-                'modified >'      => REQUEST_TIMESTAMP - (60 * 60 * $before_hours),
-            ],
-        ];
-        $res = $this->find('first', $options);
-        //指定時刻以内の送信履歴あり
-        if (!empty($res)) {
-            return true;
-        }
-        //指定時刻以内の送信履歴なし
-        return false;
-    }
 }
