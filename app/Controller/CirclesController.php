@@ -30,7 +30,7 @@ class CirclesController extends AppController
 
         if ($this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
                                                  null, $this->Circle->add_new_member_list);
             }
             $this->Pnotify->outSuccess(__d('gl', "サークルを作成しました。"));
@@ -87,11 +87,11 @@ class CirclesController extends AppController
         }
         if ($this->Circle->edit($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
                                                  null, $this->Circle->add_new_member_list);
             }
             if ($is_privacy_changed) {
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
                                                  $this->Circle->id);
             }
             $this->Pnotify->outSuccess(__d('gl', "サークル設定を保存しました。"));
@@ -148,7 +148,7 @@ class CirclesController extends AppController
         if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
             if (!empty($this->Circle->CircleMember->new_joined_circle_list)) {
                 foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
-                    $this->NotifyBiz->execSendNotify(Notification::TYPE_CIRCLE_USER_JOIN, $circle_id);
+                    $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circle_id);
                 }
             }
             $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定を保存しました。"));

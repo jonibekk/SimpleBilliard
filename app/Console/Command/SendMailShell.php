@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 App::uses('LangComponent', 'Controller/Component');
+App::uses('NotifySetting', 'Model');
 
 /**
  * SendMailShell
@@ -158,20 +159,16 @@ class SendMailShell extends AppShell
         $this->item = json_decode($data['SendMail']['item'], true);
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
-        $notify_option = Notification::$TYPE[$data['Notification']['type']];
-
+        $notify_option = NotifySetting::$TYPE[$this->item['type']];
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
             $from_user_names = [];
-            foreach ($data['NotifyFromUser'] as $user) {
-                $from_user_names[] = $user['User']['display_username'];
-            }
-            $subject = $this->User->Notification->getTitle($data['Notification']['type'],
-                                                           $from_user_names,
-                                                           $data['Notification']['count_num'],
-                                                           $data['Notification']['item_name']
+            $from_user_names[] = $data['FromUser']['display_username'];
+            $subject = $this->User->NotifySetting->getTitle($this->item['type'],
+                                                            $from_user_names,
+                                                            $this->item['count_num'],
+                                                            $this->item['item_name']
             );
-
             $options = [
                 'to'       => $data['ToUser']['PrimaryEmail']['email'],
                 'subject'  => $subject,
@@ -183,7 +180,7 @@ class SendMailShell extends AppShell
                 'from_user_name' => $data['FromUser']['display_username'],
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
-                'body'           => json_decode($data['Notification']['item_name'], true),
+                'body'           => $this->item['item_name'],
             ];
             $this->_sendMailItem($options, $viewVars);
 

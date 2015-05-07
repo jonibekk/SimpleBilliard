@@ -271,16 +271,6 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    function testIncrementNotifyUnreadCount()
-    {
-        $uid = 1;
-        $team_id = 1;
-        $this->TeamMember->current_team_id = $team_id;
-        $this->TeamMember->my_uid = $uid;
-        $this->TeamMember->incrementNotifyUnreadCount([1]);
-        $this->TeamMember->incrementNotifyUnreadCount([]);
-    }
-
     function testSaveNewMembersFromCsvSuccessChangeLocalName()
     {
         $this->setDefault();

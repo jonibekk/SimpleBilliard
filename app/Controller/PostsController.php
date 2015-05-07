@@ -45,7 +45,7 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
-        $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_POST, $this->Post->getLastInsertID());
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
         $share = explode(",", viaIsSet($this->request->data['Post']['share']));
@@ -466,9 +466,9 @@ class PostsController extends AppController
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
                                                  $this->Post->Comment->id);
-                $this->NotifyBiz->execSendNotify(Notification::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                                                  $this->Post->id, $this->Post->Comment->id);
                 $result['msg'] = __d('gl', "コメントしました。");
             }

@@ -42,7 +42,7 @@ class UserTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-        'app.notification',
+
         'app.thread',
         'app.message',
         'app.email',

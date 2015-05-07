@@ -41,7 +41,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         'app.post_read',
         'app.images_post',
         'app.comment_read',
-        'app.notification',
+
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -345,7 +345,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostDraft()
     {
         $data = [
-            'status' => Evaluation::TYPE_STATUS_DRAFT,
+            'status'     => Evaluation::TYPE_STATUS_DRAFT,
             'Evaluation' => [
                 'evaluate_type' => Evaluation::TYPE_ONESELF
             ],
@@ -390,7 +390,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostRegisterCaseOneself()
     {
         $data = [
-            'status' => Evaluation::TYPE_STATUS_DONE,
+            'status'     => Evaluation::TYPE_STATUS_DONE,
             'Evaluation' => [
                 'evaluate_type' => Evaluation::TYPE_ONESELF
             ],
@@ -430,7 +430,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostRegisterCaseEvaluator()
     {
         $data = [
-            'status' => Evaluation::TYPE_STATUS_DONE,
+            'status'     => Evaluation::TYPE_STATUS_DONE,
             'Evaluation' => [
                 'evaluate_type' => Evaluation::TYPE_EVALUATOR
             ],
@@ -470,7 +470,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testAddPostRegisterValidationError()
     {
         $data = [
-            'status' => Evaluation::TYPE_STATUS_DONE,
+            'status'     => Evaluation::TYPE_STATUS_DONE,
             'Evaluation' => [
                 'evaluate_type' => Evaluation::TYPE_ONESELF
             ],
