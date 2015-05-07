@@ -133,7 +133,7 @@ This task is watched. The task is going to run, when coffeescript(app/webroot/co
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  grunt.registerTask <span class="hljs-string">'js'</span>, [<span class="hljs-string">'coffeelint:release'</span>,<span class="hljs-string">'coffee'</span>,<span class="hljs-string">'concat:js'</span>,<span class="hljs-string">'uglify'</span>,<span class="hljs-string">'copy:js'</span>,<span class="hljs-string">'copy:jsMap'</span>,<span class="hljs-string">'docco:release'</span>,<span class="hljs-string">'concat:jsDocs'</span>,<span class="hljs-string">'clean'</span>]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  grunt.registerTask <span class="hljs-string">'js'</span>, [<span class="hljs-string">'coffeelint:release'</span>,<span class="hljs-string">'coffee'</span>,<span class="hljs-string">'concat:js'</span>,<span class="hljs-string">'uglify'</span>,<span class="hljs-string">'copy:js'</span>,<span class="hljs-string">'copy:jsMap'</span>,<span class="hljs-string">'docco:release'</span>,<span class="hljs-string">'concat:jsDocs'</span>,<span class="hljs-string">'clean:dest'</span>,<span class="hljs-string">'clean:docco'</span>]</pre></div></div>
             
         </li>
         
@@ -149,7 +149,7 @@ This task is watched. The task is going to run, when less(app/webroot/less/<em>*
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  grunt.registerTask <span class="hljs-string">'css'</span>, [<span class="hljs-string">'lesslint'</span>,<span class="hljs-string">'less'</span>,<span class="hljs-string">'autoprefixer'</span>,<span class="hljs-string">'cssmin'</span>,<span class="hljs-string">'copy:css'</span>,<span class="hljs-string">'copy:cssMap'</span>,<span class="hljs-string">'styleguide'</span>,<span class="hljs-string">'concat:cssDocs'</span>,<span class="hljs-string">'clean'</span>]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  grunt.registerTask <span class="hljs-string">'css'</span>, [<span class="hljs-string">'lesslint'</span>,<span class="hljs-string">'less'</span>,<span class="hljs-string">'autoprefixer'</span>,<span class="hljs-string">'cssmin'</span>,<span class="hljs-string">'copy:css'</span>,<span class="hljs-string">'copy:cssMap'</span>,<span class="hljs-string">'styleguide'</span>,<span class="hljs-string">'concat:cssDocs'</span>,<span class="hljs-string">'clean:dest'</span>,<span class="hljs-string">'clean:styledocco'</span>]</pre></div></div>
             
         </li>
         
@@ -175,6 +175,21 @@ This task is NOT watched.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>alltask (!watch)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  grunt.registerTask <span class="hljs-string">'all'</span>, [<span class="hljs-string">'js'</span>,<span class="hljs-string">'css'</span>,<span class="hljs-string">'gruntdocs'</span>]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>setting of watch task.</p>
 
