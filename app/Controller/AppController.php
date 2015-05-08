@@ -126,39 +126,37 @@ class AppController extends Controller
                 if (isset($this->request->params['named']['notify_id'])) {
                     $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
                 }
+                $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
+                $this->set(compact('is_isao_user'));
+                $my_channels_json = $this->User->getMyChannelsJson();
+                $this->set(compact('my_channels_json'));
+                //permission check
+                $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
+                $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
 
-            }
-            //permission check
-            $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
-            $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
-
-            //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
-            if (!$this->Auth->user('default_team_id')) {
-                $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
-                $this->Session->write('current_team_id', $set_default_team_id);
-            }
-            //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
-            elseif (!$this->User->TeamMember->isActive($login_uid)) {
-                $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
-                //ログアウト
-                $this->Pnotify->outError(__d('gl', "アクセスしたチームのアクセス権限がありません"));
-                $this->Auth->logout();
+                //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
+                if (!$this->Auth->user('default_team_id')) {
+                    $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
+                    $this->Session->write('current_team_id', $set_default_team_id);
+                }
+                //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
+                elseif (!$this->User->TeamMember->isActive($login_uid)) {
+                    $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
+                    //ログアウト
+                    $this->Pnotify->outError(__d('gl', "アクセスしたチームのアクセス権限がありません"));
+                    $this->Auth->logout();
+                }
+                $this->_setUnApprovedCnt($login_uid);
+                $this->_setEvaluableCnt();
+                $this->_setAllAlertCnt();
+                $this->_setNotifyCnt();
             }
             $this->_setMyMemberStatus();
-            $this->_setUnApprovedCnt($login_uid);
-            $this->_setEvaluableCnt();
-            $this->_setAllAlertCnt();
-            $this->_setNotifyCnt();
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
-        $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
-        $this->set(compact('is_isao_user'));
-        $my_channels_json = $this->User->getMyChannelsJson();
-        $this->set(compact('my_channels_json'));
-
     }
 
     /*

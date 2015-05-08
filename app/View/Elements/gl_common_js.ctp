@@ -105,7 +105,7 @@ echo $this->Html->script('gl_basic');
                 }];
                 callback(data);
             },
-            c: <?=$my_channels_json?>,
+            c: <?=isset($my_channels_json)?$my_channels_json:"[]"?>,
             d: "<?=viaIsSet($feed_filter)?>",
             e: <?=MY_GOALS_DISPLAY_NUMBER?>,
             f: <?=MY_COLLABO_GOALS_DISPLAY_NUMBER?>,
@@ -118,7 +118,7 @@ echo $this->Html->script('gl_basic');
             socket_id: ""
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
-        new_notify_cnt: <?=viaIsSet($new_notify_cnt)?>
+        new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>
     };
 
 
