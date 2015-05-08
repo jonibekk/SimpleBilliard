@@ -12,6 +12,7 @@ class NotificationsController extends AppController
      */
     public function index()
     {
+        $this->_setMyCircle();
         $this->_setViewValOnRightColumn();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER);
         $isExistMoreNotify = true;
