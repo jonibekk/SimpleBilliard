@@ -38,19 +38,19 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-comment-o',
         ],
         self::TYPE_CIRCLE_USER_JOIN                    => [
-            'mail_template'   => "notify_not_use_body",
+            'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_user_join',
             'icon_class'      => 'fa-circle-o',
         ],
         self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [
-            'mail_template'   => "notify_not_use_body",
+            'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_changed_privacy_setting',
             'icon_class'      => 'fa-circle-o',
         ],
         self::TYPE_CIRCLE_ADD_USER                     => [
-            'mail_template'   => "notify_not_use_body",
+            'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_add_user',
             'icon_class'      => 'fa-circle-o',
@@ -221,17 +221,14 @@ class NotifySetting extends AppModel
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
-                $title = __d('gl', '%1$s%2$sがサークル「%3$s」に参加しました。', $user_text,
-                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
-                             $item_name[0]);
+                $title = __d('gl', '%1$s%2$sがサークルに参加しました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $title = __d('gl', '%1$sがサークル「%2$s」のプライバシー設定を「%3$s」に変更しました。', $user_text,
-                             $item_name[0], $item_name[1]);
+                $title = __d('gl', '%1$sがサークルのプライバシー設定を「%2$s」に変更しました。', $user_text, $item_name[1]);
                 break;
             case self::TYPE_CIRCLE_ADD_USER:
-                $title = __d('gl', '%1$sがサークル「%2$s」にあなたを追加しました。', $user_text,
-                             $item_name[0]);
+                $title = __d('gl', '%1$sがサークルにあなたを追加しました。', $user_text);
                 break;
             default:
                 break;

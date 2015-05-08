@@ -40,11 +40,9 @@
             <div
                 class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align notify-text notify-line-number"
                 id="CommentTextBody_67">
-                <? if (in_array($notification['type'],
-                                [NotifySetting::TYPE_FEED_POST, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST])): ?>
-                    <? if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?><i
-                        class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> disp_i"></i><? endif; ?>「<?= mb_strimwidth(h(json_decode($notification['body'])[0]),0,20,'..') ?>」
-                <? endif; ?>
+                <? if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?><i
+                    class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> disp_i"></i><? endif; ?>
+                「<?= mb_strimwidth(h(json_decode($notification['body'])[0]), 0, 20, '..') ?>」
                 <p><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></p>
             </div>
         </div>
