@@ -555,6 +555,7 @@ class AppController extends Controller
 
     public function _setViewValOnRightColumn()
     {
+        $this->_setMyCircle();
         $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER);
         $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER);
         $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER);
