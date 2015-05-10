@@ -229,4 +229,19 @@ class CollaboratorTest extends CakeTestCase
         $actual = $this->Collaborator->getLeaderUid(111111);
         $this->assertEquals(null, $actual);
     }
+
+    function testGetCollaboratorListByGoalId()
+    {
+        $this->Collaborator->my_uid = 1;
+        $this->Collaborator->current_team_id = 1;
+        $data = [
+            'user_id' => 100,
+            'goal_id' => 200,
+            'team_id' => 1,
+            'type'    => Collaborator::TYPE_COLLABORATOR
+        ];
+        $this->Collaborator->save($data);
+        $actual = $this->Collaborator->getCollaboratorListByGoalId(200, Collaborator::TYPE_COLLABORATOR);
+        $this->assertNotEmpty($actual);
+    }
 }

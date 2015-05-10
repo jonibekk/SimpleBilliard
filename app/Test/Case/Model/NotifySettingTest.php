@@ -116,6 +116,7 @@ class NotifySettingTest extends CakeTestCase
         $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_USER_JOIN, $from_user_names, $count_num, $item_name);
         $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_ADD_USER, $from_user_names, $count_num, $item_name);
         $this->NotifySetting->getTitle(999, "abc", $count_num, $item_name);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_GOAL_FOLLOW, $from_user_names, $count_num, $item_name);
     }
 
 }
