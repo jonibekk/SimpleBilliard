@@ -280,7 +280,7 @@ class Collaborator extends AppModel
                 'user_id'
             ],
         ];
-        if ($type) {
+        if ($type !== null) {
             $options['conditions']['type'] = $type;
         }
         $res = $this->find('list', $options);

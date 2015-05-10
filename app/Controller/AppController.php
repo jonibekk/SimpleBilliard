@@ -477,6 +477,8 @@ class AppController extends Controller
         if (empty($request_params)) {
             return null;
         }
+        $team_id = null;
+
         if (isset($request_params['controller']) && !empty($request_params['controller'])
         ) {
             //対象IDを特定
@@ -520,7 +522,6 @@ class AppController extends Controller
             }
             $Model = ClassRegistry::init($model_name);
 
-            $team_id = null;
             switch ($Model->name) {
                 case 'User':
                     //Userの場合
@@ -548,8 +549,8 @@ class AppController extends Controller
                     }
                     $team_id = $result[$Model->name]['team_id'];
             }
-            return $team_id;
         }
+        return $team_id;
     }
 
     public function _setViewValOnRightColumn()
