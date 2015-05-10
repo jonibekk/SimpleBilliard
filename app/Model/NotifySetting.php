@@ -19,6 +19,7 @@ class NotifySetting extends AppModel
     const TYPE_CIRCLE_ADD_USER = 6;
     const TYPE_MY_GOAL_FOLLOW = 7;
     const TYPE_MY_GOAL_COLLABORATE = 8;
+    const TYPE_MY_GOAL_CHANGED_BY_LEADER = 9;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                           => [
@@ -69,6 +70,13 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'my_goal_collaborate',
             'icon_class'      => 'fa-flag',
         ],
+        self::TYPE_MY_GOAL_CHANGED_BY_LEADER           => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_goal_changed_by_leader',
+            'icon_class'      => 'fa-flag',
+        ],
+
     ];
 
     public function _setFieldRealName()
@@ -89,6 +97,8 @@ class NotifySetting extends AppModel
             = __d('gl', "自分がオーナーのゴールがフォローされたとき");
         self::$TYPE[self::TYPE_MY_GOAL_COLLABORATE]['field_real_name']
             = __d('gl', "自分がオーナーのゴールがコラボレートされたとき");
+        self::$TYPE[self::TYPE_MY_GOAL_CHANGED_BY_LEADER]['field_real_name']
+            = __d('gl', "自分がオーナーの内容がリーダーによって変更されたとき");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -253,6 +263,9 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_MY_GOAL_COLLABORATE:
                 $title = __d('gl', '%1$sがあなたのゴールにコラボりました。', $user_text);
+                break;
+            case self::TYPE_MY_GOAL_CHANGED_BY_LEADER:
+                $title = __d('gl', '%1$sがあなたのゴールの内容を変更しました。', $user_text);
                 break;
             default:
                 break;

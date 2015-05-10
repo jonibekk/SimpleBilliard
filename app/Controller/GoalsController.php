@@ -101,8 +101,12 @@ class GoalsController extends AppController
             $this->redirect($this->referer());
         }
 
-        // 新規作成時、モードの指定がある場合
+        // 新規作成時 or モードの指定がある場合
         if ($this->Goal->add($this->request->data)) {
+            //edit goal notify
+            if ($id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
+            }
             switch ($this->request->params['named']['mode']) {
                 case 2:
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
