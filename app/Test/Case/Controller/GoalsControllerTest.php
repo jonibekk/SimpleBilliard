@@ -861,37 +861,47 @@ class GoalsControllerTest extends ControllerTestCase
         $request_params = [
             'controller' => 'pages',
             'action'     => 'home',
-            'circle_id'  => 1,
-            'post_id'    => 1,
-            'team_id'    => 1,
+            'named'      => [
+                'circle_id' => 1,
+                'post_id'   => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
 
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'circle_id'  => 1,
-            'post_id'    => 1,
-            'team_id'    => 1,
+            'named'      => [
+                'circle_id' => 1,
+                'post_id'   => 1,
+                'team_id'   => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
 
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'circle_id'  => 1,
+            'named'      => [
+                'circle_id' => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'post_id'    => 1,
+            'named'      => [
+                'post_id' => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
+
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'team_id'    => 1,
+            'named'      => [
+                'team_id' => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
 

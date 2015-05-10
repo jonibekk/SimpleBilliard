@@ -101,8 +101,12 @@ class GoalsController extends AppController
             $this->redirect($this->referer());
         }
 
-        // 新規作成時、モードの指定がある場合
+        // 新規作成時 or モードの指定がある場合
         if ($this->Goal->add($this->request->data)) {
+            //edit goal notify
+            if ($id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
+            }
             switch ($this->request->params['named']['mode']) {
                 case 2:
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
@@ -117,7 +121,7 @@ class GoalsController extends AppController
                     $this->NotifyBiz->push($socketId, "all");
 
                     // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
-                    foreach($this->request->data['Collaborator'] as $val){
+                    foreach ($this->request->data['Collaborator'] as $val) {
                         $this->Goal->Collaborator->changeApprovalStatus($val['id'], 0);
                     }
 
@@ -283,11 +287,19 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function edit_collabo()
+    /**
+     * @param null $collabo_id
+     */
+    public function edit_collabo($collabo_id = null)
     {
         $this->request->allowMethod('post', 'put');
         if ($this->Goal->Collaborator->edit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
+            //if new
+            if (!$collabo_id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
+                                                 $this->request->data['Collaborator']['goal_id']);
+            }
         }
         else {
             $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
@@ -520,6 +532,7 @@ class GoalsController extends AppController
         if ($return['add']) {
             $this->Goal->Follower->addFollower($goal_id);
             $return['msg'] = __d('gl', "フォローしました。");
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_FOLLOW, $goal_id);
         }
         else {
             $this->Goal->Follower->deleteFollower($goal_id);

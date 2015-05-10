@@ -126,7 +126,8 @@ class AppController extends Controller
                 if (isset($this->request->params['named']['notify_id'])) {
                     $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
                 }
-                $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'), $this->Session->read('current_team_id'));
+                $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'),
+                                                   $this->Session->read('current_team_id'));
                 $this->set(compact('is_isao_user'));
                 $my_channels_json = $this->User->getMyChannelsJson();
                 $this->set(compact('my_channels_json'));
@@ -273,7 +274,7 @@ class AppController extends Controller
 
             $is_secret = $this->User->CircleMember->Circle->isSecret($this->request->params['circle_id']);
             $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($this->request->params['circle_id'],
-                                                                   $this->Session->read('current_team_id'));
+                                                                                       $this->Session->read('current_team_id'));
             $is_belong_circle_member = $this->User->CircleMember->isBelong($this->request->params['circle_id']);
             if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
                 $current_circle = $this->User->CircleMember->Circle->findById($this->request->params['circle_id']);
@@ -476,21 +477,23 @@ class AppController extends Controller
         if (empty($request_params)) {
             return null;
         }
+        $team_id = null;
+
         if (isset($request_params['controller']) && !empty($request_params['controller'])
         ) {
             //対象IDを特定
             $id = null;
+            //チームID指定されてた場合はチームIDを返す
+            if (isset($request_params['named']['team_id']) && !empty($request_params['named']['team_id'])) {
+                return $request_params['named']['team_id'];
+            }
             //サークルID指定されてた場合
-            if (isset($request_params['circle_id']) && !empty($request_params['circle_id'])) {
-                $id = $request_params['circle_id'];
+            elseif (isset($request_params['named']['circle_id']) && !empty($request_params['named']['circle_id'])) {
+                $id = $request_params['named']['circle_id'];
             }
             //投稿ID指定されてた場合
-            elseif (isset($request_params['post_id']) && !empty($request_params['post_id'])) {
-                $id = $request_params['post_id'];
-            }
-            //チームID指定されてた場合
-            elseif (isset($request_params['team_id']) && !empty($request_params['team_id'])) {
-                $id = $request_params['team_id'];
+            elseif (isset($request_params['named']['post_id']) && !empty($request_params['named']['post_id'])) {
+                $id = $request_params['named']['post_id'];
             }
             //通常のID指定されていた場合
             elseif (isset($request_params['pass'][0]) && !empty($request_params['pass'][0])) {
@@ -511,7 +514,7 @@ class AppController extends Controller
             if ($request_params['controller'] == 'pages') {
                 $model_name = 'Team';
             }
-            elseif (isset($request_params['circle_id']) && !empty($request_params['circle_id'])) {
+            elseif (isset($request_params['named']['circle_id']) && !empty($request_params['named']['circle_id'])) {
                 $model_name = 'Circle';
             }
             else {
@@ -519,7 +522,6 @@ class AppController extends Controller
             }
             $Model = ClassRegistry::init($model_name);
 
-            $team_id = null;
             switch ($Model->name) {
                 case 'User':
                     //Userの場合
@@ -547,8 +549,8 @@ class AppController extends Controller
                     }
                     $team_id = $result[$Model->name]['team_id'];
             }
-            return $team_id;
         }
+        return $team_id;
     }
 
     public function _setViewValOnRightColumn()
