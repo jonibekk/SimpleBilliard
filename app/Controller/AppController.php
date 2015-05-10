@@ -11,6 +11,7 @@
 
 App::uses('Controller', 'Controller');
 App::uses('HelpsController', 'Controller');
+App::uses('NotifySetting', 'Model');
 
 /**
  * Application Controller
