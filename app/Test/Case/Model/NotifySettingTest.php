@@ -36,7 +36,6 @@ class NotifySettingTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
         'app.thread',
         'app.message',
         'app.email',
@@ -117,6 +116,7 @@ class NotifySettingTest extends CakeTestCase
         $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_ADD_USER, $from_user_names, $count_num, $item_name);
         $this->NotifySetting->getTitle(999, "abc", $count_num, $item_name);
         $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_GOAL_FOLLOW, $from_user_names, $count_num, $item_name);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $from_user_names, $count_num, $item_name);
     }
 
 }
