@@ -9,6 +9,21 @@
 class MixpanelComponent extends Object
 {
 
+    const TRACK_CREATE_GOAL = 'Create a Goal';
+    const TRACK_COLLABORATE_GOAL = 'Collaborate a Goal';
+    const TRACK_FOLLOW_GOAL = 'Follow a Goal';
+    const TRACK_CREATE_KR = 'Create a KR';
+    const TRACK_CREATE_ACTION = 'Create an Action';
+    const TRACK_POST = 'Post';
+    const TRACK_COMMENT_POST = 'Comment on Post';
+    const TRACK_COMMENT_ACTION = 'Comment on Action';
+    const TRACK_COMMENT_COMPLETED_KR = 'Comment on completed KR';
+    const TRACK_COMMENT_COMPLETED_GOAL = 'Comment on completed Goal';
+    const TRACK_POST_LIKE = 'Like Post';
+    const TRACK_APPROVAL_GOAL = 'Approval Goal';
+    const TRACK_EVALUATION_ONESELF = 'Evaluation Oneself';
+    const TRACK_EVALUATION_EVALUATOR = 'Evaluation Evaluator';
+
     public $name = "Mixpanel";
 
     /**
@@ -26,6 +41,12 @@ class MixpanelComponent extends Object
         $this->Controller = $controller;
         if (MIXPANEL_TOKEN) {
             $this->MpOrigin = Mixpanel::getInstance(MIXPANEL_TOKEN);
+            if ($this->Controller->Auth->user()) {
+                //mixpanelにユーザidをセット
+                $this->MpOrigin->identify($this->Controller->Auth->user('id'));
+                //チームIDをセット
+                $this->MpOrigin->register('$team_id', $this->Controller->Session->read('team_id'));
+            }
         }
     }
 
@@ -56,11 +77,13 @@ class MixpanelComponent extends Object
         if (!MIXPANEL_TOKEN) {
             return;
         }
+
         $options = [
             'conditions' => ['User.id' => $user_id],
             'contain'    => ['PrimaryEmail',]
         ];
         $user = $this->Controller->User->find('first', $options);
+        //ユーザ情報をセット
         $this->MpOrigin->people->set($user['User']['id'], [
             '$first_name'      => $user['User']['first_name'],
             '$last_name'       => $user['User']['last_name'],
