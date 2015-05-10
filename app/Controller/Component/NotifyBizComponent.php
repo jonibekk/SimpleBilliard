@@ -9,6 +9,7 @@ App::uses('ModelType', 'Model');
  * @property GlEmailComponent $GlEmail
  * @property NotifySetting    $NotifySetting
  * @property Post             $Post
+ * @property Goal             $Goal
  */
 class NotifyBizComponent extends Component
 {
@@ -51,6 +52,7 @@ class NotifyBizComponent extends Component
             CakeSession::start();
             $this->NotifySetting = ClassRegistry::init('NotifySetting');
             $this->Post = ClassRegistry::init('Post');
+            $this->Goal = ClassRegistry::init('Goal');
             $this->GlEmail->startup($controller);
         }
     }
@@ -86,6 +88,9 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_CIRCLE_ADD_USER:
                 $this->_setCircleAddUserOption($model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_GOAL_FOLLOW:
+                $this->_setMyGoalFollowOption($model_id);
                 break;
             default:
                 break;
@@ -169,6 +174,8 @@ class NotifyBizComponent extends Component
             = $this->Post->PostShareUser->my_uid
             = $this->Post->Team->TeamMember->my_uid
             = $this->Post->User->CircleMember->my_uid
+            = $this->Goal->my_uid
+            = $this->Goal->Collaborator->my_uid
             = $this->NotifySetting->my_uid
             = $this->NotifySetting->my_uid
             = $this->GlEmail->SendMail->my_uid
@@ -181,6 +188,8 @@ class NotifyBizComponent extends Component
             = $this->Post->PostShareUser->current_team_id
             = $this->Post->Team->TeamMember->current_team_id
             = $this->Post->User->CircleMember->current_team_id
+            = $this->Goal->current_team_id
+            = $this->Goal->Collaborator->current_team_id
             = $this->NotifySetting->current_team_id
             = $this->NotifySetting->current_team_id
             = $this->GlEmail->SendMail->current_team_id
@@ -292,6 +301,27 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = json_encode([$circle['Circle']['name']]);
+    }
+
+    /**
+     * 自分がオーナーのゴールがフォローされたときのオプション
+     *
+     * @param $goal_id
+     */
+    private function _setMyGoalFollowOption($goal_id)
+    {
+        $goal = $this->Goal->getGoal($goal_id);
+        if (empty($goal)) {
+            return;
+        }
+        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
+                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
+        $this->notify_option['model_id'] = $goal_id;
+        $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
     }
 
     /**

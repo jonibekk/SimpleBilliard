@@ -117,7 +117,7 @@ class GoalsController extends AppController
                     $this->NotifyBiz->push($socketId, "all");
 
                     // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
-                    foreach($this->request->data['Collaborator'] as $val){
+                    foreach ($this->request->data['Collaborator'] as $val) {
                         $this->Goal->Collaborator->changeApprovalStatus($val['id'], 0);
                     }
 
@@ -520,6 +520,7 @@ class GoalsController extends AppController
         if ($return['add']) {
             $this->Goal->Follower->addFollower($goal_id);
             $return['msg'] = __d('gl', "フォローしました。");
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_FOLLOW, $goal_id);
         }
         else {
             $this->Goal->Follower->deleteFollower($goal_id);

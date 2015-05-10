@@ -17,6 +17,7 @@ class NotifySetting extends AppModel
     const TYPE_CIRCLE_USER_JOIN = 4;
     const TYPE_CIRCLE_CHANGED_PRIVACY_SETTING = 5;
     const TYPE_CIRCLE_ADD_USER = 6;
+    const TYPE_MY_GOAL_FOLLOW = 7;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                           => [
@@ -55,6 +56,12 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'circle_add_user',
             'icon_class'      => 'fa-circle-o',
         ],
+        self::TYPE_MY_GOAL_FOLLOW                      => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_goal_follow',
+            'icon_class'      => 'fa-flag',
+        ],
     ];
 
     public function _setFieldRealName()
@@ -71,6 +78,8 @@ class NotifySetting extends AppModel
             = __d('gl', "自分が所属するサークルのプライバシー設定が変更になったとき");
         self::$TYPE[self::TYPE_CIRCLE_ADD_USER]['field_real_name']
             = __d('gl', "自分が新たにサークルメンバーに追加させたとき");
+        self::$TYPE[self::TYPE_MY_GOAL_FOLLOW]['field_real_name']
+            = __d('gl', "自分がオーナーのゴールがフォローされたとき");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -229,6 +238,9 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_CIRCLE_ADD_USER:
                 $title = __d('gl', '%1$sがサークルにあなたを追加しました。', $user_text);
+                break;
+            case self::TYPE_MY_GOAL_FOLLOW:
+                $title = __d('gl', '%1$sがあなたのゴールをフォローしました。', $user_text);
                 break;
             default:
                 break;
