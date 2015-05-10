@@ -47,7 +47,7 @@ class MixpanelComponent extends Object
                 //mixpanelにユーザidをセット
                 $this->MpOrigin->identify($this->Controller->Auth->user('id'));
                 //チームIDをセット
-                $this->MpOrigin->register('$team_id', $this->Controller->Session->read('team_id'));
+                $this->MpOrigin->register('$team_id', $this->Controller->Session->read('current_team_id'));
             }
         }
     }
