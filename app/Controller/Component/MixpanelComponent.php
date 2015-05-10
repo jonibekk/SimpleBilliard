@@ -99,26 +99,41 @@ class MixpanelComponent extends Object
 
     function trackCreateGoal($goal_id)
     {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
         $this->MpOrigin->track(self::TRACK_CREATE_GOAL, ['$goal_id' => $goal_id]);
     }
 
     function trackCollaborateGoal($goal_id)
     {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
         $this->MpOrigin->track(self::TRACK_COLLABORATE_GOAL, ['$goal_id' => $goal_id]);
     }
 
     function trackFollowGoal($goal_id)
     {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
         $this->MpOrigin->track(self::TRACK_FOLLOW_GOAL, ['$goal_id' => $goal_id]);
     }
 
     function trackCreateKR($goal_id, $kr_id)
     {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
         $this->MpOrigin->track(self::TRACK_CREATE_KR, ['$goal_id' => $goal_id, '$kr_id' => $kr_id]);
     }
 
     function trackCreateAction($action_id, $goal_id = null, $kr_id = null)
     {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
         $this->MpOrigin->track(self::TRACK_CREATE_ACTION,
                                ['$action_id' => $action_id, '$goal_id' => $goal_id, '$kr_id' => $kr_id]);
     }
