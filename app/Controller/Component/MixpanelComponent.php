@@ -36,6 +36,8 @@ class MixpanelComponent extends Object
      */
     var $Controller;
 
+    var $trackProperty = [];
+
     function initialize(&$controller)
     {
         $this->Controller = $controller;
@@ -93,6 +95,32 @@ class MixpanelComponent extends Object
             '$is_admin'        => $user['User']['is_admin'],
             '$gender_id'       => $user['User']['gender_id'],
         ]);
+    }
+
+    function trackCreateGoal($goal_id)
+    {
+        $this->MpOrigin->track(self::TRACK_CREATE_GOAL, ['$goal_id' => $goal_id]);
+    }
+
+    function trackCollaborateGoal($goal_id)
+    {
+        $this->MpOrigin->track(self::TRACK_COLLABORATE_GOAL, ['$goal_id' => $goal_id]);
+    }
+
+    function trackFollowGoal($goal_id)
+    {
+        $this->MpOrigin->track(self::TRACK_FOLLOW_GOAL, ['$goal_id' => $goal_id]);
+    }
+
+    function trackCreateKR($goal_id, $kr_id)
+    {
+        $this->MpOrigin->track(self::TRACK_CREATE_KR, ['$goal_id' => $goal_id, '$kr_id' => $kr_id]);
+    }
+
+    function trackCreateAction($action_id, $goal_id = null, $kr_id = null)
+    {
+        $this->MpOrigin->track(self::TRACK_CREATE_ACTION,
+                               ['$action_id' => $action_id, '$goal_id' => $goal_id, '$kr_id' => $kr_id]);
     }
 
     /**
