@@ -277,7 +277,7 @@ class Collaborator extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'user_id'
+                'user_id', 'user_id'
             ],
         ];
         if ($type !== null) {

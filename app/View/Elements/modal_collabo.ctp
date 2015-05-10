@@ -18,9 +18,10 @@
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集") ?></h4>
         </div>
+        <? $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
         $this->Form->create('Collaborator', [
-            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo'],
+            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', $collabo_id],
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [

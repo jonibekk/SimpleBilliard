@@ -283,11 +283,19 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function edit_collabo()
+    /**
+     * @param null $collabo_id
+     */
+    public function edit_collabo($collabo_id = null)
     {
         $this->request->allowMethod('post', 'put');
         if ($this->Goal->Collaborator->edit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
+            //if new
+            if (!$collabo_id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
+                                                 $this->request->data['Collaborator']['goal_id']);
+            }
         }
         else {
             $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
