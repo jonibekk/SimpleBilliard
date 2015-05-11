@@ -1063,20 +1063,23 @@ $(function () {
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
-    var flag = true;
+    var flag = false;
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
         $("select,input,textarea").change(function () {
             $(document).on('submit', 'form', function () {
-                flag = false;
+                flag = true;
             });
             $("input[type=submit]").click(function () {
-                flag = false;
+                flag = true;
             });
             if (!$(this).hasClass('disable-change-warning')) {
                 $(window).on('beforeunload', function () {
-                    if (flag) {
+                    if (!flag) {
                         return cake.message.notice.a;
+                    }
+                    else{
+                        return;
                     }
                 });
             }
