@@ -226,10 +226,8 @@ class GoalApprovalController extends AppController
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
             }
-            else {
-                if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '2') {
-                    $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
-                }
+            elseif ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '2') {
+                $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
             }
         }
 
@@ -249,17 +247,13 @@ class GoalApprovalController extends AppController
             $this->comment($data);
 
         }
-        else {
-            if (isset($this->request->data['wait_btn']) === true) {
-                $this->wait($data);
+        elseif (isset($this->request->data['wait_btn']) === true) {
+            $this->wait($data);
 
-            }
-            else {
-                if (isset($this->request->data['approval_btn']) === true) {
-                    $this->approval($data);
+        }
+        elseif (isset($this->request->data['approval_btn']) === true) {
+            $this->approval($data);
 
-                }
-            }
         }
     }
 
