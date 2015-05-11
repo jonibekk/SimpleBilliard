@@ -21,6 +21,7 @@ class NotifySetting extends AppModel
     const TYPE_MY_GOAL_COLLABORATE = 8;
     const TYPE_MY_GOAL_CHANGED_BY_LEADER = 9;
     const TYPE_MY_GOAL_TARGET_FOR_EVALUATION = 10;
+    const TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE = 11;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                           => [
@@ -83,6 +84,12 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'my_goal_target_for_evaluation',
             'icon_class'      => 'fa-flag',
         ],
+        self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_goal_as_leader_request_to_change',
+            'icon_class'      => 'fa-flag',
+        ],
 
     ];
 
@@ -108,6 +115,8 @@ class NotifySetting extends AppModel
             = __d('gl', "自分がオーナーの内容がリーダーによって変更されたとき");
         self::$TYPE[self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION]['field_real_name']
             = __d('gl', "自分がオーナーのゴールが評価対象となったとき");
+        self::$TYPE[self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE]['field_real_name']
+            = __d('gl', "自分がリーダーのゴールが修正依頼を受けたとき");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -278,6 +287,9 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
                 $title = __d('gl', '%1$sがあなたのゴールを評価対象としました。', $user_text);
+                break;
+            case self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
+                $title = __d('gl', '%1$sがあなたのゴールに修正依頼をしました。。', $user_text);
                 break;
             default:
                 break;

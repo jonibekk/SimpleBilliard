@@ -99,7 +99,10 @@ class NotifyBizComponent extends Component
                 $this->_setMyGoalChangedOption($model_id, $user_id);
                 break;
             case NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
-                $this->_setMyGoalTargetFroEvaluationOption($model_id, $to_user_list);
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             default:
                 break;
@@ -385,12 +388,13 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * 自分がオーナーのゴールが評価対象となったときのオプション
+     * 認定通知オプション
      *
+     * @param $notify_type
      * @param $goal_id
      * @param $to_user_id
      */
-    private function _setMyGoalTargetFroEvaluationOption($goal_id, $to_user_id)
+    private function _setApprovalOption($notify_type, $goal_id, $to_user_id)
     {
         $goal = $this->Goal->getGoal($goal_id);
         if (empty($goal)) {
@@ -398,9 +402,14 @@ class NotifyBizComponent extends Component
         }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($to_user_id,
-                                                                                NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION);
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION;
-        $this->notify_option['url_data'] = ['controller' => 'goal_approval', 'action' => 'done', 'team_id' => $this->NotifySetting->current_team_id];
+                                                                                $notify_type);
+
+        $done_list = [
+            NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
+        ];
+        $action = in_array($notify_type, $done_list) ? "done" : "index";
+        $this->notify_option['notify_type'] = $notify_type;
+        $this->notify_option['url_data'] = ['controller' => 'goal_approval', 'action' => $action, 'team_id' => $this->NotifySetting->current_team_id];
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
     }

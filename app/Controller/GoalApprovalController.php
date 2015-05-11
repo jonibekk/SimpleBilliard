@@ -271,15 +271,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['approval']);
-            $collaborator = $this->Collaborator->findById($cb_id);
-            if (viaIsSet($collaborator['Collaborator'])) {
-                //Notify
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
-                                                 $collaborator['Collaborator']['goal_id'],
-                                                 null,
-                                                 $collaborator['Collaborator']['user_id']
-                );
-            }
+            $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION, $cb_id);
             $this->comment($data);
         }
         $this->redirect($this->referer());
@@ -306,6 +298,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['modify']);
+            $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE, $cb_id);
             $this->comment($data);
         }
 
@@ -425,6 +418,25 @@ class GoalApprovalController extends AppController
         }
 
         return 0;
+    }
+
+    /**
+     * send notify to collaborator
+     *
+     * @param $notify_type
+     * @param $collabo_id
+     */
+    function _notifyToCollaborator($notify_type, $collabo_id)
+    {
+        $collaborator = $this->Collaborator->findById($collabo_id);
+        if (viaIsSet($collaborator['Collaborator'])) {
+            //Notify
+            $this->NotifyBiz->execSendNotify($notify_type,
+                                             $collaborator['Collaborator']['goal_id'],
+                                             null,
+                                             $collaborator['Collaborator']['user_id']
+            );
+        }
     }
 
 }
