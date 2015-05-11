@@ -40,7 +40,8 @@
                 $this->Form->input('password', [
                     'label'    => __d('gl', "パスワード"),
                     'type'     => 'password',
-                    'required' => false
+                    'required' => false,
+                    'value'    => ''
                 ]) ?>
 
 

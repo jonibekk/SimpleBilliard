@@ -232,7 +232,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'end_date'         => $this->end_date,
             ]
         ];
-        $this->testAction("/goals/add/mode:2/{$this->purpose_id}", ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add/mode:2/purpose_id:{$this->purpose_id}", ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddPostMode2Edit()
@@ -250,7 +250,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'end_date'         => $this->end_date,
             ]
         ];
-        $this->testAction("/goals/add/{$this->goal_id}/mode:2/{$this->purpose_id}",
+        $this->testAction("/goals/add/{$this->goal_id}/mode:2/purpose_id:{$this->purpose_id}",
                           ['method' => 'POST', 'data' => $data]);
     }
 
