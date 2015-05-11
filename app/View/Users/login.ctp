@@ -37,7 +37,7 @@
                     'label'    => __d('gl', "パスワード"),
                     'type'     => 'password',
                     'required' => false,
-                    'value'=>''
+                    'value'    => ''
                 ]) ?>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
