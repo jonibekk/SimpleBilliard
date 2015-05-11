@@ -98,6 +98,9 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER:
                 $this->_setMyGoalChangedOption($model_id, $user_id);
                 break;
+            case NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
+                $this->_setMyGoalTargetFroEvaluationOption($model_id, $user_id);
+                break;
             default:
                 break;
         }
@@ -361,6 +364,33 @@ class NotifyBizComponent extends Component
      * @param $user_id
      */
     private function _setMyGoalChangedOption($goal_id, $user_id)
+    {
+        $goal = $this->Goal->getGoal($goal_id);
+        if (empty($goal)) {
+            return;
+        }
+        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //exclude me
+        unset($collaborators[$user_id]);
+        if (empty($collaborators)) {
+            return;
+        }
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
+                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER;
+        $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
+        $this->notify_option['model_id'] = $goal_id;
+        $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+    }
+
+    /**
+     * 自分がオーナーのゴールが評価対象となったときのオプション
+     *
+     * @param $goal_id
+     * @param $user_id
+     */
+    private function _setMyGoalTargetFroEvaluationOption($goal_id, $user_id)
     {
         $goal = $this->Goal->getGoal($goal_id);
         if (empty($goal)) {
