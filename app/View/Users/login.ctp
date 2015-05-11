@@ -30,12 +30,8 @@
                 ]); ?>
                 <?=
                 $this->Form->input('email', [
-                    'label' => __d('gl', "メールアドレス")
+                    'label' => __d('gl', "メールアドレス"),
                 ]) ?>
-
-                <?//TODO For disabling autocomplete from the browser end ?>
-                <input type="text" style="display: none">
-
                 <?=
                 $this->Form->input('password', [
                     'label'    => __d('gl', "パスワード"),
@@ -43,8 +39,6 @@
                     'required' => false,
                     'value'    => ''
                 ]) ?>
-
-
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
@@ -71,10 +65,5 @@
 </div>
 <?php $this->append('script') ?>
 <?php echo $this->Html->script('https://goalous.uservoice.com/logout.js') ?>
-<script>
-    $(document).ready(function () {
-        $("#UserEmail").attr('autocomplete', 'off');
-    });
-</script>
 <?php $this->end() ?>
 <!-- END app/View/Users/login.ctp -->
