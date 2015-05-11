@@ -285,6 +285,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
+            $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION, $cb_id);
             $this->comment($data);
         }
         $this->redirect($this->referer());

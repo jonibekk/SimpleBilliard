@@ -104,6 +104,9 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
+            case NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
             default:
                 break;
         }
@@ -406,6 +409,7 @@ class NotifyBizComponent extends Component
 
         $done_list = [
             NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
+            NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION,
         ];
         $action = in_array($notify_type, $done_list) ? "done" : "index";
         $this->notify_option['notify_type'] = $notify_type;
