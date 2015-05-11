@@ -73,7 +73,8 @@
 <?php echo $this->Html->script('https://goalous.uservoice.com/logout.js') ?>
 <script>
     $(document).ready(function () {
-        $("#UserEmail").attr('autocomplete', 'off');
+        $("#UserEmail").attr('autocomplete', 'on');
+        $("#UserPassword").attr('autocomplete', 'off');
     });
 </script>
 <?php $this->end() ?>
