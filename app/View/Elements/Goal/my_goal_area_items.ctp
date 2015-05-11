@@ -208,12 +208,6 @@
                     <i class="fa fa-caret-down feed-arrow lh_18px"></i>
                     <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
                 </a>
-                <?php } else { ?>
-                    <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>">
-                        <i class="fa fa-plus-circle font_brownRed"></i>
-                        <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
-                    </a>
                 <?php } ?>
             </div>
             <div class="con col-xxs-12 none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
