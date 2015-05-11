@@ -326,7 +326,7 @@ class NotifyBizComponent extends Component
         $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+                                                                                NotifySetting::TYPE_MY_GOAL_FOLLOW);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
@@ -350,7 +350,7 @@ class NotifyBizComponent extends Component
         unset($collaborators[$user_id]);
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+                                                                                NotifySetting::TYPE_MY_GOAL_COLLABORATE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_COLLABORATE;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
@@ -377,7 +377,7 @@ class NotifyBizComponent extends Component
         }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+                                                                                NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
