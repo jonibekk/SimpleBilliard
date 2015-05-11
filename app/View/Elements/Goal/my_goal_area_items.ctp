@@ -182,15 +182,15 @@
             <? endif; ?>
             <div class="col col-xxs-12 goalsCard-krSeek">
                 <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
-                    <?php if(count($goal['KeyResult'])>0) { ?>
-                    <div class="pull-right font_12px">
-                        <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
-                            <?= __d('gl', "%d日経過", $limit_day * -1) ?>
-                        <? else: ?>
-                            <?= __d('gl', "残り%d日", $limit_day) ?>
-                        <? endif; ?>
-                    </div>
-                        <?php }?>
+                    <?php if (count($goal['KeyResult']) > 0) { ?>
+                        <div class="pull-right font_12px">
+                            <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
+                                <?= __d('gl', "%d日経過", $limit_day * -1) ?>
+                            <? else: ?>
+                                <?= __d('gl', "残り%d日", $limit_day) ?>
+                            <? endif; ?>
+                        </div>
+                    <?php } ?>
                 <? endif; ?>
                 <?
                 $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
@@ -198,16 +198,16 @@
                     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
                 }
                 ?>
-                <?php if(count($goal['KeyResult'])>0) { ?>
-                <a href="#"
-                   class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
-                   target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
-                   ajax-url="<?= $this->Html->url($url) ?>"
-                   id="KRsOpen_<?= $goal['Goal']['id'] ?>"
-                    >
-                    <i class="fa fa-caret-down feed-arrow lh_18px"></i>
-                    <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                </a>
+                <?php if (count($goal['KeyResult']) > 0) { ?>
+                    <a href="#"
+                       class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
+                       target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
+                       ajax-url="<?= $this->Html->url($url) ?>"
+                       id="KRsOpen_<?= $goal['Goal']['id'] ?>"
+                        >
+                        <i class="fa fa-caret-down feed-arrow lh_18px"></i>
+                        <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
+                    </a>
                 <?php } ?>
             </div>
             <div class="con col-xxs-12 none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
