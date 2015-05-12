@@ -296,7 +296,7 @@ class Collaborator extends AppModel
                 'type'    => 1,
             ],
         ];
-        if ($owner === false) $options['type'] = 0;
+        if ($owner === false) $options['conditions']['type'] = 0;
         $res = $this->find('first', $options);
         return $res;
     }
