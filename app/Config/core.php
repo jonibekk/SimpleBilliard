@@ -187,16 +187,14 @@ Configure::write('App.encoding', 'UTF-8');
  */
 if (REDIS_SESSION_HOST) {
     Configure::write('Session', array(
-        'defaults' => 'cache',
-        'cookie'   => 'SID',
+        'userAgent' => false,
+        'cookie'    => 'SID',
         //セッションの保持時間（分）
-        'timeout'  => 60 * 24 * 30, //30days
-        'handler'  => array(
-            'config' => 'session'
+        'timeout'   => 60 * 24 * 30, //30days
+        'handler'   => array(
+            'engine' => 'RedisSession',
+            'key'    => 'session:'
         ),
-        'engine'   => 'Redis',
-        'server'   => REDIS_SESSION_HOST,
-        'port'     => 6379
     ));
 }
 else {
@@ -360,12 +358,12 @@ Cache::config('_cake_model_', array(
     'duration'  => $duration
 ));
 
-if (REDIS_SESSION_HOST) {
-    Cache::config('session', array(
-        'engine'   => $engine,
-        'server'   => $server,
-        'port'     => $port,
-        'prefix'   => $prefix . 'cake_session:',
-        'duration' => $duration,
-    ));
-}
+//if (REDIS_SESSION_HOST) {
+//    Cache::config('session', array(
+//        'engine'   => $engine,
+//        'server'   => $server,
+//        'port'     => $port,
+//        'prefix'   => $prefix . 'cake_session:',
+//        'duration' => $duration,
+//    ));
+//}
