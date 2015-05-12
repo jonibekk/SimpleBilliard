@@ -232,7 +232,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'end_date'         => $this->end_date,
             ]
         ];
-        $this->testAction("/goals/add/mode:2/{$this->purpose_id}", ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add/mode:2/purpose_id:{$this->purpose_id}", ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddPostMode2Edit()
@@ -250,7 +250,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'end_date'         => $this->end_date,
             ]
         ];
-        $this->testAction("/goals/add/{$this->goal_id}/mode:2/{$this->purpose_id}",
+        $this->testAction("/goals/add/{$this->goal_id}/mode:2/purpose_id:{$this->purpose_id}",
                           ['method' => 'POST', 'data' => $data]);
     }
 
@@ -861,37 +861,47 @@ class GoalsControllerTest extends ControllerTestCase
         $request_params = [
             'controller' => 'pages',
             'action'     => 'home',
-            'circle_id'  => 1,
-            'post_id'    => 1,
-            'team_id'    => 1,
+            'named'      => [
+                'circle_id' => 1,
+                'post_id'   => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
 
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'circle_id'  => 1,
-            'post_id'    => 1,
-            'team_id'    => 1,
+            'named'      => [
+                'circle_id' => 1,
+                'post_id'   => 1,
+                'team_id'   => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
 
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'circle_id'  => 1,
+            'named'      => [
+                'circle_id' => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'post_id'    => 1,
+            'named'      => [
+                'post_id' => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
+
         $request_params = [
             'controller' => 'posts',
             'action'     => 'feed',
-            'team_id'    => 1,
+            'named'      => [
+                'team_id' => 1,
+            ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
 

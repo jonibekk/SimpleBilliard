@@ -161,7 +161,7 @@ class Collaborator extends AppModel
                 'Collaborator.valued_flg' => $approval_flg,
             ],
             'contain'    => [
-                'Goal' => [
+                'Goal'            => [
                     'fields'       => [
                         'name', 'goal_category_id', 'end_date', 'photo_file_name',
                         'value_unit', 'target_value', 'start_value', 'description'
@@ -169,15 +169,15 @@ class Collaborator extends AppModel
                     'Purpose'      => ['fields' => 'name'],
                     'GoalCategory' => ['fields' => 'name'],
                 ],
-                'User' => [
+                'User'            => [
                     'fields' => $this->User->profileFields
                 ],
                 'ApprovalHistory' => [
-                    'User' => [
+                    'User'   => [
                         'fields' => $this->User->profileFields
                     ],
-                    'fields'       => ['user_id', 'comment', 'created'],
-                    'order' => ['ApprovalHistory.created DESC'],
+                    'fields' => ['user_id', 'comment', 'created'],
+                    'order'  => ['ApprovalHistory.created DESC'],
                     //'limit' => 1,
                 ]
             ],
@@ -233,7 +233,8 @@ class Collaborator extends AppModel
             }
             // 自分のゴール + 修正待ち + コラボレーター
             if ($val['User']['id'] === $user_id && $val['Collaborator']['valued_flg'] === '3'
-                && $val['Collaborator']['type'] === '0') {
+                && $val['Collaborator']['type'] === '0'
+            ) {
                 continue;
             }
             $res[] = $val;
@@ -260,5 +261,29 @@ class Collaborator extends AppModel
             return $res['Collaborator']['user_id'];
         }
         return null;
+    }
+
+    /**
+     * @param      $goal_id
+     * @param null $type
+     *
+     * @return array
+     */
+    function getCollaboratorListByGoalId($goal_id, $type = null)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'user_id', 'user_id'
+            ],
+        ];
+        if ($type !== null) {
+            $options['conditions']['type'] = $type;
+        }
+        $res = $this->find('list', $options);
+        return $res;
     }
 }
