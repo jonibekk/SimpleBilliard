@@ -113,6 +113,12 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return true;
     }
 
+    function isString(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $value)
+    {
+        return is_string($value);
+    }
+
     function isOnOrOff(/** @noinspection PhpUnusedParameterInspection */
         Model $Model, $check)
     {
