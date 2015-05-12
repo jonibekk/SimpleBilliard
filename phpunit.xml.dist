@@ -9,6 +9,7 @@
                 <directory suffix=".php">app/Controller/Component</directory>
                 <directory suffix=".php">app/View/Helper</directory>
                 <directory suffix=".php">app/Model/Behavior</directory>
+                <directory suffix=".php">app/Model/Datasource</directory>
                 <directory suffix=".php">app/Config</directory>
                 <directory suffix=".php">app/Test</directory>
                 <directory suffix=".php">app/Vendor</directory>
