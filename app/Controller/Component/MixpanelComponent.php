@@ -9,20 +9,20 @@
 class MixpanelComponent extends Object
 {
 
-    const TRACK_CREATE_GOAL = 'Create Goal';
-    const TRACK_COLLABORATE_GOAL = 'Collaborate Goal';
-    const TRACK_FOLLOW_GOAL = 'Follow Goal';
-    const TRACK_CREATE_KR = 'Create KR';
-    const TRACK_CREATE_ACTION = 'Create Action';
+    const TRACK_CREATE_GOAL = 'CreGoal';
+    const TRACK_COLLABORATE_GOAL = 'Clb';
+    const TRACK_FOLLOW_GOAL = 'FolGoal';
+    const TRACK_CREATE_KR = 'CreKR';
+    const TRACK_CREATE_ACTION = 'CreAct';
     const TRACK_POST = 'Post';
-    const TRACK_COMMENT_POST = 'Comment on Post';
-    const TRACK_COMMENT_ACTION = 'Comment on Action';
-    const TRACK_COMMENT_COMPLETED_KR = 'Comment on completed KR';
-    const TRACK_COMMENT_COMPLETED_GOAL = 'Comment on completed Goal';
-    const TRACK_POST_LIKE = 'Like Post';
-    const TRACK_APPROVAL_GOAL = 'Approval Goal';
-    const TRACK_EVALUATION_ONESELF = 'Evaluation Oneself';
-    const TRACK_EVALUATION_EVALUATOR = 'Evaluation Evaluator';
+    const TRACK_COMMENT_POST = 'CmtPost';
+    const TRACK_COMMENT_ACTION = 'CmtAct';
+    const TRACK_COMMENT_COMPLETED_KR = 'CmtCmpKR';
+    const TRACK_COMMENT_COMPLETED_GOAL = 'CmtCmpGoal';
+    const TRACK_POST_LIKE = 'LikePost';
+    const TRACK_APPROVAL_GOAL = 'ApvEva';
+    const TRACK_EVALUATION_ONESELF = 'Eva-Self';
+    const TRACK_EVALUATION_EVALUATOR = 'Eva-Evator';
 
     public $name = "Mixpanel";
 
