@@ -32,7 +32,7 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite', 'registration_with_set_password');
+                           'accept_invite', 'registration_with_set_password', 'two_fa_auth');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -68,7 +68,6 @@ class UsersController extends AppController
     public function login()
     {
         $this->_uservoiceSetSession();
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if ($this->Auth->user()) {
@@ -80,7 +79,54 @@ class UsersController extends AppController
             return $this->render();
         }
 
+        //メアド、パスの認証(セッションのストアはしていない)
+        if (!$this->Auth->identify($this->request, $this->response)) {
+            $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
+            return $this->render();
+        }
+
+        $this->Session->write('preAuthPost', $this->request->data);
+
+        //２要素設定有効なら
+        $is_2fa_auth_enabled = true;//TODO 判定処理いれる
+
+        if ($is_2fa_auth_enabled) {
+            return $this->redirect(['action' => 'two_fa_auth']);
+        }
+
+        return $this->_afterAuthSessionStore();
+    }
+
+    function two_fa_auth()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        //仮認証状態か？そうでなければエラー出してリファラリダイレクト
+        $is_avail_auth = !empty($this->Session->read('preAuthPost')) ? true : false;
+        if (!$is_avail_auth) {
+            $this->Pnotify->outError(__d('notify', "エラーが発生しました。再度ログインをお願いします。"));
+            return $this->redirect(['action' => 'login']);
+        }
+
+        if (!$this->request->is('post')) {
+            return $this->render();
+        }
+
+        $is_match_2fa_code = true;//TODO ２要素入力コード判定処理
+        if (!$is_match_2fa_code) {
+            $this->Pnotify->outError(__d('notify', "２要素認証コードが正しくありません。"));
+            return $this->render();
+        }
+
+        return $this->_afterAuthSessionStore();
+
+    }
+
+    function _afterAuthSessionStore()
+    {
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
+        $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
+            $this->Session->delete('preAuthPost');
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
@@ -88,8 +134,10 @@ class UsersController extends AppController
             return $this->redirect($redirect_url);
         }
         else {
-            $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
+            $this->Pnotify->outError(__d('notify', "エラーが発生しました。再度ログインをお願いします。"));
+            return $this->redirect(['action' => 'login']);
         }
+
     }
 
     /**
