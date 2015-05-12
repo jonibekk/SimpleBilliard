@@ -222,11 +222,10 @@ class GoalApprovalController extends AppController
                 }
             }
 
-            if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '1') {
+            if ($val['Collaborator']['valued_flg'] === '1') {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
-            }
-            elseif ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '2') {
+            } else if ($val['Collaborator']['valued_flg'] === '2') {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
             }
         }
