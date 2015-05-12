@@ -9,11 +9,11 @@
 class MixpanelComponent extends Object
 {
 
-    const TRACK_CREATE_GOAL = 'Create a Goal';
-    const TRACK_COLLABORATE_GOAL = 'Collaborate a Goal';
-    const TRACK_FOLLOW_GOAL = 'Follow a Goal';
-    const TRACK_CREATE_KR = 'Create a KR';
-    const TRACK_CREATE_ACTION = 'Create an Action';
+    const TRACK_CREATE_GOAL = 'Create Goal';
+    const TRACK_COLLABORATE_GOAL = 'Collaborate Goal';
+    const TRACK_FOLLOW_GOAL = 'Follow Goal';
+    const TRACK_CREATE_KR = 'Create KR';
+    const TRACK_CREATE_ACTION = 'Create Action';
     const TRACK_POST = 'Post';
     const TRACK_COMMENT_POST = 'Comment on Post';
     const TRACK_COMMENT_ACTION = 'Comment on Action';
