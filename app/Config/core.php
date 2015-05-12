@@ -187,16 +187,14 @@ Configure::write('App.encoding', 'UTF-8');
  */
 if (REDIS_SESSION_HOST) {
     Configure::write('Session', array(
-        'defaults' => 'cache',
-        'cookie'   => 'SID',
+        'userAgent' => false,
+        'cookie'    => 'SID',
         //セッションの保持時間（分）
-        'timeout'  => 60 * 24 * 30, //30days
-        'handler'  => array(
-            'config' => 'session'
+        'timeout'   => 60 * 24 * 30, //30days
+        'handler'   => array(
+            'engine' => 'RedisSession',
+            'key'    => 'session:'
         ),
-        'engine'   => 'Redis',
-        'server'   => REDIS_SESSION_HOST,
-        'port'     => 6379
     ));
 }
 else {
@@ -328,10 +326,7 @@ $duration = '+999 days';
 //}
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'app_';
-if (PUBLIC_ENV) {
-    $prefix = ENV_NAME . ":";
-}
+$prefix = ENV_NAME . ":";
 
 /**
  * Configure the cache used for general framework caching. Path information,
@@ -356,21 +351,9 @@ Cache::config('_cake_core_', array(
  * is used to store schema descriptions, and table listings in connections.
  */
 Cache::config('_cake_model_', array(
-    'engine'    => $engine,
-    'server'    => $server,
-    'port'      => $port,
+    'engine'    => 'Apc',
     'prefix'    => $prefix . 'cake_model:',
     'path'      => CACHE . 'models' . DS,
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
 ));
-
-if (REDIS_SESSION_HOST) {
-    Cache::config('session', array(
-        'engine'   => $engine,
-        'server'   => $server,
-        'port'     => $port,
-        'prefix'   => $prefix . 'cake_session:',
-        'duration' => $duration,
-    ));
-}
