@@ -189,8 +189,7 @@ if (REDIS_SESSION_HOST) {
     Configure::write('Session', array(
         'userAgent' => false,
         'cookie'    => 'SID',
-        //セッションの保持時間（分）
-        'timeout'   => 60 * 24 * 30, //30days
+        'timeout'   => 60 * 60 * 24 * 30, //30days
         'handler'   => array(
             'engine' => 'RedisSession',
             'key'    => 'session:'
@@ -201,8 +200,7 @@ else {
     Configure::write('Session', array(
         'defaults' => 'database',
         'cookie'   => 'SID',
-        //セッションの保持時間（分）
-        'timeout'  => 60 * 24 * 30, //30days
+        'timeout'  => 60 * 60 * 24 * 30, //30days
     ));
 }
 
