@@ -187,6 +187,18 @@
                             <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
                                 <?= __d('gl', "%d日経過", $limit_day * -1) ?>
                             <? else: ?>
+                                <? if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
+                                <? if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
+                                    <span style="color:red"><?= __d('gl', "認定待ち") ?></span>
+                                <? elseif($goal['Goal']['owner_approval_flag'] === '1') : ?>
+                                    <span style="color:#00BFFF"><?= __d('gl', "評価対象") ?></span>
+                                <? elseif($goal['Goal']['owner_approval_flag'] === '2') : ?>
+                                    <?= __d('gl', "評価対象外") ?>
+                                <? elseif($goal['Goal']['owner_approval_flag'] === '3') : ?>
+                                    <span style="color:red"><?= __d('gl', "修正待ち") ?></span>
+                                <? endif ?>
+                                ・
+                                <? endif; ?>
                                 <?= __d('gl', "残り%d日", $limit_day) ?>
                             <? endif; ?>
                         </div>
