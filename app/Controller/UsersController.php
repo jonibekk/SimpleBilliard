@@ -99,6 +99,9 @@ class UsersController extends AppController
 
     function two_fa_auth()
     {
+        if ($this->Auth->user()) {
+            return $this->redirect($this->referer());
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
         //仮認証状態か？そうでなければエラー出してリファラリダイレクト
         $is_avail_auth = !empty($this->Session->read('preAuthPost')) ? true : false;
