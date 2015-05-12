@@ -3778,7 +3778,7 @@ Temporary Properties - YOU MUST FIX
     padding: 0;
     max-height: 360px;
     white-space: normal;
-    overflow: scroll;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
