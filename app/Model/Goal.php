@@ -161,6 +161,11 @@ class Goal extends AppModel
             'numeric' => [
                 'rule' => ['numeric'],
             ],
+            'end_date' => [
+                'date' => [
+                    'rule' => array('date'),
+                    'message' => 'Invalid date'
+                ]]
         ]
     ];
 

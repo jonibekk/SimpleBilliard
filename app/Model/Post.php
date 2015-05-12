@@ -151,6 +151,10 @@ class Post extends AppModel
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
+        'body'            => [
+            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+        ]
+
     ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed

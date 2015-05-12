@@ -83,6 +83,10 @@ class KeyResult extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
+        'end_date' => [
+            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+        ]
+
     ];
 
     /**
