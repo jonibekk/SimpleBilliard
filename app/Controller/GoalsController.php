@@ -106,12 +106,21 @@ class GoalsController extends AppController
             //edit goal notify
             if ($id) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
+                //send notify to coach
+                $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->Session->read('current_team_id'),
+                                                                                $this->Auth->user('id'),
+                                                                                $id);
+                if ($my_collabo_status['Collaborator']['valued_flg'] == Collaborator::STATUS_MODIFY) {
+                    $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
+                }
             }
             switch ($this->request->params['named']['mode']) {
                 case 2:
                     //case of create new one.
                     if (!$id) {
                         $this->Mixpanel->trackCreateGoal($this->Goal->getLastInsertID());
+                        $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
+                                                  NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
                     }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                     //「情報を追加」に進む
@@ -144,6 +153,20 @@ class GoalsController extends AppController
 
         $this->Pnotify->outError(__d('gl', "ゴールの保存に失敗しました。"));
         $this->redirect($this->referer());
+    }
+
+    /**
+     * @param $goal_id
+     * @param $notify_type
+     */
+    function _sendNotifyToCoach($goal_id, $notify_type)
+    {
+        $coach_id = $this->Team->TeamMember->getCoachId($this->Auth->user('id'),
+                                                        $this->Session->read('current_team_id'));
+        if (!$coach_id) {
+            return;
+        }
+        $this->NotifyBiz->execSendNotify($notify_type, $goal_id, null, $coach_id);
     }
 
     /**
@@ -304,6 +327,8 @@ class GoalsController extends AppController
                 $this->Mixpanel->trackCollaborateGoal($this->request->data['Collaborator']['goal_id']);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
                                                  $this->request->data['Collaborator']['goal_id']);
+                $this->_sendNotifyToCoach($this->request->data['Collaborator']['goal_id'],
+                                          NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
             }
         }
         else {
