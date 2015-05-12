@@ -107,6 +107,15 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
+            case NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
             default:
                 break;
         }

@@ -23,6 +23,9 @@ class NotifySetting extends AppModel
     const TYPE_MY_GOAL_TARGET_FOR_EVALUATION = 10;
     const TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE = 11;
     const TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION = 12;
+    const TYPE_MY_MEMBER_CREATE_GOAL = 13;
+    const TYPE_MY_MEMBER_COLLABORATE_GOAL = 14;
+    const TYPE_MY_MEMBER_CHANGE_GOAL = 15;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                           => [
@@ -91,10 +94,28 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'my_goal_as_leader_request_to_change',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION => [
+        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_not_target_for_evaluation',
+            'icon_class'      => 'fa-flag',
+        ],
+        self::TYPE_MY_MEMBER_CREATE_GOAL               => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_create_goal',
+            'icon_class'      => 'fa-flag',
+        ],
+        self::TYPE_MY_MEMBER_COLLABORATE_GOAL          => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_collaborate_goal',
+            'icon_class'      => 'fa-flag',
+        ],
+        self::TYPE_MY_MEMBER_CHANGE_GOAL               => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'my_member_change_goal',
             'icon_class'      => 'fa-flag',
         ],
 
@@ -126,6 +147,12 @@ class NotifySetting extends AppModel
             = __d('gl', "自分がリーダーのゴールが修正依頼を受けたとき");
         self::$TYPE[self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION]['field_real_name']
             = __d('gl', "自分がオーナーのゴールが評価対象外となったとき");
+        self::$TYPE[self::TYPE_MY_MEMBER_CREATE_GOAL]['field_real_name']
+            = __d('gl', "自分(コーチとして)のメンバーがゴールを作成したとき");
+        self::$TYPE[self::TYPE_MY_MEMBER_COLLABORATE_GOAL]['field_real_name']
+            = __d('gl', "自分(コーチとして)のメンバーがゴールのコラボレーターとなったとき");
+        self::$TYPE[self::TYPE_MY_MEMBER_CHANGE_GOAL]['field_real_name']
+            = __d('gl', "ゴールの修正依頼を受けた自分(コーチとして)のメンバーがゴール内容を修正したとき");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -302,6 +329,15 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
                 $title = __d('gl', '%1$sがあなたのゴールを評価対象外としました。', $user_text);
+                break;
+            case self::TYPE_MY_MEMBER_CREATE_GOAL:
+                $title = __d('gl', '%1$sが新しいゴールを作成しました。', $user_text);
+                break;
+            case self::TYPE_MY_MEMBER_COLLABORATE_GOAL:
+                $title = __d('gl', '%1$sがゴールにコラボりました。', $user_text);
+                break;
+            case self::TYPE_MY_MEMBER_CHANGE_GOAL:
+                $title = __d('gl', '%1$sがゴール内容を修正しました。。', $user_text);
                 break;
             default:
                 break;
