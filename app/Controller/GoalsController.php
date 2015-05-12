@@ -107,9 +107,8 @@ class GoalsController extends AppController
             if ($id) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
                 //send notify to coach
-                $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->Session->read('current_team_id'),
-                                                                                $this->Auth->user('id'),
-                                                                                $id);
+                $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
+                                                                                $this->my_uid, $id);
                 if ($my_collabo_status['Collaborator']['valued_flg'] == Collaborator::STATUS_MODIFY) {
                     $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
                 }
