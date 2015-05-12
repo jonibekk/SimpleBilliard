@@ -328,10 +328,7 @@ $duration = '+999 days';
 //}
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'app_';
-if (PUBLIC_ENV) {
-    $prefix = ENV_NAME . ":";
-}
+$prefix = ENV_NAME . ":";
 
 /**
  * Configure the cache used for general framework caching. Path information,
@@ -356,9 +353,7 @@ Cache::config('_cake_core_', array(
  * is used to store schema descriptions, and table listings in connections.
  */
 Cache::config('_cake_model_', array(
-    'engine'    => $engine,
-    'server'    => $server,
-    'port'      => $port,
+    'engine'    => 'Apc',
     'prefix'    => $prefix . 'cake_model:',
     'path'      => CACHE . 'models' . DS,
     'serialize' => ($engine === 'File'),
