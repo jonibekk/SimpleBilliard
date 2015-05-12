@@ -357,13 +357,3 @@ Cache::config('_cake_model_', array(
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
 ));
-
-//if (REDIS_SESSION_HOST) {
-//    Cache::config('session', array(
-//        'engine'   => $engine,
-//        'server'   => $server,
-//        'port'     => $port,
-//        'prefix'   => $prefix . 'cake_session:',
-//        'duration' => $duration,
-//    ));
-//}
