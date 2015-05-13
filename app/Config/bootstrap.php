@@ -12,17 +12,10 @@
  */
 
 // Setup a 'default' cache configuration for use in the application.
-if (REDIS_SESSION_HOST) {
-    Cache::config('default', array(
-                               'engine' => 'Redis',
-                               'server' => REDIS_SESSION_HOST,
-                               'port'   => 6379,
-                           )
-    );
-}
-else {
-    Cache::config('default', array('engine' => 'File'));
-}
+Cache::config('default', array(
+                           'engine' => 'Apc',
+                       )
+);
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.

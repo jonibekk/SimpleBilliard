@@ -244,4 +244,34 @@ class CollaboratorTest extends CakeTestCase
         $actual = $this->Collaborator->getCollaboratorListByGoalId(200, Collaborator::TYPE_COLLABORATOR);
         $this->assertNotEmpty($actual);
     }
+
+    function testGetCollaboratorOwnerTypeTrue() {
+        $team_id = 1;
+        $user_id = 100;
+        $goal_id = 200;
+        $data = [
+            'team_id' => $team_id,
+            'user_id' => $user_id,
+            'goal_id' => $goal_id,
+            'type'    => Collaborator::TYPE_OWNER
+        ];
+        $this->Collaborator->save($data);
+        $res = $this->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
+        $this->assertCount(1, $res);
+    }
+
+    function testGetCollaboratorOwnerTypeFalse() {
+        $team_id = 1;
+        $user_id = 100;
+        $goal_id = 200;
+        $data = [
+            'team_id' => $team_id,
+            'user_id' => $user_id,
+            'goal_id' => $goal_id,
+            'type'    => Collaborator::TYPE_OWNER
+        ];
+        $this->Collaborator->save($data);
+        $res = $this->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
+        $this->assertCount(0, $res);
+    }
 }

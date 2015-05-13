@@ -105,6 +105,9 @@ class AppController extends Controller
      */
     public $evaluable_cnt = 0;
 
+    public $my_uid = null;
+    public $current_team_id = null;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -154,6 +157,10 @@ class AppController extends Controller
                 $this->_setNotifyCnt();
             }
             $this->_setMyMemberStatus();
+
+            $this->current_team_id = $this->Session->read('current_team_id');
+            $this->my_uid = $this->Auth->user('id');
+
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
