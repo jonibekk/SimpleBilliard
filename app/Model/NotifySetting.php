@@ -142,35 +142,35 @@ class NotifySetting extends AppModel
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_evaluation',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'fa-paw',
             'from_system'     => true,
         ],
         self::TYPE_EVALUATION_FREEZE                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'fleeze_evaluation',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'fa-paw',
             'from_system'     => true,
         ],
         self::TYPE_EVALUATION_START_CAN_ONESELF        => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_can_oneself_evaluation',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'fa-paw',
             'from_system'     => true,
         ],
         self::TYPE_EVALUATION_CAN_AS_EVALUATOR         => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_can_evaluate_as_evaluator',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'fa-paw',
             'from_system'     => true,
         ],
         self::TYPE_EVALUATION_DONE_FINAL               => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'final_evaluation_is_done',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'fa-paw',
             'from_system'     => true,
         ],
 
@@ -417,7 +417,7 @@ class NotifySetting extends AppModel
                 $title = __d('gl', '自己評価を実施してください。');
                 break;
             case self::TYPE_EVALUATION_CAN_AS_EVALUATOR:
-                $title = __d('gl', '批評者の評価の評価を実施してください。');
+                $title = __d('gl', '被評価者の評価を実施してください。');
                 break;
             case self::TYPE_EVALUATION_DONE_FINAL:
                 $title = __d('gl', '最終者が評価を実施しました。');

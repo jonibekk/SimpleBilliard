@@ -125,7 +125,7 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_EVALUATION_START_CAN_ONESELF:
                 break;
             case NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR:
-                //TODO 追加する
+                $this->_setForNextEvaluatorOption($model_id);
                 break;
             case NotifySetting::TYPE_EVALUATION_DONE_FINAL:
                 $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
@@ -455,6 +455,32 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+    }
+
+    /**
+     * 次の評価者への通知オプション
+     *
+     * @param $evaluate_id
+     */
+    private function _setForNextEvaluatorOption($evaluate_id)
+    {
+        $evaluation = $this->Goal->Evaluation->findById($evaluate_id);
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
+                                                                                NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
+        $evaluatee = $this->Goal->User->getUsersProf($evaluation['Evaluation']['evaluatee_user_id']);
+
+        $url = ['controller' => 'evaluations',
+                'action'     => 'view',
+                $evaluation['Evaluation']['evaluate_term_id'],
+                $evaluation['Evaluation']['evaluatee_user_id'],
+                'team_id'    => $this->NotifySetting->current_team_id];
+
+        $this->notify_option['from_user_id'] = null;
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR;
+        $this->notify_option['url_data'] = $url;
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode([$evaluatee[0]['User']['display_username']]);
     }
 
     /**
