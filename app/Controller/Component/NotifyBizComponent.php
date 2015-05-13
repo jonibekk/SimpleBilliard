@@ -421,8 +421,18 @@ class NotifyBizComponent extends Component
             NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION,
         ];
         $action = in_array($notify_type, $done_list) ? "done" : "index";
+        $go_to_goal = [
+            NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL
+        ];
+        if (in_array($notify_type, $go_to_goal)) {
+            $url = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, change to goal detail page
+        }
+        else {
+            $url = ['controller' => 'goal_approval', 'action' => $action, 'team_id' => $this->NotifySetting->current_team_id];
+        }
+        $this->log($url);
         $this->notify_option['notify_type'] = $notify_type;
-        $this->notify_option['url_data'] = ['controller' => 'goal_approval', 'action' => $action, 'team_id' => $this->NotifySetting->current_team_id];
+        $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
     }

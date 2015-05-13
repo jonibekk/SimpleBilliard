@@ -337,7 +337,7 @@ class NotifySetting extends AppModel
                 $title = __d('gl', '%1$sがゴールにコラボりました。', $user_text);
                 break;
             case self::TYPE_MY_MEMBER_CHANGE_GOAL:
-                $title = __d('gl', '%1$sがゴール内容を修正しました。。', $user_text);
+                $title = __d('gl', '%1$sがゴール内容を修正しました。', $user_text);
                 break;
             default:
                 break;
