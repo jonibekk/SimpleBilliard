@@ -41,7 +41,6 @@ class EvaluationTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-
         'app.oauth_token',
         'app.team_member',
         'app.job_category',
@@ -855,6 +854,33 @@ class EvaluationTest extends CakeTestCase
         $this->_saveEvaluations();
         $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->evaluate_term_id, [1, 2, 3]);
         $this->assertTrue(count($res) === 2);
+    }
+
+    function testGetEvaluateeIdsByTermId()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $excepted = array(
+            (int)1 => '1',
+            (int)2 => '2'
+        );
+        $actual = $this->Evaluation->getEvaluateeIdsByTermId($this->Evaluation->evaluate_term_id);
+        $this->assertEquals($excepted, $actual);
+    }
+
+    function testGetEvaluatorIdsByTermId()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->_saveEvaluations();
+        $excepted = array(
+            (int)1 => '1',
+            (int)2 => '2',
+            (int)3 => '3'
+        );
+        $actual = $this->Evaluation->getEvaluatorIdsByTermId($this->Evaluation->evaluate_term_id);
+        $this->assertEquals($excepted, $actual);
     }
 
     function _saveEvaluations()
