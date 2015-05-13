@@ -15,11 +15,12 @@ class NotificationsController extends AppController
         $this->_setMyCircle();
         $this->_setViewValOnRightColumn();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER);
+        $team = $this->Team->findById($this->current_team_id);
         $isExistMoreNotify = true;
         if (count($notify_items) < NOTIFY_PAGE_ITEMS_NUMBER) {
             $isExistMoreNotify = false;
         }
-        $this->set(compact('notify_items', 'isExistMoreNotify'));
+        $this->set(compact('notify_items', 'isExistMoreNotify', 'team'));
     }
 
     /**
@@ -31,10 +32,11 @@ class NotificationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER, $oldest_score);
+        $team = $this->Team->findById($this->current_team_id);
         if (count($notify_items) === 0) {
             return $this->_ajaxGetResponse("");
         }
-        $this->set(compact('notify_items'));
+        $this->set(compact('notify_items', 'team'));
         $response = $this->render('Notification/notify_items');
 
         $html = $response->__toString();
@@ -66,7 +68,8 @@ class NotificationsController extends AppController
         $this->_ajaxPreProcess();
         $this->NotifyBiz->resetCountNewNotification();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_BELL_BOX_ITEMS_NUMBER);
-        $this->set(compact('notify_items'));
+        $team = $this->Team->findById($this->current_team_id);
+        $this->set(compact('notify_items', 'team'));
         $response = $this->render('Notification/notify_items_in_list_box');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);

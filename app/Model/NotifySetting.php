@@ -408,7 +408,7 @@ class NotifySetting extends AppModel
                 $title = __d('gl', '%1$sがゴール内容を修正しました。', $user_text);
                 break;
             case self::TYPE_EVALUATION_START:
-                $title = __d('gl', '評価が開始されました。');
+                $title = __d('gl', '評価期間に入りました。');
                 break;
             case self::TYPE_EVALUATION_FREEZE:
                 $title = __d('gl', '評価が凍結されました。');

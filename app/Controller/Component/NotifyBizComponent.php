@@ -117,10 +117,10 @@ class NotifyBizComponent extends Component
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_EVALUATION_START:
-                $this->_setForEvaluationAllUserOption($notify_type, $user_id);
+                $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
                 break;
             case NotifySetting::TYPE_EVALUATION_FREEZE:
-                $this->_setForEvaluationAllUserOption($notify_type, $user_id);
+                $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
                 break;
             case NotifySetting::TYPE_EVALUATION_START_CAN_ONESELF:
                 break;
@@ -128,7 +128,7 @@ class NotifyBizComponent extends Component
                 //TODO 追加する
                 break;
             case NotifySetting::TYPE_EVALUATION_DONE_FINAL:
-                $this->_setForEvaluationAllUserOption($notify_type, $user_id);
+                $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
                 break;
             //_setForEvaluationAllUserOption
             default:
@@ -215,6 +215,9 @@ class NotifyBizComponent extends Component
             = $this->Post->User->CircleMember->my_uid
             = $this->Goal->my_uid
             = $this->Goal->Collaborator->my_uid
+            = $this->Goal->Team->my_uid
+            = $this->Goal->Team->EvaluateTerm->my_uid
+            = $this->Goal->Team->EvaluateTerm->Team->my_uid
             = $this->NotifySetting->my_uid
             = $this->NotifySetting->my_uid
             = $this->GlEmail->SendMail->my_uid
@@ -229,6 +232,9 @@ class NotifyBizComponent extends Component
             = $this->Post->User->CircleMember->current_team_id
             = $this->Goal->current_team_id
             = $this->Goal->Collaborator->current_team_id
+            = $this->Goal->Team->current_team_id
+            = $this->Goal->Team->EvaluateTerm->current_team_id
+            = $this->Goal->Team->EvaluateTerm->Team->current_team_id
             = $this->NotifySetting->current_team_id
             = $this->NotifySetting->current_team_id
             = $this->GlEmail->SendMail->current_team_id
@@ -455,15 +461,15 @@ class NotifyBizComponent extends Component
      * 評価関係者全員通知オプション
      *
      * @param $notify_type
+     * @param $term_id
      * @param $user_id
      */
-    private function _setForEvaluationAllUserOption($notify_type, $user_id)
+    private function _setForEvaluationAllUserOption($notify_type, $term_id, $user_id)
     {
-        $term_id = $this->Goal->Team->EvaluateTerm->getCurrentTermId();
         //対象ユーザはevaluatees
         $evaluatees = $this->Goal->Evaluation->getEvaluateeIdsByTermId($term_id);
         $evaluators = $this->Goal->Evaluation->getEvaluatorIdsByTermId($term_id);
-        $to_user_ids = array_merge($evaluatees, $evaluators);
+        $to_user_ids = $evaluatees + $evaluators;
         if (isset($to_user_ids[$user_id])) {
             unset($to_user_ids[$user_id]);
         }
@@ -471,10 +477,13 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($to_user_ids,
                                                                                 $notify_type);
 
-        $notify_list_url = ['controller' => 'evaluation', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];
+        $notify_list_url = ['controller' => 'evaluations',
+                            'action'     => 'index',
+                            'term'       => 'present',
+                            'team_id'    => $this->NotifySetting->current_team_id];
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $team_name = $this->Goal->Team->findByTeamId($this->NotifySetting->current_team_id);
+        $team_name = $this->Goal->Team->findById($this->NotifySetting->current_team_id);
 
         $this->notify_option['from_user_id'] = null;
         $this->notify_option['notify_type'] = $notify_type;
@@ -574,7 +583,7 @@ class NotifyBizComponent extends Component
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
             $uids,
-            $this->NotifySetting->my_uid,
+            $this->notify_option['from_user_id'],
             $item,
             $this->notify_option['url_data'],
             microtime(true)
@@ -692,10 +701,14 @@ class NotifyBizComponent extends Component
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
         //merge users to notification data
         foreach ($data as $k => $v) {
-            $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
+            $user_name = null;
+            if (isset($users[$v['Notification']['user_id']])) {
+                $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
+                $user_name = $data[$k]['User']['display_username'];
+            }
             //get title
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
-                                                    $data[$k]['User']['display_username'], 1,
+                                                    $user_name, 1,
                                                     $data[$k]['Notification']['body']);
             $data[$k]['Notification']['title'] = $title;
         }
