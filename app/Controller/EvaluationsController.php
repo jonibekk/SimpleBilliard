@@ -48,7 +48,6 @@ class EvaluationsController extends AppController
         $incomplete_number_list = $this->Evaluation->getIncompleteNumberList();
         $my_eval[] = $this->Evaluation->getEvalStatus($selected_tab_term_id, $this->Auth->user('id'));
         $my_evaluatees = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($selected_tab_term_id);
-        $this->log($my_evaluatees);
 
         // Get term frozen status
         $isFrozens = [];
