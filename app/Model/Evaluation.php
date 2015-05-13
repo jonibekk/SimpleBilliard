@@ -736,8 +736,21 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id' => $term_id
             ],
-            'fields'     => ['evaluatee_user_id'],
+            'fields'     => ['evaluatee_user_id', 'evaluatee_user_id'],
             'group'      => ['evaluatee_user_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getEvaluatorIdsByTermId($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $term_id
+            ],
+            'fields'     => ['evaluator_user_id', 'evaluator_user_id'],
+            'group'      => ['evaluator_user_id'],
         ];
         $res = $this->find('list', $options);
         return $res;
