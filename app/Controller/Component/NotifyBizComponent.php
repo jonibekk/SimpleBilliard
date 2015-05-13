@@ -117,10 +117,10 @@ class NotifyBizComponent extends Component
                 $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_EVALUATION_START:
-                $this->_setForEvaluationAllUserOption($notify_type);
+                $this->_setForEvaluationAllUserOption($notify_type, $user_id);
                 break;
             case NotifySetting::TYPE_EVALUATION_FREEZE:
-                $this->_setForEvaluationAllUserOption($notify_type);
+                $this->_setForEvaluationAllUserOption($notify_type, $user_id);
                 break;
             case NotifySetting::TYPE_EVALUATION_START_CAN_ONESELF:
                 break;
@@ -128,7 +128,7 @@ class NotifyBizComponent extends Component
                 //TODO 追加する
                 break;
             case NotifySetting::TYPE_EVALUATION_DONE_FINAL:
-                $this->_setForEvaluationAllUserOption($notify_type);
+                $this->_setForEvaluationAllUserOption($notify_type, $user_id);
                 break;
             //_setForEvaluationAllUserOption
             default:
@@ -455,14 +455,18 @@ class NotifyBizComponent extends Component
      * 評価関係者全員通知オプション
      *
      * @param $notify_type
+     * @param $user_id
      */
-    private function _setForEvaluationAllUserOption($notify_type)
+    private function _setForEvaluationAllUserOption($notify_type, $user_id)
     {
         $term_id = $this->Goal->Team->EvaluateTerm->getCurrentTermId();
         //対象ユーザはevaluatees
         $evaluatees = $this->Goal->Evaluation->getEvaluateeIdsByTermId($term_id);
         $evaluators = $this->Goal->Evaluation->getEvaluatorIdsByTermId($term_id);
         $to_user_ids = array_merge($evaluatees, $evaluators);
+        if (isset($to_user_ids[$user_id])) {
+            unset($to_user_ids[$user_id]);
+        }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($to_user_ids,
                                                                                 $notify_type);
@@ -472,6 +476,7 @@ class NotifyBizComponent extends Component
         /** @noinspection PhpUndefinedMethodInspection */
         $team_name = $this->Goal->Team->findByTeamId($this->NotifySetting->current_team_id);
 
+        $this->notify_option['from_user_id'] = null;
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $notify_list_url;
         $this->notify_option['model_id'] = null;

@@ -193,6 +193,7 @@ class TeamsController extends AppController
         }
         $this->Team->Evaluation->commit();
         $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START, null);
         return $this->redirect($this->referer());
     }
 
@@ -400,6 +401,7 @@ class TeamsController extends AppController
         else {
             $this->Team->TeamMember->commit();
             $result['msg'] = __d('gl', "%s人の最終評価を更新しました。", $save_res['success_count']);
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL, null);
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -450,6 +452,7 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE, null);
         return $this->redirect($this->referer());
     }
 }
