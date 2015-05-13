@@ -430,7 +430,6 @@ class NotifyBizComponent extends Component
         else {
             $url = ['controller' => 'goal_approval', 'action' => $action, 'team_id' => $this->NotifySetting->current_team_id];
         }
-        $this->log($url);
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = $goal_id;
