@@ -2302,7 +2302,7 @@ function initTitle() {
 }
 
 function getBellBoxSelector() {
-    return $(".bell-notify-box");
+    return $("#bellNum");
 }
 
 function getNotifyCnt() {
