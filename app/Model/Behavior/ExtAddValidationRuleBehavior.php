@@ -117,6 +117,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         Model $Model, $value)
     {
         $value = array_values($value);
+
         $value = $value[0];
         return is_string($value);
     }

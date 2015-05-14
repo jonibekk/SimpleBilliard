@@ -139,6 +139,10 @@ class KeyResult extends AppModel
         }
         $data['KeyResult']['current_value'] = $data['KeyResult']['start_value'];
 
+        $this->set($data);
+        if(!$this->validates()){
+            return false;
+        }
         //時間をunixtimeに変換
         if (!empty($data['KeyResult']['start_date'])) {
             $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
@@ -148,6 +152,7 @@ class KeyResult extends AppModel
             $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
                                                        strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
         }
+        unset($this->validate['end_date']);
         $this->create();
         if (!$this->save($data)) {
             throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
