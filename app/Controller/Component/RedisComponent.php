@@ -350,7 +350,7 @@ class RedisComponent extends Object
     function isExistsDeviceHash($team_id, $user_id)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_DEVICE_HASHES, $team_id, $user_id);
-        $hash_key = Security::hash($this->Controller->Session->read('Config.userAgent') + $user_id);
+        $hash_key = Security::hash($this->Controller->Session->read('Config.userAgent') . $user_id);
         $res = $this->Db->hGet($key, $hash_key);
         if (!$res) {
             return false;
