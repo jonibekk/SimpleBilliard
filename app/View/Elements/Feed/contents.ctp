@@ -46,7 +46,7 @@ else { ?>
                 <span class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
                                                                     '...') ?></span>
                 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $current_circle['Circle']['id']]) ?>"
-                     class="modal-ajax-get"> <span class="feed-circle-user-number"><i
+  class="modal-ajax-get"> <span class="feed-circle-user-number"><i
                             class="fa fa-user"></i>&nbsp;<?= count($circle_members) ?>
                     </span></a>
                 <?php if ($user_status != 'admin') { ?>
@@ -138,12 +138,12 @@ if (!empty($posts) && (!isset($this->request->params['post_id']) || empty($this-
     if ((count($posts) != 20)) {
         $next_page_num = 1;
         $month_index = 1;
-        $more_read_text = __d('gl', "さらに以前の投稿を読み込む ▼");
+        $more_read_text = __d('gl', "さらに投稿を読み込む ▼");
     }
     ?>
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
         <div class="panel-body panel-read-more-body">
-            <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
+            <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上の投稿はありませんでした。") ?></span>
             <a href="#" class="btn btn-link click-feed-read-more"
                parent-id="FeedMoreRead"
                no-data-text-id="ShowMoreNoData"

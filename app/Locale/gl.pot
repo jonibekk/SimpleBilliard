@@ -785,7 +785,7 @@ msgstr ""
 
 #: View/Elements/gl_common_js.ctp:377
 #: View/Elements/Feed/contents.ctp:78
-msgid "さらに以前の投稿を読み込む ▼"
+msgid "さらに投稿を読み込む ▼"
 msgstr ""
 
 #: View/Elements/gl_common_js.ctp:444
@@ -1929,4 +1929,3 @@ msgstr ""
 #: View/Users/token_resend.ctp:33
 msgid "Goalousからメールアドレス認証用のURLを送信いたします。"
 msgstr ""
-
