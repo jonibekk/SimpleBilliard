@@ -1252,8 +1252,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
         try {
             $this->testAction("/posts/circle_toggle_status/20/1111", ['method' => 'get']);
-        }
-        catch (NotFoundException $e) {
+        } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "Invalid Status Request");
     }
@@ -1269,7 +1268,7 @@ class PostsControllerTest extends ControllerTestCase
                 'Auth'      => ['user', 'loggedIn'],
                 'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-                'NotifyBiz' => ['sendNotify']
+                'NotifyBiz' => ['sendNotify', 'commentPush']
             ],
         ]);
         $value_map = [
