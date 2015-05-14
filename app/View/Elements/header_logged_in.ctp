@@ -214,7 +214,7 @@
                                     "チュートリアル") ?></a></li>
                         <li>
                             <? if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
-                                <div class="btn btn-danger btn-xs bell-notify-box sub_cnt_alert" id="bellNum">
+                                <div class="btn btn-danger btn-xs sub_cnt_alert" id="bellNum">
                                     <? echo $unapproved_cnt; ?>
                                 </div>
                             <? } ?>
