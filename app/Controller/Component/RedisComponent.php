@@ -19,6 +19,7 @@ class RedisComponent extends Object
     const KEY_TYPE_NOTIFICATION = 'notification_key';
     const KEY_TYPE_NOTIFICATION_COUNT = 'new_notification_count_key';
     const KEY_TYPE_COUNT_BY_USER = 'count_by_user_key';
+    const KEY_TYPE_TWO_FA_DEVICE_HASHES = 'two_fa_device_hashes_key';
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
 
     static public $KEY_TYPES = [
@@ -26,6 +27,7 @@ class RedisComponent extends Object
         self::KEY_TYPE_NOTIFICATION,
         self::KEY_TYPE_NOTIFICATION_COUNT,
         self::KEY_TYPE_COUNT_BY_USER,
+        self::KEY_TYPE_TWO_FA_DEVICE_HASHES,
     ];
 
     /**
@@ -66,6 +68,17 @@ class RedisComponent extends Object
         'team'  => null,
         'user'  => null,
         'count' => null,
+    ];
+
+    /**
+     * Key Name: team:[team_id]:user:[user_id]:two_fa_device_hashes:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $two_fa_device_hashes_key = [
+        'team' => null,
+        'user' => null,
     ];
 
     function initialize(Controller $controller)
@@ -134,7 +147,7 @@ class RedisComponent extends Object
     /**
      * generate uuid
      *
-     * @return RFC
+     * @return string
      */
     private function generateId()
     {
