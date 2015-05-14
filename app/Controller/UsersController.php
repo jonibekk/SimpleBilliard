@@ -541,7 +541,7 @@ class UsersController extends AppController
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
                 //ログインし直し。
-                $this->_autoLogin($this->Auth->user('id'));
+                $this->_autoLogin($this->Auth->user('id'), true);
                 //言語設定
                 $this->_setAppLanguage();
                 $me = $this->_getMyUserDataForSetting();
@@ -788,18 +788,24 @@ class UsersController extends AppController
     /*
      * 自動でログインする
      */
-    public function _autoLogin($user_id)
+    public function _autoLogin($user_id, $is_not_change_current_team = false)
     {
         //リダイレクト先を退避
         $redirect = null;
         if ($this->Session->read('Auth.redirect')) {
             $redirect = $this->Session->read('Auth.redirect');
         }
+        $current_team_id = $this->Session->read('current_team_id');
         //自動ログイン
         if ($this->_refreshAuth($user_id)) {
             //リダイレクト先をセッションに保存
             $this->Session->write('redirect', $redirect);
-            $this->_setAfterLogin();
+            if ($is_not_change_current_team) {
+                $this->_setAfterLogin($current_team_id);
+            }
+            else {
+                $this->_setAfterLogin();
+            }
             return true;
         }
         else {
@@ -819,12 +825,17 @@ class UsersController extends AppController
 
     /**
      * ログイン後に実行する
+     *
+     * @param null $team_id
      */
-    public function _setAfterLogin()
+    public function _setAfterLogin($team_id = null)
     {
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('last_login', REQUEST_TIMESTAMP);
-        $this->_setDefaultTeam($this->Auth->user('default_team_id'));
+        if (!$team_id) {
+            $team_id = $this->Auth->user('default_team_id');
+        }
+        $this->_setDefaultTeam($team_id);
         if ($this->Session->read('current_team_id')) {
             $this->User->TeamMember->updateLastLogin($this->Session->read('current_team_id'), $this->Auth->user('id'));
         }

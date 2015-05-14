@@ -98,6 +98,24 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER:
                 $this->_setMyGoalChangedOption($model_id, $user_id);
                 break;
+            case NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL:
+                $this->_setApprovalOption($notify_type, $model_id, $to_user_list);
+                break;
             default:
                 break;
         }
@@ -323,7 +341,7 @@ class NotifyBizComponent extends Component
         $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+                                                                                NotifySetting::TYPE_MY_GOAL_FOLLOW);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
@@ -347,7 +365,7 @@ class NotifyBizComponent extends Component
         unset($collaborators[$user_id]);
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+                                                                                NotifySetting::TYPE_MY_GOAL_COLLABORATE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_COLLABORATE;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
@@ -374,9 +392,47 @@ class NotifyBizComponent extends Component
         }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+                                                                                NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
+        $this->notify_option['model_id'] = $goal_id;
+        $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+    }
+
+    /**
+     * 認定通知オプション
+     *
+     * @param $notify_type
+     * @param $goal_id
+     * @param $to_user_id
+     */
+    private function _setApprovalOption($notify_type, $goal_id, $to_user_id)
+    {
+        $goal = $this->Goal->getGoal($goal_id);
+        if (empty($goal)) {
+            return;
+        }
+        //対象ユーザの通知設定
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($to_user_id,
+                                                                                $notify_type);
+
+        $done_list = [
+            NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
+            NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION,
+        ];
+        $action = in_array($notify_type, $done_list) ? "done" : "index";
+        $go_to_goal = [
+            NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL
+        ];
+        if (in_array($notify_type, $go_to_goal)) {
+            $url = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, change to goal detail page
+        }
+        else {
+            $url = ['controller' => 'goal_approval', 'action' => $action, 'team_id' => $this->NotifySetting->current_team_id];
+        }
+        $this->log($url);
+        $this->notify_option['notify_type'] = $notify_type;
+        $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
     }

@@ -286,4 +286,18 @@ class Collaborator extends AppModel
         $res = $this->find('list', $options);
         return $res;
     }
+
+    function getCollaborator($team_id, $user_id, $goal_id, $owner=true) {
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'user_id' => $user_id,
+                'goal_id' => $goal_id,
+                'type'    => 1,
+            ],
+        ];
+        if ($owner === false) $options['type'] = 0;
+        $res = $this->find('first', $options);
+        return $res;
+    }
 }

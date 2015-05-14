@@ -182,15 +182,27 @@
             <? endif; ?>
             <div class="col col-xxs-12 goalsCard-krSeek">
                 <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
-                    <?php if(count($goal['KeyResult'])>0) { ?>
-                    <div class="pull-right font_12px">
-                        <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
-                            <?= __d('gl', "%d日経過", $limit_day * -1) ?>
-                        <? else: ?>
-                            <?= __d('gl', "残り%d日", $limit_day) ?>
-                        <? endif; ?>
-                    </div>
-                        <?php }?>
+                    <?php if (count($goal['KeyResult']) > 0) { ?>
+                        <div class="pull-right font_12px">
+                            <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
+                                <?= __d('gl', "%d日経過", $limit_day * -1) ?>
+                            <? else: ?>
+                                <? if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
+                                    <? if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
+                                        <span style="color:red"><?= __d('gl', "認定待ち") ?></span>
+                                    <? elseif ($goal['Goal']['owner_approval_flag'] === '1') : ?>
+                                        <span style="color:#00BFFF"><?= __d('gl', "評価対象") ?></span>
+                                    <? elseif ($goal['Goal']['owner_approval_flag'] === '2') : ?>
+                                        <?= __d('gl', "評価対象外") ?>
+                                    <? elseif ($goal['Goal']['owner_approval_flag'] === '3') : ?>
+                                        <span style="color:red"><?= __d('gl', "修正待ち") ?></span>
+                                    <? endif ?>
+                                    ・
+                                <? endif; ?>
+                                <?= __d('gl', "残り%d日", $limit_day) ?>
+                            <? endif; ?>
+                        </div>
+                    <?php } ?>
                 <? endif; ?>
                 <?
                 $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
@@ -198,17 +210,18 @@
                     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
                 }
                 ?>
-                <?php if(count($goal['KeyResult'])>0) { ?>
-                <a href="#"
-                   class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
-                   target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
-                   ajax-url="<?= $this->Html->url($url) ?>"
-                   id="KRsOpen_<?= $goal['Goal']['id'] ?>"
-                    >
-                    <i class="fa fa-caret-down feed-arrow lh_18px"></i>
-                    <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                </a>
-                <?php } else { ?>
+                <?php if (count($goal['KeyResult']) > 0) { ?>
+                    <a href="#"
+                       class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
+                       target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
+                       ajax-url="<?= $this->Html->url($url) ?>"
+                       id="KRsOpen_<?= $goal['Goal']['id'] ?>"
+                        >
+                        <i class="fa fa-caret-down feed-arrow lh_18px"></i>
+                        <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
+                    </a>
+                <?php }
+                elseif ($type != "follow") { ?>
                     <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>">
                         <i class="fa fa-plus-circle font_brownRed"></i>
