@@ -484,7 +484,7 @@ class PostsController extends AppController
             return $this->_ajaxGetResponse($result);
         }
 
-        $this->_pushCommentToPost($this->Post->id);
+        $this->_pushCommentToPost($this->Post->id, time());
 
         return $this->_ajaxGetResponse($result);
     }
@@ -615,10 +615,14 @@ class PostsController extends AppController
         return $requestData;
     }
 
-    public function _pushCommentToPost($postId)
+    /**
+     * @param $postId
+     * @param $date
+     */
+    public function _pushCommentToPost($postId, $date)
     {
         $socketId = viaIsSet($this->request->data['socket_id']);
-        $notifyId = Security::hash(time());
+        $notifyId = Security::hash($date);
 
         // リクエストデータが正しくないケース
         if (!$socketId) {
@@ -673,7 +677,7 @@ class PostsController extends AppController
 
     function circle_toggle_status($circle_id, $status)
     {
-        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg'=>$status]);
+        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg' => $status]);
 
         if ($this->Post->Circle->CircleMember->validates()) {
             $this->Post->Circle->CircleMember->circle_status_toggle($circle_id, $status);

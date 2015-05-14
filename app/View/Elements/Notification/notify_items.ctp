@@ -14,7 +14,7 @@
 <? foreach ($notify_items as $notify_item): ?>
     <?=
     $this->element('Notification/notify_item',
-                   ['user' => $notify_item['User'], 'notification' => $notify_item['Notification']]) ?>
+                   ['user' => viaIsSet($notify_item['User']), 'notification' => $notify_item['Notification']]) ?>
 <? endforeach; ?>
 
 <!-- END app/View/Elements/Notification/notify_items.ctp -->
