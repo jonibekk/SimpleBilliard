@@ -7,6 +7,7 @@
  * @var                    $scoreList
  * @var                    $goalList
  * @var                    $evaluateeId
+ * @var                    $evaluateTermId
  * @var                    $isEditable
  * @var                    $saveIndex
  * @var                    $status
@@ -26,7 +27,7 @@
     ],
     'class'         => 'form-horizontal',
     'id'            => 'evaluation-form',
-    'url'           => ['controller' => 'evaluations', 'action' => 'add'],
+    'url'           => ['controller' => 'evaluations', 'action' => 'add', $evaluateeId, $evaluateTermId],
     'data-bv-live'  => "disabled"
 ]) ?>
 
@@ -252,8 +253,8 @@
                 'div'      => false,
                 'class'    => 'btn btn-primary eval-view-btn-submit',
                 'id'       => 'evaluation-register-submit',
-                'name'  => 'status',
-                'value' => Evaluation::TYPE_STATUS_DONE,
+                'name'     => 'status',
+                'value'    => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
             ]) ?>
             <?
@@ -553,7 +554,7 @@
                 'class' => 'btn btn-primary eval-view-btn-submit',
                 'id'    => 'evaluation-register-submit',
                 'name'  => 'status',
-                'value'  => Evaluation::TYPE_STATUS_DONE
+                'value' => Evaluation::TYPE_STATUS_DONE
             ]) ?>
             <?
             else:
@@ -563,14 +564,14 @@
                 'class' => 'btn btn-default',
                 'id'    => 'evaluation-draft-submit',
                 'name'  => 'status',
-                'value'  => Evaluation::TYPE_STATUS_DRAFT
+                'value' => Evaluation::TYPE_STATUS_DRAFT
             ]) ?>
                 <?= $this->Form->button(__d('gl', "確定"), [
                 'div'      => false,
                 'class'    => 'btn btn-primary eval-view-btn-submit',
                 'id'       => 'evaluation-register-submit',
-                'name'  => 'status',
-                'value'  => Evaluation::TYPE_STATUS_DONE,
+                'name'     => 'status',
+                'value'    => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
             ]) ?>
             <?
