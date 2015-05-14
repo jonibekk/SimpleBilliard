@@ -31,7 +31,8 @@ class NotifyShell extends AppShell
     {
         parent::startup();
         $sessionId = viaIsSet($this->params['session_id']);
-        $baseUrl   = viaIsSet($this->params['base_url']);
+        $baseUrl = viaIsSet($this->params['base_url']);
+
         if ($sessionId) {
             CakeSession::id($sessionId);
             CakeSession::start();
@@ -76,7 +77,7 @@ class NotifyShell extends AppShell
             $to_user_list = json_decode(base64_decode($this->params['user_list']), true);
         }
         $this->NotifyBiz->sendNotify($this->params['type'],
-                                     $this->params['model_id'],
+                                     isset($this->params['model_id']) ? $this->params['model_id'] : null,
                                      isset($this->params['sub_model_id']) ? $this->params['sub_model_id'] : null,
                                      $to_user_list,
                                      $this->params['user_id'],

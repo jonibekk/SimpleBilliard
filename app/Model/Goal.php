@@ -416,6 +416,11 @@ class Goal extends AppModel
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+            foreach ($goal['MyCollabo'] as $cb_info) {
+                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                }
+            }
         }
 
         /**
@@ -675,10 +680,24 @@ class Goal extends AppModel
     {
         $goal_ids = $this->Follower->getFollowList($this->my_uid, $limit, $page);
         $res = $this->getByGoalId($goal_ids);
+        // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
+        // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
+        $res = $this->setFollowGoalApprovalFlag($res);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
 
         return $res;
+    }
+
+    function setFollowGoalApprovalFlag ($goal_list) {
+        foreach ($goal_list as $key => $goal) {
+            $cb_goal = $this->Collaborator->getCollaborator(
+                $goal['Goal']['team_id'], $goal['Goal']['user_id'], $goal['Goal']['id']);
+            if (isset($cb_goal['Collaborator']['id']) === true) {
+                $goal_list[$key]['Goal']['owner_approval_flag'] = $cb_goal['Collaborator']['valued_flg'];
+            }
+        }
+        return $goal_list;
     }
 
     function getGoalAndKr($goal_ids, $user_id)
@@ -749,6 +768,11 @@ class Goal extends AppModel
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+            foreach ($goal['MyCollabo'] as $cb_info) {
+                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                }
+            }
         }
         return $res;
     }
