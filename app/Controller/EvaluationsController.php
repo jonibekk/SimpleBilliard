@@ -6,8 +6,7 @@ App::uses('Evaluation', 'Model');
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
- *
- * @var $selected_tab_term_id
+ * @var                 $selected_tab_term_id
  */
 class EvaluationsController extends AppController
 {
@@ -118,16 +117,18 @@ class EvaluationsController extends AppController
                    ));
     }
 
-    function add()
+    /**
+     * @param $evaluateeId
+     * @param $evaluateTermId
+     */
+    function add($evaluateeId, $evaluateTermId)
     {
         $this->request->allowMethod('post', 'put');
 
         $status = viaIsSet($this->request->data['status']);
         $evalType = viaIsSet($this->request->data['Evaluation']['evaluate_type']);
-
         unset($this->request->data['status']);
         unset($this->request->data['Evaluation']);
-
         // 保存処理実行
         try {
             $this->Evaluation->begin();
@@ -146,12 +147,21 @@ class EvaluationsController extends AppController
 
         // Set saved message
         $savedMsg = "";
-        if($status == Evaluation::TYPE_STATUS_DRAFT) {
+        if ($status == Evaluation::TYPE_STATUS_DRAFT) {
             $savedMsg = $successMsg = __d('gl', "下書きを保存しました。");
-        } else if($status == Evaluation::TYPE_STATUS_DONE) {
+        }
+        elseif ($status == Evaluation::TYPE_STATUS_DONE) {
+            //次の評価へ通知
+            $next_evaluation_id = $this->Evaluation->getCurrentTurnEvaluationId($evaluateeId, $evaluateTermId);
+            if ($next_evaluation_id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,
+                                                 $next_evaluation_id);
+            }
             if ($evalType == Evaluation::TYPE_ONESELF) {
                 $savedMsg = __d('gl', "自己評価を確定しました。");
-            } else if($evalType == Evaluation::TYPE_EVALUATOR) {
+
+            }
+            elseif ($evalType == Evaluation::TYPE_EVALUATOR) {
                 $savedMsg = __d('gl', "評価者の評価を確定しました。");
             }
         }

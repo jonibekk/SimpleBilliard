@@ -73,7 +73,7 @@
            id="SubHeaderMenuFeed">
             <?= __d('gl', "処理待ち") ?>
             <? if ($unapproved_cnt > 0) { ?>
-            <span class="btn btn-danger btn-xs bell-notify-box approval_badge">
+            <span class="btn btn-danger btn-xs approval_badge">
             <? echo $unapproved_cnt; ?>
             <? } ?>
             </span>
