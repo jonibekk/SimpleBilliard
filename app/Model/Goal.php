@@ -105,23 +105,6 @@ class Goal extends AppModel
      */
     public $displayField = 'goal';
 
-    public $actsAs = [
-        'Upload' => [
-            'photo' => [
-                'styles'      => [
-                    'small'        => '32x32',
-                    'medium'       => '48x48',
-                    'medium_large' => '96x96',
-                    'large'        => '128x128',
-                    'x_large'      => '256x256',
-                ],
-                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image-goal.jpg',
-                'quality'     => 100,
-            ]
-        ]
-    ];
-
     /**
      * Validation rules
      *
@@ -160,12 +143,27 @@ class Goal extends AppModel
         'goal_category_id'     => [
             'numeric' => [
                 'rule' => ['numeric'],
-            ],
-            'end_date' => [
-                'date' => [
-                    'rule' => array('date'),
-                    'message' => 'Invalid date'
-                ]]
+            ]
+        ],
+        'end_date' => [
+                'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+            ]
+    ];
+
+    public $actsAs = [
+        'Upload' => [
+            'photo' => [
+                'styles'      => [
+                    'small'        => '32x32',
+                    'medium'       => '48x48',
+                    'medium_large' => '96x96',
+                    'large'        => '128x128',
+                    'x_large'      => '256x256',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image-goal.jpg',
+                'quality'     => 100,
+            ]
         ]
     ];
 

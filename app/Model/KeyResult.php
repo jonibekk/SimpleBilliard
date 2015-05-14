@@ -84,9 +84,11 @@ class KeyResult extends AppModel
             ],
         ],
         'end_date' => [
-            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+            'isString' => [
+                'rule' => 'isString',
+                'message'=>'Invalid Submission',
+            ]
         ]
-
     ];
 
     /**
@@ -208,11 +210,16 @@ class KeyResult extends AppModel
         if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
             return false;
         }
+
         //on/offの場合は現在値0,目標値1をセット
         if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
             $data['KeyResult']['start_value'] = 0;
             $data['KeyResult']['current_value'] = 0;
             $data['KeyResult']['target_value'] = 1;
+        }
+        $this->set($data);
+        if(!$this->validates()){
+            return false;
         }
         //時間をunixtimeに変換
         $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
@@ -222,6 +229,7 @@ class KeyResult extends AppModel
 //        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
 //                                                            $data['KeyResult']['target_value'],
 //                                                            $data['KeyResult']['current_value']);
+        unset($this->validate['end_date']);
         return $this->save($data);
     }
 
