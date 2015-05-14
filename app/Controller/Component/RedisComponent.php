@@ -18,11 +18,14 @@ class RedisComponent extends Object
     const KEY_TYPE_NOTIFICATION_USER = 'notification_user_key';
     const KEY_TYPE_NOTIFICATION = 'notification_key';
     const KEY_TYPE_NOTIFICATION_COUNT = 'new_notification_count_key';
+    const KEY_TYPE_COUNT_BY_USER = 'count_by_user_key';
+    const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
 
     static public $KEY_TYPES = [
         self::KEY_TYPE_NOTIFICATION_USER,
         self::KEY_TYPE_NOTIFICATION,
         self::KEY_TYPE_NOTIFICATION_COUNT,
+        self::KEY_TYPE_COUNT_BY_USER,
     ];
 
     /**
@@ -59,10 +62,10 @@ class RedisComponent extends Object
      * @var array
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
-        $new_notification_count_key = [
-        'team'                   => null,
-        'user'                   => null,
-        'new_notification_count' => null,
+        $count_by_user_key = [
+        'team'  => null,
+        'user'  => null,
+        'count' => null,
     ];
 
     function initialize(Controller $controller)
@@ -177,7 +180,8 @@ class RedisComponent extends Object
             $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0), $score,
                         $notify_id);
             //increment
-            $pipe->incr($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $uid));
+            $pipe->hIncrBy($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $uid),
+                           self::FIELD_COUNT_NEW_NOTIFY, 1);
         }
         $pipe->exec();
         return true;
@@ -191,7 +195,8 @@ class RedisComponent extends Object
      */
     function getCountOfNewNotification($team_id, $user_id)
     {
-        $count = $this->Db->get($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id));
+        $count = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $user_id),
+                                 self::FIELD_COUNT_NEW_NOTIFY);
         return ($count === false) ? 0 : (int)$count;
     }
 
@@ -203,7 +208,8 @@ class RedisComponent extends Object
      */
     function deleteCountOfNewNotification($team_id, $user_id)
     {
-        $res = $this->Db->del($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id));
+        $res = $this->Db->hDel($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $user_id),
+                               self::FIELD_COUNT_NEW_NOTIFY);
         return (bool)$res;
     }
 
