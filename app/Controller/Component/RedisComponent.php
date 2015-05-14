@@ -94,17 +94,19 @@ class RedisComponent extends Object
      * @param null|int      $user_id
      * @param null|string   $notify_id
      * @param bool|int|null $unread
+     *
+     * @return string
      */
-    public function setKeyName($key_type, $team_id, $user_id = null, $notify_id = null, $unread = null)
+    public function getKeyName($key_type, $team_id, $user_id = null, $notify_id = null, $unread = null)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
         }
+
         //reset key name
         foreach ($this->{$key_type} as $k => $v) {
             $this->{$key_type}[$k] = null;
         }
-
         $this->{$key_type}['team'] = $team_id;
         if ($user_id && array_key_exists('user', $this->{$key_type})) {
             $this->{$key_type}['user'] = $user_id;
@@ -115,19 +117,7 @@ class RedisComponent extends Object
         if ($unread !== null && array_key_exists('unread', $this->{$key_type})) {
             $this->{$key_type}['unread'] = $unread;
         }
-        return;
-    }
 
-    /**
-     * @param string $key_type One of $KEY_TYPES
-     *
-     * @return string
-     */
-    public function getKeyName($key_type)
-    {
-        if (!in_array($key_type, self::$KEY_TYPES)) {
-            throw new RuntimeException('this is unavailable type!');
-        }
         $key_name = "";
         foreach ($this->{$key_type} as $k => $v) {
             $key_name .= $k . ":";
@@ -163,7 +153,6 @@ class RedisComponent extends Object
     {
         $this->Db = ConnectionManager::getDataSource('redis');
         $notify_id = $this->generateId();
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id);
         $data = [
             'id'      => $notify_id,
             'user_id' => $my_id,
@@ -175,23 +164,20 @@ class RedisComponent extends Object
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         //save notification
-        $pipe->hMset($this->getKeyName(self::KEY_TYPE_NOTIFICATION), $data);
-        $pipe->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION),
+        $pipe->hMset($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id), $data);
+        $pipe->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id),
                       60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
 
         $score = substr_replace((string)(microtime(true) * 10000), '1', -1, 1);
         //save notification user process
         foreach ($to_user_ids as $uid) {
             //save notification user
-            $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null);
-            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $score,
+            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null), $score,
                         $notify_id);
-            $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0);
-            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $score,
+            $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0), $score,
                         $notify_id);
             //increment
-            $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $uid);
-            $pipe->incr($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT));
+            $pipe->incr($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $uid));
         }
         $pipe->exec();
         return true;
@@ -205,8 +191,7 @@ class RedisComponent extends Object
      */
     function getCountOfNewNotification($team_id, $user_id)
     {
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id);
-        $count = $this->Db->get($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT));
+        $count = $this->Db->get($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id));
         return ($count === false) ? 0 : (int)$count;
     }
 
@@ -218,8 +203,7 @@ class RedisComponent extends Object
      */
     function deleteCountOfNewNotification($team_id, $user_id)
     {
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id);
-        $res = $this->Db->del($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT));
+        $res = $this->Db->del($this->getKeyName(self::KEY_TYPE_NOTIFICATION_COUNT, $team_id, $user_id));
         return (bool)$res;
     }
 
@@ -233,8 +217,8 @@ class RedisComponent extends Object
      */
     function changeReadStatusOfNotification($team_id, $user_id, $notify_id, $unread = 0)
     {
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id);
-        $notify_date = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_NOTIFICATION), 'created');
+        $notify_date = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id),
+                                       'created');
         if ($notify_date === false) {
             return false;
         }
@@ -245,23 +229,20 @@ class RedisComponent extends Object
         $pipe = $this->Db->multi(Redis::PIPELINE);
 
         //delete set
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
-        $deleted_count = $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_id);
+        $deleted_count = $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
+                                        $notify_id);
         if ($deleted_count === 0) {
             return false;
         }
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 0);
-        $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_id);
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 1);
-        $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_id);
+        $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 0), $notify_id);
+        $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 1), $notify_id);
 
         //add set for unread status
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, $unread);
-        $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_date,
+        $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, $unread),
+                    $notify_date,
                     $notify_id);
         //add set for all
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
-        $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), $notify_date,
+        $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), $notify_date,
                     $notify_id);
 
         $pipe->exec();
@@ -279,10 +260,9 @@ class RedisComponent extends Object
      */
     function getNotifications($team_id, $user_id, $limit = null, $from_date = null)
     {
-        $this->setKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id);
         $delete_time_from = (string)((microtime(true) - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION)) * 10000);
         //delete from notification user
-        $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), 0,
+        $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), 0,
                                     $delete_time_from);
 
         if ($limit === null) {
@@ -292,10 +272,12 @@ class RedisComponent extends Object
             if ($limit !== -1) {
                 $limit--;
             }
-            $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER), 0, $limit, true);
+            $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
+                                                0, $limit, true);
         }
         else {
-            $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER),
+            $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id,
+                                                                         $user_id),
                                                        $from_date, -1,
                                                        ['limit' => [1, $limit], 'withscores' => true]);
         }
@@ -305,8 +287,7 @@ class RedisComponent extends Object
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         foreach ($notify_list as $notify_id => $score) {
-            $this->setKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, $user_id, $notify_id);
-            $pipe->hGetAll($this->getKeyName(self::KEY_TYPE_NOTIFICATION));
+            $pipe->hGetAll($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, $user_id, $notify_id));
         }
         $pipe_res = $pipe->exec();
         foreach ($pipe_res as $k => $v) {
