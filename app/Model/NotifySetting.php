@@ -26,6 +26,11 @@ class NotifySetting extends AppModel
     const TYPE_MY_MEMBER_CREATE_GOAL = 13;
     const TYPE_MY_MEMBER_COLLABORATE_GOAL = 14;
     const TYPE_MY_MEMBER_CHANGE_GOAL = 15;
+    const TYPE_EVALUATION_START = 16;
+    const TYPE_EVALUATION_FREEZE = 17;
+    const TYPE_EVALUATION_START_CAN_ONESELF = 18;
+    const TYPE_EVALUATION_CAN_AS_EVALUATOR = 19;
+    const TYPE_EVALUATION_DONE_FINAL = 20;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                           => [
@@ -118,6 +123,36 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'my_member_change_goal',
             'icon_class'      => 'fa-flag',
         ],
+        self::TYPE_EVALUATION_START                    => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'start_evaluation',
+            'icon_class'      => 'fa-paw',
+        ],
+        self::TYPE_EVALUATION_FREEZE                   => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'fleeze_evaluation',
+            'icon_class'      => 'fa-paw',
+        ],
+        self::TYPE_EVALUATION_START_CAN_ONESELF        => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'start_can_oneself_evaluation',
+            'icon_class'      => 'fa-paw',
+        ],
+        self::TYPE_EVALUATION_CAN_AS_EVALUATOR         => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'start_can_evaluate_as_evaluator',
+            'icon_class'      => 'fa-paw',
+        ],
+        self::TYPE_EVALUATION_DONE_FINAL               => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'final_evaluation_is_done',
+            'icon_class'      => 'fa-paw',
+        ],
 
     ];
 
@@ -153,6 +188,17 @@ class NotifySetting extends AppModel
             = __d('gl', "自分(コーチとして)のメンバーがゴールのコラボレーターとなったとき");
         self::$TYPE[self::TYPE_MY_MEMBER_CHANGE_GOAL]['field_real_name']
             = __d('gl', "ゴールの修正依頼を受けた自分(コーチとして)のメンバーがゴール内容を修正したとき");
+        self::$TYPE[self::TYPE_EVALUATION_START]['field_real_name']
+            = __d('gl', "自分が所属するチームが評価開始となったとき");
+        self::$TYPE[self::TYPE_EVALUATION_FREEZE]['field_real_name']
+            = __d('gl', "自分が所属するチームが評価凍結となったとき");
+        self::$TYPE[self::TYPE_EVALUATION_START_CAN_ONESELF]['field_real_name']
+            = __d('gl', "自分が自己評価できる状態になったとき");
+        self::$TYPE[self::TYPE_EVALUATION_CAN_AS_EVALUATOR]['field_real_name']
+            = __d('gl', "評価者としての自分が評価できる状態になったとき");
+        self::$TYPE[self::TYPE_EVALUATION_DONE_FINAL]['field_real_name']
+            = __d('gl', "自分の所属するチームの最終者が最終評価データをUploadしたとき");
+
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -273,21 +319,23 @@ class NotifySetting extends AppModel
 
     function getTitle($type, $from_user_names, $count_num, $item_name)
     {
-        if (!is_array($item_name)) {
+        if ($item_name && !is_array($item_name)) {
             $item_name = json_decode($item_name, true);
         }
         $title = null;
         $user_text = null;
         //カウント数はユーザ名リストを引いた数
-        $count_num -= count($from_user_names);
-        if (!is_array($from_user_names)) {
-            $from_user_names = [$from_user_names];
-        }
-        foreach ($from_user_names as $key => $name) {
-            if ($key !== 0) {
-                $user_text .= __d('gl', "、");
+        if ($from_user_names) {
+            $count_num -= count($from_user_names);
+            if (!is_array($from_user_names)) {
+                $from_user_names = [$from_user_names];
             }
-            $user_text .= __d('gl', '%sさん', $name);
+            foreach ($from_user_names as $key => $name) {
+                if ($key !== 0) {
+                    $user_text .= __d('gl', "、");
+                }
+                $user_text .= __d('gl', '%sさん', $name);
+            }
         }
         switch ($type) {
             case self::TYPE_FEED_POST:
@@ -338,6 +386,21 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_MY_MEMBER_CHANGE_GOAL:
                 $title = __d('gl', '%1$sがゴール内容を修正しました。', $user_text);
+                break;
+            case self::TYPE_EVALUATION_START:
+                $title = __d('gl', '評価期間に入りました。');
+                break;
+            case self::TYPE_EVALUATION_FREEZE:
+                $title = __d('gl', '評価が凍結されました。');
+                break;
+            case self::TYPE_EVALUATION_START_CAN_ONESELF:
+                $title = __d('gl', '自己評価を実施してください。');
+                break;
+            case self::TYPE_EVALUATION_CAN_AS_EVALUATOR:
+                $title = __d('gl', '被評価者の評価を実施してください。');
+                break;
+            case self::TYPE_EVALUATION_DONE_FINAL:
+                $title = __d('gl', '最終者が評価を実施しました。');
                 break;
             default:
                 break;
