@@ -146,33 +146,26 @@ class PostsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
-    function testAddCommentSuccessWithSocketId()
+    function testPushCommentToPost()
     {
-        /**
-         * @var UsersController $Posts
-         */
         $Posts = $this->_getPostsCommonMock();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+        $date = time();
+        $socket_id = 'test';
+        $post_id = 1;
+        $Posts->request->data['socket_id'] = $socket_id;
+        $hash = Security::hash($date);
         $data = [
-            'user_id' => 1,
-            'team_id' => 1,
-            'body'    => 'test'
-        ];
-        $Posts->Post->save($data);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
-        $data = [
-            'Comment'   => [
-                'body'    => 'test',
-                'post_id' => 1,
-            ],
-            'socket_id' => 'test'
+            'notify_id'         => $hash,
+            'is_comment_notify' => true,
+            'post_id'           => $post_id
         ];
 
-        $this->testAction('/posts/ajax_add_comment/',
-                          ['method' => 'POST', 'data' => $data]);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->NotifyBiz->expects($this->any())->method('commentPush')
+                         ->will($this->returnValueMap([[$socket_id, $data, true]]));
+
+        $Posts->_pushCommentToPost($post_id, $date);
     }
 
     function testAddCommentSuccessWithoutSocketId()
@@ -1260,7 +1253,7 @@ class PostsControllerTest extends ControllerTestCase
     function _getPostsCommonMock()
     {
         /**
-         * @var UsersController $Posts
+         * @var PostsController $Posts
          */
         $Posts = $this->generate('Posts', [
             'components' => [
