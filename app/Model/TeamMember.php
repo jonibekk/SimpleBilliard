@@ -1826,4 +1826,17 @@ class TeamMember extends AppModel
 
         return $evaluation_flg;
     }
+
+    function getCoachId($user_id, $team_id)
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.user_id' => $user_id,
+                'TeamMember.team_id' => $team_id,
+            ],
+            'fields'     => ['coach_user_id'],
+        ];
+        $res = $this->find('first', $options);
+        return viaIsSet($res['TeamMember']['coach_user_id']) ? $res['TeamMember']['coach_user_id'] : null;
+    }
 }

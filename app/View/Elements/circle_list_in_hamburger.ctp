@@ -15,7 +15,7 @@
     <p class="circle_heading">Circles</p>
     <? if (!empty($my_circles)): ?>
         <? foreach ($my_circles as $circle): ?>
-            <div class="circle-layout clearfix">
+            <div class="circle-layout clearfix circleListMore">
                 <div class="circle-link">
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
                         <div class="circle-icon_box">
@@ -47,6 +47,10 @@
                 </div>
             </div>
         <? endforeach ?>
+        <? if (count($my_circles) > 8): ?>
+            <i class="fa fa-angle-double-down circle-toggle-icon"></i><a
+                class="pl_5px font_12px font_gray click-circle-trigger on"><?= __d('gl', "すべて表示") ?></a>
+        <? endif; ?>
     <? endif; ?>
     <div class="clearfix develop--circle-seek">
         <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i><?=
