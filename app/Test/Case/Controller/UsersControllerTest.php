@@ -42,7 +42,8 @@ class UsersControllerTest extends ControllerTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
+        'app.evaluate_term',
+        'app.evaluation',
         'app.thread',
         'app.message',
         'app.email',
@@ -328,7 +329,9 @@ class UsersControllerTest extends ControllerTestCase
          */
         $Users = $this->generate('Users', [
             'components' => [
-                'Session',
+                'Session' => [
+                    'read'
+                ],
                 'Auth',
                 'NotifyBiz',
                 'GlEmail',
@@ -343,6 +346,16 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        $session_value_map = [
+            [null, [
+                'test'   => 'test',
+                'Config' => ''
+            ]],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap($session_value_map)
+                       );
         $this->testAction('/users/logout', ['method' => 'GET']);
     }
 

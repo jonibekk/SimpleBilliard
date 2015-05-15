@@ -100,7 +100,12 @@ class UsersController extends AppController
     public function logout()
     {
         $user = $this->Auth->user();
-        $this->Session->destroy();
+        foreach ($this->Session->read() as $key => $val) {
+            if (in_array($key, ['Config', '_Token', 'Auth'])) {
+                continue;
+            }
+            $this->Session->delete($key);
+        }
         $this->Cookie->destroy();
         $this->Pnotify->outInfo(__d('notify', "%sさん、またお会いしましょう。", $user['display_username']),
                                 ['title' => __d('notify', "ログアウトしました")]);
