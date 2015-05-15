@@ -95,6 +95,8 @@ class UsersController extends AppController
         //２要素設定有効なら
         if ($is_2fa_auth_enabled) {
             $this->Session->write('2fa_secret', $user_info['2fa_secret']);
+            $this->Session->write('user_id', $user_info['id']);
+            $this->Session->write('team_id', $user_info['DefaultTeam']['id']);
             return $this->redirect(['action' => 'two_fa_auth']);
         }
 
@@ -122,6 +124,7 @@ class UsersController extends AppController
         if (empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false) {
             if ($this->TwoFa->verifyKey($this->Session->read('2fa_secret'), $this->request->data['User']['two_fa_code']) === true) {
                 $is_match_2fa_code = true;
+                $this->Redis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
             }
         }
 
