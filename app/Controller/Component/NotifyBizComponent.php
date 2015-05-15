@@ -75,10 +75,12 @@ class NotifyBizComponent extends Component
                 $this->_setFeedPostOption($model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST:
-                $this->_setFeedCommentedOnMyPostOption($model_id, $sub_model_id);
+                $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $model_id,
+                                                     $sub_model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                $this->_setFeedCommentedOnMyCommentedPostOption($model_id, $sub_model_id);
+                $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                                                            $model_id, $sub_model_id);
                 break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
@@ -519,12 +521,13 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * 自分のコメントした投稿にコメントがあった場合のオプション取得
+     * 自分のコメントした投稿、アクションその他にコメントがあった場合のオプション取得
      *
+     * @param $notify_type
      * @param $post_id
      * @param $comment_id
      */
-    private function _setFeedCommentedOnMyCommentedPostOption($post_id, $comment_id)
+    private function _setFeedCommentedOnMyCommentedOption($notify_type, $post_id, $comment_id)
     {
         //宛先は自分以外のコメント主(投稿主ものぞく)
         $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id);
@@ -542,10 +545,10 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($commented_user_list,
-                                                                                NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST);
+                                                                                $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
+        $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($commented_user_list);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
@@ -554,12 +557,13 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * 自分の投稿にコメントがあった場合のオプション取得
+     * 自分の投稿、アクション、その他にコメントがあった場合のオプション取得
      *
+     * @param $notify_type
      * @param $post_id
      * @param $comment_id
      */
-    private function _setFeedCommentedOnMyPostOption($post_id, $comment_id)
+    private function _setFeedCommentedOnMineOption($notify_type, $post_id, $comment_id)
     {
         //宛先は投稿主
         $post = $this->Post->findById($post_id);
@@ -572,11 +576,11 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($post['Post']['user_id'],
-                                                                                NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST);
+                                                                                $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST;
+        $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
                                                                                             [$post['Post']['user_id']]);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
