@@ -31,129 +31,156 @@ class NotifySetting extends AppModel
     const TYPE_EVALUATION_START_CAN_ONESELF = 18;
     const TYPE_EVALUATION_CAN_AS_EVALUATOR = 19;
     const TYPE_EVALUATION_DONE_FINAL = 20;
+    const TYPE_FEED_COMMENTED_ON_MY_ACTION = 21;
+    const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION = 22;
+    const TYPE_FEED_CAN_SEE_ACTION = 23;
+    const TYPE_USER_JOINED_TO_INVITED_TEAM = 24;
 
     static public $TYPE = [
-        self::TYPE_FEED_POST                           => [
+        self::TYPE_FEED_POST                             => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_post',
             'icon_class'      => 'fa-comment-o',
         ],
-        self::TYPE_FEED_COMMENTED_ON_MY_POST           => [
+        self::TYPE_FEED_COMMENTED_ON_MY_POST             => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_post',
             'icon_class'      => 'fa-comment-o',
         ],
-        self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST => [
+        self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_commented_post',
             'icon_class'      => 'fa-comment-o',
         ],
-        self::TYPE_CIRCLE_USER_JOIN                    => [
+        self::TYPE_CIRCLE_USER_JOIN                      => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_user_join',
             'icon_class'      => 'fa-circle-o',
         ],
-        self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING      => [
+        self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING        => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_changed_privacy_setting',
             'icon_class'      => 'fa-circle-o',
         ],
-        self::TYPE_CIRCLE_ADD_USER                     => [
+        self::TYPE_CIRCLE_ADD_USER                       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_add_user',
             'icon_class'      => 'fa-circle-o',
         ],
-        self::TYPE_MY_GOAL_FOLLOW                      => [
+        self::TYPE_MY_GOAL_FOLLOW                        => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_follow',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_GOAL_COLLABORATE                 => [
+        self::TYPE_MY_GOAL_COLLABORATE                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_collaborate',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_GOAL_CHANGED_BY_LEADER           => [
+        self::TYPE_MY_GOAL_CHANGED_BY_LEADER             => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_changed_by_leader',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION       => [
+        self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION         => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_target_for_evaluation',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE => [
+        self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_as_leader_request_to_change',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION   => [
+        self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION     => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_not_target_for_evaluation',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_MEMBER_CREATE_GOAL               => [
+        self::TYPE_MY_MEMBER_CREATE_GOAL                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_MEMBER_COLLABORATE_GOAL          => [
+        self::TYPE_MY_MEMBER_COLLABORATE_GOAL            => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_collaborate_goal',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_MY_MEMBER_CHANGE_GOAL               => [
+        self::TYPE_MY_MEMBER_CHANGE_GOAL                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_change_goal',
             'icon_class'      => 'fa-flag',
         ],
-        self::TYPE_EVALUATION_START                    => [
+        self::TYPE_EVALUATION_START                      => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_evaluation',
             'icon_class'      => 'fa-paw',
         ],
-        self::TYPE_EVALUATION_FREEZE                   => [
+        self::TYPE_EVALUATION_FREEZE                     => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'fleeze_evaluation',
             'icon_class'      => 'fa-paw',
         ],
-        self::TYPE_EVALUATION_START_CAN_ONESELF        => [
+        self::TYPE_EVALUATION_START_CAN_ONESELF          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_can_oneself_evaluation',
             'icon_class'      => 'fa-paw',
         ],
-        self::TYPE_EVALUATION_CAN_AS_EVALUATOR         => [
+        self::TYPE_EVALUATION_CAN_AS_EVALUATOR           => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_can_evaluate_as_evaluator',
             'icon_class'      => 'fa-paw',
         ],
-        self::TYPE_EVALUATION_DONE_FINAL               => [
+        self::TYPE_EVALUATION_DONE_FINAL                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'final_evaluation_is_done',
             'icon_class'      => 'fa-paw',
         ],
-
+        self::TYPE_FEED_COMMENTED_ON_MY_ACTION           => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'feed_commented_on_my_action',
+            'icon_class'      => 'fa-check-circle',
+        ],
+        self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'feed_commented_on_my_commented_action',
+            'icon_class'      => 'fa-check-circle',
+        ],
+        self::TYPE_FEED_CAN_SEE_ACTION                   => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'feed_action',
+            'icon_class'      => 'fa-check-circle',
+        ],
+        self::TYPE_USER_JOINED_TO_INVITED_TEAM           => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'user_joined_to_invited_team',
+            'icon_class'      => 'fa-users',
+        ],
     ];
 
     public function _setFieldRealName()
@@ -198,7 +225,14 @@ class NotifySetting extends AppModel
             = __d('gl', "評価者としての自分が評価できる状態になったとき");
         self::$TYPE[self::TYPE_EVALUATION_DONE_FINAL]['field_real_name']
             = __d('gl', "自分の所属するチームの最終者が最終評価データをUploadしたとき");
-
+        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_ACTION]['field_real_name']
+            = __d('gl', "自分のアクションに「コメント」されたとき");
+        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION]['field_real_name']
+            = __d('gl', "自分のコメントしたアクションに「コメント」されたとき");
+        self::$TYPE[self::TYPE_FEED_CAN_SEE_ACTION]['field_real_name']
+            = __d('gl', "自分が閲覧可能なアクションがあったとき");
+        self::$TYPE[self::TYPE_USER_JOINED_TO_INVITED_TEAM]['field_real_name']
+            = __d('gl', "自分の所属するチームへ招待したユーザーがチームに参加したとき");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -402,6 +436,19 @@ class NotifySetting extends AppModel
             case self::TYPE_EVALUATION_DONE_FINAL:
                 $title = __d('gl', '最終者が評価を実施しました。');
                 break;
+            case self::TYPE_FEED_COMMENTED_ON_MY_ACTION:
+                $title = __d('gl', '%1$sがあなたのアクションにコメントしました。', $user_text);
+                break;
+            case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
+                $title = __d('gl', '%1$sもアクションにコメントしました。', $user_text);
+                break;
+            case self::TYPE_FEED_CAN_SEE_ACTION:
+                $title = __d('gl', '%1$sがアクションしました。', $user_text);
+                break;
+            case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
+                $title = __d('gl', '%1$sがチームに参加しました。', $user_text);
+                break;
+
             default:
                 break;
         }
