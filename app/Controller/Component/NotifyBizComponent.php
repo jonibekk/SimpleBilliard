@@ -132,7 +132,15 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_EVALUATION_DONE_FINAL:
                 $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
                 break;
-            //_setForEvaluationAllUserOption
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION:
+                $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION, $model_id,
+                                                     $sub_model_id);
+                break;
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
+                $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                                                            $model_id, $sub_model_id);
+                break;
+
             default:
                 break;
         }
