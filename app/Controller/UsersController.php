@@ -731,6 +731,8 @@ class UsersController extends AppController
         $this->_refreshAuth();
         //チーム切換え
         $this->_switchTeam($invite['Invite']['team_id']);
+        //招待者に通知
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
         return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
     }
 

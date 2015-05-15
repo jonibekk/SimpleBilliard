@@ -84,6 +84,14 @@ class FollowerTest extends CakeTestCase
         $this->assertFalse($this->Follower->addFollower(100));
     }
 
+    function testGetFollowerListByGoalId()
+    {
+        $this->setDefault();
+        $expected = [(int)1 => '1'];
+        $actual = $this->Follower->getFollowerListByGoalId(1);
+        $this->assertEquals($expected, $actual);
+    }
+
     function setDefault()
     {
         $this->Follower->my_uid = 1;

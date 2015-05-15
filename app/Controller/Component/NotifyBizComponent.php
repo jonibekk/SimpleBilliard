@@ -10,6 +10,7 @@ App::uses('ModelType', 'Model');
  * @property NotifySetting    $NotifySetting
  * @property Post             $Post
  * @property Goal             $Goal
+ * @property Team             $Team
  */
 class NotifyBizComponent extends Component
 {
@@ -53,6 +54,7 @@ class NotifyBizComponent extends Component
             $this->NotifySetting = ClassRegistry::init('NotifySetting');
             $this->Post = ClassRegistry::init('Post');
             $this->Goal = ClassRegistry::init('Goal');
+            $this->Team = ClassRegistry::init('Team');
             $this->GlEmail->startup($controller);
         }
     }
@@ -75,10 +77,12 @@ class NotifyBizComponent extends Component
                 $this->_setFeedPostOption($model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST:
-                $this->_setFeedCommentedOnMyPostOption($model_id, $sub_model_id);
+                $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $model_id,
+                                                     $sub_model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                $this->_setFeedCommentedOnMyCommentedPostOption($model_id, $sub_model_id);
+                $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                                                            $model_id, $sub_model_id);
                 break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
@@ -130,7 +134,20 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_EVALUATION_DONE_FINAL:
                 $this->_setForEvaluationAllUserOption($notify_type, $model_id, $user_id);
                 break;
-            //_setForEvaluationAllUserOption
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION:
+                $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION, $model_id,
+                                                     $sub_model_id);
+                break;
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
+                $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                                                            $model_id, $sub_model_id);
+                break;
+            case NotifySetting::TYPE_FEED_CAN_SEE_ACTION:
+                $this->_setFeedActionOption($model_id);
+                break;
+            case NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM:
+                $this->_setTeamJoinOption($model_id);
+                break;
             default:
                 break;
         }
@@ -215,13 +232,17 @@ class NotifyBizComponent extends Component
             = $this->Post->User->CircleMember->my_uid
             = $this->Goal->my_uid
             = $this->Goal->Collaborator->my_uid
+            = $this->Goal->Follower->my_uid
             = $this->Goal->Team->my_uid
             = $this->Goal->Team->EvaluateTerm->my_uid
             = $this->Goal->Team->EvaluateTerm->Team->my_uid
             = $this->NotifySetting->my_uid
-            = $this->NotifySetting->my_uid
             = $this->GlEmail->SendMail->my_uid
             = $this->GlEmail->SendMail->SendMailToUser->my_uid
+            = $this->Team->my_uid
+            = $this->Team->TeamMember->my_uid
+            = $this->Team->Invite->my_uid
+            = $this->Team->Invite->FromUser->my_uid
             = $user_id;
 
         $this->Post->current_team_id
@@ -232,13 +253,17 @@ class NotifyBizComponent extends Component
             = $this->Post->User->CircleMember->current_team_id
             = $this->Goal->current_team_id
             = $this->Goal->Collaborator->current_team_id
+            = $this->Goal->Follower->current_team_id
             = $this->Goal->Team->current_team_id
             = $this->Goal->Team->EvaluateTerm->current_team_id
             = $this->Goal->Team->EvaluateTerm->Team->current_team_id
             = $this->NotifySetting->current_team_id
-            = $this->NotifySetting->current_team_id
             = $this->GlEmail->SendMail->current_team_id
             = $this->GlEmail->SendMail->SendMailToUser->current_team_id
+            = $this->Team->current_team_id
+            = $this->Team->TeamMember->current_team_id
+            = $this->Team->Invite->current_team_id
+            = $this->Team->Invite->FromUser->current_team_id
             = $team_id;
     }
 
@@ -266,6 +291,63 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
+    }
+
+    /**
+     * 招待したユーザがチーム参加したときのオプション
+     *
+     * @param $invite_id
+     */
+    private function _setTeamJoinOption($invite_id)
+    {
+        //宛先は招待した人
+        $inviter = $this->Team->Invite->getInviterUser($invite_id);
+        if (empty($inviter)) {
+            return;
+        }
+
+        //対象ユーザの通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($inviter['id'],
+                                                                                NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
+        $this->notify_option['url_data'] = '/';//TODO 暫定的にhome
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode([trim($inviter['display_username'])]);
+    }
+
+    /**
+     * 自分が閲覧可能なアクションがあった場合
+     *
+     * @param $action_result_id
+     */
+    private function _setFeedActionOption($action_result_id)
+    {
+        $action = $this->Goal->ActionResult->findById($action_result_id);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $post = $this->Post->findByActionResultId($action_result_id);
+        if (empty($action)) {
+            return;
+        }
+        $goal_id = $action['ActionResult']['goal_id'];
+        //宛先は閲覧可能な全ユーザ
+        //Collaborator
+        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //Follower
+        $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
+        //Coach
+        $coach_id = $this->Team->TeamMember->getCoachId($this->Team->my_uid, $this->Team->current_team_id);
+
+        $members = $collaborators + $followers + [$coach_id => $coach_id];
+        unset($members[$this->Team->my_uid]);
+
+        //対象ユーザの通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
+                                                                                NotifySetting::TYPE_FEED_CAN_SEE_ACTION);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_CAN_SEE_ACTION;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = !empty($action['ActionResult']['name']) ?
+            json_encode([trim($action['ActionResult']['name'])]) : null;
     }
 
     /**
@@ -519,12 +601,13 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * 自分のコメントした投稿にコメントがあった場合のオプション取得
+     * 自分のコメントした投稿、アクションその他にコメントがあった場合のオプション取得
      *
+     * @param $notify_type
      * @param $post_id
      * @param $comment_id
      */
-    private function _setFeedCommentedOnMyCommentedPostOption($post_id, $comment_id)
+    private function _setFeedCommentedOnMyCommentedOption($notify_type, $post_id, $comment_id)
     {
         //宛先は自分以外のコメント主(投稿主ものぞく)
         $commented_user_list = $this->Post->Comment->getCommentedUniqueUsersList($post_id);
@@ -542,10 +625,10 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($commented_user_list,
-                                                                                NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST);
+                                                                                $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST;
+        $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($commented_user_list);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = $post_id;
@@ -554,12 +637,13 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * 自分の投稿にコメントがあった場合のオプション取得
+     * 自分の投稿、アクション、その他にコメントがあった場合のオプション取得
      *
+     * @param $notify_type
      * @param $post_id
      * @param $comment_id
      */
-    private function _setFeedCommentedOnMyPostOption($post_id, $comment_id)
+    private function _setFeedCommentedOnMineOption($notify_type, $post_id, $comment_id)
     {
         //宛先は投稿主
         $post = $this->Post->findById($post_id);
@@ -572,11 +656,11 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($post['Post']['user_id'],
-                                                                                NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST);
+                                                                                $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST;
+        $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
                                                                                             [$post['Post']['user_id']]);
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
