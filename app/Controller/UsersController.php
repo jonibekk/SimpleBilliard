@@ -94,6 +94,7 @@ class UsersController extends AppController
 
         //２要素設定有効なら
         if ($is_2fa_auth_enabled) {
+            $this->Session->write('2fa_secret', $user_info['2fa_secret']);
             return $this->redirect(['action' => 'two_fa_auth']);
         }
 
@@ -117,7 +118,13 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        $is_match_2fa_code = true;//TODO ２要素入力コード判定処理
+        $is_match_2fa_code = false;
+        if (empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false) {
+            if ($this->TwoFa->verifyKey($this->Session->read('2fa_secret'), $this->request->data['User']['two_fa_code']) === true) {
+                $is_match_2fa_code = true;
+            }
+        }
+
         if (!$is_match_2fa_code) {
             $this->Pnotify->outError(__d('notify', "２要素認証コードが正しくありません。"));
             return $this->render();
