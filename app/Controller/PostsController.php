@@ -456,7 +456,7 @@ class PostsController extends AppController
         ];
         $this->Post->id = viaIsSet($this->request->data['Comment']['post_id']);
         $post = $this->Post->findById($this->Post->id);
-        $type = $post['Post']['type'];
+        $type = viaIsSet($post['Post']['type']);
         try {
             if (!$this->Post->exists()) {
                 throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
