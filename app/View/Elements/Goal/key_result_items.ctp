@@ -83,7 +83,6 @@
                             <? endif; ?>
                         </li>
 
-                        <? if (count($key_results) !== 1): ?>
                             <li role="presentation">
                                 <?=
                                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
@@ -91,7 +90,6 @@
                                                       ['controller' => 'goals', 'action' => 'delete_key_result', $kr['KeyResult']['id']],
                                                       ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
                             </li>
-                        <? endif; ?>
                     </ul>
                 </div>
             <? endif; ?>
