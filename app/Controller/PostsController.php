@@ -455,6 +455,8 @@ class PostsController extends AppController
             'msg'   => ""
         ];
         $this->Post->id = viaIsSet($this->request->data['Comment']['post_id']);
+        $post = $this->Post->findById($this->Post->id);
+        $type = $post['Post']['type'];
         try {
             if (!$this->Post->exists()) {
                 throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
@@ -466,10 +468,22 @@ class PostsController extends AppController
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
-                                                 $this->Post->Comment->id);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
-                                                 $this->Post->id, $this->Post->Comment->id);
+                switch ($type) {
+                    case Post::TYPE_NORMAL:
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
+                                                         $this->Post->Comment->id);
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                                                         $this->Post->id, $this->Post->Comment->id);
+                        break;
+                    case Post::TYPE_ACTION:
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                                                         $this->Post->id,
+                                                         $this->Post->Comment->id);
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                                                         $this->Post->id, $this->Post->Comment->id);
+                        break;
+                }
+
                 $result['msg'] = __d('gl', "コメントしました。");
             }
             else {
