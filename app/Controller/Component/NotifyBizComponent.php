@@ -145,6 +145,9 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_FEED_CAN_SEE_ACTION:
                 $this->_setFeedActionOption($model_id);
                 break;
+            case NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM:
+                $this->_setTeamJoinOption($model_id);
+                break;
             default:
                 break;
         }
@@ -238,6 +241,8 @@ class NotifyBizComponent extends Component
             = $this->GlEmail->SendMail->SendMailToUser->my_uid
             = $this->Team->my_uid
             = $this->Team->TeamMember->my_uid
+            = $this->Team->Invite->my_uid
+            = $this->Team->Invite->FromUser->my_uid
             = $user_id;
 
         $this->Post->current_team_id
@@ -257,6 +262,8 @@ class NotifyBizComponent extends Component
             = $this->GlEmail->SendMail->SendMailToUser->current_team_id
             = $this->Team->current_team_id
             = $this->Team->TeamMember->current_team_id
+            = $this->Team->Invite->current_team_id
+            = $this->Team->Invite->FromUser->current_team_id
             = $team_id;
     }
 
@@ -284,6 +291,28 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
+    }
+
+    /**
+     * 招待したユーザがチーム参加したときのオプション
+     *
+     * @param $invite_id
+     */
+    private function _setTeamJoinOption($invite_id)
+    {
+        //宛先は招待した人
+        $inviter = $this->Team->Invite->getInviterUser($invite_id);
+        if (empty($inviter)) {
+            return;
+        }
+
+        //対象ユーザの通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($inviter['id'],
+                                                                                NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
+        $this->notify_option['url_data'] = '/';//TODO 暫定的にhome
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode([trim($inviter['display_username'])]);
     }
 
     /**
