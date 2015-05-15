@@ -348,7 +348,8 @@ class UsersControllerTest extends ControllerTestCase
                     );
         $session_value_map = [
             [null, [
-                'test' => 'test'
+                'test'   => 'test',
+                'Config' => ''
             ]],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
