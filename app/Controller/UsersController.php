@@ -80,16 +80,19 @@ class UsersController extends AppController
         }
 
         //メアド、パスの認証(セッションのストアはしていない)
-        if (!$this->Auth->identify($this->request, $this->response)) {
+        $user_info = $this->Auth->identify($this->request, $this->response);
+        if (!$user_info) {
             $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
             return $this->render();
         }
-
         $this->Session->write('preAuthPost', $this->request->data);
 
-        //２要素設定有効なら
-        $is_2fa_auth_enabled = true;//TODO 判定処理いれる
+        $is_2fa_auth_enabled = true;
+        if (is_null($user_info['2fa_secret']) === true) {
+            $is_2fa_auth_enabled = false;
+        }
 
+        //２要素設定有効なら
         if ($is_2fa_auth_enabled) {
             return $this->redirect(['action' => 'two_fa_auth']);
         }
