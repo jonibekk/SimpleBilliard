@@ -10,6 +10,7 @@ App::uses('ModelType', 'Model');
  * @property NotifySetting    $NotifySetting
  * @property Post             $Post
  * @property Goal             $Goal
+ * @property Team             $Team
  */
 class NotifyBizComponent extends Component
 {
@@ -53,6 +54,7 @@ class NotifyBizComponent extends Component
             $this->NotifySetting = ClassRegistry::init('NotifySetting');
             $this->Post = ClassRegistry::init('Post');
             $this->Goal = ClassRegistry::init('Goal');
+            $this->Team = ClassRegistry::init('Team');
             $this->GlEmail->startup($controller);
         }
     }
@@ -140,7 +142,9 @@ class NotifyBizComponent extends Component
                 $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                                                             $model_id, $sub_model_id);
                 break;
-
+            case NotifySetting::TYPE_FEED_CAN_SEE_ACTION:
+                $this->_setFeedActionOption($model_id);
+                break;
             default:
                 break;
         }
@@ -225,13 +229,15 @@ class NotifyBizComponent extends Component
             = $this->Post->User->CircleMember->my_uid
             = $this->Goal->my_uid
             = $this->Goal->Collaborator->my_uid
+            = $this->Goal->Follower->my_uid
             = $this->Goal->Team->my_uid
             = $this->Goal->Team->EvaluateTerm->my_uid
             = $this->Goal->Team->EvaluateTerm->Team->my_uid
             = $this->NotifySetting->my_uid
-            = $this->NotifySetting->my_uid
             = $this->GlEmail->SendMail->my_uid
             = $this->GlEmail->SendMail->SendMailToUser->my_uid
+            = $this->Team->my_uid
+            = $this->Team->TeamMember->my_uid
             = $user_id;
 
         $this->Post->current_team_id
@@ -242,13 +248,15 @@ class NotifyBizComponent extends Component
             = $this->Post->User->CircleMember->current_team_id
             = $this->Goal->current_team_id
             = $this->Goal->Collaborator->current_team_id
+            = $this->Goal->Follower->current_team_id
             = $this->Goal->Team->current_team_id
             = $this->Goal->Team->EvaluateTerm->current_team_id
             = $this->Goal->Team->EvaluateTerm->Team->current_team_id
             = $this->NotifySetting->current_team_id
-            = $this->NotifySetting->current_team_id
             = $this->GlEmail->SendMail->current_team_id
             = $this->GlEmail->SendMail->SendMailToUser->current_team_id
+            = $this->Team->current_team_id
+            = $this->Team->TeamMember->current_team_id
             = $team_id;
     }
 
@@ -276,6 +284,41 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
+    }
+
+    /**
+     * 自分が閲覧可能なアクションがあった場合
+     *
+     * @param $action_result_id
+     */
+    private function _setFeedActionOption($action_result_id)
+    {
+        $action = $this->Goal->ActionResult->findById($action_result_id);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $post = $this->Post->findByActionResultId($action_result_id);
+        if (empty($action)) {
+            return;
+        }
+        $goal_id = $action['ActionResult']['goal_id'];
+        //宛先は閲覧可能な全ユーザ
+        //Collaborator
+        $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //Follower
+        $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
+        //Coach
+        $coach_id = $this->Team->TeamMember->getCoachId($this->Team->my_uid, $this->Team->current_team_id);
+
+        $members = $collaborators + $followers + [$coach_id => $coach_id];
+        unset($members[$this->Team->my_uid]);
+
+        //対象ユーザの通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
+                                                                                NotifySetting::TYPE_FEED_CAN_SEE_ACTION);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_CAN_SEE_ACTION;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = !empty($action['ActionResult']['name']) ?
+            json_encode([trim($action['ActionResult']['name'])]) : null;
     }
 
     /**

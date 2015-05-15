@@ -111,4 +111,24 @@ class Follower extends AppModel
         return $res;
     }
 
+    /**
+     * @param $goal_id
+     *
+     * @return array|null
+     */
+    function getFollowerListByGoalId($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'user_id', 'user_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }
