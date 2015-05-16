@@ -12,27 +12,27 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?
-//echo $this->Html->script('jquery-2.1.0.min');
-echo $this->Html->script('jquery-1.11.1.min');
-echo $this->Html->script('bootstrap.min');
-echo $this->Html->script('jasny-bootstrap.min');
-echo $this->Html->script('bootstrapValidator.min');
-echo $this->Html->script('bootstrap-switch.min');
-echo $this->Html->script('bvAddition');
-echo $this->Html->script('pnotify.custom.min');
-echo $this->Html->script('jquery.nailthumb.1.1.min');
-echo $this->Html->script('jquery.autosize.min');
-echo $this->Html->script('jquery.lazy.min');
-echo $this->Html->script('lightbox.min');
-echo $this->Html->script('jquery.showmore.min');
-echo $this->Html->script('ZeroClipboard.min');
-echo $this->Html->script('placeholders.min');
-echo $this->Html->script('customRadioCheck.min');
-echo $this->Html->script('select2.min');
-echo $this->Html->script('bootstrap-datepicker.min');
-echo $this->Html->script('locales/bootstrap-datepicker.ja');
-echo $this->Html->script('moment.min');
-echo $this->Html->script('pusher.min');
+//echo $this->Html->script('vendor/jquery-2.1.0.min');
+echo $this->Html->script('vendor/jquery-1.11.1.min');
+echo $this->Html->script('vendor/bootstrap.min');
+echo $this->Html->script('vendor/jasny-bootstrap.min');
+echo $this->Html->script('vendor/bootstrapValidator.min');
+echo $this->Html->script('vendor/bootstrap-switch.min');
+echo $this->Html->script('vendor/bvAddition');
+echo $this->Html->script('vendor/pnotify.custom.min');
+echo $this->Html->script('vendor/jquery.nailthumb.1.1.min');
+echo $this->Html->script('vendor/jquery.autosize.min');
+echo $this->Html->script('vendor/jquery.lazy.min');
+echo $this->Html->script('vendor/lightbox.min');
+echo $this->Html->script('vendor/jquery.showmore.min');
+echo $this->Html->script('vendor/ZeroClipboard.min');
+echo $this->Html->script('vendor/placeholders.min');
+echo $this->Html->script('vendor/customRadioCheck.min');
+echo $this->Html->script('vendor/select2.min');
+echo $this->Html->script('vendor/bootstrap-datepicker.min');
+echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
+echo $this->Html->script('vendor/moment.min');
+echo $this->Html->script('vendor/pusher.min');
 echo $this->Html->script('gl_basic');
 ?>
 <!--suppress JSDuplicatedDeclaration -->

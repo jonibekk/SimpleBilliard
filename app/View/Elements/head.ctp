@@ -50,8 +50,8 @@
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
     <!--[if lt IE 9]>
-    <?= $this->Html->script('html5shiv')?>
-    <?= $this->Html->script('respond.min')?>
+    <?= $this->Html->script('vendor/html5shiv')?>
+    <?= $this->Html->script('vendor/respond.min')?>
     <![endif]-->
     <?
     //公開環境のみタグを有効化
