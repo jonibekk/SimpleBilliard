@@ -6,3 +6,6 @@ exclude_paths:
 - "app/Config/*"
 - "app/Locale/*"
 - "app/Test/*"
+- "app/webroot/js/vendor/*"
+- "etc/*"
+- "docs/*"
