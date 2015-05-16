@@ -339,8 +339,8 @@ class GoalsControllerTest extends ControllerTestCase
                 'user_id'    => $user_id,
                 'team_id'    => $team_id,
                 'name'       => 'test',
-                'start_date' => '2014/07/07',
-                'end_date'   => '2014/10/07',
+                'start_date' => strtotime('2014/07/07'),
+                'end_date'   => strtotime('2014/10/07'),
             ],
         ];
         $goal = $Goals->Goal->save($goal_data);

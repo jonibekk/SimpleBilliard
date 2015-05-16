@@ -158,7 +158,7 @@ class KeyResult extends AppModel
         $validate_backup = $this->validate;
         $this->validate = array_merge($this->validate, $this->post_validate);
         if (!$this->validates()) {
-            return false;
+            throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
         }
         $this->validate = $validate_backup;
         //時間をunixtimeに変換
@@ -239,10 +239,15 @@ class KeyResult extends AppModel
             $data['KeyResult']['current_value'] = 0;
             $data['KeyResult']['target_value'] = 1;
         }
+
         $this->set($data);
+        $validate_backup = $this->validate;
+        $this->validate = array_merge($this->validate, $this->post_validate);
         if (!$this->validates()) {
             return false;
         }
+        $this->validate = $validate_backup;
+
         //時間をunixtimeに変換
         $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
         $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
@@ -251,7 +256,6 @@ class KeyResult extends AppModel
 //        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
 //                                                            $data['KeyResult']['target_value'],
 //                                                            $data['KeyResult']['current_value']);
-        unset($this->validate['end_date']);
         return $this->save($data);
     }
 
