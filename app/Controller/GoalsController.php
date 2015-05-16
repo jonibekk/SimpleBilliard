@@ -843,6 +843,8 @@ class GoalsController extends AppController
 
         $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;
         $this->Mixpanel->trackCreateAction($this->Goal->ActionResult->getLastInsertID(), $goal_id, $kr_id);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
+                                         $this->Goal->ActionResult->getLastInsertID());
 
         // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));

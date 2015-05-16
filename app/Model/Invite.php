@@ -186,4 +186,29 @@ class Invite extends AppModel
         return false;
     }
 
+    /**
+     * @param $invite_id
+     *
+     * @return null
+     */
+    function getInviterUser($invite_id)
+    {
+        $options = [
+            'conditions' => [
+                'Invite.id' => $invite_id
+            ],
+            'contain'    => [
+                'FromUser' => [
+                    'fields' => $this->FromUser->profileFields
+                ]
+            ]
+        ];
+        $inviter = $this->find('first', $options);
+        if (!isset($inviter['FromUser'])) {
+            return null;
+        }
+        $res = $inviter['FromUser'];
+        return $res;
+    }
+
 }

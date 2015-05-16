@@ -196,6 +196,57 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAddCommentActionSuccessWithoutSocketId()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'body'    => 'test',
+            'type'    => 3
+        ];
+        $Posts->Post->save($data);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Comment' => [
+                'body'    => 'test',
+                'post_id' => $Posts->Post->getLastInsertID(),
+            ],
+        ];
+
+        $this->testAction('/posts/ajax_add_comment/',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAddCommentFailNotExistsWithoutSocketId()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Comment' => [
+                'body'    => 'test',
+                'post_id' => 10000000000,
+            ],
+        ];
+
+        $this->testAction('/posts/ajax_add_comment/',
+                          ['method' => 'POST', 'data' => $data]);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAddCommentFailNotPost()
     {
         $this->_getPostsCommonMock();
