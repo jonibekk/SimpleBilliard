@@ -77,24 +77,6 @@ class Follower extends AppModel
         return $res;
     }
 
-    function isFollowed($goal_id, $uid = null)
-    {
-        if (!$uid) {
-            $uid = $this->my_uid;
-        }
-        $options = [
-            'conditions' => [
-                'Follower.goal_id' => $goal_id,
-                'Follower.user_id' => $uid,
-            ],
-        ];
-        $res = $this->find('first', $options);
-        if (!empty($res)) {
-            return true;
-        }
-        return false;
-    }
-
     function isExists($goal_id)
     {
         $options = [
@@ -108,6 +90,26 @@ class Follower extends AppModel
             ],
         ];
         $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * @param $goal_id
+     *
+     * @return array|null
+     */
+    function getFollowerListByGoalId($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'user_id', 'user_id'
+            ],
+        ];
+        $res = $this->find('list', $options);
         return $res;
     }
 

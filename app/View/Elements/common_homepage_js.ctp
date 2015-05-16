@@ -1,8 +1,8 @@
 <? /* @var $this View */ ?>
 <!-- START app/View/Elements/common_homepage_js.ctp -->
-<?= $this->Html->script('jquery-1.11.1.min') ?>
-<?= $this->Html->script('bootstrap.min') ?>
-<?= $this->Html->script('pnotify.custom.min') ?>
+<?= $this->Html->script('vendor/jquery-1.11.1.min') ?>
+<?= $this->Html->script('vendor/bootstrap.min') ?>
+<?= $this->Html->script('vendor/pnotify.custom.min') ?>
 <?= $this->Html->script('homepage/modernizr') ?>
 <?= $this->Html->script('homepage/ba-cond') ?>
 <?= $this->Html->script('homepage/slitslider') ?>
