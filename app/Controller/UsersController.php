@@ -146,6 +146,9 @@ class UsersController extends AppController
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');
+            $this->Session->delete('2fa_secret');
+            $this->Session->delete('user_id');
+            $this->Session->delete('team_id');
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
