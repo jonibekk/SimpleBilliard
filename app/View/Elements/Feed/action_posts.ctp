@@ -77,21 +77,7 @@
                         <?= $this->element('Feed/post_edit_form', compact('post')) ?>
                     </div>
                 <?php endif; ?>
-                <div class="col col-xxs-12 feed-contents post-contents showmore font_14px font_verydark box-align"
-                     id="PostTextBody_<?= $post['Post']['id'] ?>">
-                    <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
-                        <?= $this->TextEx->autoLink($post['Post']['body']) ?>
-                    <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-                        <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= $this->TextEx->autoLink($post['ActionResult']['name']) ?>
-                    <?php elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
-                        <i class="fa fa-key disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！",
-                                                                      h($post['KeyResult']['name'])) ?>
-                    <?php elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
-                        <i class="fa fa-flag disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['Goal']['name'])) ?>
-                    <?php else: ?>
-                        <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
-                    <?php endif; ?>
-                </div>
+                <?= $this->element('Feed/post_body', compact('post')) ?>
                 <?php $photo_count = 0;
                 //タイプ別に切り分け
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
