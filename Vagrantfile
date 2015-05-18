@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-required_plugins = %w( vagrant-omnibus vagrant-cachier )
+required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers )
 required_plugins.each do |plugin|
  unless Vagrant.has_plugin? plugin
    required_plugins.each do |plugin|
@@ -29,6 +29,12 @@ Vagrant.configure("2") do |config|
 
   if Vagrant.has_plugin?("vagrant-omnibus")
     config.omnibus.chef_version = '11.4.4'
+  end
+
+  if Vagrant.has_plugin?("vagrant-triggers")
+    config.trigger.after [:reload, :halt], stdout: true do
+      `rm .vagrant/machines/default/virtualbox/synced_folders`
+    end
   end
 
   src_dir = './'
