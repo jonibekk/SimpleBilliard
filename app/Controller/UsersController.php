@@ -80,17 +80,26 @@ class UsersController extends AppController
         }
 
         //メアド、パスの認証(セッションのストアはしていない)
-        if (!$this->Auth->identify($this->request, $this->response)) {
+        $user_info = $this->Auth->identify($this->request, $this->response);
+        if (!$user_info) {
             $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
             return $this->render();
         }
-
         $this->Session->write('preAuthPost', $this->request->data);
 
-        //２要素設定有効なら
-        $is_2fa_auth_enabled = true;//TODO 判定処理いれる
+        $is_2fa_auth_enabled = true;
+        // 2要素認証設定OFFの場合
+        // 2要素認証設定ONかつ、設定して30日以内の場合
+        if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
+                && $this->Redis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))) {
+            $is_2fa_auth_enabled = false;
+        }
 
+        //２要素設定有効なら
         if ($is_2fa_auth_enabled) {
+            $this->Session->write('2fa_secret', $user_info['2fa_secret']);
+            $this->Session->write('user_id', $user_info['id']);
+            $this->Session->write('team_id', $user_info['DefaultTeam']['id']);
             return $this->redirect(['action' => 'two_fa_auth']);
         }
 
@@ -114,14 +123,15 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        $is_match_2fa_code = true;//TODO ２要素入力コード判定処理
-        if (!$is_match_2fa_code) {
+        if ((empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false)
+            && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'), $this->request->data['User']['two_fa_code']) === true) {
+            $this->Redis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
+            return $this->_afterAuthSessionStore();
+
+        } else {
             $this->Pnotify->outError(__d('notify', "２要素認証コードが正しくありません。"));
             return $this->render();
         }
-
-        return $this->_afterAuthSessionStore();
-
     }
 
     function _afterAuthSessionStore()
@@ -130,6 +140,9 @@ class UsersController extends AppController
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');
+            $this->Session->delete('2fa_secret');
+            $this->Session->delete('user_id');
+            $this->Session->delete('team_id');
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
