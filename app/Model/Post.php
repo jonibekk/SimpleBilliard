@@ -439,7 +439,7 @@ class Post extends AppModel
             elseif ($this->orgParams['post_id']) {
                 //アクセス可能かチェック
                 //ゴール投稿なら参照可能なゴールか？
-                if ($this->isPermittedGoalPost($this->orgParams['post_id'])) {
+                if ($this->isGoalPost($this->orgParams['post_id'])) {
                     $p_list = $this->orgParams['post_id'];
                 }
                 elseif (
@@ -614,18 +614,13 @@ class Post extends AppModel
         return $res;
     }
 
-    public function isPermittedGoalPost($post_id)
+    public function isGoalPost($post_id)
     {
         $post = $this->find('first', ['conditions' => ['Post.id' => $post_id], 'fields' => ['Post.goal_id']]);
         if (!isset($post['Post']['goal_id']) || !$post['Post']['goal_id']) {
             return false;
         }
-        if ($this->Goal->Follower->isFollowed($post['Post']['goal_id'])
-            || $this->Goal->Collaborator->isCollaborated($post['Post']['goal_id'])
-        ) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public function getAllExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
