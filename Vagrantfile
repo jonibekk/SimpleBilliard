@@ -31,6 +31,12 @@ Vagrant.configure("2") do |config|
     config.omnibus.chef_version = '11.4.4'
   end
 
+  if Vagrant.has_plugin?("vagrant-triggers")
+    config.trigger.after [:reload, :halt], stdout: true do
+      `rm .vagrant/machines/default/virtualbox/synced_folders`
+    end
+  end
+
   src_dir = './'
   doc_root = '/vagrant_data/app/webroot'
   app_root = '/vagrant_data/'
