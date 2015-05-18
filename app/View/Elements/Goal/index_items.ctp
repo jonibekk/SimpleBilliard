@@ -58,53 +58,25 @@
             </div>
             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                 <div class="col col-xxs-12 mt_5px">
-                    <?php if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
-                        $follow_class = 'follow-off';
-                        $follow_style = null;
-                        $follow_text = __d('gl', "フォロー");
-                        $follow_disabled = null;
-                    }
-                    elseif (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
-                        $follow_class = 'follow-off';
-                        $follow_style = null;
-                        $follow_text = __d('gl', "フォロー");
-                        $follow_disabled = "disabled";
-                    }
-                    else {
-                        $follow_class = 'follow-on';
-                        $follow_style = 'display:none;';
-                        $follow_text = __d('gl', "フォロー中");
-                        $follow_disabled = null;
-                    } ?>
-                    <?php if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
-                        $collabo_class = 'collabo-on';
-                        $collabo_style = 'display:none;';
-                        $collabo_text = __d('gl', "コラボり中");
-                        $follow_disabled = "disabled";
-                    }
-                    else {
-                        $collabo_class = 'collabo-off';
-                        $collabo_style = null;
-                        $collabo_text = __d('gl', "コラボる");
-                    } ?>
+                    <? $follow_opt = $this->Goal->getFollowOption($goal) ?>
+                    <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
                     <div class="col col-xxs-6 col-xs-4 mr_5px">
-                        <a class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= $follow_class ?>"
+                        <a class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= $follow_opt['class'] ?>"
                            href="#"
                            data-class="toggle-follow"
                            goal-id="<?= $goal['Goal']['id'] ?>"
-                            <?= $follow_disabled ?>
-                            >
-                            <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
-                            <span class="ml_5px"><?= $follow_text ?></span>
+                        <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>">
+                        <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
+                        <span class="ml_5px"><?= $follow_opt['text'] ?></span>
                         </a>
                     </div>
                     <div class="col col-xxs-5 col-xs-4">
-                        <a class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_class ?>"
+                        <a class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
-                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
-                            <span class="ml_5px font_14px"><?= $collabo_text ?></span>
+                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_opt['style'] ?>"></i>
+                            <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
                         </a>
                     </div>
                 </div>
