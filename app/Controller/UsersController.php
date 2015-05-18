@@ -123,21 +123,15 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        $is_match_2fa_code = false;
-        if (empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false) {
-            if ($this->TwoFa->verifyKey($this->Session->read('2fa_secret'), $this->request->data['User']['two_fa_code']) === true) {
-                $is_match_2fa_code = true;
-                $this->Redis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
-            }
-        }
+        if ((empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false)
+            && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'), $this->request->data['User']['two_fa_code']) === true) {
+            $this->Redis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
+            return $this->_afterAuthSessionStore();
 
-        if (!$is_match_2fa_code) {
+        } else {
             $this->Pnotify->outError(__d('notify', "２要素認証コードが正しくありません。"));
             return $this->render();
         }
-
-        return $this->_afterAuthSessionStore();
-
     }
 
     function _afterAuthSessionStore()
