@@ -517,8 +517,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
         });
     //modeによってdisableにする
-    <?if(isset($this->request->params['named']['mode'])):?>
-    <?if($this->request->params['named']['mode'] == 2):?>
+    <?php if(isset($this->request->params['named']['mode'])):?>
+    <?php if($this->request->params['named']['mode'] == 2):?>
     disabledAllInput("#AddGoalFormPurpose");
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
@@ -532,7 +532,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-headding');
     $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-container');
-    <?elseif($this->request->params['named']['mode'] == 3):?>
+    <?php elseif($this->request->params['named']['mode'] == 3):?>
     disabledAllInput("#AddGoalFormPurpose");
     disabledAllInput("#AddGoalFormKeyResult");
     //noinspection JSJQueryEfficiency
@@ -558,8 +558,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     $(".panel-container", "#AddGoalFormOtherWrap").removeClass('panel-closed-container');
     //noinspection JSJQueryEfficiency
     $(".panel-container", "#AddGoalFormOtherWrap").removeClass('hidden');
-    <?endif;?>
-    <?endif;?>
+    <?php endif;?>
+    <?php endif;?>
     $(".goal-add-edit-button").click(function () {
         attrUndefinedCheck(this, 'target-id');
         var target_id = $(this).attr('target-id');

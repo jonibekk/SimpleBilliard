@@ -92,15 +92,15 @@ echo $this->Html->script('gl_basic');
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
             b: function (element, callback) {
                 var data = [{
-                    <?if(isset($current_circle)&&!empty($current_circle)):?>
+                    <?php if(isset($current_circle)&&!empty($current_circle)):?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
                     text: "<?=h($current_circle['Circle']['name'])?>",
                     image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    <?else:?>
+                    <?php else:?>
                     id: 'public',
                     text: "<?=__d('gl',"チーム全体")?>",
                     image: "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
-                    <?endif;?>
+                    <?php endif;?>
                 }];
                 callback(data);
             },
@@ -121,11 +121,11 @@ echo $this->Html->script('gl_basic');
     };
 
 
-    <?if(isset($mode_view)):?>
-    <?if($mode_view == MODE_VIEW_TUTORIAL):?>
+    <?php if(isset($mode_view)):?>
+    <?php if($mode_view == MODE_VIEW_TUTORIAL):?>
     $("#modal_tutorial").modal('show');
-    <?endif;?>
-    <?endif;?>
+    <?php endif;?>
+    <?php endif;?>
 </script>
 <?= $this->Session->flash('click_event') ?>
 <?php echo $this->Session->flash('pnotify');
