@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/index_items.ctp -->
-<? foreach ($goals as $goal): ?>
+<?php foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-3 col-xs-2">
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
@@ -33,32 +33,32 @@
                         class="ln_trigger-ff font_verydark"><?= h($goal['Goal']['name']) ?></p></a>
             </div>
             <div class="col col-xxs-12 font_lightgray font_12px">
-                <? if (!empty($goal['Leader'])): ?>
+                <?php if (!empty($goal['Leader'])): ?>
                     <?=
                     __d('gl', "リーダー: %s",
                         h($goal['Leader'][0]['User']['display_username'])) ?>
-                <? endif; ?>
+                <?php endif; ?>
                 | <?= __d('gl', "コラボ: ") ?>
-                <? if (count($goal['Collaborator']) == 0): ?>
+                <?php if (count($goal['Collaborator']) == 0): ?>
                     <?= __d('gl', "0人") ?>
-                <? else: ?>
-                    <? foreach ($goal['Collaborator'] as $key => $collaborator): ?>
+                <?php else: ?>
+                    <?php foreach ($goal['Collaborator'] as $key => $collaborator): ?>
                         <?= h($collaborator['User']['display_username']) ?>
-                        <? if (isset($goal['Collaborator'][$key + 1])) {
+                        <?php if (isset($goal['Collaborator'][$key + 1])) {
                             echo ", ";
                         } ?>
-                        <? if ($key == 1) {
+                        <?php if ($key == 1) {
                             break;
                         } ?>
-                    <? endforeach ?>
-                    <? if (($other_count = count($goal['Collaborator']) - 2) > 0): ?>
+                    <?php endforeach ?>
+                    <?php if (($other_count = count($goal['Collaborator']) - 2) > 0): ?>
                         <?= __d('gl', "他%s人", $other_count) ?>
-                    <? endif; ?>
-                <? endif; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
             </div>
-            <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
+            <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                 <div class="col col-xxs-12 mt_5px">
-                    <? if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+                    <?php if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
                         $follow_class = 'follow-off';
                         $follow_style = null;
                         $follow_text = __d('gl', "フォロー");
@@ -76,7 +76,7 @@
                         $follow_text = __d('gl', "フォロー中");
                         $follow_disabled = null;
                     } ?>
-                    <? if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
+                    <?php if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
                         $collabo_class = 'collabo-on';
                         $collabo_style = 'display:none;';
                         $collabo_text = __d('gl', "コラボり中");
@@ -108,8 +108,8 @@
                         </a>
                     </div>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
     </div>
-<? endforeach ?>
+<?php endforeach ?>
 <!-- End app/View/Elements/Goal/index_items.ctp -->

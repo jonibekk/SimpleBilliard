@@ -7,9 +7,9 @@
  */
 ?>
 <!-- START app/View/Posts/feed.ctp -->
-<? if ($this->Session->read('current_team_id')): ?>
+<?php if ($this->Session->read('current_team_id')): ?>
     <?= $this->element('Feed/contents') ?>
-<? else: ?>
+<?php else: ?>
     <?= $this->Html->link(__d('gl', "チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
-<? endif; ?>
+<?php endif; ?>
 <!-- END app/View/Posts/feed.ctp -->

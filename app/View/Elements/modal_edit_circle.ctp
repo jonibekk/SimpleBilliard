@@ -49,7 +49,7 @@
                     <?=
                     $this->Form->hidden('members',
                                         ['class' => 'ajax_add_select2_members', 'value' => $this->request->data['Circle']['members'], 'style' => "width: 100%", 'circle_id' => $this->request->data['Circle']['id']]) ?>
-                    <? $this->Form->unlockField('Circle.members') ?>
+                    <?php $this->Form->unlockField('Circle.members') ?>
                     <span class="help-block font_11px"><?=
                         __d('gl', "管理者：%s",
                             h($this->Session->read('Auth.User.display_username'))) ?></span>

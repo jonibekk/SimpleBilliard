@@ -38,41 +38,41 @@
         ]); ?>
         <div class="modal-body modal-feed-body tab-content">
             <div class="tab-pane fade in active" id="tab1">
-                <? $key = 0 ?>
-                <? if (!empty($non_joined_circles)): ?>
+                <?php $key = 0 ?>
+                <?php if (!empty($non_joined_circles)): ?>
                     <div class="row borderBottom">
-                        <? foreach ($non_joined_circles as $key => $circle): ?>
+                        <?php foreach ($non_joined_circles as $key => $circle): ?>
                             <?= $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
-                        <? endforeach ?>
+                        <?php endforeach ?>
                     </div>
-                <? else: ?>
+                <?php else: ?>
                     <?= __d('gl', "参加していないサークルはありません。") ?>
-                <? endif ?>
+                <?php endif ?>
             </div>
             <div class="tab-pane fade" id="tab2">
-                <? if (!empty($joined_circles)): ?>
+                <?php if (!empty($joined_circles)): ?>
                     <div class="row borderBottom">
-                        <? foreach ($joined_circles as $circle): ?>
-                            <? ++$key ?>
+                        <?php foreach ($joined_circles as $circle): ?>
+                            <?php ++$key ?>
                             <?= $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
-                        <? endforeach ?>
+                        <?php endforeach ?>
                     </div>
-                <? else: ?>
+                <?php else: ?>
                     <?= __d('gl', "参加しているサークルはありません。") ?>
-                <? endif ?>
+                <?php endif ?>
             </div>
         </div>
         <div class="modal-footer modal-feed-footer">
-            <? if (!empty($joined_circles) || !empty($non_joined_circles)): ?>
+            <?php if (!empty($joined_circles) || !empty($non_joined_circles)): ?>
                 <?=
                 $this->Form->submit(__d('gl', "変更を保存"),
                                     ['class' => 'btn btn-primary pull-right', 'div' => false /*, 'disabled' => 'disabled'*/]) ?>
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px"
                         data-dismiss="modal"><?= __d('gl',
                                                      "キャンセル") ?></button>
-            <? else: ?>
+            <?php else: ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
         <?= $this->Form->end() ?>
     </div>

@@ -59,11 +59,11 @@
                 ?>
                 <div class="row form-group m_0px none" id="PostFormImage">
                     <ul class="col input-images post-images">
-                        <? for ($i = 1; $i <= 5; $i++): ?>
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
                             <li>
                             <?= $this->element('Feed/photo_upload',
                                                ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
-                            </li><? endfor ?>
+                            </li><?php endfor ?>
                     </ul>
                     <span class="help-block" id="Post__Photo_ValidateMessage"></span>
                 </div>
@@ -81,8 +81,8 @@
                     <?=
                     $this->Form->hidden('share',
                                         ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
-                    <? $this->Form->unlockField('Post.share') ?>
-                    <? $this->Form->unlockField('socket_id') ?>
+                    <?php $this->Form->unlockField('Post.share') ?>
+                    <?php $this->Form->unlockField('socket_id') ?>
                 </div>
             </div>
             <div class="post-panel-footer">

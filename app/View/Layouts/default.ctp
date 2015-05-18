@@ -14,11 +14,11 @@
 <html lang="ja">
 <?= $this->element('head') ?>
 <body class="<?= (isset($avail_sub_menu) && $avail_sub_menu ? 'avail-sub-menu' : null) ?>">
-<? if (extension_loaded('newrelic')) {
+<?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
-<?=$this->element('google_tag_manager')?>
+<?= $this->element('google_tag_manager') ?>
 <?
 if ($this->Session->read('Auth.User.id')) {
     echo $this->element('header_logged_in');
@@ -54,7 +54,7 @@ else {
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->
-<? if (extension_loaded('newrelic')) {
+<?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_footer();
 } ?>

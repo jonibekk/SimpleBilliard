@@ -200,7 +200,7 @@
         </div>
     </div>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#ProfileForm').bootstrapValidator({
@@ -226,5 +226,5 @@
         });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <!-- END app/View/Users/add_profile.ctp -->

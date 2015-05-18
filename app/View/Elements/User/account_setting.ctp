@@ -39,7 +39,7 @@
             <div class="col col-sm-6">
                 <p class="form-control-static"><?= h($me['PrimaryEmail']['email']) ?></p>
 
-                <? if (!empty($not_verified_email)): ?>
+                <?php if (!empty($not_verified_email)): ?>
                     <p class="form-control-static">
                         <a href="#" rel="tooltip" title="<?= __d('gl', "認証待ちのメールアドレスが存在するため、変更はできません。") ?>">
                             <?= __d('gl', "メールアドレスを変更する") ?>
@@ -56,7 +56,7 @@
                         </a>
                     </div>
 
-                <? else: ?>
+                <?php else: ?>
                     <p class="form-control-static">
                         <a href="#" data-toggle="modal" data-target="#modal_change_email">
                             <?= __d('gl', "メールアドレスを変更する") ?>
@@ -114,13 +114,13 @@
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
-                    <? if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
+                    <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
                         <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_delete']) ?>"
                            class="modal-ajax-get"><?= __d('gl', "解除する") ?></a>
-                    <? else: ?>
+                    <?php else: ?>
                         <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_register']) ?>"
                            class="modal-ajax-get"><?= __d('gl', "設定する") ?></a>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </p>
 
                 <div class="alert alert-warning" role="alert"><?= __d('gl', "２要素認証のログイン処理は現在、準備中です。") ?></div>
@@ -133,7 +133,7 @@
     </div>
     <?= $this->Form->end(); ?>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#UserAccountForm').bootstrapValidator({
@@ -147,7 +147,7 @@
         });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <?= $this->element('User/modal_change_password') ?>
 <?= $this->element('User/modal_change_email') ?>
 <?

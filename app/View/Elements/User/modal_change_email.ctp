@@ -61,7 +61,7 @@
         </div>
     </div>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#ChangeEmail').bootstrapValidator({
@@ -97,5 +97,5 @@
         });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <!-- END app/View/Elements/User/modal_change_email.ctp -->

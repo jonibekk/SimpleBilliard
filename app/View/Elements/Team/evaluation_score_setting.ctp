@@ -52,29 +52,29 @@
                 </th>
                 <th></th>
             </tr>
-            <? foreach ($this->request->data['EvaluateScore'] as $es_key => $evaluation_select_value) : ?>
+            <?php foreach ($this->request->data['EvaluateScore'] as $es_key => $evaluation_select_value) : ?>
                 <?= $this->element('Team/eval_score_form_elm',
                                    ['index' => $es_key, 'id' => $evaluation_select_value['id'], 'type' => 'exists']) ?>
             <?php endforeach; ?>
         </table>
         <div class="form-group">
             <?= $this->Form->submit(__d('gl', '評価スコア設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
-            <? $index = count($this->request->data['EvaluateScore']);
+            <?php $index = count($this->request->data['EvaluateScore']);
             $max_index = $index + 9; ?>
             <?= $this->Html->link(__d('gl', "定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
                                   ['id' => 'AddScoreButton', 'target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default pull-left']) ?>
         </div>
-        <? for ($i = $index; $i <= $max_index; $i++): ?>
-            <? $this->Form->unlockField("EvaluateScore.$i.name") ?>
-            <? $this->Form->unlockField("EvaluateScore.$i.index_num") ?>
-            <? $this->Form->unlockField("EvaluateScore.$i.description") ?>
-        <? endfor ?>
+        <?php for ($i = $index; $i <= $max_index; $i++): ?>
+            <?php $this->Form->unlockField("EvaluateScore.$i.name") ?>
+            <?php $this->Form->unlockField("EvaluateScore.$i.index_num") ?>
+            <?php $this->Form->unlockField("EvaluateScore.$i.description") ?>
+        <?php endfor ?>
         <?= $this->Form->end() ?>
 
     </div>
 </div>
 <!-- END app/View/Elements/Team/evaluation_score_setting.ctp -->
-<? $this->start('script') ?>
+<?php $this->start('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#EvaluationSettingForm').bootstrapValidator({
@@ -102,5 +102,5 @@
             });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 

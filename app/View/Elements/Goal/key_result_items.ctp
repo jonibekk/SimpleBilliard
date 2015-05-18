@@ -13,8 +13,8 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/key_result_items.ctp -->
-<? if (!empty($key_results)): ?>
-    <? foreach ($key_results as $kr): ?>
+<?php if (!empty($key_results)): ?>
+    <?php foreach ($key_results as $kr): ?>
         <div class="bd-t h_50px">
             <div class="col col-xxs-12 responsive-goal-space-width mxh_50px ln_1 ptb_5px">
                 <div class="inline-block responsive-goal-title-width pl_1px">
@@ -22,14 +22,14 @@
                         <?= h($kr['KeyResult']['name']) ?></span>
                     <i class="fa fa-check-circle"></i>
                     <span class="ml_2px"><?= h($kr['KeyResult']['action_result_count']) ?></span>
-                    <? if ($kr['KeyResult']['completed']): ?>
-                        <span class="fin-kr tag-sm tag-info"><?= __d('gl',"完了") ?></span>
-                    <? else: ?>
-                        <span class="unfin-kr tag-sm tag-danger"><?= __d('gl',"未完了") ?></span>
-                    <? endif; ?>
+                    <?php if ($kr['KeyResult']['completed']): ?>
+                        <span class="fin-kr tag-sm tag-info"><?= __d('gl', "完了") ?></span>
+                    <?php else: ?>
+                        <span class="unfin-kr tag-sm tag-danger"><?= __d('gl', "未完了") ?></span>
+                    <?php endif; ?>
                 </div>
             </div>
-            <? if ($kr_can_edit): ?>
+            <?php if ($kr_can_edit): ?>
                 <div class="pull-right dropdown">
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_2px pb_2px"
                        data-toggle="dropdown"
@@ -44,12 +44,12 @@
                                 <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "出したい成果を編集する") ?></span></a>
                         </li>
                         <li role="presentation">
-                            <? if ($kr['KeyResult']['completed']): ?>
+                            <?php if ($kr['KeyResult']['completed']): ?>
                                 <?= $this->Form->postLink('<i class="fa fa-reply"></i><span class="ml_2px">' .
                                                           __d('gl', "出したい成果を未完了にする") . '</span>',
                                                           ['controller' => 'goals', 'action' => 'incomplete_kr', $kr['KeyResult']['id']],
                                                           ['escape' => false]) ?>
-                            <? else: ?>
+                            <?php else: ?>
                                 <?
                                 //最後のKRの場合
                                 if ($incomplete_kr_count === 1):?>
@@ -58,7 +58,7 @@
                                         <i class="fa fa-check"></i><span class="ml_2px"><?= __d('gl',
                                                                                                 "出したい成果を完了にする") ?></span>
                                     </a>
-                                <? else: ?>
+                                <?php else: ?>
                                     <?=
                                     $this->Form->create('Goal', [
                                         'url'           => ['controller' => 'goals', 'action' => 'complete_kr', $kr['KeyResult']['id']],
@@ -71,7 +71,7 @@
                                         'name'          => 'kr_achieve_' . $kr['KeyResult']['id'],
                                         'id'            => 'kr_achieve_' . $kr['KeyResult']['id']
                                     ]); ?>
-                                    <? $this->Form->unlockField('socket_id') ?>
+                                    <?php $this->Form->unlockField('socket_id') ?>
                                     <?= $this->Form->end() ?>
                                     <a href="#" form-id="kr_achieve_<?= $kr['KeyResult']['id'] ?>"
                                        class="kr_achieve_button">
@@ -79,23 +79,23 @@
                                             <?= __d('gl', "出したい成果を完了にする"); ?>
                                         </span>
                                     </a>
-                                <? endif; ?>
-                            <? endif; ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </li>
 
-                            <li role="presentation">
-                                <?=
-                                $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                                      __d('gl', "出したい成果を削除する") . '</span>',
-                                                      ['controller' => 'goals', 'action' => 'delete_key_result', $kr['KeyResult']['id']],
-                                                      ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
-                            </li>
+                        <li role="presentation">
+                            <?=
+                            $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
+                                                  __d('gl', "出したい成果を削除する") . '</span>',
+                                                  ['controller' => 'goals', 'action' => 'delete_key_result', $kr['KeyResult']['id']],
+                                                  ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
+                        </li>
                     </ul>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
-    <? endforeach ?>
-    <? if ($kr_can_edit): ?>
+    <?php endforeach ?>
+    <?php if ($kr_can_edit): ?>
         <div class="bd-t pt_8px">
             <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal_id]) ?>">
@@ -103,8 +103,8 @@
                 <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
             </a>
         </div>
-    <? endif; ?>
-<? else: ?>
+    <?php endif; ?>
+<?php else: ?>
     <div class="col col-xxs-12">
         <div class="bd-t pt_8px">
             <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
@@ -114,5 +114,5 @@
             </a>
         </div>
     </div>
-<?  endif; ?>
+<?php endif; ?>
 <!-- End app/View/Elements/Goal/key_result_items.ctp -->

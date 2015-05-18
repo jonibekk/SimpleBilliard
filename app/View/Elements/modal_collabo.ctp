@@ -18,7 +18,7 @@
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集") ?></h4>
         </div>
-        <? $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
+        <?php $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
         $this->Form->create('Collaborator', [
             'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', $collabo_id],
@@ -83,13 +83,13 @@
                     $this->Form->submit(empty($goal['MyCollabo']) ? __d('gl', "コラボる") : __d('gl', "コラボを編集"),
                                         ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
-                    <? if (!empty($goal['MyCollabo'])): ?>
+                    <?php if (!empty($goal['MyCollabo'])): ?>
                         <?=
                         $this->Form->postLink(__d('gl', "コラボ抜ける"),
                                               ['controller' => 'goals', 'action' => 'delete_collabo', $goal['MyCollabo'][0]['id']],
                                               ['class' => 'pull-left btn btn-link'],
                                               __d('gl', "本当にコラボレータから抜けますか？")) ?>
-                    <? endif; ?>
+                    <?php endif; ?>
 
                 </div>
             </div>

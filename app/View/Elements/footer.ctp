@@ -46,8 +46,8 @@
                                       ])
                     ?></li>
             </ul>
-            <p><? $link = $this->Html->link(__d('gl', "Isao Corporation"), "http://www.isao.co.jp/",
-                                            ['target' => "_blank"]);
+            <p><?php $link = $this->Html->link(__d('gl', "Isao Corporation"), "http://www.isao.co.jp/",
+                                               ['target' => "_blank"]);
                 echo __d('gl', "Made By %s", $link) ?></p>
         </div>
     </div>

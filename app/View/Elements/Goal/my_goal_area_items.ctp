@@ -11,10 +11,10 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
-<? foreach ($goals as $goal): ?>
+<?php foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
-            <? if ($type == 'leader'): ?>
+            <?php if ($type == 'leader'): ?>
                 <div class="pull-right goals-column-function bd-radius_4px dropdown">
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
                        data-toggle="dropdown"
@@ -32,7 +32,7 @@
                             $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
                         }
                         ?>
-                        <? if (!empty($goal['Goal'])): ?>
+                        <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
@@ -40,8 +40,8 @@
                                             <?= __d('gl', "出したい成果を追加") ?></span>
                                 </a>
                             </li>
-                        <? endif; ?>
-                        <? if (!viaIsSet($goal['Evaluation'])): ?>
+                        <?php endif; ?>
+                        <?php if (!viaIsSet($goal['Evaluation'])): ?>
                             <li role="presentation"><a role="menuitem" tabindex="-1"
                                                        href="<?= $this->Html->url($edit_url) ?>">
                                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
@@ -54,10 +54,10 @@
                                                       $del_url,
                                                       ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
                             </li>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
-            <? elseif
+            <?php elseif
             ($type == 'collabo'
             ): ?>
                 <div class="pull-right goals-column-function bd-radius_4px dropdown">
@@ -68,7 +68,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
-                        <? if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
+                        <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result"
@@ -82,10 +82,10 @@
                                     <span class="ml_2px"><?= __d('gl', "コラボを編集") ?></span>
                                 </a>
                             </li>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
-            <? elseif
+            <?php elseif
             ($type == 'my_prev'
             ): ?>
                 <div class="pull-right goals-column-function bd-radius_4px dropdown">
@@ -105,7 +105,7 @@
                             $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
                         }
                         ?>
-                        <? if (!empty($goal['Goal'])): ?>
+                        <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
@@ -113,12 +113,12 @@
                                             <?= __d('gl', "出したい成果を追加") ?></span>
                                 </a>
                             </li>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
 
-            <? if (empty($goal['Goal'])): ?>
+            <?php if (empty($goal['Goal'])): ?>
                 <div class="col col-xxs-10 goals-column-add-box">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
                        class="font_rougeOrange">
@@ -126,7 +126,7 @@
                         <div class="goals-column-add-text font_12px"><?= __d('gl', '基準を追加する') ?></div>
                     </a>
                 </div>
-            <? else: ?>
+            <?php else: ?>
                 <div class="ln_contain w_88per">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal['Goal']['id']]) ?>"
                        class="modal-ajax-get">
@@ -135,12 +135,12 @@
                             <?= h($goal['Goal']['name']) ?></p>
                     </a>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
         <div class="col col-xxs-12 font_12px ln_1 goals-column-purpose">
             <?= h($goal['Purpose']['name']) ?>
         </div>
-        <? if (isset($goal['Goal']['id'])): ?>
+        <?php if (isset($goal['Goal']['id'])): ?>
             <div class="col col-xxs-12">
                 <div class="progress mb_0px goals-column-progress-bar">
                     <div class="progress-bar progress-bar-info" role="progressbar"
@@ -150,7 +150,7 @@
                     </div>
                 </div>
             </div>
-            <? if ($type != 'follow'): ?>
+            <?php if ($type != 'follow'): ?>
                 <div class="col col-xxs-12 goalsCard-actionResult" id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>">
                     <form action="#" id="" method="post" accept-charset="utf-8">
                         <div class="form-group mb_5px develop--font_normal">
@@ -164,44 +164,44 @@
                                 ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
                                 ></textarea>
                         </div>
-                        <? if ($goal['Goal']['action_result_count'] > 0): ?>
+                        <?php if ($goal['Goal']['action_result_count'] > 0): ?>
                             <a class="goalsCard-activity inline-block col-xxs-2 click-show-post-modal font_gray-brownRed pointer"
                                id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
                                 <i class="fa fa-check-circle mr_1px font_brownRed"></i><span
                                     class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
                             </a>
-                        <? else: ?>
+                        <?php else: ?>
                             <div class="goalsCard-activity0 inline-block col-xxs-2">
                                 <i class="fa fa-check-circle mr_1px"></i><span
                                     class="ls_number">0</span>
                             </div>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </form>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
             <div class="col col-xxs-12 goalsCard-krSeek">
-                <? if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
+                <?php if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
                     <div class="pull-right font_12px">
-                        <? if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
+                        <?php if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
                             <?= __d('gl', "%d日経過", $limit_day * -1) ?>
-                        <? else: ?>
-                            <? if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
-                                <? if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
+                        <?php else: ?>
+                            <?php if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
+                                <?php if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
                                     <span style="color:red"><?= __d('gl', "認定待ち") ?></span>
-                                <? elseif ($goal['Goal']['owner_approval_flag'] === '1') : ?>
+                                <?php elseif ($goal['Goal']['owner_approval_flag'] === '1') : ?>
                                     <span style="color:#00BFFF"><?= __d('gl', "評価対象") ?></span>
-                                <? elseif ($goal['Goal']['owner_approval_flag'] === '2') : ?>
+                                <?php elseif ($goal['Goal']['owner_approval_flag'] === '2') : ?>
                                     <?= __d('gl', "評価対象外") ?>
-                                <? elseif ($goal['Goal']['owner_approval_flag'] === '3') : ?>
+                                <?php elseif ($goal['Goal']['owner_approval_flag'] === '3') : ?>
                                     <span style="color:red"><?= __d('gl', "修正待ち") ?></span>
-                                <? endif ?>
+                                <?php endif ?>
                                 ・
-                            <? endif; ?>
+                            <?php endif; ?>
                             <?= __d('gl', "残り%d日", $limit_day) ?>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
                 <?
                 $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
                 if ($type == "follow") {
@@ -228,7 +228,7 @@
                 <?php } ?>
             </div>
             <div class="con col-xxs-12 none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
-        <? endif; ?>
+        <?php endif; ?>
     </div>
-<? endforeach ?>
+<?php endforeach ?>
 <!-- End app/View/Elements/Goal/my_goal_area_items.ctp -->

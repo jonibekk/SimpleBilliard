@@ -21,11 +21,11 @@ if (!isset($form)) {
                                ['class' => 'comment-img'])
     ?>
     <div class="comment-body modal-comment">
-        <? if ($form): ?>
+        <?php if ($form): ?>
             <div class="pull-right circle-join-switch">
-                <? if (!empty($circle['CircleAdmin'])): ?>
+                <?php if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者") ?>
-                <? else: ?>
+                <?php else: ?>
                     <?
                     $joined = false;
                     foreach ($circle['CircleMember'] as $member) {
@@ -37,13 +37,13 @@ if (!isset($form)) {
                     echo $this->Form->input("$key.join",
                                             ['label' => false, 'div' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => $joined ? true : false]) ?>
                     <?= $this->Form->hidden("$key.circle_id", ['value' => $circle['Circle']['id']]) ?>
-                <? endif; ?>
+                <?php endif; ?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
         <div class="font_12px font_bold modalFeedTextPadding">
-            <? if ($circle['Circle']['created'] > strtotime("-1 week")): ?>
+            <?php if ($circle['Circle']['created'] > strtotime("-1 week")): ?>
                 <span class="circle-new">New</span>
-            <? endif; ?>
+            <?php endif; ?>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
                class="link-dark-gray">
                 <?= h($circle['Circle']['name']) ?>

@@ -15,9 +15,9 @@
     <?= $this->Html->charset(); ?>
     <title><?= $page_title; ?></title>
 
-    <? if (Configure::read('debug') == 0): ?>
+    <?php if (Configure::read('debug') == 0): ?>
         <meta http-equiv="Refresh" content="<?= $pause; ?>;url=<?= $url; ?>"/>
-    <? endif ?>
+    <?php endif ?>
     <style><!--
         P {
             text-align: center;

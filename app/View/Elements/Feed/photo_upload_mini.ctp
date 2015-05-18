@@ -42,9 +42,9 @@ if (!isset($id_prefix)) {
             data-trigger="fileinput"
             target-id="<?= $submit_id ?>"
             style="width: 34px; height: 34px;">
-            <? $delete_style = null ?>
-            <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
-                <? $delete_style = "display:block" ?>
+            <?php $delete_style = null ?>
+            <?php if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
+                <?php $delete_style = "display:block" ?>
                 <?=
                 $this->Html->image('ajax-loader.gif',
                                    [
@@ -55,9 +55,9 @@ if (!isset($id_prefix)) {
                                    ]
                 )
                 ?>
-            <? endif ?><? if ($index == 1): ?><i class="fa fa-plus photo-plus-mini"></i><? endif; ?>
+            <?php endif ?><?php if ($index == 1): ?><i class="fa fa-plus photo-plus-mini"></i><?php endif; ?>
         </div>
-        <? if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
+        <?php if (isset($data[$model]["photo{$index}_file_name"]) && $data[$model]["photo{$index}_file_name"]): ?>
             <div class="custom-wrapper">
                 <?=
                 $this->Form->input('photo_delete.' . $index,
@@ -73,7 +73,7 @@ if (!isset($id_prefix)) {
                                    ]
                 ) ?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
         <div>
             <span class="hideFileInput">
                 <?

@@ -4,6 +4,7 @@
  * User: saeki
  * Date: 15/04/13
  * Time: 15:18
+ *
  * @var $progress_percent
  * @var $statuses
  */
@@ -35,23 +36,23 @@
         <div class="form-group">
             <label for="TeamName" class="col control-label form-label"><?= __d('gl', "未完了数") ?></label>
         </div>
-        <? foreach ($statuses as $type => $status): ?>
+        <?php foreach ($statuses as $type => $status): ?>
             <div class="form-group">
                 <label for="0EvaluationComment" class="col col-xxs-12 col-sm-3 control-label form-label">
-                    <? if($type == Evaluation::TYPE_ONESELF): ?>
+                    <?php if ($type == Evaluation::TYPE_ONESELF): ?>
                         <a class="modal-ajax-get pointer"
                            href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_oneself']) ?>">
-                        <?= $status['label'] ?>
+                            <?= $status['label'] ?>
                         </a>
-                    <? else:?>
+                    <?php else: ?>
                         <?= $status['label'] ?>
-                    <? endif ?>
+                    <?php endif ?>
                 </label>
 
                 <div class="col col-sm-8">
                     <?= $status['incomplete_num'] ?>/<?= $status['all_num'] ?>
                 </div>
             </div>
-        <? endforeach; ?>
+        <?php endforeach; ?>
     </div>
     <!-- END app/View/Elements/Team/evaluation_progress.ctp -->

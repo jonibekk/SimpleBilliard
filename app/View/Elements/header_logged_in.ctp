@@ -139,7 +139,7 @@
                         <i class="fa fa-plus-circle header-link header-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
-                        <? if ($this->Session->read('current_team_id')): ?>
+                        <?php if ($this->Session->read('current_team_id')): ?>
                             <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
                                     <i class="fa fa-flag header-drop-icons"></i>
                                     <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
@@ -151,7 +151,7 @@
                                     <span class="font_verydark"><?= __d('gl', "サークルを作成") ?></span>
                                 </a>
                             </li>
-                        <? endif; ?>
+                        <?php endif; ?>
                         <li>
                             <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                                 <i class="fa fa-users header-drop-icons"></i>
@@ -188,14 +188,14 @@
                     </div>
                 </div>
                 <div class="pull-right header-function dropdown">
-                    <? if ($all_alert_cnt > 0): ?>
+                    <?php if ($all_alert_cnt > 0): ?>
                         <div class="btn btn-danger btn-xs" style="position: absolute;
                                 margin: 5px 0 0 33px;
                                 color: #fff;
                                 font-size: 10px;
                                 background-color:red!important;
                                 display:block"><?= $all_alert_cnt ?></div>
-                    <? endif; ?>
+                    <?php endif; ?>
                     <a href="#"
                        class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
                        data-toggle="dropdown"
@@ -213,11 +213,11 @@
                                 __d('gl',
                                     "チュートリアル") ?></a></li>
                         <li>
-                            <? if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
+                            <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
                                 <div class="btn btn-danger btn-xs sub_cnt_alert">
-                                    <? echo $unapproved_cnt; ?>
+                                    <?php echo $unapproved_cnt; ?>
                                 </div>
-                            <? } ?>
+                            <?php } ?>
                             <?= $this->Html->link(__d('gl', "ゴール認定"),
                                                   ['controller' => 'goal_approval', 'action' => 'index']) ?>
                         </li>
@@ -225,17 +225,17 @@
                             $this->Html->link(__d('gl', "ログアウト"),
                                               ['controller' => 'users', 'action' => 'logout']) ?></li>
                         <li class="divider"></li>
-                        <? if ($is_evaluation_available): ?>
+                        <?php if ($is_evaluation_available): ?>
                             <li>
-                                <? if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
+                                <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
                                     <div class="btn btn-danger btn-xs sub_cnt_alert"><?= $evaluable_cnt ?></div>
-                                <? endif; ?>
+                                <?php endif; ?>
 
                                 <?=
                                 $this->Html->link(__d('gl', '評価'),
                                                   ['controller' => 'evaluations', 'action' => 'index']) ?>
                             </li>
-                        <? endif; ?>
+                        <?php endif; ?>
                         <?
                         //TODO 一時的にチーム管理者はチーム招待リンクを表示
                         if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
@@ -244,7 +244,7 @@
                                 $this->Html->link(__d('gl', 'チーム設定'),
                                                   ['controller' => 'teams', 'action' => 'settings']) ?>
                             </li>
-                        <? endif; ?>
+                        <?php endif; ?>
                         <li><?=
                             $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
                                               ['target' => '_blank']) ?></li>
@@ -255,7 +255,7 @@
         <!--/.nav-collapse -->
     </div>
 </header>
-<? if ($avail_sub_menu): ?>
+<?php if ($avail_sub_menu): ?>
     <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt height_40px" id="SubHeaderMenu">
         <div class="col col-xxs-6 text-align_r">
             <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
@@ -270,5 +270,5 @@
             </a>
         </div>
     </div>
-<? endif; ?>
+<?php endif; ?>
 <!-- END app/View/Elements/header_logged_in.ctp -->

@@ -18,17 +18,17 @@
             <h4 class="modal-title"><?= __d('gl', "このコメントを%s人が読みました。", count($red_users)) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
-            <? if (!empty($red_users)): ?>
+            <?php if (!empty($red_users)): ?>
                 <div class="row borderBottom">
-                    <? foreach ($red_users as $user): ?>
+                    <?php foreach ($red_users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
                                        ['user' => $user['User'], 'created' => $user['CommentRead']['created']]) ?>
-                    <? endforeach ?>
+                    <?php endforeach ?>
                 </div>
-            <? else: ?>
+            <?php else: ?>
                 <?= __d('gl', "まだ、この投稿を読んだ人はいません。") ?>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

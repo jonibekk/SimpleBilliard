@@ -197,10 +197,10 @@
                     <div class="label-addiction"><?= __d('gl', "チーム内限定で共有されます。") ?></div>
                 </div>
                 <div class="col col-sm-6">
-                    <? if (isset($this->request->data['TeamMember'][0]['id'])): ?>
+                    <?php if (isset($this->request->data['TeamMember'][0]['id'])): ?>
                         <?= $this->Form->hidden('TeamMember.0.id',
                                                 ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
-                    <? endif; ?>
+                    <?php endif; ?>
                     <?=
                     $this->Form->input('TeamMember.0.comment',
                                        ['label'     => false,
@@ -241,7 +241,7 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
         <?= $this->Form->end(); ?>
     </div>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#ChangeProfileForm').bootstrapValidator({
@@ -283,5 +283,5 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
         });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <!-- END app/View/Elements/User/profile_setting.ctp -->

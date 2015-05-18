@@ -21,19 +21,19 @@
         </div>
         <div class="modal-body modal-feed-body">
             <div class="row borderBottom">
-                <? if (!empty($circles)): ?>
-                    <? foreach ($circles as $key => $circle): ?>
+                <?php if (!empty($circles)): ?>
+                    <?php foreach ($circles as $key => $circle): ?>
                         <?=
                         $this->element('public_circle_item', ['circle' => $circle, 'key' => $key, 'form' => false]) ?>
-                    <? endforeach ?>
-                <? endif ?>
-                <? if (!empty($users)): ?>
-                    <? foreach ($users as $user): ?>
+                    <?php endforeach ?>
+                <?php endif ?>
+                <?php if (!empty($users)): ?>
+                    <?php foreach ($users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
                                        ['user' => $user['User'], 'created' => null]) ?>
-                    <? endforeach ?>
-                <? endif; ?>
+                    <?php endforeach ?>
+                <?php endif; ?>
             </div>
         </div>
         <div class="modal-footer modal-feed-footer">

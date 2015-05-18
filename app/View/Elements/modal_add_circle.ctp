@@ -49,7 +49,7 @@
                         <?=
                         $this->Form->hidden('members',
                                             ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
-                        <? $this->Form->unlockField('Circle.members') ?>
+                        <?php $this->Form->unlockField('Circle.members') ?>
                         <span class="help-block font_11px"><?=
                             __d('gl', "管理者：%s",
                                 h($this->Session->read('Auth.User.display_username'))) ?></span>
@@ -141,7 +141,7 @@
         </div>
     </div>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#AddCircleForm').bootstrapValidator({
@@ -168,5 +168,5 @@
         });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <!-- END app/View/Elements/modal_add_circle.ctp -->

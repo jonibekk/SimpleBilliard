@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="signup-email">
-                    <? $signup_link = $this->Html
+                    <?php $signup_link = $this->Html
                         ->link(__d('home', 'here'),
                                array(
                                    'controller' => 'users',
@@ -428,7 +428,7 @@
     </div>
 </div>
 <!-- end: social icon -->
-<? $this->append('ogp') ?>
+<?php $this->append('ogp') ?>
 <meta property="og:site_name" content="Goalous"/>
 <meta property="og:type" content="article"/>
 <meta property="og:title" content="Goalous"/>
@@ -437,7 +437,7 @@
 <meta property="og:image"
       content="https://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_180x180.png"/>
 <meta property="og:url" content="https://www.goalous.com/"/>
-<? $this->end() ?>
+<?php $this->end() ?>
 <?
 $this->Html
     ->meta('description',
