@@ -5,6 +5,8 @@
  * @var CodeCompletionView $this
  * @var                    $scoreList
  * @var                    $goalList
+ * @var                    $totalList
+ * @var                    $total
  * @var                    $evaluateeId
  * @var                    $evaluateTermId
  * @var                    $isEditable
@@ -60,13 +62,7 @@
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <?php if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <?php elseif ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <?php else: ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <?php endif;?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div class="col col-xxs-12 col-sm-4 col-md-3">
                                     <?php if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
@@ -150,13 +146,7 @@
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <?php if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_ONESELF): ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <?php elseif ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <?php else: ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <?php endif;?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div class="col col-xxs-12 col-sm-4 col-md-3">
                                     <?php if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
@@ -382,13 +372,7 @@
                         <div class="form-group col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <?php if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <?php elseif ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <?php else: ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <?php endif; ?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div
                                     class="col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
@@ -462,13 +446,7 @@
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <?php if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <?php elseif ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <?php else: ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <?php endif;?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div
                                     class="col col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
