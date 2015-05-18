@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @var CodeCompletionView $this
  * @var                    $unapproved_cnt
  * @var                    $done_cnt

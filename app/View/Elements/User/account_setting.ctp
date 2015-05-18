@@ -62,8 +62,7 @@
                             <?= __d('gl', "メールアドレスを変更する") ?>
                         </a>
                     </p>
-                <?
-                endif ?>
+                <?php endif ?>
             </div>
         </div>
         <?=
@@ -88,8 +87,7 @@
         ])
         ?>
         <hr>
-        <?
-        if (!empty($my_teams)) {
+        <?php if (!empty($my_teams)) {
             echo $this->Form->input('default_team_id', [
                 'label'   => __d('gl', "デフォルトチーム"),
                 'type'    => 'select',
@@ -150,8 +148,7 @@
 <?php $this->end() ?>
 <?= $this->element('User/modal_change_password') ?>
 <?= $this->element('User/modal_change_email') ?>
-<?
-if (!empty($not_verified_email)) {
+<?php if (!empty($not_verified_email)) {
     echo $this->element('User/modal_delete_email',
                         ['email'    => $not_verified_email['Email']['email'],
                          'email_id' => $not_verified_email['Email']['id']]);

@@ -27,8 +27,7 @@
                 'id'            => 'ProfileForm',
             ]); ?>
             <div class="panel-body">
-                <?
-                if (!$is_not_use_local_name) {
+                <?php if (!$is_not_use_local_name) {
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('LocalName.0.last_name', [
@@ -53,8 +52,7 @@
                                              ['value' => $this->Session->read('Auth.User.language')]);
                 }
                 ?>
-                <?
-                //姓と名は言語によって表示順を変える
+                <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __d('gl', "姓(ローマ字)"),
                     'placeholder'              => __d('gl', "例) Suzuki"),
@@ -187,8 +185,7 @@
                         <?=
                         $this->Form->submit(__d('gl', "プロフィールを登録"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
-                        <?
-                        //招待の場合のスキップはホーム、そうじゃない場合はチーム作成
+                        <?php //招待の場合のスキップはホーム、そうじゃない場合はチーム作成
                         $skip_link = isset($this->request->params['named']['invite_token']) ? "/" : ['controller' => 'teams', 'action' => 'add'];
                         echo $this->Html->link(__d('gl', "スキップ"), $skip_link,
                                                ['class' => 'btn btn-default', 'div' => false]);

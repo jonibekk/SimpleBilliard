@@ -56,8 +56,7 @@
                 </div>
             </div>
             <hr>
-            <?
-            $privacy_option = Circle::$TYPE_PUBLIC;
+            <?php $privacy_option = Circle::$TYPE_PUBLIC;
             $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
                                                                                                    "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
             $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',

@@ -127,12 +127,10 @@ else { ?>
         </div>
     </div>
 <?php endif; ?>
-<?
-//ポストが存在する　かつ　パーマリンクでない
+<?php //ポストが存在する　かつ　パーマリンクでない
 if (!empty($posts) && (!isset($this->request->params['post_id']) || empty($this->request->params['post_id']))):
     ?>
-    <?
-    $next_page_num = 2;
+    <?php $next_page_num = 2;
     $month_index = 0;
     $more_read_text = __d('gl', "もっと読む ▼");
     if ((count($posts) != 20)) {

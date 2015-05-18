@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Created by PhpStorm.
  * User: bigplants
  * Date: 5/28/14
@@ -15,8 +14,7 @@
     <title origin-title="<?= $title_for_layout; ?>">
         <?= $title_for_layout; ?>
     </title>
-    <?
-    echo $this->Html->meta('icon');
+    <?php echo $this->Html->meta('icon');
     echo $this->Html->meta(
         ['name'    => 'viewport',
          'content' => "width=device-width, initial-scale=1, maximum-scale=1"
@@ -53,8 +51,7 @@
     <?= $this->Html->script('vendor/html5shiv')?>
     <?= $this->Html->script('vendor/respond.min')?>
     <![endif]-->
-    <?
-    //公開環境のみタグを有効化
+    <?php //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
         /** @noinspection PhpDeprecationInspection */
         echo $this->element('external_service_tags');

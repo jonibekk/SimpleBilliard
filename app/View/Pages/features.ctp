@@ -304,8 +304,7 @@
 <meta property="og:url" content="https://www.goalous.com/"/>
 <?php $this->end() ?>
 
-<?
-$this->Html
+<?php $this->Html
     ->meta('description',
            __d('home',
                "Goalous is a tool that all members of a team are able to action in high motivated toward the achievement of self goals.Because the members create public goals in a team,they collaborate each other and get praise to your actions."),

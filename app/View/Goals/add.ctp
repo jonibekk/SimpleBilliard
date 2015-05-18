@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Created by PhpStorm.
  * User: bigplants
  * Date: 6/11/14
@@ -57,8 +56,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'          => 'file',
                     'id'            => 'AddGoalFormPurpose',
                 ]); ?>
-                <?
-                if (isset($this->request->data['Purpose']['id'])) {
+                <?php if (isset($this->request->data['Purpose']['id'])) {
                     echo $this->Form->hidden('Purpose.id', ['value' => $this->request->data['Purpose']['id']]);
                 }
                 ?>
@@ -341,8 +339,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                         'placeholder' => __d('gl', "ゴールの内容を詳しく書く"),
                                         'rows'        => 1,
                                        ]) ?>
-                    <?
-                    if (isset($this->request->data['Collaborator'][0]['id'])) {
+                    <?php if (isset($this->request->data['Collaborator'][0]['id'])) {
                         echo $this->Form->hidden('Collaborator.0.id',
                                                  ['value' => $this->request->data['Collaborator'][0]['id']]);
                     }
@@ -371,8 +368,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                      data-trigger="fileinput"
                                      style="width: 96px; height: 96px;">
-                                    <?
-                                    if (isset($this->request->data['Goal']['photo_file_name']) && !empty($this->request->data['Goal']['photo_file_name'])) {
+                                    <?php if (isset($this->request->data['Goal']['photo_file_name']) && !empty($this->request->data['Goal']['photo_file_name'])) {
                                         echo $this->Upload->uploadImage($this->request->data, 'Goal.photo',
                                                                         ['style' => 'x_large']);
                                     }

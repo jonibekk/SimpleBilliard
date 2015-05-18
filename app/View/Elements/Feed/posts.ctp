@@ -136,23 +136,19 @@
                             && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
                         ): ?>
                             <span class="font_lightgray"> ･ </span>
-                            <?
-                            //公開の場合
+                            <?php //公開の場合
                             if ($post['share_mode'] == Post::SHARE_ALL): ?>
                                 <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
-                            <?
-                            //自分のみ
+                            <?php //自分のみ
                             elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
                                 <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
-                            <?
-                            //共有ユーザ
+                            <?php //共有ユーザ
                             elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
                                 <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
                                    class="modal-ajax-get-share-circles-users link-dark-gray">
                                     <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
                                 </a>
-                            <?
-                            //共有サークル、共有ユーザ
+                            <?php //共有サークル、共有ユーザ
                             elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
                                 <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
                                    class="modal-ajax-get-share-circles-users link-dark-gray">
@@ -177,8 +173,7 @@
                         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
                     <?php endif; ?>
                 </div>
-                <?
-                $photo_count = 0;
+                <?php $photo_count = 0;
                 //タイプ別に切り分け
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
                     $model_name = 'ActionResult';

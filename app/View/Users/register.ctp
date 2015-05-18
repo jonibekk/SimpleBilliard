@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * ユーザ登録画面
  *
  * @var $this View
@@ -26,8 +25,7 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body register-panel-body">
-                <?
-                //姓と名は言語によって表示順を変える
+                <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __d('gl', "姓(ローマ字)"),
                     'placeholder'              => __d('gl', "例) Suzuki"),
@@ -94,9 +92,8 @@
                     'type'                     => 'password',
                 ]) ?>
                 <hr>
-                <?
-                $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',
-                                             ['class' => 'link', 'data-toggle' => "modal"]);
+                <?php $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',
+                                                   ['class' => 'link', 'data-toggle' => "modal"]);
 
                 $ppLink = $this->Html->link(__d('gl', 'プライバシーポリシー'), '#modal-pp',
                                             ['class' => 'link', 'data-toggle' => "modal"]);

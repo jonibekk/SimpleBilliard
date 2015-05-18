@@ -13,8 +13,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<?
-if (!isset($id_prefix)) {
+<?php if (!isset($id_prefix)) {
     $id_prefix = null;
 }
 ?>
@@ -66,8 +65,7 @@ if (!isset($id_prefix)) {
                 class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= $this->TextEx->autoLink($comment['body']) ?></div>
 
-            <?
-            $photo_count = 0;
+            <?php $photo_count = 0;
             for ($i = 1; $i <= 5; $i++) {
                 if ($comment["photo{$i}_file_name"]) {
                     $photo_count++;

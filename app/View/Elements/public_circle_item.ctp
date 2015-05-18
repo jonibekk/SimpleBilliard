@@ -26,8 +26,7 @@ if (!isset($form)) {
                 <?php if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者") ?>
                 <?php else: ?>
-                    <?
-                    $joined = false;
+                    <?php $joined = false;
                     foreach ($circle['CircleMember'] as $member) {
                         if ($member['user_id'] == $this->Session->read('Auth.User.id')) {
                             $joined = true;

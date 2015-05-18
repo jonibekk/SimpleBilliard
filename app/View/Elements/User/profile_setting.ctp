@@ -32,8 +32,7 @@
             'id'            => 'ChangeProfileForm'
         ]); ?>
         <div class="panel-body profile-setting-panel-body">
-            <?
-            if (!$is_not_use_local_name) {
+            <?php if (!$is_not_use_local_name) {
                 //ローカル名を使う国のみ表示
                 //姓と名は言語によって表示順を変える
                 $local_last_name = $this->Form->input('LocalName.0.last_name', [
@@ -63,8 +62,7 @@
                 echo "<hr>";
             }
             ?>
-            <?
-            //姓と名は言語によって表示順を変える
+            <?php //姓と名は言語によって表示順を変える
             $last_name = $this->Form->input('last_name', [
                 'label'                    => __d('gl', "姓(ローマ字)"),
                 'placeholder'              => __d('gl', "例) Suzuki"),

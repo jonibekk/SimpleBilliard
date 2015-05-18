@@ -23,8 +23,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
-                        <?
-                        //目的のみの場合とそうでない場合でurlが違う
+                        <?php //目的のみの場合とそうでない場合でurlが違う
                         $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
                         $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
@@ -96,8 +95,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
-                        <?
-                        //目的のみの場合とそうでない場合でurlが違う
+                        <?php //目的のみの場合とそうでない場合でurlが違う
                         $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
                         $del_url = ['controll er' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
@@ -202,8 +200,7 @@
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
-                <?
-                $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
+                <?php $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
                 if ($type == "follow") {
                     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
                 }

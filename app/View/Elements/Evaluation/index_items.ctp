@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Created by PhpStorm.
  * User: bigplants
  * Date: 3/26/15

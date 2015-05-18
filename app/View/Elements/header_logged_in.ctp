@@ -82,19 +82,18 @@
                 </li>
                 <li>
                     <form class="nav-form-group" role="search">
-                        <?
-                        echo $this->Form->input('current_team',
-                                                array(
-                                                    'type'      => 'select',
-                                                    'options'   => !empty($my_teams) ? $my_teams : [__d('gl',
-                                                                                                        'チームがありません')],
-                                                    'value'     => $this->Session->read('current_team_id'),
-                                                    'id'        => 'SwitchTeam',
-                                                    'label'     => false,
-                                                    'div'       => false,
-                                                    'class'     => 'form-control nav-team-select font_12px disable-change-warning',
-                                                    'wrapInput' => false,
-                                                ))
+                        <?php echo $this->Form->input('current_team',
+                                                      array(
+                                                          'type'      => 'select',
+                                                          'options'   => !empty($my_teams) ? $my_teams : [__d('gl',
+                                                                                                              'チームがありません')],
+                                                          'value'     => $this->Session->read('current_team_id'),
+                                                          'id'        => 'SwitchTeam',
+                                                          'label'     => false,
+                                                          'div'       => false,
+                                                          'class'     => 'form-control nav-team-select font_12px disable-change-warning',
+                                                          'wrapInput' => false,
+                                                      ))
                         ?>
                     </form>
                 </li>
@@ -236,8 +235,7 @@
                                                   ['controller' => 'evaluations', 'action' => 'index']) ?>
                             </li>
                         <?php endif; ?>
-                        <?
-                        //TODO 一時的にチーム管理者はチーム招待リンクを表示
+                        <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
                         if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
                             <li>
                                 <?=

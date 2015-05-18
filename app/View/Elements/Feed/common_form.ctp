@@ -68,8 +68,7 @@
                     <span class="help-block" id="Post__Photo_ValidateMessage"></span>
                 </div>
             </div>
-            <?
-            if (isset($this->request->params['circle_id'])) {
+            <?php if (isset($this->request->params['circle_id'])) {
                 $display = "block";
             }
             else {

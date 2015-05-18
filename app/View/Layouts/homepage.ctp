@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * PHP 5
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -24,8 +23,7 @@
     <?= $this->Html->charset(); ?>
     <title><?=
         $title_for_layout ?></title>
-    <?
-    echo $this->Html->meta('icon');
+    <?php echo $this->Html->meta('icon');
     echo $this->Html
         ->meta(
             array(
@@ -97,8 +95,7 @@
         display: none;
     }</style>
     <![endif]-->
-    <?
-    //公開環境のみタグを有効化
+    <?php //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
         /** @noinspection PhpDeprecationInspection */
         echo $this->element('external_service_tags');

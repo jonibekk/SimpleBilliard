@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
@@ -39,8 +38,7 @@
         <div class="panel-heading"><?= __d('gl', "トータル評価") ?></div>
         <div class="panel-body eval-view-panel-body">
             <?php foreach ($totalList as $total): ?>
-                <?
-                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable && $total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):
+                <?php if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable && $total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):
                     ?>
                     <div class="form-group col-xxs-12 mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
@@ -127,12 +125,10 @@
                             </div>
                         </div>
                     </div>
-                    <?
-                    $saveIndex++;
+                    <?php $saveIndex++;
                     ?>
 
-                <?
-                else:
+                <?php else:
                     ?>
                     <div class="col-xxs-12  mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
@@ -202,8 +198,7 @@
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
-        <?
-        if ($isEditable):
+        <?php if ($isEditable):
             if ($status != Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <div class="panel-footer clearfix">
@@ -217,8 +212,7 @@
                         ]) ?>
                     </div>
                 </div>
-            <?
-            endif;
+            <?php endif;
         endif;
         ?>
 
@@ -229,8 +223,7 @@
 <?php if ($isEditable && !empty($goalList)) : ?>
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
         <div class="text-align_c p_8px bg-lightGray">
-            <?
-            if ($status == Evaluation::TYPE_STATUS_DONE):
+            <?php if ($status == Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <?= $this->Form->button(__d('gl', "修正して確定"), [
                 'div'   => false,
@@ -239,8 +232,7 @@
                 'name'  => 'status',
                 'value' => Evaluation::TYPE_STATUS_DONE,
             ]) ?>
-            <?
-            else:
+            <?php else:
                 ?>
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
                 'div'   => false,
@@ -257,8 +249,7 @@
                 'value'    => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
             ]) ?>
-            <?
-            endif;
+            <?php endif;
             ?>
         </div>
     </div>
@@ -451,11 +442,9 @@
                             </div>
                         </div>
                     </div>
-                    <?
-                    $saveIndex++;
+                    <?php $saveIndex++;
                     ?>
-                <?
-                else:
+                <?php else:
                     ?>
                     <div class="col-xxs-12  mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
@@ -515,13 +504,11 @@
                         </div>
                     </div>
 
-                <?
-                endif;
+                <?php endif;
                 ?>
             <?php endforeach ?>
         </div>
-        <?
-        if ($isEditable):
+        <?php if ($isEditable):
             if ($status != Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <div class="panel-footer clearfix">
@@ -535,8 +522,7 @@
                         ]) ?>
                     </div>
                 </div>
-            <?
-            endif;
+            <?php endif;
         endif;
         ?>
     </div>
@@ -546,8 +532,7 @@
 <?php if ($isEditable): ?>
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
         <div class="text-align_c p_8px bg-lightGray">
-            <?
-            if ($status == Evaluation::TYPE_STATUS_DONE):
+            <?php if ($status == Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <?= $this->Form->button(__d('gl', "修正して確定"), [
                 'div'   => false,
@@ -556,8 +541,7 @@
                 'name'  => 'status',
                 'value' => Evaluation::TYPE_STATUS_DONE
             ]) ?>
-            <?
-            else:
+            <?php else:
                 ?>
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
                 'div'   => false,
@@ -574,8 +558,7 @@
                 'value'    => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
             ]) ?>
-            <?
-            endif;
+            <?php endif;
             ?>
         </div>
     </div>

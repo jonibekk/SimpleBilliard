@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @var $scripts_for_layout string
  */
 ?>

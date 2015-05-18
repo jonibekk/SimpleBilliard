@@ -50,8 +50,7 @@
                                                           ['controller' => 'goals', 'action' => 'incomplete_kr', $kr['KeyResult']['id']],
                                                           ['escape' => false]) ?>
                             <?php else: ?>
-                                <?
-                                //最後のKRの場合
+                                <?php //最後のKRの場合
                                 if ($incomplete_kr_count === 1):?>
                                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', $kr['KeyResult']['id']]) ?>"
                                        class="modal-ajax-get">

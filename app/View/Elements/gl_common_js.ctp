@@ -11,8 +11,7 @@
  */
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
-<?
-//echo $this->Html->script('vendor/jquery-2.1.0.min');
+<?php //echo $this->Html->script('vendor/jquery-2.1.0.min');
 echo $this->Html->script('vendor/jquery-1.11.1.min');
 echo $this->Html->script('vendor/bootstrap.min');
 echo $this->Html->script('vendor/jasny-bootstrap.min');
@@ -129,16 +128,14 @@ echo $this->Html->script('gl_basic');
     <?endif;?>
 </script>
 <?= $this->Session->flash('click_event') ?>
-<?
-echo $this->Session->flash('pnotify');
+<?php echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
 ?>
 <?php if (ENV_NAME == "stg"): ?>
     <p class="ribbon ribbon-staging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Staging</p>
 <?php elseif (ENV_NAME == "hotfix"): ?>
     <p class="ribbon ribbon-hotfix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hotfix</p>
-<?
-elseif (ENV_NAME == "local"): ?>
+<?php elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local</p>
 <?php endif; ?>
 <!-- END app/View/Elements/gl_common_js.ctp -->

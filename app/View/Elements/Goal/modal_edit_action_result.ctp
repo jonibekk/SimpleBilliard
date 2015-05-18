@@ -9,8 +9,7 @@
  * @var                    $kr_list
  */
 ?>
-<?
-$action = $this->request->data;
+<?php $action = $this->request->data;
 ?>
 <!-- START app/View/Elements/Goal/modal_edit_action_result.ctp -->
 <div class="modal-dialog">

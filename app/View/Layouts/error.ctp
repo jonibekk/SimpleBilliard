@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
@@ -16,8 +15,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
         <?= $cakeDescription ?>:
         <?= $title_for_layout; ?>
     </title>
-    <?
-    echo $this->Html->meta('icon');
+    <?php echo $this->Html->meta('icon');
 
     echo $this->Html->css('cake.generic');
 

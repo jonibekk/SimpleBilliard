@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @var $this View
  * @var $no_title
  */

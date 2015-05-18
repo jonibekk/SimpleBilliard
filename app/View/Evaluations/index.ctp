@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
@@ -23,8 +22,7 @@
             <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
                 <?php foreach (['present' => __d('gl', "今期"), 'previous' => __d('gl', "前期")] as $key => $val): ?>
                     <?php $selected = $key == $selected_term_name ? 'selected' : ''; ?>
-                    <?
-                    $incompleteNum = (int)$incomplete_number_list[$key]['my_eval'] + (int)$incomplete_number_list[$key]['my_evaluatees'];
+                    <?php $incompleteNum = (int)$incomplete_number_list[$key]['my_eval'] + (int)$incomplete_number_list[$key]['my_evaluatees'];
                     ?>
                     <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>"
                        class="btn btn-default goal-search-elm <?= $selected ?>" role="button">
@@ -36,8 +34,7 @@
                                 font-size: 10px;
                                 background-color:red!important;
                                 display:block"><?= $incompleteNum ?></div>
-                        <?
-                        endif;
+                        <?php endif;
                         ?>
                         <?= $val ?>
                     </a>

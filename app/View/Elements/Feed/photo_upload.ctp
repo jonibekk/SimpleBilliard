@@ -80,8 +80,7 @@ if (!isset($id_prefix)) {
         <?php endif; ?>
         <div>
             <span class="hideFileInput">
-                <?
-                $model_id = null;
+                <?php $model_id = null;
                 if (isset($data[$model]['id'])) {
                     $model_id = $data[$model]['id'];
                 }

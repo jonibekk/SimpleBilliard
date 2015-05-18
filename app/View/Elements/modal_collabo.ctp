@@ -35,8 +35,7 @@
             'id'            => 'CollaboEditForm',
         ]); ?>
         <?= $this->Form->hidden('goal_id', ['value' => $goal['Goal']['id']]) ?>
-        <?
-        if (isset($goal['MyCollabo'][0]['id'])) {
+        <?php if (isset($goal['MyCollabo'][0]['id'])) {
             echo $this->Form->hidden('id', ['value' => $goal['MyCollabo'][0]['id']]);
         }
         ?>

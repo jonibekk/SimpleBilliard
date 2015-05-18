@@ -9,8 +9,7 @@
  * @var $id_prefix
  */
 ?>
-<?
-if (!isset($id_prefix)) {
+<?php if (!isset($id_prefix)) {
     $id_prefix = null;
 }
 ?>
