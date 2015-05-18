@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-required_plugins = %w( vagrant-omnibus vagrant-cachier )
+required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers )
 required_plugins.each do |plugin|
  unless Vagrant.has_plugin? plugin
    required_plugins.each do |plugin|
