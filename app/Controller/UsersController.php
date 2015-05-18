@@ -764,6 +764,9 @@ class UsersController extends AppController
         $this->request->allowMethod('post');
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('2fa_secret', null);
+        if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
+            $this->Redis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
+        }
         $this->Pnotify->outSuccess(__d('gl', "２要素認証を解除しました。"));
         return $this->redirect($this->referer());
     }
