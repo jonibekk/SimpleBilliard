@@ -18,11 +18,13 @@ class RedisComponent extends Object
     const KEY_TYPE_NOTIFICATION_USER = 'notification_user_key';
     const KEY_TYPE_NOTIFICATION = 'notification_key';
     const KEY_TYPE_NOTIFICATION_COUNT = 'new_notification_count_key';
+    const KEY_TYPE_LOGIN_FAIL = 'login_fail_key';
 
     static public $KEY_TYPES = [
         self::KEY_TYPE_NOTIFICATION_USER,
         self::KEY_TYPE_NOTIFICATION,
         self::KEY_TYPE_NOTIFICATION_COUNT,
+        self::KEY_TYPE_LOGIN_FAIL,
     ];
 
     /**
@@ -63,6 +65,18 @@ class RedisComponent extends Object
         'team'                   => null,
         'user'                   => null,
         'new_notification_count' => null,
+    ];
+
+    /**
+     * Key Name: email:[email]:device:[device_hash]:fail_count:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $login_fail_key = [
+        'email'      => null,
+        'device'     => null,
+        'fail_count' => null,
     ];
 
     function initialize(Controller $controller)
@@ -322,4 +336,5 @@ class RedisComponent extends Object
         }
         return $pipe_res;
     }
+
 }
