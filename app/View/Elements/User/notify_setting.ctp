@@ -36,7 +36,7 @@
         $this->Form->hidden('NotifySetting.id',
                             ['value' => isset($this->request->data['NotifySetting']['id']) ? $this->request->data['NotifySetting']['id'] : null]) ?>
         <div class="panel-body notify-setting-panel-body">
-            <? foreach (NotifySetting::$TYPE as $k => $v): ?>
+            <?php foreach (NotifySetting::$TYPE as $k => $v): ?>
                 <div class="form-group">
                     <label class="col col-sm-3 col-xxs-12 control-label form-label"><?= $v['field_real_name'] ?></label>
                     <?=
@@ -64,7 +64,7 @@
                                        ])
                     ?>
                 </div>
-            <? endforeach; ?>
+            <?php endforeach; ?>
         </div>
         <div class="panel-footer setting_pannel-footer">
             <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>

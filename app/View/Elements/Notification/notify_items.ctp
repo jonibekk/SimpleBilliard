@@ -11,10 +11,10 @@
 
 <!-- START app/View/Elements/Notification/notify_items.ctp -->
 
-<? foreach ($notify_items as $notify_item): ?>
+<?php foreach ($notify_items as $notify_item): ?>
     <?=
     $this->element('Notification/notify_item',
                    ['user' => viaIsSet($notify_item['User']), 'notification' => $notify_item['Notification']]) ?>
-<? endforeach; ?>
+<?php endforeach; ?>
 
 <!-- END app/View/Elements/Notification/notify_items.ctp -->

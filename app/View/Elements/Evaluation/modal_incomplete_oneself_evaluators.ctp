@@ -15,17 +15,17 @@
             <h4 class="modal-title"><?= __d('gl', "自己評価未評価者") ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
-            <? if (!empty($oneself_incomplete_users)): ?>
+            <?php if (!empty($oneself_incomplete_users)): ?>
                 <div class="row borderBottom">
-                    <? foreach ($oneself_incomplete_users as $user): ?>
+                    <?php foreach ($oneself_incomplete_users as $user): ?>
                         <?=
                         $this->element('Evaluation/incomplete_oneself',
                                        ['user' => $user['EvaluatorUser']]) ?>
-                    <? endforeach ?>
+                    <?php endforeach ?>
                 </div>
-            <? else: ?>
+            <?php else: ?>
                 <?= __d('gl', "全員の評価が完了しています。") ?>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

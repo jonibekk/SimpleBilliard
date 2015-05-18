@@ -108,5 +108,9 @@ if (false) {
          * @var CsvHelper
          */
         var $Csv;
+        /**
+         * @var GoalHelper
+         */
+        var $Goal;
     }
 }

@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * PHP 5
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -35,7 +34,7 @@
                 </div>
 
                 <div class="signup-email">
-                    <? $signup_link = $this->Html
+                    <?php $signup_link = $this->Html
                         ->link(__d('home', 'here'),
                                array(
                                    'controller' => 'users',
@@ -428,7 +427,7 @@
     </div>
 </div>
 <!-- end: social icon -->
-<? $this->append('ogp') ?>
+<?php $this->append('ogp') ?>
 <meta property="og:site_name" content="Goalous"/>
 <meta property="og:type" content="article"/>
 <meta property="og:title" content="Goalous"/>
@@ -437,9 +436,8 @@
 <meta property="og:image"
       content="https://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_180x180.png"/>
 <meta property="og:url" content="https://www.goalous.com/"/>
-<? $this->end() ?>
-<?
-$this->Html
+<?php $this->end() ?>
+<?php $this->Html
     ->meta('description',
            __d('home',
                "Goalous is a tool that all members of a team are able to action in high motivated toward the achievement of self goals.Because the members create public goals in a team,they collaborate each other and get praise to your actions."),

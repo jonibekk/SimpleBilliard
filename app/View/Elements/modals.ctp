@@ -1,6 +1,5 @@
 <!-- START app/View/Elements/modals.ctp -->
-<?
-/**
+<?php /**
  * Created by PhpStorm.
  * User: daikihirakata
  * Date: 2014/07/29

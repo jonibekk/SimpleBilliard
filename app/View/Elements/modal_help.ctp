@@ -18,17 +18,17 @@
             <h4 class="modal-title"><?= $help_item['title'] ?></h4>
         </div>
         <div class="modal-body">
-            <? if ($help_item['picture_name']): ?>
+            <?php if ($help_item['picture_name']): ?>
                 <div class="col col-xxs-12">
                     <?= $this->Html->image($help_item['picture_name'],
                                            ['width' => '280', 'height' => '', 'class' => 'm_pic']) ?>
                 </div>
-            <? endif; ?>
-            <? if ($help_item['body']): ?>
+            <?php endif; ?>
+            <?php if ($help_item['body']): ?>
                 <div class="col col-xxs-12">
                     <?= $help_item['body'] ?>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

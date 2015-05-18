@@ -19,8 +19,8 @@
             <h4 class="modal-title"><?= __d('gl', "アクションリスト") ?></h4>
         </div>
         <div class="modal-body" id="ActionListBody">
-            <? if (!empty($posts)): ?>
-                <? if (isset($posts[0]['Goal']['id']) && $posts[0]['Goal']['id']): ?>
+            <?php if (!empty($posts)): ?>
+                <?php if (isset($posts[0]['Goal']['id']) && $posts[0]['Goal']['id']): ?>
                     <!--START Goal Post Header -->
                     <div class="panel panel-default">
                         <div class="panel-body pt_10px plr_11px pb_8px bd-b">
@@ -52,10 +52,10 @@
                         </div>
                     </div>
                     <!--END Goal Post Header -->
-                <? endif; ?>
-            <? endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
             <?= $this->element('Feed/action_posts') ?>
-            <? if (count($posts) == 20): ?>
+            <?php if (count($posts) == 20): ?>
                 <div class="panel panel-default feed-read-more" id="ActionListMoreRead">
                     <div class="panel-body panel-read-more-body">
                         <span class="none" id="ActionShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
@@ -69,7 +69,7 @@
                             <?= __d('gl', "もっと読む ▼") ?></a>
                     </div>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default"

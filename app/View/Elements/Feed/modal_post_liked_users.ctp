@@ -19,17 +19,17 @@
                                                                 count($liked_users)) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
-            <? if (!empty($liked_users)): ?>
+            <?php if (!empty($liked_users)): ?>
                 <div class="row borderBottom">
-                    <? foreach ($liked_users as $user): ?>
+                    <?php foreach ($liked_users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
                                        ['user' => $user['User'], 'created' => $user['PostLike']['created']]) ?>
-                    <? endforeach ?>
+                    <?php endforeach ?>
                 </div>
-            <? else: ?>
+            <?php else: ?>
                 <?= __d('gl', "まだ、いいね！と言っている人はいません。") ?>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

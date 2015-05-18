@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * Licensed under The MIT License
@@ -17,7 +16,7 @@
 <h2><?= __d('cake_dev', 'Fatal Error'); ?></h2>
 <p class="error">
     <strong><?= __d('cake_dev', 'Error'); ?>: </strong>
-    <? /** @noinspection PhpUndefinedVariableInspection */
+    <?php /** @noinspection PhpUndefinedVariableInspection */
     echo h($error->getMessage()); ?>
     <br>
 

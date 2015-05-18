@@ -34,17 +34,17 @@ $this->Form->input('ActionResult.name', [
 )
 ?>
 <div class="goalsCard-activity inline-block col-xxs-2">
-    <? if ($ar_count > 0): ?>
+    <?php if ($ar_count > 0): ?>
         <a class="click-show-post-modal font_gray-brownRed pointer"
            id="ActionListOpen_<?= $goal_id ?>"
            href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal_id, 'type' => Post::TYPE_ACTION]) ?>">
             <i class="fa fa-check-circle mr_1px"></i><span
                 class="ls_number"><?= $ar_count ?></span>
         </a>
-    <? else: ?>
+    <?php else: ?>
         <i class="fa fa-check-circle mr_1px"></i><span
             class="ls_number">0</span>
-    <? endif; ?>
+    <?php endif; ?>
 </div>
 <div id="ActionFormDetail_<?= $goal_id ?>">
     <div class="form-group">
@@ -54,12 +54,12 @@ $this->Form->input('ActionResult.name', [
 
         <div class="col-xxs-8">
             <ul class="col input-images post-images">
-                <? for ($i = 1; $i <= 5; $i++): ?>
+                <?php for ($i = 1; $i <= 5; $i++): ?>
                     <li>
                         <?= $this->element('Feed/photo_upload_mini',
                                            ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => false, 'id_prefix' => 'Goal_' . $goal_id . '_']) ?>
                     </li>
-                <? endfor ?>
+                <?php endfor ?>
             </ul>
             <span class="help-block" id="Goal_<?= $goal_id ?>_ActionResult__Photo_ValidateMessage">
         </div>
@@ -76,7 +76,7 @@ $this->Form->input('ActionResult.name', [
                                                    ]
     )
     ?>
-    <? $this->Form->unlockField('socket_id') ?>
+    <?php $this->Form->unlockField('socket_id') ?>
     <div class="form-group col-xxs-12 mt_12px">
         <a href="#" target-id="ActionFormName_<?= $goal_id ?>"
            class="btn btn-white tiny-form-text-close font_verydark"><?= __d('gl',

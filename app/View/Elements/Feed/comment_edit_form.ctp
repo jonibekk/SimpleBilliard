@@ -9,8 +9,7 @@
  * @var $id_prefix
  */
 ?>
-<?
-if (!isset($id_prefix)) {
+<?php if (!isset($id_prefix)) {
     $id_prefix = null;
 }
 ?>
@@ -47,13 +46,13 @@ $this->Form->create('Comment', [
 </div>
 <div class="form-group none" id="<?= $id_prefix ?>CommentEditFormImage_<?= $comment['id'] ?>">
     <ul class="input-images">
-        <? for ($i = 1; $i <= 5; $i++): ?>
+        <?php for ($i = 1; $i <= 5; $i++): ?>
             <li>
                 <?=
                 $this->element('Feed/photo_upload',
                                ['data' => ['Comment' => $comment], 'type' => 'comment', 'index' => $i, 'id_prefix' => $id_prefix, 'submit_id' => $id_prefix . "CommentEditSubmit_{$comment['id']}"]) ?>
             </li>
-        <? endfor ?>
+        <?php endfor ?>
     </ul>
     <span class="help-block" id="Comment_<?= $comment['id'] ?>_Photo_ValidateMessage"></span>
 </div>

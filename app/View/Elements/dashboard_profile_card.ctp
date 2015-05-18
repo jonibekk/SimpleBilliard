@@ -61,13 +61,13 @@
         </div>
     </div>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         ajaxAppendCount('CountPostByMe', "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_post_count'])?>");
         ajaxAppendCount('CountActionByMe', "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_action_count'])?>");
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 
 <!-- END app/View/Elements/dashboard_profile_card.ctp -->
