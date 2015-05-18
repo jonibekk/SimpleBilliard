@@ -25,6 +25,9 @@
     //TODO botの拒否。一般公開前に必ず外す。
     echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
 
+    // クリックジャッキング対策
+    echo $this->Html->meta(['name' => 'X-FRAME-OPTIONS', 'content' => 'SAMEORIGIN']);
+
     //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
     echo $this->Html->css('goalstrap', array('media' => 'screen'));
