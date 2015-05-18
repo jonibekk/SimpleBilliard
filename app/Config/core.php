@@ -189,7 +189,7 @@ if (REDIS_SESSION_HOST) {
     Configure::write('Session', array(
         'userAgent' => false,
         'cookie'    => 'SID',
-        'timeout'   => 60 * 60 * 24 * 30, //30days
+        'timeout'   => 60 * 60 * 24 * 14, //14days = 2weeks
         'handler'   => array(
             'engine' => 'RedisSession',
             'key'    => 'session:'
@@ -200,7 +200,7 @@ else {
     Configure::write('Session', array(
         'defaults' => 'database',
         'cookie'   => 'SID',
-        'timeout'  => 60 * 60 * 24 * 30, //30days
+        'timeout'  => 60 * 60 * 24 * 14, //14days = 2weeks
     ));
 }
 
