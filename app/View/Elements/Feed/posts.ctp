@@ -130,33 +130,7 @@
                     )
                     ?>
                     <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
-                    <div class="font_11px font_lightgray">
-                        <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
-                        <?php if ($post['Post']['type'] != Post::TYPE_ACTION
-                            && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
-                        ): ?>
-                            <span class="font_lightgray"> ･ </span>
-                            <?php //公開の場合
-                            if ($post['share_mode'] == Post::SHARE_ALL): ?>
-                                <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
-                            <?php //自分のみ
-                            elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
-                                <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
-                            <?php //共有ユーザ
-                            elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                                   class="modal-ajax-get-share-circles-users link-dark-gray">
-                                    <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
-                                </a>
-                            <?php //共有サークル、共有ユーザ
-                            elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                                   class="modal-ajax-get-share-circles-users link-dark-gray">
-                                    <i class="fa fa-circle-o"></i>&nbsp;<?= $post['share_text'] ?>
-                                </a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                    </div>
+                    <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_body', compact('post')) ?>
                 <?php $photo_count = 0;
