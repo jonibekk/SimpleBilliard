@@ -293,7 +293,7 @@ class CollaboratorTest extends CakeTestCase
         ];
         $this->Collaborator->save($params);
         $cnt = $this->Collaborator->countCollaboGoal($team_id, $user_id, [$goal_id], $valued_flg);
-        $this->assertEquals(1, $cnt);
+        $this->assertEquals(0, $cnt);
     }
 
     function testGetLeaderUidNotNull()
