@@ -1269,7 +1269,7 @@ class PostsControllerTest extends ControllerTestCase
                 'Auth'      => ['user', 'loggedIn'],
                 'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-                'NotifyBiz' => ['sendNotify']
+                'NotifyBiz' => ['sendNotify', 'commentPush']
             ],
         ]);
         $value_map = [
