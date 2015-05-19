@@ -231,17 +231,17 @@ class Collaborator extends AppModel
                 continue;
             }
             // 自分のゴール + 修正待ち以外
-            if ($val['User']['id'] === $user_id && $val['Collaborator']['valued_flg'] !== '3') {
+            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['valued_flg'] !== '3') {
                 continue;
             }
             // 自分のゴール + 修正待ち + コラボレーター
-            if ($val['User']['id'] === $user_id && $val['Collaborator']['valued_flg'] === '3'
+            if ($val['User']['id'] === (string)$user_id && $val['Collaborator']['valued_flg'] === '3'
                 && $val['Collaborator']['type'] === '0'
             ) {
                 continue;
             }
             //他人のゴール + 重要度0 = 対象外
-            if ($val['User']['id'] !== $user_id && $val['Collaborator']['priority'] === '0'){
+            if ($val['User']['id'] !== (string)$user_id && $val['Collaborator']['priority'] === '0') {
                 continue;
             }
             $res[] = $val;
@@ -294,7 +294,8 @@ class Collaborator extends AppModel
         return $res;
     }
 
-    function getCollaborator($team_id, $user_id, $goal_id, $owner=true) {
+    function getCollaborator($team_id, $user_id, $goal_id, $owner = true)
+    {
         $options = [
             'conditions' => [
                 'team_id' => $team_id,
@@ -303,7 +304,9 @@ class Collaborator extends AppModel
                 'type'    => 1,
             ],
         ];
-        if ($owner === false) $options['conditions']['type'] = 0;
+        if ($owner === false) {
+            $options['conditions']['type'] = 0;
+        }
         $res = $this->find('first', $options);
         return $res;
     }
