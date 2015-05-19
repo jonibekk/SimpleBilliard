@@ -80,7 +80,8 @@ class UsersController extends AppController
         }
 
         //account lock check
-        $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email']);
+        $ip_address = $this->request->clientIp();
+        $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
         if ($is_account_locked) {
             $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();

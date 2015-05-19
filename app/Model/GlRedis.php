@@ -338,11 +338,11 @@ class GlRedis extends AppModel
 
     /**
      * @param      $user_id
-     * @param bool $with_ip
+     * @param null $ip_address
      *
      * @return bool|string
      */
-    function makeDeviceHash($user_id, $with_ip = false)
+    function makeDeviceHash($user_id, $ip_address = null)
     {
         $browser_info = get_browser(CakeRequest::header('User-Agent'));
         if (empty($browser_info) === true) {
@@ -353,11 +353,6 @@ class GlRedis extends AppModel
         $browser = $browser_info->browser;
         if (empty($platform) === true || empty($browser) === true) {
             return false;
-        }
-
-        $ip_address = null;
-        if ($with_ip) {
-            $ip_address = $this->Controller->request->clientIp();
         }
         return Security::hash($platform . $browser . $user_id . $ip_address, 'sha1', true);
     }
@@ -413,9 +408,15 @@ class GlRedis extends AppModel
         return $this->Db->del($key);
     }
 
-    function isAccountLocked($email)
+    /**
+     * @param      $email
+     * @param null $ip_address
+     *
+     * @return bool
+     */
+    function isAccountLocked($email, $ip_address = null)
     {
-        $device = $this->makeDeviceHash($email, true);
+        $device = $this->makeDeviceHash($email, $ip_address);
         $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
         $count = $this->Db->incr($key);
         if ($count !== false && $count >= ACCOUNT_LOCK_COUNT) {

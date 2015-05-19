@@ -4,7 +4,6 @@ App::uses('ModelType', 'Model');
 /**
  * @author daikihirakata
  * @property SessionComponent    $Session
- * @property RedisComponent      $Redis
  * @property AuthComponent       $Auth
  * @property GlEmailComponent    $GlEmail
  * @property NotifySetting       $NotifySetting
