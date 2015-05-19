@@ -41,3 +41,5 @@ define('BASIC_AUTH_ID', 'test');
 define('BASIC_AUTH_PASS', 'test');
 define('NOTIFY_AUTO_UPDATE_SEC', 5);
 define('TWO_FA_TTL', 60 * 60 * 24 * 30);
+define('ACCOUNT_LOCK_TTL', 60 * 5);
+define('ACCOUNT_LOCK_COUNT', 5);
