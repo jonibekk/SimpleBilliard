@@ -368,11 +368,11 @@ class RedisComponent extends Object
             return false;
         }
 
-        $ip = null;
+        $ip_address = null;
         if ($with_ip) {
-            $ip = $this->Controller->request->clientIp();
+            $ip_address = $this->Controller->request->clientIp();
         }
-        return Security::hash($platform . $browser . $user_id . $ip, 'sha1', true);
+        return Security::hash($platform . $browser . $user_id . $ip_address, 'sha1', true);
     }
 
     /**
