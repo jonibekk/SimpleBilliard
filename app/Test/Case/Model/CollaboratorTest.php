@@ -171,7 +171,7 @@ class CollaboratorTest extends CakeTestCase
         $this->Collaborator->save($params);
 
         $goal_detail = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, false);
-        $this->assertEquals(null, $goal_detail);
+        $this->assertEmpty($goal_detail);
     }
 
     function testChangeApprovalStatus()
