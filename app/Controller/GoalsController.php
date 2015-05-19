@@ -738,20 +738,21 @@ class GoalsController extends AppController
             $common_record['valued'] = null;
             if (!empty($ug_v['Collaborator'])) {
                 foreach ($ug_v['Collaborator'] as $c_v) {
-                    if($c_v['valued_flg'])
-                    {
-                        $approval_status = 'Pending modification';
-                    }
-                    else if(!$c_v['valued_flg'])
-                    {
-                        $approval_status = 'Pending approval';
-                    }
-                    else if($c_v['valued_flg']=='2')
-                    {
-                        $approval_status = 'Evaluable';
-                    }
-                    else{
-                        $approval_status = 'Not Evaluable';
+                    switch ($c_v['valued_flg']) {
+                        case Collaborator::STATUS_UNAPPROVED:
+                            $approval_status = __d('gl', "Pending approval");
+                            break;
+                        case Collaborator::STATUS_APPROVAL:
+                            $approval_status = __d('gl', "Evaluable");
+                            break;
+                        case Collaborator::STATUS_HOLD:
+                            $approval_status = __d('gl', "Not Evaluable");
+                            break;
+                        case Collaborator::STATUS_MODIFY:
+                            $approval_status = __d('gl', "Pending modification");
+                            break;
+                        default:
+                            $approval_status = null;
                     }
 
                     $record = $common_record;
