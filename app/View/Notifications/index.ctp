@@ -22,18 +22,18 @@
             $this->element('Notification/notify_items',
                            ['user' => $notify_items]) ?>
         </ul>
-        <? if($isExistMoreNotify): ?>
-        <div class="feed-read-more">
-            <div class="panel-read-more-body">
-                <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
-                <a href="#" class="btn btn-link click-notify-read-more"
-                   get-url="<?=
-                   $this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_old_notify_more']) ?>"
-                    >
-                    <?= __d('gl', "もっと見る ▼") ?></a>
+        <?php if ($isExistMoreNotify): ?>
+            <div class="feed-read-more">
+                <div class="panel-read-more-body">
+                    <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
+                    <a href="#" class="btn btn-link click-notify-read-more"
+                       get-url="<?=
+                       $this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_old_notify_more']) ?>"
+                        >
+                        <?= __d('gl', "もっと見る ▼") ?></a>
+                </div>
             </div>
-        </div>
-        <? endif; ?>
+        <?php endif; ?>
     </div>
     <div class="panel-footer">
     </div>

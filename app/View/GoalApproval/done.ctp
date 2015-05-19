@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @var CodeCompletionView $this
  * @var                    $unapproved_cnt
  * @var                    $done_cnt
@@ -50,7 +49,7 @@
         margin: -20px 0 0 -4px;
         color: #fff;
         font-size: 10px;
-        background-color:red;
+        background-color: red;
     }
 
 </style>
@@ -61,17 +60,17 @@
            id="SubHeaderMenuFeed"
            href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'index']) ?>">
             <?= __d('gl', "処理待ち") ?>
-            <? if ($unapproved_cnt > 0) { ?>
+            <?php if ($unapproved_cnt > 0) { ?>
             <span class="btn btn-danger btn-xs bell-notify-box approval_badge">
-            <? echo $unapproved_cnt; ?>
-            <? } ?>
+            <?php echo $unapproved_cnt; ?>
+            <?php } ?>
         </a>
     </div>
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuGoal">
-            <?= __d('gl', "処理済み") ?> <? if ($done_cnt > 0) {
-                echo '('. $done_cnt. ')';
+            <?= __d('gl', "処理済み") ?> <?php if ($done_cnt > 0) {
+                echo '(' . $done_cnt . ')';
             } ?></a>
     </div>
 </div>
@@ -79,19 +78,22 @@
 <div class="approval_body_start_area">
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
-            <? if (isset($goal_info) === true && count($goal_info) > 0) { ?>
-                <? foreach ($goal_info as $goal) { ?>
+            <?php if (isset($goal_info) === true && count($goal_info) > 0) { ?>
+                <?php foreach ($goal_info as $goal) { ?>
                     <div class="panel panel-default" id="AddGoalFormPurposeWrap">
 
-                        <? if (isset($goal['status']) === true) { ?>
+                        <?php if (isset($goal['status']) === true) { ?>
                             <div class="approval_status_box"><?= $goal['status']; ?></div>
-                        <? } ?>
+                        <?php } ?>
 
                         <div class="panel-body goal-set-heading clearfix">
 
                             <p class="approval_body_text">
-                                <?= $this->Html->image('ajax-loader.gif', [ 'class' => 'lazy comment-img',
-                                                                            'data-original' => $this->Upload->uploadUrl($goal['User'], 'User.photo', ['style' => 'small'])]) ?></p>
+                                <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
+                                                                           'data-original' => $this->Upload->uploadUrl($goal['User'],
+                                                                                                                       'User.photo',
+                                                                                                                       ['style' => 'small'])]) ?></p>
+
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= $goal['User']['display_username']; ?></p>
 
@@ -142,58 +144,71 @@
                         </div>
 
                         <div class="panel-body comment-block">
-                            <?= $this->Form->create('GoalApproval', ['url' => ['controller'=>'goal_approval', 'action'=>'done'], 'type' => 'post', 'novalidate' => true]); ?>
-                            <?= $this->Form->hidden('collaborator_id', ['value'=>$goal['Collaborator']['id']]); ?>
+                            <?= $this->Form->create('GoalApproval',
+                                                    ['url' => ['controller' => 'goal_approval', 'action' => 'done'], 'type' => 'post', 'novalidate' => true]); ?>
+                            <?= $this->Form->hidden('collaborator_id', ['value' => $goal['Collaborator']['id']]); ?>
 
-                            <? if ($goal['is_present_term'] === true) { ?>
-                            <div class="row">
-                                <div class="approval_botton_area">
-                                    <? if ($goal['my_goal'] === false) { ?>
-                                        <? if ($goal['Collaborator']['valued_flg'] === '1') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象にしない"), ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
-                                        <? } else if ($goal['Collaborator']['valued_flg'] === '2') { ?>
-                                            <?= $this->Form->button(__d('gl', "評価対象にする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
-                                        <? } ?>
-                                    <? } ?>
+                            <?php if ($goal['is_present_term'] === true) { ?>
+                                <div class="row">
+                                    <div class="approval_botton_area">
+                                        <?php if ($goal['my_goal'] === false) { ?>
+                                            <?php if ($goal['Collaborator']['valued_flg'] === '1') { ?>
+                                                <?= $this->Form->button(__d('gl', "評価対象にしない"),
+                                                                        ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
+                                            <?php }
+                                            else {
+                                                if ($goal['Collaborator']['valued_flg'] === '2') { ?>
+                                                    <?= $this->Form->button(__d('gl', "評価対象にする"),
+                                                                            ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
+                                                <?php }
+                                            } ?>
+                                        <?php } ?>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <?= $this->Form->textarea('comment', ['label'=>false, 'class'=>'form-control addteam_input-design', 'rows'=>3, 'cols'=>30, 'style'=>'margin-top: 10px; margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
+                                <?= $this->Form->textarea('comment',
+                                                          ['label' => false, 'class' => 'form-control addteam_input-design', 'rows' => 3, 'cols' => 30, 'style' => 'margin-top: 10px; margin-bottom: 10px;', 'placeholder' => 'コメントを書く']) ?>
 
-                            <div class="row">
-                                <div class="approval_botton_area">
-                                    <? if ($goal['my_goal'] === true) { ?>
-                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
-                                    <? } ?>
+                                <div class="row">
+                                    <div class="approval_botton_area">
+                                        <?php if ($goal['my_goal'] === true) { ?>
+                                            <?= $this->Form->button(__d('gl', "コメントする"),
+                                                                    ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
+                                        <?php } ?>
+                                    </div>
                                 </div>
-                            </div>
-                            <? } ?>
+                            <?php } ?>
 
-                            <? if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
-                                <? foreach ($goal['ApprovalHistory'] as $history) { ?>
+                            <?php if (isset($goal['ApprovalHistory']) === true && empty($goal['ApprovalHistory']) === false) { ?>
+                                <?php foreach ($goal['ApprovalHistory'] as $history) { ?>
                                     <div class="font_12px comment-box" comment-id="">
                                         <div class="col col-xxs-12">
-                                            <?= $this->Html->image('ajax-loader.gif', [ 'class' => 'lazy comment-img',
-                                                                   'data-original' => $this->Upload->uploadUrl($history['User'], 'User.photo', ['style' => 'small'])]) ?>
+                                            <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
+                                                                                       'data-original' => $this->Upload->uploadUrl($history['User'],
+                                                                                                                                   'User.photo',
+                                                                                                                                   ['style' => 'small'])]) ?>
                                             <div class="comment-body">
 
                                                 <div class="col col-xxs-12 comment-text comment-user">
-                                                    <div class="mb_2px lh_12px font_bold font_verydark"><?=$history['User']['local_username'];?></div>
-                                                    <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
-                                                    <div class="lh_15px"><?= $this->TimeEx->elapsedTime(h($history['created'])) ?></div>
+                                                    <div
+                                                        class="mb_2px lh_12px font_bold font_verydark"><?= $history['User']['local_username']; ?></div>
+                                                    <div
+                                                        class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?= $history['comment']; ?></div>
+                                                    <div
+                                                        class="lh_15px"><?= $this->TimeEx->elapsedTime(h($history['created'])) ?></div>
                                                 </div>
 
                                             </div>
                                         </div>
                                     </div>
-                                <? } ?>
-                            <? } ?>
+                                <?php } ?>
+                            <?php } ?>
                             <?= $this->Form->end(); ?>
                         </div>
 
                     </div>
-                <? } ?>
-            <? } ?>
+                <?php } ?>
+            <?php } ?>
         </div>
     </div>
 </div>

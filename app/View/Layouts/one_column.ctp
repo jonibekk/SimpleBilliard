@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
@@ -13,13 +12,12 @@
 <html lang="ja">
 <?= $this->element('head') ?>
 <body>
-<? if (extension_loaded('newrelic')) {
+<?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
-<?=$this->element('google_tag_manager')?>
-<?
-if ($this->Session->read('Auth.User.id')) {
+<?= $this->element('google_tag_manager') ?>
+<?php if ($this->Session->read('Auth.User.id')) {
     echo $this->element('header_logged_in');
 }
 else {
@@ -41,7 +39,7 @@ else {
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->
-<? if (extension_loaded('newrelic')) {
+<?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_footer();
 } ?>

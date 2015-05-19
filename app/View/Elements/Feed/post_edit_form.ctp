@@ -41,13 +41,13 @@ $this->Form->create('Post', [
 </div>
 <div class="row form-group m_0px none" id="PostFormImage_<?= $post['Post']['id'] ?>">
     <ul class="col input-images">
-        <? for ($i = 1; $i <= 5; $i++): ?>
+        <?php for ($i = 1; $i <= 5; $i++): ?>
             <li>
                 <?=
                 $this->element('Feed/photo_upload',
                                ['type' => 'post', 'index' => $i, 'data' => $post, 'submit_id' => "PostEditSubmit_{$post['Post']['id']}"]) ?>
             </li>
-        <? endfor ?>
+        <?php endfor ?>
     </ul>
     <span class="help-block" id="Post_<?= $post['Post']['id'] ?>_Photo_ValidateMessage">
 </div>

@@ -9,14 +9,14 @@
  */
 ?>
 <!-- START app/View/Users/settings.ctp -->
-<? $this->start('sidebar') ?>
+<?php $this->start('sidebar') ?>
 <li class="active"><a href="#account"><?= __d('gl', "アカウント") ?></a></li>
 <li class=""><a href="#profile"><?= __d('gl', "プロフィール") ?></a></li>
 <li class="">
     <a class="" href="#notification"><?= __d('gl', "通知") ?></a></li>
 <li class=""><!--suppress HtmlUnknownAnchorTarget -->
     <a class="develop--forbiddenLink" href="#link"><?= __d('gl', "リンク") ?></a></li>
-<? $this->end() ?>
+<?php $this->end() ?>
 <div id="account">
     <?= $this->element('User/account_setting') ?>
 </div>

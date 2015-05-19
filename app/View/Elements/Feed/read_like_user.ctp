@@ -21,11 +21,11 @@
         <div class="font_12px font_bold modalFeedTextPadding">
             <?= h($user['display_username']) ?></div>
 
-        <? if ($created): ?>
+        <?php if ($created): ?>
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
                 <?= $this->TimeEx->elapsedTime(h($created), viaIsSet($type)) ?>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
     </div>
 </div>
 <!-- END app/View/Elements/Feed/read_like_user.ctp -->

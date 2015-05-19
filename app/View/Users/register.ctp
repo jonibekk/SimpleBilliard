@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * ユーザ登録画面
  *
  * @var $this View
@@ -26,8 +25,7 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body register-panel-body">
-                <?
-                //姓と名は言語によって表示順を変える
+                <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                    => __d('gl', "姓(ローマ字)"),
                     'placeholder'              => __d('gl', "例) Suzuki"),
@@ -52,7 +50,7 @@
                 }
                 ?>
                 <hr>
-                <? if (isset($email)): ?>
+                <?php if (isset($email)): ?>
                     <div class="form-group">
                         <label for="" class="col col-sm-3 control-label form-label"><?= __d('gl', "メール") ?></label>
 
@@ -62,7 +60,7 @@
                     </div>
                     <?=
                     $this->Form->hidden('Email.0.email', ['value' => $email]) ?>
-                <? else: ?>
+                <?php else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
                         'label'                        => __d('gl', "メール"),
@@ -70,7 +68,7 @@
                         'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
                         "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                     ]) ?>
-                <? endif; ?>
+                <?php endif; ?>
 
                 <?=
                 $this->Form->input('update_email_flg', [
@@ -94,9 +92,8 @@
                     'type'                     => 'password',
                 ]) ?>
                 <hr>
-                <?
-                $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',
-                                             ['class' => 'link', 'data-toggle' => "modal"]);
+                <?php $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',
+                                                   ['class' => 'link', 'data-toggle' => "modal"]);
 
                 $ppLink = $this->Html->link(__d('gl', 'プライバシーポリシー'), '#modal-pp',
                                             ['class' => 'link', 'data-toggle' => "modal"]);
@@ -130,12 +127,12 @@
 </div>
 <?= $this->element('modal_tos') ?>
 <?= $this->element('modal_privacy_policy') ?>
-<? $this->append('script'); ?>
+<?php $this->append('script'); ?>
 <script type="text/javascript">
     $(document).ready(function () {
         //ユーザ登録時にローカル時間をセットする
         $('input#InitLocalDate').val(getLocalDate());
     });
 </script>
-<? $this->end(); ?>
+<?php $this->end(); ?>
 <!-- END app/View/Users/register.ctp -->

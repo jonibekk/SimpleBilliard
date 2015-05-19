@@ -23,55 +23,28 @@
                     <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128"
                          height="128">
                 </div>
-                <? if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && !empty($goal['Goal'])): ?>
+                <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                     <div class="col col-xxs-6">
-                        <? if (empty($goal['MyFollow']) && !viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
-                            $follow_class = 'follow-off';
-                            $follow_style = null;
-                            $follow_text = __d('gl', "フォロー");
-                            $follow_disabled = null;
-                        }
-                        elseif (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
-                            $follow_class = 'follow-off';
-                            $follow_style = null;
-                            $follow_text = __d('gl', "フォロー");
-                            $follow_disabled = "disabled";
-                        }
-                        else {
-                            $follow_class = 'follow-on';
-                            $follow_style = 'display:none;';
-                            $follow_text = __d('gl', "フォロー中");
-                            $follow_disabled = null;
-                        } ?>
-                        <? if (isset($goal['MyCollabo']) && !empty($goal['MyCollabo'])) {
-                            $collabo_class = 'collabo-on';
-                            $collabo_style = 'display:none;';
-                            $collabo_text = __d('gl', "コラボり中");
-                            $follow_disabled = "disabled";
-                        }
-                        else {
-                            $collabo_class = 'collabo-off';
-                            $collabo_style = null;
-                            $collabo_text = __d('gl', "コラボる");
-                        } ?>
-                        <a class="btn btn-white bd-circle_22px pull-right mt_16px toggle-follow font_verydark <?= $follow_class ?>"
-                           href="#" <?= $follow_disabled ?>="<?= $follow_disabled ?>"
+                        <? $follow_opt = $this->Goal->getFollowOption($goal) ?>
+                        <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
+                        <a class="btn btn-white bd-circle_22px pull-right mt_16px toggle-follow font_verydark <?= $follow_opt['class'] ?>"
+                           href="#" <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>"
                         data-class="toggle-follow"
                         goal-id="<?= $goal['Goal']['id'] ?>">
-                        <i class="fa fa-heart font_rougeOrange" style="<?= $follow_style ?>"></i>
-                        <span class="ml_5px"><?= $follow_text ?></span>
+                        <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
+                        <span class="ml_5px"><?= $follow_opt['text'] ?></span>
                         </a>
-                        <a class="btn btn-white bd-circle_22px pull-right mt_16px font_verydark-white modal-ajax-get-collabo <?= $collabo_class ?>"
+                        <a class="btn btn-white bd-circle_22px pull-right mt_16px font_verydark-white modal-ajax-get-collabo <?= $collabo_opt['class'] ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
-                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_style ?>"></i>
-                            <span class="ml_5px font_14px"><?= $collabo_text ?></span>
+                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_opt['style'] ?>"></i>
+                            <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
                         </a>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
             </div>
-            <? if (isset($goal['Goal']) && !empty($goal['Goal'])): ?>
+            <?php if (isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                 <div class="col col-xxs-12 font_11px">
                     <i class="fa fa-folder"></i><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span>
                 </div>
@@ -85,53 +58,53 @@
                     <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __d('gl', '程度') ?></span>
 
                     <div><?= __d('gl', '単位: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
-                    <? if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
+                    <?php if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
                         <div><?= __d('gl', '達成時: %s', (double)$goal['Goal']['target_value']) ?></div>
                         <div><?= __d('gl', '開始時: %s', (double)$goal['Goal']['start_value']) ?></div>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12">
                     <!-- アクション、フォロワー -->
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-sun-o"></i><span class="pl_2px"><?= __d('gl', "リーダー") ?></span></div>
-                    <? if (isset($goal['Leader'][0]['User'])): ?>
+                    <?php if (isset($goal['Leader'][0]['User'])): ?>
                         <img src="<?=
                         $this->Upload->uploadUrl($goal['Leader'][0]['User'],
                                                  'User.photo', ['style' => 'small']) ?>"
                              style="width:32px;height: 32px;">
                         <?= h($goal['Leader'][0]['User']['display_username']) ?>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-child"></i><span class="pl_2px"><?= __d('gl', "コラボレータ") ?>
                             &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
-                    <? if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
-                        <? foreach ($goal['Collaborator'] as $collabo): ?>
+                    <?php if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
+                        <?php foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
                             $this->Upload->uploadUrl($collabo['User'],
                                                      'User.photo', ['style' => 'small']) ?>"
                                  style="width:32px;height: 32px;" alt="<?= h($collabo['User']['display_username']) ?>"
                                  title="<?= h($collabo['User']['display_username']) ?>">
-                        <? endforeach ?>
-                    <? else: ?>
+                        <?php endforeach ?>
+                    <?php else: ?>
                         <?= __d('gl', "なし") ?>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-heart"></i><span class="pl_2px"><?= __d('gl', "フォロワー") ?>
                             &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
-                    <? if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
-                        <? foreach ($goal['Follower'] as $follower): ?>
+                    <?php if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
+                        <?php foreach ($goal['Follower'] as $follower): ?>
                             <img src="<?=
                             $this->Upload->uploadUrl($follower['User'],
                                                      'User.photo', ['style' => 'small']) ?>"
                                  style="width:32px;height: 32px;" alt="<?= h($follower['User']['display_username']) ?>"
                                  title="<?= h($follower['User']['display_username']) ?>">
-                        <? endforeach ?>
-                    <? else: ?>
+                        <?php endforeach ?>
+                    <?php else: ?>
                         <?= __d('gl', "なし") ?>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __d('gl', '詳細') ?></span></div>
@@ -142,22 +115,22 @@
                 <div class="col col-xxs-12">
                     <div><i class="fa fa-key"></i><span class="pl_2px"><?= __d('gl', "出したい成果") ?>
                             &nbsp;(<?= count($goal['KeyResult']) ?>)</span></div>
-                    <? if (isset($goal['KeyResult']) && !empty($goal['KeyResult'])): ?>
-                        <? foreach ($goal['KeyResult'] as $key_result): ?>
+                    <?php if (isset($goal['KeyResult']) && !empty($goal['KeyResult'])): ?>
+                        <?php foreach ($goal['KeyResult'] as $key_result): ?>
                             <div class="col col-xxs-12 dot-omission">
-                                <? if ($key_result['completed']): ?>
+                                <?php if ($key_result['completed']): ?>
                                     <span class="fin-kr tag-sm tag-info"><?= __d('gl', "完了") ?></span>
-                                <? else: ?>
+                                <?php else: ?>
                                     <span class="unfin-kr tag-sm tag-danger"><?= __d('gl', "未完了") ?></span>
-                                <? endif; ?>
+                                <?php endif; ?>
                                 <?= h($key_result['name']) ?>
                             </div>
-                        <? endforeach ?>
-                    <? else: ?>
+                        <?php endforeach ?>
+                    <?php else: ?>
                         <?= __d('gl', "なし") ?>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
 
         <div class="modal-footer">

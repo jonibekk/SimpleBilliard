@@ -19,17 +19,17 @@
                                                                 count($circle_members)) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
-            <? if (!empty($circle_members)): ?>
+            <?php if (!empty($circle_members)): ?>
                 <div class="row borderBottom">
-                    <? foreach ($circle_members as $user): ?>
+                    <?php foreach ($circle_members as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
                                        ['user' => $user['User'], 'created' => $user['CircleMember']['modified'], 'type' => 'rough']) ?>
-                    <? endforeach ?>
+                    <?php endforeach ?>
                 </div>
-            <? else: ?>
+            <?php else: ?>
                 <?= __d('gl', "このサークルにはメンバーがいません。") ?>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

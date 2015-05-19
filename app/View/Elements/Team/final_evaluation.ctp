@@ -58,8 +58,7 @@
         </div>
     </div>
     <!-- END app/View/Elements/Team/final_evaluation.ctp -->
-<?
-$this->start('modal');
+<?php $this->start('modal');
 if ($previous_term_id && $previous_eval_is_frozen) {
     echo $this->element('Team/modal_final_evaluation_by_csv',
                         ['term_id' => $previous_term_id, 'start' => $previous_term_start_date, 'end' => $previous_term_end_date]);
