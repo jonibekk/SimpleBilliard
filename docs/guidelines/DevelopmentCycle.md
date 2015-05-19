@@ -21,5 +21,5 @@ PR制度を採用しています。
 `git push origin topic-xxx`
 1. PR発行
 descriptionに関連Issueの番号を`Connected to #[Issue番号]`という風に記載すると親IssueとWaffle上で紐付けられる。
-1. メンバーにレビュー依頼(Issueのコメントでmention`@IsaoCorp/goalous_developers`を付ける)。
+1. メンバーにレビュー依頼(Issueのコメントでレビュアーにmentionをする)。
 1. 第三者にレビューをしてもらいマージしてもらう
