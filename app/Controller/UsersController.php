@@ -80,7 +80,7 @@ class UsersController extends AppController
         }
 
         //account lock check
-        $is_account_locked = $this->Redis->isAccountLocked($this->request->data['User']['email']);
+        $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email']);
         if ($is_account_locked) {
             $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();
@@ -98,7 +98,7 @@ class UsersController extends AppController
         // 2要素認証設定OFFの場合
         // 2要素認証設定ONかつ、設定して30日以内の場合
         if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
-                && $this->Redis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))
+                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))
         ) {
             $is_2fa_auth_enabled = false;
         }
@@ -135,7 +135,7 @@ class UsersController extends AppController
             && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'),
                                        $this->request->data['User']['two_fa_code']) === true
         ) {
-            $this->Redis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
+            $this->GlRedis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
             return $this->_afterAuthSessionStore();
 
         }
@@ -776,7 +776,7 @@ class UsersController extends AppController
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('2fa_secret', null);
         if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
-            $this->Redis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
+            $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }
         $this->Pnotify->outSuccess(__d('gl', "２要素認証を解除しました。"));
         return $this->redirect($this->referer());

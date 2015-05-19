@@ -37,6 +37,7 @@ App::uses('NotifySetting', 'Model');
  * @property Team                                      $Team
  * @property NotifyBizComponent                        $NotifyBiz
  * @property RedisComponent                            $Redis
+ * @property GlRedis                                   $GlRedis
  * @property BenchmarkComponent                        $Benchmark
  */
 class AppController extends Controller
@@ -84,6 +85,7 @@ class AppController extends Controller
         'Post',
         'Goal',
         'Team',
+        'GlRedis',
     ];
 
     /**

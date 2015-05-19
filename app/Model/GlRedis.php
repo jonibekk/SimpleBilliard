@@ -1,19 +1,29 @@
 <?php
+App::uses('AppModel', 'Model');
+App::uses('ConnectionManager', 'Model');
 
 /**
- * Class RedisComponent
+ * GlRedis Model
  *
  * @property Redis $Db
  */
-class RedisComponent extends Object
+class GlRedis extends AppModel
 {
-    public $name = "Redis";
-    public $Db;
+    public $useTable = false;
+    protected $_schema = array(
+        'dummy' => array('type' => 'text'),
+    );
 
     /**
-     * @var AppController
+     * @param bool $id
+     * @param null $table
+     * @param null $ds
      */
-    var $Controller;
+    public function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+        $this->Db = ConnectionManager::getDataSource('redis');
+    }
 
     const KEY_TYPE_NOTIFICATION_USER = 'notification_user_key';
     const KEY_TYPE_NOTIFICATION = 'notification_key';
@@ -97,29 +107,6 @@ class RedisComponent extends Object
         'two_fa_device_hashes' => null,
     ];
 
-    function initialize(Controller $controller)
-    {
-        App::uses('ConnectionManager', 'Model');
-        $this->Db = ConnectionManager::getDataSource('redis');
-        $this->Controller = $controller;
-    }
-
-    function startup()
-    {
-    }
-
-    function beforeRender()
-    {
-    }
-
-    function shutdown()
-    {
-    }
-
-    function beforeRedirect()
-    {
-    }
-
     /**
      * @param string        $key_type One of $KEY_TYPES
      * @param int           $team_id
@@ -131,7 +118,7 @@ class RedisComponent extends Object
      *
      * @return string
      */
-    public function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null)
+    private function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
@@ -356,7 +343,7 @@ class RedisComponent extends Object
      */
     function makeDeviceHash($user_id)
     {
-        $browser_info = get_browser($this->Controller->request->header('User-Agent'));
+        $browser_info = get_browser(CakeRequest::header('User-Agent'));
         if (empty($browser_info) === true) {
             return false;
         }
@@ -434,3 +421,4 @@ class RedisComponent extends Object
     }
 
 }
+
