@@ -15,7 +15,9 @@ class InviteTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.local_name',
+        'app.notify_setting',
         'app.team_member',
         'app.invite',
         'app.team',
@@ -187,4 +189,17 @@ class InviteTest extends CakeTestCase
     {
         $this->assertFalse($this->Invite->isByBatchSetup('not_exists_token'));
     }
+
+    function testGetInviterUserNoData()
+    {
+        $res = $this->Invite->getInviteById(1111);
+        $this->assertEmpty($res);
+    }
+
+    function testGetInviterUserSuccess()
+    {
+        $res = $this->Invite->getInviteById(2);
+        $this->assertNotEmpty($res);
+    }
+
 }

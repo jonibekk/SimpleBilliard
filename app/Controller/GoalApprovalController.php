@@ -222,10 +222,10 @@ class GoalApprovalController extends AppController
                 }
             }
 
-            if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '1') {
+            if ($val['Collaborator']['valued_flg'] === '1') {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
-            } else if ($goal_info[$key]['my_goal'] === false && $val['Collaborator']['valued_flg'] === '2') {
+            } else if ($val['Collaborator']['valued_flg'] === '2') {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
             }
         }
@@ -245,10 +245,12 @@ class GoalApprovalController extends AppController
         if (isset($this->request->data['comment_btn']) === true) {
             $this->comment($data);
 
-        } else if (isset($this->request->data['wait_btn']) === true) {
+        }
+        elseif (isset($this->request->data['wait_btn']) === true) {
             $this->wait($data);
 
-        } else if (isset($this->request->data['approval_btn']) === true) {
+        }
+        elseif (isset($this->request->data['approval_btn']) === true) {
             $this->approval($data);
 
         }
@@ -262,6 +264,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['approval']);
+            $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION, $cb_id);
             $this->comment($data);
         }
         $this->redirect($this->referer());
@@ -275,6 +278,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
+            $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION, $cb_id);
             $this->comment($data);
         }
         $this->redirect($this->referer());
@@ -288,6 +292,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['modify']);
+            $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE, $cb_id);
             $this->comment($data);
         }
 
@@ -340,18 +345,20 @@ class GoalApprovalController extends AppController
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, [$this->user_id], $goal_status);
 
-        } elseif ($this->user_type === 2) {
+        }
+        elseif ($this->user_type === 2) {
             $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->member_ids, $goal_status);
+                $this->team_id, $this->member_ids, $goal_status, false);
 
             $my_goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, [$this->user_id], $goal_status);
 
             $goal_info = array_merge($member_goal_info, $my_goal_info);
 
-        } elseif ($this->user_type === 3) {
+        }
+        elseif ($this->user_type === 3) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->member_ids, $goal_status);
+                $this->team_id, $this->member_ids, $goal_status, false);
         }
 
         return $goal_info;
@@ -405,6 +412,25 @@ class GoalApprovalController extends AppController
         }
 
         return 0;
+    }
+
+    /**
+     * send notify to collaborator
+     *
+     * @param $notify_type
+     * @param $collabo_id
+     */
+    function _notifyToCollaborator($notify_type, $collabo_id)
+    {
+        $collaborator = $this->Collaborator->findById($collabo_id);
+        if (viaIsSet($collaborator['Collaborator'])) {
+            //Notify
+            $this->NotifyBiz->execSendNotify($notify_type,
+                                             $collaborator['Collaborator']['goal_id'],
+                                             null,
+                                             $collaborator['Collaborator']['user_id']
+            );
+        }
     }
 
 }

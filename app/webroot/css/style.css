@@ -190,8 +190,8 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
     margin-right: 0;
 }
 
-.dropdown-menu li a ,
-.notify-list-page li a{
+.dropdown-menu a ,
+.notify-list-page a{
     color: #231814;
 }
 
@@ -3778,7 +3778,7 @@ Temporary Properties - YOU MUST FIX
     padding: 0;
     max-height: 360px;
     white-space: normal;
-    overflow: scroll;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 

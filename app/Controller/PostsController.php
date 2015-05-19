@@ -455,6 +455,8 @@ class PostsController extends AppController
             'msg'   => ""
         ];
         $this->Post->id = viaIsSet($this->request->data['Comment']['post_id']);
+        $post = $this->Post->findById($this->Post->id);
+        $type = viaIsSet($post['Post']['type']);
         try {
             if (!$this->Post->exists()) {
                 throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
@@ -466,10 +468,22 @@ class PostsController extends AppController
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
-                                                 $this->Post->Comment->id);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
-                                                 $this->Post->id, $this->Post->Comment->id);
+                switch ($type) {
+                    case Post::TYPE_NORMAL:
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $this->Post->id,
+                                                         $this->Post->Comment->id);
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                                                         $this->Post->id, $this->Post->Comment->id);
+                        break;
+                    case Post::TYPE_ACTION:
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                                                         $this->Post->id,
+                                                         $this->Post->Comment->id);
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                                                         $this->Post->id, $this->Post->Comment->id);
+                        break;
+                }
+
                 $result['msg'] = __d('gl', "コメントしました。");
             }
             else {
@@ -484,7 +498,7 @@ class PostsController extends AppController
             return $this->_ajaxGetResponse($result);
         }
 
-        $this->_pushCommentToPost($this->Post->id);
+        $this->_pushCommentToPost($this->Post->id, time());
 
         return $this->_ajaxGetResponse($result);
     }
@@ -615,10 +629,14 @@ class PostsController extends AppController
         return $requestData;
     }
 
-    public function _pushCommentToPost($postId)
+    /**
+     * @param $postId
+     * @param $date
+     */
+    public function _pushCommentToPost($postId, $date)
     {
         $socketId = viaIsSet($this->request->data['socket_id']);
-        $notifyId = Security::hash(time());
+        $notifyId = Security::hash($date);
 
         // リクエストデータが正しくないケース
         if (!$socketId) {
@@ -673,7 +691,7 @@ class PostsController extends AppController
 
     function circle_toggle_status($circle_id, $status)
     {
-        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg'=>$status]);
+        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg' => $status]);
 
         if ($this->Post->Circle->CircleMember->validates()) {
             $this->Post->Circle->CircleMember->circle_status_toggle($circle_id, $status);

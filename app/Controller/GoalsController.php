@@ -101,12 +101,28 @@ class GoalsController extends AppController
             $this->redirect($this->referer());
         }
 
-        // 新規作成時、モードの指定がある場合
+        // 新規作成時 or モードの指定がある場合
         if ($this->Goal->add($this->request->data)) {
+            //edit goal notify
+            if ($id) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
+                //send notify to coach
+                $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
+                                                                                $this->my_uid, $id);
+                if ($my_collabo_status['Collaborator']['valued_flg'] == Collaborator::STATUS_MODIFY) {
+                    $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
+                }
+            }
             switch ($this->request->params['named']['mode']) {
                 case 2:
+                    //case of create new one.
+                    if (!$id) {
+                        $this->Mixpanel->trackCreateGoal($this->Goal->getLastInsertID());
+                        $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
+                                                  NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+                    }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
-                    //「ゴールを定める」に進む
+                    //「情報を追加」に進む
                     $this->redirect([$this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
                     break;
                 case 3:
@@ -117,8 +133,13 @@ class GoalsController extends AppController
                     $this->NotifyBiz->push($socketId, "all");
 
                     // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
+                    // ただし重要度0のゴールであれば認定フラグは対象外にセットする
                     foreach ($this->request->data['Collaborator'] as $val) {
-                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], 0);
+                        $valued_flg = 0;
+                        if ($val['priority'] === "0") {
+                            $valued_flg = 2;
+                        }
+                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], $valued_flg);
                     }
 
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
@@ -136,6 +157,20 @@ class GoalsController extends AppController
 
         $this->Pnotify->outError(__d('gl', "ゴールの保存に失敗しました。"));
         $this->redirect($this->referer());
+    }
+
+    /**
+     * @param $goal_id
+     * @param $notify_type
+     */
+    function _sendNotifyToCoach($goal_id, $notify_type)
+    {
+        $coach_id = $this->Team->TeamMember->getCoachId($this->Auth->user('id'),
+                                                        $this->Session->read('current_team_id'));
+        if (!$coach_id) {
+            return;
+        }
+        $this->NotifyBiz->execSendNotify($notify_type, $goal_id, null, $coach_id);
     }
 
     /**
@@ -283,11 +318,22 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function edit_collabo()
+    /**
+     * @param null $collabo_id
+     */
+    public function edit_collabo($collabo_id = null)
     {
         $this->request->allowMethod('post', 'put');
         if ($this->Goal->Collaborator->edit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
+            //if new
+            if (!$collabo_id) {
+                $this->Mixpanel->trackCollaborateGoal($this->request->data['Collaborator']['goal_id']);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
+                                                 $this->request->data['Collaborator']['goal_id']);
+                $this->_sendNotifyToCoach($this->request->data['Collaborator']['goal_id'],
+                                          NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+            }
         }
         else {
             $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
@@ -318,6 +364,7 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
+        $this->Mixpanel->trackCreateKR($goal_id, $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
         $this->redirect($this->referer());
@@ -520,6 +567,8 @@ class GoalsController extends AppController
         if ($return['add']) {
             $this->Goal->Follower->addFollower($goal_id);
             $return['msg'] = __d('gl', "フォローしました。");
+            $this->Mixpanel->trackFollowGoal($goal_id);
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_FOLLOW, $goal_id);
         }
         else {
             $this->Goal->Follower->deleteFollower($goal_id);
@@ -819,6 +868,11 @@ class GoalsController extends AppController
         $socket_id = viaIsSet($this->request->data['socket_id']);
         $channelName = "goal_" . $goal_id;
         $this->NotifyBiz->push($socket_id, $channelName);
+
+        $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;
+        $this->Mixpanel->trackCreateAction($this->Goal->ActionResult->getLastInsertID(), $goal_id, $kr_id);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
+                                         $this->Goal->ActionResult->getLastInsertID());
 
         // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));

@@ -379,7 +379,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
     }
 
     /**
@@ -424,7 +424,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAddPostRegisterCaseEvaluator()
@@ -464,7 +464,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAddPostRegisterValidationError()
@@ -503,7 +503,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 ],
             ],
         ];
-        $this->testAction('/evaluations/add', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAjaxGetIncompleteEvaluatees()

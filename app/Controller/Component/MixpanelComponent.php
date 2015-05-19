@@ -9,6 +9,21 @@
 class MixpanelComponent extends Object
 {
 
+    const TRACK_CREATE_GOAL = 'CreGoal';
+    const TRACK_COLLABORATE_GOAL = 'Clb';
+    const TRACK_FOLLOW_GOAL = 'FolGoal';
+    const TRACK_CREATE_KR = 'CreKR';
+    const TRACK_CREATE_ACTION = 'CreAct';
+    const TRACK_POST = 'Post';
+    const TRACK_COMMENT_POST = 'CmtPost';
+    const TRACK_COMMENT_ACTION = 'CmtAct';
+    const TRACK_COMMENT_COMPLETED_KR = 'CmtCmpKR';
+    const TRACK_COMMENT_COMPLETED_GOAL = 'CmtCmpGoal';
+    const TRACK_POST_LIKE = 'LikePost';
+    const TRACK_APPROVAL_GOAL = 'ApvEva';
+    const TRACK_EVALUATION_ONESELF = 'Eva-Self';
+    const TRACK_EVALUATION_EVALUATOR = 'Eva-Evator';
+
     public $name = "Mixpanel";
 
     /**
@@ -21,11 +36,19 @@ class MixpanelComponent extends Object
      */
     var $Controller;
 
+    var $trackProperty = [];
+
     function initialize(&$controller)
     {
         $this->Controller = $controller;
         if (MIXPANEL_TOKEN) {
             $this->MpOrigin = Mixpanel::getInstance(MIXPANEL_TOKEN);
+            if ($this->Controller->Auth->user()) {
+                //mixpanelにユーザidをセット
+                $this->MpOrigin->identify($this->Controller->Auth->user('id'));
+                //チームIDをセット
+                $this->MpOrigin->register('$team_id', $this->Controller->Session->read('current_team_id'));
+            }
         }
     }
 
@@ -56,11 +79,13 @@ class MixpanelComponent extends Object
         if (!MIXPANEL_TOKEN) {
             return;
         }
+
         $options = [
             'conditions' => ['User.id' => $user_id],
             'contain'    => ['PrimaryEmail',]
         ];
         $user = $this->Controller->User->find('first', $options);
+        //ユーザ情報をセット
         $this->MpOrigin->people->set($user['User']['id'], [
             '$first_name'      => $user['User']['first_name'],
             '$last_name'       => $user['User']['last_name'],
@@ -70,6 +95,47 @@ class MixpanelComponent extends Object
             '$is_admin'        => $user['User']['is_admin'],
             '$gender_id'       => $user['User']['gender_id'],
         ]);
+    }
+
+    function trackCreateGoal($goal_id)
+    {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
+        $this->MpOrigin->track(self::TRACK_CREATE_GOAL, ['$goal_id' => $goal_id]);
+    }
+
+    function trackCollaborateGoal($goal_id)
+    {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
+        $this->MpOrigin->track(self::TRACK_COLLABORATE_GOAL, ['$goal_id' => $goal_id]);
+    }
+
+    function trackFollowGoal($goal_id)
+    {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
+        $this->MpOrigin->track(self::TRACK_FOLLOW_GOAL, ['$goal_id' => $goal_id]);
+    }
+
+    function trackCreateKR($goal_id, $kr_id)
+    {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
+        $this->MpOrigin->track(self::TRACK_CREATE_KR, ['$goal_id' => $goal_id, '$kr_id' => $kr_id]);
+    }
+
+    function trackCreateAction($action_id, $goal_id = null, $kr_id = null)
+    {
+        if (!MIXPANEL_TOKEN) {
+            return;
+        }
+        $this->MpOrigin->track(self::TRACK_CREATE_ACTION,
+                               ['$action_id' => $action_id, '$goal_id' => $goal_id, '$kr_id' => $kr_id]);
     }
 
     /**

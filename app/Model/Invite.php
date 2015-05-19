@@ -186,4 +186,26 @@ class Invite extends AppModel
         return false;
     }
 
+    /**
+     * @param $invite_id
+     *
+     * @return null
+     */
+    function getInviteById($invite_id)
+    {
+        $options = [
+            'conditions' => [
+                'Invite.id' => $invite_id
+            ],
+            'contain'    => [
+                'FromUser' => [
+                    'fields' => $this->FromUser->profileFields
+                ],
+                'Team'
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
 }

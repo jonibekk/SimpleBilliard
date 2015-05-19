@@ -51,13 +51,13 @@
         margin: -20px 0 0 -4px;
         color: #fff;
         font-size: 10px;
-        background-color:red;
+        background-color: red;
     }
 
 </style>
 
 <script type="text/javascript">
-    var is_comment = function(str, button_no) {
+    var is_comment = function (str, button_no) {
         var button_name = 'modify_btn_' + button_no;
         if (str.length > 0) {
             document.getElementById(button_name).disabled = "";
@@ -73,7 +73,7 @@
            id="SubHeaderMenuFeed">
             <?= __d('gl', "処理待ち") ?>
             <? if ($unapproved_cnt > 0) { ?>
-            <span class="btn btn-danger btn-xs bell-notify-box approval_badge">
+            <span class="btn btn-danger btn-xs approval_badge">
             <? echo $unapproved_cnt; ?>
             <? } ?>
             </span>
@@ -83,7 +83,7 @@
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
            id="SubHeaderMenuGoal" href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'done']) ?>">
             <?= __d('gl', "処理済み") ?> <? if ($done_cnt > 0) {
-                echo '('. $done_cnt. ')';
+                echo '(' . $done_cnt . ')';
             } ?></a>
     </div>
 </div>
@@ -103,8 +103,10 @@
                         <div class="panel-body goal-set-heading clearfix">
 
                             <p class="approval_body_text">
-                                <?= $this->Html->image('ajax-loader.gif', [ 'class' => 'lazy comment-img',
-                                                                            'data-original' => $this->Upload->uploadUrl($goal['User'], 'User.photo', ['style' => 'small'])]) ?></p>
+                                <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
+                                                                           'data-original' => $this->Upload->uploadUrl($goal['User'],
+                                                                                                                       'User.photo',
+                                                                                                                       ['style' => 'small'])]) ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
@@ -157,28 +159,39 @@
 
 
                         <div class="panel-body comment-block">
-                            <?= $this->Form->create('GoalApproval', ['url' => ['controller'=>'goal_approval', 'action'=>'index'], 'type' => 'post', 'novalidate' => true]); ?>
-                            <?= $this->Form->hidden('collaborator_id', ['value'=>$goal['Collaborator']['id']]); ?>
+                            <?= $this->Form->create('GoalApproval',
+                                                    ['url' => ['controller' => 'goal_approval', 'action' => 'index'], 'type' => 'post', 'novalidate' => true]); ?>
+                            <?= $this->Form->hidden('collaborator_id', ['value' => $goal['Collaborator']['id']]); ?>
 
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if ($goal['my_goal'] === false) { ?>
-                                        <?= $this->Form->button(__d('gl', "評価対象にする"), ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
-                                        <?= $this->Form->button(__d('gl', "評価対象にしない"), ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false]) ?>
-                                    <? } elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === '1' && $goal['Collaborator']['valued_flg'] === '3') { ?>
-                                        <a class="btn btn-primary approval_button" href="goals/add/<?= $goal['Goal']['id']; ?>/mode:3"><?=__d('gl', "ゴールを修正する")?> <i class="fa fa-chevron-right"></i></a>
+                                        <?= $this->Form->button(__d('gl', "評価対象にする"),
+                                                                ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
+                                        <?= $this->Form->button(__d('gl', "評価対象にしない"),
+                                                                ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div' => false]) ?>
+                                    <? }
+                                    elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === '1' && $goal['Collaborator']['valued_flg'] === '3') { ?>
+                                        <a class="btn btn-primary approval_button"
+                                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?= __d('gl',
+                                                                                                                                                                   "ゴールを修正する") ?>
+                                            <i class="fa fa-chevron-right"></i></a>
                                     <? } ?>
                                 </div>
                             </div>
 
-                            <?= $this->Form->textarea('comment', ['label'=>false, 'onkeyup' => 'is_comment(value,'.$goal['Collaborator']['id']. ')', 'class'=>'form-control addteam_input-design', 'rows'=>3, 'cols'=>30, 'style'=>'margin-top: 10px; margin-bottom: 10px;', 'placeholder'=>'コメントを書く'])?>
+                            <?= $this->Form->textarea('comment',
+                                                      ['label' => false, 'onkeyup' => 'is_comment(value,' . $goal['Collaborator']['id'] . ')', 'class' => 'form-control addteam_input-design', 'rows' => 3, 'cols' => 30, 'style' => 'margin-top: 10px; margin-bottom: 10px;', 'placeholder' => 'コメントを書く']) ?>
 
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <? if ($goal['my_goal'] === true || ($goal['my_goal'] === false && $goal['Collaborator']['type'] === '0')) { ?>
-                                        <?= $this->Form->button(__d('gl', "コメントする"), ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div'=>false]) ?>
-                                    <? } else { ?>
-                                        <?= $this->Form->button(__d('gl', "修正を依頼"), ['id' => 'modify_btn_'. $goal['Collaborator']['id'], 'name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div'=>false, 'disabled']) ?>
+                                        <?= $this->Form->button(__d('gl', "コメントする"),
+                                                                ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
+                                    <? }
+                                    else { ?>
+                                        <?= $this->Form->button(__d('gl', "修正を依頼"),
+                                                                ['id' => 'modify_btn_' . $goal['Collaborator']['id'], 'name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div' => false, 'disabled']) ?>
                                     <? } ?>
                                 </div>
                             </div>
@@ -187,14 +200,19 @@
                                 <? foreach ($goal['ApprovalHistory'] as $history) { ?>
                                     <div class="font_12px comment-box">
                                         <div class="col col-xxs-12">
-                                            <?= $this->Html->image('ajax-loader.gif', [ 'class' => 'lazy comment-img',
-                                                                                        'data-original' => $this->Upload->uploadUrl($history['User'], 'User.photo', ['style' => 'small'])]) ?>
+                                            <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
+                                                                                       'data-original' => $this->Upload->uploadUrl($history['User'],
+                                                                                                                                   'User.photo',
+                                                                                                                                   ['style' => 'small'])]) ?>
                                             <div class="comment-body">
 
                                                 <div class="col col-xxs-12 comment-text comment-user">
-                                                    <div class="mb_2px lh_12px font_bold font_verydark"><?=$history['User']['local_username'];?></div>
-                                                    <div class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?=$history['comment'];?></div>
-                                                    <div class="lh_15px"><?= $this->TimeEx->elapsedTime(h($history['created'])) ?></div>
+                                                    <div
+                                                        class="mb_2px lh_12px font_bold font_verydark"><?= $history['User']['local_username']; ?></div>
+                                                    <div
+                                                        class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?= $history['comment']; ?></div>
+                                                    <div
+                                                        class="lh_15px"><?= $this->TimeEx->elapsedTime(h($history['created'])) ?></div>
                                                 </div>
 
                                             </div>

@@ -36,7 +36,6 @@ class NotifySettingTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
         'app.thread',
         'app.message',
         'app.email',
@@ -106,16 +105,9 @@ class NotifySettingTest extends CakeTestCase
         $from_user_names = ['aaa', 'bbb'];
         $count_num = 1;
         $item_name = json_encode(['ccc', 'ddd']);
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name);
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, $from_user_names,
-                                       $count_num, $item_name);
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $from_user_names, $count_num,
-                                       $item_name);
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING, $from_user_names, $count_num,
-                                       $item_name);
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_USER_JOIN, $from_user_names, $count_num, $item_name);
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_CIRCLE_ADD_USER, $from_user_names, $count_num, $item_name);
-        $this->NotifySetting->getTitle(999, "abc", $count_num, $item_name);
+        foreach (NotifySetting::$TYPE as $type => $val) {
+            $this->NotifySetting->getTitle($type, $from_user_names, $count_num, $item_name);
+        }
     }
 
 }

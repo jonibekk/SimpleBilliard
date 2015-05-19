@@ -717,11 +717,11 @@ class Evaluation extends AppModel
         return viaIsSet($res['Evaluation']['evaluate_term_id']);
     }
 
-    function getEvaluateeIdByEvaluationId($evaluateeId)
+    function getEvaluateeIdByEvaluationId($evaluationId)
     {
         $res = $this->find("first", [
             'conditions' => [
-                'id' => $evaluateeId
+                'id' => $evaluationId
             ],
             'fields'     => [
                 'evaluatee_user_id'
@@ -736,8 +736,21 @@ class Evaluation extends AppModel
             'conditions' => [
                 'evaluate_term_id' => $term_id
             ],
-            'fields'     => ['evaluatee_user_id'],
+            'fields'     => ['evaluatee_user_id', 'evaluatee_user_id'],
             'group'      => ['evaluatee_user_id'],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getEvaluatorIdsByTermId($term_id)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id' => $term_id
+            ],
+            'fields'     => ['evaluator_user_id', 'evaluator_user_id'],
+            'group'      => ['evaluator_user_id'],
         ];
         $res = $this->find('list', $options);
         return $res;
@@ -1023,6 +1036,23 @@ class Evaluation extends AppModel
         $res = $this->find('all', $options);
 
         return $res;
+    }
+
+    function getCurrentTurnEvaluationId($evaluateeId, $termId)
+    {
+        $options = [
+            'conditions' => [
+                'evaluate_term_id'  => $termId,
+                'my_turn_flg'       => true,
+                'evaluatee_user_id' => $evaluateeId,
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        $res = $this->find('first', $options);
+        return viaIsSet($res['Evaluation']['id']);
     }
 
 }

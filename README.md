@@ -5,8 +5,8 @@ Goalous 2.0のリポジトリです。
 
 ## Health
 |master|develop|
-|:--:|:--:|
-|[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2) [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=master)](https://coveralls.io/r/IsaoCorp/goalous2?branch=master)   |[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.png?branch=develop)](https://coveralls.io/r/IsaoCorp/goalous2?branch=develop)   |
+|:--|:--|
+|[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2) <br> [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=master&t=YVamu1)](https://coveralls.io/r/IsaoCorp/goalous2?branch=master)  |  [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) <br> [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=develop&t=YVamu1)](https://coveralls.io/r/IsaoCorp/goalous2?branch=develop) <br> [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed)  |
 
 ## Progress
 - [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous2) ... Goalousの開発状況はこのかんばんボードで管理しています。
