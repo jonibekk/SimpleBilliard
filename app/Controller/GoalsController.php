@@ -748,7 +748,7 @@ class GoalsController extends AppController
             __d('gl', "姓"),
             __d('gl', "名"),
             __d('gl', "Member to be Evaluated"),
-            __d('gl', "認定"),
+            __d('gl', "Approval Status"),
             __d('gl', "目的"),
             __d('gl', "ゴールカテゴリ"),
             __d('gl', "ゴールオーナー種別"),
@@ -773,6 +773,7 @@ class GoalsController extends AppController
             $common_record['local_last_name'] = isset($ug_v['LocalName'][0]['last_name']) ? $ug_v['LocalName'][0]['last_name'] : null;
             $common_record['local_first_name'] = isset($ug_v['LocalName'][0]['first_name']) ? $ug_v['LocalName'][0]['first_name'] : null;
             $common_record['evaluation_enable_flg'] = $ug_v['TeamMember']['0']['evaluation_enable_flg'] ? 'ON' : 'OFF';
+            $common_record['valued'] = null;
             $common_record['purpose'] = null;
             $common_record['category'] = null;
             $common_record['collabo_type'] = null;
@@ -784,7 +785,6 @@ class GoalsController extends AppController
             $common_record['start_date'] = null;
             $common_record['description'] = null;
             $common_record['priority'] = null;
-            $common_record['valued'] = null;
             if (!empty($ug_v['Collaborator'])) {
                 foreach ($ug_v['Collaborator'] as $c_v) {
                     $approval_status = null;
@@ -804,8 +804,6 @@ class GoalsController extends AppController
                     }
                     $record = $common_record;
                     if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
-                        //$record['valued'] = $c_v['valued_flg'] == true) ? __d('gl', "Approval Status") : __d('gl', "Approval Status");
-
                         $record['valued'] = $approval_status;
                         $record['purpose'] = $c_v['Goal']['Purpose']['name'];
                         $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
