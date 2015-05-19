@@ -133,8 +133,13 @@ class GoalsController extends AppController
                     $this->NotifyBiz->push($socketId, "all");
 
                     // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
+                    // ただし重要度0のゴールであれば認定フラグは対象外にセットする
                     foreach ($this->request->data['Collaborator'] as $val) {
-                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], 0);
+                        $valued_flg = 0;
+                        if ($val['priority'] === "0") {
+                            $valued_flg = 2;
+                        }
+                        $this->Goal->Collaborator->changeApprovalStatus($val['id'], $valued_flg);
                     }
 
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移

@@ -151,7 +151,7 @@ class Collaborator extends AppModel
         return false;
     }
 
-    function getCollaboGoalDetail($team_id, $goal_user_id, $approval_flg)
+    function getCollaboGoalDetail($team_id, $goal_user_id, $approval_flg, $is_include_priority_0 = true)
     {
         $options = [
             'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
@@ -184,6 +184,9 @@ class Collaborator extends AppModel
             'type'       => 'inner',
             'order'      => ['Collaborator.created DESC'],
         ];
+        if (!$is_include_priority_0) {
+            $options['conditions']['NOT'] = array('Collaborator.priority' => "0");
+        }
         if (is_array($approval_flg)) {
             unset($options['conditions']['Collaborator.valued_flg']);
             foreach ($approval_flg as $val) {
@@ -203,7 +206,7 @@ class Collaborator extends AppModel
     function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
     {
         $options = [
-            'fields'     => ['id', 'type', 'valued_flg'],
+            'fields'     => ['id', 'type', 'valued_flg', 'priority'],
             'conditions' => [
                 'Collaborator.team_id'    => $team_id,
                 'Collaborator.user_id'    => $goal_user_id,
@@ -235,6 +238,10 @@ class Collaborator extends AppModel
             if ($val['User']['id'] === $user_id && $val['Collaborator']['valued_flg'] === '3'
                 && $val['Collaborator']['type'] === '0'
             ) {
+                continue;
+            }
+            //他人のゴール + 重要度0 = 対象外
+            if ($val['User']['id'] !== $user_id && $val['Collaborator']['priority'] === '0'){
                 continue;
             }
             $res[] = $val;

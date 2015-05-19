@@ -128,6 +128,52 @@ class CollaboratorTest extends CakeTestCase
         $this->assertEquals($user_id, $goal_detail[0]['User']['id']);
     }
 
+    function testGetCollabeGoalDetailExcludePriorityZero()
+    {
+        $team_id = 1;
+
+        $params = [
+            'first_name' => 'test',
+            'last_name'  => 'test'
+        ];
+        $this->Collaborator->User->save($params);
+        $user_id = $this->Collaborator->User->getLastInsertID();
+
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'name'    => 'test'
+        ];
+        $this->Collaborator->Goal->Purpose->save($params);
+        $purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
+
+        $params = [
+            'user_id'          => $user_id,
+            'team_id'          => $team_id,
+            'purpose_id'       => $purpose_id,
+            'name'             => 'test',
+            'goal_category_id' => 1,
+            'end_date'         => '1427813999',
+            'photo_file_name'  => 'aa.png'
+        ];
+        $this->Collaborator->Goal->save($params);
+        $goal_id = $this->Collaborator->Goal->getLastInsertID();
+
+        $valued_flg = 0;
+        $params = [
+            'user_id'    => $user_id,
+            'team_id'    => $team_id,
+            'goal_id'    => $goal_id,
+            'valued_flg' => $valued_flg,
+            'type'       => 0,
+            'priority'   => 0,
+        ];
+        $this->Collaborator->save($params);
+
+        $goal_detail = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, false);
+        $this->assertEquals(null, $goal_detail);
+    }
+
     function testChangeApprovalStatus()
     {
         $user_id = 777;
