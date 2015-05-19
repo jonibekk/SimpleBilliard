@@ -754,7 +754,6 @@ class GoalsController extends AppController
                         default:
                             $approval_status = null;
                     }
-
                     $record = $common_record;
                     if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
                         //$record['valued'] = $c_v['valued_flg'] == true) ? __d('gl', "Approval Status") : __d('gl', "Approval Status");
