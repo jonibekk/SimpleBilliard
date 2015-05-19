@@ -693,10 +693,13 @@ class GoalsController extends AppController
 
         //見出し
         $th = [
+            __d('gl', "Member Number"),
             __d('gl', "Sei"),
             __d('gl', "Mei"),
             __d('gl', "姓"),
             __d('gl', "名"),
+            __d('gl', "Member to be Evaluated"),
+            __d('gl', "認定"),
             __d('gl', "目的"),
             __d('gl', "ゴールカテゴリ"),
             __d('gl', "ゴールオーナー種別"),
@@ -707,18 +710,20 @@ class GoalsController extends AppController
             __d('gl', "期限"),
             __d('gl', "開始日"),
             __d('gl', "詳細"),
-            __d('gl', "重要度"),
-            __d('gl', "認定"),
+            __d('gl', "重要度")
         ];
         $user_goals = $this->Goal->getAllUserGoal();
+
         $this->Goal->KeyResult->_setUnitName();
         $td = [];
         foreach ($user_goals as $ug_k => $ug_v) {
             $common_record = [];
+            $common_record['member_no'] = $ug_v['TeamMember']['0']['member_no'];
             $common_record['last_name'] = $ug_v['User']['last_name'];
             $common_record['first_name'] = $ug_v['User']['first_name'];
             $common_record['local_last_name'] = isset($ug_v['LocalName'][0]['last_name']) ? $ug_v['LocalName'][0]['last_name'] : null;
             $common_record['local_first_name'] = isset($ug_v['LocalName'][0]['first_name']) ? $ug_v['LocalName'][0]['first_name'] : null;
+            $common_record['evaluation_enable_flg'] = $ug_v['TeamMember']['0']['evaluation_enable_flg'] ? 'ON' : 'OFF';
             $common_record['purpose'] = null;
             $common_record['category'] = null;
             $common_record['collabo_type'] = null;
@@ -733,8 +738,27 @@ class GoalsController extends AppController
             $common_record['valued'] = null;
             if (!empty($ug_v['Collaborator'])) {
                 foreach ($ug_v['Collaborator'] as $c_v) {
+                    if($c_v['valued_flg'])
+                    {
+                        $approval_status = 'Pending modification';
+                    }
+                    else if(!$c_v['valued_flg'])
+                    {
+                        $approval_status = 'Pending approval';
+                    }
+                    else if($c_v['valued_flg']=='2')
+                    {
+                        $approval_status = 'Evaluable';
+                    }
+                    else{
+                        $approval_status = 'Not Evaluable';
+                    }
+
                     $record = $common_record;
                     if (!empty($c_v['Goal']) && !empty($c_v['Goal']['Purpose'])) {
+                        //$record['valued'] = $c_v['valued_flg'] == true) ? __d('gl', "Approval Status") : __d('gl', "Approval Status");
+
+                        $record['valued'] = $approval_status;
                         $record['purpose'] = $c_v['Goal']['Purpose']['name'];
                         $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
                         $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
@@ -749,7 +773,7 @@ class GoalsController extends AppController
                                                      $c_v['Goal']['start_date'] + $this->Goal->me['timezone'] * 60 * 60);
                         $record['description'] = $c_v['Goal']['description'];
                         $record['priority'] = $c_v['priority'];
-                        $record['valued'] = ($c_v['valued_flg'] == true) ? __d('gl', "認定済") : __d('gl', "保留");
+
                         $td[] = $record;
                     }
                 }
