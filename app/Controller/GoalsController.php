@@ -12,7 +12,6 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action', 'edit_action'];
     }
 
     /**

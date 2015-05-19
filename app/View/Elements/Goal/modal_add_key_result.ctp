@@ -218,6 +218,7 @@
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
         </div>
+        <?= $this->Form->end() ?>
     </div>
 </div>
 <!-- END app/View/Elements/Goal/modal_add_key_result.ctp -->
