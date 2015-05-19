@@ -126,10 +126,12 @@ class RedisComponent extends Object
      * @param null|int      $user_id
      * @param null|string   $notify_id
      * @param bool|int|null $unread
+     * @param null|string   $email
+     * @param null|string   $device
      *
      * @return string
      */
-    public function getKeyName($key_type, $team_id, $user_id = null, $notify_id = null, $unread = null)
+    public function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
@@ -139,7 +141,9 @@ class RedisComponent extends Object
         foreach ($this->{$key_type} as $k => $v) {
             $this->{$key_type}[$k] = null;
         }
-        $this->{$key_type}['team'] = $team_id;
+        if ($team_id && array_key_exists('team', $this->{$key_type})) {
+            $this->{$key_type}['team'] = $team_id;
+        }
         if ($user_id && array_key_exists('user', $this->{$key_type})) {
             $this->{$key_type}['user'] = $user_id;
         }
@@ -148,6 +152,12 @@ class RedisComponent extends Object
         }
         if ($unread !== null && array_key_exists('unread', $this->{$key_type})) {
             $this->{$key_type}['unread'] = $unread;
+        }
+        if ($email !== null && array_key_exists('email', $this->{$key_type})) {
+            $this->{$key_type}['email'] = $email;
+        }
+        if ($device !== null && array_key_exists('device', $this->{$key_type})) {
+            $this->{$key_type}['device'] = $device;
         }
 
         $key_name = "";
@@ -344,7 +354,8 @@ class RedisComponent extends Object
      *
      * @return bool|string
      */
-    function makeDeviceHash($user_id) {
+    function makeDeviceHash($user_id)
+    {
         $browser_info = get_browser($this->Controller->request->header('User-Agent'));
         if (empty($browser_info) === true) {
             return false;
@@ -356,7 +367,7 @@ class RedisComponent extends Object
             return false;
         }
 
-        return Security::hash($platform. $browser. $user_id, 'sha1', true);
+        return Security::hash($platform . $browser . $user_id, 'sha1', true);
     }
 
     /**
@@ -408,6 +419,18 @@ class RedisComponent extends Object
     {
         $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_DEVICE_HASHES, $team_id, $user_id);
         return $this->Db->del($key);
+    }
+
+    function isAccountLocked($email)
+    {
+        $device = $this->makeDeviceHash($email);
+        $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
+        $count = $this->Db->incr($key);
+        if ($count !== false && $count >= ACCOUNT_LOCK_COUNT) {
+            return true;
+        }
+        $this->Db->setTimeout($key, ACCOUNT_LOCK_TTL);
+        return false;
     }
 
 }

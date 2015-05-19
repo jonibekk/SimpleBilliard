@@ -79,6 +79,13 @@ class UsersController extends AppController
             return $this->render();
         }
 
+        //account lock check
+        $is_account_locked = $this->Redis->isAccountLocked($this->request->data['User']['email']);
+        if ($is_account_locked) {
+            $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
+            return $this->render();
+        }
+
         //メアド、パスの認証(セッションのストアはしていない)
         $user_info = $this->Auth->identify($this->request, $this->response);
         if (!$user_info) {
@@ -91,7 +98,8 @@ class UsersController extends AppController
         // 2要素認証設定OFFの場合
         // 2要素認証設定ONかつ、設定して30日以内の場合
         if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
-                && $this->Redis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))) {
+                && $this->Redis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))
+        ) {
             $is_2fa_auth_enabled = false;
         }
 
@@ -124,11 +132,14 @@ class UsersController extends AppController
         }
 
         if ((empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false)
-            && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'), $this->request->data['User']['two_fa_code']) === true) {
+            && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'),
+                                       $this->request->data['User']['two_fa_code']) === true
+        ) {
             $this->Redis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
             return $this->_afterAuthSessionStore();
 
-        } else {
+        }
+        else {
             $this->Pnotify->outError(__d('notify', "２要素認証コードが正しくありません。"));
             return $this->render();
         }
