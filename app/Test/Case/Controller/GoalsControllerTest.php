@@ -258,9 +258,12 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goal = $this->_getGoalsCommonMock();
         $this->_setDefault($Goal);
+        $Goal->Goal->Collaborator->id = $this->collabo_id;
+        $Goal->Goal->Collaborator->saveField('valued_flg',Collaborator::STATUS_MODIFY);
         $data = [
             'Goal'         => [
                 'description' => 'test',
+                'priority'         => 0,
             ],
             'Collaborator' => [
                 [
