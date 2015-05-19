@@ -350,11 +350,12 @@ class RedisComponent extends Object
     }
 
     /**
-     * @param $user_id
+     * @param      $user_id
+     * @param bool $with_ip
      *
      * @return bool|string
      */
-    function makeDeviceHash($user_id)
+    function makeDeviceHash($user_id, $with_ip = false)
     {
         $browser_info = get_browser($this->Controller->request->header('User-Agent'));
         if (empty($browser_info) === true) {
@@ -367,7 +368,11 @@ class RedisComponent extends Object
             return false;
         }
 
-        return Security::hash($platform . $browser . $user_id, 'sha1', true);
+        $ip_address = null;
+        if ($with_ip) {
+            $ip_address = $this->Controller->request->clientIp();
+        }
+        return Security::hash($platform . $browser . $user_id . $ip_address, 'sha1', true);
     }
 
     /**
@@ -423,7 +428,7 @@ class RedisComponent extends Object
 
     function isAccountLocked($email)
     {
-        $device = $this->makeDeviceHash($email);
+        $device = $this->makeDeviceHash($email, true);
         $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
         $count = $this->Db->incr($key);
         if ($count !== false && $count >= ACCOUNT_LOCK_COUNT) {
