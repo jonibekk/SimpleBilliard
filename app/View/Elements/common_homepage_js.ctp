@@ -1,4 +1,4 @@
-<? /* @var $this View */ ?>
+<?php /* @var $this View */ ?>
 <!-- START app/View/Elements/common_homepage_js.ctp -->
 <?= $this->Html->script('vendor/jquery-1.11.1.min') ?>
 <?= $this->Html->script('vendor/bootstrap.min') ?>

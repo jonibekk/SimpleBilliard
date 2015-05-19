@@ -1788,9 +1788,6 @@ function notifyNewFeed() {
     if (num >= 1) {
         // top of feed
         numArea.html(num + 1);
-        // titles
-        var titleStr = title.text().replace(/^\(\d+\)/, "(" + String(num + 1) + ")");
-        title.text(titleStr);
         return;
     }
 
@@ -1799,7 +1796,6 @@ function notifyNewFeed() {
     notifyBox.css("display", function () {
         return "block";
     });
-    title.prepend("(1)");
 
     // 通知をふんわり出す
     var i = 0.2;

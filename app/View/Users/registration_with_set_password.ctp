@@ -77,12 +77,12 @@
         </div>
     </div>
 </div>
-<? $this->append('script'); ?>
+<?php $this->append('script'); ?>
 <script type="text/javascript">
     $(document).ready(function () {
         //ユーザ登録時にローカル時間をセットする
         $('input#InitLocalDate').val(getLocalDate());
     });
 </script>
-<? $this->end(); ?>
+<?php $this->end(); ?>
 <!-- END app/View/Users/registration_with_set_password.ctp -->

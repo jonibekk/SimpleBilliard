@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Created by PhpStorm.
  * User: bigplants
  * Date: 6/11/14
@@ -57,8 +56,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'          => 'file',
                     'id'            => 'AddGoalFormPurpose',
                 ]); ?>
-                <?
-                if (isset($this->request->data['Purpose']['id'])) {
+                <?php if (isset($this->request->data['Purpose']['id'])) {
                     echo $this->Form->hidden('Purpose.id', ['value' => $this->request->data['Purpose']['id']]);
                 }
                 ?>
@@ -127,7 +125,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     'type'          => 'file',
                     'id'            => 'AddGoalFormKeyResult',
                 ]); ?>
-                <? if (isset($this->request->params['named']['purpose_id'])) {
+                <?php if (isset($this->request->params['named']['purpose_id'])) {
                     echo $this->Form->hidden('purpose_id', ['value' => $this->request->params['named']['purpose_id']]);
                 }
                 ?>
@@ -280,7 +278,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             $this->Html->link(__d('gl', "詳しくはこちら"),
                                               ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP02],
                                               ['class' => 'btn btn-link btn-lightGray bd-radius_4px modal-ajax-get', 'div' => false]) ?>
-                            <? if (isset($this->request->data['KeyResult'][0])) {
+                            <?php if (isset($this->request->data['KeyResult'][0])) {
                                 $disabled = false;
                             }
                             else {
@@ -341,8 +339,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                         'placeholder' => __d('gl', "ゴールの内容を詳しく書く"),
                                         'rows'        => 1,
                                        ]) ?>
-                    <?
-                    if (isset($this->request->data['Collaborator'][0]['id'])) {
+                    <?php if (isset($this->request->data['Collaborator'][0]['id'])) {
                         echo $this->Form->hidden('Collaborator.0.id',
                                                  ['value' => $this->request->data['Collaborator'][0]['id']]);
                     }
@@ -359,7 +356,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         'style'    => 'width:130px',
                         'options'  => $priority_list
                     ]) ?>
-                    <? $this->Form->unlockField('socket_id') ?>
+                    <?php $this->Form->unlockField('socket_id') ?>
                     <div class="form-group">
                         <div class="col col-sm-3 control-label">
                             <label for=""><?= __d('gl', "ゴール画像") ?></label>
@@ -371,8 +368,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                      data-trigger="fileinput"
                                      style="width: 96px; height: 96px;">
-                                    <?
-                                    if (isset($this->request->data['Goal']['photo_file_name']) && !empty($this->request->data['Goal']['photo_file_name'])) {
+                                    <?php if (isset($this->request->data['Goal']['photo_file_name']) && !empty($this->request->data['Goal']['photo_file_name'])) {
                                         echo $this->Upload->uploadImage($this->request->data, 'Goal.photo',
                                                                         ['style' => 'x_large']);
                                     }
@@ -427,7 +423,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         </div>
     </div>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
     });
@@ -521,8 +517,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
         });
     //modeによってdisableにする
-    <?if(isset($this->request->params['named']['mode'])):?>
-    <?if($this->request->params['named']['mode'] == 2):?>
+    <?php if(isset($this->request->params['named']['mode'])):?>
+    <?php if($this->request->params['named']['mode'] == 2):?>
     disabledAllInput("#AddGoalFormPurpose");
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormPurposeWrap").addClass('panel-closed-headding');
@@ -536,7 +532,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     //noinspection JSJQueryEfficiency
     $(".panel-heading", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-headding');
     $(".panel-container", "#AddGoalFormKeyResultWrap").removeClass('panel-closed-container');
-    <?elseif($this->request->params['named']['mode'] == 3):?>
+    <?php elseif($this->request->params['named']['mode'] == 3):?>
     disabledAllInput("#AddGoalFormPurpose");
     disabledAllInput("#AddGoalFormKeyResult");
     //noinspection JSJQueryEfficiency
@@ -562,8 +558,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     $(".panel-container", "#AddGoalFormOtherWrap").removeClass('panel-closed-container');
     //noinspection JSJQueryEfficiency
     $(".panel-container", "#AddGoalFormOtherWrap").removeClass('hidden');
-    <?endif;?>
-    <?endif;?>
+    <?php endif;?>
+    <?php endif;?>
     $(".goal-add-edit-button").click(function () {
         attrUndefinedCheck(this, 'target-id');
         var target_id = $(this).attr('target-id');
@@ -578,5 +574,5 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         return false;
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <!-- END app/View/Goals/add.ctp -->

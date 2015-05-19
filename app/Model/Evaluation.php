@@ -101,10 +101,22 @@ class Evaluation extends AppModel
     public $evaluate_term_id = null;
 
     static public $TYPE = [
-        self::TYPE_ONESELF         => "",
-        self::TYPE_EVALUATOR       => "",
-        self::TYPE_FINAL_EVALUATOR => "",
-        self::TYPE_LEADER          => ","
+        self::TYPE_ONESELF         => [
+            'index' => "",
+            'view'  => "",
+        ],
+        self::TYPE_EVALUATOR       => [
+            'index' => "",
+            'view'  => "",
+        ],
+        self::TYPE_FINAL_EVALUATOR => [
+            'index' => "",
+            'view'  => "",
+        ],
+        self::TYPE_LEADER          => [
+            'index' => "",
+            'view'  => "",
+        ],
     ];
 
     /**
@@ -112,10 +124,14 @@ class Evaluation extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_ONESELF] = __d('gl', "あなた");
-        self::$TYPE[self::TYPE_EVALUATOR] = __d('gl', "評価者");
-        self::$TYPE[self::TYPE_FINAL_EVALUATOR] = __d('gl', "最終者");
-        self::$TYPE[self::TYPE_LEADER] = __d('gl', "リーダ");
+        self::$TYPE[self::TYPE_ONESELF]['index'] = __d('gl', "あなた");
+        self::$TYPE[self::TYPE_EVALUATOR]['index'] = __d('gl', "評価者");
+        self::$TYPE[self::TYPE_FINAL_EVALUATOR]['index'] = __d('gl', "最終者");
+        self::$TYPE[self::TYPE_LEADER]['index'] = __d('gl', "リーダ");
+        self::$TYPE[self::TYPE_ONESELF]['view'] = __d('gl', "本人");
+        self::$TYPE[self::TYPE_EVALUATOR]['view'] = __d('gl', "評価者");
+        self::$TYPE[self::TYPE_FINAL_EVALUATOR]['view'] = __d('gl', "最終評価者");
+        self::$TYPE[self::TYPE_LEADER]['view'] = __d('gl', "リーダ");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -562,7 +578,7 @@ class Evaluation extends AppModel
         $status_text = ['your_turn' => false, 'body' => null];
         //update flow
         foreach ($data as $val) {
-            $name = self::$TYPE[$val['evaluate_type']];
+            $name = self::$TYPE[$val['evaluate_type']]['index'];
             if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
                 if ($val['evaluator_user_id'] == $this->my_uid) {
                     $name = __d('gl', "あなた");

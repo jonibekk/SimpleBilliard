@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * PHP 5
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -24,8 +23,7 @@
     <?= $this->Html->charset(); ?>
     <title><?=
         $title_for_layout ?></title>
-    <?
-    echo $this->Html->meta('icon');
+    <?php echo $this->Html->meta('icon');
     echo $this->Html
         ->meta(
             array(
@@ -97,8 +95,7 @@
         display: none;
     }</style>
     <![endif]-->
-    <?
-    //公開環境のみタグを有効化
+    <?php //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
         /** @noinspection PhpDeprecationInspection */
         echo $this->element('external_service_tags');
@@ -107,11 +104,11 @@
 
 </head>
 <body>
-<?=$this->element('google_tag_manager')?>
+<?= $this->element('google_tag_manager') ?>
 <header id="header">
 
     <!--NewRelic Header-->
-    <? if (extension_loaded('newrelic')) {
+    <?php if (extension_loaded('newrelic')) {
         /** @noinspection PhpUndefinedFunctionInspection */
         echo newrelic_get_browser_timing_header();
     } ?>
@@ -181,10 +178,10 @@
                                 <strong
                                     class="caret"></strong></a>
                             <ul class="dropdown-menu">
-                                <? /** @var $lang_list */
+                                <?php /** @var $lang_list */
                                 foreach ($lang_list as $key => $val) : ?>
                                     <li><?= $this->Html->link($val, '/' . $key . '/'); ?></li>
-                                <? endforeach; ?>
+                                <?php endforeach; ?>
                             </ul>
                     </ul>
                 </div>
@@ -266,7 +263,7 @@
 <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <!--NewRelic Footer-->
-<? if (extension_loaded('newrelic')) {
+<?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_footer();
 } ?>

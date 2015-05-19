@@ -228,8 +228,8 @@ class GoalsControllerTest extends ControllerTestCase
                 'value_unit'       => 0,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date,
-                'end_date'         => $this->end_date,
+                'start_date'       => date('yyyy/mm/dd', $this->start_date),
+                'end_date'         => date('yyyy/mm/dd', $this->end_date),
             ]
         ];
         $this->testAction("/goals/add/mode:2/purpose_id:{$this->purpose_id}", ['method' => 'POST', 'data' => $data]);
@@ -246,8 +246,8 @@ class GoalsControllerTest extends ControllerTestCase
                 'value_unit'       => 0,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date,
-                'end_date'         => $this->end_date,
+                'start_date'       => date('yyyy/mm/dd', $this->start_date),
+                'end_date'         => date('yyyy/mm/dd', $this->end_date),
             ]
         ];
         $this->testAction("/goals/add/{$this->goal_id}/mode:2/purpose_id:{$this->purpose_id}",
@@ -339,8 +339,8 @@ class GoalsControllerTest extends ControllerTestCase
                 'user_id'    => $user_id,
                 'team_id'    => $team_id,
                 'name'       => 'test',
-                'start_date' => '2014/07/07',
-                'end_date'   => '2014/10/07',
+                'start_date' => strtotime('2014/07/07'),
+                'end_date'   => strtotime('2014/10/07'),
             ],
         ];
         $goal = $Goals->Goal->save($goal_data);
@@ -740,8 +740,8 @@ class GoalsControllerTest extends ControllerTestCase
                 'id'         => $this->kr_id,
                 'name'       => 'test',
                 'value_unit' => 2,
-                'start_date' => 1,
-                'end_date'   => 1,
+                'start_date' => '2015/1/15',
+                'end_date'   => '2015/1/20',
                 'goal_id'    => $this->goal_id,
             ]
         ];

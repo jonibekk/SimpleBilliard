@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Created by PhpStorm.
@@ -83,7 +83,7 @@ class DataUpdateShell extends AppShell
         if (!empty($save_data)) {
             $this->out("Updated Evaluation.");
         }
-        else{
+        else {
             $this->out("No Data.");
         }
 

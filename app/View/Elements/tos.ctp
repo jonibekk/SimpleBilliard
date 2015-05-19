@@ -1,9 +1,9 @@
 <!-- START app/View/Elements/tos.ctp -->
-<? if (!isset($no_title) || !$no_title): ?>
+<?php if (!isset($no_title) || !$no_title): ?>
     <h2>「Goalous」サービス利用規約（無償版）</h2>
     <br>
     <br>
-<? endif; ?>
+<?php endif; ?>
 第１章<br>
 第１条（目的）<br>
 「Goalousサービス利用規約」（以下「本規約」といいます）は、株式会社ＩＳＡＯ（以下「当社」といいます）がWEBサイト上で提供するクラウド型コミュニケーションツール（サービス名称「Goalous」。以下「Goalous」といいます）について、当社が第2条(2)に定めるお客様に対し「Goalous」を提供するための諸条件を規定することを目的として、定めるものです。

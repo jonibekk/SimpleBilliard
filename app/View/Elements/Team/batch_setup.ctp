@@ -47,7 +47,7 @@
         </div>
     </div>
     <!-- END app/View/Elements/Team/batch_setup.ctp -->
-<? $this->start('modal') ?>
+<?php $this->start('modal') ?>
 <?= $this->element('modal_add_members_by_csv') ?>
 <?= $this->element('modal_edit_members_by_csv') ?>
-<? $this->end() ?>
+<?php $this->end() ?>

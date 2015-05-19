@@ -87,6 +87,12 @@ class Team extends AppModel
                 'rule' => ['emailsCheck']
             ],
         ],
+        'comment'=>[
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
+        ]
     ];
 
     /**

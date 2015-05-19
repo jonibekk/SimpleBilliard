@@ -10,8 +10,6 @@ PR制度を採用しています。
 `vagrant up`
 1. アプリケーションをアップデート
 `sh ./etc/local/update_app.sh`
-1. 開発環境にログイン
-`vagrant ssh`
 1. 作業用ブランチを作成
 `git branch topic-xxxx`
 1. 作業ブランチにチェックアウト

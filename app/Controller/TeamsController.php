@@ -11,7 +11,6 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['ajax_upload_new_members_csv'];
     }
 
     public function add()

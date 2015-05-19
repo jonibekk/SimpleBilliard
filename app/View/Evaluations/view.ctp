@@ -1,11 +1,12 @@
-<?
-/**
+<?php /**
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var CodeCompletionView $this
  * @var                    $scoreList
  * @var                    $goalList
+ * @var                    $totalList
+ * @var                    $total
  * @var                    $evaluateeId
  * @var                    $evaluateTermId
  * @var                    $isEditable
@@ -33,20 +34,19 @@
 
 <!---- Total Evaluations ---->
 
-<? if (!empty($totalList)): ?>
+<?php if (!empty($totalList)): ?>
 
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
         <div class="panel-heading"><?= __d('gl', "トータル評価") ?></div>
         <div class="panel-body eval-view-panel-body">
-            <? foreach ($totalList as $total): ?>
-                <?
-                if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable && $total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):
+            <?php foreach ($totalList as $total): ?>
+                <?php if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable && $total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):
                     ?>
                     <div class="form-group col-xxs-12 mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
-                            <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                            <?php if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                 <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
-                            <? else: ?>
+                            <?php else: ?>
                                 <?=
                                 $this->Html->image('ajax-loader.gif',
                                                    [
@@ -57,23 +57,17 @@
                                                    ]
                                 )
                                 ?>
-                            <? endif;?>
+                            <?php endif;?>
                         </div>
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <? elseif ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <? else: ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <? endif;?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div class="col col-xxs-12 col-sm-4 col-md-3">
-                                    <? if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                                    <?php if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                         <?= h($total['EvaluatorUser']['display_username']) ?>
-                                    <? endif ?>
+                                    <?php endif ?>
                                 </div>
                             </div>
                             <div class="col col-xxs-12">
@@ -127,18 +121,16 @@
                             </div>
                         </div>
                     </div>
-                    <?
-                    $saveIndex++;
+                    <?php $saveIndex++;
                     ?>
 
-                <?
-                else:
+                <?php else:
                     ?>
                     <div class="col-xxs-12  mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
-                            <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                            <?php if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                 <i class="fa fa-user user-icon fa-3x eval-view-img text-align_c"></i>
-                            <? else: ?>
+                            <?php else: ?>
                                 <?=
                                 $this->Html->image('ajax-loader.gif',
                                                    [
@@ -149,23 +141,17 @@
                                                    ]
                                 )
                                 ?>
-                            <? endif ?>
+                            <?php endif ?>
                         </div>
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <? if ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_ONESELF): ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <? elseif ($total['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <? else: ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <? endif;?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div class="col col-xxs-12 col-sm-4 col-md-3">
-                                    <? if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
+                                    <?php if ($total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR): ?>
                                         <?= h($total['EvaluatorUser']['display_username']) ?>
-                                    <? endif ?>
+                                    <?php endif ?>
                                 </div>
                             </div>
                             <div class="form-group col-xxs-12">
@@ -175,11 +161,11 @@
                                 </label>
 
                                 <div class="col col-sm-8">
-                                    <? if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                    <?php if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
-                                    <? else: ?>
+                                    <?php else: ?>
                                         <?= h($total['Evaluation']['comment']) ?>
-                                    <? endif ?>
+                                    <?php endif ?>
                                 </div>
                             </div>
                             <div class="form-group col-xxs-12">
@@ -189,21 +175,20 @@
                                 </label>
 
                                 <div class="col col-sm-8">
-                                    <? if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                    <?php if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
-                                    <? else: ?>
+                                    <?php else: ?>
                                         <?= h($total['EvaluateScore']['name']) ?>
-                                    <? endif ?>
+                                    <?php endif ?>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                <? endif; ?>
-            <? endforeach; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
         </div>
-        <?
-        if ($isEditable):
+        <?php if ($isEditable):
             if ($status != Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <div class="panel-footer clearfix">
@@ -217,20 +202,18 @@
                         ]) ?>
                     </div>
                 </div>
-            <?
-            endif;
+            <?php endif;
         endif;
         ?>
 
     </div>
-<? endif; ?>
+<?php endif; ?>
 
 <!--todo ゴールがemptyでないとき表示する -->
-<? if ($isEditable && !empty($goalList)) : ?>
+<?php if ($isEditable && !empty($goalList)) : ?>
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix bg-info">
         <div class="text-align_c p_8px bg-lightGray">
-            <?
-            if ($status == Evaluation::TYPE_STATUS_DONE):
+            <?php if ($status == Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <?= $this->Form->button(__d('gl', "修正して確定"), [
                 'div'   => false,
@@ -239,8 +222,7 @@
                 'name'  => 'status',
                 'value' => Evaluation::TYPE_STATUS_DONE,
             ]) ?>
-            <?
-            else:
+            <?php else:
                 ?>
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
                 'div'   => false,
@@ -257,18 +239,17 @@
                 'value'    => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
             ]) ?>
-            <?
-            endif;
+            <?php endif;
             ?>
         </div>
     </div>
-<? endif; ?>
+<?php endif; ?>
 
 <!---- Goal Evaluations ---->
 
-<? $goalIndex = 1 ?>
-<? foreach ($goalList as $goal): ?>
-    <? $goal = array_values($goal) ?>
+<?php $goalIndex = 1 ?>
+<?php foreach ($goalList as $goal): ?>
+    <?php $goal = array_values($goal) ?>
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
         <div class="panel-heading"><?= __d('gl', "ゴール評価") ?>(<?= $goalIndex ?>/<?= count($goalList) ?>)</div>
         <div class="panel-body eval-view-panel-body">
@@ -338,7 +319,7 @@
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "役割:") ?>
-                    <? $role = viaIsSet(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
+                    <?php $role = viaIsSet(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
                     <?= ($role) ? h($role) : __d('gl', "リーダー") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
@@ -355,26 +336,26 @@
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "成果:") ?>
-                    <? if (empty($goal[0]['Goal']['KeyResult'])): ?>
+                    <?php if (empty($goal[0]['Goal']['KeyResult'])): ?>
                         <?= __d('gl', "なし") ?>
-                    <? else: ?>
-                        <? foreach (Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]") as $kr): ?>
+                    <?php else: ?>
+                        <?php foreach (Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]") as $kr): ?>
                             <p><?= h($kr['name']) ?></p>
-                        <? endforeach; ?>
-                    <? endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
-                    <? $collaboPriority = viaIsSet(Hash::extract($goal[0],
-                                                                 "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
-                    <? $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($goal[0],
-                                                                                                  "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
+                    <?php $collaboPriority = viaIsSet(Hash::extract($goal[0],
+                                                                    "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
+                    <?php $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($goal[0],
+                                                                                                     "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
                     <?= h($priority) ?>
                 </div>
             </div>
 
-            <? foreach ($goal as $evalIndex => $eval): ?>
-                <? if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable): ?>
+            <?php foreach ($goal as $evalIndex => $eval): ?>
+                <?php if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable): ?>
                     <div class="col-xxs-12 mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
                             <?=
@@ -391,13 +372,7 @@
                         <div class="form-group col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <? if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <? elseif ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <? else: ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <? endif; ?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div
                                     class="col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
@@ -451,11 +426,9 @@
                             </div>
                         </div>
                     </div>
-                    <?
-                    $saveIndex++;
+                    <?php $saveIndex++;
                     ?>
-                <?
-                else:
+                <?php else:
                     ?>
                     <div class="col-xxs-12  mb_32px">
                         <div class="col-xxs-3 col-xs-2 col-md-1">
@@ -473,13 +446,7 @@
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <? if ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_EVALUATOR): ?>
-                                        <?= __d('gl', "評価者") ?>
-                                    <? elseif ($eval['Evaluation']['evaluate_type'] == Evaluation::TYPE_FINAL_EVALUATOR): ?>
-                                        <?= __d('gl', "最終評価者") ?>
-                                    <? else: ?>
-                                        <?= __d('gl', "本人") ?>
-                                    <? endif;?>
+                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div
                                     class="col col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
@@ -491,11 +458,11 @@
                                 </label>
 
                                 <div class="col col-sm-8">
-                                    <? if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                    <?php if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
-                                    <? else: ?>
+                                    <?php else: ?>
                                         <?= h($eval['Evaluation']['comment']) ?>
-                                    <? endif ?>
+                                    <?php endif ?>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -505,23 +472,21 @@
                                 </label>
 
                                 <div class="col col-sm-8">
-                                    <? if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
+                                    <?php if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
-                                    <? else: ?>
+                                    <?php else: ?>
                                         <?= h($eval['EvaluateScore']['name']) ?>
-                                    <? endif ?>
+                                    <?php endif ?>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                <?
-                endif;
+                <?php endif;
                 ?>
-            <? endforeach ?>
+            <?php endforeach ?>
         </div>
-        <?
-        if ($isEditable):
+        <?php if ($isEditable):
             if ($status != Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <div class="panel-footer clearfix">
@@ -535,19 +500,17 @@
                         ]) ?>
                     </div>
                 </div>
-            <?
-            endif;
+            <?php endif;
         endif;
         ?>
     </div>
-    <? $goalIndex++ ?>
-<? endforeach ?>
+    <?php $goalIndex++ ?>
+<?php endforeach ?>
 
-<? if ($isEditable): ?>
+<?php if ($isEditable): ?>
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
         <div class="text-align_c p_8px bg-lightGray">
-            <?
-            if ($status == Evaluation::TYPE_STATUS_DONE):
+            <?php if ($status == Evaluation::TYPE_STATUS_DONE):
                 ?>
                 <?= $this->Form->button(__d('gl', "修正して確定"), [
                 'div'   => false,
@@ -556,8 +519,7 @@
                 'name'  => 'status',
                 'value' => Evaluation::TYPE_STATUS_DONE
             ]) ?>
-            <?
-            else:
+            <?php else:
                 ?>
                 <?= $this->Form->button(__d('gl', "下書き保存"), [
                 'div'   => false,
@@ -574,12 +536,11 @@
                 'value'    => Evaluation::TYPE_STATUS_DONE,
                 'disabled' => true,
             ]) ?>
-            <?
-            endif;
+            <?php endif;
             ?>
         </div>
     </div>
-<? endif; ?>
+<?php endif; ?>
 <?=
 $this->Form->input("evaluate_type", [
     'label' => false,

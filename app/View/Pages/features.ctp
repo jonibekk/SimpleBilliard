@@ -294,7 +294,7 @@
     </div>
 </div>
 <!-- end: social icon -->
-<? $this->append('ogp') ?>
+<?php $this->append('ogp') ?>
 <meta property="og:site_name" content="Goalous"/>
 <meta property="og:type" content="article"/>
 <meta property="og:title" content="Goalous"/>
@@ -302,10 +302,9 @@
       content="<?= __d('home', "Collaborative achievement goal tool") ?>"/>
 <meta property="og:image" content=""/>
 <meta property="og:url" content="https://www.goalous.com/"/>
-<? $this->end() ?>
+<?php $this->end() ?>
 
-<?
-$this->Html
+<?php $this->Html
     ->meta('description',
            __d('home',
                "Goalous is a tool that all members of a team are able to action in high motivated toward the achievement of self goals.Because the members create public goals in a team,they collaborate each other and get praise to your actions."),

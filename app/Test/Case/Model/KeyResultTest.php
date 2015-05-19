@@ -188,8 +188,8 @@ class KeyResultTest extends CakeTestCase
                 'team_id'    => 1,
                 'goal_id'    => 1,
                 'value_unit' => KeyResult::UNIT_BINARY,
-                'start_date' => time(),
-                'end_date'   => time(),
+                'start_date' => '2015/7/7',
+                'end_date'   => '2015/10/7',
             ]
         ];
         $res = $this->KeyResult->saveEdit($data);

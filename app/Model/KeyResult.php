@@ -73,16 +73,37 @@ class KeyResult extends AppModel
      * @var array
      */
     public $validate = [
-        'name'    => [
+        'name'       => [
             'notEmpty' => [
                 'rule' => 'notEmpty',
             ],
         ],
-        'del_flg' => [
+        'del_flg'    => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
+        'start_date' => [
+            'numeric' => ['rule' => ['numeric']]
+        ],
+        'end_date'   => [
+            'numeric' => ['rule' => ['numeric']]
+        ],
+    ];
+
+    public $post_validate = [
+        'start_date' => [
+            'isString' => [
+                'rule'    => 'isString',
+                'message' => 'Invalid Submission',
+            ]
+        ],
+        'end_date'   => [
+            'isString' => [
+                'rule'    => 'isString',
+                'message' => 'Invalid Submission',
+            ]
+        ]
     ];
 
     /**
@@ -133,6 +154,13 @@ class KeyResult extends AppModel
         }
         $data['KeyResult']['current_value'] = $data['KeyResult']['start_value'];
 
+        $this->set($data);
+        $validate_backup = $this->validate;
+        $this->validate = array_merge($this->validate, $this->post_validate);
+        if (!$this->validates()) {
+            throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
+        }
+        $this->validate = $validate_backup;
         //時間をunixtimeに変換
         if (!empty($data['KeyResult']['start_date'])) {
             $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
@@ -204,12 +232,22 @@ class KeyResult extends AppModel
         if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
             return false;
         }
+
         //on/offの場合は現在値0,目標値1をセット
         if ($data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY) {
             $data['KeyResult']['start_value'] = 0;
             $data['KeyResult']['current_value'] = 0;
             $data['KeyResult']['target_value'] = 1;
         }
+
+        $this->set($data);
+        $validate_backup = $this->validate;
+        $this->validate = array_merge($this->validate, $this->post_validate);
+        if (!$this->validates()) {
+            return false;
+        }
+        $this->validate = $validate_backup;
+
         //時間をunixtimeに変換
         $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
         $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
