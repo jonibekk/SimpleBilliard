@@ -847,10 +847,39 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testDownloadAllGoalCsv()
+    function testDownloadAllGoalCsvUnapproved()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
+        $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_UNAPPROVED);
+        $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
+    }
+
+    function testDownloadAllGoalCsvApproval()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_APPROVAL);
+        $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
+    }
+
+    function testDownloadAllGoalCsvHold()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_HOLD);
+        $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
+    }
+
+    function testDownloadAllGoalCsvModify()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
 
