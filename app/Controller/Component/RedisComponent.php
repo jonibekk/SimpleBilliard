@@ -326,6 +326,26 @@ class RedisComponent extends Object
     }
 
     /**
+     * @param $user_id
+     *
+     * @return bool|string
+     */
+    function makeDeviceHash($user_id) {
+        $browser_info = get_browser($this->Controller->request->header('User-Agent'));
+        if (empty($browser_info) === true) {
+            return false;
+        }
+
+        $platform = $browser_info->platform;
+        $browser = $browser_info->browser;
+        if (empty($platform) === true || empty($browser) === true) {
+            return false;
+        }
+
+        return Security::hash($platform. $browser. $user_id, 'sha1', true);
+    }
+
+    /**
      * @param $team_id
      * @param $user_id
      *
@@ -334,7 +354,7 @@ class RedisComponent extends Object
     function saveDeviceHash($team_id, $user_id)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_DEVICE_HASHES, $team_id, $user_id);
-        $hash_key = Security::hash($this->Controller->Session->read('Config.userAgent') . $user_id, 'sha1', true);
+        $hash_key = $this->makeDeviceHash($user_id);
         $ex_date = time() + TWO_FA_TTL;
         $res = $this->Db->hSet($key, $hash_key, $ex_date);
         $this->Db->setTimeout($key, TWO_FA_TTL);
@@ -350,7 +370,7 @@ class RedisComponent extends Object
     function isExistsDeviceHash($team_id, $user_id)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_DEVICE_HASHES, $team_id, $user_id);
-        $hash_key = Security::hash($this->Controller->Session->read('Config.userAgent') . $user_id, 'sha1', true);
+        $hash_key = $this->makeDeviceHash($user_id);
         $res = $this->Db->hGet($key, $hash_key);
         if (!$res) {
             return false;
