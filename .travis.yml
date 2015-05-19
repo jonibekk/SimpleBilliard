@@ -39,6 +39,9 @@ before_script:
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - wget http://pecl.php.net/get/redis-2.2.7.tgz ; tar -xzf redis-2.2.7.tgz ; sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  # Download browscap.ini
+  - wget -O /home/travis/browscap.ini http://browscap.org/stream?q=LITE_PHP_BrowsCapINI
+  - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
   - curl -s http://getcomposer.org/installer | php
   - composer install --dev --no-interaction
