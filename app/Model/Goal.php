@@ -1184,7 +1184,7 @@ class Goal extends AppModel
                         'GoalCategory',
                     ]
                 ],
-                'TeamMember' => [
+                'TeamMember'   => [
                     'fields'     => [
                         'member_no',
                         'evaluation_enable_flg'
@@ -1192,8 +1192,8 @@ class Goal extends AppModel
                     'conditions' => [
                         'TeamMember.team_id' => $this->current_team_id
                     ],
-                    'order'=>['TeamMember.member_no DESC']
-                    ]
+                    'order'      => ['TeamMember.member_no DESC']
+                ]
             ]
         ];
         $res = $this->Collaborator->User->find('all', $options);
