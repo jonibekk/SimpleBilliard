@@ -598,8 +598,8 @@ class PostsController extends AppController
     function _addOgpIndexes($requestData, $body)
     {
 
-        // テキストが空の場合
-        if (!$body) {
+        // blank or not string, then return;
+        if (!$body || !is_string($body)) {
             return $requestData;
         }
 
