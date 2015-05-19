@@ -11,7 +11,6 @@ class PostsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['ajax_add_comment'];
     }
 
     /**
