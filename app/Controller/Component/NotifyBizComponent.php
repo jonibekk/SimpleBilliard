@@ -301,18 +301,18 @@ class NotifyBizComponent extends Component
     private function _setTeamJoinOption($invite_id)
     {
         //宛先は招待した人
-        $inviter = $this->Team->Invite->getInviterUser($invite_id);
-        if (empty($inviter)) {
+        $invite = $this->Team->Invite->getInviteById($invite_id);
+        if (!viaIsSet($invite['FromUser']['id']) || !viaIsSet($invite['Team']['name'])) {
             return;
         }
 
         //対象ユーザの通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($inviter['id'],
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($invite['FromUser']['id'],
                                                                                 NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
         $this->notify_option['url_data'] = '/';//TODO 暫定的にhome
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode([trim($inviter['display_username'])]);
+        $this->notify_option['item_name'] = json_encode([$invite['Team']['name']]);
     }
 
     /**
