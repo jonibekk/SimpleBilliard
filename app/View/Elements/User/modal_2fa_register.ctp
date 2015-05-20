@@ -51,31 +51,31 @@
         <div class="modal-body" style="max-height: none">
             <p>STEP 1 ></p>
             <div class="two_fa_step_box">
-                <label for="" >アプリをインストールする</label>
-                <p>Google認証システム</p>
+                <label for="" ><?= __d('gl', "アプリをインストールする") ?></label>
+                <p><?= __d('gl', "Google認証システム") ?></p>
                 <p>
-                    Android <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">こちらからダウンロード</a>
+                    Android <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __d('gl', "こちらからダウンロード") ?></a>
                 </p>
                 <p>
-                    IOS <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank">こちらからダウンロード</a>
+                    IOS <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __d('gl', "こちらからダウンロード") ?></a>
                 </p>
             </div>
 
             <p>STEP 2 ></p>
             <div class="two_fa_step_box">
-                <label for="" >バーコードをスキャンする</label>
-                <p>アプリを起動し、カメラを使用してバーコードをスキャンします。</p>
+                <label for="" ><?= __d('gl', "バーコードをスキャンする") ?></label>
+                <p><?= __d('gl', "アプリを起動し、カメラを使用してバーコードをスキャンします。") ?></p>
                 <?= $this->Html->image($url_2fa) ?>
             </div>
 
             <p>STEP 3 ></p>
             <div class="two_fa_step_box">
-                <label for="" >確認コードを入力する</label>
-                <p>バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。</p>
+                <label for="" ><?= __d('gl', "確認コードを入力する") ?></label>
+                <p><?= __d('gl', "バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。") ?></p>
             <?=
             $this->Form->input('2fa_code',
                                ['label'                    => false,
-                                'placeholder'              => __d('gl', "例) 012345"),
+                                'placeholder'              => __d('gl', "code"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                 'required'                 => true,
                                ]) ?>
