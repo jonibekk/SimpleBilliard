@@ -4,8 +4,7 @@ App::uses('ConnectionManager', 'Model');
 
 /**
  * GlRedis Model
- *
- * @property Redis $Db
+
  */
 class GlRedis extends AppModel
 {
@@ -13,6 +12,11 @@ class GlRedis extends AppModel
     protected $_schema = array(
         'dummy' => array('type' => 'text'),
     );
+
+    /**
+     * @var Redis $Db
+     */
+    private $Db;
 
     /**
      * @param bool $id
