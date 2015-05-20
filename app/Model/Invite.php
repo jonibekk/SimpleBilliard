@@ -191,7 +191,7 @@ class Invite extends AppModel
      *
      * @return null
      */
-    function getInviterUser($invite_id)
+    function getInviteById($invite_id)
     {
         $options = [
             'conditions' => [
@@ -200,14 +200,11 @@ class Invite extends AppModel
             'contain'    => [
                 'FromUser' => [
                     'fields' => $this->FromUser->profileFields
-                ]
+                ],
+                'Team'
             ]
         ];
-        $inviter = $this->find('first', $options);
-        if (!isset($inviter['FromUser'])) {
-            return null;
-        }
-        $res = $inviter['FromUser'];
+        $res = $this->find('first', $options);
         return $res;
     }
 

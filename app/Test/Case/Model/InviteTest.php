@@ -192,13 +192,13 @@ class InviteTest extends CakeTestCase
 
     function testGetInviterUserNoData()
     {
-        $res = $this->Invite->getInviterUser(1111);
-        $this->assertNull($res);
+        $res = $this->Invite->getInviteById(1111);
+        $this->assertEmpty($res);
     }
 
     function testGetInviterUserSuccess()
     {
-        $res = $this->Invite->getInviterUser(2);
+        $res = $this->Invite->getInviteById(2);
         $this->assertNotEmpty($res);
     }
 

@@ -1215,6 +1215,7 @@ class Goal extends AppModel
             $end_date = $this->Team->getCurrentTermEndDate();
         }
         $team_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
+
         $options = [
             'conditions' => [
                 'User.id' => $team_member_list
@@ -1236,6 +1237,16 @@ class Goal extends AppModel
                         'Purpose',
                         'GoalCategory',
                     ]
+                ],
+                'TeamMember'   => [
+                    'fields'     => [
+                        'member_no',
+                        'evaluation_enable_flg'
+                    ],
+                    'conditions' => [
+                        'TeamMember.team_id' => $this->current_team_id
+                    ],
+                    'order'      => ['TeamMember.member_no DESC']
                 ]
             ]
         ];

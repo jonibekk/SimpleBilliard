@@ -348,7 +348,7 @@ class GoalApprovalController extends AppController
         }
         elseif ($this->user_type === 2) {
             $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->member_ids, $goal_status);
+                $this->team_id, $this->member_ids, $goal_status, false);
 
             $my_goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, [$this->user_id], $goal_status);
@@ -358,7 +358,7 @@ class GoalApprovalController extends AppController
         }
         elseif ($this->user_type === 3) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->member_ids, $goal_status);
+                $this->team_id, $this->member_ids, $goal_status, false);
         }
 
         return $goal_info;
