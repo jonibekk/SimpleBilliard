@@ -286,11 +286,8 @@ class GlRedis extends AppModel
         $pipe = $this->Db->multi(Redis::PIPELINE);
 
         //delete set
-        $deleted_count = $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
-                                        $notify_id);
-        if ($deleted_count === 0) {
-            return false;
-        }
+        $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
+                       $notify_id);
         $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 0), $notify_id);
         $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 1), $notify_id);
 
@@ -313,7 +310,7 @@ class GlRedis extends AppModel
      * @param null $limit
      * @param null $from_date
      *
-     * @return array|null
+     * @return array
      */
     function getNotifications($team_id, $user_id, $limit = null, $from_date = null)
     {
@@ -339,7 +336,7 @@ class GlRedis extends AppModel
                                                        ['limit' => [1, $limit], 'withscores' => true]);
         }
         if (empty($notify_list)) {
-            return null;
+            return $notify_list;
         }
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
