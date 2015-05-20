@@ -140,7 +140,7 @@ class UsersController extends AppController
 
         }
         else {
-            $this->Pnotify->outError(__d('notify', "２要素認証コードが正しくありません。"));
+            $this->Pnotify->outError(__d('notify', "2段階認証コードが正しくありません。"));
             return $this->render();
         }
     }
@@ -758,7 +758,7 @@ class UsersController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Session->delete('2fa_secret_key');
-        $this->Pnotify->outSuccess(__d('gl', "２要素認証の登録が完了しました。"));
+        $this->Pnotify->outSuccess(__d('gl', "2段階認証の登録が完了しました。"));
         return $this->redirect($this->referer());
     }
 
@@ -778,7 +778,7 @@ class UsersController extends AppController
         if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
             $this->Redis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }
-        $this->Pnotify->outSuccess(__d('gl', "２要素認証を解除しました。"));
+        $this->Pnotify->outSuccess(__d('gl', "2段階認証を解除しました。"));
         return $this->redirect($this->referer());
     }
 

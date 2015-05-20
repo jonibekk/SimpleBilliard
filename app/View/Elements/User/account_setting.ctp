@@ -108,7 +108,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "２要素認証") ?></label>
+            <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "2段階認証") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
@@ -120,8 +120,6 @@
                            class="modal-ajax-get"><?= __d('gl', "設定する") ?></a>
                     <?php endif; ?>
                 </p>
-
-                <div class="alert alert-warning" role="alert"><?= __d('gl', "２要素認証のログイン処理は現在、準備中です。") ?></div>
             </div>
         </div>
     </div>
