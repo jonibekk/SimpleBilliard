@@ -120,8 +120,6 @@
                            class="modal-ajax-get"><?= __d('gl', "設定する") ?></a>
                     <?php endif; ?>
                 </p>
-
-                <div class="alert alert-warning" role="alert"><?= __d('gl', "２要素認証のログイン処理は現在、準備中です。") ?></div>
             </div>
         </div>
     </div>
