@@ -758,7 +758,7 @@ class UsersController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Session->delete('2fa_secret_key');
-        $this->Pnotify->outSuccess(__d('gl', "２段階認証の登録が完了しました。"));
+        $this->Pnotify->outSuccess(__d('gl', "2段階認証の登録が完了しました。"));
         return $this->redirect($this->referer());
     }
 
