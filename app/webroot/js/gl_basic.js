@@ -155,6 +155,19 @@ $(document).ready(function () {
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
+        $modal_elm.on('hide.bs.modal', function (e) {
+            if($(this).data('form-data') != $(this).find('form').serialize()) {
+                if(!confirm(cake.message.notice.a)) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $(this).data('form-data', $(this).find('form').serialize());
+        });
+
+
         $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
@@ -186,6 +199,18 @@ $(document).ready(function () {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
+        $modal_elm.on('hide.bs.modal', function (e) {
+            if($(this).data('form-data') != $(this).find('form').serialize()) {
+                if(!confirm(cake.message.notice.a)) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $(this).data('form-data', $(this).find('form').serialize());
+        });
+
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
@@ -210,11 +235,19 @@ $(document).ready(function () {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
+        $modal_elm.on('hide.bs.modal', function (e) {
+            if($(this).data('form-data') != $(this).find('form').serialize()) {
+                if(!confirm(cake.message.notice.a)) {
+                    e.preventDefault();
+                }
+            }
+        });
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
         $modal_elm.on('shown.bs.modal', function (e) {
+            $(this).data('form-data', $(this).find('form').serialize());
             $(this).find('textarea').each(function () {
                 $(this).autosize();
             });
@@ -1087,6 +1120,44 @@ function setChangeWarningForAllStaticPage() {
     }, 2000);
 }
 
+$.hideWarning = function(){
+    $modal_elm.on('hide.bs.modal', function (e) {
+        if($(this).data('form-data') != $(this).find('form').serialize()) {
+            if(!confirm(cake.message.notice.a)) {
+                e.preventDefault();
+            }
+        }
+    });
+}
+
+function warningCloseModal()
+{
+    warningAction('modal-dialog');
+}
+
+
+function warningAction(class_name)
+{
+    $('.'+class_name).on('shown.bs.modal, loaded.bs.modal', function(e) {
+        $(this).data('form-data', $(this).find('form').serialize());
+    });
+
+    $('.modal').on('hide.bs.modal', function(e) {
+        if($(this).data('form-data') != $(this).find('form').serialize()) {
+            if(!confirm(cake.message.notice.a)) {
+                //$.clearInput();
+                e.preventDefault();
+            }
+            $.clearInput();
+        }
+    });
+}
+
+$.clearInput = function () {
+    $('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
+    $('form').bootstrapValidator('resetForm', true);
+};
+
 //入力途中での警告表示
 //Ajaxエレメント中の適用したい要素にchange-warningクラスを指定
 function setChangeWarningForAjax() {
@@ -1114,6 +1185,8 @@ $(function () {
 $(document).ready(function () {
 
     setChangeWarningForAllStaticPage();
+
+    warningCloseModal();
 
     //noinspection JSUnresolvedFunction
     var client = new ZeroClipboard($('.copy_me'));
@@ -1215,6 +1288,18 @@ $(document).ready(function () {
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
+        $modal_elm.on('hide.bs.modal', function (e) {
+            if($(this).data('form-data') != $(this).find('form').serialize()) {
+                if(!confirm(cake.message.notice.a)) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $(this).data('form-data', $(this).find('form').serialize());
+        });
+
         $modal_elm.modal();
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
@@ -1366,6 +1451,19 @@ function getModalPostList(e) {
     $modal_elm.on('hidden.bs.modal', function (e) {
         $(this).remove();
     });
+
+    $modal_elm.on('hide.bs.modal', function (e) {
+        if($(this).data('form-data') != $(this).find('form').serialize()) {
+            if(!confirm(cake.message.notice.a)) {
+                e.preventDefault();
+            }
+        }
+    });
+
+    $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).data('form-data', $(this).find('form').serialize());
+    });
+
     $modal_elm.modal();
     var url = $(this).attr('href');
     if (url.indexOf('#') == 0) {
@@ -1661,7 +1759,17 @@ function getModalFormFromUrl(e) {
     $modal_elm.on('hidden.bs.modal', function (e) {
         $(this).remove();
     });
+
+    $modal_elm.on('hide.bs.modal', function (e) {
+        if($(this).data('form-data') != $(this).find('form').serialize()) {
+            if(!confirm(cake.message.notice.a)) {
+                e.preventDefault();
+            }
+        }
+    });
+
     $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).data('form-data', $(this).find('form').serialize());
         $(this).find('textarea').each(function () {
             $(this).autosize();
         });
@@ -1678,6 +1786,7 @@ function getModalFormFromUrl(e) {
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
             });
     });
+
     var url = $(this).attr('href');
     if (url.indexOf('#') == 0) {
         $(url).modal('open');
