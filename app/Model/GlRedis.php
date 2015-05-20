@@ -1,19 +1,35 @@
 <?php
+App::uses('AppModel', 'Model');
+App::uses('ConnectionManager', 'Model');
 
 /**
- * Class RedisComponent
- *
- * @property Redis $Db
+ * GlRedis Model
+
  */
-class RedisComponent extends Object
+class GlRedis extends AppModel
 {
-    public $name = "Redis";
-    public $Db;
+    public $useTable = false;
+    protected $_schema = array(
+        'dummy' => array('type' => 'text'),
+    );
 
     /**
-     * @var AppController
+     * @var Redis $Db
      */
-    var $Controller;
+    private $Db;
+
+    private $config_name = 'redis';
+
+    /**
+     * @param bool $id
+     * @param null $table
+     * @param null $ds
+     */
+    public function __construct($id = false, $table = null, $ds = null)
+    {
+        parent::__construct($id, $table, $ds);
+        $this->Db = ConnectionManager::getDataSource($this->config_name);
+    }
 
     const KEY_TYPE_NOTIFICATION_USER = 'notification_user_key';
     const KEY_TYPE_NOTIFICATION = 'notification_key';
@@ -97,27 +113,24 @@ class RedisComponent extends Object
         'two_fa_device_hashes' => null,
     ];
 
-    function initialize(Controller $controller)
+    public function changeDbSource($config_name = "redis_test")
     {
-        App::uses('ConnectionManager', 'Model');
-        $this->Db = ConnectionManager::getDataSource('redis');
-        $this->Controller = $controller;
+        unset($this->Db);
+        $this->config_name = $config_name;
+        $this->Db = ConnectionManager::getDataSource($config_name);
     }
 
-    function startup()
+    /**
+     *  Attention! delete all data!
+     */
+    public function deleteAllData()
     {
-    }
-
-    function beforeRender()
-    {
-    }
-
-    function shutdown()
-    {
-    }
-
-    function beforeRedirect()
-    {
+        $keys = $this->Db->keys('*');
+        $prefix = $this->Db->config['prefix'];
+        foreach ($keys as $k) {
+            $keys[$k] = str_replace($prefix, "", $k);
+        }
+        return $this->Db->del($keys);
     }
 
     /**
@@ -131,7 +144,7 @@ class RedisComponent extends Object
      *
      * @return string
      */
-    public function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null)
+    private function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
@@ -193,7 +206,6 @@ class RedisComponent extends Object
      */
     public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date)
     {
-        $this->Db = ConnectionManager::getDataSource('redis');
         $notify_id = $this->generateId();
         $data = [
             'id'      => $notify_id,
@@ -274,11 +286,8 @@ class RedisComponent extends Object
         $pipe = $this->Db->multi(Redis::PIPELINE);
 
         //delete set
-        $deleted_count = $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
-                                        $notify_id);
-        if ($deleted_count === 0) {
-            return false;
-        }
+        $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
+                       $notify_id);
         $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 0), $notify_id);
         $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 1), $notify_id);
 
@@ -301,7 +310,7 @@ class RedisComponent extends Object
      * @param null $limit
      * @param null $from_date
      *
-     * @return array|null
+     * @return array
      */
     function getNotifications($team_id, $user_id, $limit = null, $from_date = null)
     {
@@ -327,7 +336,7 @@ class RedisComponent extends Object
                                                        ['limit' => [1, $limit], 'withscores' => true]);
         }
         if (empty($notify_list)) {
-            return null;
+            return $notify_list;
         }
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
@@ -351,13 +360,13 @@ class RedisComponent extends Object
 
     /**
      * @param      $user_id
-     * @param bool $with_ip
+     * @param null $ip_address
      *
      * @return bool|string
      */
-    function makeDeviceHash($user_id, $with_ip = false)
+    function makeDeviceHash($user_id, $ip_address = null)
     {
-        $browser_info = get_browser($this->Controller->request->header('User-Agent'));
+        $browser_info = get_browser(CakeRequest::header('User-Agent'));
         if (empty($browser_info) === true) {
             return false;
         }
@@ -366,11 +375,6 @@ class RedisComponent extends Object
         $browser = $browser_info->browser;
         if (empty($platform) === true || empty($browser) === true) {
             return false;
-        }
-
-        $ip_address = null;
-        if ($with_ip) {
-            $ip_address = $this->Controller->request->clientIp();
         }
         return Security::hash($platform . $browser . $user_id . $ip_address, 'sha1', true);
     }
@@ -426,9 +430,15 @@ class RedisComponent extends Object
         return $this->Db->del($key);
     }
 
-    function isAccountLocked($email)
+    /**
+     * @param      $email
+     * @param null $ip_address
+     *
+     * @return bool
+     */
+    function isAccountLocked($email, $ip_address = null)
     {
-        $device = $this->makeDeviceHash($email, true);
+        $device = $this->makeDeviceHash($email, $ip_address);
         $key = $this->getKeyName(self::KEY_TYPE_LOGIN_FAIL, null, null, null, null, $email, $device);
         $count = $this->Db->incr($key);
         if ($count !== false && $count >= ACCOUNT_LOCK_COUNT) {
@@ -439,3 +449,4 @@ class RedisComponent extends Object
     }
 
 }
+

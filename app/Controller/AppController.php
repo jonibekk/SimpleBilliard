@@ -36,7 +36,7 @@ App::uses('NotifySetting', 'Model');
  * @property Goal                                      $Goal
  * @property Team                                      $Team
  * @property NotifyBizComponent                        $NotifyBiz
- * @property RedisComponent                            $Redis
+ * @property GlRedis                                   $GlRedis
  * @property BenchmarkComponent                        $Benchmark
  */
 class AppController extends Controller
@@ -65,7 +65,6 @@ class AppController extends Controller
         'NotifyBiz',
         'Uservoice',
         'Csv',
-        'Redis',
         //        'Benchmark',
     ];
     public $helpers = [
@@ -84,6 +83,7 @@ class AppController extends Controller
         'Post',
         'Goal',
         'Team',
+        'GlRedis',
     ];
 
     /**

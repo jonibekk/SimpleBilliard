@@ -42,6 +42,18 @@ class DATABASE_CONFIG
         'prefix'      => '',
     );
 
+    public $redis_test = array(
+        'datasource'  => 'Redis.RedisSource',
+        'host'        => REDIS_HOST,
+        'port'        => 6379,
+        'password'    => '',
+        'database'    => 0,
+        'timeout'     => 0,
+        'persistent'  => false,
+        'unix_socket' => '',
+        'prefix'      => 'test:',
+    );
+
     public function __construct()
     {
         //opsworksの環境の場合はdb設定をopsworks側で管理されているものに置き換える
@@ -57,6 +69,10 @@ class DATABASE_CONFIG
         //set prefix of redis
         if (isset($this->redis)) {
             $this->redis['prefix'] = ENV_NAME . ":";
+        }
+        //set prefix of redis_test
+        if (isset($this->redis_test)) {
+            $this->redis_test['prefix'] = ENV_NAME . ":" . $this->redis_test['prefix'];
         }
     }
 }
