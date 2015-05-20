@@ -1120,19 +1120,9 @@ function setChangeWarningForAllStaticPage() {
     }, 2000);
 }
 
-$.hideWarning = function(){
-    $modal_elm.on('hide.bs.modal', function (e) {
-        if($(this).data('form-data') != $(this).find('form').serialize()) {
-            if(!confirm(cake.message.notice.a)) {
-                e.preventDefault();
-            }
-        }
-    });
-}
-
 function warningCloseModal()
 {
-    warningAction('modal-dialog');
+    warningAction('modal');
 }
 
 
@@ -1145,10 +1135,10 @@ function warningAction(class_name)
     $('.modal').on('hide.bs.modal', function(e) {
         if($(this).data('form-data') != $(this).find('form').serialize()) {
             if(!confirm(cake.message.notice.a)) {
-                //$.clearInput();
+                $.clearInput();
                 e.preventDefault();
             }
-            $.clearInput();
+
         }
     });
 }
