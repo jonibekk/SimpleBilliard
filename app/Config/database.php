@@ -42,6 +42,19 @@ class DATABASE_CONFIG
         'prefix'      => '',
     );
 
+    public $redis_test = array(
+        'datasource'  => 'Redis.RedisSource',
+        'host'        => REDIS_HOST,
+        'port'        => 6379,
+        'password'    => '',
+        'database'    => 0,
+        'timeout'     => 0,
+        'persistent'  => false,
+        'unix_socket' => '',
+        'prefix'      => 'test',
+    );
+
+
     public function __construct()
     {
         //opsworksの環境の場合はdb設定をopsworks側で管理されているものに置き換える
