@@ -14,9 +14,9 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <?= __d('gl', "お知らせ") ?>
+        <?= __d('gl', "すべてのお知らせ") ?>
     </div>
-    <div class="panel-body">
+    <div class="panel-body panel-body-notify-page">
         <ul class="notify-list-page" role="menu">
             <?=
             $this->element('Notification/notify_items',
@@ -34,8 +34,6 @@
                 </div>
             </div>
         <?php endif; ?>
-    </div>
-    <div class="panel-footer">
     </div>
 </div>
 
