@@ -3,8 +3,8 @@ App::uses('GlRedis', 'Model');
 
 /**
  * GlRedis Test Case
+ *
  * @property GlRedis $GlRedis
-
  */
 class GlRedisTest extends CakeTestCase
 {
@@ -14,8 +14,7 @@ class GlRedisTest extends CakeTestCase
      *
      * @var array
      */
-    public $fixtures = array(
-    );
+    public $fixtures = array();
 
     /**
      * setUp method
@@ -26,6 +25,7 @@ class GlRedisTest extends CakeTestCase
     {
         parent::setUp();
         $this->GlRedis = ClassRegistry::init('GlRedis');
+        $this->GlRedis->changeDbSource('redis_test');
     }
 
     /**
@@ -35,13 +35,15 @@ class GlRedisTest extends CakeTestCase
      */
     public function tearDown()
     {
+        $this->GlRedis->deleteAllData();
         unset($this->GlRedis);
-
         parent::tearDown();
     }
 
-    function testDummy()
+    function testSetNotifications()
     {
+        $res = $this->GlRedis->setNotifications(1, 2000000, [2], 1, "body", ['/'], time());
+        $this->assertTrue($res);
 
     }
 

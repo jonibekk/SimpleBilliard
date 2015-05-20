@@ -18,6 +18,8 @@ class GlRedis extends AppModel
      */
     private $Db;
 
+    private $config_name = 'redis';
+
     /**
      * @param bool $id
      * @param null $table
@@ -26,7 +28,7 @@ class GlRedis extends AppModel
     public function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
-        $this->Db = ConnectionManager::getDataSource('redis');
+        $this->Db = ConnectionManager::getDataSource($this->config_name);
     }
 
     const KEY_TYPE_NOTIFICATION_USER = 'notification_user_key';
@@ -111,6 +113,26 @@ class GlRedis extends AppModel
         'two_fa_device_hashes' => null,
     ];
 
+    public function changeDbSource($config_name = "redis_test")
+    {
+        unset($this->Db);
+        $this->config_name = $config_name;
+        $this->Db = ConnectionManager::getDataSource($config_name);
+    }
+
+    /**
+     *  Attention! delete all data!
+     */
+    public function deleteAllData()
+    {
+        $keys = $this->Db->keys('*');
+        $prefix = $this->Db->config['prefix'];
+        foreach ($keys as $k) {
+            $keys[$k] = str_replace($prefix, "", $k);
+        }
+        return $this->Db->del($keys);
+    }
+
     /**
      * @param string        $key_type One of $KEY_TYPES
      * @param int           $team_id
@@ -184,7 +206,6 @@ class GlRedis extends AppModel
      */
     public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date)
     {
-        $this->Db = ConnectionManager::getDataSource('redis');
         $notify_id = $this->generateId();
         $data = [
             'id'      => $notify_id,

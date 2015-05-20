@@ -51,9 +51,8 @@ class DATABASE_CONFIG
         'timeout'     => 0,
         'persistent'  => false,
         'unix_socket' => '',
-        'prefix'      => 'test',
+        'prefix'      => 'test:',
     );
-
 
     public function __construct()
     {
@@ -70,6 +69,10 @@ class DATABASE_CONFIG
         //set prefix of redis
         if (isset($this->redis)) {
             $this->redis['prefix'] = ENV_NAME . ":";
+        }
+        //set prefix of redis_test
+        if (isset($this->redis_test)) {
+            $this->redis_test['prefix'] = ENV_NAME . ":" . $this->redis_test['prefix'];
         }
     }
 }
