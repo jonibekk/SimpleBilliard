@@ -152,29 +152,14 @@ $(document).ready(function () {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $(this).remove();
-        });
-        $modal_elm.on('hide.bs.modal', function (e) {
-            if($(this).data('form-data') != $(this).find('form').serialize()) {
-                if(!confirm(cake.message.notice.a)) {
-                    e.preventDefault();
-                }
-            }
-        });
-
-        $modal_elm.on('shown.bs.modal', function (e) {
-            $(this).data('form-data', $(this).find('form').serialize());
-        });
-
-
-        $modal_elm.modal();
+        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+                $modal_elm.modal();
                 //画像をレイジーロード
                 imageLazyOn($modal_elm);
                 //画像リサイズ
@@ -199,28 +184,14 @@ $(document).ready(function () {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
-        $modal_elm.on('hide.bs.modal', function (e) {
-            if($(this).data('form-data') != $(this).find('form').serialize()) {
-                if(!confirm(cake.message.notice.a)) {
-                    e.preventDefault();
-                }
-            }
-        });
-
-        $modal_elm.on('shown.bs.modal', function (e) {
-            $(this).data('form-data', $(this).find('form').serialize());
-        });
-
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $(this).remove();
-        });
-        $modal_elm.modal();
+        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+                $modal_elm.modal();
             }).success(function () {
                 $('body').addClass('modal-open');
             });
@@ -235,23 +206,7 @@ $(document).ready(function () {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
-        $modal_elm.on('hide.bs.modal', function (e) {
-            if($(this).data('form-data') != $(this).find('form').serialize()) {
-                if(!confirm(cake.message.notice.a)) {
-                    e.preventDefault();
-                }
-            }
-        });
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $(this).remove();
-        });
-        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
-        $modal_elm.on('shown.bs.modal', function (e) {
-            $(this).data('form-data', $(this).find('form').serialize());
-            $(this).find('textarea').each(function () {
-                $(this).autosize();
-            });
-        });
+        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
@@ -1111,7 +1066,7 @@ function setChangeWarningForAllStaticPage() {
                     if (!flag) {
                         return cake.message.notice.a;
                     }
-                    else{
+                    else {
                         return;
                     }
                 });
@@ -1120,32 +1075,56 @@ function setChangeWarningForAllStaticPage() {
     }, 2000);
 }
 
-function warningCloseModal()
-{
+function warningCloseModal() {
     warningAction('modal');
 }
 
-
-function warningAction(class_name)
-{
-    $('.'+class_name).on('shown.bs.modal, loaded.bs.modal', function(e) {
+function warningAction(class_name) {
+    $('.' + class_name).on('shown.bs.modal', function (e) {
         $(this).data('form-data', $(this).find('form').serialize());
     });
 
-    $('.modal').on('hide.bs.modal', function(e) {
-        if($(this).data('form-data') != $(this).find('form').serialize()) {
-            if(!confirm(cake.message.notice.a)) {
-                $.clearInput();
+    $('.' + class_name).on('hide.bs.modal', function (e) {
+        if ($(this).data('form-data') != $(this).find('form').serialize()) {
+            if (!confirm(cake.message.notice.a)) {
                 e.preventDefault();
+            }else{
+                $.clearInput($(this));
             }
 
         }
     });
 }
 
-$.clearInput = function () {
-    $('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
-    $('form').bootstrapValidator('resetForm', true);
+function modalFormCommonBindEvent($modal_elm) {
+    modalWarningShownBind($modal_elm);
+    modalWarningHideBind($modal_elm);
+    $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).find('textarea').each(function () {
+            $(this).autosize();
+        });
+    });
+}
+function modalWarningHideBind($modal_elm) {
+    $modal_elm.on('hide.bs.modal', function (e) {
+        if ($(this).data('form-data') != $(this).find('form').serialize()) {
+            if (!confirm(cake.message.notice.a)) {
+                e.preventDefault();
+            }
+        }
+    });
+}
+
+function modalWarningShownBind($modal_elm) {
+    $modal_elm.on('shown.bs.modal', function (e) {
+        $(this).data('form-data', $(this).find('form').serialize());
+    });
+}
+
+
+$.clearInput = function ($obj) {
+    $obj.find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
+    $obj.bootstrapValidator('resetForm', true);
 };
 
 //入力途中での警告表示
@@ -1275,28 +1254,14 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        $modal_elm.on('hidden.bs.modal', function (e) {
-            $(this).remove();
-        });
-        $modal_elm.on('hide.bs.modal', function (e) {
-            if($(this).data('form-data') != $(this).find('form').serialize()) {
-                if(!confirm(cake.message.notice.a)) {
-                    e.preventDefault();
-                }
-            }
-        });
-
-        $modal_elm.on('shown.bs.modal', function (e) {
-            $(this).data('form-data', $(this).find('form').serialize());
-        });
-
-        $modal_elm.modal();
+        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+                $modal_elm.modal();
                 $modal_elm.find(".bt-switch").bootstrapSwitch({
                     size: "small",
                     onText: cake.word.b,
@@ -1438,29 +1403,15 @@ function getModalPostList(e) {
 
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
     //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
-    $modal_elm.on('hidden.bs.modal', function (e) {
-        $(this).remove();
-    });
+    modalFormCommonBindEvent($modal_elm);
 
-    $modal_elm.on('hide.bs.modal', function (e) {
-        if($(this).data('form-data') != $(this).find('form').serialize()) {
-            if(!confirm(cake.message.notice.a)) {
-                e.preventDefault();
-            }
-        }
-    });
-
-    $modal_elm.on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
-    });
-
-    $modal_elm.modal();
     var url = $(this).attr('href');
     if (url.indexOf('#') == 0) {
         $(url).modal('open');
     } else {
         $.get(url, function (data) {
             $modal_elm.append(data);
+            $modal_elm.modal();
             //クリップボードコピーの処理を追加
             //noinspection JSUnresolvedFunction
             var client = new ZeroClipboard($modal_elm.find('.copy_me'));
@@ -1471,7 +1422,7 @@ function getModalPostList(e) {
                 });
             });
             //画像をレイジーロード
-            imageLazyOn();
+            imageLazyOn($modal_elm);
             //画像リサイズ
             $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
                 $(this).children('.nailthumb-container').nailthumb({
@@ -1746,23 +1697,9 @@ function showMore(obj) {
 function getModalFormFromUrl(e) {
     e.preventDefault();
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-    $modal_elm.on('hidden.bs.modal', function (e) {
-        $(this).remove();
-    });
-
-    $modal_elm.on('hide.bs.modal', function (e) {
-        if($(this).data('form-data') != $(this).find('form').serialize()) {
-            if(!confirm(cake.message.notice.a)) {
-                e.preventDefault();
-            }
-        }
-    });
+    modalFormCommonBindEvent($modal_elm);
 
     $modal_elm.on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
-        $(this).find('textarea').each(function () {
-            $(this).autosize();
-        });
         $(this).find('.input-group.date').datepicker({
             format: "yyyy/mm/dd",
             todayBtn: 'linked',
