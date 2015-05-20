@@ -35,6 +35,8 @@ class GlRedisTest extends CakeTestCase
      */
     public function tearDown()
     {
+        $this->GlRedis = ClassRegistry::init('GlRedis');
+        $this->GlRedis->changeDbSource('redis_test');
         $this->GlRedis->deleteAllData();
         unset($this->GlRedis);
         parent::tearDown();
