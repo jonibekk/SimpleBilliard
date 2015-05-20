@@ -108,7 +108,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "２要素認証") ?></label>
+            <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "２段階認証") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
