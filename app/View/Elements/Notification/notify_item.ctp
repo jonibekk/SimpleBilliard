@@ -55,7 +55,7 @@
                 id="CommentTextBody_67">
                 <?php if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?><i
                     class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> disp_i font_bold"></i><?php endif; ?>
-                「<?= mb_strimwidth(h(json_decode($notification['body'])[0]), 0, 32, '..') ?>」
+                <?= mb_strimwidth(h(json_decode($notification['body'])[0]), 0, 36, '..') ?>
             </div>
             <p class="notify-card-aside"><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></p>
         </div>
