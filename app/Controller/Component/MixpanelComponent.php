@@ -140,25 +140,28 @@ class MixpanelComponent extends Object
             '$goal_owner_type'      => null,
             '$goal_approval_status' => null,
         ];
-        $user_id = $this->Controller->Auth->user('id');
-        $team_id = $this->Controller->Session->read('current_team_id');
 
-        $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
-        if (empty($collabo)) {
-            $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
-        }
-        if (isset($collabo['Collaborator']['type'])) {
-            $property['$goal_owner_type'] = $collabo['Collaborator']['type'] == Collaborator::TYPE_OWNER ? 'L' : 'C';
-        }
+        if ($track_type != self::TRACK_FOLLOW_GOAL && $track_type != self::TRACK_UN_FOLLOW_GOAL) {
+            $user_id = $this->Controller->Auth->user('id');
+            $team_id = $this->Controller->Session->read('current_team_id');
 
-        $approval_status = [
-            Collaborator::STATUS_UNAPPROVED => "Pending approval",
-            Collaborator::STATUS_APPROVAL   => "Evaluable",
-            Collaborator::STATUS_HOLD       => "Not evaluable",
-            Collaborator::STATUS_MODIFY     => "Pending modification",
-        ];
-        if (isset($collabo['Collaborator']['valued_flg'])) {
-            $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
+            $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
+            if (empty($collabo)) {
+                $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
+            }
+            if (isset($collabo['Collaborator']['type'])) {
+                $property['$goal_owner_type'] = $collabo['Collaborator']['type'] == Collaborator::TYPE_OWNER ? 'L' : 'C';
+            }
+
+            $approval_status = [
+                Collaborator::STATUS_UNAPPROVED => "Pending approval",
+                Collaborator::STATUS_APPROVAL   => "Evaluable",
+                Collaborator::STATUS_HOLD       => "Not evaluable",
+                Collaborator::STATUS_MODIFY     => "Pending modification",
+            ];
+            if (isset($collabo['Collaborator']['valued_flg'])) {
+                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
+            }
         }
         $this->MpOrigin->track($track_type, $property);
     }
