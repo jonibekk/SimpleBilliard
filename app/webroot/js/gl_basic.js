@@ -1410,8 +1410,8 @@ function getModalPostList(e) {
         $(url).modal('open');
     } else {
         $.get(url, function (data) {
-            $modal_elm.append(data);
             $modal_elm.modal();
+            $modal_elm.append(data);
             //クリップボードコピーの処理を追加
             //noinspection JSUnresolvedFunction
             var client = new ZeroClipboard($modal_elm.find('.copy_me'));
