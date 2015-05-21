@@ -1195,7 +1195,7 @@ This task make js files to a js file.</p>
     <span class="hljs-attribute">cwd</span>: <span class="hljs-string">'&lt;%= config.dest %&gt;/jssrc/'</span>
     <span class="hljs-attribute">dest</span>: <span class="hljs-string">'&lt;%= config.webroot %&gt;/js/'</span>
     <span class="hljs-attribute">src</span>: [
-      <span class="hljs-string">'*.css.map'</span>
+      <span class="hljs-string">'*.js.map'</span>
     ]</pre></div></div>
             
         </li>
@@ -1857,7 +1857,7 @@ sourceMap must be true.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">dist</span>:
     <span class="hljs-attribute">files</span>:
-      <span class="hljs-string">'&lt;%= config.dest %&gt;/csssrc/sample.css'</span>: [<span class="hljs-string">'&lt;%= config.less %&gt;/sample.less'</span>]
+      <span class="hljs-string">'&lt;%= config.dest %&gt;/csssrc/goalous.css'</span>: [<span class="hljs-string">'&lt;%= config.less %&gt;/goalous.less'</span>]
     <span class="hljs-attribute">options</span>:
       <span class="hljs-attribute">sourceMap</span>: <span class="hljs-literal">true</span></pre></div></div>
             
@@ -1999,12 +1999,13 @@ sourceMap must be true.</p>
               </div>
               <p>Setting of lesslint
 grunt-lesslint requires grunt-contrib-csslint</p>
-<p>I think we should set more details of less rules.</p>
+<p>I think we should set more details of less rules.
+Need to check only goalous.less because All less files are imported to goalous.less !!</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">lesslint</span>:
-    <span class="hljs-attribute">src</span>: <span class="hljs-string">'&lt;%= config.less %&gt;/**/**.less'</span></pre></div></div>
+    <span class="hljs-attribute">src</span>: <span class="hljs-string">'&lt;%= config.less %&gt;/goalous.less'</span></pre></div></div>
             
         </li>
         
