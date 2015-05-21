@@ -1,4 +1,6 @@
 <?php
+App::uses('Collaborator', 'Model');
+App::uses('User', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -152,11 +154,9 @@ class MixpanelComponent extends Object
             Collaborator::STATUS_HOLD       => "Not evaluable",
             Collaborator::STATUS_MODIFY     => "Pending modification",
         ];
-
-        if (viaIsSet($collabo['Collaborator']['valued_flg'])) {
+        if (isset($collabo['Collaborator']['valued_flg'])) {
             $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
         }
-
         $this->MpOrigin->track($track_type, $property);
     }
 
