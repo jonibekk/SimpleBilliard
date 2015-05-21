@@ -44,9 +44,12 @@ class MixpanelComponent extends Object
 
     var $trackProperty = [];
 
+    var $user;
+
     function initialize(&$controller)
     {
         $this->Controller = $controller;
+        $user = $this->getUserInfo();
         if (MIXPANEL_TOKEN) {
             $this->MpOrigin = Mixpanel::getInstance(MIXPANEL_TOKEN);
             if ($this->Controller->Auth->user()) {
@@ -54,8 +57,25 @@ class MixpanelComponent extends Object
                 $this->MpOrigin->identify($this->Controller->Auth->user('id'));
                 //チームIDをセット
                 $this->MpOrigin->register('$team_id', $this->Controller->Session->read('current_team_id'));
+                //性別をセット
+                $this->MpOrigin->register('$gender', $this->getGenderName());
+                //言語をセット
+                $this->MpOrigin->register('$language', $user['language']);
+                //タイムゾーンをセット
+                $this->MpOrigin->register('$timezone', $user['timezone']);
             }
         }
+    }
+
+    function getGenderName()
+    {
+        $user = $this->getUserInfo();
+        $gender_types = [
+            User::TYPE_GENDER_MALE    => 'male',
+            User::TYPE_GENDER_FEMALE  => 'female',
+            User::TYPE_GENDER_NEITHER => 'other'
+        ];
+        return isset($gender_types[$user['gender_type']]) ? $gender_types[$user['gender_type']] : null;
     }
 
     function startup()
@@ -77,30 +97,35 @@ class MixpanelComponent extends Object
 
     /**
      * ユーザ情報をセット
-     *
-     * @param $user_id
      */
-    function setUser($user_id)
+    function setUser()
     {
         if (!MIXPANEL_TOKEN) {
             return;
         }
 
-        $options = [
-            'conditions' => ['User.id' => $user_id],
-            'contain'    => ['PrimaryEmail',]
-        ];
-        $user = $this->Controller->User->find('first', $options);
+        $user = $this->getUserInfo();
         //ユーザ情報をセット
-        $this->MpOrigin->people->set($user['User']['id'], [
-            '$first_name'      => $user['User']['first_name'],
-            '$last_name'       => $user['User']['last_name'],
-            '$email'           => $user['PrimaryEmail']['email'],
-            '$default_team_id' => $user['User']['default_team_id'],
-            '$language'        => $user['User']['language'],
-            '$is_admin'        => $user['User']['is_admin'],
-            '$gender_type'     => $user['User']['gender_type'],
-        ]);
+        $this->MpOrigin->people->set($user['id'],
+                                     [
+                                         '$first_name'      => $user['first_name'],
+                                         '$last_name'       => $user['last_name'],
+                                         '$email'           => $user['PrimaryEmail']['email'],
+                                         '$default_team_id' => $user['default_team_id'],
+                                         '$language'        => $user['language'],
+                                         '$is_admin'        => $user['is_admin'],
+                                         '$gender_type'     => $user['gender_type'],
+                                     ]
+        );
+    }
+
+    function getUserInfo()
+    {
+        if ($this->user) {
+            return $this->user;
+        }
+        $this->user = $this->Controller->Auth->user();
+        return $this->user;
     }
 
     function trackCreateGoal($goal_id)
