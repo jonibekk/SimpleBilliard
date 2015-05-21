@@ -62,7 +62,7 @@
                 <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <div
-                class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"
+                class="col col-xxs-12 <?= $long_text ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= $this->TextEx->autoLink($comment['body']) ?></div>
 
             <?php $photo_count = 0;

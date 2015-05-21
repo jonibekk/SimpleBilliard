@@ -252,6 +252,7 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
+
         $response = $this->render('Feed/action_posts');
         $html = $response->__toString();
         $result = array(
@@ -279,8 +280,12 @@ class PostsController extends AppController
     public function ajax_get_old_comment($post_id, $get_num)
     {
         $this->_ajaxPreProcess();
-
         $comments = $this->Post->Comment->getPostsComment($post_id, $get_num);
+        $long_text = false;
+        if (isset($this->request->params['named']['long_text'])) {
+            $long_text = $this->request->params['named']['long_text'];
+        }
+        $this->set('long_text', $long_text);
         $this->set(compact('comments'));
 
         //エレメントの出力を変数に格納する
@@ -290,6 +295,7 @@ class PostsController extends AppController
         $result = array(
             'html' => $html
         );
+
         return $this->_ajaxGetResponse($result);
     }
 
@@ -530,6 +536,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
+        $this->set('long_text', true);
         $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params',
                            'circle_status'));
         try {

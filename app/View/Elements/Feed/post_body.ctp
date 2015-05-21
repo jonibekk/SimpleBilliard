@@ -9,8 +9,9 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/post_body.ctp -->
-<div class="col col-xxs-12 feed-contents post-contents showmore font_14px font_verydark box-align"
-     id="PostTextBody_<?= $post['Post']['id'] ?>">
+<div
+    class="col col-xxs-12 feed-contents post-contents <?= $long_text ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"
+    id="PostTextBody_<?= $post['Post']['id'] ?>">
     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
         <?= $this->TextEx->autoLink($post['Post']['body']) ?>
     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
