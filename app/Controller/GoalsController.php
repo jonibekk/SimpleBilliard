@@ -524,10 +524,10 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_collabo($key_result_user_id)
+    public function delete_collabo($collabo_id)
     {
         $this->request->allowMethod('post', 'put');
-        $this->Goal->Collaborator->id = $key_result_user_id;
+        $this->Goal->Collaborator->id = $collabo_id;
         if (!$this->Goal->Collaborator->exists()) {
             $this->Pnotify->outError(__('gl', "既にコラボレータから抜けている可能性があります。"));
         }
