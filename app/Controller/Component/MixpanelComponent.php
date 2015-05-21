@@ -144,7 +144,10 @@ class MixpanelComponent extends Object
         $team_id = $this->Controller->Session->read('current_team_id');
 
         $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
-        if (viaIsSet($collabo['Collaborator']['type'])) {
+        if (empty($collabo)) {
+            $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
+        }
+        if (isset($collabo['Collaborator']['type'])) {
             $property['$goal_owner_type'] = $collabo['Collaborator']['type'] == Collaborator::TYPE_OWNER ? 'L' : 'C';
         }
 

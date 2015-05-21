@@ -332,7 +332,8 @@ class GoalsController extends AppController
             $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
             //if new
             if (!$collabo_id) {
-                $this->Mixpanel->trackCollaborateGoal($this->request->data['Collaborator']['goal_id']);
+                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL,
+                                           $this->request->data['Collaborator']['goal_id']);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
                                                  $this->request->data['Collaborator']['goal_id']);
                 $this->_sendNotifyToCoach($this->request->data['Collaborator']['goal_id'],
@@ -534,6 +535,8 @@ class GoalsController extends AppController
         if (!$this->Goal->Collaborator->isOwner($this->Auth->user('id'))) {
             $this->Pnotify->outError(__('gl', "この操作の権限がありません。"));
         }
+        $collabo = $this->Goal->Collaborator->findById($collabo_id);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE, $collabo['Collaborator']['goal_id']);
         $this->Goal->Collaborator->delete();
         $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
         $this->redirect($this->referer());
