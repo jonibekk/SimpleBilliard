@@ -116,9 +116,13 @@ class GoalsController extends AppController
                 case 2:
                     //case of create new one.
                     if (!$id) {
-                        $this->Mixpanel->trackCreateGoal($this->Goal->getLastInsertID());
+                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
+                                                   $this->Goal->getLastInsertID());
                         $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
                                                   NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+                    }
+                    else {
+                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
                     }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                     //「情報を追加」に進む
@@ -190,9 +194,11 @@ class GoalsController extends AppController
         }
         $this->request->allowMethod('post', 'delete');
         $this->Goal->id = $id;
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_GOAL, $id);
         $this->Goal->delete();
         $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_GOAL, $id);
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
