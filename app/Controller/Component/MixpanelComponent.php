@@ -166,22 +166,6 @@ class MixpanelComponent extends Object
         $this->MpOrigin->track($track_type, $property);
     }
 
-    function trackCollaborateGoal($goal_id)
-    {
-        if (!MIXPANEL_TOKEN) {
-            return;
-        }
-        $this->MpOrigin->track(self::TRACK_COLLABORATE_GOAL, ['$goal_id' => $goal_id]);
-    }
-
-    function trackFollowGoal($goal_id)
-    {
-        if (!MIXPANEL_TOKEN) {
-            return;
-        }
-        $this->MpOrigin->track(self::TRACK_FOLLOW_GOAL, ['$goal_id' => $goal_id]);
-    }
-
     function trackCreateKR($goal_id, $kr_id)
     {
         if (!MIXPANEL_TOKEN) {
