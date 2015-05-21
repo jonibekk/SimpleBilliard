@@ -9,8 +9,7 @@
  * @var                    $kr_list
  */
 ?>
-<?
-$action = $this->request->data;
+<?php $action = $this->request->data;
 ?>
 <!-- START app/View/Elements/Goal/modal_edit_action_result.ctp -->
 <div class="modal-dialog">
@@ -50,12 +49,12 @@ $action = $this->request->data;
 
                     <div class="col-xxs-8">
                         <ul class="col input-images post-images">
-                            <? for ($i = 1; $i <= 5; $i++): ?>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <li>
                                     <?= $this->element('Feed/photo_upload_mini',
                                                        ['data' => $action, 'type' => 'action_result', 'index' => $i, 'submit_id' => "ActionEditFormSubmit_" . $action['ActionResult']['id'], 'has_many' => false]) ?>
                                 </li>
-                            <? endfor ?>
+                            <?php endfor ?>
                         </ul>
                         <span class="help-block"
                               id="ActionResult_<?= $action['ActionResult']['id'] ?>_Photo_ValidateMessage"></span>

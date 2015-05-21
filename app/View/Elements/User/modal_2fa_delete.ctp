@@ -15,15 +15,15 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "２要素認証設定") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "2段階認証設定") ?></h4>
         </div>
         <div class="modal-body">
             <div class="form-group"><label for="" class="col col-sm-3 modal-label pr_12px"></label>
 
                 <div class="col col-sm-6">
-                    <p class="form-control-static"><?= __d('gl', "現在、２要素認証が有効になっています。") ?></p>
+                    <p class="form-control-static"><?= __d('gl', "現在、2段階認証が有効になっています。") ?></p>
 
-                    <p class="form-control-static"><?= __d('gl', "２要素認証を解除しますか？") ?></p>
+                    <p class="form-control-static"><?= __d('gl', "2段階認証を解除しますか？") ?></p>
                 </div>
             </div>
         </div>

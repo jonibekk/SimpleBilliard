@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Controller/Component/Auth/Form2Authenticate.php
  */
 App::uses('FormAuthenticate', 'Controller/Component/Auth');

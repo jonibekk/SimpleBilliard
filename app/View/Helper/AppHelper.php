@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Application level View Helper
  * This file is application-wide helper file. You can put all
  * application-wide helper-related methods here.

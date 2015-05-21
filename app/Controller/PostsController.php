@@ -11,7 +11,6 @@ class PostsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['ajax_add_comment'];
     }
 
     /**
@@ -598,8 +597,8 @@ class PostsController extends AppController
     function _addOgpIndexes($requestData, $body)
     {
 
-        // テキストが空の場合
-        if (!$body) {
+        // blank or not string, then return;
+        if (!$body || !is_string($body)) {
             return $requestData;
         }
 

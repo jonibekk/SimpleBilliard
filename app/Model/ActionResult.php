@@ -98,6 +98,9 @@ class ActionResult extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
+        'name' => [
+            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+        ]
     ];
 
     /**

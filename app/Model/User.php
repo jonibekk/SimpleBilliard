@@ -179,6 +179,12 @@ class User extends AppModel
         'photo'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'hometown'=>[
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
         ]
     ];
 

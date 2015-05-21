@@ -32,8 +32,7 @@
             'id'            => 'ChangeProfileForm'
         ]); ?>
         <div class="panel-body profile-setting-panel-body">
-            <?
-            if (!$is_not_use_local_name) {
+            <?php if (!$is_not_use_local_name) {
                 //ローカル名を使う国のみ表示
                 //姓と名は言語によって表示順を変える
                 $local_last_name = $this->Form->input('LocalName.0.last_name', [
@@ -63,8 +62,7 @@
                 echo "<hr>";
             }
             ?>
-            <?
-            //姓と名は言語によって表示順を変える
+            <?php //姓と名は言語によって表示順を変える
             $last_name = $this->Form->input('last_name', [
                 'label'                    => __d('gl', "姓(ローマ字)"),
                 'placeholder'              => __d('gl', "例) Suzuki"),
@@ -197,10 +195,10 @@
                     <div class="label-addiction"><?= __d('gl', "チーム内限定で共有されます。") ?></div>
                 </div>
                 <div class="col col-sm-6">
-                    <? if (isset($this->request->data['TeamMember'][0]['id'])): ?>
+                    <?php if (isset($this->request->data['TeamMember'][0]['id'])): ?>
                         <?= $this->Form->hidden('TeamMember.0.id',
                                                 ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
-                    <? endif; ?>
+                    <?php endif; ?>
                     <?=
                     $this->Form->input('TeamMember.0.comment',
                                        ['label'     => false,
@@ -241,7 +239,7 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
         <?= $this->Form->end(); ?>
     </div>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#ChangeProfileForm').bootstrapValidator({
@@ -283,5 +281,5 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
         });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <!-- END app/View/Elements/User/profile_setting.ctp -->

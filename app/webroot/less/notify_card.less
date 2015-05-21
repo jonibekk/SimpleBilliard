@@ -1,0 +1,99 @@
+/*
+  notify-cardsのスタイル
+ */
+.notify-card {
+  display: block;
+  padding: 6px 6px 2px;
+}
+@media screen and (min-width: 768px) {
+  .notify-card {
+    padding: 12px 8px 8px;
+  }
+}
+.notify-dropdown-lists {
+  margin: 0;
+  padding: 0;
+  max-height: 480px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notify-contents {
+  width: 190px;
+}
+.notify-card-head {
+  font-size: @fontSmall;
+  line-height: 18px;
+}
+.notify-card-text {
+  font-size: @fontSmallest;
+  color: @black;
+  line-height: 15px;
+  height: 15px;
+}
+.notify-card-aside {
+  color: @lightGray;
+  font-size: @fontSmallest;
+}
+.notify-icon {
+  width: 64px;
+  height: 64px;
+}
+.notify-all-view-link {
+  .link;
+  height: 40px;
+  line-height: 40px;
+}
+.notify-card-read {
+  background-color: @white;
+}
+.notify-card-unread {
+  background-color: fade(@softRed, 20%);
+}
+.notify-divider {
+  .divider;
+  background-color: @lightGray;
+}
+.notify-card:hover,
+.notify-card:focus {
+  color: @black;
+  background-color: fade(@darkRed, 20%);
+}
+/* notify-pageのスタイル */
+.panel-body-notify-page {
+  padding: 0;
+}
+.notify-list-page {
+  margin-bottom: 0;
+}
+/* frame-arrow */
+.frame-arrow-notify {
+  top: 100%;
+  .frame-arrow;
+}
+.frame-arrow-notify::before {
+  content: "";
+  border: 7px solid transparent;
+  /*noinspection CssOverwrittenProperties*/
+  border-bottom: 7px solid @white;
+  position: absolute;
+  right: 18%;
+  top: -14px;
+  z-index: 2;
+}
+.frame-arrow-notify::after {
+  content: "";
+  border: 7px solid transparent;
+  /*noinspection CssOverwrittenProperties*/
+  border-bottom: 7px solid #ccc;
+  position: absolute;
+  right: 18%;
+  top: -15px;
+}
+.notify-dropdown-area {
+  width: 280px;
+  padding: 0;
+  left: auto;
+  right: -36px;
+  top: 40px;
+}

@@ -4,6 +4,7 @@
  * User: saeki
  * Date: 15/04/17
  * Time: 14:12
+ *
  * @var $incomplete_evaluators
  */
 ?>
@@ -16,17 +17,17 @@
             <h4 class="modal-title"><?= __d('gl', "未完了の評価者(%s)", count($incomplete_evaluators)) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
-            <? if (!empty($incomplete_evaluators)): ?>
+            <?php if (!empty($incomplete_evaluators)): ?>
                 <div class="row borderBottom">
-                    <? foreach ($incomplete_evaluators as $user): ?>
+                    <?php foreach ($incomplete_evaluators as $user): ?>
                         <?=
                         $this->element('Evaluation/incomplete_evaluator',
                                        ['user' => $user['User']]) ?>
-                    <? endforeach ?>
+                    <?php endforeach ?>
                 </div>
-            <? else: ?>
+            <?php else: ?>
                 <?= __d('gl', "全員の評価が完了しています。") ?>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

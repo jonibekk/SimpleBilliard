@@ -11,8 +11,7 @@
  */
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
-<?
-//echo $this->Html->script('vendor/jquery-2.1.0.min');
+<?php //echo $this->Html->script('vendor/jquery-2.1.0.min');
 echo $this->Html->script('vendor/jquery-1.11.1.min');
 echo $this->Html->script('vendor/bootstrap.min');
 echo $this->Html->script('vendor/jasny-bootstrap.min');
@@ -93,15 +92,15 @@ echo $this->Html->script('gl_basic');
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
             b: function (element, callback) {
                 var data = [{
-                    <?if(isset($current_circle)&&!empty($current_circle)):?>
+                    <?php if(isset($current_circle)&&!empty($current_circle)):?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
                     text: "<?=h($current_circle['Circle']['name'])?>",
                     image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    <?else:?>
+                    <?php else:?>
                     id: 'public',
                     text: "<?=__d('gl',"チーム全体")?>",
                     image: "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
-                    <?endif;?>
+                    <?php endif;?>
                 }];
                 callback(data);
             },
@@ -122,23 +121,21 @@ echo $this->Html->script('gl_basic');
     };
 
 
-    <?if(isset($mode_view)):?>
-    <?if($mode_view == MODE_VIEW_TUTORIAL):?>
+    <?php if(isset($mode_view)):?>
+    <?php if($mode_view == MODE_VIEW_TUTORIAL):?>
     $("#modal_tutorial").modal('show');
-    <?endif;?>
-    <?endif;?>
+    <?php endif;?>
+    <?php endif;?>
 </script>
 <?= $this->Session->flash('click_event') ?>
-<?
-echo $this->Session->flash('pnotify');
+<?php echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
 ?>
-<? if (ENV_NAME == "stg"): ?>
+<?php if (ENV_NAME == "stg"): ?>
     <p class="ribbon ribbon-staging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Staging</p>
-<? elseif (ENV_NAME == "hotfix"): ?>
+<?php elseif (ENV_NAME == "hotfix"): ?>
     <p class="ribbon ribbon-hotfix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hotfix</p>
-<?
-elseif (ENV_NAME == "local"): ?>
+<?php elseif (ENV_NAME == "local"): ?>
     <p class="ribbon ribbon-local">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local</p>
-<? endif; ?>
+<?php endif; ?>
 <!-- END app/View/Elements/gl_common_js.ctp -->

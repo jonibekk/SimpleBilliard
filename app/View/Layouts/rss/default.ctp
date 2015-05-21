@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @var $title_for_layout string
  */
 if (!isset($channel)):

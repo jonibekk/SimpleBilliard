@@ -28,25 +28,25 @@ else { ?>
 <div class="feed-share-range">
     <div class="panel-body ptb_10px plr_11px">
         <div class="col col-xxs-12 font_12px">
-            <? if ($feed_filter == "all"): ?>
+            <?php if ($feed_filter == "all"): ?>
                 <span class="feed-current-filter"><?= __d('gl', 'すべて') ?></span>
-            <? else: ?>
+            <?php else: ?>
                 <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
-            <? endif; ?>
+            <?php endif; ?>
             <span> ･ </span>
-            <? if ($feed_filter == "goal"): ?>
+            <?php if ($feed_filter == "goal"): ?>
                 <span class="feed-current-filter"><?= __d('gl', 'ゴール') ?></span>
-            <? else: ?>
+            <?php else: ?>
                 <?= $this->Html->link(__d('gl', 'ゴール'),
                                       ['controller' => 'posts', 'action' => 'feed', 'filter_goal' => true],
                                       ['class' => 'font_lightgray']) ?>
-            <? endif; ?>
-            <? if ($current_circle): ?>
+            <?php endif; ?>
+            <?php if ($current_circle): ?>
                 <span> ･ </span>
                 <span class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
                                                                     '...') ?></span>
                 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $current_circle['Circle']['id']]) ?>"
-  class="modal-ajax-get"> <span class="feed-circle-user-number"><i
+                     class="modal-ajax-get"> <span class="feed-circle-user-number"><i
                             class="fa fa-user"></i>&nbsp;<?= count($circle_members) ?>
                     </span></a>
                 <?php if ($user_status != 'admin') { ?>
@@ -86,13 +86,13 @@ else { ?>
                         </ul>
                     </div>
                 <?php } ?>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
     <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
-<? if ($current_circle && $user_status != 'admin'): ?>
+<?php if ($current_circle && $user_status != 'admin'): ?>
     <?php if ($user_status != 'joined') { ?>
         <div class="panel panel-default">
             <div class="panel-body ptb_10px plr_11px ">
@@ -116,9 +116,9 @@ else { ?>
             </div>
         <?php endif; ?>
     <?php } ?>
-<? endif; ?>
+<?php endif; ?>
 <?= $this->element("Feed/posts") ?>
-<? if (empty($posts)): ?>
+<?php if (empty($posts)): ?>
     <div class="panel panel-default">
         <div class="panel-body ptb_10px plr_11px ">
             <div class="col col-xxs-12">
@@ -126,13 +126,11 @@ else { ?>
             </div>
         </div>
     </div>
-<? endif; ?>
-<?
-//ポストが存在する　かつ　パーマリンクでない
+<?php endif; ?>
+<?php //ポストが存在する　かつ　パーマリンクでない
 if (!empty($posts) && (!isset($this->request->params['post_id']) || empty($this->request->params['post_id']))):
     ?>
-    <?
-    $next_page_num = 2;
+    <?php $next_page_num = 2;
     $month_index = 0;
     $more_read_text = __d('gl', "もっと読む ▼");
     if ((count($posts) != 20)) {
@@ -155,5 +153,5 @@ if (!empty($posts) && (!isset($this->request->params['post_id']) || empty($this-
                 <?= $more_read_text ?></a>
         </div>
     </div>
-<? endif; ?>
+<?php endif; ?>
 <!-- END app/View/Elements/Feed/contents.ctp -->

@@ -183,7 +183,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->save($data);
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => null]]]));
         $data = [
             'Comment' => [
                 'body'    => 'test',

@@ -190,11 +190,6 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
     margin-right: 0;
 }
 
-.dropdown-menu a ,
-.notify-list-page a{
-    color: #231814;
-}
-
 .panel-body {
     padding: 10px 11px;
 }
@@ -1893,101 +1888,6 @@ ul.input-images > li {
 }
 
 /*/タブで切り替え*/
-
-/*メニューなどの▲マーク*/
-.frame-arrow-icon {
-    top: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ccc;
-}
-
-.frame-arrow-pic {
-    top: 98%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ccc;
-}
-
-.frame-arrow-notify {
-    top: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ccc;
-}
-
-.frame-arrow-icon::before {
-    content: "";
-    border: 8px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 8px solid #fff;
-    position: absolute;
-    right: 6%;
-    top: -15px;
-    z-index: 2;
-}
-
-.frame-arrow-icon::after {
-    content: "";
-    border: 8px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 8px solid #ccc;
-    position: absolute;
-    right: 6%;
-    top: -16px;
-}
-
-.frame-arrow-pic::before {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #fff;
-    position: absolute;
-    right: 14%;
-    top: -14px;
-    z-index: 2;
-}
-
-.frame-arrow-pic::after {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #ccc;
-    position: absolute;
-    right: 14%;
-    top: -15px;
-}
-
-.frame-arrow-notify::before {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #e5e5e5;
-    position: absolute;
-    right: 18%;
-    top: -14px;
-    z-index: 2;
-}
-
-.frame-arrow-notify::after {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #ccc;
-    position: absolute;
-    right: 18%;
-    top: -15px;
-}
-
-@media screen and (min-width: 768px) {
-    .frame-arrow-notify::before {
-        right: 5%;
-    }
-
-    .frame-arrow-notify::after {
-        right: 5%;
-    }
-
-}
-
-/*/メニューなどの▲マーク*/
 
 /*PostAreaのデザイン*/
 .post-panel-body {
@@ -3762,40 +3662,8 @@ Temporary Properties - YOU MUST FIX
     background: #e5e5e5;
 }
 
-.notify-icon {
-    width: 48px;
-    height: 48px;
-}
-
-.notify-dropdown-area {
-    width: 280px;
-    padding: 0;
-    right: -36px;
-}
-
-.notify-dropdown-lists {
-    margin: 0;
-    padding: 0;
-    max-height: 360px;
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 @media screen and (min-width: 768px) {
-    .notify-dropdown-area {
-        width: 320px;
-        max-height: 520px;
-    }
-
-    .notify-icon {
-        width: 64px;
-        height: 64px;
-    }
-
-    .notify-dropdown-lists {
-        max-height: 500px;
-    }
 
     .notify-line-number {
         margin: 0;
@@ -3822,19 +3690,6 @@ Temporary Properties - YOU MUST FIX
     vertical-align: top;
 }
 
-.notify-card {
-    display: block;
-    padding: 12px 8px 8px;
-}
-
-.dropdown-menu .notify-card:hover,
-.dropdown-menu .notify-card:focus,
-.notify-list-page .notify-card:hover,
-.notify-list-page .notify-card:focus {
-    color: #000;
-    background-color: #f0f0f0;
-}
-
 .notify-text {
     /*
         white-space: nowrap;
@@ -3843,12 +3698,6 @@ Temporary Properties - YOU MUST FIX
     */
     white-space: normal;
     overflow: hidden;
-}
-
-.dropdown-menu .notify-divider,
-.notify-list-page .notify-divider {
-    clear: both;
-    margin: 0;
 }
 
 .notify-contents {
@@ -4058,22 +3907,4 @@ Temporary Properties - YOU MUST FIX
 .notify-list-page {
     overflow: hidden;
     padding-left: 0;
-}
-
-.unread_notify {
-
-}
-
-.read_notify {
-    background-color: #F2EFEF;
-}
-
-.notify-all-view-link {
-    padding: 3px;
-}
-
-.notify-list-page .divider {
-    height: 1px;
-    overflow: hidden;
-    background-color: #e5e5e5;
 }
