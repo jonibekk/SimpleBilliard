@@ -127,8 +127,6 @@
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
                         <li class="text-align_c"><?= __d('gl', "準備中") ?></li>
 
-                        <!--
--->
                     </ul>
                 </div>
                 <a href="<?= $this->Html->url('/') ?>" class="header-home header-link"><?= __d('gl', "ホーム") ?></a>
@@ -162,6 +160,14 @@
                 <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
 
                 <div class="dropdown dropdown-menu-right navbar-nav-fix header-circle">
+                    <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
+                        <ul class="notify-dropdown-lists" id="bell-dropdown" role="menu">
+                            <li class="notify-card-empty" id="notifyCardEmpty">
+                                <i class="fa fa-smile-o font_33px mr_8px"></i><span
+                                    class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="btn btn-danger btn-xs bell-notify-box"
                          id="bellNum"
                          style="position: absolute;
@@ -175,16 +181,6 @@
                     <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
                     </a>
-
-                    <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
-                        <div class="notify-head"><?= __d('gl', "お知らせ") ?></div>
-                        <ul class="notify-dropdown-lists" id="bell-dropdown" role="menu">
-                            <li class="notify-card-empty" id="notifyCardEmpty">
-                                <i class="fa fa-smile-o font_33px mr_8px"></i><span
-                                    class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
                 <div class="pull-right header-function dropdown">
                     <?php if ($all_alert_cnt > 0): ?>

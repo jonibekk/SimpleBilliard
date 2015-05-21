@@ -18,7 +18,6 @@
            class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
     </li>
      -->
-    <li class="divider notify-divider"></li>
     <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
     <li class="text-align_c notify-all-view-link">
             <?= __d('gl', "すべて見る") ?>

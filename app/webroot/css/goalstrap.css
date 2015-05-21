@@ -1191,12 +1191,6 @@ select[multiple].input-lg {
     right: 0;
     left: auto;
 }
-.dropdown-menu .divider {
-    height: 1px;
-    margin: 9px 0;
-    overflow: hidden;
-    background-color: #e5e5e5;
-}
 .dropdown-menu > li > a {
     display: block;
     padding: 3px 20px;
@@ -1279,9 +1273,6 @@ select[multiple].input-lg {
     margin-bottom: 1px;
 }
 @media (min-width: 768px) {
-    .navbar-right .dropdown-menu {
-        left: auto;
-        right: 0;
     }
     .navbar-right .dropdown-menu-left {
         left: 0;

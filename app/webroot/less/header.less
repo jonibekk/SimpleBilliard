@@ -1,0 +1,25 @@
+.frame-arrow-icon {
+    top: 100%;
+    .frame-arrow;
+}
+
+.frame-arrow-icon::before {
+    content: "";
+    border: 8px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 8px solid #fff;
+    position: absolute;
+    right: 6%;
+    top: -15px;
+    z-index: 2;
+}
+
+.frame-arrow-icon::after {
+    content: "";
+    border: 8px solid transparent;
+    /*noinspection CssOverwrittenProperties*/
+    border-bottom: 8px solid #ccc;
+    position: absolute;
+    right: 6%;
+    top: -16px;
+}
