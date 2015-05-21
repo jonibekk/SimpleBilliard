@@ -10,19 +10,25 @@ class MixpanelComponent extends Object
 {
 
     const TRACK_CREATE_GOAL = 'CreGoal';
+    const TRACK_DELETE_GOAL = 'DelGoal';
+    const TRACK_UPDATE_GOAL = 'UpdGoal';
     const TRACK_COLLABORATE_GOAL = 'Clb';
+    const TRACK_WITHDRAW_COLLABORATE = "WidClb";
     const TRACK_FOLLOW_GOAL = 'FolGoal';
+    const TRACK_UN_FOLLOW_GOAL = 'UnFolGoal';
     const TRACK_CREATE_KR = 'CreKR';
+    const TRACK_DELETE_KR = 'DelKR';
+    const TRACK_UPDATE_KR = 'UpdKR';
     const TRACK_CREATE_ACTION = 'CreAct';
+    const TRACK_DELETE_ACTION = 'DelAct';
+    const TRACK_UPDATE_ACTION = 'UpdAct';
     const TRACK_POST = 'Post';
-    const TRACK_COMMENT_POST = 'CmtPost';
-    const TRACK_COMMENT_ACTION = 'CmtAct';
-    const TRACK_COMMENT_COMPLETED_KR = 'CmtCmpKR';
-    const TRACK_COMMENT_COMPLETED_GOAL = 'CmtCmpGoal';
-    const TRACK_POST_LIKE = 'LikePost';
-    const TRACK_APPROVAL_GOAL = 'ApvEva';
-    const TRACK_EVALUATION_ONESELF = 'Eva-Self';
-    const TRACK_EVALUATION_EVALUATOR = 'Eva-Evator';
+    const TRACK_COMMENT = 'Comment';
+    const TRACK_LIKE = 'Like';
+    const TRACK_APPROVAL = 'ApvAct';
+    const TRACK_EVALUATION = 'EvaAct';
+    const TRACK_2SV_ENABLE = '2SVEbl';
+    const TRACK_2SV_DISABLE = '2SVDbl';
 
     public $name = "Mixpanel";
 
