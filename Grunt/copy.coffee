@@ -22,7 +22,7 @@ module.exports = (grunt) ->
     cwd: '<%= config.dest %>/jssrc/'
     dest: '<%= config.webroot %>/js/'
     src: [
-      '*.css.map'
+      '*.js.map'
     ]
 
   #
