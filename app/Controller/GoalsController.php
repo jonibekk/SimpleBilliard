@@ -324,6 +324,15 @@ class GoalsController extends AppController
     public function edit_collabo($collabo_id = null)
     {
         $this->request->allowMethod('post', 'put');
+
+        // もしpriority=0のデータであれば認定対象外なのでvalued_flg=2を設定する
+        // そうでなければ再認定が必要なのでvalued_flg=0にする
+        $valued_flg = 0;
+        if ($this->request->data['Collaborator']['priority'] === '0') {
+            $valued_flg = 2;
+        }
+        $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
+
         if ($this->Goal->Collaborator->edit($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
             //if new
