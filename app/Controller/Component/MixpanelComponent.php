@@ -99,7 +99,7 @@ class MixpanelComponent extends Object
             '$default_team_id' => $user['User']['default_team_id'],
             '$language'        => $user['User']['language'],
             '$is_admin'        => $user['User']['is_admin'],
-            '$gender_id'       => $user['User']['gender_id'],
+            '$gender_type'     => $user['User']['gender_type'],
         ]);
     }
 
