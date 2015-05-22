@@ -496,6 +496,29 @@ class PostsController extends AppController
                         break;
                 }
 
+                $mixpanel_prop_name = null;
+                //mixpanel
+                switch ($type) {
+                    case Post::TYPE_NORMAL:
+                        $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_POST;
+                        break;
+                    case Post::TYPE_ACTION:
+                        $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_ACTION;
+                        break;
+                    case Post::TYPE_KR_COMPLETE:
+                        $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_COMPLETE_KR;
+                        break;
+                    case Post::TYPE_CREATE_GOAL:
+                        $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_CREATE_GOAL;
+                        break;
+                    case Post::TYPE_GOAL_COMPLETE:
+                        $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_COMPLETED_GOAL;
+                        break;
+                }
+                if ($mixpanel_prop_name) {
+                    $this->Mixpanel->trackComment($mixpanel_prop_name);
+                }
+
                 $result['msg'] = __d('gl', "コメントしました。");
             }
             else {

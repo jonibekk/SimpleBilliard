@@ -200,6 +200,16 @@ class MixpanelComponent extends Object
         $this->MpOrigin->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
     }
 
+    function trackComment($target_type)
+    {
+        $this->MpOrigin->track(self::TRACK_COMMENT, ['$target_type' => $target_type]);
+    }
+
+    function trackLike($target_type)
+    {
+        $this->MpOrigin->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
+    }
+
     /**
      * Add an array representing a message to be sent to Mixpanel to the in-memory queue.
      *
