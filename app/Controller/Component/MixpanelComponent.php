@@ -48,6 +48,11 @@ class MixpanelComponent extends Object
     const PROP_TARGET_COMPLETED_GOAL = 'Complete Goal';
     const PROP_LIKE_ITSELF = 'Itself';
     const PROP_LIKE_COMMENT = 'Comment';
+    const PROP_APPROVAL_MEMBER_COACH = 'Coach';
+    const PROP_APPROVAL_MEMBER_MEMBER = 'Member';
+    const PROP_EVALUATION_MEMBER_SELF = 'Self';
+    const PROP_EVALUATION_MEMBER_EVALUATOR = 'Evaluator';
+    const PROP_EVALUATION_MEMBER_LEADER = 'Leader';
 
     public $name = "Mixpanel";
 
