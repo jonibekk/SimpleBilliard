@@ -361,6 +361,10 @@ class GoalsController extends AppController
                     throw new RuntimeException(__d('gl', "権限がありません。"));
                 }
                 $this->Goal->KeyResult->complete($current_kr_id);
+                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
+                                           $goal_id,
+                                           $current_kr_id
+                );
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
