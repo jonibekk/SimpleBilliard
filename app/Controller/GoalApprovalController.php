@@ -246,6 +246,7 @@ class GoalApprovalController extends AppController
     public function changeStatus($data)
     {
         if (isset($this->request->data['comment_btn']) === true) {
+            //TODO ここでmixpanelなげる
             $this->comment($data);
 
         }
@@ -326,21 +327,6 @@ class GoalApprovalController extends AppController
         if (empty($cb_id) === false && empty($comment) === false) {
             // Todo: 第３パラメータに「1」がハードコーディングされているが、履歴表示の実装の時、定数化する
             $this->ApprovalHistory->add($cb_id, $this->user_id, 1, $comment);
-            $collaborator = $this->Collaborator->findById($cb_id);
-            if (viaIsSet($collaborator['Collaborator'])) {
-                $member_type = null;
-                //member
-                if ($collaborator['Collaborator']['user_id'] == $this->user_id) {
-                    $member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER;
-                }
-                //coach
-                else {
-                    $member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_COACH;
-                }
-                $this->_trackToMixpanel(MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_COMMENT_GOAL,
-                                        $member_type,
-                                        $cb_id);
-            }
         }
 
         $this->redirect($this->referer());
