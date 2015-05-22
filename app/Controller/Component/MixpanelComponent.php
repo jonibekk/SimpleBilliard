@@ -34,6 +34,8 @@ class MixpanelComponent extends Object
     const TRACK_EVALUATION = 'EvaAct';
     const TRACK_2SV_ENABLE = '2SVEbl';
     const TRACK_2SV_DISABLE = '2SVDbl';
+    const TRACK_ACHIEVE_GOAL = 'AchieveGoal';
+    const TRACK_ACHIEVE_KR = 'AchieveKR';
 
     /**
      * Property Values

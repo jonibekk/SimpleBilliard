@@ -423,9 +423,15 @@ class GoalsController extends AppController
                 //ゴール完了の投稿
                 $this->Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $key_result['KeyResult']['goal_id'], null);
                 $this->Goal->complete($goal['Goal']['id']);
+                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL,
+                                           $key_result['KeyResult']['goal_id'],
+                                           $kr_id);
                 $this->Pnotify->outSuccess(__d('gl', "ゴールを完了にしました。"));
             }
             else {
+                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
+                                           $key_result['KeyResult']['goal_id'],
+                                           $kr_id);
                 $this->Pnotify->outSuccess(__d('gl', "成果を完了にしました。"));
             }
         } catch (RuntimeException $e) {
@@ -546,8 +552,9 @@ class GoalsController extends AppController
             $this->Pnotify->outError(__('gl', "この操作の権限がありません。"));
         }
         $collabo = $this->Goal->Collaborator->findById($collabo_id);
-        if(!empty($collabo)){
-            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE, $collabo['Collaborator']['goal_id']);
+        if (!empty($collabo)) {
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE,
+                                       $collabo['Collaborator']['goal_id']);
         }
         $this->Goal->Collaborator->delete();
         $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
