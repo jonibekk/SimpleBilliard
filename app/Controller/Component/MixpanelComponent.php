@@ -132,7 +132,7 @@ class MixpanelComponent extends Object
                                          '$email'           => $user['PrimaryEmail']['email'],
                                          '$default_team_id' => $user['default_team_id'],
                                          '$language'        => $user['language'],
-                                         '$is_admin'        => $user['is_admin'],
+                                         '$is_admin'        => $user['admin_flg'],
                                          '$gender_type'     => $user['gender_type'],
                                      ]
         );
@@ -195,9 +195,9 @@ class MixpanelComponent extends Object
         $this->MpOrigin->track($track_type, $property);
     }
 
-    function trackPost()
+    function trackPost($share_type, $post_id)
     {
-
+        $this->MpOrigin->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
     }
 
     /**
