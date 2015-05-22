@@ -225,8 +225,11 @@ class GoalApprovalController extends AppController
             if ($val['Collaborator']['valued_flg'] === '1') {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
-            } else if ($val['Collaborator']['valued_flg'] === '2') {
-                $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
+            }
+            else {
+                if ($val['Collaborator']['valued_flg'] === '2') {
+                    $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
+                }
             }
         }
 
@@ -265,6 +268,10 @@ class GoalApprovalController extends AppController
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['approval']);
             $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION, $cb_id);
+            $this->_trackToMixpanel(MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_EVALUABLE,
+                                    MixpanelComponent::PROP_APPROVAL_MEMBER_COACH,
+                                    $cb_id);
+
             $this->comment($data);
         }
         $this->redirect($this->referer());
@@ -279,6 +286,10 @@ class GoalApprovalController extends AppController
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
             $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION, $cb_id);
+            $this->_trackToMixpanel(MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE,
+                                    MixpanelComponent::PROP_APPROVAL_MEMBER_COACH,
+                                    $cb_id);
+
             $this->comment($data);
         }
         $this->redirect($this->referer());
@@ -293,6 +304,9 @@ class GoalApprovalController extends AppController
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['modify']);
             $this->_notifyToCollaborator(NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE, $cb_id);
+            $this->_trackToMixpanel(MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_REVISION_REQUESTS,
+                                    MixpanelComponent::PROP_APPROVAL_MEMBER_COACH,
+                                    $cb_id);
             $this->comment($data);
         }
 
@@ -312,9 +326,36 @@ class GoalApprovalController extends AppController
         if (empty($cb_id) === false && empty($comment) === false) {
             // Todo: 第３パラメータに「1」がハードコーディングされているが、履歴表示の実装の時、定数化する
             $this->ApprovalHistory->add($cb_id, $this->user_id, 1, $comment);
+            $collaborator = $this->Collaborator->findById($cb_id);
+            if (viaIsSet($collaborator['Collaborator'])) {
+                $member_type = null;
+                //member
+                if ($collaborator['Collaborator']['user_id'] == $this->user_id) {
+                    $member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER;
+                }
+                //coach
+                else {
+                    $member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_COACH;
+                }
+                $this->_trackToMixpanel(MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_COMMENT_GOAL,
+                                        $member_type,
+                                        $cb_id);
+            }
         }
 
         $this->redirect($this->referer());
+    }
+
+    function _trackToMixpanel($approval_type, $approval_member_type, $cb_id)
+    {
+        $collaborator = $this->Collaborator->findById($cb_id);
+        if (viaIsSet($collaborator['Collaborator'])) {
+            $this->Mixpanel->trackApproval(
+                $approval_type,
+                $approval_member_type,
+                $collaborator['Collaborator']['goal_id']
+            );
+        }
     }
 
     /*

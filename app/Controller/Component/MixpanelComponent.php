@@ -50,6 +50,10 @@ class MixpanelComponent extends Object
     const PROP_LIKE_COMMENT = 'Comment';
     const PROP_APPROVAL_MEMBER_COACH = 'Coach';
     const PROP_APPROVAL_MEMBER_MEMBER = 'Member';
+    const PROP_APPROVAL_STATUS_APPROVAL_COMMENT_GOAL = 'Comment on Goal Approval';
+    const PROP_APPROVAL_STATUS_APPROVAL_REVISION_REQUESTS = 'Approval-revision requests';
+    const PROP_APPROVAL_STATUS_APPROVAL_EVALUABLE = 'Approval-Evaluable';
+    const PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE = 'Approval-Inevaluable';
     const PROP_EVALUATION_MEMBER_SELF = 'Self';
     const PROP_EVALUATION_MEMBER_EVALUATOR = 'Evaluator';
     const PROP_EVALUATION_MEMBER_LEADER = 'Leader';
@@ -212,6 +216,21 @@ class MixpanelComponent extends Object
     {
         $target_type = $this->getTargetTypeByPostType($post_type);
         $this->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
+    }
+
+    /**
+     * @param $approval_type
+     * @param $approval_member_type
+     * @param $goal_id
+     */
+    function trackApproval($approval_type, $approval_member_type, $goal_id)
+    {
+        $property = [
+            '$approval_type'        => $approval_type,
+            '$approval_member_type' => $approval_member_type,
+            '$goal_id'              => $goal_id,
+        ];
+        $this->track(self::TRACK_APPROVAL, $property);
     }
 
     function getTargetTypeByPostType($post_type)
