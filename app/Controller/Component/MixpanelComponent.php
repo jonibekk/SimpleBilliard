@@ -200,14 +200,39 @@ class MixpanelComponent extends Object
         $this->MpOrigin->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
     }
 
-    function trackComment($target_type)
+    function trackComment($post_type)
     {
+        $target_type = $this->getTargetTypeByPostType($post_type);
         $this->MpOrigin->track(self::TRACK_COMMENT, ['$target_type' => $target_type]);
     }
 
-    function trackLike($target_type)
+    function trackLike($post_type)
     {
+        $target_type = $this->getTargetTypeByPostType($post_type);
         $this->MpOrigin->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
+    }
+
+    function getTargetTypeByPostType($post_type)
+    {
+        $mixpanel_prop_name = null;
+        switch ($post_type) {
+            case Post::TYPE_NORMAL:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_POST;
+                break;
+            case Post::TYPE_ACTION:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_ACTION;
+                break;
+            case Post::TYPE_KR_COMPLETE:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_COMPLETE_KR;
+                break;
+            case Post::TYPE_CREATE_GOAL:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_CREATE_GOAL;
+                break;
+            case Post::TYPE_GOAL_COMPLETE:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_COMPLETED_GOAL;
+                break;
+        }
+        return $mixpanel_prop_name;
     }
 
     /**
