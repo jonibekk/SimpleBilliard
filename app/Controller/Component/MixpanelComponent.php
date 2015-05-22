@@ -155,9 +155,6 @@ class MixpanelComponent extends Object
      */
     function trackGoal($track_type, $goal_id, $kr_id = null, $action_id = null)
     {
-        if (!MIXPANEL_TOKEN) {
-            return;
-        }
         $property = [
             '$goal_id'              => $goal_id,
             '$goal_owner_type'      => null,
@@ -192,24 +189,24 @@ class MixpanelComponent extends Object
         if ($action_id) {
             $property['$action_id'] = $action_id;
         }
-        $this->MpOrigin->track($track_type, $property);
+        $this->track($track_type, $property);
     }
 
     function trackPost($share_type, $post_id)
     {
-        $this->MpOrigin->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
+        $this->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
     }
 
     function trackComment($post_type)
     {
         $target_type = $this->getTargetTypeByPostType($post_type);
-        $this->MpOrigin->track(self::TRACK_COMMENT, ['$target_type' => $target_type]);
+        $this->track(self::TRACK_COMMENT, ['$target_type' => $target_type]);
     }
 
     function trackLike($post_type)
     {
         $target_type = $this->getTargetTypeByPostType($post_type);
-        $this->MpOrigin->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
+        $this->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
     }
 
     function getTargetTypeByPostType($post_type)
