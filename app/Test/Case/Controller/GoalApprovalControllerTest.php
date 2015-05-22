@@ -44,11 +44,11 @@ class GoalApprovalControllerTest extends ControllerTestCase
         'app.job_category',
         'app.team_member',
         'app.member_type',
-
         'app.thread',
         'app.message',
         'app.evaluator',
         'app.evaluation_setting',
+        'app.evaluate_term',
         'app.email',
         'app.notify_setting',
         'app.oauth_token',
@@ -109,6 +109,19 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $this->testAction('/goal_approval/index', ['method' => 'GET']);
     }
 
+    function testIndexPost()
+    {
+        $this->_getGoalApprovalCommonMock();
+        $data = [
+            'GoalApproval' => [
+                'collaborator_id' => 1,
+                'comment'         => 'test'
+            ],
+            'comment_btn'  => null
+        ];
+        $this->testAction('/goal_approval/index', ['method' => 'POST', 'data' => $data]);
+    }
+
     function testDone()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
@@ -152,6 +165,19 @@ class GoalApprovalControllerTest extends ControllerTestCase
             'GoalApproval' => '',
         ];
         $this->testAction('/goal_approval/done', ['method' => 'GET']);
+    }
+
+    function testDonePost()
+    {
+        $this->_getGoalApprovalCommonMock();
+        $data = [
+            'GoalApproval' => [
+                'collaborator_id' => 1,
+                'comment'         => 'test'
+            ],
+            'comment_btn'  => null
+        ];
+        $this->testAction('/goal_approval/done', ['method' => 'POST', 'data' => $data]);
     }
 
     function testApproval()
@@ -516,6 +542,8 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $GoalApproval->Goal->Team->my_uid = 1;
         $GoalApproval->Goal->Team->current_team_id = 1;
+        $GoalApproval->ApprovalHistory->my_uid = 1;
+        $GoalApproval->ApprovalHistory->current_team_id = 1;
         $GoalApproval->Goal->Team->current_team = [
             'Team' => [
                 'start_term_month' => 4,
