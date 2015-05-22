@@ -233,6 +233,17 @@ class MixpanelComponent extends Object
         $this->track(self::TRACK_APPROVAL, $property);
     }
 
+    /**
+     * @param $member_type
+     */
+    function trackEvaluation($member_type)
+    {
+        $property = [
+            '$evaluation_member_type' => $member_type,
+        ];
+        $this->track(self::TRACK_EVALUATION, $property);
+    }
+
     function getTargetTypeByPostType($post_type)
     {
         $mixpanel_prop_name = null;
