@@ -178,15 +178,6 @@ class MixpanelComponent extends Object
         $this->MpOrigin->track($track_type, $property);
     }
 
-    function trackCreateAction($action_id, $goal_id = null, $kr_id = null)
-    {
-        if (!MIXPANEL_TOKEN) {
-            return;
-        }
-        $this->MpOrigin->track(self::TRACK_CREATE_ACTION,
-                               ['$action_id' => $action_id, '$goal_id' => $goal_id, '$kr_id' => $kr_id]);
-    }
-
     /**
      * Add an array representing a message to be sent to Mixpanel to the in-memory queue.
      *
