@@ -130,7 +130,13 @@ class MixpanelComponent extends Object
         return $this->user;
     }
 
-    function trackGoal($track_type, $goal_id)
+    /**
+     * @param      $track_type
+     * @param      $goal_id
+     * @param null $kr_id
+     * @param null $action_id
+     */
+    function trackGoal($track_type, $goal_id, $kr_id = null, $action_id = null)
     {
         if (!MIXPANEL_TOKEN) {
             return;
@@ -163,15 +169,13 @@ class MixpanelComponent extends Object
                 $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
             }
         }
-        $this->MpOrigin->track($track_type, $property);
-    }
-
-    function trackCreateKR($goal_id, $kr_id)
-    {
-        if (!MIXPANEL_TOKEN) {
-            return;
+        if ($kr_id) {
+            $property['$kr_id'] = $kr_id;
         }
-        $this->MpOrigin->track(self::TRACK_CREATE_KR, ['$goal_id' => $goal_id, '$kr_id' => $kr_id]);
+        if ($action_id) {
+            $property['$action_id'] = $action_id;
+        }
+        $this->MpOrigin->track($track_type, $property);
     }
 
     function trackCreateAction($action_id, $goal_id = null, $kr_id = null)

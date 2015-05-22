@@ -369,7 +369,8 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
-        $this->Mixpanel->trackCreateKR($goal_id, $this->Goal->KeyResult->getLastInsertID());
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
+                                   $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
         $this->redirect($this->referer());
@@ -395,6 +396,9 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -490,6 +494,8 @@ class GoalsController extends AppController
         $this->Goal->ActionResult->releaseKr($kr_id);
 
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
