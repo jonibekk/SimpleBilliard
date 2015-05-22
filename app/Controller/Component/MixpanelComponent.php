@@ -244,6 +244,11 @@ class MixpanelComponent extends Object
         $this->track(self::TRACK_EVALUATION, $property);
     }
 
+    function track2SV($track_type)
+    {
+        $this->track($track_type);
+    }
+
     function getTargetTypeByPostType($post_type)
     {
         $mixpanel_prop_name = null;

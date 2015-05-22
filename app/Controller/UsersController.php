@@ -759,6 +759,7 @@ class UsersController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Session->delete('2fa_secret_key');
+        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
         $this->Pnotify->outSuccess(__d('gl', "2段階認証の登録が完了しました。"));
         return $this->redirect($this->referer());
     }
@@ -779,6 +780,7 @@ class UsersController extends AppController
         if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
             $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }
+        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
         $this->Pnotify->outSuccess(__d('gl', "2段階認証を解除しました。"));
         return $this->redirect($this->referer());
     }
