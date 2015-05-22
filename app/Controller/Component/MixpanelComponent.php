@@ -82,15 +82,15 @@ class MixpanelComponent extends Object
             $this->MpOrigin = Mixpanel::getInstance(MIXPANEL_TOKEN);
             if ($this->Controller->Auth->user()) {
                 //mixpanelにユーザidをセット
-                $this->MpOrigin->identify($this->Controller->Auth->user('id'));
+                $this->identify($this->Controller->Auth->user('id'));
                 //チームIDをセット
-                $this->MpOrigin->register('$team_id', $this->Controller->Session->read('current_team_id'));
+                $this->register('$team_id', $this->Controller->Session->read('current_team_id'));
                 //性別をセット
-                $this->MpOrigin->register('$gender', $this->getGenderName());
+                $this->register('$gender', $this->getGenderName());
                 //言語をセット
-                $this->MpOrigin->register('$language', $user['language']);
+                $this->register('$language', $user['language']);
                 //タイムゾーンをセット
-                $this->MpOrigin->register('$timezone', $user['timezone']);
+                $this->register('$timezone', $user['timezone']);
             }
         }
     }
