@@ -520,6 +520,10 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Goal->ActionResult->id = $ar_id;
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_ACTION,
+                                   $action['ActionResult']['goal_id'],
+                                   $action['ActionResult']['key_result_id'],
+                                   $ar_id);
         $this->Goal->ActionResult->delete();
         if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
             $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
@@ -741,6 +745,10 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
         $action = $this->Goal->ActionResult->find('first',
                                                   ['conditions' => ['ActionResult.id' => $ar_id]]);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
+                                   $action['ActionResult']['goal_id'],
+                                   $action['ActionResult']['key_result_id'],
+                                   $ar_id);
         if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
             $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
         }
@@ -882,7 +890,8 @@ class GoalsController extends AppController
         $this->NotifyBiz->push($socket_id, $channelName);
 
         $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;
-        $this->Mixpanel->trackCreateAction($this->Goal->ActionResult->getLastInsertID(), $goal_id, $kr_id);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goal_id, $kr_id,
+                                   $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
                                          $this->Goal->ActionResult->getLastInsertID());
 
