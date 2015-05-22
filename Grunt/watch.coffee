@@ -1,6 +1,6 @@
 module.exports = (grunt) ->
 
-  # Setting of wathc.
+  # Setting of watch.
   # NOTICE: Now, I don't set livereload yet. I wanna set it someday.
   # If you set "spawn: false", you can use grunt-contrib-watch much faster.
   # We set 2 watch tasks
