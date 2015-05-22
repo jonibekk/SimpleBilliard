@@ -1,7 +1,7 @@
 module.exports = (grunt) ->
 
   # Setting of watch.
-  # NOTICE: Now, I don't set livereload yet. I wanna set it someday.
+  # NOTICE: I don't set livereload by Grunt. Use Global browser-sync :-) I wanna set it by Grunt someday.
   # If you set "spawn: false", you can use grunt-contrib-watch much faster.
   # We set 2 watch tasks
   # 1. coffee
