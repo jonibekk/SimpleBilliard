@@ -139,16 +139,16 @@ class GoalApprovalController extends AppController
         $this->user_id = $this->Auth->user('id');
         $this->team_id = $this->Session->read('current_team_id');
 
-        $this->setCoachFlag($this->user_id, $this->team_id);
-        $this->setMemberFlag($this->user_id, $this->team_id);
+        $this->_setCoachFlag($this->user_id, $this->team_id);
+        $this->_setMemberFlag($this->user_id, $this->team_id);
 
         // コーチ認定機能が使えるユーザーはトップページ
-        $this->user_type = $this->getUserType();
+        $this->user_type = $this->_getUserType();
         if ($this->user_type === 0) {
         }
 
         $this->my_evaluation_flg = $this->TeamMember->getEvaluationEnableFlg($this->user_id, $this->team_id);
-        $this->goal_user_ids = $this->getCollaboratorUserId();
+        $this->goal_user_ids = $this->_getCollaboratorUserId();
 
         $this->done_cnt = $this->Collaborator->countCollaboGoal(
             $this->team_id, $this->user_id, $this->goal_user_ids,
@@ -168,7 +168,7 @@ class GoalApprovalController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $goal_info = $this->getGoalInfo([$this->goal_status['unapproved'], $this->goal_status['modify']]);
+        $goal_info = $this->_getGoalInfo([$this->goal_status['unapproved'], $this->goal_status['modify']]);
 
         foreach ($goal_info as $key => $val) {
             $goal_info[$key]['my_goal'] = false;
@@ -204,7 +204,7 @@ class GoalApprovalController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $goal_info = $this->getGoalInfo([$this->goal_status['approval'], $this->goal_status['hold']]);
+        $goal_info = $this->_getGoalInfo([$this->goal_status['approval'], $this->goal_status['hold']]);
 
         foreach ($goal_info as $key => $val) {
             $goal_info[$key]['my_goal'] = false;
@@ -241,7 +241,7 @@ class GoalApprovalController extends AppController
         if (empty($data)) {
             return;
         }
-        $this->changeStatus($data);
+        $this->_changeStatus($data);
 
         $cb_id = viaIsSet($data['collaborator_id']);
         if (!$cb_id) {
@@ -260,62 +260,62 @@ class GoalApprovalController extends AppController
     /*
      * 認定状態変更コントロール
      */
-    public function changeStatus($data)
+    public function _changeStatus($data)
     {
         if (isset($this->request->data['comment_btn']) === true) {
-            $this->comment($data);
+            $this->_comment($data);
         }
         elseif (isset($this->request->data['wait_btn']) === true) {
-            $this->wait($data);
+            $this->_wait($data);
         }
         elseif (isset($this->request->data['approval_btn']) === true) {
-            $this->approval($data);
+            $this->_approval($data);
         }
         elseif (isset($this->request->data['modify_btn']) === true) {
-            $this->modify($data);
+            $this->_modify($data);
         }
     }
 
     /*
      * 承認する
      */
-    public function approval($data)
+    public function _approval($data)
     {
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['approval']);
-            $this->comment($data);
+            $this->_comment($data);
         }
     }
 
     /*
      * 承認しない
      */
-    public function wait($data)
+    public function _wait($data)
     {
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
-            $this->comment($data);
+            $this->_comment($data);
         }
     }
 
     /*
      * 修正依頼をする
      */
-    public function modify($data)
+    public function _modify($data)
     {
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['modify']);
-            $this->comment($data);
+            $this->_comment($data);
         }
     }
 
     /*
      *  コメントする
      */
-    public function comment($data)
+    public function _comment($data)
     {
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         $comment = isset($data['comment']) === true ? $data['comment'] : '';
@@ -359,7 +359,7 @@ class GoalApprovalController extends AppController
     /*
      * リストに表示するゴールのUserIDを取得
      */
-    public function getCollaboratorUserId()
+    public function _getCollaboratorUserId()
     {
         $goal_user_ids = [];
         if ($this->user_type === 1) {
@@ -377,7 +377,7 @@ class GoalApprovalController extends AppController
     /*
      * リストに表示するゴールのUserIDを取得
      */
-    public function getGoalInfo($goal_status)
+    public function _getGoalInfo($goal_status)
     {
         $goal_info = [];
         if ($this->user_type === 1) {
@@ -406,7 +406,7 @@ class GoalApprovalController extends AppController
     /*
      * ログインしているユーザーはコーチが存在するのか
      */
-    public function setCoachFlag($user_id, $team_id)
+    public function _setCoachFlag($user_id, $team_id)
     {
         $coach_id = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
         if (isset($coach_id['TeamMember']['coach_user_id']) === true
@@ -420,7 +420,7 @@ class GoalApprovalController extends AppController
     /*
      * ログインしているユーザーは管理するメンバー存在するのか
      */
-    public function setMemberFlag($user_id, $team_id)
+    public function _setMemberFlag($user_id, $team_id)
     {
         $member_ids = $this->TeamMember->selectUserIdFromTeamMembersTB($user_id, $team_id);
         if (empty($member_ids) === false) {
@@ -435,7 +435,7 @@ class GoalApprovalController extends AppController
      * 2: コーチいる、メンバーがいる
      * 3: コーチがいない、メンバーがいる
      */
-    public function getUserType()
+    public function _getUserType()
     {
 
         if ($this->coach_flag === true && $this->member_flag === false) {
