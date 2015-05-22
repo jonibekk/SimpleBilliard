@@ -11,6 +11,9 @@ App::uses('User', 'Model');
 class MixpanelComponent extends Object
 {
 
+    /**
+     * Event Name
+     */
     const TRACK_CREATE_GOAL = 'CreGoal';
     const TRACK_DELETE_GOAL = 'DelGoal';
     const TRACK_UPDATE_GOAL = 'UpdGoal';
@@ -31,6 +34,20 @@ class MixpanelComponent extends Object
     const TRACK_EVALUATION = 'EvaAct';
     const TRACK_2SV_ENABLE = '2SVEbl';
     const TRACK_2SV_DISABLE = '2SVDbl';
+
+    /**
+     * Property Values
+     */
+    const PROP_SHARE_CIRCLE = 'Circle';
+    const PROP_SHARE_MEMBERS = 'Members';
+    const PROP_SHARE_TEAM = 'Team';
+    const PROP_TARGET_POST = 'Post';
+    const PROP_TARGET_ACTION = 'Action';
+    const PROP_TARGET_COMPLETE_KR = 'Complete KR';
+    const PROP_TARGET_CREATE_GOAL = 'Create Goal';
+    const PROP_TARGET_COMPLETED_GOAL = 'Complete Goal';
+    const PROP_LIKE_ITSELF = 'Itself';
+    const PROP_LIKE_COMMENT = 'Comment';
 
     public $name = "Mixpanel";
 
@@ -176,6 +193,11 @@ class MixpanelComponent extends Object
             $property['$action_id'] = $action_id;
         }
         $this->MpOrigin->track($track_type, $property);
+    }
+
+    function trackPost()
+    {
+
     }
 
     /**
