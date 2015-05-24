@@ -76,6 +76,10 @@ class GoalApprovalController extends AppController
      * 3: メンバーのみ存在
      */
     public $user_type = 0;
+    const USER_TYPE_NOT_AVAILABLE = 0;
+    const USER_TYPE_ONLY_COACH = 1;
+    const USER_TYPE_COACH_AND_MEMBER = 2;
+    const USER_TYPE_ONLY_MEMBER = 3;
 
     /*
      * ログインユーザーのuser_id
@@ -144,7 +148,7 @@ class GoalApprovalController extends AppController
 
         // コーチ認定機能が使えるユーザーはトップページ
         $this->user_type = $this->_getUserType();
-        if ($this->user_type === 0) {
+        if ($this->user_type === self::USER_TYPE_NOT_AVAILABLE) {
         }
 
         $this->my_evaluation_flg = $this->TeamMember->getEvaluationEnableFlg($this->user_id, $this->team_id);
@@ -323,8 +327,7 @@ class GoalApprovalController extends AppController
         // 現状はコメントがある時、履歴を追加している。
         // 今後はコメントなくてもアクションステータスを格納する必要あり。
         if (empty($cb_id) === false && empty($comment) === false) {
-            // Todo: 第３パラメータに「1」がハードコーディングされているが、履歴表示の実装の時、定数化する
-            $this->ApprovalHistory->add($cb_id, $this->user_id, 1, $comment);
+            $this->ApprovalHistory->add($cb_id, $this->user_id, ApprovalHistory::ACTION_STATUS_ONLY_COMMENT, $comment);
         }
     }
 
@@ -362,13 +365,13 @@ class GoalApprovalController extends AppController
     public function _getCollaboratorUserId()
     {
         $goal_user_ids = [];
-        if ($this->user_type === 1) {
+        if ($this->user_type === self::USER_TYPE_ONLY_COACH) {
             $goal_user_ids = [$this->user_id];
         }
-        elseif ($this->user_type === 2) {
+        elseif ($this->user_type === self::USER_TYPE_COACH_AND_MEMBER) {
             $goal_user_ids = array_merge([$this->user_id], $this->member_ids);
         }
-        elseif ($this->user_type === 3) {
+        elseif ($this->user_type === self::USER_TYPE_ONLY_MEMBER) {
             $goal_user_ids = $this->member_ids;
         }
         return $goal_user_ids;
@@ -380,12 +383,12 @@ class GoalApprovalController extends AppController
     public function _getGoalInfo($goal_status)
     {
         $goal_info = [];
-        if ($this->user_type === 1) {
+        if ($this->user_type === self::USER_TYPE_ONLY_COACH) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, [$this->user_id], $goal_status);
 
         }
-        elseif ($this->user_type === 2) {
+        elseif ($this->user_type === self::USER_TYPE_COACH_AND_MEMBER) {
             $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, $this->member_ids, $goal_status, false);
 
@@ -395,7 +398,7 @@ class GoalApprovalController extends AppController
             $goal_info = array_merge($member_goal_info, $my_goal_info);
 
         }
-        elseif ($this->user_type === 3) {
+        elseif ($this->user_type === self::USER_TYPE_ONLY_MEMBER) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, $this->member_ids, $goal_status, false);
         }
@@ -439,18 +442,18 @@ class GoalApprovalController extends AppController
     {
 
         if ($this->coach_flag === true && $this->member_flag === false) {
-            return 1;
+            return self::USER_TYPE_ONLY_COACH;
         }
 
         if ($this->coach_flag === true && $this->member_flag === true) {
-            return 2;
+            return self::USER_TYPE_COACH_AND_MEMBER;
         }
 
         if ($this->coach_flag === false && $this->member_flag === true) {
-            return 3;
+            return self::USER_TYPE_ONLY_MEMBER;
         }
 
-        return 0;
+        return self::USER_TYPE_NOT_AVAILABLE;
     }
 
     /**

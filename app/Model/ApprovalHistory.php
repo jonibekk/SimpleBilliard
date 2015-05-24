@@ -10,6 +10,12 @@ App::uses('AppModel', 'Model');
 class ApprovalHistory extends AppModel
 {
 
+    const ACTION_STATUS_NO_ACTION = 0;
+    const ACTION_STATUS_ONLY_COMMENT = 1;
+    const ACTION_STATUS_EVALUABLE = 2;
+    const ACTION_STATUS_NOT_EVALUABLE = 3;
+    const ACTION_STATUS_REQUEST_MODIFY = 4;
+
     /**
      * Validation rules
      *
@@ -37,17 +43,17 @@ class ApprovalHistory extends AppModel
         'User',
     ];
 
-    function add($collaborator_id, $user_id, $action_status=0, $comment='')
+    function add($collaborator_id, $user_id, $action_status = 0, $comment = '')
     {
-        if ($action_status === 0 && empty($comment) === true) {
+        if ($action_status === self::ACTION_STATUS_NO_ACTION && empty($comment) === true) {
             return;
         }
 
         $param = [
             'collaborator_id' => $collaborator_id,
-            'user_id' => $user_id,
-            'action_status' => $action_status,
-            'comment' => $comment,
+            'user_id'         => $user_id,
+            'action_status'   => $action_status,
+            'comment'         => $comment,
         ];
 
         return $this->save($param);
