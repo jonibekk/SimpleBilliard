@@ -1185,6 +1185,10 @@ $(document).ready(function () {
                     regexp: {
                         regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
                         message: cake.message.validate.e
+                    },
+                    different: {
+                        field: 'data[Email][0][email]',
+                        message: cake.message.validate.f
                     }
                 }
             },
