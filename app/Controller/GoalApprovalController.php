@@ -91,10 +91,10 @@ class GoalApprovalController extends AppController
      * 評価ステータス
      */
     public $goal_status = [
-        'unapproved' => 0,
-        'approval'   => 1,
-        'hold'       => 2,
-        'modify'     => 3,
+        'unapproved' => Collaborator::STATUS_UNAPPROVED,
+        'approval'   => Collaborator::STATUS_APPROVAL,
+        'hold'       => Collaborator::STATUS_HOLD,
+        'modify'     => Collaborator::STATUS_MODIFY,
     ];
 
     /*
@@ -181,7 +181,7 @@ class GoalApprovalController extends AppController
                 }
             }
 
-            if ($val['Collaborator']['valued_flg'] === '3') {
+            if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_MODIFY) {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::MODIFY_MEMBER_GOAL_MSG];
             }
 
@@ -217,12 +217,12 @@ class GoalApprovalController extends AppController
                 }
             }
 
-            if ($val['Collaborator']['valued_flg'] === '1') {
+            if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
             }
             else {
-                if ($val['Collaborator']['valued_flg'] === '2') {
+                if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) {
                     $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
                 }
             }
