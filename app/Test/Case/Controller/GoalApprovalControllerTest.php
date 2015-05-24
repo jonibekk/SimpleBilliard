@@ -366,6 +366,24 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $this->assertEquals($valued_flg, Collaborator::STATUS_MODIFY);
     }
 
+    function testTrackToMixpanel()
+    {
+        $GoalApprovals = $this->_getGoalApprovalCommonMock();
+
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['comment_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['wait_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['approval_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['modify_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+    }
+
     function testSetCoachFlagTrue()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
