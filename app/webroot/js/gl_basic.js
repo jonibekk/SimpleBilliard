@@ -1088,7 +1088,7 @@ function warningAction(class_name) {
         if ($(this).data('form-data') != $(this).find('form').serialize()) {
             if (!confirm(cake.message.notice.a)) {
                 e.preventDefault();
-            }else{
+            } else {
                 $.clearInput($(this));
             }
 
@@ -1181,6 +1181,10 @@ $(document).ready(function () {
                     stringLength: {
                         min: 8,
                         message: cake.message.validate.a
+                    },
+                    regexp: {
+                        regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
+                        message: cake.message.validate.e
                     }
                 }
             },
