@@ -99,7 +99,7 @@ class UsersController extends AppController
         // 2要素認証設定OFFの場合
         // 2要素認証設定ONかつ、設定して30日以内の場合
         if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
-                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))
+                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id'], $ip_address))
         ) {
             $is_2fa_auth_enabled = false;
         }
