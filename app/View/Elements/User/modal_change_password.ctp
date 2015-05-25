@@ -95,6 +95,10 @@
                         },
                         notEmpty: {
                             message: "<?=__d('validate', "入力必須項目です。")?>"
+                        },
+                        regexp: {
+                            regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
+                            message: cake.message.validate.e
                         }
                     }
                 },

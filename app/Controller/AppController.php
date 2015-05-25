@@ -398,13 +398,13 @@ class AppController extends Controller
     function _setBasicAuth()
     {
         $this->autoRender = false;
-        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+        if (!env('PHP_AUTH_USER')) {
             header('WWW-Authenticate: Basic realm="Private Page"');
             header('HTTP/1.0 401 Unauthorized');
             die("id / password Required");
         }
         else {
-            if ($_SERVER['PHP_AUTH_USER'] != BASIC_AUTH_ID || $_SERVER['PHP_AUTH_PW'] != BASIC_AUTH_PASS) {
+            if (env('PHP_AUTH_USER') != BASIC_AUTH_ID || env('PHP_AUTH_PW') != BASIC_AUTH_PASS) {
                 header('WWW-Authenticate: Basic realm="Private Page"');
                 header('HTTP/1.0 401 Unauthorized');
                 die("Invalid id / password combination.  Please try again");

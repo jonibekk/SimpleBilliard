@@ -1088,7 +1088,7 @@ function warningAction(class_name) {
         if ($(this).data('form-data') != $(this).find('form').serialize()) {
             if (!confirm(cake.message.notice.a)) {
                 e.preventDefault();
-            }else{
+            } else {
                 $.clearInput($(this));
             }
 
@@ -1181,6 +1181,14 @@ $(document).ready(function () {
                     stringLength: {
                         min: 8,
                         message: cake.message.validate.a
+                    },
+                    regexp: {
+                        regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
+                        message: cake.message.validate.e
+                    },
+                    different: {
+                        field: 'data[Email][0][email]',
+                        message: cake.message.validate.f
                     }
                 }
             },
@@ -1685,10 +1693,26 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
+        $('.showmore-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '900px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+
         $('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+
+        $('.showmore-comment-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '920px',
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
@@ -2366,4 +2390,8 @@ function updateListBox() {
         }
     });
     return false;
+}
+
+function copyToClipboard(url) {
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
 }

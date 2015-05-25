@@ -1,4 +1,6 @@
 <?php
+App::uses('Collaborator', 'Model');
+App::uses('User', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -9,20 +11,54 @@
 class MixpanelComponent extends Object
 {
 
+    /**
+     * Event Name
+     */
     const TRACK_CREATE_GOAL = 'CreGoal';
+    const TRACK_DELETE_GOAL = 'DelGoal';
+    const TRACK_UPDATE_GOAL = 'UpdGoal';
     const TRACK_COLLABORATE_GOAL = 'Clb';
+    const TRACK_WITHDRAW_COLLABORATE = "WidClb";
     const TRACK_FOLLOW_GOAL = 'FolGoal';
+    const TRACK_UN_FOLLOW_GOAL = 'UnFolGoal';
     const TRACK_CREATE_KR = 'CreKR';
+    const TRACK_DELETE_KR = 'DelKR';
+    const TRACK_UPDATE_KR = 'UpdKR';
     const TRACK_CREATE_ACTION = 'CreAct';
+    const TRACK_DELETE_ACTION = 'DelAct';
+    const TRACK_UPDATE_ACTION = 'UpdAct';
     const TRACK_POST = 'Post';
-    const TRACK_COMMENT_POST = 'CmtPost';
-    const TRACK_COMMENT_ACTION = 'CmtAct';
-    const TRACK_COMMENT_COMPLETED_KR = 'CmtCmpKR';
-    const TRACK_COMMENT_COMPLETED_GOAL = 'CmtCmpGoal';
-    const TRACK_POST_LIKE = 'LikePost';
-    const TRACK_APPROVAL_GOAL = 'ApvEva';
-    const TRACK_EVALUATION_ONESELF = 'Eva-Self';
-    const TRACK_EVALUATION_EVALUATOR = 'Eva-Evator';
+    const TRACK_COMMENT = 'Comment';
+    const TRACK_LIKE = 'Like';
+    const TRACK_APPROVAL = 'ApvAct';
+    const TRACK_EVALUATION = 'EvaAct';
+    const TRACK_2SV_ENABLE = '2SVEbl';
+    const TRACK_2SV_DISABLE = '2SVDbl';
+    const TRACK_ACHIEVE_GOAL = 'AchieveGoal';
+    const TRACK_ACHIEVE_KR = 'AchieveKR';
+
+    /**
+     * Property Values
+     */
+    const PROP_SHARE_CIRCLE = 'Circle';
+    const PROP_SHARE_MEMBERS = 'Members';
+    const PROP_SHARE_TEAM = 'Team';
+    const PROP_TARGET_POST = 'Post';
+    const PROP_TARGET_ACTION = 'Action';
+    const PROP_TARGET_COMPLETE_KR = 'Complete KR';
+    const PROP_TARGET_CREATE_GOAL = 'Create Goal';
+    const PROP_TARGET_COMPLETED_GOAL = 'Complete Goal';
+    const PROP_LIKE_ITSELF = 'Itself';
+    const PROP_LIKE_COMMENT = 'Comment';
+    const PROP_APPROVAL_MEMBER_COACH = 'Coach';
+    const PROP_APPROVAL_MEMBER_MEMBER = 'Member';
+    const PROP_APPROVAL_STATUS_APPROVAL_COMMENT_GOAL = 'Comment on Goal Approval';
+    const PROP_APPROVAL_STATUS_APPROVAL_REVISION_REQUESTS = 'Approval-revision requests';
+    const PROP_APPROVAL_STATUS_APPROVAL_EVALUABLE = 'Approval-Evaluable';
+    const PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE = 'Approval-Inevaluable';
+    const PROP_EVALUATION_MEMBER_SELF = 'Self';
+    const PROP_EVALUATION_MEMBER_EVALUATOR = 'Evaluator';
+    const PROP_EVALUATION_MEMBER_LEADER = 'Leader';
 
     public $name = "Mixpanel";
 
@@ -38,18 +74,38 @@ class MixpanelComponent extends Object
 
     var $trackProperty = [];
 
+    var $user;
+
     function initialize(&$controller)
     {
         $this->Controller = $controller;
+        $user = $this->getUserInfo();
         if (MIXPANEL_TOKEN) {
             $this->MpOrigin = Mixpanel::getInstance(MIXPANEL_TOKEN);
             if ($this->Controller->Auth->user()) {
                 //mixpanelにユーザidをセット
-                $this->MpOrigin->identify($this->Controller->Auth->user('id'));
+                $this->identify($this->Controller->Auth->user('id'));
                 //チームIDをセット
-                $this->MpOrigin->register('$team_id', $this->Controller->Session->read('current_team_id'));
+                $this->register('$team_id', $this->Controller->Session->read('current_team_id'));
+                //性別をセット
+                $this->register('$gender', $this->getGenderName());
+                //言語をセット
+                $this->register('$language', $user['language']);
+                //タイムゾーンをセット
+                $this->register('$timezone', $user['timezone']);
             }
         }
+    }
+
+    function getGenderName()
+    {
+        $user = $this->getUserInfo();
+        $gender_types = [
+            User::TYPE_GENDER_MALE    => 'male',
+            User::TYPE_GENDER_FEMALE  => 'female',
+            User::TYPE_GENDER_NEITHER => 'other'
+        ];
+        return isset($gender_types[$user['gender_type']]) ? $gender_types[$user['gender_type']] : null;
     }
 
     function startup()
@@ -71,71 +127,151 @@ class MixpanelComponent extends Object
 
     /**
      * ユーザ情報をセット
-     *
-     * @param $user_id
      */
-    function setUser($user_id)
+    function setUser()
     {
         if (!MIXPANEL_TOKEN) {
             return;
         }
 
-        $options = [
-            'conditions' => ['User.id' => $user_id],
-            'contain'    => ['PrimaryEmail',]
-        ];
-        $user = $this->Controller->User->find('first', $options);
+        $user = $this->getUserInfo();
         //ユーザ情報をセット
-        $this->MpOrigin->people->set($user['User']['id'], [
-            '$first_name'      => $user['User']['first_name'],
-            '$last_name'       => $user['User']['last_name'],
-            '$email'           => $user['PrimaryEmail']['email'],
-            '$default_team_id' => $user['User']['default_team_id'],
-            '$language'        => $user['User']['language'],
-            '$is_admin'        => $user['User']['is_admin'],
-            '$gender_id'       => $user['User']['gender_id'],
-        ]);
+        $this->MpOrigin->people->set($user['id'],
+                                     [
+                                         '$first_name'      => $user['first_name'],
+                                         '$last_name'       => $user['last_name'],
+                                         '$email'           => $user['PrimaryEmail']['email'],
+                                         '$default_team_id' => $user['default_team_id'],
+                                         '$language'        => $user['language'],
+                                         '$is_admin'        => $user['admin_flg'],
+                                         '$gender_type'     => $this->getGenderName(),
+                                     ]
+        );
     }
 
-    function trackCreateGoal($goal_id)
+    function getUserInfo()
     {
-        if (!MIXPANEL_TOKEN) {
-            return;
+        if ($this->user) {
+            return $this->user;
         }
-        $this->MpOrigin->track(self::TRACK_CREATE_GOAL, ['$goal_id' => $goal_id]);
+        $this->user = $this->Controller->Auth->user();
+        return $this->user;
     }
 
-    function trackCollaborateGoal($goal_id)
+    /**
+     * @param      $track_type
+     * @param      $goal_id
+     * @param null $kr_id
+     * @param null $action_id
+     */
+    function trackGoal($track_type, $goal_id, $kr_id = null, $action_id = null)
     {
-        if (!MIXPANEL_TOKEN) {
-            return;
+        $property = [
+            '$goal_id'              => $goal_id,
+            '$goal_owner_type'      => null,
+            '$goal_approval_status' => null,
+        ];
+
+        if ($track_type != self::TRACK_FOLLOW_GOAL && $track_type != self::TRACK_UN_FOLLOW_GOAL) {
+            $user_id = $this->Controller->Auth->user('id');
+            $team_id = $this->Controller->Session->read('current_team_id');
+
+            $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id);
+            if (empty($collabo)) {
+                $collabo = $this->Controller->Goal->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
+            }
+            if (isset($collabo['Collaborator']['type'])) {
+                $property['$goal_owner_type'] = $collabo['Collaborator']['type'] == Collaborator::TYPE_OWNER ? 'L' : 'C';
+            }
+
+            $approval_status = [
+                Collaborator::STATUS_UNAPPROVED => "Pending approval",
+                Collaborator::STATUS_APPROVAL   => "Evaluable",
+                Collaborator::STATUS_HOLD       => "Not evaluable",
+                Collaborator::STATUS_MODIFY     => "Pending modification",
+            ];
+            if (isset($collabo['Collaborator']['valued_flg'])) {
+                $property['$goal_approval_status'] = $approval_status[$collabo['Collaborator']['valued_flg']];
+            }
         }
-        $this->MpOrigin->track(self::TRACK_COLLABORATE_GOAL, ['$goal_id' => $goal_id]);
+        if ($kr_id) {
+            $property['$kr_id'] = $kr_id;
+        }
+        if ($action_id) {
+            $property['$action_id'] = $action_id;
+        }
+        $this->track($track_type, $property);
     }
 
-    function trackFollowGoal($goal_id)
+    function trackPost($share_type, $post_id)
     {
-        if (!MIXPANEL_TOKEN) {
-            return;
-        }
-        $this->MpOrigin->track(self::TRACK_FOLLOW_GOAL, ['$goal_id' => $goal_id]);
+        $this->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
     }
 
-    function trackCreateKR($goal_id, $kr_id)
+    function trackComment($post_type)
     {
-        if (!MIXPANEL_TOKEN) {
-            return;
-        }
-        $this->MpOrigin->track(self::TRACK_CREATE_KR, ['$goal_id' => $goal_id, '$kr_id' => $kr_id]);
+        $target_type = $this->getTargetTypeByPostType($post_type);
+        $this->track(self::TRACK_COMMENT, ['$target_type' => $target_type]);
     }
 
-    function trackCreateAction($action_id, $goal_id = null, $kr_id = null)
+    function trackLike($post_type)
     {
-        if (!MIXPANEL_TOKEN) {
-            return;
+        $target_type = $this->getTargetTypeByPostType($post_type);
+        $this->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
+    }
+
+    /**
+     * @param $approval_type
+     * @param $approval_member_type
+     * @param $goal_id
+     */
+    function trackApproval($approval_type, $approval_member_type, $goal_id)
+    {
+        $property = [
+            '$approval_type'        => $approval_type,
+            '$approval_member_type' => $approval_member_type,
+            '$goal_id'              => $goal_id,
+        ];
+        $this->track(self::TRACK_APPROVAL, $property);
+    }
+
+    /**
+     * @param $member_type
+     */
+    function trackEvaluation($member_type)
+    {
+        $property = [
+            '$evaluation_member_type' => $member_type,
+        ];
+        $this->track(self::TRACK_EVALUATION, $property);
+    }
+
+    function track2SV($track_type)
+    {
+        $this->track($track_type);
+    }
+
+    function getTargetTypeByPostType($post_type)
+    {
+        $mixpanel_prop_name = null;
+        switch ($post_type) {
+            case Post::TYPE_NORMAL:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_POST;
+                break;
+            case Post::TYPE_ACTION:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_ACTION;
+                break;
+            case Post::TYPE_KR_COMPLETE:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_COMPLETE_KR;
+                break;
+            case Post::TYPE_CREATE_GOAL:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_CREATE_GOAL;
+                break;
+            case Post::TYPE_GOAL_COMPLETE:
+                $mixpanel_prop_name = MixpanelComponent::PROP_TARGET_COMPLETED_GOAL;
+                break;
         }
-        $this->MpOrigin->track(self::TRACK_CREATE_ACTION,
-                               ['$action_id' => $action_id, '$goal_id' => $goal_id, '$kr_id' => $kr_id]);
+        return $mixpanel_prop_name;
     }
 
     /**

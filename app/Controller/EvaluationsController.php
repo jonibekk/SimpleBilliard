@@ -157,13 +157,17 @@ class EvaluationsController extends AppController
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,
                                                  $next_evaluation_id);
             }
+            $mixpanel_member_type = null;
             if ($evalType == Evaluation::TYPE_ONESELF) {
                 $savedMsg = __d('gl', "自己評価を確定しました。");
+                $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_SELF;
 
             }
             elseif ($evalType == Evaluation::TYPE_EVALUATOR) {
                 $savedMsg = __d('gl', "評価者の評価を確定しました。");
+                $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_EVALUATOR;
             }
+            $this->Mixpanel->trackEvaluation($mixpanel_member_type);
         }
         $this->Pnotify->outSuccess($savedMsg);
         return $this->redirect($this->referer());

@@ -56,16 +56,29 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
+        $mixpanel_prop_name = null;
         // チーム全体公開が含まれている場合はチーム全体にのみpush
         if (in_array("public", $share)) {
             $this->NotifyBiz->push($socketId, "public");
+            $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
         }
         else {
+            $share_circle = false;
             // それ以外の場合は共有先の数だけ回す
             foreach ($share as $val) {
+                if (strpos($val, "circle") !== false) {
+                    $share_circle = true;
+                }
                 $this->NotifyBiz->push($socketId, $val);
             }
+            if ($share_circle) {
+                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
+            }
+            else {
+                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
+            }
         }
+        $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
 
@@ -252,6 +265,7 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
+
         $response = $this->render('Feed/action_posts');
         $html = $response->__toString();
         $result = array(
@@ -279,8 +293,12 @@ class PostsController extends AppController
     public function ajax_get_old_comment($post_id, $get_num)
     {
         $this->_ajaxPreProcess();
-
         $comments = $this->Post->Comment->getPostsComment($post_id, $get_num);
+        $long_text = false;
+        if (isset($this->request->params['named']['long_text'])) {
+            $long_text = $this->request->params['named']['long_text'];
+        }
+        $this->set('long_text', $long_text);
         $this->set(compact('comments'));
 
         //エレメントの出力を変数に格納する
@@ -290,6 +308,7 @@ class PostsController extends AppController
         $result = array(
             'html' => $html
         );
+
         return $this->_ajaxGetResponse($result);
     }
 
@@ -379,6 +398,11 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $res = $this->Post->PostLike->changeLike($post_id);
+        if ($res['is_liked']) {
+            $post = $this->Post->findById($post_id);
+            $type = viaIsSet($post['Post']['type']);
+            $this->Mixpanel->trackLike($type);
+        }
         return $this->_ajaxGetResponse($res);
     }
 
@@ -482,6 +506,8 @@ class PostsController extends AppController
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
                 }
+                //mixpanel
+                $this->Mixpanel->trackComment($type);
 
                 $result['msg'] = __d('gl', "コメントしました。");
             }
@@ -530,6 +556,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
+        $this->set('long_text', true);
         $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params',
                            'circle_status'));
         try {
@@ -592,7 +619,7 @@ class PostsController extends AppController
      * @param array  $requestData
      * @param string $body
      *
-     * @return $requestData
+     * @return array $requestData
      */
     function _addOgpIndexes($requestData, $body)
     {

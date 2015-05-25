@@ -37,6 +37,14 @@ module.exports = (grunt) ->
       '*.min.css'
     ]
 
+  readme:
+    expand: true
+    cwd: '<%= config.docs %>/css/'
+    dest: '<%= config.less %>/'
+    src: [
+      'README.md'
+    ]
+
   #
   # [*.css.map]
   # dest/csssrc -> app/webroot/css

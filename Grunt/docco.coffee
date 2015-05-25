@@ -6,7 +6,7 @@ module.exports = (grunt) ->
   release:
     src: ['<%= config.coffee %>/**/*.coffee']
     options:
-      output: '<%= config.docs %>/docco'
+      output: '<%= config.docs %>/js'
 
   #
   # make coffee docs for Grunt

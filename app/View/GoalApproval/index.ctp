@@ -116,7 +116,7 @@
                             <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>
                                 : <?= h($goal['Goal']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
+                            <p class="approval_body_text"><?= $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "役割") ?>
@@ -170,7 +170,7 @@
                                         <?= $this->Form->button(__d('gl', "評価対象にしない"),
                                                                 ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div' => false]) ?>
                                     <?php }
-                                    elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === '1' && $goal['Collaborator']['valued_flg'] === '3') { ?>
+                                    elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER && $goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_MODIFY) { ?>
                                         <a class="btn btn-primary approval_button"
                                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?= __d('gl',
                                                                                                                                                                   "ゴールを修正する") ?>
@@ -184,7 +184,7 @@
 
                             <div class="row">
                                 <div class="approval_botton_area">
-                                    <?php if ($goal['my_goal'] === true || ($goal['my_goal'] === false && $goal['Collaborator']['type'] === '0')) { ?>
+                                    <?php if ($goal['my_goal'] === true || ($goal['my_goal'] === false && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_COLLABORATOR)) { ?>
                                         <?= $this->Form->button(__d('gl', "コメントする"),
                                                                 ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                     <?php }
