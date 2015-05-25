@@ -2391,3 +2391,7 @@ function updateListBox() {
     });
     return false;
 }
+
+function copyToClipboard(url) {
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
+}
