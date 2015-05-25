@@ -729,7 +729,8 @@ class UsersController extends AppController
             $google_2fa_secret_key = $this->TwoFa->generateSecretKey();
             $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
         }
-        $url_2fa = $this->TwoFa->getQRCodeGoogleUrl('Goalous',
+
+        $url_2fa = $this->TwoFa->getQRCodeGoogleUrl(SERVICE_NAME,
                                                     $this->Session->read('Auth.User.PrimaryEmail.email'),
                                                     $google_2fa_secret_key);
         $this->set(compact('url_2fa'));
