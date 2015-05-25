@@ -36,7 +36,6 @@ module.exports = (grunt) ->
   grunt.registerTask 'jsdocs', [
     'docco:release'
     'concat:jsDocs'
-    'clean:docco'
   ]
 
   #
@@ -47,7 +46,6 @@ module.exports = (grunt) ->
     'copy:readme'
     'styleguide'
     'concat:cssDocs'
-    'clean:styledocco'
   ]
 
   #
@@ -58,7 +56,6 @@ module.exports = (grunt) ->
     'coffeelint:gruntlint'
     'docco:gruntDocs'
     'concat:gruntDocs'
-    'clean:gruntDocs'
   ]
 
   #
