@@ -402,7 +402,7 @@ class GlRedis extends AppModel
      *
      * @return bool
      */
-    function isExistsDeviceHash($team_id, $user_id, $ip_address)
+    function isExistsDeviceHash($team_id, $user_id, $ip_address = null)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_DEVICE_HASHES, $team_id, $user_id);
         $hash_key = $this->makeDeviceHash($user_id, $ip_address);
