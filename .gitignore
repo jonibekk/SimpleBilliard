@@ -40,6 +40,10 @@ npm-debug.log
 /docs/grunt
 /docs/frontend
 /docs/index.html
+/docs/css
+/docs/js
+/app/webroot/less/README.md
+/index.html
 # for dest files of a less and coffee maps
 /app/webroot/css/goalous.css.map
 /app/webroot/js/*.js.map
