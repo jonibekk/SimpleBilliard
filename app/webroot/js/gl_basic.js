@@ -1693,10 +1693,26 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
+        $('.showmore-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '900px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+
         $('.showmore-comment').showMore({
             speedDown: 300,
             speedUp: 300,
             height: '105px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+
+        $('.showmore-comment-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '920px',
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });

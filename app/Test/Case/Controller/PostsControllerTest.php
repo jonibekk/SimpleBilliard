@@ -482,7 +482,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->saveAll($post_data);
         $post_id = $Posts->Post->getLastInsertID();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_old_comment/' . $post_id . '/5', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_old_comment/' . $post_id . '/5/long_text:1/', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

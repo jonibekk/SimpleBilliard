@@ -314,7 +314,7 @@
                     <a href="#" class="btn btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
+                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3, 'long_text' => $long_text]) ?>"
                         >
                         <?php if ($post['unread_count'] > 0): ?>
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=

@@ -11,5 +11,5 @@
 <?php foreach ($comments as $comment): ?>
     <?=
     $this->element('Feed/comment',
-                   ['comment' => $comment['Comment'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                   ['comment' => $comment['Comment'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike'], 'long_text' => $long_text]) ?>
 <?php endforeach ?>
