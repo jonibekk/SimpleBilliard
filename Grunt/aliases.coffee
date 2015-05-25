@@ -5,24 +5,82 @@ module.exports = (grunt) ->
   # setting of js task.
   # This task is watched. The task is going to run, when coffeescript(app/webroot/coffee/**/*.coffee) is changed.
   #
-  grunt.registerTask 'js', ['coffeelint:release','coffee','concat:js','uglify','copy:js','copy:jsMap','docco:release','concat:jsDocs','clean:dest','clean:docco']
+  grunt.registerTask 'js', [
+    'coffeelint:release'
+    'coffee'
+    'concat:js'
+    'uglify'
+    'copy:js'
+    'copy:jsMap'
+    'clean:dest'
+  ]
 
   #
   # setting of css task.
   # This task is watched. The task is going to run, when less(app/webroot/less/**/*.less) is changed.
   #
-  grunt.registerTask 'css', ['lesslint','less','autoprefixer','cssmin','copy:css','copy:cssMap','styleguide','concat:cssDocs','clean:dest','clean:styledocco']
+  grunt.registerTask 'css', [
+    'lesslint'
+    'less'
+    'autoprefixer'
+    'cssmin'
+    'copy:css'
+    'copy:cssMap'
+    'clean:dest'
+  ]
+
+  #
+  # setting of jsdocs task.
+  # This task is NOT watched.
+  #
+  grunt.registerTask 'jsdocs', [
+    'docco:release'
+    'concat:jsDocs'
+    'clean:docco'
+  ]
+
+  #
+  # setting of cssdocs task.
+  # This task is NOT watched.
+  #
+  grunt.registerTask 'cssdocs', [
+    'copy:readme'
+    'styleguide'
+    'concat:cssDocs'
+    'clean:styledocco'
+  ]
 
   #
   # setting of gruntdocs task.
   # This task is NOT watched.
   #
-  grunt.registerTask 'gruntdocs', ['coffeelint:gruntlint','docco:gruntDocs','concat:gruntDocs','clean:gruntDocs']
+  grunt.registerTask 'gruntdocs', [
+    'coffeelint:gruntlint'
+    'docco:gruntDocs'
+    'concat:gruntDocs'
+    'clean:gruntDocs'
+  ]
+
+  #
+  # combine 3 above tasks.
+  # Run `grunt docs` before push.
+  #
+  grunt.registerTask 'docs', [
+    'jsdocs'
+    'cssdocs'
+    'gruntdocs'
+    'jade'
+    'connect'
+  ]
 
   #
   # alltask (!watch)
   #
-  grunt.registerTask 'all', ['js','css','gruntdocs']
+  grunt.registerTask 'all', [
+    'js'
+    'css'
+    'docs'
+  ]
 
   #
   # setting of watch task.

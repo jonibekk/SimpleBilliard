@@ -10,4 +10,4 @@ module.exports = (grunt) ->
     options:
       'no-minify': true
     files:
-      "<%= config.docs %>/styledocco": "<%= config.less %>/common.less"
+      "<%= config.docs %>/css": "<%= config.less %>/goalous.less"

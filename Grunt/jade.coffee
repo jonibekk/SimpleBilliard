@@ -5,8 +5,8 @@ module.exports = (grunt) ->
   docs:
     files: [
       expand: yes
-      cwd: 'docs/'
+      cwd: 'docs/jade'
       src: '**/*.jade'
-      dest: 'docs/'
+      dest: ''
       ext: '.html'
     ]
