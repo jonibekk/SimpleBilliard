@@ -699,10 +699,10 @@ class Goal extends AppModel
 
     function getMyFollowedGoals($limit = null, $page = 1)
     {
-        $goal_ids = $this->Follower->getFollowList($this->my_uid);
+        $follow_goal_ids = $this->Follower->getFollowList($this->my_uid);
         $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->my_uid);
         $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
-        $goal_ids = $goal_ids + $coaching_goal_ids;
+        $goal_ids = $follow_goal_ids + $coaching_goal_ids;
         //exclude collabo goal
         foreach ($collabo_goal_ids as $k => $v) {
             unset($goal_ids[$k]);
