@@ -111,10 +111,11 @@
                                                                   null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
                                     <?php endif; ?>
                                 <?php endif ?>
-                                <li><a href="#" class="copy_me"
-                                       data-clipboard-text="<?=
+                                <li>
+                                    <a href="#" class="copy_me"
+                                       onclick="copyToClipboard('<?=
                                        $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
-                                                        true) ?>">
+                                                        true) ?>')">
                                         <?= __d('gl', "リンクをコピー") ?></a>
                                 </li>
                             </ul>
