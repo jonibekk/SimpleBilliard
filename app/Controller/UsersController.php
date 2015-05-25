@@ -852,8 +852,8 @@ class UsersController extends AppController
 
     function _uservoiceSetSession()
     {
-        if (isset($_GET['uv_login'])) {
-            $this->Session->write('uv_status', $_GET);
+        if (isset($this->request->query['uv_login'])) {
+            $this->Session->write('uv_status', $this->request->query);
         }
         else {
             $this->Session->delete('uv_status');
