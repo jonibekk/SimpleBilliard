@@ -699,8 +699,15 @@ class Goal extends AppModel
 
     function getMyFollowedGoals($limit = null, $page = 1)
     {
-        $goal_ids = $this->Follower->getFollowList($this->my_uid, $limit, $page);
-        $res = $this->getByGoalId($goal_ids);
+        $follow_goal_ids = $this->Follower->getFollowList($this->my_uid);
+        $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->my_uid);
+        $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        $goal_ids = $follow_goal_ids + $coaching_goal_ids;
+        //exclude collabo goal
+        foreach ($collabo_goal_ids as $k => $v) {
+            unset($goal_ids[$k]);
+        }
+        $res = $this->getByGoalId($goal_ids, $limit, $page);
         // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
         // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
         $res = $this->setFollowGoalApprovalFlag($res);
@@ -753,7 +760,7 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getByGoalId($goal_ids)
+    function getByGoalId($goal_ids, $limit = null, $page = 1)
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
@@ -764,6 +771,8 @@ class Goal extends AppModel
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
             ],
+            'page'       => $page,
+            'limit'      => $limit,
             'contain'    => [
                 'Purpose',
                 'KeyResult' => [
@@ -1289,7 +1298,6 @@ class Goal extends AppModel
         }
 
         return $is_present_term_flag;
-
     }
 
 }

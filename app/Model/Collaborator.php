@@ -118,7 +118,7 @@ class Collaborator extends AppModel
                 ],
             ],
             'fields'     => [
-                'goal_id'
+                'goal_id', 'goal_id'
             ],
             'page'       => $page,
             'limit'      => $limit

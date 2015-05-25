@@ -18,6 +18,15 @@ class GoalHelper extends AppHelper
             'disabled' => null,
         ];
 
+        //if coaching goal then, already following.
+        if (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
+            $option['class'] = 'follow-on';
+            $option['style'] = 'display:none;';
+            $option['disabled'] = "disabled";
+            $option['text'] = __d('gl', "フォロー中");
+            return $option;
+        }
+
         if (viaIsSet($goal['MyCollabo'])) {
             $option['disabled'] = "disabled";
         }
