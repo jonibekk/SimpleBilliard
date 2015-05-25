@@ -1,7 +1,6 @@
 <?php
 /**
  * Index
- *
  * The Front Controller for handling every request
  *
  * @link          http://cakephp.org CakePHP(tm) Project
@@ -24,7 +23,7 @@ if (!defined('DS')) {
 
 /**
  * The full path to the directory which holds "app", WITHOUT a trailing DS.
- *
+
  */
 if (!defined('ROOT')) {
     define('ROOT', dirname(dirname(dirname(__FILE__))));
@@ -32,7 +31,7 @@ if (!defined('ROOT')) {
 
 /**
  * The actual directory name for the "app".
- *
+
  */
 if (!defined('APP_DIR')) {
     define('APP_DIR', basename(dirname(dirname(__FILE__))));
@@ -40,15 +39,11 @@ if (!defined('APP_DIR')) {
 
 /**
  * The absolute path to the "cake" directory, WITHOUT a trailing DS.
- *
  * Un-comment this line to specify a fixed path to CakePHP.
  * This should point at the directory containing `Cake`.
- *
  * For ease of development CakePHP uses PHP's include_path. If you
  * cannot modify your include_path set this value.
- *
  * Leaving this constant undefined will result in it being defined in Cake/bootstrap.php
- *
  * The following line differs from its sibling
  * /app/webroot/index.php
  */
@@ -58,7 +53,7 @@ define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'Vendor' . DS . 'cakephp' . DS . 'c
 /**
  * Editing below this line should NOT be necessary.
  * Change at your own risk.
- *
+
  */
 if (!defined('WEBROOT_DIR')) {
     define('WEBROOT_DIR', basename(dirname(__FILE__)));
@@ -69,7 +64,7 @@ if (!defined('WWW_ROOT')) {
 
 // for built-in server
 if (php_sapi_name() === 'cli-server') {
-    if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['PHP_SELF'])) {
+    if (env('REQUEST_URI') !== '/' && file_exists(WWW_ROOT . env('PHP_SELF'))) {
         return false;
     }
     $_SERVER['PHP_SELF'] = '/' . basename(__FILE__);
@@ -99,6 +94,6 @@ App::uses('Dispatcher', 'Routing');
 
 $Dispatcher = new Dispatcher();
 $Dispatcher->dispatch(
-           new CakeRequest(),
-           new CakeResponse()
+    new CakeRequest(),
+    new CakeResponse()
 );

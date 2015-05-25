@@ -144,7 +144,7 @@ class MixpanelComponent extends Object
                                          '$default_team_id' => $user['default_team_id'],
                                          '$language'        => $user['language'],
                                          '$is_admin'        => $user['admin_flg'],
-                                         '$gender_type'     => $user['gender_type'],
+                                         '$gender_type'     => $this->getGenderName(),
                                      ]
         );
     }

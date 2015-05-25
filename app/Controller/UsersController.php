@@ -196,7 +196,7 @@ class UsersController extends AppController
     public function register()
     {
         //TODO basic認証 本番公開後に外す
-        if ((ENV_NAME == "www" || ENV_NAME == "stg") && !isset($this->request->params['named']['invite_token'])) {
+        if ((ENV_NAME == "www" || ENV_NAME == "stg" || ENV_NAME == "hotfix") && !isset($this->request->params['named']['invite_token'])) {
             $this->_setBasicAuth();
         }
 
@@ -729,7 +729,8 @@ class UsersController extends AppController
             $google_2fa_secret_key = $this->TwoFa->generateSecretKey();
             $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
         }
-        $url_2fa = $this->TwoFa->getQRCodeGoogleUrl('Goalous',
+
+        $url_2fa = $this->TwoFa->getQRCodeGoogleUrl(SERVICE_NAME,
                                                     $this->Session->read('Auth.User.PrimaryEmail.email'),
                                                     $google_2fa_secret_key);
         $this->set(compact('url_2fa'));
@@ -852,8 +853,8 @@ class UsersController extends AppController
 
     function _uservoiceSetSession()
     {
-        if (isset($_GET['uv_login'])) {
-            $this->Session->write('uv_status', $_GET);
+        if (isset($this->request->query['uv_login'])) {
+            $this->Session->write('uv_status', $this->request->query);
         }
         else {
             $this->Session->delete('uv_status');
