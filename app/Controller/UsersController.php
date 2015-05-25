@@ -196,7 +196,7 @@ class UsersController extends AppController
     public function register()
     {
         //TODO basic認証 本番公開後に外す
-        if ((ENV_NAME == "www" || ENV_NAME == "stg") && !isset($this->request->params['named']['invite_token'])) {
+        if ((ENV_NAME == "www" || ENV_NAME == "stg" || ENV_NAME == "hotfix") && !isset($this->request->params['named']['invite_token'])) {
             $this->_setBasicAuth();
         }
 
