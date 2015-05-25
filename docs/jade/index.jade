@@ -1,0 +1,20 @@
+doctype html
+html(lang="ja")
+  head
+    title= pageTitle
+  body
+    h1 Goalous Developers Documents.
+    #container.col
+      p.ja-text
+        |ドキュメントのindexファイルは、このファイルはJadeを用いて作成しております。記法やJadeそのものについての詳しく知りたい方は
+        a(href="http://jade-lang.com/" target="_blank") 公式サイト
+        |をご覧ください。
+        |コンパイルなどは、Gruntで自動化させておりますので、特に考えることなく使用できると思います。
+      p.en-text
+        |This index file are made by Jade. If you want to get know Jade, you can see 
+        a(href="http://jade-lang.com/" target="_blank") Official Jade Page
+        | :-)
+      ul
+        li: a(href="docs/css/") LESS and CSS
+        li: a(href="docs/js") CoffeeScript and JavaScript
+        li: a(href="docs/grunt") Gruntfile
