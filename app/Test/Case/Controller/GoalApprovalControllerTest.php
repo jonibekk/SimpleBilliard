@@ -44,11 +44,11 @@ class GoalApprovalControllerTest extends ControllerTestCase
         'app.job_category',
         'app.team_member',
         'app.member_type',
-
         'app.thread',
         'app.message',
         'app.evaluator',
         'app.evaluation_setting',
+        'app.evaluate_term',
         'app.email',
         'app.notify_setting',
         'app.oauth_token',
@@ -109,6 +109,39 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $this->testAction('/goal_approval/index', ['method' => 'GET']);
     }
 
+    function testIndexNoEvaluable()
+    {
+        $GoalApprovals = $this->_getGoalApprovalCommonMock();
+        $GoalApprovals->TeamMember->id = 1;
+        $GoalApprovals->TeamMember->saveField('evaluation_enable_flg', false);
+        $GoalApprovals->Collaborator->id = 1;
+        $GoalApprovals->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
+        $this->testAction('/goal_approval/index', ['method' => 'GET',]);
+    }
+
+    function testIndexPost()
+    {
+        $this->_getGoalApprovalCommonMock();
+        $data = [
+            'GoalApproval' => [
+                'collaborator_id' => 1,
+                'comment'         => 'test'
+            ],
+            'comment_btn'  => null
+        ];
+        $this->testAction('/goal_approval/index', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testDoneNoEvaluable()
+    {
+        $GoalApprovals = $this->_getGoalApprovalCommonMock();
+        $GoalApprovals->TeamMember->id = 1;
+        $GoalApprovals->TeamMember->saveField('evaluation_enable_flg', false);
+        $GoalApprovals->Collaborator->id = 1;
+        $GoalApprovals->Collaborator->saveField('valued_flg', Collaborator::STATUS_HOLD);
+        $this->testAction('/goal_approval/done', ['method' => 'GET',]);
+    }
+
     function testDone()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
@@ -154,6 +187,36 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $this->testAction('/goal_approval/done', ['method' => 'GET']);
     }
 
+    function testDonePost()
+    {
+        $this->_getGoalApprovalCommonMock();
+        $data = [
+            'GoalApproval' => [
+                'collaborator_id' => 1,
+                'comment'         => 'test'
+            ],
+            'comment_btn'  => null
+        ];
+        $this->testAction('/goal_approval/done', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testSaveApprovalData()
+    {
+        $GoalApprovals = $this->_getGoalApprovalCommonMock();
+        $GoalApprovals->_saveApprovalData();
+
+        $GoalApprovals->request->data['GoalApproval'] = [
+            'comment' => 'test'
+        ];
+        $GoalApprovals->_saveApprovalData();
+
+        $GoalApprovals->request->data['GoalApproval'] = [
+            'comment'         => 'test',
+            'collaborator_id' => 99999
+        ];
+        $GoalApprovals->_saveApprovalData();
+    }
+
     function testApproval()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
@@ -167,7 +230,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $id = $GoalApproval->Collaborator->getLastInsertID();
         $data = ['collaborator_id' => $id];
-        $GoalApproval->approval($data);
+        $GoalApproval->_approval($data);
 
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $valued_flg = $res['Collaborator']['valued_flg'];
@@ -187,7 +250,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $id = $GoalApproval->Collaborator->getLastInsertID();
         $data = ['collaborator_id' => $id];
-        $GoalApproval->wait($data);
+        $GoalApproval->_wait($data);
 
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $valued_flg = $res['Collaborator']['valued_flg'];
@@ -207,7 +270,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $id = $GoalApproval->Collaborator->getLastInsertID();
         $data = ['collaborator_id' => $id];
-        $GoalApproval->modify($data);
+        $GoalApproval->_modify($data);
 
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $valued_flg = $res['Collaborator']['valued_flg'];
@@ -220,7 +283,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval->user_id = 999;
         $data = ['collaborator_id' => 888, 'comment' => 'test'];
 
-        $GoalApproval->comment($data);
+        $GoalApproval->_comment($data);
 
         $res = $GoalApproval->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => 888]]);
         $comment = $res['ApprovalHistory']['comment'];
@@ -233,7 +296,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval->request->data = ['comment_btn' => ''];
         $GoalApproval->user_id = 999;
         $data = ['collaborator_id' => 888, 'comment' => 'test'];
-        $GoalApproval->changeStatus($data);
+        $GoalApproval->_changeStatus($data);
 
         $res = $GoalApproval->ApprovalHistory->find('first', ['conditions' => ['collaborator_id' => 888]]);
         $comment = $res['ApprovalHistory']['comment'];
@@ -254,7 +317,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $GoalApproval->request->data = ['wait_btn' => ''];
         $data = ['collaborator_id' => $id];
-        $GoalApproval->changeStatus($data);
+        $GoalApproval->_changeStatus($data);
 
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $valued_flg = $res['Collaborator']['valued_flg'];
@@ -275,11 +338,67 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $GoalApproval->request->data = ['approval_btn' => ''];
         $data = ['collaborator_id' => $id];
-        $GoalApproval->changeStatus($data);
+        $GoalApproval->_changeStatus($data);
 
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $valued_flg = $res['Collaborator']['valued_flg'];
         $this->assertEquals($valued_flg, '1');
+    }
+
+    function testChangeStatusTypeModify()
+    {
+        $GoalApproval = $this->_getGoalApprovalCommonMock();
+        $params = [
+            'user_id'    => 999,
+            'team_id'    => 888,
+            'goal_id'    => 777,
+            'valued_flg' => 0,
+        ];
+        $GoalApproval->Collaborator->save($params);
+        $id = $GoalApproval->Collaborator->getLastInsertID();
+
+        $GoalApproval->request->data = ['modify_btn' => ''];
+        $data = ['collaborator_id' => $id];
+        $GoalApproval->_changeStatus($data);
+
+        $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
+        $valued_flg = $res['Collaborator']['valued_flg'];
+        $this->assertEquals($valued_flg, Collaborator::STATUS_MODIFY);
+    }
+
+    function testTrackToMixpanel()
+    {
+        $GoalApprovals = $this->_getGoalApprovalCommonMock();
+
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['comment_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['wait_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['approval_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['modify_btn' => ''];
+        $GoalApprovals->_trackToMixpanel(1);
+    }
+    function testNotifyToCollaborator()
+    {
+        $GoalApprovals = $this->_getGoalApprovalCommonMock();
+        $GoalApprovals->_notifyToCollaborator(99999999);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['comment_btn' => ''];
+        $GoalApprovals->_notifyToCollaborator(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['wait_btn' => ''];
+        $GoalApprovals->_notifyToCollaborator(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['approval_btn' => ''];
+        $GoalApprovals->_notifyToCollaborator(1);
+        unset($GoalApprovals->request->data);
+        $GoalApprovals->request->data = ['modify_btn' => ''];
+        $GoalApprovals->_notifyToCollaborator(1);
     }
 
     function testSetCoachFlagTrue()
@@ -291,7 +410,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
             'coach_user_id' => 777,
         ];
         $GoalApproval->TeamMember->save($params);
-        $GoalApproval->setCoachFlag(999, 888);
+        $GoalApproval->_setCoachFlag(999, 888);
         $this->assertTrue($GoalApproval->coach_flag);
     }
 
@@ -304,7 +423,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
             'coach_user_id' => 777,
         ];
         $GoalApproval->TeamMember->save($params);
-        $GoalApproval->setMemberFlag(777, 888);
+        $GoalApproval->_setMemberFlag(777, 888);
         $this->assertTrue($GoalApproval->member_flag);
     }
 
@@ -313,7 +432,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval = $this->_getGoalApprovalCommonMock();
         $GoalApproval->coach_flag = true;
         $GoalApproval->member_flag = false;
-        $type = $GoalApproval->getUserType();
+        $type = $GoalApproval->_getUserType();
         $this->assertEquals(1, $type);
     }
 
@@ -322,7 +441,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval = $this->_getGoalApprovalCommonMock();
         $GoalApproval->coach_flag = true;
         $GoalApproval->member_flag = true;
-        $type = $GoalApproval->getUserType();
+        $type = $GoalApproval->_getUserType();
         $this->assertEquals(2, $type);
     }
 
@@ -331,7 +450,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval = $this->_getGoalApprovalCommonMock();
         $GoalApproval->coach_flag = false;
         $GoalApproval->member_flag = true;
-        $type = $GoalApproval->getUserType();
+        $type = $GoalApproval->_getUserType();
         $this->assertEquals(3, $type);
     }
 
@@ -340,7 +459,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval = $this->_getGoalApprovalCommonMock();
         $GoalApproval->coach_flag = false;
         $GoalApproval->member_flag = false;
-        $type = $GoalApproval->getUserType();
+        $type = $GoalApproval->_getUserType();
         $this->assertEquals(0, $type);
     }
 
@@ -350,7 +469,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval->user_type = 1;
         $GoalApproval->user_id = 999;
         $GoalApproval->member_ids = [888, 777];
-        $goal_user_id = $GoalApproval->getCollaboratorUserId();
+        $goal_user_id = $GoalApproval->_getCollaboratorUserId();
         $this->assertContains($GoalApproval->user_id, $goal_user_id);
     }
 
@@ -365,7 +484,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $GoalApproval->user_id = $user_id;
         $GoalApproval->member_ids = $member_id;
-        $goal_user_id = $GoalApproval->getCollaboratorUserId();
+        $goal_user_id = $GoalApproval->_getCollaboratorUserId();
         $this->assertEquals($ids, $goal_user_id);
 
     }
@@ -381,7 +500,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval->user_id = $user_id;
         $GoalApproval->member_ids = $member_id;
 
-        $goal_user_id = $GoalApproval->getCollaboratorUserId();
+        $goal_user_id = $GoalApproval->_getCollaboratorUserId();
         $this->assertEquals($member_id, $goal_user_id);
 
     }
@@ -404,7 +523,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         ];
         $GoalApproval->Collaborator->save($params);
 
-        $res = $GoalApproval->getGoalInfo($valued_flg);
+        $res = $GoalApproval->_getGoalInfo($valued_flg);
         $this->assertCount(1, $res);
     }
 
@@ -439,7 +558,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         ];
         $GoalApproval->Collaborator->save($params);
 
-        $res = $GoalApproval->getGoalInfo($valued_flg);
+        $res = $GoalApproval->_getGoalInfo($valued_flg);
         $this->assertCount(2, $res);
     }
 
@@ -462,7 +581,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         ];
         $GoalApproval->Collaborator->save($params);
 
-        $res = $GoalApproval->getGoalInfo($valued_flg);
+        $res = $GoalApproval->_getGoalInfo($valued_flg);
         $this->assertCount(1, $res);
     }
 
@@ -516,6 +635,8 @@ class GoalApprovalControllerTest extends ControllerTestCase
 
         $GoalApproval->Goal->Team->my_uid = 1;
         $GoalApproval->Goal->Team->current_team_id = 1;
+        $GoalApproval->ApprovalHistory->my_uid = 1;
+        $GoalApproval->ApprovalHistory->current_team_id = 1;
         $GoalApproval->Goal->Team->current_team = [
             'Team' => [
                 'start_term_month' => 4,

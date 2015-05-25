@@ -102,7 +102,7 @@
 
                             <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>: <?= h($goal['Goal']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= $goal['Collaborator']['type'] === '1' ?
+                            <p class="approval_body_text"><?= $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER ?
                                     __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "役割") ?>
@@ -152,12 +152,12 @@
                                 <div class="row">
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === false) { ?>
-                                            <?php if ($goal['Collaborator']['valued_flg'] === '1') { ?>
+                                            <?php if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) { ?>
                                                 <?= $this->Form->button(__d('gl', "評価対象にしない"),
                                                                         ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                             <?php }
                                             else {
-                                                if ($goal['Collaborator']['valued_flg'] === '2') { ?>
+                                                if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) { ?>
                                                     <?= $this->Form->button(__d('gl', "評価対象にする"),
                                                                             ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                                 <?php }

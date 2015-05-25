@@ -56,16 +56,29 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
+        $mixpanel_prop_name = null;
         // チーム全体公開が含まれている場合はチーム全体にのみpush
         if (in_array("public", $share)) {
             $this->NotifyBiz->push($socketId, "public");
+            $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
         }
         else {
+            $share_circle = false;
             // それ以外の場合は共有先の数だけ回す
             foreach ($share as $val) {
+                if (strpos($val, "circle") !== false) {
+                    $share_circle = true;
+                }
                 $this->NotifyBiz->push($socketId, $val);
             }
+            if ($share_circle) {
+                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
+            }
+            else {
+                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
+            }
         }
+        $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
 
@@ -385,6 +398,11 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $res = $this->Post->PostLike->changeLike($post_id);
+        if ($res['is_liked']) {
+            $post = $this->Post->findById($post_id);
+            $type = viaIsSet($post['Post']['type']);
+            $this->Mixpanel->trackLike($type);
+        }
         return $this->_ajaxGetResponse($res);
     }
 
@@ -488,6 +506,8 @@ class PostsController extends AppController
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
                 }
+                //mixpanel
+                $this->Mixpanel->trackComment($type);
 
                 $result['msg'] = __d('gl', "コメントしました。");
             }
@@ -599,7 +619,7 @@ class PostsController extends AppController
      * @param array  $requestData
      * @param string $body
      *
-     * @return $requestData
+     * @return array $requestData
      */
     function _addOgpIndexes($requestData, $body)
     {
