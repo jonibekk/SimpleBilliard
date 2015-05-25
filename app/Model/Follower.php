@@ -68,7 +68,7 @@ class Follower extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'goal_id'
+                'goal_id', 'goal_id'
             ],
             'page'       => $page,
             'limit'      => $limit
