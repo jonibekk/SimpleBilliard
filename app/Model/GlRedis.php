@@ -398,13 +398,14 @@ class GlRedis extends AppModel
     /**
      * @param $team_id
      * @param $user_id
+     * @param $ip_address
      *
      * @return bool
      */
-    function isExistsDeviceHash($team_id, $user_id)
+    function isExistsDeviceHash($team_id, $user_id, $ip_address = null)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_DEVICE_HASHES, $team_id, $user_id);
-        $hash_key = $this->makeDeviceHash($user_id);
+        $hash_key = $this->makeDeviceHash($user_id, $ip_address);
         $res = $this->Db->hGet($key, $hash_key);
         if (!$res) {
             return false;
