@@ -2395,3 +2395,25 @@ function updateListBox() {
 function copyToClipboard(url) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
 }
+
+var track_load = 20;
+$(document).ready(function () {
+
+    var loading = false;
+
+    $(window).scroll(function(){
+        if($(window).scrollTop() + $(window).height() == $(document).height())
+        {
+            if(track_load >= 20 && loading==false)
+            {
+                $('#FeedMoreReadLink').trigger('click');
+                loading = true;
+                track_load++;
+            }
+            else{
+                loading = false;
+            }
+
+        }
+    });
+});

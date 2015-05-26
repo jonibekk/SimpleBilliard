@@ -10,10 +10,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<?php if (!empty($posts)):
-    $items_per_group = 20;
-
-    ?>
+<?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
@@ -392,28 +389,3 @@
     <?php endforeach ?>
     <!-- END app/View/Elements/Feed/posts.ctp -->
 <?php endif ?>
-<?php $this->append('script') ?>
-    <script type="text/javascript">
-        var track_load = 20;
-        $(document).ready(function () {
-
-            var loading = false;
-
-            $(window).scroll(function(){
-                if($(window).scrollTop() + $(window).height() == $(document).height())
-                {
-                    if(track_load >= 20 && loading==false)
-                    {
-                        $('#FeedMoreReadLink').trigger('click');
-                        loading = true;
-                        track_load++;
-                    }
-                    else{
-                        loading = false;
-                    }
-
-                }
-            });
-        });
-    </script>
-<?php $this->end() ?>
