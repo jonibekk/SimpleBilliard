@@ -2192,6 +2192,7 @@ $(function () {
 
 });
 
+
 function evNotifyMoreView() {
     attrUndefinedCheck(this, 'get-url');
 
@@ -2210,6 +2211,7 @@ function evNotifyMoreView() {
         url: url,
         async: true,
         success: function (data) {
+            autoload_more = false;
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $notify = $(data.html);
