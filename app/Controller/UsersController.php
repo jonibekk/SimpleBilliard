@@ -136,7 +136,9 @@ class UsersController extends AppController
             && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'),
                                        $this->request->data['User']['two_fa_code']) === true
         ) {
-            $this->GlRedis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
+            $ip_address = $this->request->clientIp();
+            $this->GlRedis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'),
+                                           $ip_address);
             return $this->_afterAuthSessionStore();
 
         }

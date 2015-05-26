@@ -382,13 +382,14 @@ class GlRedis extends AppModel
     /**
      * @param $team_id
      * @param $user_id
+     * @param $ip_address
      *
      * @return int
      */
-    function saveDeviceHash($team_id, $user_id)
+    function saveDeviceHash($team_id, $user_id, $ip_address = null)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_DEVICE_HASHES, $team_id, $user_id);
-        $hash_key = $this->makeDeviceHash($user_id);
+        $hash_key = $this->makeDeviceHash($user_id, $ip_address);
         $ex_date = time() + TWO_FA_TTL;
         $res = $this->Db->hSet($key, $hash_key, $ex_date);
         $this->Db->setTimeout($key, TWO_FA_TTL);
