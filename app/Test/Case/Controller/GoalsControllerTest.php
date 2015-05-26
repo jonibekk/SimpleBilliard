@@ -409,6 +409,20 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/edit_collabo', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testEditCollaboPriority0Success()
+    {
+        $this->_getGoalsCommonMock();
+        $data = [
+            'Collaborator' => [
+                'role'        => 'test',
+                'description' => 'test',
+                'goal_id'     => 1,
+                'priority'     => 0,
+            ]
+        ];
+        $this->testAction('/goals/edit_collabo', ['method' => 'POST', 'data' => $data]);
+    }
+
     function testEditCollaboFail()
     {
         $this->_getGoalsCommonMock();

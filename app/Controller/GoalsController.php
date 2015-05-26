@@ -330,7 +330,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'put');
 
         if (!isset($this->request->data['Collaborator'])) {
-            $this->edit_collabo_error();
+            $this->_editCollaboError();
             return;
         }
         $collaborator = $this->request->data['Collaborator'];
@@ -344,7 +344,7 @@ class GoalsController extends AppController
         $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
-            $this->edit_collabo_error();
+            $this->_editCollaboError();
             return;
         }
 
@@ -359,7 +359,7 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    private function edit_collabo_error()
+    function _editCollaboError()
     {
         $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
         $this->redirect($this->referer());
