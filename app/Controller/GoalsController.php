@@ -352,18 +352,7 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
         //if new
         if (!$collabo_id) {
-
-            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL,
-                                       $this->request->data['Collaborator']['goal_id']);
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
-                                             $this->request->data['Collaborator']['goal_id']);
-            $this->_sendNotifyToCoach($this->request->data['Collaborator']['goal_id'],
-                                      NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
-
-
-
-
-            $this->Mixpanel->trackCollaborateGoal($collaborator['goal_id']);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
         }
