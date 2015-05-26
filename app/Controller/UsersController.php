@@ -32,7 +32,7 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite', 'registration_with_set_password');
+                           'accept_invite', 'registration_with_set_password', 'two_fa_auth');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -68,7 +68,6 @@ class UsersController extends AppController
     public function login()
     {
         $this->_uservoiceSetSession();
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if ($this->Auth->user()) {
@@ -80,7 +79,84 @@ class UsersController extends AppController
             return $this->render();
         }
 
+        //account lock check
+        $ip_address = $this->request->clientIp();
+        $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
+        if ($is_account_locked) {
+            $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
+            return $this->render();
+        }
+
+        //メアド、パスの認証(セッションのストアはしていない)
+        $user_info = $this->Auth->identify($this->request, $this->response);
+        if (!$user_info) {
+            $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
+            return $this->render();
+        }
+        $this->Session->write('preAuthPost', $this->request->data);
+
+        $is_2fa_auth_enabled = true;
+        // 2要素認証設定OFFの場合
+        // 2要素認証設定ONかつ、設定して30日以内の場合
+        if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
+                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id'], $ip_address))
+        ) {
+            $is_2fa_auth_enabled = false;
+        }
+
+        //２要素設定有効なら
+        if ($is_2fa_auth_enabled) {
+            $this->Session->write('2fa_secret', $user_info['2fa_secret']);
+            $this->Session->write('user_id', $user_info['id']);
+            $this->Session->write('team_id', $user_info['DefaultTeam']['id']);
+            return $this->redirect(['action' => 'two_fa_auth']);
+        }
+
+        return $this->_afterAuthSessionStore();
+    }
+
+    function two_fa_auth()
+    {
+        if ($this->Auth->user()) {
+            return $this->redirect($this->referer());
+        }
+        $this->layout = LAYOUT_ONE_COLUMN;
+        //仮認証状態か？そうでなければエラー出してリファラリダイレクト
+        $is_avail_auth = !empty($this->Session->read('preAuthPost')) ? true : false;
+        if (!$is_avail_auth) {
+            $this->Pnotify->outError(__d('notify', "エラーが発生しました。再度ログインをお願いします。"));
+            return $this->redirect(['action' => 'login']);
+        }
+
+        if (!$this->request->is('post')) {
+            return $this->render();
+        }
+
+        if ((empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false)
+            && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'),
+                                       $this->request->data['User']['two_fa_code']) === true
+        ) {
+            $ip_address = $this->request->clientIp();
+            $this->GlRedis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'),
+                                           $ip_address);
+            return $this->_afterAuthSessionStore();
+
+        }
+        else {
+            $this->Pnotify->outError(__d('notify', "2段階認証コードが正しくありません。"));
+            return $this->render();
+        }
+    }
+
+    function _afterAuthSessionStore()
+    {
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
+        $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
+            $this->Session->delete('preAuthPost');
+            $this->Session->delete('2fa_secret');
+            $this->Session->delete('user_id');
+            $this->Session->delete('team_id');
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__d('notify', "%sさん、こんにちは。", $this->Auth->user('display_username')),
@@ -88,8 +164,10 @@ class UsersController extends AppController
             return $this->redirect($redirect_url);
         }
         else {
-            $this->Pnotify->outError(__d('notify', "メールアドレスもしくはパスワードが正しくありません。"));
+            $this->Pnotify->outError(__d('notify', "エラーが発生しました。再度ログインをお願いします。"));
+            return $this->redirect(['action' => 'login']);
         }
+
     }
 
     /**
@@ -120,7 +198,7 @@ class UsersController extends AppController
     public function register()
     {
         //TODO basic認証 本番公開後に外す
-        if ((ENV_NAME == "www" || ENV_NAME == "stg") && !isset($this->request->params['named']['invite_token'])) {
+        if ((ENV_NAME == "www" || ENV_NAME == "stg" || ENV_NAME == "hotfix") && !isset($this->request->params['named']['invite_token'])) {
             $this->_setBasicAuth();
         }
 
@@ -653,7 +731,8 @@ class UsersController extends AppController
             $google_2fa_secret_key = $this->TwoFa->generateSecretKey();
             $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
         }
-        $url_2fa = $this->TwoFa->getQRCodeGoogleUrl('Goalous',
+
+        $url_2fa = $this->TwoFa->getQRCodeGoogleUrl(SERVICE_NAME,
                                                     $this->Session->read('Auth.User.PrimaryEmail.email'),
                                                     $google_2fa_secret_key);
         $this->set(compact('url_2fa'));
@@ -683,7 +762,8 @@ class UsersController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Session->delete('2fa_secret_key');
-        $this->Pnotify->outSuccess(__d('gl', "２要素認証の登録が完了しました。"));
+        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
+        $this->Pnotify->outSuccess(__d('gl', "2段階認証の登録が完了しました。"));
         return $this->redirect($this->referer());
     }
 
@@ -700,7 +780,11 @@ class UsersController extends AppController
         $this->request->allowMethod('post');
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('2fa_secret', null);
-        $this->Pnotify->outSuccess(__d('gl', "２要素認証を解除しました。"));
+        if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
+            $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
+        }
+        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
+        $this->Pnotify->outSuccess(__d('gl', "2段階認証を解除しました。"));
         return $this->redirect($this->referer());
     }
 
@@ -771,8 +855,8 @@ class UsersController extends AppController
 
     function _uservoiceSetSession()
     {
-        if (isset($_GET['uv_login'])) {
-            $this->Session->write('uv_status', $_GET);
+        if (isset($this->request->query['uv_login'])) {
+            $this->Session->write('uv_status', $this->request->query);
         }
         else {
             $this->Session->delete('uv_status');

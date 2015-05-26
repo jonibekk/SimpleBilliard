@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Created by PhpStorm.
  * User: bigplants
  * Date: 5/28/14
@@ -15,8 +14,7 @@
     <title origin-title="<?= $title_for_layout; ?>">
         <?= $title_for_layout; ?>
     </title>
-    <?
-    echo $this->Html->meta('icon');
+    <?php echo $this->Html->meta('icon');
     echo $this->Html->meta(
         ['name'    => 'viewport',
          'content' => "width=device-width, initial-scale=1, maximum-scale=1"
@@ -24,6 +22,9 @@
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
     //TODO botの拒否。一般公開前に必ず外す。
     echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
+
+    // クリックジャッキング対策
+    echo $this->Html->meta(['name' => 'X-FRAME-OPTIONS', 'content' => 'SAMEORIGIN']);
 
     //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
@@ -43,6 +44,7 @@
     echo $this->Html->css('bootstrap-ext-col');
     echo $this->Html->css('datepicker3');
     echo $this->Html->css('style', array('media' => 'screen'));
+    echo $this->Html->css('goalous.min', array('media' => 'screen'));
     echo $this->fetch('css');
     echo $this->fetch('meta');
 
@@ -53,8 +55,7 @@
     <?= $this->Html->script('vendor/html5shiv')?>
     <?= $this->Html->script('vendor/respond.min')?>
     <![endif]-->
-    <?
-    //公開環境のみタグを有効化
+    <?php //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
         /** @noinspection PhpDeprecationInspection */
         echo $this->element('external_service_tags');

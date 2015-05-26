@@ -70,18 +70,18 @@ if (!viaIsSet($index) || !is_numeric($index)) {
             ?>
         </div>
     </td>
-    <? if (viaIsSet($type) && viaIsSet($id) && $type == 'exists'): ?>
+    <?php if (viaIsSet($type) && viaIsSet($id) && $type == 'exists'): ?>
         <td>
             <a class="modal-ajax-get"
                href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_confirm_inactive_score_modal', $id]) ?>"><i
                     class="fa fa-trash font_lightGray-gray"></i></a>
         </td>
         <?= $this->Form->hidden("EvaluateScore.$index.id") ?>
-    <? else: ?>
+    <?php else: ?>
         <td>
             <a href="#" class="click-target-remove" target-selector="#AddScore_<?= $index ?>"><i
                     class="fa fa-times font_lightGray-gray"></i></a>
         </td>
-    <? endif; ?>
+    <?php endif; ?>
 </tr>
 <!-- END app/View/Elements/Team/eval_score_form_elm.ctp -->

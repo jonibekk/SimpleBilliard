@@ -7,6 +7,6 @@ module.exports = (grunt) ->
   # sourceMap must be true.
   dist:
     files:
-      '<%= config.dest %>/csssrc/sample.css': ['<%= config.less %>/sample.less']
+      '<%= config.dest %>/csssrc/goalous.css': ['<%= config.less %>/goalous.less']
     options:
       sourceMap: true

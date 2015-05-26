@@ -179,6 +179,12 @@ class User extends AppModel
         'photo'             => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
+        ],
+        'hometown'=>[
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
         ]
     ];
 
@@ -466,7 +472,7 @@ class User extends AppModel
             $email_token = $this->generateToken();
             $data['Email'][0]['Email']['email_token'] = $email_token;
             //メールアドレスの認証トークンの期限をセット
-            $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire();
+            $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire(3600);
         }
         //本登録なら
         else {

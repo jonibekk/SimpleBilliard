@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
@@ -15,9 +14,9 @@
     <?= $this->Html->charset(); ?>
     <title><?= $page_title; ?></title>
 
-    <? if (Configure::read('debug') == 0): ?>
+    <?php if (Configure::read('debug') == 0): ?>
         <meta http-equiv="Refresh" content="<?= $pause; ?>;url=<?= $url; ?>"/>
-    <? endif ?>
+    <?php endif ?>
     <style><!--
         P {
             text-align: center;

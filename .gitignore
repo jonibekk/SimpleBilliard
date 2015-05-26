@@ -38,6 +38,12 @@ npm-debug.log
 /docs/docco
 /docs/styledocco
 /docs/grunt
-# for dest files of min.css and min.js
-/app/webroot/css/goalous.min.css
-/app/webroot/js/goalous.min.js
+/docs/frontend
+/docs/index.html
+/docs/css
+/docs/js
+/app/webroot/less/README.md
+/index.html
+# for dest files of a less and coffee maps
+/app/webroot/css/goalous.css.map
+/app/webroot/js/*.js.map

@@ -78,6 +78,27 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
+    function testAddOnlyCircle()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Post' => [
+                'body'  => 'test',
+                'share' => 'circle_1'
+            ],
+        ];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
 
     function testAddNotExistOgp()
     {
@@ -183,7 +204,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->save($data);
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => null]]]));
         $data = [
             'Comment' => [
                 'body'    => 'test',
@@ -482,7 +503,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->saveAll($post_data);
         $post_id = $Posts->Post->getLastInsertID();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_old_comment/' . $post_id . '/5', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_old_comment/' . $post_id . '/5/long_text:1/', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

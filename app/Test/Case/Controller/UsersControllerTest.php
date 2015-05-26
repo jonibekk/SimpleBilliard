@@ -319,7 +319,6 @@ class UsersControllerTest extends ControllerTestCase
         ];
         $Users->Auth->logout();
         $this->testAction('/users/login', ['data' => $data, 'method' => 'post']);
-//        $this->assertContains("メールアドレスもしくはパスワードが正しくありません。",$res,"[異常系]ログイン");
     }
 
     function testLogout()

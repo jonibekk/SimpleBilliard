@@ -68,6 +68,7 @@ class PagesController extends AppController
         $this->_setViewValOnRightColumn();
         $current_global_menu = "home";
         $feed_filter = 'all';
+        $this->set('long_text', false);
         $this->set(compact('feed_filter', 'select2_default', 'current_global_menu'));
         $this->set('avail_sub_menu', true);
         try {

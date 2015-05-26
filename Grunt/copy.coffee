@@ -22,7 +22,7 @@ module.exports = (grunt) ->
     cwd: '<%= config.dest %>/jssrc/'
     dest: '<%= config.webroot %>/js/'
     src: [
-      '*.css.map'
+      '*.js.map'
     ]
 
   #
@@ -35,6 +35,14 @@ module.exports = (grunt) ->
     dest: '<%= config.webroot %>/css/'
     src: [
       '*.min.css'
+    ]
+
+  readme:
+    expand: true
+    cwd: '<%= config.docs %>/css/'
+    dest: '<%= config.less %>/'
+    src: [
+      'README.md'
     ]
 
   #

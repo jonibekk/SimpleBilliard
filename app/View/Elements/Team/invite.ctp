@@ -69,17 +69,17 @@
                 <?=
                 $this->Form->submit(__d('gl', "招待メールを送信"),
                                     ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
-                <? if (isset($from_setting) && !$from_setting): ?>
+                <?php if (isset($from_setting) && !$from_setting): ?>
                     <?=
                     $this->Html->link(__d('gl', "スキップ"), "/",
                                       ['class' => 'btn btn-default', 'div' => false]) ?>
-                <? endif; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
     <?= $this->Form->end(); ?>
 </div>
-<? $this->append('script') ?>
+<?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -95,5 +95,5 @@
         });
     });
 </script>
-<? $this->end() ?>
+<?php $this->end() ?>
 <!-- END app/View/Elements/Team/invite.ctp -->

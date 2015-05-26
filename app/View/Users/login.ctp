@@ -33,7 +33,7 @@
                     'label' => __d('gl', "メールアドレス")
                 ]) ?>
 
-                <? //TODO For disabling autocomplete from the browser end ?>
+                <?php //TODO For disabling autocomplete from the browser end ?>
                 <input type="text" style="display: none">
 
                 <?=

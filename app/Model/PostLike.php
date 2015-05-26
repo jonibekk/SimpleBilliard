@@ -38,9 +38,10 @@ class PostLike extends AppModel
     public function changeLike($post_id)
     {
         $res = [
-            'created' => false,
-            'error'   => false,
-            'count'   => 0
+            'created'  => false,
+            'error'    => false,
+            'count'    => 0,
+            'is_liked' => false,
         ];
 
         $exists = $this->find('first', ['conditions' => ['post_id' => $post_id, 'user_id' => $this->my_uid]]);
@@ -58,6 +59,7 @@ class PostLike extends AppModel
                 $res['error'] = true;
             }
             $res['created'] = true;
+            $res['is_liked'] = true;
         }
         $post = $this->Post->read('post_like_count', $post_id);
         if (isset($post['Post']['post_like_count'])) {

@@ -12,7 +12,6 @@ class GoalsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->unlockedActions = ['add_key_result', 'edit_key_result', 'add_completed_action', 'edit_action'];
     }
 
     /**
@@ -117,9 +116,13 @@ class GoalsController extends AppController
                 case 2:
                     //case of create new one.
                     if (!$id) {
-                        $this->Mixpanel->trackCreateGoal($this->Goal->getLastInsertID());
+                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
+                                                   $this->Goal->getLastInsertID());
                         $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
                                                   NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+                    }
+                    else {
+                        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
                     }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                     //「情報を追加」に進む
@@ -191,6 +194,7 @@ class GoalsController extends AppController
         }
         $this->request->allowMethod('post', 'delete');
         $this->Goal->id = $id;
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_GOAL, $id);
         $this->Goal->delete();
         $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
@@ -348,6 +352,17 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
         //if new
         if (!$collabo_id) {
+
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL,
+                                       $this->request->data['Collaborator']['goal_id']);
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
+                                             $this->request->data['Collaborator']['goal_id']);
+            $this->_sendNotifyToCoach($this->request->data['Collaborator']['goal_id'],
+                                      NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+
+
+
+
             $this->Mixpanel->trackCollaborateGoal($collaborator['goal_id']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
@@ -376,6 +391,10 @@ class GoalsController extends AppController
                     throw new RuntimeException(__d('gl', "権限がありません。"));
                 }
                 $this->Goal->KeyResult->complete($current_kr_id);
+                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
+                                           $goal_id,
+                                           $current_kr_id
+                );
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
@@ -384,7 +403,8 @@ class GoalsController extends AppController
         }
 
         $this->Goal->commit();
-        $this->Mixpanel->trackCreateKR($goal_id, $this->Goal->KeyResult->getLastInsertID());
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
+                                   $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
         $this->redirect($this->referer());
@@ -410,6 +430,9 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
+
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -434,9 +457,15 @@ class GoalsController extends AppController
                 //ゴール完了の投稿
                 $this->Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $key_result['KeyResult']['goal_id'], null);
                 $this->Goal->complete($goal['Goal']['id']);
+                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL,
+                                           $key_result['KeyResult']['goal_id'],
+                                           $kr_id);
                 $this->Pnotify->outSuccess(__d('gl', "ゴールを完了にしました。"));
             }
             else {
+                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
+                                           $key_result['KeyResult']['goal_id'],
+                                           $kr_id);
                 $this->Pnotify->outSuccess(__d('gl', "成果を完了にしました。"));
             }
         } catch (RuntimeException $e) {
@@ -505,6 +534,8 @@ class GoalsController extends AppController
         $this->Goal->ActionResult->releaseKr($kr_id);
 
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -529,6 +560,10 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         $this->Goal->ActionResult->id = $ar_id;
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_ACTION,
+                                   $action['ActionResult']['goal_id'],
+                                   $action['ActionResult']['key_result_id'],
+                                   $ar_id);
         $this->Goal->ActionResult->delete();
         if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
             $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
@@ -540,15 +575,20 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_collabo($key_result_user_id)
+    public function delete_collabo($collabo_id)
     {
         $this->request->allowMethod('post', 'put');
-        $this->Goal->Collaborator->id = $key_result_user_id;
+        $this->Goal->Collaborator->id = $collabo_id;
         if (!$this->Goal->Collaborator->exists()) {
             $this->Pnotify->outError(__('gl', "既にコラボレータから抜けている可能性があります。"));
         }
         if (!$this->Goal->Collaborator->isOwner($this->Auth->user('id'))) {
             $this->Pnotify->outError(__('gl', "この操作の権限がありません。"));
+        }
+        $collabo = $this->Goal->Collaborator->findById($collabo_id);
+        if (!empty($collabo)) {
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE,
+                                       $collabo['Collaborator']['goal_id']);
         }
         $this->Goal->Collaborator->delete();
         $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
@@ -587,11 +627,12 @@ class GoalsController extends AppController
         if ($return['add']) {
             $this->Goal->Follower->addFollower($goal_id);
             $return['msg'] = __d('gl', "フォローしました。");
-            $this->Mixpanel->trackFollowGoal($goal_id);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goal_id);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_FOLLOW, $goal_id);
         }
         else {
             $this->Goal->Follower->deleteFollower($goal_id);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goal_id);
             $return['msg'] = __d('gl', "フォロー解除しました。");
         }
 
@@ -747,6 +788,10 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
         $action = $this->Goal->ActionResult->find('first',
                                                   ['conditions' => ['ActionResult.id' => $ar_id]]);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
+                                   $action['ActionResult']['goal_id'],
+                                   $action['ActionResult']['key_result_id'],
+                                   $ar_id);
         if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
             $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
         }
@@ -888,7 +933,8 @@ class GoalsController extends AppController
         $this->NotifyBiz->push($socket_id, $channelName);
 
         $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;
-        $this->Mixpanel->trackCreateAction($this->Goal->ActionResult->getLastInsertID(), $goal_id, $kr_id);
+        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goal_id, $kr_id,
+                                   $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
                                          $this->Goal->ActionResult->getLastInsertID());
 

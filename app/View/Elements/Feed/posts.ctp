@@ -10,42 +10,42 @@
  * @var CodeCompletionView $this
  */
 ?>
-<? if (!empty($posts)): ?>
+<?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
-    <? foreach ($posts as $post_key => $post): ?>
+    <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <? if ((isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
+            <?php if ((isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
 
-                <? if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
-                <div class="panel-body pt_10px plr_11px pb_8px bd-b">
-                    <div class="col col-xxs-12">
-                        <div class="pull-right">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
-                               class="no-line font_verydark modal-ajax-get">
-                                <?=
-                                $this->Html->image('ajax-loader.gif',
-                                                   [
-                                                       'class'         => 'lazy media-object',
-                                                       'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                   "Goal.photo",
-                                                                                                   ['style' => 'small']),
-                                                       'width'         => '32px',
-                                                       'error-img'     => "/img/no-image-link.png",
-                                                   ]
-                                )
-                                ?>
-                            </a>
-                        </div>
-                        <div class="ln_contain w_88per">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
-                               class="no-line font_verydark modal-ajax-get">
-                                <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($post['Goal']['name']) ?>
-                            </a>
+                <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
+                    <div class="panel-body pt_10px plr_11px pb_8px bd-b">
+                        <div class="col col-xxs-12">
+                            <div class="pull-right">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
+                                   class="no-line font_verydark modal-ajax-get">
+                                    <?=
+                                    $this->Html->image('ajax-loader.gif',
+                                                       [
+                                                           'class'         => 'lazy media-object',
+                                                           'data-original' => $this->Upload->uploadUrl($post,
+                                                                                                       "Goal.photo",
+                                                                                                       ['style' => 'small']),
+                                                           'width'         => '32px',
+                                                           'error-img'     => "/img/no-image-link.png",
+                                                       ]
+                                    )
+                                    ?>
+                                </a>
+                            </div>
+                            <div class="ln_contain w_88per">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
+                                   class="no-line font_verydark modal-ajax-get">
+                                    <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($post['Goal']['name']) ?>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                    <?  elseif (isset($post['Circle']['id'])): ?>
+                <?php elseif (isset($post['Circle']['id'])): ?>
                     <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
                             <div class="pull-right">
@@ -73,13 +73,13 @@
                             </div>
                         </div>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
 
 
 
                 <!--END Goal Post Header -->
 
-            <? endif; ?>
+            <?php endif; ?>
             <div class="panel-body pt_10px plr_11px pb_8px">
                 <div class="col col-xxs-12 feed-user">
                     <div class="pull-right">
@@ -88,7 +88,7 @@
                                 <i class="fa fa-chevron-down feed-arrow"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                                <? if ($post['User']['id'] === $this->Session->read('Auth.User.id')
+                                <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')
                                     && $post['Post']['type'] != Post::TYPE_ACTION
                                     && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
                                     && $post['Post']['type'] != Post::TYPE_GOAL_COMPLETE
@@ -102,19 +102,20 @@
                                            ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', $post['Post']['id']]) ?>"
                                             ><?= __d('gl', "投稿を編集") ?></a>
                                     </li>
-                                <? endif ?>
-                                <? if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                    <? if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
+                                <?php endif ?>
+                                <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                                    <?php if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
                                         <li><?=
                                             $this->Form->postLink(__d('gl', "投稿を削除"),
                                                                   ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
                                                                   null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
-                                    <? endif; ?>
-                                <? endif ?>
-                                <li><a href="#" class="copy_me"
-                                       data-clipboard-text="<?=
+                                    <?php endif; ?>
+                                <?php endif ?>
+                                <li>
+                                    <a href="#" class="copy_me"
+                                       onclick="copyToClipboard('<?=
                                        $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
-                                                        true) ?>">
+                                                        true) ?>')">
                                         <?= __d('gl', "リンクをコピー") ?></a>
                                 </li>
                             </ul>
@@ -130,55 +131,10 @@
                     )
                     ?>
                     <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
-                    <div class="font_11px font_lightgray">
-                        <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
-                        <? if ($post['Post']['type'] != Post::TYPE_ACTION
-                            && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
-                        ): ?>
-                            <span class="font_lightgray"> ･ </span>
-                            <?
-                            //公開の場合
-                            if ($post['share_mode'] == Post::SHARE_ALL): ?>
-                                <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
-                            <?
-                            //自分のみ
-                            elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
-                                <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
-                            <?
-                            //共有ユーザ
-                            elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                                   class="modal-ajax-get-share-circles-users link-dark-gray">
-                                    <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
-                                </a>
-                            <?
-                            //共有サークル、共有ユーザ
-                            elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_share_circles_users_modal', $post['Post']['id']]) ?>"
-                                   class="modal-ajax-get-share-circles-users link-dark-gray">
-                                    <i class="fa fa-circle-o"></i>&nbsp;<?= $post['share_text'] ?>
-                                </a>
-                            <? endif; ?>
-                        <? endif; ?>
-                    </div>
+                    <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
-                <div class="col col-xxs-12 feed-contents post-contents showmore font_14px font_verydark box-align"
-                     id="PostTextBody_<?= $post['Post']['id'] ?>">
-                    <? if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
-                        <?= $this->TextEx->autoLink($post['Post']['body']) ?>
-                    <? elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-                        <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= $this->TextEx->autoLink($post['ActionResult']['name']) ?>
-                    <? elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
-                        <i class="fa fa-key disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！",
-                                                                      h($post['KeyResult']['name'])) ?>
-                    <? elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
-                        <i class="fa fa-flag disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['Goal']['name'])) ?>
-                    <? else: ?>
-                        <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
-                    <? endif; ?>
-                </div>
-                <?
-                $photo_count = 0;
+                <?= $this->element('Feed/post_body', compact('post')) ?>
+                <?php $photo_count = 0;
                 //タイプ別に切り分け
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
                     $model_name = 'ActionResult';
@@ -192,28 +148,28 @@
                     }
                 }
                 ?>
-                <? if ($photo_count): ?>
+                <?php if ($photo_count): ?>
                     <div class="col col-xxs-12 pt_10px">
                         <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
                             <!-- Indicators -->
-                            <? if ($photo_count >= 2): ?>
+                            <?php if ($photo_count >= 2): ?>
                                 <ol class="carousel-indicators">
-                                    <? $index = 0 ?>
-                                    <? for ($i = 1; $i <= 5; $i++): ?>
-                                        <? if ($post[$model_name]["photo{$i}_file_name"]): ?>
+                                    <?php $index = 0 ?>
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <?php if ($post[$model_name]["photo{$i}_file_name"]): ?>
                                             <li data-target="#CarouselPost_<?= $post[$model_name]['id'] ?>"
                                                 data-slide-to="<?= $index ?>"
                                                 class="<?= ($index === 0) ? "active" : null ?>"></li>
-                                            <? $index++ ?>
-                                        <? endif ?>
-                                    <? endfor ?>
+                                            <?php $index++ ?>
+                                        <?php endif ?>
+                                    <?php endfor ?>
                                 </ol>
-                            <? endif; ?>
+                            <?php endif; ?>
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner">
-                                <? $index = 0 ?>
-                                <? for ($i = 1; $i <= 5; $i++): ?>
-                                    <? if ($post[$model_name]["photo{$i}_file_name"]): ?>
+                                <?php $index = 0 ?>
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <?php if ($post[$model_name]["photo{$i}_file_name"]): ?>
                                         <div class="item <?= ($index === 0) ? "active" : null ?>">
                                             <a href="<?=
                                             $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
@@ -230,14 +186,14 @@
                                                 )
                                                 ?>
                                             </a>
-                                            <? $index++ ?>
+                                            <?php $index++ ?>
                                         </div>
-                                    <? endif ?>
-                                <? endfor ?>
+                                    <?php endif ?>
+                                <?php endfor ?>
                             </div>
 
                             <!-- Controls -->
-                            <? if ($photo_count >= 2): ?>
+                            <?php if ($photo_count >= 2): ?>
                                 <a class="left carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
                                    data-slide="prev">
                                     <span class="glyphicon glyphicon-chevron-left"></span>
@@ -246,13 +202,13 @@
                                    data-slide="next">
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                 </a>
-                            <? endif; ?>
+                            <?php endif; ?>
                         </div>
 
                     </div>
-                <? endif; ?>
-                <? if ($post['Post']['site_info']): ?>
-                    <? $site_info = json_decode($post['Post']['site_info'], true) ?>
+                <?php endif; ?>
+                <?php if ($post['Post']['site_info']): ?>
+                    <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
                     <div class="col col-xxs-12 pt_10px">
                         <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
                            class="no-line font_verydark">
@@ -279,51 +235,19 @@
                                                                                                                            "...") : null ?></h4>
 
                                         <p class="font_11px media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
-                                        <? if (isset($site_info['description'])): ?>
+                                        <?php if (isset($site_info['description'])): ?>
                                             <div class="font_12px site-info-txt">
                                                 <?= mb_strimwidth(h($site_info['description']), 0, 110, "...") ?>
                                             </div>
-                                        <? endif; ?>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                         </a>
                     </div>
-                <? elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && isset($post['Goal']['id']) && $post['Goal']['id']): ?>
-                    <div class="col col-xxs-12 pt_10px">
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
-                           class="no-line font_verydark modal-ajax-get">
-                            <div class="site-info bd-radius_4px">
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <?=
-                                        $this->Html->image('ajax-loader.gif',
-                                                           [
-                                                               'class'         => 'lazy media-object',
-                                                               'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                           "Goal.photo",
-                                                                                                           ['style' => 'medium_large']),
-                                                               'width'         => '80px',
-                                                           ]
-                                        )
-                                        ?>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Goal']['name']),
-                                                                                              0, 50,
-                                                                                              "...") ?></h4>
-                                        <? if (isset($post['Goal']['Purpose']['name'])): ?>
-                                            <div class="font_12px site-info-txt">
-                                                <?= mb_strimwidth(h($post['Goal']['Purpose']['name']), 0, 110, "...") ?>
-                                            </div>
-                                        <? endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                <? elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
+                <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && isset($post['Goal']['id']) && $post['Goal']['id']): ?>
+                    <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
+                <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
                     <div class="col col-xxs-12 pt_10px">
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
                            class="no-line font_verydark">
@@ -346,25 +270,25 @@
                                         <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Circle']['name']),
                                                                                               0, 50,
                                                                                               "...") ?></h4>
-                                        <? if (isset($post['Circle']['description'])): ?>
+                                        <?php if (isset($post['Circle']['description'])): ?>
                                             <div class="font_12px site-info-txt">
                                                 <?= mb_strimwidth(h($post['Circle']['description']), 0, 110, "...") ?>
                                             </div>
-                                        <? endif; ?>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                         </a>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
 
 
 
-                <? if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
+                <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
                 <div class="col col-xxs-12 font_12px pt_8px">
                     <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
@@ -387,13 +311,13 @@
                 </div>
             </div>
             <div class="panel-body ptb_8px plr_11px comment-block">
-                <? if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
+                <?php if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                     <a href="#" class="btn btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
+                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3, 'long_text' => $long_text]) ?>"
                         >
-                        <? if ($post['unread_count'] > 0): ?>
+                        <?php if ($post['unread_count'] > 0): ?>
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
                             __d('gl', "他%s件のコメントを見る",
                                 $post['Post']['comment_count'] - 3) ?>
@@ -401,21 +325,21 @@
                             __d('gl', "(%s)",
                                 $post['unread_count']) ?>
 
-                        <? else: ?>
+                        <?php else: ?>
                             <span class="font_gray">
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
                                 __d('gl', "他%s件のコメントを見る",
                                     $post['Post']['comment_count'] - 3) ?>
                             </span>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </a>
-                <? endif; ?>
+                <?php endif; ?>
 
-                <? foreach ($post['Comment'] as $comment): ?>
+                <?php foreach ($post['Comment'] as $comment): ?>
                     <?=
                     $this->element('Feed/comment',
                                    ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
-                <? endforeach ?>
+                <?php endforeach ?>
 
                 <a href="#" class="btn btn-link click-comment-new"
                    id="Comments_new_<?= $post['Post']['id'] ?>"
@@ -462,6 +386,6 @@
                 </div>
             </div>
         </div>
-    <? endforeach ?>
+    <?php endforeach ?>
     <!-- END app/View/Elements/Feed/posts.ctp -->
-<? endif ?>
+<?php endif ?>

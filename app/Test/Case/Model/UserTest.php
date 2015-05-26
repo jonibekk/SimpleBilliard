@@ -661,4 +661,9 @@ class UserTest extends CakeTestCase
         $this->User->getAllUsersCirclesSelect2();
     }
 
+    function testGetUsersProf()
+    {
+        $res = $this->User->getUsersProf(1);
+        $this->assertTrue(!empty($res));
+    }
 }

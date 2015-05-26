@@ -36,7 +36,7 @@ App::uses('NotifySetting', 'Model');
  * @property Goal                                      $Goal
  * @property Team                                      $Team
  * @property NotifyBizComponent                        $NotifyBiz
- * @property RedisComponent                            $Redis
+ * @property GlRedis                                   $GlRedis
  * @property BenchmarkComponent                        $Benchmark
  */
 class AppController extends Controller
@@ -65,7 +65,6 @@ class AppController extends Controller
         'NotifyBiz',
         'Uservoice',
         'Csv',
-        'Redis',
         //        'Benchmark',
     ];
     public $helpers = [
@@ -84,6 +83,7 @@ class AppController extends Controller
         'Post',
         'Goal',
         'Team',
+        'GlRedis',
     ];
 
     /**
@@ -398,13 +398,13 @@ class AppController extends Controller
     function _setBasicAuth()
     {
         $this->autoRender = false;
-        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+        if (!env('PHP_AUTH_USER')) {
             header('WWW-Authenticate: Basic realm="Private Page"');
             header('HTTP/1.0 401 Unauthorized');
             die("id / password Required");
         }
         else {
-            if ($_SERVER['PHP_AUTH_USER'] != BASIC_AUTH_ID || $_SERVER['PHP_AUTH_PW'] != BASIC_AUTH_PASS) {
+            if (env('PHP_AUTH_USER') != BASIC_AUTH_ID || env('PHP_AUTH_PW') != BASIC_AUTH_PASS) {
                 header('WWW-Authenticate: Basic realm="Private Page"');
                 header('HTTP/1.0 401 Unauthorized');
                 die("Invalid id / password combination.  Please try again");
@@ -566,6 +566,7 @@ class AppController extends Controller
         $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER);
         $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER);
         $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER);
+
         $my_previous_goals = $this->Goal->getMyPreviousGoals();
         $my_previous_goals_count = count($my_previous_goals);
         $my_goals_count = count($this->Goal->getMyGoals());

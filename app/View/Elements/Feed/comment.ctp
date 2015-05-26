@@ -13,8 +13,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<?
-if (!isset($id_prefix)) {
+<?php if (!isset($id_prefix)) {
     $id_prefix = null;
 }
 ?>
@@ -31,7 +30,7 @@ if (!isset($id_prefix)) {
         ?>
         <div class="comment-body">
             <div class="col col-xxs-12 comment-text comment-user">
-                <? if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
+                <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
                             <i class="fa fa-chevron-down comment-arrow"></i>
@@ -52,52 +51,51 @@ if (!isset($id_prefix)) {
                                                       null, __d('gl', "本当にこのコメントを削除しますか？")) ?></li>
                         </ul>
                     </div>
-                <? elseif ($my_member_status['TeamMember']['admin_flg']): ?>
+                <?php elseif ($my_member_status['TeamMember']['admin_flg']): ?>
                     <div class="pull-right develop--link-gray">
                         <?=
                         $this->Form->postLink('<i class="fa fa-times comment-cross"></i>',
                                               ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
                 <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
             </div>
             <div
-                class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"
+                class="col col-xxs-12 <?= $long_text ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= $this->TextEx->autoLink($comment['body']) ?></div>
 
-            <?
-            $photo_count = 0;
+            <?php $photo_count = 0;
             for ($i = 1; $i <= 5; $i++) {
                 if ($comment["photo{$i}_file_name"]) {
                     $photo_count++;
                 }
             }
             ?>
-            <? if ($photo_count): ?>
+            <?php if ($photo_count): ?>
                 <div class="col col-xxs-12 comment-photo">
 
                     <div id="<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>" class="carousel slide"
                          data-ride="carousel">
                         <!-- Indicators -->
-                        <? if ($photo_count >= 2): ?>
+                        <?php if ($photo_count >= 2): ?>
                             <ol class="carousel-indicators">
-                                <? $index = 0 ?>
-                                <? for ($i = 1; $i <= 5; $i++): ?>
-                                    <? if ($comment["photo{$i}_file_name"]): ?>
+                                <?php $index = 0 ?>
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <?php if ($comment["photo{$i}_file_name"]): ?>
                                         <li data-target="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
                                             data-slide-to="<?= $index ?>"
                                             class="<?= ($index === 0) ? "active" : null ?>"></li>
-                                        <? $index++ ?>
-                                    <? endif ?>
-                                <? endfor ?>
+                                        <?php $index++ ?>
+                                    <?php endif ?>
+                                <?php endfor ?>
                             </ol>
-                        <? endif; ?>
+                        <?php endif; ?>
                         <!-- Wrapper for slides -->
                         <div class="carousel-inner">
-                            <? $index = 0 ?>
-                            <? for ($i = 1; $i <= 5; $i++): ?>
-                                <? if ($comment["photo{$i}_file_name"]): ?>
+                            <?php $index = 0 ?>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?php if ($comment["photo{$i}_file_name"]): ?>
                                     <div class="item <?= ($index === 0) ? "active" : null ?>">
                                         <a href="<?=
                                         $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
@@ -115,14 +113,14 @@ if (!isset($id_prefix)) {
                                             )
                                             ?>
                                         </a>
-                                        <? $index++ ?>
+                                        <?php $index++ ?>
                                     </div>
-                                <? endif ?>
-                            <? endfor ?>
+                                <?php endif ?>
+                            <?php endfor ?>
                         </div>
 
                         <!-- Controls -->
-                        <? if ($photo_count >= 2): ?>
+                        <?php if ($photo_count >= 2): ?>
                             <a class="left carousel-control"
                                href="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
                                data-slide="prev">
@@ -133,14 +131,14 @@ if (!isset($id_prefix)) {
                                data-slide="next">
                                 <span class="glyphicon glyphicon-chevron-right"></span>
                             </a>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </div>
 
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
 
-            <? if ($comment['site_info']): ?>
-                <? $site_info = json_decode($comment['site_info'], true) ?>
+            <?php if ($comment['site_info']): ?>
+                <?php $site_info = json_decode($comment['site_info'], true) ?>
                 <div class="col col-xxs-12">
                     <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
                        class="no-line font_verydark">
@@ -166,17 +164,17 @@ if (!isset($id_prefix)) {
                                                                                                                                   "...") : null ?></h4>
 
                                     <p class="font_11px  media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
-                                    <? if (isset($site_info['description'])): ?>
+                                    <?php if (isset($site_info['description'])): ?>
                                         <div class="font_12px">
                                             <?= mb_strimwidth(h($site_info['description']), 0, 95, "...") ?>
                                         </div>
-                                    <? endif; ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
 
 
             <div class="lh_15px">

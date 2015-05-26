@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-required_plugins = %w( vagrant-omnibus vagrant-cachier )
+required_plugins = %w( vagrant-omnibus vagrant-cachier vagrant-triggers )
 required_plugins.each do |plugin|
  unless Vagrant.has_plugin? plugin
    required_plugins.each do |plugin|
@@ -31,6 +31,12 @@ Vagrant.configure("2") do |config|
     config.omnibus.chef_version = '11.4.4'
   end
 
+  if Vagrant.has_plugin?("vagrant-triggers")
+    config.trigger.after [:reload, :halt], stdout: true do
+      `rm .vagrant/machines/default/virtualbox/synced_folders`
+    end
+  end
+
   src_dir = './'
   doc_root = '/vagrant_data/app/webroot'
   app_root = '/vagrant_data/'
@@ -45,7 +51,7 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "local_db"
     chef.add_recipe "local_etc"
     chef.add_recipe "deploy_cake_local"
-    chef.json = {doc_root: doc_root,app_root: app_root}
+    chef.json = {doc_root: doc_root,app_root: app_root, php5:{session_secure:"Off"}}
   end
 
 end

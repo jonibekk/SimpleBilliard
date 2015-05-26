@@ -29,7 +29,7 @@ $this->Form->create('Comment', [
     'first-form-id'   => $prefix . 'NewCommentForm_' . $post_id,
     'refresh-link-id' => $prefix . 'Comments_new_' . $post_id,
 ]); ?>
-<? $this->Form->unlockField('socket_id') ?>
+<?php $this->Form->unlockField('socket_id') ?>
 <?=
 $this->Form->input('body', [
     'id'          => "{$prefix}CommentFormBody_{$post_id}",
@@ -47,13 +47,13 @@ $this->Form->input('body', [
 <div class="form-group" id="<?= $prefix ?>CommentFormImage_<?= $post_id ?>"
      style="display: none">
     <ul class="input-images">
-        <? for ($i = 1; $i <= 5; $i++): ?>
+        <?php for ($i = 1; $i <= 5; $i++): ?>
             <li>
                 <?=
                 $this->element('Feed/photo_upload',
                                ['type' => 'comment', 'index' => $i, 'submit_id' => "{$prefix}CommentSubmit_{$post_id}", 'post_id' => $post_id]) ?>
             </li>
-        <? endfor ?>
+        <?php endfor ?>
     </ul>
     <span class="help-block" id="Comment__Post_<?= $post_id ?>_Photo_ValidateMessage"></span>
 </div>
@@ -68,7 +68,8 @@ $this->Form->input('body', [
             </button>
         </a>
     </div>
-    <div class="pull-left mt_12px font_brownRed"><span id="<?= $prefix ?>CommentFormErrorMsg_<?= $post_id ?>"></span></div>
+    <div class="pull-left mt_12px font_brownRed"><span id="<?= $prefix ?>CommentFormErrorMsg_<?= $post_id ?>"></span>
+    </div>
     <div class="pull-right">
         <?=
         $this->Form->submit(__d('gl', "コメントする"),

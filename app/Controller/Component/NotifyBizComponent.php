@@ -3,14 +3,14 @@ App::uses('ModelType', 'Model');
 
 /**
  * @author daikihirakata
- * @property SessionComponent $Session
- * @property RedisComponent   $Redis
- * @property AuthComponent    $Auth
- * @property GlEmailComponent $GlEmail
- * @property NotifySetting    $NotifySetting
- * @property Post             $Post
- * @property Goal             $Goal
- * @property Team             $Team
+ * @property SessionComponent    $Session
+ * @property AuthComponent       $Auth
+ * @property GlEmailComponent    $GlEmail
+ * @property NotifySetting       $NotifySetting
+ * @property Post                $Post
+ * @property Goal                $Goal
+ * @property GlRedis             $GlRedis
+ * @property Team                $Team
  */
 class NotifyBizComponent extends Component
 {
@@ -55,6 +55,7 @@ class NotifyBizComponent extends Component
             $this->Post = ClassRegistry::init('Post');
             $this->Goal = ClassRegistry::init('Goal');
             $this->Team = ClassRegistry::init('Team');
+            $this->GlRedis = ClassRegistry::init('GlRedis');
             $this->GlEmail->startup($controller);
         }
     }
@@ -689,7 +690,7 @@ class NotifyBizComponent extends Component
         }
         $item = json_encode($item);
         //TODO save to redis.
-        $this->Redis->setNotifications(
+        $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
             $uids,
@@ -793,7 +794,7 @@ class NotifyBizComponent extends Component
      */
     function getNotification($limit = null, $from_date = null)
     {
-        $notify_from_redis = $this->Redis->getNotifications(
+        $notify_from_redis = $this->GlRedis->getNotifications(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid,
             $limit,
@@ -837,7 +838,7 @@ class NotifyBizComponent extends Component
      */
     function setNotifications($to_user_ids, $type, $url, $body = null)
     {
-        $this->Redis->setNotifications(
+        $this->GlRedis->setNotifications(
             $type,
             $this->NotifySetting->current_team_id,
             $to_user_ids,
@@ -855,7 +856,7 @@ class NotifyBizComponent extends Component
      */
     function getCountNewNotification()
     {
-        return $this->Redis->getCountOfNewNotification(
+        return $this->GlRedis->getCountOfNewNotification(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid
         );
@@ -868,7 +869,7 @@ class NotifyBizComponent extends Component
      */
     function resetCountNewNotification()
     {
-        return $this->Redis->deleteCountOfNewNotification(
+        return $this->GlRedis->deleteCountOfNewNotification(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid
         );
@@ -883,7 +884,7 @@ class NotifyBizComponent extends Component
      */
     function changeReadStatusNotification($notify_id)
     {
-        return $this->Redis->changeReadStatusOfNotification(
+        return $this->GlRedis->changeReadStatusOfNotification(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid,
             $notify_id

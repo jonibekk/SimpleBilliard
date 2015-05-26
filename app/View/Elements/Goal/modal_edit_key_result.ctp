@@ -78,8 +78,7 @@
                                        ]) ?>
                 </div>
                 <div class="row">
-                    <?
-                    //TODO 一旦、使わないのでコメントアウト
+                    <?php //TODO 一旦、使わないのでコメントアウト
                     //                echo $this->Form->input('KeyResult.current_value',
                     //                                        [
                     //                                            'before'                       => '<div class="col col-sm-3 control-label set-importance">' .
@@ -241,6 +240,7 @@
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
         </div>
+        <?= $this->Form->end() ?>
     </div>
 </div>
 <!-- END app/View/Elements/Goal/modal_edit_key_result.ctp -->

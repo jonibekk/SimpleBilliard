@@ -49,15 +49,14 @@
                     <?=
                     $this->Form->hidden('members',
                                         ['class' => 'ajax_add_select2_members', 'value' => $this->request->data['Circle']['members'], 'style' => "width: 100%", 'circle_id' => $this->request->data['Circle']['id']]) ?>
-                    <? $this->Form->unlockField('Circle.members') ?>
+                    <?php $this->Form->unlockField('Circle.members') ?>
                     <span class="help-block font_11px"><?=
                         __d('gl', "管理者：%s",
                             h($this->Session->read('Auth.User.display_username'))) ?></span>
                 </div>
             </div>
             <hr>
-            <?
-            $privacy_option = Circle::$TYPE_PUBLIC;
+            <?php $privacy_option = Circle::$TYPE_PUBLIC;
             $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
                                                                                                    "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
             $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
