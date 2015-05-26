@@ -10,6 +10,10 @@
  * @var CodeCompletionView $this
  */
 ?>
+<?php if (!empty($posts)):
+    $items_per_group = 20;
+
+    ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
