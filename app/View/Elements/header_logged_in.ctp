@@ -71,7 +71,8 @@
                     </a>
                 </li>
                 <li class="mtb_5px mtb-sm_0">
-                    <a href="#" class="header-team header_l-icons develop--forbiddenLink">
+                    <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
+                        href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'member_list']) ?>">
                         <div class="ta-sm_c">
                             <i class="fa fa-users header-link header-icon nav-xxs-icon"></i>
 

@@ -457,4 +457,12 @@ class TeamsController extends AppController
                                          $this->Team->EvaluateTerm->getCurrentTermId());
         return $this->redirect($this->referer());
     }
+
+    function member_list()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $current_global_menu = "team";
+        $this->set(compact('current_global_menu'));
+        return $this->render();
+    }
 }
