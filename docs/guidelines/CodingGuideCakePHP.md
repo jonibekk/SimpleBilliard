@@ -73,7 +73,7 @@ belongsToもしくはhasManyのテーブルを一緒に取ってきたい場合�
 
 ## Controller
 #### レスポンスを返す処理はアクションメソッド内で`return`する。
-理由
+理由:  
 - レスポンスを返す処理がアクションメソッドにあると処理が終わる箇所が把握しやすい。
 - `return`しないと、テストでそのあとの処理が実行されてしまう。
 
@@ -90,12 +90,12 @@ return $this->render();
 ```php
 return $this->redirect(['controller'=>'goals','action'=>'add',111,'type'=>'abc']);
 ```
-この場合は`GoalsController`の`add`アクションメソッドが呼ばれ、そのメソッドの第一引数に`111`が渡り、
-名前付きパラメータの`type`が`$this->request->params['named']['type']`に渡ります。
-`/goals/add/111/type:abc`ではなく、なぜこのような書き方にするかというと、以下のファイルのルーティングルールに準拠する為です。
-https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/routes.php
-ここで指定すれば、長いURLを短くカスタマイズしたり、色々できます。逆ルーティングも含めて。
-ソースコードに手を加えずに、サービス全体に反映させられます。
+この場合は`GoalsController`の`add`アクションメソッドが呼ばれ、そのメソッドの第一引数に`111`が渡り、  
+名前付きパラメータの`type`が`$this->request->params['named']['type']`に渡ります。  
+`/goals/add/111/type:abc`ではなく、なぜこのような書き方にするかというと、以下のファイルのルーティングルールに準拠する為です。  
+https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/routes.php  
+ここで指定すれば、長いURLを短くカスタマイズしたり、色々できます。逆ルーティングも含めて。  
+ソースコードに手を加えずに、サービス全体に反映させられます。  
 
 
 #### 権限チェックなどは、`try-catch`で処理する。
@@ -112,8 +112,8 @@ https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/routes.php
 
 
 ## View
-書きかけです。
-現在、[BoostCake](http://slywalker.github.io/cakephp-plugin-boost_cake/)というプラグインを使ってFormその他の出力を行っているが、近い将来これをやめ、Cake標準の[FormHelper](http://book.cakephp.org/2.0/ja/core-libraries/helpers/form.html)に戻す。
+書きかけです。  
+現在、[BoostCake](http://slywalker.github.io/cakephp-plugin-boost_cake/)というプラグインを使ってFormその他の出力を行っているが、近い将来これをやめ、Cake標準の[FormHelper](http://book.cakephp.org/2.0/ja/core-libraries/helpers/form.html)に戻す。  
 理由としては、当初Bootstrapを採用した事で共通のelementの出力をHelperがまかなってくれることでViewの行数が減って良かったが、多様なComponentに対応できず、かつ極端に可読性が落ちている為。
 
 ## Test
