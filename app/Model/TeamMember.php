@@ -12,6 +12,9 @@ App::uses('AppModel', 'Model');
  */
 class TeamMember extends AppModel
 {
+    const ADMIN_USER_FLAG = 1;
+    const ACTIVE_USER_FLAG = 1;
+
     public $myTeams = [];
     /**
      * Validation rules
@@ -233,6 +236,30 @@ class TeamMember extends AppModel
         }
         $res = $this->find('list', $options);
         return $res;
+    }
+
+    public function selectMemberInfo($team_id)
+    {
+        $options = [
+            'fields'     => ['active_flg', 'admin_flg'],
+            'conditions' => [
+                'team_id' => $team_id
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret'],
+                ],
+                'Team' => [
+                    'Group' => [
+                        'fields' => ['name']
+                    ]
+                ]
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        $count = $this->find('count', $options);
+        return [$res, $count];
     }
 
     public function activateMembers($user_ids, $team_id = null)
