@@ -89,8 +89,8 @@
 1. 名前を変更して`Advanced`を押す。   
 ![clone_stack_01_goalous_production_copy_ _aws_opsworks](https://cloud.githubusercontent.com/assets/3040037/7809438/0b705ce0-03d5-11e5-9cd2-0567d6dd4e20.png)   
 1. Custom Json を変更する。  
-![clone_stack_01_goalous_production_copy_ _aws_opsworks](https://cloud.githubusercontent.com/assets/3040037/7809518/d3eddd1e-03d5-11e5-896f-e2c806c856fd.png)   
-![clone_stack_01_goalous_production_copy_ _aws_opsworks](https://cloud.githubusercontent.com/assets/3040037/7810389/83e96dcc-03dc-11e5-994d-f8f16a98f05d.png)   
+![clone_stack_01_goalous_production_copy_ _aws_opsworks](https://cloud.githubusercontent.com/assets/3040037/7821044/16cf7efc-0427-11e5-9d32-309ae3b35031.png)  
+![clone_stack_01_goalous_production_copy_ _aws_opsworks](https://cloud.githubusercontent.com/assets/3040037/7821048/1b600e50-0427-11e5-9695-7dbe56d6f4db.png)  
 1. `Clone Stack`ボタンを押す。  
 ![clone_stack_01_goalous_production_copy_ _aws_opsworks](https://cloud.githubusercontent.com/assets/3040037/7809668/f0f7f740-03d6-11e5-8884-5aebff652656.png)   
 1. ELBを紐付ける。   
