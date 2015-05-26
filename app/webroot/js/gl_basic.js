@@ -2399,7 +2399,6 @@ function copyToClipboard(url) {
 }
 
 $(document).ready(function () {
-console.log(autoload_more);
     $(window).scroll(function(){
         if($(window).scrollTop() + $(window).height() == $(document).height())
         {
@@ -2407,7 +2406,6 @@ console.log(autoload_more);
             {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
-                console.log(autoload_more);
             }
         }
     });
