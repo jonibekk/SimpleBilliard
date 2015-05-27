@@ -2059,7 +2059,7 @@ function evCommentLatestView() {
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     //ローダー表示
-    $obj.children(".new-comment-read").append($loader_html);
+
     $.ajax({
         type: 'GET',
         url: get_url,
