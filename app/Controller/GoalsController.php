@@ -331,7 +331,7 @@ class GoalsController extends AppController
 
         if (!isset($this->request->data['Collaborator'])) {
             $this->_editCollaboError();
-            return;
+            return $this->redirect($this->referer());
         }
         $collaborator = $this->request->data['Collaborator'];
 
@@ -345,7 +345,7 @@ class GoalsController extends AppController
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
             $this->_editCollaboError();
-            return;
+            return $this->redirect($this->referer());
         }
 
         //success case.
@@ -356,13 +356,12 @@ class GoalsController extends AppController
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
         }
-        $this->redirect($this->referer());
+        return $this->redirect($this->referer());
     }
 
     function _editCollaboError()
     {
         $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
-        $this->redirect($this->referer());
     }
 
     public function add_key_result($goal_id, $current_kr_id = null)
