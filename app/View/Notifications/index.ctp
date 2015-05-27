@@ -25,7 +25,7 @@
         <?php if ($isExistMoreNotify): ?>
               <div class="panel-read-more-body">
                   <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
-                  <a href="#" class="btn btn-link font_bold click-notify-read-more"
+                  <a id="FeedMoreReadLink" href="#" class="btn btn-link font_bold click-notify-read-more"
                      get-url="<?=
                      $this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_old_notify_more']) ?>"
                       >

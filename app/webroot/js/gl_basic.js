@@ -1450,6 +1450,7 @@ function getModalPostList(e) {
         });
     }
 }
+autoload_more = false;
 function evFeedMoreView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
@@ -1521,6 +1522,7 @@ function evFeedMoreView() {
 
                 $('.custom-radio-check').customRadioCheck();
 
+
             }
 
             if (data.count < 20) {
@@ -1544,6 +1546,7 @@ function evFeedMoreView() {
                     $obj.remove();
                 }
             }
+            autoload_more = false;
         },
         error: function () {
             alert(cake.message.notice.c);
@@ -1555,7 +1558,6 @@ function evFeedMoreView() {
 function evCommentOldView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'get-url');
-
     var $obj = $(this);
     var parent_id = $obj.attr('parent-id');
     var get_url = $obj.attr('get-url');
@@ -2190,6 +2192,7 @@ $(function () {
 
 });
 
+
 function evNotifyMoreView() {
     attrUndefinedCheck(this, 'get-url');
 
@@ -2208,6 +2211,7 @@ function evNotifyMoreView() {
         url: url,
         async: true,
         success: function (data) {
+            autoload_more = false;
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $notify = $(data.html);
@@ -2395,3 +2399,16 @@ function updateListBox() {
 function copyToClipboard(url) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
 }
+
+$(document).ready(function () {
+    $(window).scroll(function(){
+        if($(window).scrollTop() + $(window).height() == $(document).height())
+        {
+            if(!autoload_more)
+            {
+                autoload_more = true;
+                $('#FeedMoreReadLink').trigger('click');
+            }
+        }
+    });
+});

@@ -149,6 +149,7 @@ if (!empty($posts) && (!isset($this->request->params['post_id']) || empty($this-
                month-index="<?= $month_index ?>"
                get-url="<?=
                $this->Html->url($feed_more_read_url) ?>"
+               id="FeedMoreReadLink"
                 >
                 <?= $more_read_text ?></a>
         </div>

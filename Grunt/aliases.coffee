@@ -30,6 +30,14 @@ module.exports = (grunt) ->
   ]
 
   #
+  # chef task (!watch)
+  #
+  grunt.registerTask 'chef', [
+    'js'
+    'css'
+  ]
+
+  #
   # setting of jsdocs task.
   # This task is NOT watched.
   #
@@ -59,6 +67,7 @@ module.exports = (grunt) ->
   ]
 
   #
+  # DO NOT use on Virtual Machine.
   # combine 3 above tasks.
   # Run `grunt docs` before push.
   #
@@ -68,15 +77,6 @@ module.exports = (grunt) ->
     'gruntdocs'
     'jade'
     'connect'
-  ]
-
-  #
-  # alltask (!watch)
-  #
-  grunt.registerTask 'all', [
-    'js'
-    'css'
-    'docs'
   ]
 
   #
