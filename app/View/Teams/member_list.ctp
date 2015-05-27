@@ -1,7 +1,16 @@
 <!-- START app/View/Teams/member_list.ctp -->
+<style type="text/css">
+    .team_member_table {
+        background-color: #ffffff;
+        font-size: 14px;
+        border-radius: 5px;
+    }
+
+</style>
+
 <script type="text/javascript">
     function changeFilter() {
-        var filter_name = document.forms.TeamMemberListForm.filter_name.selectedIndex;
+        var filter_name = document.getElementById('filter_name').selectedIndex;
         if (filter_name == 0) {
             document.getElementById('name_field').style.display = "block";
             document.getElementById('admin_field').style.display = "none";
@@ -31,8 +40,7 @@
 </script>
 
 <div class="well">
-    <div class="row">
-        <?= $this->Form->create(); ?>
+    <div id="filter_box" class="row">
         <div class="col-xs-12 col-sm-4">
             <select id="filter_name" name="filter_name" class="form-control" onchange="changeFilter()">
                 <option value="name">名前</option>
@@ -59,19 +67,19 @@
             </div>
             <div id="group_field" style="display: none">
                 <select name="group_id" class="form-control">
+                    <option value="all">すべて</option>
                     <?php foreach ($group_info as $id => $name) { ?>
                         <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
                     <?php } ?>
                 </select>
             </div>
         </div>
-        <?= $this->Form->end(); ?>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-12">
-        <table class="table table-striped">
+        <table class="table table-bordered team_member_table">
             <?php foreach ($user_info as $key => $ui) { ?>
                 <tr>
                     <td width="30%">
@@ -79,9 +87,9 @@
                                                                    'data-original' => $this->Upload->uploadUrl($ui['User']['id'],
                                                                                                                'User.photo',
                                                                                                                ['style' => 'small'])]) ?>
+                        <p><?= $ui['User']['display_username']; ?></p>
                     </td>
                     <td>
-                        <p><?= $ui['User']['display_username']; ?></p>
 
                         <p><?= $ui['TeamMember']['admin_flg'] == (string)TeamMember::ADMIN_USER_FLAG ? '管理者' : 'メンバー'; ?></p>
 

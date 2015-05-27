@@ -467,6 +467,10 @@ class TeamsController extends AppController
         // グループ名を取得
         $group_info = $this->Team->Group->getByAllName($team_id);
 
+
+        var_dump($this->request->is('post'));
+
+
         // ユーザー取得(デフォルト:チームメンバー全員)
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id);
         //var_dump($user_ids[0]['Team']['Group'], $count);
