@@ -177,9 +177,9 @@ class KeyResult extends AppModel
         return true;
     }
 
-    function getKeyResults($goal_id, $find_type = "all",$is_complete = null)
+    function getKeyResults($goal_id, $find_type = "all",$is_complete = false)
     {
-        if(is_null($is_complete)) {
+        if(!$is_complete) {
             $options = [
                 'conditions' => [
                     'goal_id' => $goal_id,
