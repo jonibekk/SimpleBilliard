@@ -712,7 +712,7 @@ class GoalsController extends AppController
     public function ajax_get_kr_list($goal_id)
     {
         $this->_ajaxPreProcess();
-        $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list");
+        $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list",'y');
         return $this->_ajaxGetResponse($kr_list);
     }
 

@@ -177,20 +177,38 @@ class KeyResult extends AppModel
         return true;
     }
 
-    function getKeyResults($goal_id, $find_type = "all")
+    function getKeyResults($goal_id, $find_type = "all",$is_complete = null)
     {
-        $options = [
-            'conditions' => [
-                'goal_id' => $goal_id,
-                'team_id' => $this->current_team_id,
-            ],
-            'order'      => [
-                'KeyResult.progress ASC',
-                'KeyResult.start_date ASC',
-                'KeyResult.end_date ASC',
-                'KeyResult.priority DESC',
-            ]
-        ];
+        if(is_null($is_complete)) {
+            $options = [
+                'conditions' => [
+                    'goal_id' => $goal_id,
+                    'team_id' => $this->current_team_id,
+                ],
+                'order'      => [
+                    'KeyResult.progress ASC',
+                    'KeyResult.start_date ASC',
+                    'KeyResult.end_date ASC',
+                    'KeyResult.priority DESC',
+                ]
+            ];
+        }
+        else{
+            $options = [
+                'conditions' => [
+                    'goal_id' => $goal_id,
+                    'team_id' => $this->current_team_id,
+                    'completed' =>null
+                ],
+                'order'      => [
+                    'KeyResult.progress ASC',
+                    'KeyResult.start_date ASC',
+                    'KeyResult.end_date ASC',
+                    'KeyResult.priority DESC',
+                ]
+            ];
+        }
+
         $res = $this->find($find_type, $options);
         return $res;
     }
