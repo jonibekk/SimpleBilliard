@@ -579,7 +579,7 @@ function evTargetShowTargetDelete() {
     var $obj = $(this);
     var show_target_id = $obj.attr("show-target-id");
     var delete_target_id = $obj.attr("delete-target-id");
-    $("#" + show_target_id).show();
+    $("#" + show_target_id).removeClass('none');
     $("#" + delete_target_id).remove();
     return false;
 }
@@ -2401,11 +2401,9 @@ function copyToClipboard(url) {
 }
 
 $(document).ready(function () {
-    $(window).scroll(function(){
-        if($(window).scrollTop() + $(window).height() == $(document).height())
-        {
-            if(!autoload_more)
-            {
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+            if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
             }
