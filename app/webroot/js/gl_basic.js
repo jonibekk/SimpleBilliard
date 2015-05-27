@@ -263,11 +263,12 @@ $(document).ready(function () {
         var startTermMonth = $('#TeamStartTermMonth').val();
         var borderMonths = $('#TeamBorderMonths').val();
         if (startTermMonth === "" || borderMonths === "") {
+            $('#CurrentTermStr').empty();
             return false;
         }
         var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths;
         $.get(url, function (data) {
-            $('#CurrentTermStr').empty().text(data.start + "  -  " + data.end);
+            $('#CurrentTermStr').text(data.start + "  -  " + data.end);
         });
     });
 
