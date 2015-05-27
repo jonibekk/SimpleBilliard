@@ -1273,7 +1273,6 @@ select[multiple].input-lg {
     margin-bottom: 1px;
 }
 @media (min-width: 768px) {
-    }
     .navbar-right .dropdown-menu-left {
         left: 0;
         right: auto;
