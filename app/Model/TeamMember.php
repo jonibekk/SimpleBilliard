@@ -241,7 +241,7 @@ class TeamMember extends AppModel
     public function selectMemberInfo($team_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'admin_flg'],
+            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id'],
             'conditions' => [
                 'team_id' => $team_id
             ],
@@ -258,6 +258,16 @@ class TeamMember extends AppModel
         ];
 
         $res = $this->find('all', $options);
+        foreach ($res as $key => $tm_obj) {
+            // コーチ名を取得
+            if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
+                $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);
+                if (isset($u_info['User']['display_username']) === true) {
+                    $res[$key]['TeamMember']['coach_name'] = $u_info['User']['display_username'];
+                }
+            }
+        }
+
         $count = $this->find('count', $options);
         return [$res, $count];
     }

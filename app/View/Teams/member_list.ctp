@@ -7,14 +7,14 @@
     }
 
     .team_member_count_label {
-        font-size: 24px;
+        font-size: 18px;
         padding: 12px;
     }
 
     .team_member_setting_btn {
         color: #ffffff;
-        background-color: #696969;
-        border-color: #696969;
+        background-color: #ffffff;
+        border-color: lightgray;
     }
 
 </style>
@@ -22,59 +22,34 @@
 <script type="text/javascript">
     function changeFilter() {
         var filter_name = document.getElementById('filter_name').selectedIndex;
-        if (filter_name == 0) {
-            document.getElementById('name_field').style.display = "block";
-            document.getElementById('admin_field').style.display = "none";
-            document.getElementById('coach_field').style.display = "none";
-            document.getElementById('group_field').style.display = "none";
-
-        } else if (filter_name == 1) {
+        if (filter_name == 2) {
             document.getElementById('name_field').style.display = "none";
-            document.getElementById('admin_field').style.display = "block";
-            document.getElementById('coach_field').style.display = "none";
-            document.getElementById('group_field').style.display = "none";
-
-        } else if (filter_name == 2) {
-            document.getElementById('name_field').style.display = "none";
-            document.getElementById('admin_field').style.display = "none";
-            document.getElementById('coach_field').style.display = "block";
-            document.getElementById('group_field').style.display = "none";
-
-        } else if (filter_name == 3) {
-            document.getElementById('name_field').style.display = "none";
-            document.getElementById('admin_field').style.display = "none";
-            document.getElementById('coach_field').style.display = "none";
             document.getElementById('group_field').style.display = "block";
 
+        } else {
+            document.getElementById('name_field').style.display = "block";
+            document.getElementById('group_field').style.display = "none";
         }
     }
 </script>
+
+<br>
 
 <div class="well">
     <div id="filter_box" class="row">
         <div class="col-xs-12 col-sm-4">
             <select id="filter_name" name="filter_name" class="form-control" onchange="changeFilter()">
-                <option value="name">名前</option>
-                <option value="admin">管理者</option>
-                <option value="coach">コーチ</option>
-                <option value="group">グループ</option>
+                <option value="name">すべて</option>
+                <option value="name">コーチの名前</option>
+                <option value="group">グループ名</option>
+                <option value="group">チーム管理者</option>
+                <option value="group">招待中</option>
+                <option value="group">2段階認証OFF</option>
             </select>
         </div>
         <div class="col-xs-12 col-sm-8">
             <div id="name_field">
-                <input type="text" class="form-control">
-            </div>
-            <div id="admin_field" style="display: none">
-                <select name="admin_flg" class="form-control">
-                    <option value="">管理者のみ</option>
-                    <option value="">一般メンバーのみ</option>
-                </select>
-            </div>
-            <div id="coach_field" style="display: none">
-                <select name="coach_id" class="form-control">
-                    <option value="">菊池</option>
-                    <option value="">草刈</option>
-                </select>
+                <input type="text" class="form-control" placeholder="名前を入力してください">
             </div>
             <div id="group_field" style="display: none">
                 <select name="group_id" class="form-control">
@@ -86,14 +61,21 @@
             </div>
         </div>
     </div>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" value="">
+            無効化されたメンバーも表示する
+            <!-- <p><?= $ui['TeamMember']['active_flg'] == (string)TeamMember::ACTIVE_USER_FLAG ? '在職中' : '退職'; ?></p> -->
+        </label>
+    </div>
 </div>
 
 
 
 <div class="row">
-    <div class="team_member_count_label"><?= $count; ?> people in your network</div>
+    <div class="team_member_count_label">対象メンバー ( <?= $count; ?> )</div>
     <div class="col-xs-12">
-        <table class="table table-bordered team_member_table">
+        <table class="table team_member_table">
             <?php foreach ($user_info as $key => $ui) { ?>
                 <tr>
                     <td width="30%">
@@ -101,22 +83,25 @@
                                                                    'data-original' => $this->Upload->uploadUrl($ui['User'],
                                                                                                                'User.photo',
                                                                                                                ['style' => 'small'])]) ?>
-                        <p><?= $ui['User']['display_username']; ?></p>
+                        <p>
+                            <?= $ui['User']['display_username']; ?>
+                            <?php if ($ui['TeamMember']['admin_flg'] == (string)TeamMember::ADMIN_USER_FLAG) {?> <i class="fa fa-adn"></i> <?php } ?>
+                        </p>
+
                     </td>
                     <td>
-
-                        <p><?= $ui['TeamMember']['admin_flg'] == (string)TeamMember::ADMIN_USER_FLAG ? '管理者' : 'メンバー'; ?></p>
-
-                        <p><?= $ui['TeamMember']['active_flg'] == (string)TeamMember::ACTIVE_USER_FLAG ? '在職中' : '退職'; ?></p>
-
-                        <p><?= is_null($ui['User']['2fa_secret']) == true ? '2段階認証未設定' : '2段階認証済み'; ?></p>
+                        <p><i class="fa fa-sitemap"></i> グループ名</p>
+                        <p><i class="fa fa-venus-double"></i> <?php if (isset($ui['TeamMember']['coach_name'])) { ?>
+                                <?= $ui['TeamMember']['coach_name']; ?><?php } else { ?>コーチはいません<?php } ?></p>
+                        <p><i class="fa fa-lock"></i> <?= is_null($ui['User']['2fa_secret']) == true ? 'OFF' : 'ON'; ?></p>
+                        <p><i class="fa fa-shield"></i> 評価対象フラグ</p>
                     </td>
                     <td width="20%">
-                        <div class="dropdown">
-                            <button class="btn btn-sm team_member_setting_btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                設定 <span class="caret"></span>
+                        <div class="pull-right header-function dropdown">
+                            <button class="btn team_member_setting_btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-cog header-function-icon" style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu" aria-labelledby="dropdownMenu1">
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">非アクティブにする</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">アクティブにする</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">管理者にする</a></li>
