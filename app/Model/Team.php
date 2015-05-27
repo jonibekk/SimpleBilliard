@@ -87,7 +87,7 @@ class Team extends AppModel
                 'rule' => ['emailsCheck']
             ],
         ],
-        'comment'=>[
+        'comment'            => [
             'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
@@ -169,6 +169,16 @@ class Team extends AppModel
             $this->TeamMember->User->saveField('default_team_id', $this->id);
         }
         return true;
+    }
+
+    function getTermOptions()
+    {
+        $term_options = [
+            3  => __d('gl', "四半期"),
+            6  => __d('gl', "半年"),
+            12 => __d('gl', "年")
+        ];
+        return $term_options;
     }
 
     /**

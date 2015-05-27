@@ -16,21 +16,20 @@ class TeamsController extends AppController
     public function add()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('term_options', $this->Team->getTermOptions());
 
         if (!$this->request->is('post')) {
             return $this->render();
         }
 
-        if ($this->Team->add($this->request->data, $this->Auth->user('id'))) {
-            $this->_refreshAuth($this->Auth->user('id'));
-            $this->Session->write('current_team_id', $this->Team->getLastInsertID());
-            $this->Pnotify->outSuccess(__d('gl', "チームを作成しました。"));
-            return $this->redirect(['action' => 'invite']);
+        if (!$this->Team->add($this->request->data, $this->Auth->user('id'))) {
+            $this->Pnotify->outError(__d('gl', "チーム作成に失敗しました。"));
+            return $this->render();
         }
-        else {
-            $this->Pnotify->outError(__d('gl', "チームに失敗しました。"));
-        }
-        return $this->render();
+        $this->_refreshAuth($this->Auth->user('id'));
+        $this->Session->write('current_team_id', $this->Team->getLastInsertID());
+        $this->Pnotify->outSuccess(__d('gl', "チームを作成しました。"));
+        return $this->redirect(['action' => 'invite']);
     }
 
     public function settings()
