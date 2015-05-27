@@ -328,22 +328,40 @@ class GoalsController extends AppController
     public function edit_collabo($collabo_id = null)
     {
         $this->request->allowMethod('post', 'put');
-        if ($this->Goal->Collaborator->edit($this->request->data)) {
-            $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
-            //if new
-            if (!$collabo_id) {
-                $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL,
-                                           $this->request->data['Collaborator']['goal_id']);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE,
-                                                 $this->request->data['Collaborator']['goal_id']);
-                $this->_sendNotifyToCoach($this->request->data['Collaborator']['goal_id'],
-                                          NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
-            }
+
+        if (!isset($this->request->data['Collaborator'])) {
+            $this->_editCollaboError();
+            return $this->redirect($this->referer());
         }
-        else {
-            $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
+        $collaborator = $this->request->data['Collaborator'];
+
+        // もしpriority=0のデータであれば認定対象外なのでvalued_flg=2を設定する
+        // そうでなければ再認定が必要なのでvalued_flg=0にする
+        $valued_flg = 0;
+        if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
+            $valued_flg = 2;
         }
-        $this->redirect($this->referer());
+        $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
+
+        if (!$this->Goal->Collaborator->edit($this->request->data)) {
+            $this->_editCollaboError();
+            return $this->redirect($this->referer());
+        }
+
+        //success case.
+        $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
+        //if new
+        if (!$collabo_id) {
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
+            $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+        }
+        return $this->redirect($this->referer());
+    }
+
+    function _editCollaboError()
+    {
+        $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
     }
 
     public function add_key_result($goal_id, $current_kr_id = null)
