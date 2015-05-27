@@ -41,7 +41,6 @@ class TeamsControllerTest extends ControllerTestCase
         'app.post_read',
         'app.images_post',
         'app.comment_read',
-
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -401,6 +400,14 @@ class TeamsControllerTest extends ControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/ajax_get_score_elm/index:1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+    function testAjaxGetTermStartEnd()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_term_start_end/1/6', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
