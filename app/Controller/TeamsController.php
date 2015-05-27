@@ -16,7 +16,9 @@ class TeamsController extends AppController
     public function add()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->set('term_options', $this->Team->getTermOptions());
+        $border_months_options = $this->Team->getBorderMonthsOptions();
+        $start_term_month_options = $this->Team->getMonths();
+        $this->set(compact('border_months_options', 'start_term_month_options'));
 
         if (!$this->request->is('post')) {
             return $this->render();
@@ -169,6 +171,13 @@ class TeamsController extends AppController
         $response = $this->render('Team/eval_score_form_elm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_term_start_end($start_term_month, $border_months)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->getTermStrStartEndFromParam($start_term_month, $border_months, REQUEST_TIMESTAMP);
+        return $this->_ajaxGetResponse($res);
     }
 
     function start_evaluation()

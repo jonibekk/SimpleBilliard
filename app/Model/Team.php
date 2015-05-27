@@ -171,14 +171,35 @@ class Team extends AppModel
         return true;
     }
 
-    function getTermOptions()
+    function getBorderMonthsOptions()
     {
         $term_options = [
-            3  => __d('gl', "四半期"),
-            6  => __d('gl', "半年"),
-            12 => __d('gl', "年")
+            null => __d('gl', "選択してください"),
+            3    => __d('gl', "四半期"),
+            6    => __d('gl', "半年"),
+            12   => __d('gl', "年")
         ];
         return $term_options;
+    }
+
+    function getMonths()
+    {
+        $months = [
+            null => __d('gl', "選択して下さい"),
+            1    => __d('gl', "１月"),
+            2    => __d('gl', "２月"),
+            3    => __d('gl', "３月"),
+            4    => __d('gl', "４月"),
+            5    => __d('gl', "５月"),
+            6    => __d('gl', "６月"),
+            7    => __d('gl', "７月"),
+            8    => __d('gl', "８月"),
+            9    => __d('gl', "９月"),
+            10   => __d('gl', "１０月"),
+            11   => __d('gl', "１１月"),
+            12   => __d('gl', "１２月"),
+        ];
+        return $months;
     }
 
     /**
@@ -301,6 +322,14 @@ class Team extends AppModel
         $this->current_term_start_date = $term['start'];
         $this->current_term_end_date = $term['end'];
         return null;
+    }
+
+    function getTermStrStartEndFromParam($start_term_month, $border_months, $target_date)
+    {
+        $res = $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
+        $res['start'] = date('Y/m/d', strtotime("+1 day", $res['start']));
+        $res['end'] = date('Y/m/d', $res['end']);
+        return $res;
     }
 
     function getTermStartEndFromParam($start_term_month, $border_months, $target_date)
