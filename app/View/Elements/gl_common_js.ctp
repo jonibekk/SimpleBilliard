@@ -32,6 +32,7 @@ echo $this->Html->script('vendor/bootstrap-datepicker.min');
 echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
 echo $this->Html->script('vendor/moment.min');
 echo $this->Html->script('vendor/pusher.min');
+echo $this->Html->script('vendor/dropbox');
 echo $this->Html->script('gl_basic');
 ?>
 <!--suppress JSDuplicatedDeclaration -->

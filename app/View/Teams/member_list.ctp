@@ -6,6 +6,17 @@
         border-radius: 5px;
     }
 
+    .team_member_count_label {
+        font-size: 24px;
+        padding: 12px;
+    }
+
+    .team_member_setting_btn {
+        color: #ffffff;
+        background-color: #696969;
+        border-color: #696969;
+    }
+
 </style>
 
 <script type="text/javascript">
@@ -77,14 +88,17 @@
     </div>
 </div>
 
+
+
 <div class="row">
+    <div class="team_member_count_label"><?= $count; ?> people in your network</div>
     <div class="col-xs-12">
         <table class="table table-bordered team_member_table">
             <?php foreach ($user_info as $key => $ui) { ?>
                 <tr>
                     <td width="30%">
                         <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
-                                                                   'data-original' => $this->Upload->uploadUrl($ui['User']['id'],
+                                                                   'data-original' => $this->Upload->uploadUrl($ui['User'],
                                                                                                                'User.photo',
                                                                                                                ['style' => 'small'])]) ?>
                         <p><?= $ui['User']['display_username']; ?></p>
@@ -96,6 +110,19 @@
                         <p><?= $ui['TeamMember']['active_flg'] == (string)TeamMember::ACTIVE_USER_FLAG ? '在職中' : '退職'; ?></p>
 
                         <p><?= is_null($ui['User']['2fa_secret']) == true ? '2段階認証未設定' : '2段階認証済み'; ?></p>
+                    </td>
+                    <td width="20%">
+                        <div class="dropdown">
+                            <button class="btn btn-sm team_member_setting_btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                設定 <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">非アクティブにする</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">アクティブにする</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">管理者にする</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">管理者から外す</a></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             <?php } ?>

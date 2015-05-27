@@ -247,7 +247,7 @@ class TeamMember extends AppModel
             ],
             'contain'    => [
                 'User' => [
-                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret'],
+                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
                 ],
                 'Team' => [
                     'Group' => [
