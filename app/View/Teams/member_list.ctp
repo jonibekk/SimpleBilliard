@@ -71,7 +71,6 @@
 </div>
 
 
-
 <div class="row">
     <div class="team_member_count_label">対象メンバー ( <?= $count; ?> )</div>
     <div class="col-xs-12">
@@ -85,23 +84,35 @@
                                                                                                                ['style' => 'small'])]) ?>
                         <p>
                             <?= $ui['User']['display_username']; ?>
-                            <?php if ($ui['TeamMember']['admin_flg'] == (string)TeamMember::ADMIN_USER_FLAG) {?> <i class="fa fa-adn"></i> <?php } ?>
+                            <?php if ($ui['TeamMember']['admin_flg'] == (string)TeamMember::ADMIN_USER_FLAG) { ?> <i
+                                class="fa fa-adn"></i> <?php } ?>
                         </p>
 
                     </td>
                     <td>
                         <p><i class="fa fa-sitemap"></i> グループ名</p>
+
                         <p><i class="fa fa-venus-double"></i> <?php if (isset($ui['TeamMember']['coach_name'])) { ?>
-                                <?= $ui['TeamMember']['coach_name']; ?><?php } else { ?>コーチはいません<?php } ?></p>
-                        <p><i class="fa fa-lock"></i> <?= is_null($ui['User']['2fa_secret']) == true ? 'OFF' : 'ON'; ?></p>
-                        <p><i class="fa fa-shield"></i> 評価対象フラグ</p>
+                                <?= $ui['TeamMember']['coach_name']; ?><?php }
+                            else { ?>コーチはいません<?php } ?></p>
+
+                        <p><i class="fa fa-lock"></i> <?= is_null($ui['User']['2fa_secret']) == true ? 'OFF' : 'ON'; ?>
+                        </p>
+
+                        <p>
+                            <i class="fa fa-shield"></i> <?php if ($ui['TeamMember']['evaluation_enable_flg'] == true) { ?>評価対象者です
+                            <?php }
+                            else { ?>評価対象者ではありません<?php } ?></p>
                     </td>
                     <td width="20%">
                         <div class="pull-right header-function dropdown">
-                            <button class="btn team_member_setting_btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                <i class="fa fa-cog header-function-icon" style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
+                            <button class="btn team_member_setting_btn dropdown-toggle" type="button" id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-cog header-function-icon"
+                                   style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu" aria-labelledby="dropdownMenu1">
+                            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                                aria-labelledby="dropdownMenu1">
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">非アクティブにする</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">アクティブにする</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">管理者にする</a></li>
