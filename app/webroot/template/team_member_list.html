@@ -4,11 +4,12 @@
         <tr ng-repeat="item in team_list">
             <td width="30%">
                 <img ng-src="{{item.User.img_url}}" class="feed-img"/>
-
                 <p> {{item.User.display_username}} </p>
             </td>
 
             <td>
+                <p> {{item.User.e_mail}} </p>
+
                 <p><i class="fa fa-sitemap"></i> グループ名</p>
 
                 <p><i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>

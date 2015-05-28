@@ -47,9 +47,7 @@
         $scope.getTeamList = function () {
             var url = '/teams/ajax_get_team_member/' + $scope.name_field;
             $http.get(url).success(function (data) {
-                for (user_info in data) {
-
-                }
+                console.log(data);
                 $scope.team_list = data;
                 $location.path('/get');
             });

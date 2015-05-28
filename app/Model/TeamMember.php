@@ -250,12 +250,13 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'Email' => ['fields' => ['email']]
                 ],
                 'Team' => [
                     'Group' => [
                         'fields' => ['name']
                     ]
-                ]
+                ],
             ]
         ];
 
@@ -279,10 +280,13 @@ class TeamMember extends AppModel
             $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? 'OFF' : 'ON';
             // 評価対象
             $res[$key]['TeamMember']['evaluation_enable_flg'] = $tm_obj['TeamMember']['evaluation_enable_flg'] === true ? '評価対象者です' : '評価対象者ではありません';
-
-            $user_img_url = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
-            $res[$key]['User']['img_url'] = $user_img_url;
-
+            // メイン画像
+            $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
+            // Email TODO: 1人が復数のEmail所有することができる？
+            foreach ($tm_obj['User']['Email'] as $val) {
+                $res[$key]['User']['e_mail'] = $val['email'];
+                break;
+            }
         }
 
         $count = $this->find('count', $options);
