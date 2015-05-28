@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * TeamMember Model
@@ -238,12 +240,12 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    public function selectMemberInfo($team_id)
+    public function selectMemberInfo($team_id, $user_name='')
     {
         $options = [
             'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
-                'team_id' => $team_id
+                'team_id' => $team_id,
             ],
             'contain'    => [
                 'User' => [
@@ -257,15 +259,30 @@ class TeamMember extends AppModel
             ]
         ];
 
+        if (empty($user_name) === false) {
+            $options['conditions']['User.first_name LIKE'] = '%'. $user_name. '%';
+        }
+
         $res = $this->find('all', $options);
+        $upload = new UploadHelper(new View());
         foreach ($res as $key => $tm_obj) {
             // コーチ名を取得
+            $res[$key]['TeamMember']['coach_name'] = 'コーチはいません';
             if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
                 $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);
                 if (isset($u_info['User']['display_username']) === true) {
                     $res[$key]['TeamMember']['coach_name'] = $u_info['User']['display_username'];
                 }
             }
+
+            // 2fa_secret
+            $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? 'OFF' : 'ON';
+            // 評価対象
+            $res[$key]['TeamMember']['evaluation_enable_flg'] = $tm_obj['TeamMember']['evaluation_enable_flg'] === true ? '評価対象者です' : '評価対象者ではありません';
+
+            $user_img_url = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
+            $res[$key]['User']['img_url'] = $user_img_url;
+
         }
 
         $count = $this->find('count', $options);

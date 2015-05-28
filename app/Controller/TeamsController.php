@@ -469,7 +469,7 @@ class TeamsController extends AppController
         $group_info = $this->Team->Group->getByAllName($team_id);
 
         // ユーザー取得(デフォルト:チームメンバー全員)
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id);
+        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '');
 
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
         $login_user_admin_flg = true;
@@ -477,5 +477,20 @@ class TeamsController extends AppController
         // グルーブの絞り込みが選択された場合
         $this->set(compact('current_global_menu', 'group_info', 'user_info', 'count', 'login_user_admin_flg'));
         return $this->render();
+    }
+
+    function ajax_get_team_member($user_name)
+    {
+        //$this->_ajaxPreProcess();
+        //$query = $this->request->query;
+        $team_id = $this->Session->read('current_team_id');
+        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
+        /*
+        if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit']);
+        }
+        */
+        //return $this->_ajaxGetResponse($user_info);
+        return $this->_ajaxGetResponse($user_info);
     }
 }
