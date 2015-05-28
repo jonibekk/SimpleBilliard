@@ -99,9 +99,9 @@
             </div>
         <?php else: ?>
             <?= $this->element('Goal/index_items') ?>
-            <?php if (count($goals) == 300)://TODO 暫定的に300、いずれ20に戻す ?>
+            <?php if (count($goals) == 50)://TODO 暫定的に300、いずれ20に戻す ?>
                 <div class="panel-body panel-read-more-body" id="GoalMoreView">
-                    <a href="#" class="btn btn-link click-feed-read-more"
+                    <a id="FeedMoreReadLink" href="#" class="btn btn-link click-feed-read-more"
                        parent-id="GoalMoreView"
                        next-page-num="2"
                        month-index="1"
