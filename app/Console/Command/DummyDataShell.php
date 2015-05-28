@@ -118,6 +118,9 @@ class DummyDataShell extends AppShell
                     $params[] = $id;
                     $id++;
                 }
+                elseif($field == "team_id"){
+                    $params[] = 1;
+                }
                 else {
                     $params[] = $val[$field];
                 }
@@ -175,6 +178,10 @@ class DummyDataShell extends AppShell
         foreach ($default_data as $key => $val) {
             if ($key === "id") {
                 $select_fields .= 'null';
+                continue;
+            }
+            if ($key === "team_id") {
+                $select_fields .= ', 1';
                 continue;
             }
             if ($key === "item") {
