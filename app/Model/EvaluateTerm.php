@@ -51,8 +51,8 @@ class EvaluateTerm extends AppModel
     {
         $options = [
             'conditions' => [
-                'start_date >=' => REQUEST_TIMESTAMP,
-                'end_date <='   => REQUEST_TIMESTAMP,
+                'start_date <=' => REQUEST_TIMESTAMP,
+                'end_date >='   => REQUEST_TIMESTAMP,
                 'team_id'       => $this->current_team_id
             ]
         ];
@@ -65,6 +65,15 @@ class EvaluateTerm extends AppModel
 
     function getLatestTermId()
     {
+        $res = $this->getLatestTerm();
+        if (viaIsSet($res['EvaluateTerm']['id'])) {
+            return $res['EvaluateTerm']['id'];
+        }
+        return null;
+    }
+
+    function getLatestTerm()
+    {
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id
@@ -72,10 +81,7 @@ class EvaluateTerm extends AppModel
             'order'      => ['id' => 'desc']
         ];
         $res = $this->find('first', $options);
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
-        }
-        return null;
+        return $res;
     }
 
     function getPreviousTermId()
@@ -99,9 +105,14 @@ class EvaluateTerm extends AppModel
 
     function saveTerm()
     {
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $latest = $this->getLatestTerm();
+        if (!empty($latest)) {
+            $start_date = $latest['EvaluateTerm']['end_date'] + 1;
+        }
         $data = [
             'team_id'    => $this->current_team_id,
-            'start_date' => $this->Team->getCurrentTermStartDate(),
+            'start_date' => $start_date,
             'end_date'   => $this->Team->getCurrentTermEndDate() - 1,
         ];
         $res = $this->save($data);

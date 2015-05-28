@@ -107,6 +107,7 @@ class AppController extends Controller
 
     public $my_uid = null;
     public $current_team_id = null;
+    public $term_id = null;
 
     public function beforeFilter()
     {
@@ -116,6 +117,9 @@ class AppController extends Controller
         $this->_setAppLanguage();
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
+            $this->current_team_id = $this->Session->read('current_team_id');
+            $this->my_uid = $this->Auth->user('id');
+
             $login_uid = $this->Auth->user('id');
 
             //ajaxの時以外で実行する
@@ -155,17 +159,26 @@ class AppController extends Controller
                 $this->_setEvaluableCnt();
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
+                $this->_setCurrentTerm();
+
             }
             $this->_setMyMemberStatus();
-
-            $this->current_team_id = $this->Session->read('current_team_id');
-            $this->my_uid = $this->Auth->user('id');
-
         }
         $this->set('current_global_menu', null);
         $this->set('avail_sub_menu', false);
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
+    }
+
+    public function _setCurrentTerm()
+    {
+        if (!$this->current_team_id) {
+            return false;
+        }
+        if (!$this->term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
+            $term = $this->Team->EvaluateTerm->saveTerm();
+            $this->term_id = $term['EvaluateTerm']['id'];
+        }
     }
 
     /*
