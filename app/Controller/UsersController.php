@@ -99,7 +99,7 @@ class UsersController extends AppController
         // 2要素認証設定OFFの場合
         // 2要素認証設定ONかつ、設定して30日以内の場合
         if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
-                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id'], $ip_address))
+                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))
         ) {
             $is_2fa_auth_enabled = false;
         }
@@ -136,9 +136,7 @@ class UsersController extends AppController
             && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'),
                                        $this->request->data['User']['two_fa_code']) === true
         ) {
-            $ip_address = $this->request->clientIp();
-            $this->GlRedis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'),
-                                           $ip_address);
+            $this->GlRedis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
             return $this->_afterAuthSessionStore();
 
         }
