@@ -258,6 +258,19 @@ $(document).ready(function () {
         imageLazyOn();
     });
 
+    //team term setting
+    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths', function () {
+        var startTermMonth = $('#TeamStartTermMonth').val();
+        var borderMonths = $('#TeamBorderMonths').val();
+        if (startTermMonth === "" || borderMonths === "") {
+            $('#CurrentTermStr').empty();
+            return false;
+        }
+        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths;
+        $.get(url, function (data) {
+            $('#CurrentTermStr').text(data.start + "  -  " + data.end);
+        });
+    });
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
