@@ -164,6 +164,9 @@ class PagesControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        $Pages->Team->EvaluateTerm->my_uid = 1;
+        $Pages->Team->EvaluateTerm->current_team_id = 1;
+
         Configure::write('Config.language', 'en');
         $this->testAction('/ja/', ['return' => 'contents']);
         $this->assertTextContains("Goalousをはじめよう！", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");
@@ -256,6 +259,8 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
+        $Pages->Team->EvaluateTerm->my_uid = 1;
+        $Pages->Team->EvaluateTerm->current_team_id = 1;
         $this->testAction('/team_id:1');
     }
 
@@ -346,6 +351,8 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
+        $Pages->Team->EvaluateTerm->my_uid = 1;
+        $Pages->Team->EvaluateTerm->current_team_id = 1;
         $this->testAction('/pages/display/home/circle_id:11111111');
     }
 
@@ -409,6 +416,8 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Post->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Pages->Post->User->CircleMember->current_team_id = '1';
+        $Pages->Team->EvaluateTerm->my_uid = 1;
+        $Pages->Team->EvaluateTerm->current_team_id = 1;
 
         $this->testAction('/', ['return' => 'contents']);
     }
@@ -446,6 +455,8 @@ class PagesControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        $Pages->Team->EvaluateTerm->my_uid = 1;
+        $Pages->Team->EvaluateTerm->current_team_id = 1;
 
         $this->testAction('/features', ['return' => 'contents']);
     }
@@ -542,6 +553,8 @@ class PagesControllerTest extends ControllerTestCase
             ->expects($this->any())
             ->method('_validatePost')
             ->will($this->returnValue(true));
+        $Pages->Team->EvaluateTerm->my_uid = 1;
+        $Pages->Team->EvaluateTerm->current_team_id = 1;
         Configure::write('Config.language', 'en');
         $this->testAction('/ja/features', ['return' => 'contents']);
         $this->assertTextContains("ゴールを作成する", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");

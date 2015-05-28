@@ -67,6 +67,7 @@ class NotificationsControllerTest extends ControllerTestCase
     function testAjaxGetOldNotifyMoreCaseItemCntIsZero()
     {
         $oldest_score_id = 1;
+        $this->_getNotificationsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/notifications/ajax_get_old_notify_more/{$oldest_score_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -132,6 +133,7 @@ class NotificationsControllerTest extends ControllerTestCase
 
     function testAjaxGetLatestNotifyItems()
     {
+        $this->_getNotificationsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/notifications/ajax_get_latest_notify_items', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -182,6 +184,8 @@ class NotificationsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Notifications->Session->expects($this->any())->method('read')
                                ->will($this->returnValueMap([['current_team_id', 1]]));
+        $Notifications->Team->EvaluateTerm->my_uid = 1;
+        $Notifications->Team->EvaluateTerm->current_team_id = 1;
 
         return $Notifications;
     }
