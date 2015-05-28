@@ -43,23 +43,29 @@
                 <?php endif; ?>
             </div>
             <div class="col col-xxs-12 font_lightgray font_12px">
-                <i class="fa fa-check-circle"></i><?="&nbsp;".count(($goal['ActionResult']))."&nbsp;･&nbsp;" ?>
-                <i class="fa fa-key"></i><?="&nbsp;".count($goal['KeyResult'])."&nbsp;･" ?>
-                <i class="fa fa-heart"></i><?="&nbsp;".count($goal['MyFollow'])."&nbsp;･" ?>
-                <i class="fa fa-child"></i><?php if(count($goal['MyCollabo'])!=0) { ?><?="&nbsp;".count($goal['MyCollabo'])."&nbsp;" ?><?php }?>
-                <?=__d('gl', " ") ?>
+                <i class="fa fa-check-circle"></i><?= "&nbsp;" . count(($goal['ActionResult'])) . "&nbsp;･&nbsp;" ?>
+                <i class="fa fa-key"></i><?= "&nbsp;" . count($goal['KeyResult']) . "&nbsp;･" ?>
+                <i class="fa fa-heart"></i><?= "&nbsp;" . count($goal['MyFollow']) . "&nbsp;･" ?>
+                <i class="fa fa-child"></i><?php if (count($goal['MyCollabo']) != 0) { ?><?= "&nbsp;" . count($goal['MyCollabo']) . "&nbsp;" ?><?php } ?>
+                <?= __d('gl', " ") ?>
                 <?php if (count($goal['Collaborator']) == 0): ?>
                     <?= __d('gl', " 0") ?>
                 <?php else: ?>
-                    <?php $i =1; foreach ($goal['Collaborator'] as $key => $collaborator): ?>
-                        <?php if($i==1) { echo "(".h($collaborator['User']['display_username']); } else { echo h($collaborator['User']['display_username']).")"; } ?>
+                    <?php $i = 1;
+                    foreach ($goal['Collaborator'] as $key => $collaborator): ?>
+                        <?php if ($i == 1) {
+                            echo "(" . h($collaborator['User']['display_username']);
+                        }
+                        else {
+                            echo h($collaborator['User']['display_username']) . ")";
+                        } ?>
                         <?php if (isset($goal['Collaborator'][$key + 1])) {
                             echo ", ";
                         } ?>
                         <?php if ($key == 1) {
                             break;
                         } ?>
-                    <?php $i++; endforeach ?>
+                        <?php $i++; endforeach ?>
                     <?php if (($other_count = count($goal['Collaborator']) - 2) > 0): ?>
                         <?= __d('gl', "他%s人", $other_count) ?>
                     <?php endif; ?>
