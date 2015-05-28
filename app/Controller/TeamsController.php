@@ -463,17 +463,19 @@ class TeamsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $current_global_menu = "team";
         $team_id = $this->Session->read('current_team_id');
+        $user_id = $this->Session->read('Auth.User.id');
 
         // グループ名を取得
         $group_info = $this->Team->Group->getByAllName($team_id);
 
         // ユーザー取得(デフォルト:チームメンバー全員)
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id);
-        //var_dump($user_ids[0]['Team']['Group'], $count);
-        //var_dump($user_info[0]);
+
+        // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
+        $login_user_admin_flg = true;
 
         // グルーブの絞り込みが選択された場合
-        $this->set(compact('current_global_menu', 'group_info', 'user_info', 'count'));
-        //return $this->render();
+        $this->set(compact('current_global_menu', 'group_info', 'user_info', 'count', 'login_user_admin_flg'));
+        return $this->render();
     }
 }
