@@ -579,7 +579,7 @@ function evTargetShowTargetDelete() {
     var $obj = $(this);
     var show_target_id = $obj.attr("show-target-id");
     var delete_target_id = $obj.attr("delete-target-id");
-    $("#" + show_target_id).show();
+    $("#" + show_target_id).removeClass('none');
     $("#" + delete_target_id).remove();
     return false;
 }
@@ -2059,7 +2059,7 @@ function evCommentLatestView() {
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     //ローダー表示
-    $obj.children(".new-comment-read").append($loader_html);
+
     $.ajax({
         type: 'GET',
         url: get_url,
