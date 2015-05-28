@@ -36,12 +36,13 @@
     }
 
     var app = angular.module('myApp', ['ngRoute']).
-        config(['$routeProvider', function($routeProvider){
+        config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/get', {
-                controller: 'TeamController',
-                templateUrl: '/template/team_member_list.html'
-            }
-        )}]);
+                    controller: 'TeamController',
+                    templateUrl: '/template/team_member_list.html'
+                }
+            )
+        }]);
 
     app.controller("TeamController", function ($scope, $http, $location) {
         $scope.getTeamList = function () {
@@ -49,6 +50,7 @@
             $http.get(url).success(function (data) {
                 console.log(data);
                 $scope.team_list = data.user_info;
+                $scope.login_user_info = data.login_user_info;
                 $location.path('/get');
             });
         }
@@ -68,10 +70,8 @@
                         <option value="coach_name">コーチの名前</option>
                         <option value="group_name">グループ名</option>
                         <option value="team_admin">チーム管理者</option>
-                        <?php if ($login_user_admin_flg === true) { ?>
-                            <option value="invite">招待中</option>
-                            <option value="two_step">2段階認証OFF</option>
-                        <?php } ?>
+                        <option value="invite" ng-if="login_user_info.admin_flg == true">招待中</option>
+                        <option value="two_step" ng-if="login_user_info.admin_flg == true">2段階認証OFF</option>
                     </select>
                 </div>
                 <div class="col-xs-12 col-sm-8">

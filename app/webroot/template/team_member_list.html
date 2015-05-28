@@ -4,6 +4,7 @@
         <tr ng-repeat="item in team_list">
             <td width="30%">
                 <img ng-src="{{item.User.img_url}}" class="feed-img"/>
+
                 <p> {{item.User.display_username}} </p>
             </td>
 
@@ -14,12 +15,13 @@
 
                 <p><i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>
 
-                <p><i class="fa fa-lock"></i> {{item.User.two_step_flg}}</p>
+                <p ng-if="login_user_info.admin_flg == true"><i class="fa fa-lock"></i> {{item.User.two_step_flg}}</p>
 
-                <p><i class="fa fa-shield"></i> {{item.TeamMember.evaluation_enable_flg}}</p>
+                <p ng-if="login_user_info.admin_flg == true"><i class="fa fa-shield"></i>
+                    {{item.TeamMember.evaluation_enable_flg}}</p>
             </td>
 
-            <td width="20%">
+            <td width="20%" ng-if="login_user_info.admin_flg == true">
                 <div class="pull-right header-function dropdown">
                     <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                             id="dropdownMenu1"

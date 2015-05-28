@@ -480,7 +480,6 @@ class TeamsController extends AppController
     {
         //$this->_ajaxPreProcess();
         //$query = $this->request->query;
-        $res = [];
         $team_id = $this->Session->read('current_team_id');
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
 
