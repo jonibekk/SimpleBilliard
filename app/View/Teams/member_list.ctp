@@ -25,49 +25,64 @@ echo $this->Html->script('vendor/angular/angular-route.min');
 ?>
 
 <script type="text/javascript">
-    function changeFilter() {
-        var filter_name = document.getElementById('filter_name').selectedIndex;
-        if (filter_name == 2) {
-            document.getElementById('name_field').style.display = "none";
-            document.getElementById('group_field').style.display = "block";
-
-        } else {
-            document.getElementById('name_field').style.display = "block";
-            document.getElementById('group_field').style.display = "none";
-        }
-    }
 
     var app = angular.module('myApp', ['ngRoute']).
         config(['$routeProvider', function ($routeProvider) {
-            $routeProvider.when('/get', {
+            $routeProvider
+                /*
+                .when('/', {
                     controller: 'TeamController',
+                    templateUrl: '/template/team_member_filter.html'
+                })
+                */
+                .when('/get', {
+                    controller: 'TeamMemberListController',
                     templateUrl: '/template/team_member_list.html'
-                }
-            )
+                })
         }]);
 
-    app.controller("TeamController", function ($scope, $http, $location) {
+    app.controller("TeamMemberListController", function ($scope, $http, $location) {
+
+        var init = function () {
+            $scope.name_field_show = true;
+            $scope.group_field_show = false;
+            var url = '/teams/ajax_get_current_team_group_list/';
+            $http.get(url).success(function (data) {
+                $scope.group_list = data;
+            });
+        }
+        init();
+
         $scope.getTeamList = function () {
             var url = '/teams/ajax_get_team_member/' + $scope.name_field;
             $http.get(url).success(function (data) {
-                console.log(data);
                 $scope.team_list = data.user_info;
                 $scope.login_user_info = data.login_user_info;
                 $location.path('/get');
             });
+        }
+
+        $scope.changeFilter = function() {
+            var filter_name = $scope.filter_name;
+            if (filter_name == 'group_name') {
+                $scope.name_field_show = false;
+                $scope.group_field_show = true;
+            } else {
+                init();
+            }
         }
     });
 
 </script>
 
 <div ng-app="myApp">
-    <div ng-controller="TeamController">
+    <div ng-controller="TeamMemberListController">
         <br>
 
         <div class="well">
             <div id="filter_box" class="row">
                 <div class="col-xs-12 col-sm-4">
-                    <select id="filter_name" name="filter_name" class="form-control" onchange="changeFilter()">
+                    <select ng-model="filter_name" name="filter_name" class="form-control" ng-change="changeFilter()">
                         <option value="all">すべて</option>
                         <option value="coach_name">コーチの名前</option>
                         <option value="group_name">グループ名</option>
@@ -77,16 +92,13 @@ echo $this->Html->script('vendor/angular/angular-route.min');
                     </select>
                 </div>
                 <div class="col-xs-12 col-sm-8">
-                    <div id="name_field">
+                    <div ng-show="name_field_show">
                         <input ng-model="name_field" ng-keypress="getTeamList()" type="text" class="form-control"
                                placeholder="名前を入力してください">
                     </div>
-                    <div id="group_field" style="display: none">
+                    <div ng-show="group_field_show">
                         <select name="group_id" class="form-control">
-                            <option value="all">すべて</option>
-                            <?php foreach ($group_info as $id => $name) { ?>
-                                <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
-                            <?php } ?>
+                            <option  ng-repeat="gl in group_list">{{gl}}</option>
                         </select>
                     </div>
                 </div>

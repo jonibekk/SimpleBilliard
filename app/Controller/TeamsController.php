@@ -462,29 +462,19 @@ class TeamsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         $current_global_menu = "team";
-        $team_id = $this->Session->read('current_team_id');
-        $user_id = $this->Session->read('Auth.User.id');
-
-        // グループ名を取得
-        $group_info = $this->Team->Group->getByAllName($team_id);
-
-        // ユーザー取得(デフォルト:チームメンバー全員)
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '');
 
         // グルーブの絞り込みが選択された場合
-        $this->set(compact('current_global_menu', 'group_info', 'user_info', 'count', 'login_user_admin_flg'));
+        $this->set(compact('current_global_menu'));
         return $this->render();
     }
 
     function ajax_get_team_member($user_name)
     {
-        //$this->_ajaxPreProcess();
-        //$query = $this->request->query;
         $team_id = $this->Session->read('current_team_id');
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
 
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
-        $login_user_info['admin_flg'] = false;
+        $login_user_info['admin_flg'] = true;
 
         $res = [
             'login_user_info' => $login_user_info,
@@ -493,5 +483,15 @@ class TeamsController extends AppController
         ];
 
         return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_current_team_group_list () {
+
+        $team_id = $this->Session->read('current_team_id');
+
+        // グループ名を取得
+        $group_info = $this->Team->Group->getByAllName($team_id);
+
+        return $this->_ajaxGetResponse($group_info);
     }
 }
