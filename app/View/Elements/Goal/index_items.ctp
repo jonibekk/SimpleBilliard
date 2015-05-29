@@ -8,9 +8,6 @@
  * @var CodeCompletionView $this
  * @var                    $goals
  */
-//echo "<pre>";
-//print_r($goals);
-//exit;
 ?>
 <!-- START app/View/Elements/Goal/index_items.ctp -->
 <?php foreach ($goals as $goal): ?>
@@ -46,30 +43,30 @@
                 <i class="fa fa-check-circle"></i><?= "&nbsp;" . count(($goal['ActionResult'])) . "&nbsp;･&nbsp;" ?>
                 <i class="fa fa-key"></i><?= "&nbsp;" . count($goal['KeyResult']) . "&nbsp;･" ?>
                 <i class="fa fa-heart"></i><?= "&nbsp;" . count($goal['MyFollow']) . "&nbsp;･" ?>
-                <i class="fa fa-child"></i><?php if (count($goal['MyCollabo']) != 0) { ?><?= "&nbsp;" . count($goal['MyCollabo']) . "&nbsp;" ?><?php } ?>
-                <?= __d('gl', " ") ?>
-                <?php if (count($goal['Collaborator']) == 0): ?>
-                    <?= __d('gl', " 0") ?>
-                <?php else: ?>
+                <i class="fa fa-child"></i><?= "&nbsp;" . count($goal['Collaborator']) . "&nbsp;" ?>
                     <?php $i = 1;
                     foreach ($goal['Collaborator'] as $key => $collaborator): ?>
                         <?php if ($i == 1) {
                             echo "(" . h($collaborator['User']['display_username']);
                         }
-                        else {
+                        if($i==count($goal['Collaborator'])) {
+
                             echo h($collaborator['User']['display_username']) . ")";
-                        } ?>
-                        <?php if (isset($goal['Collaborator'][$key + 1])) {
+                        }
+                        elseif($i!=1 && $i!=count($goal['Collaborator'])){
+                            echo h($collaborator['User']['display_username']);
+                        }
+                        if (isset($goal['Collaborator'][$key + 1])) {
                             echo ", ";
-                        } ?>
+                        }
+                        ?>
                         <?php if ($key == 1) {
                             break;
                         } ?>
                         <?php $i++; endforeach ?>
                     <?php if (($other_count = count($goal['Collaborator']) - 2) > 0): ?>
-                        <?= __d('gl', "他%s人", $other_count) ?>
+                        <?= __d('gl', "他%s人", $other_count).")"; ?>
                     <?php endif; ?>
-                <?php endif; ?>
 
             </div>
             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
