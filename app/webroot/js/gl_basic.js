@@ -2083,14 +2083,10 @@ function evCommentLatestView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
-                var postNum = $posts.children("div").length;
                 //一旦非表示
-                $posts.hide();
+               $posts.fadeOut();
                 $($obj).before($posts);
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
+                $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
