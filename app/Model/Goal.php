@@ -911,10 +911,11 @@ class Goal extends AppModel
      * @param int   $limit
      * @param array $search_option
      * @param null  $params
+     * @param bool  $is_complete
      *
      * @return array
      */
-    function getAllGoals($limit = 20, $search_option = null, $params = null)
+    function getAllGoals($limit = 20, $search_option = null, $params = null, $is_complete = false)
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
@@ -985,9 +986,17 @@ class Goal extends AppModel
                             'coach_user_id' => $this->my_uid,
                         ]
                     ],
+                ],
+                'ActionResult' => [
+                    'fields' => [
+                        'id'
+                    ]
                 ]
             ]
         ];
+        if ($is_complete == true) {
+            $options['contain']['KeyResult']['conditions']['NOT']['completed'] = null;
+        }
         $options = $this->setFilter($options, $search_option);
         $res = $this->find('all', $options);
         //進捗を計算

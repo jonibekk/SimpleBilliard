@@ -63,4 +63,31 @@ class GoalHelper extends AppHelper
         return $option;
     }
 
+    /**
+     * @param array $collaborator
+     *
+     * @return null
+     */
+    function displayCollaboratorNameList($collaborator)
+    {
+        if (!is_array($collaborator) || empty($collaborator)) {
+            return null;
+        }
+        $items = [];
+        $i = 1;
+        foreach ($collaborator as $k => $v) {
+            $items[] = h($v['User']['display_username']);
+            if ($i >= 2) {
+                break;
+            }
+            $i++;
+        }
+        $rest_count = count($collaborator) - 2;
+        if ($rest_count > 0) {
+            $items[] = __d('gl', "他%s人", $rest_count);
+        }
+
+        return "( " . implode(", ", $items) . " )";
+    }
+
 }
