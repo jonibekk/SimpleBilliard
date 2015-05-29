@@ -133,7 +133,6 @@ class NotificationsControllerTest extends ControllerTestCase
 
     function testAjaxGetLatestNotifyItems()
     {
-        $this->_getNotificationsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/notifications/ajax_get_latest_notify_items', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
