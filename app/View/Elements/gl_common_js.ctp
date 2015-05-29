@@ -88,7 +88,8 @@ echo $this->Html->script('gl_basic');
             d: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like'])?>",
             e: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like'])?>",
             f: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_notify_count'])?>",
-            g: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_notify_items'])?>"
+            g: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_notify_items'])?>",
+            h: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_term_start_end'])?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

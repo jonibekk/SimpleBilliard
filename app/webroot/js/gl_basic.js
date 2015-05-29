@@ -258,6 +258,19 @@ $(document).ready(function () {
         imageLazyOn();
     });
 
+    //team term setting
+    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths', function () {
+        var startTermMonth = $('#TeamStartTermMonth').val();
+        var borderMonths = $('#TeamBorderMonths').val();
+        if (startTermMonth === "" || borderMonths === "") {
+            $('#CurrentTermStr').empty();
+            return false;
+        }
+        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths;
+        $.get(url, function (data) {
+            $('#CurrentTermStr').text(data.start + "  -  " + data.end);
+        });
+    });
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
@@ -579,7 +592,7 @@ function evTargetShowTargetDelete() {
     var $obj = $(this);
     var show_target_id = $obj.attr("show-target-id");
     var delete_target_id = $obj.attr("delete-target-id");
-    $("#" + show_target_id).show();
+    $("#" + show_target_id).removeClass('none');
     $("#" + delete_target_id).remove();
     return false;
 }
@@ -2059,7 +2072,7 @@ function evCommentLatestView() {
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     //ローダー表示
-    $obj.children(".new-comment-read").append($loader_html);
+
     $.ajax({
         type: 'GET',
         url: get_url,
@@ -2402,7 +2415,7 @@ function copyToClipboard(url) {
 
 $(document).ready(function () {
     $(window).scroll(function(){
-        if($(window).scrollTop() + $(window).height() == $(document).height())
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 200)
         {
             if(!autoload_more)
             {

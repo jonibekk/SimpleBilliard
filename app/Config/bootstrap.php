@@ -148,7 +148,7 @@ define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 20);
 //通知リストボックス(ベルのアイコンのところ)内のアイテム数
 define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 5);
 //通知リストページの1ブロックのアイテム数
-define('NOTIFY_PAGE_ITEMS_NUMBER', 20);
+define('NOTIFY_PAGE_ITEMS_NUMBER', 50);
 
 /**
  * 共通関数
