@@ -19,8 +19,10 @@
 
 </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-route.min.js"></script>
+<?php
+echo $this->Html->script('vendor/angular/angular.min');
+echo $this->Html->script('vendor/angular/angular-route.min');
+?>
 
 <script type="text/javascript">
     function changeFilter() {
