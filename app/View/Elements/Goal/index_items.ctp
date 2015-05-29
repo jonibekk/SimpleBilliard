@@ -44,30 +44,7 @@
                 <i class="fa fa-key"></i><?= "&nbsp;" . count($goal['KeyResult']) . "&nbsp;･" ?>
                 <i class="fa fa-heart"></i><?= "&nbsp;" . count($goal['MyFollow']) . "&nbsp;･" ?>
                 <i class="fa fa-child"></i><?= "&nbsp;" . count($goal['Collaborator']) . "&nbsp;" ?>
-                    <?php $i = 1;
-                    foreach ($goal['Collaborator'] as $key => $collaborator): ?>
-                        <?php if ($i == 1) {
-                            echo "(" . h($collaborator['User']['display_username']);
-                        }
-                        if($i==count($goal['Collaborator'])) {
-
-                            echo h($collaborator['User']['display_username']) . ")";
-                        }
-                        elseif($i!=1 && $i!=count($goal['Collaborator'])){
-                            echo h($collaborator['User']['display_username']);
-                        }
-                        if (isset($goal['Collaborator'][$key + 1])) {
-                            echo ", ";
-                        }
-                        ?>
-                        <?php if ($key == 1) {
-                            break;
-                        } ?>
-                        <?php $i++; endforeach ?>
-                    <?php if (($other_count = count($goal['Collaborator']) - 2) > 0): ?>
-                        <?= __d('gl', "他%s人", $other_count).")"; ?>
-                    <?php endif; ?>
-
+                <?= $this->Goal->displayCollaboratorNameList($goal['Collaborator']) ?>
             </div>
             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                 <div class="col col-xxs-12 mt_5px">
