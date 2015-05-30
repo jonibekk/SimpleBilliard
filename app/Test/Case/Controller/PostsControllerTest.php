@@ -1275,14 +1275,16 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/posts/join_circle/circle_id:1', ['method' => 'get']);
     }
 
-    function testJoinCircleException()
+    function testJoinCircleNotFound()
     {
         $this->_getPostsCommonMock();
-        try {
-            $this->testAction('/posts/join_circle/', ['method' => 'get']);
-        } catch (NotFoundException $e) {
-        }
-        $this->assertTrue(isset($e));
+        $this->testAction('/posts/join_circle/', ['method' => 'get']);
+    }
+
+    function testJoinCircleNotExists()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/join_circle/circle_id:999999', ['method' => 'get']);
     }
 
     function testUnJoinCircle()
@@ -1296,11 +1298,7 @@ class PostsControllerTest extends ControllerTestCase
     function testUnJoinCircleNotFound()
     {
         $this->_getPostsCommonMock();
-        try {
-            $this->testAction("/posts/unjoin_circle/", ['method' => 'get']);
-        } catch (NotFoundException $e) {
-        }
-        $this->assertTrue(isset($e));
+        $this->testAction("/posts/unjoin_circle/", ['method' => 'get']);
     }
 
     function testUserCircleStatusAdmin()
