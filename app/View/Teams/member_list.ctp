@@ -31,8 +31,8 @@ echo $this->Html->script('vendor/angular/angular-route.min');
             $routeProvider
                 /*
                 .when('/', {
-                    controller: 'TeamController',
-                    templateUrl: '/template/team_member_filter.html'
+                    controller: 'TeamMemberListController',
+                    templateUrl: '/template/team_member_list.html'
                 })
                 */
                 .when('/get', {
@@ -46,9 +46,10 @@ echo $this->Html->script('vendor/angular/angular-route.min');
         var init = function () {
             $scope.name_field_show = true;
             $scope.group_field_show = false;
-            var url = '/teams/ajax_get_current_team_group_list/';
+            var url = '/teams/ajax_get_team_member_init/';
             $http.get(url).success(function (data) {
-                $scope.group_list = data;
+                $scope.res = data;
+                console.log(data);
             });
         }
         init();
@@ -62,9 +63,13 @@ echo $this->Html->script('vendor/angular/angular-route.min');
             });
         }
 
-        $scope.changeFilter = function() {
+        $scope.changeFilter = function () {
             var filter_name = $scope.filter_name;
             if (filter_name == 'group_name') {
+                var url = '/teams/ajax_get_current_team_group_list/';
+                $http.get(url).success(function (data) {
+                    $scope.group_list = data;
+                });
                 $scope.name_field_show = false;
                 $scope.group_field_show = true;
             } else {
@@ -83,12 +88,12 @@ echo $this->Html->script('vendor/angular/angular-route.min');
             <div id="filter_box" class="row">
                 <div class="col-xs-12 col-sm-4">
                     <select ng-model="filter_name" name="filter_name" class="form-control" ng-change="changeFilter()">
-                        <option value="all">すべて</option>
+                        <option ng-selected="true" value="">すべて</option>
                         <option value="coach_name">コーチの名前</option>
                         <option value="group_name">グループ名</option>
                         <option value="team_admin">チーム管理者</option>
-                        <option value="invite" ng-if="login_user_info.admin_flg == true">招待中</option>
-                        <option value="two_step" ng-if="login_user_info.admin_flg == true">2段階認証OFF</option>
+                        <option value="invite" ng-if="res.login_user_info.admin_flg == true">招待中</option>
+                        <option value="two_step" ng-if="res.login_user_info.admin_flg == true">2段階認証OFF</option>
                     </select>
                 </div>
                 <div class="col-xs-12 col-sm-8">
@@ -96,18 +101,16 @@ echo $this->Html->script('vendor/angular/angular-route.min');
                         <input ng-model="name_field" ng-keypress="getTeamList()" type="text" class="form-control"
                                placeholder="名前を入力してください">
                     </div>
-                    <div ng-show="group_field_show">
-                        <select name="group_id" class="form-control">
-                            <option  ng-repeat="gl in group_list">{{gl}}</option>
-                        </select>
-                    </div>
+                    <select ng-show="group_field_show" ng-model="select_group_id"
+                            ng-options="num as name for (num, name) in group_list" class="form-control">
+                        <option ng-selected="true" value="">すべて</option>
+                    </select>
                 </div>
             </div>
             <div class="checkbox">
                 <label>
                     <input type="checkbox" value="">
                     無効化されたメンバーも表示する
-                    <!-- <p><?= $ui['TeamMember']['active_flg'] == (string)TeamMember::ACTIVE_USER_FLAG ? '在職中' : '退職'; ?></p> -->
                 </label>
             </div>
         </div>
