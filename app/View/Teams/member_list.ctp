@@ -29,12 +29,10 @@ echo $this->Html->script('vendor/angular/angular-route.min');
     var app = angular.module('myApp', ['ngRoute']).
         config(['$routeProvider', function ($routeProvider) {
             $routeProvider
-                /*
                 .when('/', {
                     controller: 'TeamMemberListController',
                     templateUrl: '/template/team_member_list.html'
                 })
-                */
                 .when('/get', {
                     controller: 'TeamMemberListController',
                     templateUrl: '/template/team_member_list.html'
@@ -48,17 +46,22 @@ echo $this->Html->script('vendor/angular/angular-route.min');
             $scope.group_field_show = false;
             var url = '/teams/ajax_get_team_member_init/';
             $http.get(url).success(function (data) {
-                $scope.res = data;
-                console.log(data);
+                $scope.login_user_info = data.login_user_info;
             });
         }
         init();
+
+        if ($location.path() !== '/get') {
+            var url = '/teams/ajax_get_team_member/';
+            $http.get(url).success(function (data) {
+                $scope.team_list = data.user_info;
+            });
+        }
 
         $scope.getTeamList = function () {
             var url = '/teams/ajax_get_team_member/' + $scope.name_field;
             $http.get(url).success(function (data) {
                 $scope.team_list = data.user_info;
-                $scope.login_user_info = data.login_user_info;
                 $location.path('/get');
             });
         }
@@ -92,8 +95,8 @@ echo $this->Html->script('vendor/angular/angular-route.min');
                         <option value="coach_name">コーチの名前</option>
                         <option value="group_name">グループ名</option>
                         <option value="team_admin">チーム管理者</option>
-                        <option value="invite" ng-if="res.login_user_info.admin_flg == true">招待中</option>
-                        <option value="two_step" ng-if="res.login_user_info.admin_flg == true">2段階認証OFF</option>
+                        <option value="invite" ng-if="login_user_info.admin_flg == true">招待中</option>
+                        <option value="two_step" ng-if="login_user_info.admin_flg == true">2段階認証OFF</option>
                     </select>
                 </div>
                 <div class="col-xs-12 col-sm-8">

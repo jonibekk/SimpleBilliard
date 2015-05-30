@@ -471,17 +471,13 @@ class TeamsController extends AppController
     {
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
         $login_user_info['admin_flg'] = true;
-        $team_id = $this->Session->read('current_team_id');
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '');
         $res = [
-            'user_info'       => $user_info,
-            'count'           => $count,
             'login_user_info' => $login_user_info,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_team_member($user_name)
+    function ajax_get_team_member($user_name='')
     {
         $team_id = $this->Session->read('current_team_id');
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
