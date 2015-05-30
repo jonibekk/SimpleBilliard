@@ -20,6 +20,11 @@ aws opsworks --region us-east-1 create-deployment --stack-id e09a695a-0631-4c60-
 ```
 aws opsworks --region us-east-1 create-deployment --stack-id 8d158e51-2c9b-4cf4-876b-5f11ab8280e9 --app-id feaeb538-35a5-4a1c-bab7-01a70c666987 --command "{\"Name\":\"deploy from cli\"}"
 ```
+#### stress test
+```
+aws opsworks --region us-east-1 create-deployment --stack-id 086f0871-7c09-4d3e-8f81-4e64174793fe --app-id a62504ee-0dcc-4dab-a51b-6583bd9234ff --command "{\"Name\":\"deploy from cli\"}"
+```
+
 ### Add instance
 
 #### stg
@@ -34,6 +39,12 @@ aws opsworks --region us-east-1 create-instance --stack-id e09a695a-0631-4c60-be
 
 ```
 aws opsworks --region us-east-1 create-instance --stack-id 8d158e51-2c9b-4cf4-876b-5f11ab8280e9 --layer-ids 85ba1a73-4700-4f10-8afb-beb53a2a09ef --instance-type c3.large --os "Ubuntu 12.04 LTS"
+```
+
+#### stress test
+
+```
+aws opsworks --region us-east-1 create-instance --stack-id 086f0871-7c09-4d3e-8f81-4e64174793fe --layer-ids ee21144f-4afb-4268-8b81-647d06f75168 --instance-type c3.large --os "Ubuntu 12.04 LTS"
 ```
 
 ### Start instance

@@ -38,23 +38,13 @@
                     __d('gl', "リーダー: %s",
                         h($goal['Leader'][0]['User']['display_username'])) ?>
                 <?php endif; ?>
-                | <?= __d('gl', "コラボ: ") ?>
-                <?php if (count($goal['Collaborator']) == 0): ?>
-                    <?= __d('gl', "0人") ?>
-                <?php else: ?>
-                    <?php foreach ($goal['Collaborator'] as $key => $collaborator): ?>
-                        <?= h($collaborator['User']['display_username']) ?>
-                        <?php if (isset($goal['Collaborator'][$key + 1])) {
-                            echo ", ";
-                        } ?>
-                        <?php if ($key == 1) {
-                            break;
-                        } ?>
-                    <?php endforeach ?>
-                    <?php if (($other_count = count($goal['Collaborator']) - 2) > 0): ?>
-                        <?= __d('gl', "他%s人", $other_count) ?>
-                    <?php endif; ?>
-                <?php endif; ?>
+            </div>
+            <div class="col col-xxs-12 font_lightgray font_12px">
+                <i class="fa fa-check-circle"></i><?= "&nbsp;" . count(($goal['ActionResult'])) . "&nbsp;･&nbsp;" ?>
+                <i class="fa fa-key"></i><?= "&nbsp;" . count($goal['KeyResult']) . "&nbsp;･" ?>
+                <i class="fa fa-heart"></i><?= "&nbsp;" . count($goal['MyFollow']) . "&nbsp;･" ?>
+                <i class="fa fa-child"></i><?= "&nbsp;" . count($goal['Collaborator']) . "&nbsp;" ?>
+                <?= $this->Goal->displayCollaboratorNameList($goal['Collaborator']) ?>
             </div>
             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                 <div class="col col-xxs-12 mt_5px">
