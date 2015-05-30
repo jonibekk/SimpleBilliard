@@ -78,6 +78,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
+
     function testAddOnlyCircle()
     {
         /**
@@ -1264,24 +1265,26 @@ class PostsControllerTest extends ControllerTestCase
 
         $Posts->Post->Circle->save($data);
         $circle_id = $Posts->Post->Circle->getLastInsertID();
-        $this->testAction("/posts/join_circle/{$circle_id}", ['method' => 'get']);
+        $this->testAction("/posts/join_circle/circle_id:{$circle_id}", ['method' => 'get']);
     }
 
     function testJoinCircleFailed()
     {
         $this->_getPostsCommonMock();
 
-        $this->testAction('/posts/join_circle/1', ['method' => 'get']);
+        $this->testAction('/posts/join_circle/circle_id:1', ['method' => 'get']);
     }
 
-    function testJoinCircleException()
+    function testJoinCircleNotFound()
     {
         $this->_getPostsCommonMock();
-        try {
-            $this->testAction('/posts/join_circle/', ['method' => 'get']);
-        } catch (NotFoundException $e) {
-        }
-        $this->assertTrue(isset($e));
+        $this->testAction('/posts/join_circle/', ['method' => 'get']);
+    }
+
+    function testJoinCircleNotExists()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/join_circle/circle_id:999999', ['method' => 'get']);
     }
 
     function testUnJoinCircle()
@@ -1289,21 +1292,31 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $circle_id = '1';
-        $this->testAction("/posts/unjoin_circle/{$circle_id}", ['method' => 'get']);
+        $this->testAction("/posts/unjoin_circle/circle_id:{$circle_id}", ['method' => 'get']);
+    }
+
+    function testUnJoinCircleNotFound()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction("/posts/unjoin_circle/", ['method' => 'get']);
     }
 
     function testUserCircleStatusAdmin()
     {
-        $this->_getPostsCommonMock();
-        $this->testAction("/posts/userCircleStatus/1", ['method' => 'get']);
-
+        $Posts = $this->_getPostsCommonMock();
+        $this->assertEquals('admin', $Posts->_userCircleStatus(1));
     }
 
     function testUserCircleStatusJoined()
     {
-        $this->_getPostsCommonMock();
-        $this->testAction("/posts/userCircleStatus/2", ['method' => 'get']);
+        $Posts = $this->_getPostsCommonMock();
+        $this->assertEquals('joined', $Posts->_userCircleStatus(2));
+    }
 
+    function testUserCircleStatusNodJoined()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $this->assertEquals('not_joined', $Posts->_userCircleStatus(100000000));
     }
 
     function testCircleToggleStatusSuccess()

@@ -537,7 +537,7 @@ class PostsController extends AppController
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
-        $user_status = $this->userCircleStatus($this->request->params['circle_id']);
+        $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
 
         $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
                                                                             $this->request->params['circle_id']);
@@ -677,12 +677,14 @@ class PostsController extends AppController
         $this->NotifyBiz->commentPush($socketId, $data);
     }
 
-    public function join_circle($circle_id = null)
+    public function join_circle()
     {
-        if (!$circle_id) {
-            throw new NotFoundException(__('gl', "Invalid Request"));
+        if (!$this->_isAvailCircle()) {
+            $this->Pnotify->outError(__d('gl', "アクセスURLに誤りがあります。"));
+            return $this->redirect($this->referer());
         }
-        if ($this->Post->Circle->CircleMember->joinNewMember($circle_id)) {
+
+        if ($this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'])) {
             $this->Pnotify->outSuccess(__d('gl', "You have joined the circle"));
         }
         else {
@@ -692,17 +694,30 @@ class PostsController extends AppController
 
     }
 
-    public function unjoin_circle($circle_id)
+    public function unjoin_circle()
     {
-        if (!$circle_id) {
-            throw new NotFoundException(__('gl', "Invalid Request"));
+        if (!$this->_isAvailCircle()) {
+            $this->Pnotify->outError(__d('gl', "アクセスURLに誤りがあります。"));
+            return $this->redirect($this->referer());
         }
-        $this->Post->Circle->CircleMember->unjoinMember($circle_id);
+        $this->Post->Circle->CircleMember->unjoinMember($this->request->params['named']['circle_id']);
         $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
-        return $this->redirect($this->request->referer());
+        return $this->redirect($this->referer());
     }
 
-    public function userCircleStatus($circle_id)
+    public function _isAvailCircle()
+    {
+        if (!isset($this->request->params['named']['circle_id'])) {
+            return false;
+        }
+        $circle_id = $this->request->params['named']['circle_id'];
+        if (!$this->Post->Circle->isBelongCurrentTeam($circle_id, $this->current_team_id)) {
+            return false;
+        }
+        return true;
+    }
+
+    public function _userCircleStatus($circle_id)
     {
         if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
             return 'admin';

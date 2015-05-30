@@ -57,19 +57,14 @@ class UploadHelper extends AppHelper
             $url = isset($settings['default_url']) ? $settings['default_url'] : null;
         }
 
-        if ($options['urlize']) {
-            if (isset($settings['default_url']) && $url == $settings['default_url']) {
-                $url = IMAGES_URL . $url;
-                if (!PUBLIC_ENV) {
-                    $url = DS . $url;
-                }
-            }
-            else {
-                $this->Html->url($url);
-            }
+        if (isset($settings['default_url']) && $url == $settings['default_url']) {
+            $url = DS . IMAGES_URL . $url;
+            $url = $options['urlize'] ? $this->Html->url($url) : $url;
         }
-        //s3用の処理追加
-        $url = $this->substrS3Url($url);
+        else {
+            //s3用の処理追加
+            $url = $this->substrS3Url($url);
+        }
         return $url;
     }
 

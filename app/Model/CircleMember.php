@@ -17,17 +17,17 @@ class CircleMember extends AppModel
      * @var array
      */
     public $validate = [
-        'del_flg'   => [
+        'del_flg'               => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'admin_flg' => [
+        'admin_flg'             => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'show_for_all_feed_flg'    => [
+        'show_for_all_feed_flg' => [
             'rule'    => ['boolean'],
             'message' => 'Invalid Status'
         ]
@@ -335,7 +335,13 @@ class CircleMember extends AppModel
         if (empty($this->User->CircleMember->isBelong($circle_id))) {
             return;
         }
-        $this->deleteAll(['CircleMember.circle_id' => $circle_id, 'CircleMember.user_id' => $this->my_uid]);
+        $this->deleteAll(
+            [
+                'CircleMember.circle_id' => $circle_id,
+                'CircleMember.user_id'   => $this->my_uid,
+                'CircleMember.team_id'   => $this->current_team_id,
+            ]
+        );
         return;
     }
 

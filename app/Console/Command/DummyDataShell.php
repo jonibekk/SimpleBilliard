@@ -111,10 +111,12 @@ class DummyDataShell extends AppShell
             $data[] = $default_data;
         }
         $params = [];
+        $id = 1;
         foreach ($data as $val) {
             foreach ($fields as $field) {
                 if ($field == "id") {
-                    $params[] = "null";
+                    $params[] = $id;
+                    $id++;
                 }
                 else {
                     $params[] = $val[$field];
