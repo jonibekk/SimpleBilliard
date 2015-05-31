@@ -16,21 +16,22 @@ class TeamsController extends AppController
     public function add()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $border_months_options = $this->Team->getBorderMonthsOptions();
+        $start_term_month_options = $this->Team->getMonths();
+        $this->set(compact('border_months_options', 'start_term_month_options'));
 
         if (!$this->request->is('post')) {
             return $this->render();
         }
 
-        if ($this->Team->add($this->request->data, $this->Auth->user('id'))) {
-            $this->_refreshAuth($this->Auth->user('id'));
-            $this->Session->write('current_team_id', $this->Team->getLastInsertID());
-            $this->Pnotify->outSuccess(__d('gl', "チームを作成しました。"));
-            return $this->redirect(['action' => 'invite']);
+        if (!$this->Team->add($this->request->data, $this->Auth->user('id'))) {
+            $this->Pnotify->outError(__d('gl', "チーム作成に失敗しました。"));
+            return $this->render();
         }
-        else {
-            $this->Pnotify->outError(__d('gl', "チームに失敗しました。"));
-        }
-        return $this->render();
+        $this->_refreshAuth($this->Auth->user('id'));
+        $this->Session->write('current_team_id', $this->Team->getLastInsertID());
+        $this->Pnotify->outSuccess(__d('gl', "チームを作成しました。"));
+        return $this->redirect(['action' => 'invite']);
     }
 
     public function settings()
@@ -170,6 +171,13 @@ class TeamsController extends AppController
         $response = $this->render('Team/eval_score_form_elm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_term_start_end($start_term_month, $border_months)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->getTermStrStartEndFromParam($start_term_month, $border_months, REQUEST_TIMESTAMP);
+        return $this->_ajaxGetResponse($res);
     }
 
     function start_evaluation()
