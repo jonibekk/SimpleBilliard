@@ -99,8 +99,33 @@ class DummyDataShell extends AppShell
         $this->User->deleteAll(['User.id Like' => "dummy_%"]);
     }
 
+    public function truncate_table($table_name = null)
+    {
+        if (!$table_name && !isset($this->params['table'])) {
+            $this->hr();
+            return $this->out("エラーです。");
+        }
+        $external = false;
+        if (!$table_name) {
+            $external = true;
+            if (isset($this->params['config'])) {
+                $this->User->useDbConfig = $this->params['config'];
+            }
+            else {
+                $this->User->useDbConfig = "bench";
+            }
+            $table_name = $this->params['table'];
+        }
+        $this->User->query("TRUNCATE {$table_name};");
+        if ($external) {
+            $this->hr();
+            $this->out("{$table_name} をトランケートしました。");
+        }
+    }
+
     public function insertInitData($default_data, $table_name)
     {
+        $this->truncate_table($table_name);
         $fields = array_keys($default_data);
         $holder = '(' . implode(',', array_fill(0, count($fields), '?')) . ')';
         $once_rows = 10;
@@ -121,8 +146,11 @@ class DummyDataShell extends AppShell
                 elseif ($field == "team_id") {
                     $params[] = 1;
                 }
-                else {
+                elseif ($field == "del_flg" || $field == "deleted") {
                     $params[] = $val[$field];
+                }
+                else {
+                    $params[] = 1;
                 }
             }
             $current_no++;
@@ -170,9 +198,6 @@ class DummyDataShell extends AppShell
 
         ];
         $add_unique_num_type_list = [
-            'string',
-            'text',
-            'integer',
             'biginteger',
         ];
         foreach ($default_data as $key => $val) {
@@ -187,8 +212,14 @@ class DummyDataShell extends AppShell
             if ($key === "item") {
                 $select_fields .= ', null';
             }
+            elseif (strpos($key, 'photo', 0) === 0) {
+                $select_fields .= ', null';
+            }
+            elseif (strpos($key, 'site', 0) === 0) {
+                $select_fields .= ', null';
+            }
             elseif (in_array($key, $datetime_list)) {
-                $select_fields .= ", unix_timestamp() - ({$unique_num})";
+                $select_fields .= ", unix_timestamp() - ({$unique_num}) - (60 * 60 * 24 * 30 * 3)";
             }
             elseif (in_array($table_schema[$key]['type'], $add_unique_num_type_list)) {
                 $select_fields .= ", CONCAT(t1.{$key},({$unique_num}))";
@@ -206,7 +237,6 @@ class DummyDataShell extends AppShell
         $this->out("完了 : {$table_name}");
         $this->out("実行時間:{$current_time}sec");
         $this->out("経過時間:{$total_time}sec");
-
     }
 
     function _setTableAndRecords()
@@ -235,8 +265,13 @@ class DummyDataShell extends AppShell
                 elseif ($field_name == "deleted") {
                     $records[$table_name][$field_name] = null;
                 }
+                elseif (strpos($field_name, 'photo', 0) === 0) {
+                    $records[$table_name][$field_name] = null;
+                }
+                elseif (strpos($field_name, 'site_photo', 0) === 0) {
+                    $records[$table_name][$field_name] = null;
+                }
                 else {
-
                     if ($field['type'] == "string") {
                         $records[$table_name][$field_name] = "test_string";
                     }
