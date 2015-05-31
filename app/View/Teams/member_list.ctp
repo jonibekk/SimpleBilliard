@@ -61,6 +61,7 @@ echo $this->Html->script('vendor/angular/angular-route.min');
                     });
                     $scope.name_field_show = false;
                     $scope.group_field_show = true;
+                } else if (filter_name == 'coach_name') {
                 } else {
                     init();
                 }
@@ -72,6 +73,14 @@ echo $this->Html->script('vendor/angular/angular-route.min');
                     $scope.team_list = data.user_info;
                 });
             };
+
+            $scope.changeGroupFilter = function () {
+                var url = '/teams/ajax_get_group_member/' + $scope.group_id;
+                $http.get(url).success(function (data) {
+                    console.log(data);
+                    $scope.team_list = data.user_info;
+                });
+            }
 
         }
     );

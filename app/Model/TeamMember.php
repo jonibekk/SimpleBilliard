@@ -240,7 +240,7 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    public function selectMemberInfo($team_id, $user_name='')
+    public function selectMemberInfo($team_id, $user_name='', $group_id='')
     {
         $options = [
             'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
@@ -250,11 +250,11 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                    'Email' => ['fields' => ['email']]
+                    'Email' => ['fields' => ['email']],
                 ],
                 'Team' => [
                     'Group' => [
-                        'fields' => ['name']
+                        'fields' => ['id', 'name']
                     ]
                 ],
             ]
@@ -262,6 +262,9 @@ class TeamMember extends AppModel
 
         if (empty($user_name) === false) {
             $options['conditions']['User.first_name LIKE'] = '%'. $user_name. '%';
+        }
+
+        if (empty($group_id) === false) {
         }
 
         $res = $this->find('all', $options);
