@@ -485,10 +485,10 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_team_member($user_name='')
+    function ajax_get_team_member()
     {
         $team_id = $this->Session->read('current_team_id');
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
+        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id);
         $res = [
             'user_info'       => $user_info,
             'count'           => $count,
@@ -513,5 +513,15 @@ class TeamsController extends AppController
         // グループ名を取得
         $group_info = $this->Team->Group->getByAllName($team_id);
         return $this->_ajaxGetResponse($group_info);
+    }
+
+    function ajax_get_current_team_admin_list () {
+        $team_id = $this->Session->read('current_team_id');
+        list($user_info, $count) = $this->Team->TeamMember->selectAdminMemberInfo($team_id);
+        $res = [
+            'user_info'       => $user_info,
+            'count'           => $count,
+        ];
+        return $this->_ajaxGetResponse($res);
     }
 }

@@ -25,17 +25,6 @@ echo $this->Html->script('vendor/angular/angular-route.min');
 echo $this->Html->script('controller/team_member_list');
 ?>
 
-<script type="text/javascript">
-    var app = angular.module('myApp', ['ngRoute']).
-        config(['$routeProvider', function ($routeProvider) {
-            $routeProvider
-                .when('/', {
-                    controller: 'TeamMemberMainController',
-                    templateUrl: '/template/team_member_list.html'
-                });
-        }]);
-</script>
-
 <div ng-app="myApp">
     <div ng-controller="TeamMemberMainController" ng-view> 検索中....</div>
 </div>

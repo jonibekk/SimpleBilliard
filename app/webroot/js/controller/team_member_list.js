@@ -17,14 +17,14 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             $http.get(url).success(function (data) {
                 $scope.login_user_info = data.login_user_info;
             });
+
+            var url = '/teams/ajax_get_team_member/';
+            $http.get(url).success(function (data) {
+                $scope.team_list = data.user_info;
+                $scope.count = data.count;
+            });
         };
         init();
-
-        var url = '/teams/ajax_get_team_member/';
-        $http.get(url).success(function (data) {
-            $scope.team_list = data.user_info;
-            $scope.count = data.count;
-        });
 
         $scope.changeFilter = function () {
             var filter_name = $scope.filter_name;
@@ -36,17 +36,18 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 $scope.name_field_show = false;
                 $scope.group_field_show = true;
             } else if (filter_name == 'coach_name') {
+
+            } else if (filter_name == 'team_admin') {
+                // チーム管理者選択
+                var url = '/teams/ajax_get_current_team_admin_list/';
+                $http.get(url).success(function (data) {
+                    $scope.team_list = data.user_info;
+                    $scope.count = data.count;
+                    console.log(data);
+                });
             } else {
                 init();
             }
-        };
-
-        $scope.getTeamList = function () {
-            var url = '/teams/ajax_get_team_member/' + $scope.name_field;
-            $http.get(url).success(function (data) {
-                $scope.team_list = data.user_info;
-                $scope.count = data.count;
-            });
         };
 
         $scope.changeGroupFilter = function () {
