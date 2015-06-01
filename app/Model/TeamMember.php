@@ -250,6 +250,24 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    public function select2faStepMemberInfo($team_id)
+    {
+        $options = [
+            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'conditions' => [
+                'team_id' => $team_id,
+                'User.2fa_secret' => NULL
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'Email' => ['fields' => ['email']],
+                ],
+            ]
+        ];
+        return $this->convertMemberData($this->find('all', $options));
+    }
+
     public function selectAdminMemberInfo($team_id)
     {
         $options = [

@@ -521,4 +521,13 @@ class TeamsController extends AppController
         ];
         return $this->_ajaxGetResponse($res);
     }
+
+    function ajax_get_current_not_2fa_step_user_list () {
+        $team_id = $this->Session->read('current_team_id');
+        $user_info = $this->Team->TeamMember->select2faStepMemberInfo($team_id);
+        $res = [
+            'user_info'       => $user_info,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
 }

@@ -40,6 +40,11 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 $scope.group_field_show = true;
             } else if (filter_name == 'coach_name') {
 
+            } else if (filter_name == 'two_step') {
+                var url = '/teams/ajax_get_current_not_2fa_step_user_list/';
+                $http.get(url).success(function (data) {
+                    $scope.team_list = data.user_info;
+                });
             } else if (filter_name == 'team_admin') {
                 // チーム管理者選択
                 var url = '/teams/ajax_get_current_team_admin_list/';
