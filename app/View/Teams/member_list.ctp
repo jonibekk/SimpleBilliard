@@ -38,6 +38,7 @@ echo $this->Html->script('vendor/angular/angular-route.min');
     app.controller("TeamMemberMainController", function ($scope, $http) {
 
             var init = function () {
+                $scope.count = 0;
                 $scope.name_field_show = true;
                 $scope.group_field_show = false;
                 var url = '/teams/ajax_get_team_member_init/';
@@ -50,6 +51,7 @@ echo $this->Html->script('vendor/angular/angular-route.min');
             var url = '/teams/ajax_get_team_member/';
             $http.get(url).success(function (data) {
                 $scope.team_list = data.user_info;
+                $scope.count = data.count;
             });
 
             $scope.changeFilter = function () {
@@ -71,6 +73,7 @@ echo $this->Html->script('vendor/angular/angular-route.min');
                 var url = '/teams/ajax_get_team_member/' + $scope.name_field;
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
+                    $scope.count = data.count;
                 });
             };
 
@@ -87,5 +90,5 @@ echo $this->Html->script('vendor/angular/angular-route.min');
 </script>
 
 <div ng-app="myApp">
-    <div ng-controller="TeamMemberMainController" ng-view></div>
+    <div ng-controller="TeamMemberMainController" ng-view> 検索中.... </div>
 </div>
