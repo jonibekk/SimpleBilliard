@@ -224,7 +224,7 @@ class DummyDataShell extends AppShell
                 $select_fields .= ', null';
             }
             elseif (in_array($key, $datetime_list)) {
-                $select_fields .= ", unix_timestamp() - ({$unique_num}) - (60 * 60 * 24 * 30 * 3)";
+                $select_fields .= ", unix_timestamp() - ({$unique_num}) - (60 * 60 * 24 * 30 * 7)";
             }
             elseif (in_array($table_schema[$key]['type'], $add_unique_num_type_list)) {
                 $select_fields .= ", {$unique_num}";

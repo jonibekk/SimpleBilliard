@@ -62,6 +62,15 @@ echo "${gre}*** Done.${whit}"
 echo "*** Insert into comment_reads."
 ./Console/cake dummy_data -c default -t comment_reads -d ${DISIT} || error_exit
 echo "${gre}*** Done.${whit}"
+echo "*** Insert into goals."
+./Console/cake dummy_data -c default -t goals -d ${DISIT} || error_exit
+echo "${gre}*** Done.${whit}"
+echo "*** Insert into key_results."
+./Console/cake dummy_data -c default -t key_results -d ${DISIT} || error_exit
+echo "${gre}*** Done.${whit}"
+echo "*** Insert into collaborators."
+./Console/cake dummy_data -c default -t collaborators -d ${DISIT} || error_exit
+echo "${gre}*** Done.${whit}"
 echo "*** Insert into action_results."
 ./Console/cake dummy_data -c default -t action_results -d ${DISIT} || error_exit
 echo "${gre}*** Done.${whit}"
