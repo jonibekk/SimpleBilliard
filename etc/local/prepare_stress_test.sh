@@ -13,6 +13,20 @@ else
   DISIT=6;
 fi
 
+echo "データ削除しますけどいいですか？ [y/N]"
+read ANSWER
+
+case `echo $ANSWER | tr y Y` in
+    Y* )
+    echo "本番環境じゃないですよね？ [y/N]"
+    read ANSWER_AGAIN
+    case `echo $ANSWER_AGAIN | tr y Y` in
+        Y* );;
+        *  ) exit;;
+    esac
+    ;;
+    *  ) exit;;
+esac
 
 error_exit(){ echo "${red}*** Error!!${whit}" ; exit 1 ; }
 
