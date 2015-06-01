@@ -427,8 +427,10 @@ class Evaluation extends AppModel
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             return false;
         }
-        $this->Team->EvaluateTerm->saveTerm();
-        $term_id = $this->Team->EvaluateTerm->getLastInsertID();
+        if (!$term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
+            $this->Team->EvaluateTerm->saveTerm();
+            $term_id = $this->Team->EvaluateTerm->getLastInsertID();
+        }
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
         $evaluators = [];
         if ($this->Team->EvaluationSetting->isEnabledEvaluator()) {
@@ -449,6 +451,7 @@ class Evaluation extends AppModel
                               'Evaluation.index_num'        => 0,
                              ]
             );
+            $this->EvaluateTerm->changeToInProgress($term_id);
 
             return (bool)$res;
         }

@@ -61,6 +61,7 @@ class TeamsController extends AppController
         $eval_start_button_enabled = true;
         if (!is_null($current_term_id) &&
             !is_null($latest_term_id) &&
+            !$this->Team->EvaluateTerm->isAbleToStartEvaluation($current_term_id) &&
             $current_term_id === $latest_term_id
         ) {
             $eval_start_button_enabled = false;

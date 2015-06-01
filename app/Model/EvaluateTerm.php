@@ -84,23 +84,32 @@ class EvaluateTerm extends AppModel
         return $res;
     }
 
-    function getPreviousTermId()
+    function getAllTerm($order_desc = true)
     {
-        $start_end = $this->Team->getBeforeTermStartEnd();
-        $start_date = $start_end['start'];
-        $end_date = $start_end['end'];
         $options = [
             'conditions' => [
-                'start_date >=' => $start_date,
-                'end_date <='   => $end_date,
-                'team_id'       => $this->current_team_id
+                'team_id' => $this->current_team_id
+            ],
+            'order'      => [
+                'start_date' => 'asc'
             ]
         ];
-        $res = $this->find('first', $options);
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
+        if ($order_desc) {
+            $options['order']['start_date'] = 'desc';
         }
-        return null;
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.EvaluateTerm.id', '{n}.EvaluateTerm');
+        return $res;
+    }
+
+    function getPreviousTermId()
+    {
+        $all_term = $this->getAllTerm();
+        if (count($all_term) < 2) {
+            return null;
+        }
+        next($all_term);
+        return key($all_term);
     }
 
     function saveTerm()
@@ -119,16 +128,43 @@ class EvaluateTerm extends AppModel
         return $res;
     }
 
+    function changeToInProgress($id)
+    {
+        $this->id = $id;
+        return $this->saveField('evaluate_status', self::STATUS_EVAL_IN_PROGRESS);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return bool
+     */
+    function isAbleToStartEvaluation($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'              => $id,
+                'team_id'         => $this->current_team_id,
+                'evaluate_status' => self::STATUS_EVAL_NOT_STARTED,
+            ],
+        ];
+        $res = $this->find('first', $options);
+        return (bool)$res;
+    }
+
     function checkTermAvailable($id)
     {
         $options = [
             'conditions' => [
                 'id'      => $id,
-                'team_id' => $this->current_team_id
+                'team_id' => $this->current_team_id,
+                'NOT'     => [
+                    'evaluate_status' => self::STATUS_EVAL_NOT_STARTED,
+                ]
             ]
         ];
         $res = $this->find('first', $options);
-        return (empty($res)) ? false : true;
+        return (bool)$res;
     }
 
     function changeFreezeStatus($id)
