@@ -39,6 +39,18 @@ class Group extends AppModel
         'MemberGroup'
     ];
 
+    function getByAllName($team_id)
+    {
+        $options = [
+            'fields' => ['id', 'name'],
+            'conditions' => [
+                'team_id' => $team_id,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     function getByName($name, $team_id = null)
     {
         if (!$team_id) {
