@@ -33,7 +33,7 @@ error_exit(){ echo "${red}*** Error!!${whit}" ; exit 1 ; }
 echo "${blu}### Preparing Data For Stress Test. ###${whit}"
 echo "Please wait a minute..."
 echo "*** Truncate teams."
-./Console/cake dummy_data truncate_table -t teams || error_exit
+./Console/cake dummy_data truncate_table -t teams -c default || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** Insert into users."
 ./Console/cake dummy_data -c default -t users -d 4 || error_exit
