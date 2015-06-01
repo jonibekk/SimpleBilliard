@@ -9,7 +9,6 @@ var app = angular.module('myApp', ['ngRoute']).
 
 app.controller("TeamMemberMainController", function ($scope, $http) {
 
-        $scope.count = 0;
         // 無効化されたメンバーも表示する項目
         $scope.disp_active_flag = '1';
         // 名前入力欄
@@ -26,7 +25,6 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             var url = '/teams/ajax_get_team_member/';
             $http.get(url).success(function (data) {
                 $scope.team_list = data.user_info;
-                $scope.count = data.count;
             });
         };
         init();
@@ -47,7 +45,6 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 var url = '/teams/ajax_get_current_team_admin_list/';
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
-                    $scope.count = data.count;
                 });
             } else {
                 init();

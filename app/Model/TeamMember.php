@@ -265,10 +265,7 @@ class TeamMember extends AppModel
                 ],
             ]
         ];
-        $res = $this->convertMemberData($this->find('all', $options));
-        $count = $this->find('count', $options);
-
-        return [$res, $count];
+        return $this->convertMemberData($this->find('all', $options));
     }
 
     public function selectMemberInfo($team_id, $group_id='')
@@ -294,10 +291,7 @@ class TeamMember extends AppModel
         if (empty($group_id) === false) {
         }
 
-        $res = $this->convertMemberData($this->find('all', $options));
-        $count = $this->find('count', $options);
-
-        return [$res, $count];
+        return $this->convertMemberData($this->find('all', $options));
     }
 
 

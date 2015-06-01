@@ -488,10 +488,9 @@ class TeamsController extends AppController
     function ajax_get_team_member()
     {
         $team_id = $this->Session->read('current_team_id');
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id);
+        $user_info = $this->Team->TeamMember->selectMemberInfo($team_id);
         $res = [
             'user_info'       => $user_info,
-            'count'           => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
@@ -499,10 +498,9 @@ class TeamsController extends AppController
     function ajax_get_group_member($group_id='')
     {
         $team_id = $this->Session->read('current_team_id');
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '', $group_id);
+        $user_info = $this->Team->TeamMember->selectMemberInfo($team_id, '', $group_id);
         $res = [
             'user_info'       => $user_info,
-            'count'           => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
@@ -517,10 +515,9 @@ class TeamsController extends AppController
 
     function ajax_get_current_team_admin_list () {
         $team_id = $this->Session->read('current_team_id');
-        list($user_info, $count) = $this->Team->TeamMember->selectAdminMemberInfo($team_id);
+        $user_info = $this->Team->TeamMember->selectAdminMemberInfo($team_id);
         $res = [
             'user_info'       => $user_info,
-            'count'           => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
