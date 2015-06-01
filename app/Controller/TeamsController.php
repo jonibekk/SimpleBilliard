@@ -465,4 +465,53 @@ class TeamsController extends AppController
                                          $this->Team->EvaluateTerm->getCurrentTermId());
         return $this->redirect($this->referer());
     }
+
+    function member_list()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $current_global_menu = "team";
+        // グルーブの絞り込みが選択された場合
+        $this->set(compact('current_global_menu'));
+        return $this->render();
+    }
+
+    function ajax_get_team_member_init()
+    {
+        // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
+        $login_user_info['admin_flg'] = true;
+        $res = [
+            'login_user_info' => $login_user_info,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_team_member($user_name='')
+    {
+        $team_id = $this->Session->read('current_team_id');
+        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
+        $res = [
+            'user_info'       => $user_info,
+            'count'           => $count,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_group_member($group_id='')
+    {
+        $team_id = $this->Session->read('current_team_id');
+        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '', $group_id);
+        $res = [
+            'user_info'       => $user_info,
+            'count'           => $count,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_current_team_group_list ()
+    {
+        $team_id = $this->Session->read('current_team_id');
+        // グループ名を取得
+        $group_info = $this->Team->Group->getByAllName($team_id);
+        return $this->_ajaxGetResponse($group_info);
+    }
 }
