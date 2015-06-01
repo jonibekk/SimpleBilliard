@@ -9,10 +9,15 @@ var app = angular.module('myApp', ['ngRoute']).
 
 app.controller("TeamMemberMainController", function ($scope, $http) {
 
+        $scope.count = 0;
+        // 無効化されたメンバーも表示する項目
+        $scope.disp_active_flag = '1';
+        // 名前入力欄
+        $scope.name_field_show = true;
+        // グループ選択欄
+        $scope.group_field_show = false;
+
         var init = function () {
-            $scope.count = 0;
-            $scope.name_field_show = true;
-            $scope.group_field_show = false;
             var url = '/teams/ajax_get_team_member_init/';
             $http.get(url).success(function (data) {
                 $scope.login_user_info = data.login_user_info;
@@ -43,7 +48,6 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
                     $scope.count = data.count;
-                    console.log(data);
                 });
             } else {
                 init();
