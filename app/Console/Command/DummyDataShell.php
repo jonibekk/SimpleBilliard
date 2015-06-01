@@ -149,6 +149,12 @@ class DummyDataShell extends AppShell
                 elseif ($field == "del_flg" || $field == "deleted") {
                     $params[] = $val[$field];
                 }
+                elseif (strpos($field, 'photo', 0) === 0) {
+                    $params[] = $val[$field];
+                }
+                elseif (strpos($field, 'site', 0) === 0) {
+                    $params[] = $val[$field];
+                }
                 else {
                     $params[] = 1;
                 }
@@ -185,8 +191,7 @@ class DummyDataShell extends AppShell
         for ($i = 1; $i < $this->digits - 1; $i++) {
             $minus_mun += pow(10, $i);
         }
-        $unique_num = "(" . $unique_num . ") - " . $minus_mun;
-
+        $unique_num = "(" . $unique_num . ") ";
         $select_fields = "";
         $datetime_list = [
             'created',
@@ -222,7 +227,7 @@ class DummyDataShell extends AppShell
                 $select_fields .= ", unix_timestamp() - ({$unique_num}) - (60 * 60 * 24 * 30 * 3)";
             }
             elseif (in_array($table_schema[$key]['type'], $add_unique_num_type_list)) {
-                $select_fields .= ", CONCAT(t1.{$key},({$unique_num}))";
+                $select_fields .= ", {$unique_num}";
             }
             else {
                 $select_fields .= ", t1.{$key}";
@@ -268,7 +273,7 @@ class DummyDataShell extends AppShell
                 elseif (strpos($field_name, 'photo', 0) === 0) {
                     $records[$table_name][$field_name] = null;
                 }
-                elseif (strpos($field_name, 'site_photo', 0) === 0) {
+                elseif (strpos($field_name, 'site', 0) === 0) {
                     $records[$table_name][$field_name] = null;
                 }
                 else {

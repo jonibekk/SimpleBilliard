@@ -36,13 +36,13 @@ echo "*** Truncate teams."
 ./Console/cake dummy_data truncate_table -t teams || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** Insert into users."
-./Console/cake dummy_data -c default -t users -d ${DISIT} || error_exit
+./Console/cake dummy_data -c default -t users -d 4 || error_exit
+echo "${gre}*** Done.${whit}"
+echo "*** Insert into team_members."
+./Console/cake dummy_data -c default -t team_members -d 4 || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** Insert into emails."
 ./Console/cake dummy_data -c default -t emails -d ${DISIT} || error_exit
-echo "${gre}*** Done.${whit}"
-echo "*** Insert into team_members."
-./Console/cake dummy_data -c default -t team_members -d ${DISIT} || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** Insert into posts."
 ./Console/cake dummy_data -c default -t posts -d ${DISIT} || error_exit
