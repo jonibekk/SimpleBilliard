@@ -1,96 +1,94 @@
 <!-- START app/View/Teams/member_list.ctp -->
+<style type="text/css">
+    .team_member_table {
+        background-color: #ffffff;
+        font-size: 14px;
+        border-radius: 5px;
+    }
+
+    .team_member_count_label {
+        font-size: 18px;
+        padding: 12px;
+    }
+
+    .team_member_setting_btn {
+        color: #ffffff;
+        background-color: #ffffff;
+        border-color: lightgray;
+    }
+
+</style>
+
+<?php
+echo $this->Html->script('vendor/angular/angular.min');
+echo $this->Html->script('vendor/angular/angular-route.min');
+?>
+
 <script type="text/javascript">
-    function changeFilter() {
-        var filter_name = document.forms.TeamMemberListForm.filter_name.selectedIndex;
-        if (filter_name == 0) {
-            document.getElementById('name_field').style.display = "block";
-            document.getElementById('admin_field').style.display = "none";
-            document.getElementById('coach_field').style.display = "none";
-            document.getElementById('group_field').style.display = "none";
 
-        } else if (filter_name == 1) {
-            document.getElementById('name_field').style.display = "none";
-            document.getElementById('admin_field').style.display = "block";
-            document.getElementById('coach_field').style.display = "none";
-            document.getElementById('group_field').style.display = "none";
+    var app = angular.module('myApp', ['ngRoute']).
+        config(['$routeProvider', function ($routeProvider) {
+            $routeProvider
+                .when('/', {
+                    controller: 'TeamMemberMainController',
+                    templateUrl: '/template/team_member_list.html'
+                });
+        }]);
 
-        } else if (filter_name == 2) {
-            document.getElementById('name_field').style.display = "none";
-            document.getElementById('admin_field').style.display = "none";
-            document.getElementById('coach_field').style.display = "block";
-            document.getElementById('group_field').style.display = "none";
+    app.controller("TeamMemberMainController", function ($scope, $http) {
 
-        } else if (filter_name == 3) {
-            document.getElementById('name_field').style.display = "none";
-            document.getElementById('admin_field').style.display = "none";
-            document.getElementById('coach_field').style.display = "none";
-            document.getElementById('group_field').style.display = "block";
+            var init = function () {
+                $scope.count = 0;
+                $scope.name_field_show = true;
+                $scope.group_field_show = false;
+                var url = '/teams/ajax_get_team_member_init/';
+                $http.get(url).success(function (data) {
+                    $scope.login_user_info = data.login_user_info;
+                });
+            };
+            init();
+
+            var url = '/teams/ajax_get_team_member/';
+            $http.get(url).success(function (data) {
+                $scope.team_list = data.user_info;
+                $scope.count = data.count;
+            });
+
+            $scope.changeFilter = function () {
+                var filter_name = $scope.filter_name;
+                if (filter_name == 'group_name') {
+                    var url = '/teams/ajax_get_current_team_group_list/';
+                    $http.get(url).success(function (data) {
+                        $scope.group_list = data;
+                    });
+                    $scope.name_field_show = false;
+                    $scope.group_field_show = true;
+                } else if (filter_name == 'coach_name') {
+                } else {
+                    init();
+                }
+            };
+
+            $scope.getTeamList = function () {
+                var url = '/teams/ajax_get_team_member/' + $scope.name_field;
+                $http.get(url).success(function (data) {
+                    $scope.team_list = data.user_info;
+                    $scope.count = data.count;
+                });
+            };
+
+            $scope.changeGroupFilter = function () {
+                var url = '/teams/ajax_get_group_member/' + $scope.group_id;
+                $http.get(url).success(function (data) {
+                    console.log(data);
+                    $scope.team_list = data.user_info;
+                });
+            }
 
         }
-    }
+    );
 </script>
 
-<div class="well">
-    <div class="row">
-        <?= $this->Form->create(); ?>
-        <div class="col-xs-12 col-sm-4">
-            <select id="filter_name" name="filter_name" class="form-control" onchange="changeFilter()">
-                <option value="name">名前</option>
-                <option value="admin">管理者</option>
-                <option value="coach">コーチ</option>
-                <option value="group">グループ</option>
-            </select>
-        </div>
-        <div class="col-xs-12 col-sm-8">
-            <div id="name_field">
-                <input type="text" class="form-control">
-            </div>
-            <div id="admin_field" style="display: none">
-                <select name="admin_flg" class="form-control">
-                    <option value="">管理者のみ</option>
-                    <option value="">一般メンバーのみ</option>
-                </select>
-            </div>
-            <div id="coach_field" style="display: none">
-                <select name="coach_id" class="form-control">
-                    <option value="">菊池</option>
-                    <option value="">草刈</option>
-                </select>
-            </div>
-            <div id="group_field" style="display: none">
-                <select name="group_id" class="form-control">
-                    <?php foreach ($group_info as $id => $name) { ?>
-                        <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-        </div>
-        <?= $this->Form->end(); ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12">
-        <table class="table table-striped">
-            <?php foreach ($user_info as $key => $ui) { ?>
-                <tr>
-                    <td width="30%">
-                        <?= $this->Html->image('ajax-loader.gif', ['class'         => 'lazy comment-img',
-                                                                   'data-original' => $this->Upload->uploadUrl($ui['User']['id'],
-                                                                                                               'User.photo',
-                                                                                                               ['style' => 'small'])]) ?>
-                    </td>
-                    <td>
-                        <p><?= $ui['User']['display_username']; ?></p>
-
-                        <p><?= $ui['TeamMember']['admin_flg'] == (string)TeamMember::ADMIN_USER_FLAG ? '管理者' : 'メンバー'; ?></p>
-
-                        <p><?= $ui['TeamMember']['active_flg'] == (string)TeamMember::ACTIVE_USER_FLAG ? '在職中' : '退職'; ?></p>
-
-                        <p><?= is_null($ui['User']['2fa_secret']) == true ? '2段階認証未設定' : '2段階認証済み'; ?></p>
-                    </td>
-                </tr>
-            <?php } ?>
-        </table>
-    </div>
+<div ng-app="myApp">
+    <div ng-controller="TeamMemberMainController" ng-view> 検索中.... </div>
 </div>

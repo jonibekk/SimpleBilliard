@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * TeamMember Model
@@ -238,26 +240,58 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    public function selectMemberInfo($team_id)
+    public function selectMemberInfo($team_id, $user_name='', $group_id='')
     {
         $options = [
-            'fields'     => ['active_flg', 'admin_flg'],
+            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
-                'team_id' => $team_id
+                'team_id' => $team_id,
             ],
             'contain'    => [
                 'User' => [
-                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret'],
+                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'Email' => ['fields' => ['email']],
                 ],
                 'Team' => [
                     'Group' => [
-                        'fields' => ['name']
+                        'fields' => ['id', 'name']
                     ]
-                ]
+                ],
             ]
         ];
 
+        if (empty($user_name) === false) {
+            $options['conditions']['User.first_name LIKE'] = '%'. $user_name. '%';
+        }
+
+        if (empty($group_id) === false) {
+        }
+
         $res = $this->find('all', $options);
+        $upload = new UploadHelper(new View());
+        foreach ($res as $key => $tm_obj) {
+            // コーチ名を取得
+            $res[$key]['TeamMember']['coach_name'] = 'コーチはいません';
+            if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
+                $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);
+                if (isset($u_info['User']['display_username']) === true) {
+                    $res[$key]['TeamMember']['coach_name'] = $u_info['User']['display_username'];
+                }
+            }
+
+            // 2fa_secret
+            $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? 'OFF' : 'ON';
+            // 評価対象
+            $res[$key]['TeamMember']['evaluation_enable_flg'] = $tm_obj['TeamMember']['evaluation_enable_flg'] === true ? '評価対象者です' : '評価対象者ではありません';
+            // メイン画像
+            $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
+            // Email TODO: 1人が復数のEmail所有することができる？
+            foreach ($tm_obj['User']['Email'] as $val) {
+                $res[$key]['User']['e_mail'] = $val['email'];
+                break;
+            }
+        }
+
         $count = $this->find('count', $options);
         return [$res, $count];
     }
