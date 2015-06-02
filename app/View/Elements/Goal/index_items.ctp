@@ -42,7 +42,7 @@
             <div class="col col-xxs-12 font_lightgray font_12px">
                 <i class="fa fa-check-circle"></i><?= "&nbsp;" . count(($goal['ActionResult'])) . "&nbsp;･&nbsp;" ?>
                 <i class="fa fa-key"></i><?= "&nbsp;" . count($goal['KeyResult']) . "&nbsp;･" ?>
-                <i class="fa fa-heart"></i><?= "&nbsp;" . count($goal['MyFollow']) . "&nbsp;･" ?>
+                <i class="fa fa-heart"></i><?= "&nbsp;" . count($goal['Follower']) . "&nbsp;･" ?>
                 <i class="fa fa-child"></i><?= "&nbsp;" . count($goal['Collaborator']) . "&nbsp;" ?>
                 <?= $this->Goal->displayCollaboratorNameList($goal['Collaborator']) ?>
             </div>

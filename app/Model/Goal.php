@@ -968,6 +968,11 @@ class Goal extends AppModel
                         'MyFollow.id',
                     ],
                 ],
+                'Follower'     => [
+                    'fields'     => [
+                        'Follower.id',
+                    ],
+                ],
                 'KeyResult'    => [
                     'fields' => [
                         'KeyResult.id',
