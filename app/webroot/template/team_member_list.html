@@ -8,7 +8,7 @@
                 <option value="coach_name">コーチの名前</option>
                 <option value="group_name">グループ名</option>
                 <option value="team_admin">チーム管理者</option>
-                <option value="two_step" ng-if="login_user_info.admin_flg == true">2段階認証OFF</option>
+                <option value="two_step" ng-if="login_user_admin_flg == true">2段階認証OFF</option>
             </select>
         </div>
         <div class="col-xs-12 col-sm-8">
@@ -59,13 +59,13 @@
 
                 <p><i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>
 
-                <p ng-if="login_user_info.admin_flg == true"><i class="fa fa-lock"></i> {{item.User.two_step_flg}}</p>
+                <p ng-if="login_user_admin_flg == true"><i class="fa fa-lock"></i> {{item.User.two_step_flg}}</p>
 
-                <p ng-if="login_user_info.admin_flg == true"><i class="fa fa-shield"></i>
+                <p ng-if="login_user_admin_flg == true"><i class="fa fa-shield"></i>
                     {{item.TeamMember.evaluation_enable_flg}}</p>
             </td>
 
-            <td width="20%" ng-if="login_user_info.admin_flg == true">
+            <td width="20%" ng-if="login_user_admin_flg == true">
                 <div class="pull-right header-function dropdown">
                     <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                             id="dropdownMenu1"

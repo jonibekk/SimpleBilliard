@@ -31,7 +31,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             // チーム全員のリストを取得する
             var url = '/teams/ajax_get_team_member_init/';
             $http.get(url).success(function (data) {
-                $scope.login_user_info = data.login_user_info;
+                $scope.login_user_admin_flg = data.login_user_admin_flg;
                 $scope.admin_user_cnt = data.admin_user_cnt;
             });
         }

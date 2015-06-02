@@ -478,11 +478,11 @@ class TeamsController extends AppController
     function ajax_get_team_member_init()
     {
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
-        $login_user_info['admin_flg'] = true;
+        $login_user_admin_flg = true;
         $res = [
             // TODO: チーム管理者のカウント処理必要
             'admin_user_cnt' => 2,
-            'login_user_info' => $login_user_info,
+            'login_user_admin_flg' => $login_user_admin_flg,
         ];
         return $this->_ajaxGetResponse($res);
     }
