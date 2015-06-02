@@ -1924,6 +1924,16 @@ class TeamMember extends AppModel
         return false;
     }
 
+    function getAdminUserCount ($team_id) {
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'admin_flg' => 1
+            ]
+        ];
+        return $this->find('count', $options);
+    }
+
     /**
      * マイメンバーのゴールを取得する
 

@@ -479,13 +479,12 @@ class TeamsController extends AppController
     {
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
         $team_id = $this->Session->read('current_team_id');
-        $login_user_id = $this->Auth->user('id');
-        $login_user_admin_flg = $this->Team->TeamMember->getLoginUserAdminFlag($team_id, $login_user_id);
+        $login_user_admin_flg = $this->Team->TeamMember->getLoginUserAdminFlag($team_id, $this->Auth->user('id'));
+        $admin_user_cnt = $this->Team->TeamMember->getAdminUserCount($team_id);
 
-        //$login_user_admin_flg = true;
         $res = [
             // TODO: チーム管理者のカウント処理必要
-            'admin_user_cnt'       => 2,
+            'admin_user_cnt'       => $admin_user_cnt,
             'login_user_admin_flg' => $login_user_admin_flg,
         ];
         return $this->_ajaxGetResponse($res);
