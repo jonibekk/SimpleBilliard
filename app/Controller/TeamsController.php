@@ -498,7 +498,7 @@ class TeamsController extends AppController
     function ajax_get_group_member($group_id='')
     {
         $team_id = $this->Session->read('current_team_id');
-        $user_info = $this->Team->TeamMember->selectMemberInfo($team_id, '', $group_id);
+        $user_info = $this->Team->TeamMember->selectGroupMemberInfo($team_id, $group_id);
         $res = [
             'user_info'       => $user_info,
         ];

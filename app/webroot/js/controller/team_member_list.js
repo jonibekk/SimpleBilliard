@@ -11,10 +11,12 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
 
         // 無効化されたメンバーも表示する項目
         $scope.disp_active_flag = '1';
-        // 名前入力欄
-        $scope.name_field_show = true;
-        // グループ選択欄
-        $scope.group_field_show = false;
+
+        var showTextField = function () {
+            $scope.name_field_show = true;
+            $scope.group_field_show = false;
+        }
+        showTextField();
 
         var init = function () {
             var url = '/teams/ajax_get_team_member_init/';
@@ -38,28 +40,37 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 });
                 $scope.name_field_show = false;
                 $scope.group_field_show = true;
+                init();
             } else if (filter_name == 'coach_name') {
+                $scope.name_field = '';
 
             } else if (filter_name == 'two_step') {
+                $scope.name_field = '';
+                showTextField();
                 var url = '/teams/ajax_get_current_not_2fa_step_user_list/';
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
                 });
             } else if (filter_name == 'team_admin') {
-                // チーム管理者選択
+                $scope.name_field = '';
+                showTextField();
                 var url = '/teams/ajax_get_current_team_admin_list/';
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
                 });
             } else {
                 init();
+                $scope.name_field = '';
+                showTextField();
             }
         };
 
         $scope.changeGroupFilter = function () {
             var url = '/teams/ajax_get_group_member/' + $scope.group_id;
+            if ($scope.group_id == null) {
+                var url = '/teams/ajax_get_team_member/';
+            }
             $http.get(url).success(function (data) {
-                console.log(data);
                 $scope.team_list = data.user_info;
             });
         }

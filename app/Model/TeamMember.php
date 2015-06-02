@@ -250,6 +250,27 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    public function selectGroupMemberInfo($team_id, $group_id)
+    {
+        $options = [
+            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'conditions' => [
+                'team_id' => $team_id,
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'Email' => ['fields' => ['email']],
+                ]
+            ]
+        ];
+        if (empty($group_id) === false) {
+            $user_id = $this->User->MemberGroup->getGroupMemberUserId($team_id, $group_id);
+            $options['conditions']['user_id'] = $user_id;
+        }
+        return $this->convertMemberData($this->find('all', $options));
+    }
+
     public function select2faStepMemberInfo($team_id)
     {
         $options = [
@@ -286,7 +307,7 @@ class TeamMember extends AppModel
         return $this->convertMemberData($this->find('all', $options));
     }
 
-    public function selectMemberInfo($team_id, $group_id='')
+    public function selectMemberInfo($team_id)
     {
         $options = [
             'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
@@ -305,10 +326,6 @@ class TeamMember extends AppModel
                 ],
             ]
         ];
-
-        if (empty($group_id) === false) {
-        }
-
         return $this->convertMemberData($this->find('all', $options));
     }
 
