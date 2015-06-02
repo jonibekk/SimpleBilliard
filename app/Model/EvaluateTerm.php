@@ -47,6 +47,22 @@ class EvaluateTerm extends AppModel
         'Evaluator',
     ];
 
+    function getTermIdByDate($start, $end)
+    {
+        $options = [
+            'conditions' => [
+                'start_date <=' => $start,
+                'end_date >='   => $end,
+                'team_id'       => $this->current_team_id
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (viaIsSet($res['EvaluateTerm']['id'])) {
+            return $res['EvaluateTerm']['id'];
+        }
+        return null;
+    }
+
     function getCurrentTermId()
     {
         $options = [
@@ -61,6 +77,15 @@ class EvaluateTerm extends AppModel
             return $res['EvaluateTerm']['id'];
         }
         return null;
+    }
+
+    function getNextTermId()
+    {
+        $next_term = $this->Team->getAfterTermStartEnd();
+        if (empty($next_term)) {
+            return;
+        }
+        return $this->Team->EvaluateTerm->getTermIdByDate($next_term['start'], $next_term['end'] - 1);
     }
 
     function getLatestTermId()
@@ -112,18 +137,36 @@ class EvaluateTerm extends AppModel
         return key($all_term);
     }
 
-    function saveTerm()
+    function saveCurrentTerm()
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $latest = $this->getLatestTerm();
         if (!empty($latest)) {
             $start_date = $latest['EvaluateTerm']['end_date'] + 1;
         }
+        $res = $this->saveTerm($start_date, $this->Team->getCurrentTermEndDate() - 1);
+        return $res;
+    }
+
+    function saveNextTerm()
+    {
+        $after_start_end = $this->Team->getAfterTermStartEnd();
+        $latest = $this->getLatestTerm();
+        if (!empty($latest)) {
+            $start_date = $latest['EvaluateTerm']['end_date'] + 1;
+        }
+        $res = $this->saveTerm($start_date, $after_start_end['end'] - 1);
+        return $res;
+    }
+
+    function saveTerm($start, $end)
+    {
         $data = [
             'team_id'    => $this->current_team_id,
-            'start_date' => $start_date,
-            'end_date'   => $this->Team->getCurrentTermEndDate() - 1,
+            'start_date' => $start,
+            'end_date'   => $end,
         ];
+        $this->create();
         $res = $this->save($data);
         return $res;
     }

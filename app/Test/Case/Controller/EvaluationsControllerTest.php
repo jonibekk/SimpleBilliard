@@ -66,7 +66,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testIndexSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $eval_data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 1,
@@ -88,7 +88,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testIndexPreviousTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
             'team_id'           => 1,
@@ -106,7 +106,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testIndexPresentTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $presentTermId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
@@ -141,7 +141,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
@@ -173,7 +173,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $records = [
             [
@@ -208,7 +208,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotExistTotal()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
@@ -240,7 +240,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotMyTern()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
@@ -272,7 +272,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewIncorrectEvaluateeId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectEvaluateeId = 10;
@@ -305,7 +305,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewIncorrectTermId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectTermId = 10;

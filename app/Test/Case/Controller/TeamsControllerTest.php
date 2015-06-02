@@ -259,7 +259,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testSettingsSuccessNotAvailStartEvalButton()
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
-        $Teams->Team->EvaluateTerm->saveTerm();
+        $Teams->Team->EvaluateTerm->saveCurrentTerm();
 
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
@@ -402,6 +402,7 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/ajax_get_score_elm/index:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxGetTermStartEnd()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -476,7 +477,7 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
 
-        $Teams->Team->EvaluateTerm->saveTerm();
+        $Teams->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Teams->Team->EvaluateTerm->getLastInsertID();
         $data = ['evaluate_term_id' => $termId];
         $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);

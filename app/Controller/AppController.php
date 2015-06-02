@@ -107,7 +107,8 @@ class AppController extends Controller
 
     public $my_uid = null;
     public $current_team_id = null;
-    public $term_id = null;
+    public $current_term_id = null;
+    public $next_term_id = null;
 
     public function beforeFilter()
     {
@@ -160,6 +161,7 @@ class AppController extends Controller
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
                 $this->_setCurrentTerm();
+                $this->_setNextTerm();
 
             }
             $this->_setMyMemberStatus();
@@ -175,10 +177,25 @@ class AppController extends Controller
         if (!$this->current_team_id) {
             return false;
         }
-        if (!$this->term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $term = $this->Team->EvaluateTerm->saveTerm();
-            $this->term_id = $term['EvaluateTerm']['id'];
+        if (!$this->current_term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
+            $term = $this->Team->EvaluateTerm->saveCurrentTerm();
+            $this->current_term_id = $term['EvaluateTerm']['id'];
         }
+    }
+
+    public function _setNextTerm()
+    {
+        if (!$this->current_team_id) {
+            return false;
+        }
+        if (!$this->current_term_id) {
+            $this->_setCurrentTerm();
+        }
+        if (!$this->next_term_id = $this->Team->EvaluateTerm->getNextTermId()) {
+            $this->Team->EvaluateTerm->saveNextTerm();
+            $this->next_term_id = $this->Team->EvaluateTerm->getLastInsertID();
+        }
+
     }
 
     /*
