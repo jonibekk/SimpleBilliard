@@ -143,6 +143,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations = $this->_getEvaluationsCommonMock();
         $Evaluations->Team->EvaluateTerm->saveTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -209,6 +210,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations = $this->_getEvaluationsCommonMock();
         $Evaluations->Team->EvaluateTerm->saveTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -240,6 +242,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations = $this->_getEvaluationsCommonMock();
         $Evaluations->Team->EvaluateTerm->saveTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -271,6 +274,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations = $this->_getEvaluationsCommonMock();
         $Evaluations->Team->EvaluateTerm->saveTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectEvaluateeId = 10;
         $records = [
             [
@@ -303,6 +307,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $Evaluations = $this->_getEvaluationsCommonMock();
         $Evaluations->Team->EvaluateTerm->saveTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectTermId = 10;
         $records = [
             [

@@ -27,7 +27,7 @@
 <div class="panel panel-default">
     <div class="panel-heading"><?= __d('gl', "評価凍結設定") ?></div>
     <div class="panel-body form-horizontal">
-        <?php if ($current_eval_is_available): ?>
+        <?php if ($current_eval_is_started): ?>
             <h4><?= __d('gl', "今期") ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
                 - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
             <?php if ($current_eval_is_frozen): ?>
@@ -44,7 +44,7 @@
                                       __d('gl', "今期の評価を凍結します。よろしいですか？")) ?>
             <?php endif; ?>
         <?php endif; ?>
-        <?php if ($previous_eval_is_available): ?>
+        <?php if ($previous_eval_is_started): ?>
             <h4><?= __d('gl', "前期") ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
                 - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
             <?php if ($previous_eval_is_frozen): ?>

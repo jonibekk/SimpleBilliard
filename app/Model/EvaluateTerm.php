@@ -152,7 +152,7 @@ class EvaluateTerm extends AppModel
         return (bool)$res;
     }
 
-    function checkTermAvailable($id)
+    function isStartedEvaluation($id)
     {
         $options = [
             'conditions' => [

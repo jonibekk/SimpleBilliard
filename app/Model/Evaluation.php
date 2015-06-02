@@ -224,7 +224,7 @@ class Evaluation extends AppModel
             throw new RuntimeException(__d('gl', "パラメータが不正です。"));
         }
 
-        if (!$this->Team->EvaluateTerm->checkTermAvailable($termId)) {
+        if (!$this->Team->EvaluateTerm->isStartedEvaluation($termId)) {
             throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
         }
 
