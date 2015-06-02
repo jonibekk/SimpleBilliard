@@ -273,7 +273,7 @@ class UsersController extends AppController
 
         // 本登録成功
         //ログイン
-        $this->_autoLogin($this->User->getLastInsertID());
+        $this->_autoLogin($this->User->getLastInsertID(), true);
         //チーム参加
         $this->_joinTeam($this->request->params['named']['invite_token']);
         //ホーム画面でモーダル表示
@@ -904,6 +904,9 @@ class UsersController extends AppController
 
     public function _setDefaultTeam($team_id)
     {
+        if (!$team_id) {
+            return false;
+        }
         try {
             $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
