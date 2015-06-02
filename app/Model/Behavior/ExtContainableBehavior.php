@@ -287,6 +287,7 @@ class ExtContainableBehavior extends ContainableBehavior
             }
             //softDelete用conditionを追加
             $children = $this->_addSoftDeleteConditionForModel($name, $children);
+            $children = $this->_addWithTeamIdConditionForModel($Model, $name, $children);
 
             $children = (array)$children;
             foreach ($children as $key => $val) {
@@ -461,4 +462,36 @@ class ExtContainableBehavior extends ContainableBehavior
         $children['conditions'][$model_name . '.del_flg'] = false;
         return $children;
     }
+
+    /**
+     * @param Model $Model
+     * @param       $model_name
+     * @param       $children
+     *
+     * @return mixed
+     */
+    private function _addWithTeamIdConditionForModel(Model $Model, $model_name, $children)
+    {
+        //$model_name
+        $child_class_name = null;
+        if (isset($Model->hasMany[$model_name]['className'])) {
+            $child_class_name = $Model->hasMany[$model_name]['className'];
+        }
+        if (isset($Model->belongsTo[$model_name]['className'])) {
+            $child_class_name = $Model->belongsTo[$model_name]['className'];
+        }
+        if (isset($Model->hasAndBelongsToMany[$model_name]['className'])) {
+            $child_class_name = $Model->hasAndBelongsToMany[$model_name]['className'];
+        }
+        if (!$child_class_name) {
+            return $children;
+        }
+        $ChildModel = ClassRegistry::init($child_class_name);
+        if ($ChildModel->hasField('team_id')) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $children['conditions'][$model_name . '.team_id'] = $Model->current_team_id;
+        }
+        return $children;
+    }
+
 }

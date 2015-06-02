@@ -22,6 +22,7 @@ class AppModel extends Model
             'field'      => 'del_flg',
             'field_date' => 'deleted',
         ],
+        'WithTeamId',
         'ExtContainable',
     ];
 
