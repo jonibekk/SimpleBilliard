@@ -15,6 +15,11 @@ class EvaluateTerm extends AppModel
     const STATUS_EVAL_FROZEN = 2;
     const STATUS_EVAL_FINISHED = 3;
 
+    private $previous_term = [];
+    private $current_term = [];
+    private $next_term = [];
+    private $latest_term = [];
+
     /**
      * Validation rules
      *
@@ -61,6 +66,11 @@ class EvaluateTerm extends AppModel
             return $res['EvaluateTerm']['id'];
         }
         return null;
+    }
+
+    function getCurrentTerm()
+    {
+
     }
 
     function getCurrentTermId()
