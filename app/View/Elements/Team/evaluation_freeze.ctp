@@ -11,12 +11,12 @@
  * @var                    $term_end_date
  * @var                    $eval_enabled
  * @var                    $eval_start_button_enabled
- * @var                    $current_eval_is_available
+ * @var                    $current_eval_is_started
  * @var                    $current_term_start_date
  * @var                    $current_term_end_date
  * @var                    $current_eval_is_frozen
  * @var                    $current_term_id
- * @var                    $previous_eval_is_available
+ * @var                    $previous_eval_is_started
  * @var                    $previous_term_start_date
  * @var                    $previous_term_end_date
  * @var                    $previous_eval_is_frozen
