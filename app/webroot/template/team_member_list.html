@@ -17,6 +17,10 @@
                    ng-model="name_field.User.display_username"
                    class="form-control" placeholder="名前を入力してください">
 
+            <input ng-show="coach_name_field_show"
+                   ng-model="name_field.TeamMember.coach_name"
+                   class="form-control" placeholder="コーチの名前を入力してください">
+
             <select ng-show="group_field_show"
                     ng-model="group_id"
                     ng-options="num as name for (num, name) in group_list"

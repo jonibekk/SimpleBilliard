@@ -21,6 +21,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
 
             // 名前検索のテキストボックスを表示
             $scope.name_field_show = true;
+            $scope.coach_name_field_show = false;
             $scope.group_field_show = false;
 
             // 入力値を初期化
@@ -43,6 +44,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             if (filter_name == 'group_name') {
                 init();
                 $scope.name_field_show = false;
+                $scope.coach_name_field_show = false;
                 $scope.group_field_show = true;
                 url = '/teams/ajax_get_current_team_group_list/';
                 $http.get(url).success(function (data) {
@@ -52,6 +54,9 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             // コーチ名が選択
             } else if (filter_name == 'coach_name') {
                 init();
+                $scope.name_field_show = false;
+                $scope.coach_name_field_show = true;
+                $scope.group_field_show = false;
                 var url = '/teams/ajax_get_team_member/';
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
