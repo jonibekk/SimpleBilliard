@@ -26,5 +26,5 @@ echo $this->Html->script('controller/team_member_list');
 ?>
 
 <div ng-app="myApp">
-    <div ng-controller="TeamMemberMainController" ng-view> 検索中....</div>
+    <div ng-controller="TeamMemberMainController" ng-view> ロード中....</div>
 </div>

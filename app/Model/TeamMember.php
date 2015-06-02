@@ -250,10 +250,16 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    public function setActiveFlag ($member_id, $flag) {
+        $this->id = $member_id;
+        $flag = $flag == 'ON' ? 1 : 0;
+        return $this->saveField('active_flg', $flag);
+    }
+
     public function selectGroupMemberInfo($team_id, $group_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
@@ -274,7 +280,7 @@ class TeamMember extends AppModel
     public function select2faStepMemberInfo($team_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
                 'team_id' => $team_id,
                 'User.2fa_secret' => NULL
@@ -292,7 +298,7 @@ class TeamMember extends AppModel
     public function selectAdminMemberInfo($team_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
                 'team_id' => $team_id,
                 'TeamMember.admin_flg' => 1
@@ -310,7 +316,7 @@ class TeamMember extends AppModel
     public function selectMemberInfo($team_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
                 'team_id' => $team_id,
             ],

@@ -99,5 +99,16 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             });
         }
 
+        $scope.setActiveFlag = function (index, member_id, active_flg) {
+            var url = '/teams/ajax_set_current_team_active_flag/' + member_id + '/' + active_flg;
+            $http.get(url).success(function (data) {
+                var show_flg = false;
+                if (active_flg == 'ON') {
+                    show_flg = true;
+                }
+                $scope.team_list[index]['TeamMember']['active_flg'] = show_flg;
+            });
+        }
+
     }
 );
