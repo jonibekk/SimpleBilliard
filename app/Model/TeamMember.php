@@ -1910,6 +1910,20 @@ class TeamMember extends AppModel
         return null;
     }
 
+    function getLoginUserAdminFlag ($team_id, $user_id) {
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'user_id' => $user_id,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['TeamMember']['admin_flg']) === true) {
+            return $res['TeamMember']['admin_flg'];
+        }
+        return false;
+    }
+
     /**
      * マイメンバーのゴールを取得する
 

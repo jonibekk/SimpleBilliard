@@ -478,10 +478,14 @@ class TeamsController extends AppController
     function ajax_get_team_member_init()
     {
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
-        $login_user_admin_flg = true;
+        $team_id = $this->Session->read('current_team_id');
+        $login_user_id = $this->Auth->user('id');
+        $login_user_admin_flg = $this->Team->TeamMember->getLoginUserAdminFlag($team_id, $login_user_id);
+
+        //$login_user_admin_flg = true;
         $res = [
             // TODO: チーム管理者のカウント処理必要
-            'admin_user_cnt' => 2,
+            'admin_user_cnt'       => 2,
             'login_user_admin_flg' => $login_user_admin_flg,
         ];
         return $this->_ajaxGetResponse($res);
@@ -492,22 +496,22 @@ class TeamsController extends AppController
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->selectMemberInfo($team_id);
         $res = [
-            'user_info'       => $user_info,
+            'user_info' => $user_info,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_group_member($group_id='')
+    function ajax_get_group_member($group_id = '')
     {
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->selectGroupMemberInfo($team_id, $group_id);
         $res = [
-            'user_info'       => $user_info,
+            'user_info' => $user_info,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_current_team_group_list ()
+    function ajax_get_current_team_group_list()
     {
         $team_id = $this->Session->read('current_team_id');
         // グループ名を取得
@@ -515,20 +519,22 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($group_info);
     }
 
-    function ajax_get_current_team_admin_list () {
+    function ajax_get_current_team_admin_list()
+    {
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->selectAdminMemberInfo($team_id);
         $res = [
-            'user_info'       => $user_info,
+            'user_info' => $user_info,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_current_not_2fa_step_user_list () {
+    function ajax_get_current_not_2fa_step_user_list()
+    {
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->select2faStepMemberInfo($team_id);
         $res = [
-            'user_info'       => $user_info,
+            'user_info' => $user_info,
         ];
         return $this->_ajaxGetResponse($res);
     }
