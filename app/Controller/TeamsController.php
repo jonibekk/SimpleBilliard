@@ -56,19 +56,13 @@ class TeamsController extends AppController
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-        $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
-
         $eval_start_button_enabled = true;
-        if (!is_null($current_term_id) &&
-            !is_null($latest_term_id) &&
-            !$this->Team->EvaluateTerm->isAbleToStartEvaluation($current_term_id) &&
-            $current_term_id === $latest_term_id
-        ) {
+        if (!$this->Team->EvaluateTerm->isAbleToStartEvaluation($current_term_id)) {
             $eval_start_button_enabled = false;
         }
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
                            'eval_scores'));
-        $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
+        $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
 
         // 全体progressカウント
         $all_cnt = array_sum(Hash::extract($statuses, "{s}.all_num"));
@@ -451,19 +445,23 @@ class TeamsController extends AppController
         return $this->render();
     }
 
-    function change_freeze_status()
+    function change_freeze_status($termId)
     {
         $this->request->allowMethod('post');
-        $termId = viaIsSet($this->request->data['evaluate_term_id']);
         try {
-            $this->Team->EvaluateTerm->changeFreezeStatus($termId);
+            $res = $this->Team->EvaluateTerm->changeFreezeStatus($termId);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e);
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
-                                         $this->Team->EvaluateTerm->getCurrentTermId());
+        if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
+            $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
+                                             $this->Team->EvaluateTerm->getCurrentTermId());
+        }
+        else {
+            $this->Pnotify->outSuccess(__d('gl', "評価の凍結を解除しました。"));
+        }
         return $this->redirect($this->referer());
     }
 

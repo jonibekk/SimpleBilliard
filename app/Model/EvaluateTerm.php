@@ -133,8 +133,17 @@ class EvaluateTerm extends AppModel
         if (count($all_term) < 2) {
             return null;
         }
-        next($all_term);
-        return key($all_term);
+        $current_term_id = $this->getCurrentTermId();
+        $prev_key = null;
+        $res_key = null;
+        foreach ($all_term as $k => $v) {
+            if ($prev_key == $current_term_id) {
+                $res_key = $k;
+                break;
+            }
+            $prev_key = $k;
+        }
+        return $res_key;
     }
 
     function saveCurrentTerm()
