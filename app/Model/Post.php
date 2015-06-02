@@ -582,6 +582,13 @@ class Post extends AppModel
                 ]
             ],
         ];
+
+        if ($this->orgParams['circle_id']) {
+            $options['order'] = [
+                'Post.modified' => 'desc'
+            ];
+        }
+
         if (!empty($this->orgParams['post_id'])) {
             //単独の場合はコメントの件数上限外す
             unset($options['contain']['Comment']['limit']);
