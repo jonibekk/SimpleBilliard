@@ -250,6 +250,12 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    public function setAdminUserFlag ($member_id, $flag) {
+        $this->id = $member_id;
+        $flag = $flag == 'ON' ? 1 : 0;
+        return $this->saveField('admin_flg', $flag);
+    }
+
     public function setActiveFlag ($member_id, $flag) {
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;

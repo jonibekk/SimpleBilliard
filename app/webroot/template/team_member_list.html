@@ -49,7 +49,7 @@
             <td width="30%">
                 <img ng-src="{{item.User.img_url}}" class="feed-img"/>
 
-                <p> {{item.User.display_username}} </p>
+                <p> {{item.User.display_username}} <i class="fa fa-adn" ng-if="item.TeamMember.admin_flg == '1'"></i></p>
             </td>
 
             <td>
@@ -80,10 +80,10 @@
                             <a role="menuitem" tabindex="-1" ng-click="setActiveFlag($index, item.TeamMember.id, 'ON')">アクティブにする</a>
                         </li>
                         <li role="presentation" ng-if="item.TeamMember.admin_flg == '0'">
-                            <a role="menuitem" tabindex="-1">管理者にする</a>
+                            <a role="menuitem" tabindex="-1" ng-click="setAdminUserFlag($index, item.TeamMember.id, 'ON')">管理者にする</a>
                         </li>
                         <li role="presentation" ng-if="item.TeamMember.admin_flg == '1' && admin_user_cnt > 1">
-                            <a role="menuitem" tabindex="-1">管理者から外す</a>
+                            <a role="menuitem" tabindex="-1" ng-click="setAdminUserFlag($index, item.TeamMember.id, 'OFF')">管理者から外す</a>
                         </li>
                     </ul>
                 </div>

@@ -52,7 +52,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                     $scope.group_list = data;
                 });
 
-            // コーチ名が選択
+                // コーチ名が選択
             } else if (filter_name == 'coach_name') {
                 init();
                 $scope.name_field_show = false;
@@ -63,7 +63,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                     $scope.team_list = data.user_info;
                 });
 
-            //2段階認証OFF選択
+                //2段階認証OFF選択
             } else if (filter_name == 'two_step') {
                 init();
                 url = '/teams/ajax_get_current_not_2fa_step_user_list/';
@@ -71,7 +71,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                     $scope.team_list = data.user_info;
                 });
 
-            // チーム管理者選択
+                // チーム管理者選択
             } else if (filter_name == 'team_admin') {
                 init();
                 url = '/teams/ajax_get_current_team_admin_list/';
@@ -79,7 +79,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                     $scope.team_list = data.user_info;
                 });
 
-            // その他
+                // その他
             } else {
                 init();
                 var url = '/teams/ajax_get_team_member/';
@@ -107,6 +107,17 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                     show_flg = true;
                 }
                 $scope.team_list[index]['TeamMember']['active_flg'] = show_flg;
+            });
+        }
+
+        $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
+            var url = '/teams/ajax_set_current_team_admin_user_flag/' + member_id + '/' + admin_flg;
+            $http.get(url).success(function (data) {
+                var show_flg = false;
+                if (admin_flg == 'ON') {
+                    show_flg = true;
+                }
+                $scope.team_list[index]['TeamMember']['admin_flg'] = show_flg;
             });
         }
 
