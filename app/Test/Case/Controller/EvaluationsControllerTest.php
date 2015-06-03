@@ -513,51 +513,56 @@ class EvaluationsControllerTest extends ControllerTestCase
 
     public function testAjaxGetIncompleteEvaluatees()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $evaluateeId = 1;
-        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/term_id:{$evaluateeId}", ['method' => 'GET']);
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetIncompleteEvaluators()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $evaluateeId = 1;
-        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/term_id:{$evaluateeId}", ['method' => 'GET']);
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetEvaluatorsStatus()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
         $evaluateeId = 1;
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluators_status/term_id:{$evaluateeId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}/term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetEvaluateesByEvaluator()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
         $evaluatorId = 1;
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/term_id:{$evaluatorId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}/term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetIncompleteOneself()
     {
         $this->_getEvaluationsCommonMock();
-        $evaluatorId = 1;
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_incomplete_oneself/term_id:{$evaluatorId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_oneself/term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
