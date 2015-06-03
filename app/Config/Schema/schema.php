@@ -885,7 +885,7 @@ class AppSchema extends CakeSchema
         'site_photo_file_name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'サイト画像', 'charset' => 'utf8'),
         'del_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
-        'created'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を追加した日付時刻'),
+        'created'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
         'modified'             => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を更新した日付時刻'),
         'indexes'              => array(
             'PRIMARY'          => array('column' => array('id', 'modified'), 'unique' => 1),
@@ -896,7 +896,8 @@ class AppSchema extends CakeSchema
             'team_id_modified' => array('column' => array('team_id', 'modified'), 'unique' => 0),
             'action_result_id' => array('column' => 'action_result_id', 'unique' => 0),
             'key_result_id'    => array('column' => 'key_result_id', 'unique' => 0),
-            'circle_id'        => array('column' => 'circle_id', 'unique' => 0)
+            'circle_id'        => array('column' => 'circle_id', 'unique' => 0),
+            'created'          => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
