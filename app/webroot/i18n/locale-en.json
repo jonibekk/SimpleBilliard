@@ -1,0 +1,9 @@
+{
+    "FILTER_ALL": "All",
+    "FILTER_COACH_NAME": "Coach Name",
+    "FILTER_GROUP_NAME": "Group Name",
+    "FILTER_ADMIN": "Admin",
+    "FILTER_TWO_STEP": "2 Step Auth",
+    "PLACEHOLDER_NAME_FIELD": "Please Input User Name.",
+    "PLACEHOLDER_COACH_NAME_FIELD": "Please Input Coach User Name."
+}

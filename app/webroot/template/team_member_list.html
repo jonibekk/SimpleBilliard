@@ -4,21 +4,21 @@
     <div id="filter_box" class="row">
         <div class="col-xs-12 col-sm-4">
             <select ng-model="filter_name" name="filter_name" class="form-control" ng-change="changeFilter()">
-                <option ng-selected="true" value="">すべて</option>
-                <option value="coach_name">コーチの名前</option>
-                <option value="group_name">グループ名</option>
-                <option value="team_admin">チーム管理者</option>
-                <option value="two_step" ng-if="login_user_admin_flg == true">2段階認証OFF</option>
+                <option ng-selected="true" value="">{{ 'FILTER_ALL' | translate}}</option>
+                <option value="coach_name">{{ 'FILTER_COACH_NAME' | translate}}</option>
+                <option value="group_name">{{ 'FILTER_GROUP_NAME' | translate}}</option>
+                <option value="team_admin">{{ 'FILTER_ADMIN' | translate}}</option>
+                <option value="two_step" ng-if="login_user_admin_flg == true">{{ 'FILTER_TWO_STEP' | translate}}</option>
             </select>
         </div>
         <div class="col-xs-12 col-sm-8">
             <input ng-show="name_field_show"
                    ng-model="name_field.User.display_username"
-                   class="form-control" placeholder="名前を入力してください">
+                   class="form-control" placeholder="{{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
 
             <input ng-show="coach_name_field_show"
                    ng-model="name_field.TeamMember.coach_name"
-                   class="form-control" placeholder="コーチの名前を入力してください">
+                   class="form-control" placeholder="{{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
 
             <select ng-show="group_field_show"
                     ng-model="group_id"

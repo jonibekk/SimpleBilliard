@@ -487,6 +487,7 @@ class TeamsController extends AppController
             'admin_user_cnt'       => $admin_user_cnt,
             'login_user_id'        => $login_user_id,
             'login_user_admin_flg' => $login_user_admin_flg,
+            'login_user_language'  => $this->Session->read('Auth.User.language'),
         ];
         return $this->_ajaxGetResponse($res);
     }

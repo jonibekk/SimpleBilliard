@@ -1,20 +1,29 @@
-var app = angular.module('myApp', ['ngRoute']).
-    config(['$routeProvider', function ($routeProvider) {
+var app = angular.module('myApp', ['ngRoute', 'pascalprecht.translate']).
+
+    config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
+        // ルーティング
         $routeProvider
             .when('/', {
                 controller: 'TeamMemberMainController',
                 templateUrl: '/template/team_member_list.html'
             });
+
+        // 多言語設定
+        $translateProvider.useStaticFilesLoader({
+            prefix: '/i18n/locale-',
+            suffix: '.json'
+        });
+        $translateProvider.preferredLanguage('ja');
+        $translateProvider.fallbackLanguage('en');
     }]);
 
-app.controller("TeamMemberMainController", function ($scope, $http) {
+app.controller("TeamMemberMainController", function ($scope, $http, $translate) {
 
         // 無効化されたメンバーも表示する項目
         $scope.disp_active_flag = '1';
 
         var url = cake['url']['i'];
         $http.get(url).success(function (data) {
-            console.log(data);
             $scope.team_list = data.user_info;
         });
 
@@ -29,11 +38,18 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             $scope.name_field = '';
             $scope.group_id = null;
 
-            // チーム全員のリストを取得する
             var url = cake['url']['j'];
             $http.get(url).success(function (data) {
+
                 $scope.login_user_id = data.login_user_id;
                 $scope.login_user_admin_flg = data.login_user_admin_flg;
+
+                // 多言語設定（デフォルトは日本語）
+                $scope.login_user_language = data.login_user_language;
+                if ($scope.login_user_language == 'eng') {
+                    $translate.use('en');
+                }
+
                 $scope.admin_user_cnt = data.admin_user_cnt;
             });
         }

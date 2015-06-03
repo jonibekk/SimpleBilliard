@@ -1,0 +1,9 @@
+{
+    "FILTER_ALL" : "すべて",
+    "FILTER_COACH_NAME": "コーチの名前",
+    "FILTER_GROUP_NAME": "グループ名",
+    "FILTER_ADMIN": "チーム管理者",
+    "FILTER_TWO_STEP": "２段階認証OFF",
+    "PLACEHOLDER_NAME_FIELD": "名前を入力してください",
+    "PLACEHOLDER_COACH_NAME_FIELD": "コーチの名前を入力してください"
+}
