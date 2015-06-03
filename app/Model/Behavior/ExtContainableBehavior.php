@@ -49,7 +49,7 @@ class ExtContainableBehavior extends ContainableBehavior
     public function setup(Model $Model, $settings = array())
     {
         if (!isset($this->settings[$Model->alias])) {
-            $this->settings[$Model->alias] = array('recursive' => true, 'notices' => true, 'autoFields' => true);
+            $this->settings[$Model->alias] = array('recursive' => true, 'notices' => true, 'autoFields' => true, 'with_team_id' => true);
         }
         $this->settings[$Model->alias] = array_merge($this->settings[$Model->alias], $settings);
     }
@@ -472,6 +472,9 @@ class ExtContainableBehavior extends ContainableBehavior
      */
     private function _addWithTeamIdConditionForModel(Model $Model, $model_name, $children)
     {
+        if (!$this->settings[$Model->alias]['with_team_id']) {
+            return $children;
+        }
         //$model_name
         $child_class_name = null;
         if (isset($Model->hasMany[$model_name]['className'])) {
