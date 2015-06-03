@@ -736,6 +736,7 @@ class EvaluationTest extends CakeTestCase
         $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
         $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
         $this->Evaluation->getMyTurnCount();
     }
