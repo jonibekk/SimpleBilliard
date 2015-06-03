@@ -67,8 +67,8 @@ class GoalCategory extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id' => $teamId,
-                //                'active_flg' => true,
+                'team_id'    => $teamId,
+                'active_flg' => true,
             ],
         ];
         $res = $this->find('all', $options);
@@ -90,6 +90,22 @@ class GoalCategory extends AppModel
         ];
         $res = $this->saveAll($data);
         return $res;
+    }
+
+    function saveGoalCategories($datas, $team_id)
+    {
+        if (empty($datas)) {
+            return false;
+        }
+        $datas = Hash::insert($datas, '{n}.team_id', $team_id);
+        $res = $this->saveAll($datas);
+        return $res;
+    }
+
+    function setToInactive($id)
+    {
+        $this->id = $id;
+        return $this->saveField('active_flg', false);
     }
 
 }

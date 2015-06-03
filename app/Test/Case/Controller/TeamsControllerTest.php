@@ -402,6 +402,7 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/ajax_get_score_elm/index:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxGetTermStartEnd()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -415,7 +416,7 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $this->_getTeamsCommonMock(null, true);
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/to_inactive/1', ['method' => 'POST']);
+        $this->testAction('/teams/to_inactive_score/1', ['method' => 'POST']);
     }
 
     function testAjaxGetConfirmInactiveScoreModal()

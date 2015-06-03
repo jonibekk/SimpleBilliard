@@ -52,7 +52,8 @@ class TeamsController extends AppController
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
         $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
-        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores);
+        $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
+        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
@@ -80,8 +81,6 @@ class TeamsController extends AppController
             $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
         }
 
-        $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
-
         // Get term info
         $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
         $current_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($current_term_id);
@@ -94,7 +93,6 @@ class TeamsController extends AppController
         $previous_term_end_date = $previous_term['end'] - 1;
 
         $this->set(compact(
-                       'goal_categories',
                        'statuses',
                        'all_cnt',
                        'incomplete_cnt',
@@ -145,13 +143,31 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__d('gl', "評価スコア設定が保存できませんでした。"));
         }
         return $this->redirect($this->referer());
+    }
+
+    function save_goal_categories()
+    {
+        $this->request->allowMethod(['post', 'put']);
+        $this->Team->begin();
+        if ($this->Goal->GoalCategory->saveGoalCategories($this->request->data['GoalCategory'],
+                                                          $this->Session->read('current_team_id'))
+        ) {
+            $this->Team->commit();
+            $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリ設定を保存しました。"));
+        }
+        else {
+            $this->Team->rollback();
+            $this->Pnotify->outError(__d('gl', "ゴールカテゴリ設定が保存できませんでした。"));
+        }
+        return $this->redirect($this->referer());
 
     }
 
-    function to_inactive($id)
+    function to_inactive_score($id)
     {
         $this->request->allowMethod(['post']);
-        $this->Team->Evaluation->EvaluateScore->setToInactive($id);
+        $res = $this->Team->Evaluation->EvaluateScore->setToInactive($id);
+        $this->log($res);
         $this->Pnotify->outSuccess(__d('gl', "スコア定義を削除しました。"));
         return $this->redirect($this->referer());
     }
@@ -174,6 +190,35 @@ class TeamsController extends AppController
         $response = $this->render('Team/eval_score_form_elm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_confirm_inactive_goal_category_modal($id)
+    {
+        $this->_ajaxPreProcess();
+        $this->set(compact('id'));
+        $response = $this->render('Team/confirm_to_inactive_goal_category_modal');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_goal_category_elm()
+    {
+        $this->_ajaxPreProcess();
+        if (viaIsSet($this->request->params['named']['index'])) {
+            $this->set(['index' => $this->request->params['named']['index']]);
+        }
+        $response = $this->render('Team/goal_category_form_elm');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function to_inactive_goal_category($id)
+    {
+        $this->request->allowMethod(['post']);
+        $res = $this->Goal->GoalCategory->setToInactive($id);
+        $this->log($res);
+        $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリを削除しました。"));
+        return $this->redirect($this->referer());
     }
 
     function ajax_get_term_start_end($start_term_month, $border_months)
