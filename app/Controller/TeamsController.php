@@ -167,7 +167,6 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod(['post']);
         $res = $this->Team->Evaluation->EvaluateScore->setToInactive($id);
-        $this->log($res);
         $this->Pnotify->outSuccess(__d('gl', "スコア定義を削除しました。"));
         return $this->redirect($this->referer());
     }
@@ -216,7 +215,6 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod(['post']);
         $res = $this->Goal->GoalCategory->setToInactive($id);
-        $this->log($res);
         $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリを削除しました。"));
         return $this->redirect($this->referer());
     }
