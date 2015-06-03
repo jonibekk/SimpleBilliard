@@ -279,7 +279,6 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                    'Email' => ['fields' => ['email']],
                 ]
             ]
         ];
@@ -301,7 +300,6 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                    'Email' => ['fields' => ['email']],
                 ],
             ]
         ];
@@ -319,7 +317,6 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                    'Email' => ['fields' => ['email']],
                 ],
             ]
         ];
@@ -336,12 +333,6 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                    'Email' => ['fields' => ['email']],
-                ],
-                'Team' => [
-                    'Group' => [
-                        'fields' => ['id', 'name']
-                    ]
                 ],
             ]
         ];
@@ -366,12 +357,6 @@ class TeamMember extends AppModel
 
             // メイン画像
             $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
-
-            // Email TODO: 1人が復数のEmail所有することができる？
-            foreach ($tm_obj['User']['Email'] as $val) {
-                $res[$key]['User']['e_mail'] = $val['email'];
-                break;
-            }
         }
         return $res;
     }
