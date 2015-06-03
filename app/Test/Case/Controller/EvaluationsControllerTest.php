@@ -516,7 +516,8 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/evaluations/ajax_get_incomplete_evaluatees/', ['method' => 'GET']);
+        $evaluateeId = 1;
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/term_id:{$evaluateeId}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -525,7 +526,8 @@ class EvaluationsControllerTest extends ControllerTestCase
         $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/evaluations/ajax_get_incomplete_evaluators/', ['method' => 'GET']);
+        $evaluateeId = 1;
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/term_id:{$evaluateeId}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -535,7 +537,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $evaluateeId = 1;
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluators_status/term_id:{$evaluateeId}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -545,16 +547,17 @@ class EvaluationsControllerTest extends ControllerTestCase
         $evaluatorId = 1;
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/term_id:{$evaluatorId}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetIncompleteOneself()
     {
         $this->_getEvaluationsCommonMock();
+        $evaluatorId = 1;
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_incomplete_oneself", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_oneself/term_id:{$evaluatorId}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
