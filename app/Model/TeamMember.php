@@ -262,6 +262,13 @@ class TeamMember extends AppModel
         return $this->saveField('active_flg', $flag);
     }
 
+    public function setEvaluationFlag($member_id, $flag)
+    {
+        $this->id = $member_id;
+        $flag = $flag == 'ON' ? 1 : 0;
+        return $this->saveField('evaluation_enable_flg', $flag);
+    }
+
     public function selectGroupMemberInfo($team_id, $group_id)
     {
         $options = [
@@ -356,10 +363,10 @@ class TeamMember extends AppModel
 
             // 2fa_secret
             $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? 'OFF' : 'ON';
-            // 評価対象
-            $res[$key]['TeamMember']['evaluation_enable_flg'] = $tm_obj['TeamMember']['evaluation_enable_flg'] === true ? '評価対象者です' : '評価対象者ではありません';
+
             // メイン画像
             $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
+
             // Email TODO: 1人が復数のEmail所有することができる？
             foreach ($tm_obj['User']['Email'] as $val) {
                 $res[$key]['User']['e_mail'] = $val['email'];

@@ -135,5 +135,20 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             });
         }
 
+        $scope.setEvaluationFlag = function (index, member_id, evaluation_flg) {
+
+            var url = '/teams/ajax_set_current_team_evaluation_flag/' + member_id + '/' + evaluation_flg;
+            $http.get(url).success(function (data) {
+
+                var show_evaluation_flg = false;
+                if (evaluation_flg == 'ON') {
+                    show_evaluation_flg = true;
+                }
+
+                // 項目の切り替えのため(管理者にする or 管理者から外す)
+                $scope.team_list[index]['TeamMember']['evaluation_enable_flg'] = show_evaluation_flg;
+            });
+
+        }
     }
 );

@@ -550,4 +550,10 @@ class TeamsController extends AppController
         $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $active_flg);
         return $this->_ajaxGetResponse($res);
     }
+
+    function ajax_set_current_team_evaluation_flag($member_id, $evaluation_flg)
+    {
+        $res = $this->Team->TeamMember->setEvaluationFlag($member_id, $evaluation_flg);
+        return $this->_ajaxGetResponse($res);
+    }
 }
