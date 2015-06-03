@@ -57,7 +57,10 @@
 
                 <p><i class="fa fa-sitemap"></i> グループ名</p>
 
-                <p><i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>
+                <p ng-if="item.TeamMember.coach_user_id == null"><i class="fa fa-venus-double"></i> コーチはいません</p>
+
+                <p ng-if="item.TeamMember.coach_user_id != null && item.TeamMember.coacha_name != ''">
+                    <i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>
 
                 <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == false">
                     <i class="fa fa-lock"></i> OFF</p>

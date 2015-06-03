@@ -344,7 +344,6 @@ class TeamMember extends AppModel
         $upload = new UploadHelper(new View());
         foreach ($res as $key => $tm_obj) {
             // コーチ名を取得
-            $res[$key]['TeamMember']['coach_name'] = 'コーチはいません';
             if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
                 $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);
                 if (isset($u_info['User']['display_username']) === true) {
