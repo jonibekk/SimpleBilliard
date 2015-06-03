@@ -62,18 +62,10 @@ class TeamsController extends AppController
         }
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
                            'eval_scores'));
-        $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
-
-        // 全体progressカウント
-        $all_cnt = array_sum(Hash::extract($statuses, "{s}.all_num"));
-        $incomplete_cnt = array_sum(Hash::extract($statuses, "{s}.incomplete_num"));
-        $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
-        if ($complete_cnt == 0) {
-            $progress_percent = 0;
-        }
-        else {
-            $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
-        }
+        $current_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
+        $current_progress = $this->_getEvalProgress($current_statuses);
+        $previous_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($previous_term_id);
+        $previous_progress = $this->_getEvalProgress($previous_statuses);
 
         // Get term info
         $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
@@ -88,10 +80,10 @@ class TeamsController extends AppController
         $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
 
         $this->set(compact(
-                       'statuses',
-                       'all_cnt',
-                       'incomplete_cnt',
-                       'progress_percent',
+                       'current_statuses',
+                       'current_progress',
+                       'previous_statuses',
+                       'previous_progress',
                        'eval_is_frozen',
                        'current_term_id',
                        'current_eval_is_frozen',
@@ -106,6 +98,22 @@ class TeamsController extends AppController
                    ));
 
         return $this->render();
+    }
+
+    function _getEvalProgress($statuses)
+    {
+        if (!$statuses) {
+            return null;
+        }
+        // 全体progressカウント
+        $all_cnt = array_sum(Hash::extract($statuses, "{n}.all_num"));
+        $incomplete_cnt = array_sum(Hash::extract($statuses, "{n}.incomplete_num"));
+        $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
+        $progress_percent = 0;
+        if ($complete_cnt != 0) {
+            $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
+        }
+        return $progress_percent;
     }
 
     function save_evaluation_setting()

@@ -866,6 +866,9 @@ class Evaluation extends AppModel
 
     function getAllStatusesForTeamSettings($termId)
     {
+        if (!$termId) {
+            return null;
+        }
         $evaluation_statuses = [
             self::TYPE_ONESELF   => [
                 'label'          => __d('gl', "自己"),
