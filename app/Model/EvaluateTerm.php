@@ -54,6 +54,12 @@ class EvaluateTerm extends AppModel
 
     function getTermIdByDate($start, $end)
     {
+        $res = $this->getTermByDate($start, $end);
+        return viaIsSet($res['id']);
+    }
+
+    function getTermByDate($start, $end)
+    {
         $options = [
             'conditions' => [
                 'start_date <=' => $start,
@@ -62,53 +68,57 @@ class EvaluateTerm extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
-        }
-        return null;
+        $res = Hash::extract($res, 'EvaluateTerm');
+        return $res;
     }
 
     function getCurrentTerm()
     {
-
+        if ($this->current_term) {
+            return $this->current_term;
+        }
+        $res = $this->getTermByDate(REQUEST_TIMESTAMP, REQUEST_TIMESTAMP);
+        $this->current_term = $res;
+        return $this->current_term;
     }
 
     function getCurrentTermId()
     {
-        $options = [
-            'conditions' => [
-                'start_date <=' => REQUEST_TIMESTAMP,
-                'end_date >='   => REQUEST_TIMESTAMP,
-                'team_id'       => $this->current_team_id
-            ]
-        ];
-        $res = $this->find('first', $options);
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
+        $current_term = $this->getCurrentTerm();
+        return viaIsSet($current_term['id']);
+    }
+
+    function getNextTerm()
+    {
+        if ($this->next_term) {
+            return $this->next_term;
         }
-        return null;
+        $next_term_start_end = $this->Team->getAfterTermStartEnd();
+        if (empty($next_term_start_end)) {
+            return null;
+        }
+        $res = $this->getTermByDate($next_term_start_end['start'], $next_term_start_end['end'] - 1);
+        $this->next_term = $res;
+        return $this->next_term;
     }
 
     function getNextTermId()
     {
-        $next_term = $this->Team->getAfterTermStartEnd();
-        if (empty($next_term)) {
-            return;
-        }
-        return $this->Team->EvaluateTerm->getTermIdByDate($next_term['start'], $next_term['end'] - 1);
+        $next_term = $this->getNextTerm();
+        return viaIsSet($next_term['id']);
     }
 
     function getLatestTermId()
     {
         $res = $this->getLatestTerm();
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
-        }
-        return null;
+        return viaIsSet($res['id']);
     }
 
     function getLatestTerm()
     {
+        if ($this->latest_term) {
+            return $this->latest_term;
+        }
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id
@@ -116,6 +126,7 @@ class EvaluateTerm extends AppModel
             'order'      => ['id' => 'desc']
         ];
         $res = $this->find('first', $options);
+        $res = Hash::extract($res, 'EvaluateTerm');
         return $res;
     }
 
@@ -139,6 +150,15 @@ class EvaluateTerm extends AppModel
 
     function getPreviousTermId()
     {
+        $res = $this->getPreviousTerm();
+        return viaIsSet($res['id']);
+    }
+
+    function getPreviousTerm()
+    {
+        if ($this->previous_term) {
+            return $this->previous_term;
+        }
         $all_term = $this->getAllTerm();
         if (count($all_term) < 2) {
             return null;
@@ -153,7 +173,8 @@ class EvaluateTerm extends AppModel
             }
             $prev_key = $k;
         }
-        return $res_key;
+        $this->previous_term = viaIsSet($all_term[$res_key]['EvaluateTerm']);
+        return $this->previous_term;
     }
 
     function saveCurrentTerm()
@@ -173,6 +194,9 @@ class EvaluateTerm extends AppModel
         $latest = $this->getLatestTerm();
         if (!empty($latest)) {
             $start_date = $latest['EvaluateTerm']['end_date'] + 1;
+        }
+        else {
+            $start_date = $after_start_end['start'];
         }
         $res = $this->saveTerm($start_date, $after_start_end['end'] - 1);
         return $res;
