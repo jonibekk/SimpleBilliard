@@ -173,7 +173,7 @@ class EvaluateTerm extends AppModel
             }
             $prev_key = $k;
         }
-        $this->previous_term = viaIsSet($all_term[$res_key]['EvaluateTerm']);
+        $this->previous_term = viaIsSet($all_term[$res_key]);
         return $this->previous_term;
     }
 

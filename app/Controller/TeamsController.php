@@ -78,13 +78,14 @@ class TeamsController extends AppController
         // Get term info
         $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
         $current_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($current_term_id);
-        $current_term_start_date = $this->Team->getCurrentTermStartDate();
-        $current_term_end_date = $this->Team->getCurrentTermEndDate() - 1;
+        $current_term = $this->Team->EvaluateTerm->getCurrentTerm();
+        $current_term_start_date = viaIsSet($current_term['start_date']);
+        $current_term_end_date = viaIsSet($current_term['end_date']) - 1;
         $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
         $previous_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($previous_term_id);
-        $previous_term = $this->Team->getBeforeTermStartEnd();
-        $previous_term_start_date = $previous_term['start'];
-        $previous_term_end_date = $previous_term['end'] - 1;
+        $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
+        $previous_term_start_date = viaIsSet($previous_term['start_date']);
+        $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
 
         $this->set(compact(
                        'statuses',
