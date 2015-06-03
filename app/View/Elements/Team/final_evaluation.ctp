@@ -61,11 +61,11 @@
 <?php $this->start('modal');
 if ($previous_term_id && $previous_eval_is_frozen) {
     echo $this->element('Team/modal_final_evaluation_by_csv',
-                        ['current_term_id' => $previous_term_id, 'start' => $previous_term_start_date, 'end' => $previous_term_end_date]);
+                        ['term_id' => $previous_term_id, 'start' => $previous_term_start_date, 'end' => $previous_term_end_date]);
 }
 if ($current_term_id && $current_eval_is_frozen) {
     echo $this->element('Team/modal_final_evaluation_by_csv',
-                        ['current_term_id' => $current_term_id, 'start' => $current_term_start_date, 'end' => $current_term_end_date]);
+                        ['term_id' => $current_term_id, 'start' => $current_term_start_date, 'end' => $current_term_end_date]);
 }
 $this->end();
 ?>
