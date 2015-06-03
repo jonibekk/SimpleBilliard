@@ -31,6 +31,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             // チーム全員のリストを取得する
             var url = '/teams/ajax_get_team_member_init/';
             $http.get(url).success(function (data) {
+                $scope.login_user_id = data.login_user_id;
                 $scope.login_user_admin_flg = data.login_user_admin_flg;
                 $scope.admin_user_cnt = data.admin_user_cnt;
             });
@@ -113,10 +114,23 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
             var url = '/teams/ajax_set_current_team_admin_user_flag/' + member_id + '/' + admin_flg;
             $http.get(url).success(function (data) {
-                var show_flg = false;
+
                 if (admin_flg == 'ON') {
-                    show_flg = true;
+                    // 設定ボタンの表示切り替え
+                    var show_flg = true;
+                    $scope.admin_user_cnt = $scope.admin_user_cnt + 1;
+
+                } else if (admin_flg == 'OFF') {
+                    var show_flg = false;
+                    $scope.admin_user_cnt = $scope.admin_user_cnt - 1;
+
+                    // 自分を管理者から外した場合はすべての設定ボタンを表示しない
+                    if ($scope.login_user_id == $scope.team_list[index]['User']['id']) {
+                        $scope.login_user_admin_flg = false;
+                    }
                 }
+
+                // 項目の切り替えのため(管理者にする or 管理者から外す)
                 $scope.team_list[index]['TeamMember']['admin_flg'] = show_flg;
             });
         }
