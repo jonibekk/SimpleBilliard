@@ -337,6 +337,19 @@ class TeamMember extends AppModel
     public function convertMemberData ($res) {
         $upload = new UploadHelper(new View());
         foreach ($res as $key => $tm_obj) {
+            // グループ名の取得
+            $group_name = [];
+            foreach ($tm_obj['User']['MemberGroup'] as $g_obj) {
+                if (isset($g_obj['Group']['name']) === true && empty($g_obj['Group']['name']) === false) {
+                    $group_name[] = $g_obj['Group']['name'];
+                }
+            }
+
+            $res[$key]['TeamMember']['group_name'] = '';
+            if (count($group_name) > 0) {
+                $res[$key]['TeamMember']['group_name'] = implode(',', $group_name);
+            }
+
             // コーチ名を取得
             if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
                 $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);

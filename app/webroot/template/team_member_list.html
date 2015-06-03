@@ -55,7 +55,9 @@
             <td>
                 <!--<p> {{item.User.e_mail}} </p>-->
 
-                <p><i class="fa fa-sitemap"></i> グループ名</p>
+                <p ng-if="item.TeamMember.group_name == ''"><i class="fa fa-sitemap"></i> 所属グループはありません</p>
+
+                <p ng-if="item.TeamMember.group_name != ''"><i class="fa fa-sitemap"></i> {{item.TeamMember.group_name}}</p>
 
                 <p ng-if="item.TeamMember.coach_user_id == null"><i class="fa fa-venus-double"></i> コーチはいません</p>
 
