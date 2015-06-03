@@ -182,7 +182,7 @@ class EvaluateTerm extends AppModel
         $start_date = $this->Team->getCurrentTermStartDate();
         $latest = $this->getLatestTerm();
         if (!empty($latest)) {
-            $start_date = $latest['EvaluateTerm']['end_date'] + 1;
+            $start_date = $latest['end_date'] + 1;
         }
         $res = $this->saveTerm($start_date, $this->Team->getCurrentTermEndDate() - 1);
         return $res;
@@ -193,7 +193,7 @@ class EvaluateTerm extends AppModel
         $after_start_end = $this->Team->getAfterTermStartEnd();
         $latest = $this->getLatestTerm();
         if (!empty($latest)) {
-            $start_date = $latest['EvaluateTerm']['end_date'] + 1;
+            $start_date = $latest['end_date'] + 1;
         }
         else {
             $start_date = $after_start_end['start'];
