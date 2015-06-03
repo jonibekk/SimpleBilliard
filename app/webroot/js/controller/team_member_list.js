@@ -12,8 +12,9 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
         // 無効化されたメンバーも表示する項目
         $scope.disp_active_flag = '1';
 
-        var url = '/teams/ajax_get_team_member/';
+        var url = cake['url']['i'];
         $http.get(url).success(function (data) {
+            console.log(data);
             $scope.team_list = data.user_info;
         });
 
@@ -29,7 +30,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
             $scope.group_id = null;
 
             // チーム全員のリストを取得する
-            var url = '/teams/ajax_get_team_member_init/';
+            var url = cake['url']['j'];
             $http.get(url).success(function (data) {
                 $scope.login_user_id = data.login_user_id;
                 $scope.login_user_admin_flg = data.login_user_admin_flg;
@@ -48,7 +49,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 $scope.name_field_show = false;
                 $scope.coach_name_field_show = false;
                 $scope.group_field_show = true;
-                url = '/teams/ajax_get_current_team_group_list/';
+                url = cake['url']['k'];
                 $http.get(url).success(function (data) {
                     $scope.group_list = data;
                 });
@@ -59,7 +60,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 $scope.name_field_show = false;
                 $scope.coach_name_field_show = true;
                 $scope.group_field_show = false;
-                var url = '/teams/ajax_get_team_member/';
+                url = cake['url']['i'];
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
                 });
@@ -67,7 +68,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 //2段階認証OFF選択
             } else if (filter_name == 'two_step') {
                 init();
-                url = '/teams/ajax_get_current_not_2fa_step_user_list/';
+                url = cake['url']['l'];
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
                 });
@@ -75,7 +76,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 // チーム管理者選択
             } else if (filter_name == 'team_admin') {
                 init();
-                url = '/teams/ajax_get_current_team_admin_list/';
+                url = cake['url']['m'];
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
                 });
@@ -83,7 +84,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
                 // その他
             } else {
                 init();
-                var url = '/teams/ajax_get_team_member/';
+                var url = cake['url']['i'];
                 $http.get(url).success(function (data) {
                     $scope.team_list = data.user_info;
                 });
@@ -91,9 +92,9 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
         };
 
         $scope.changeGroupFilter = function () {
-            var url = '/teams/ajax_get_group_member/' + $scope.group_id;
+            var url = cake['url']['n'] + $scope.group_id;
             if ($scope.group_id == null) {
-                url = '/teams/ajax_get_team_member/';
+                url = cake['url']['i'];
             }
             $http.get(url).success(function (data) {
                 $scope.team_list = data.user_info;
@@ -101,7 +102,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
         }
 
         $scope.setActiveFlag = function (index, member_id, active_flg) {
-            var url = '/teams/ajax_set_current_team_active_flag/' + member_id + '/' + active_flg;
+            var url = cake['url']['o'] + member_id + '/' + active_flg;
             $http.get(url).success(function (data) {
                 var show_flg = false;
                 if (active_flg == 'ON') {
@@ -112,7 +113,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
         }
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
-            var url = '/teams/ajax_set_current_team_admin_user_flag/' + member_id + '/' + admin_flg;
+            var url = cake['url']['p'] + member_id + '/' + admin_flg;
             $http.get(url).success(function (data) {
 
                 if (admin_flg == 'ON') {
@@ -137,7 +138,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
 
         $scope.setEvaluationFlag = function (index, member_id, evaluation_flg) {
 
-            var url = '/teams/ajax_set_current_team_evaluation_flag/' + member_id + '/' + evaluation_flg;
+            var url = cake['url']['q'] + member_id + '/' + evaluation_flg;
             $http.get(url).success(function (data) {
 
                 var show_evaluation_flg = false;
