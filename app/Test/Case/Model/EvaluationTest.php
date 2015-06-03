@@ -15,6 +15,7 @@ class EvaluationTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.evaluation',
         'app.team',
         'app.badge',
