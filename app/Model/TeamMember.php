@@ -269,19 +269,12 @@ class TeamMember extends AppModel
         return $this->saveField('evaluation_enable_flg', $flag);
     }
 
+    /*
+     * グループ別のメンバー取得
+     */
     public function selectGroupMemberInfo($team_id, $group_id)
     {
-        $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
-            'conditions' => [
-                'team_id' => $team_id,
-            ],
-            'contain'    => [
-                'User' => [
-                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                ]
-            ]
-        ];
+        $options = $this->defineTeamMemberOption($team_id);
         if (empty($group_id) === false) {
             $user_id = $this->User->MemberGroup->getGroupMemberUserId($team_id, $group_id);
             $options['conditions']['user_id'] = $user_id;
@@ -289,43 +282,39 @@ class TeamMember extends AppModel
         return $this->convertMemberData($this->find('all', $options));
     }
 
+    /*
+     * 2段階認証OFFのメンバーを取得
+     */
     public function select2faStepMemberInfo($team_id)
     {
-        $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
-            'conditions' => [
-                'team_id' => $team_id,
-                'User.2fa_secret' => NULL
-            ],
-            'contain'    => [
-                'User' => [
-                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                ],
-            ]
-        ];
+        $options = $this->defineTeamMemberOption($team_id);
+        $options['conditions']['User.2fa_secret'] = NULL;
         return $this->convertMemberData($this->find('all', $options));
     }
 
+    /*
+     * チーム管理者取得
+     */
     public function selectAdminMemberInfo($team_id)
     {
-        $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
-            'conditions' => [
-                'team_id' => $team_id,
-                'TeamMember.admin_flg' => 1
-            ],
-            'contain'    => [
-                'User' => [
-                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                ],
-            ]
-        ];
+        $options = $this->defineTeamMemberOption($team_id);
+        $options['conditions']['TeamMember.admin_flg'] = 1;
         return $this->convertMemberData($this->find('all', $options));
     }
 
+    /*
+     * すべてのチームメンバー取得
+     */
     public function selectMemberInfo($team_id)
     {
-        $options = [
+        return $this->convertMemberData($this->find('all', $this->defineTeamMemberOption($team_id)));
+    }
+
+    /*
+     * チームページDefaultのオプション取得
+     */
+    public function defineTeamMemberOption ($team_id) {
+         $options = [
             'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
                 'team_id' => $team_id,
@@ -333,12 +322,17 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'MemberGroup' => [
+                        'fields' => ['group_id'],
+                        'Group' => [
+                            'fields' => ['name']
+                        ]
+                    ]
                 ],
             ]
         ];
-        return $this->convertMemberData($this->find('all', $options));
+        return $options;
     }
-
 
     public function convertMemberData ($res) {
         $upload = new UploadHelper(new View());
