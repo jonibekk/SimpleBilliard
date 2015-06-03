@@ -166,7 +166,7 @@ class TeamsController extends AppController
     function to_inactive_score($id)
     {
         $this->request->allowMethod(['post']);
-        $res = $this->Team->Evaluation->EvaluateScore->setToInactive($id);
+        $this->Team->Evaluation->EvaluateScore->setToInactive($id);
         $this->Pnotify->outSuccess(__d('gl', "スコア定義を削除しました。"));
         return $this->redirect($this->referer());
     }
@@ -214,7 +214,7 @@ class TeamsController extends AppController
     function to_inactive_goal_category($id)
     {
         $this->request->allowMethod(['post']);
-        $res = $this->Goal->GoalCategory->setToInactive($id);
+        $this->Goal->GoalCategory->setToInactive($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリを削除しました。"));
         return $this->redirect($this->referer());
     }
