@@ -14,6 +14,7 @@ app.controller("TeamMemberMainController", function ($scope, $http) {
 
         var url = '/teams/ajax_get_team_member/';
         $http.get(url).success(function (data) {
+            console.log(data);
             $scope.team_list = data.user_info;
         });
 

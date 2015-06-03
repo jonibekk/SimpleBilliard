@@ -361,8 +361,8 @@ class TeamMember extends AppModel
                 }
             }
 
-            // 2fa_secret
-            $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? 'OFF' : 'ON';
+            // 2fa_secret: AngularJSで整数から始まるキーを読み取れないので別項目にて２段階認証設定表示を行う
+            $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? false : true;
 
             // メイン画像
             $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
