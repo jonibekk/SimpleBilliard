@@ -80,6 +80,8 @@ class TeamsController extends AppController
             $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
         }
 
+        $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
+
         // Get term info
         $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
         $current_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($current_term_id);
@@ -92,6 +94,7 @@ class TeamsController extends AppController
         $previous_term_end_date = $previous_term['end'] - 1;
 
         $this->set(compact(
+                       'goal_categories',
                        'statuses',
                        'all_cnt',
                        'incomplete_cnt',
@@ -485,29 +488,29 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_team_member($user_name='')
+    function ajax_get_team_member($user_name = '')
     {
         $team_id = $this->Session->read('current_team_id');
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
         $res = [
-            'user_info'       => $user_info,
-            'count'           => $count,
+            'user_info' => $user_info,
+            'count'     => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_group_member($group_id='')
+    function ajax_get_group_member($group_id = '')
     {
         $team_id = $this->Session->read('current_team_id');
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '', $group_id);
         $res = [
-            'user_info'       => $user_info,
-            'count'           => $count,
+            'user_info' => $user_info,
+            'count'     => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_current_team_group_list ()
+    function ajax_get_current_team_group_list()
     {
         $team_id = $this->Session->read('current_team_id');
         // グループ名を取得
