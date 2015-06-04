@@ -26,33 +26,35 @@ switch ($location_type) {
 <?php $unread_class = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
 <li class="notify-card-list <?= $unread_class ?> <?= $list_type_class ?>" data-score="<?= $notification['score'] ?>">
     <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card-link" id="notifyCard">
-        <?php if (!empty($user)): ?>
-            <?=
-            $this->Html->image(
-                $this->Upload->uploadUrl(
-                    $user,
-                    'User.photo',
-                    ['style' => 'medium_large']
-                ),
-                array(
-                    'class' => array('pull-left notify-icon')
-                )
-            );
-            ?>
-        <?php else: ?>
-            <?=
-            $this->Html->image(
-                $this->Upload->uploadUrl(
-                    $team,
-                    'Team.photo',
-                    ['style' => 'medium_large']
-                ),
-                array(
-                    'class' => array('pull-left notify-icon')
-                )
-            );
-            ?>
-        <?php endif; ?>
+        <div class="col-xxs-3">
+          <?php if (!empty($user)): ?>
+              <?=
+              $this->Html->image(
+                  $this->Upload->uploadUrl(
+                      $user,
+                      'User.photo',
+                      ['style' => 'medium_large']
+                  ),
+                  array(
+                      'class' => array('pull-left notify-card-pic')
+                  )
+              );
+              ?>
+          <?php else: ?>
+              <?=
+              $this->Html->image(
+                  $this->Upload->uploadUrl(
+                      $team,
+                      'Team.photo',
+                      ['style' => 'medium_large']
+                  ),
+                  array(
+                      'class' => array('pull-left notify-card-pic')
+                  )
+              );
+              ?>
+          <?php endif; ?>
+        </div>
         <div class="col-xxs-9 notify-contents">
             <div class="col col-xxs-12 notify-card-head">
               <span class="font-heading">
