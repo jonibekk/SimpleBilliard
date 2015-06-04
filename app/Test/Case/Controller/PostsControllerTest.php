@@ -94,7 +94,8 @@ class PostsControllerTest extends ControllerTestCase
         $data = [
             'Post' => [
                 'body'  => 'test',
-                'share' => 'circle_1'
+                'share' => 'circle_1',
+                'current_team_id'=>'888'
             ],
         ];
         $this->testAction('/posts/add',
@@ -114,7 +115,8 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'body'      => 'test',
                 'share'     => 'public,circle_1,user_12',
-                'socket_id' => 'hogehage'
+                'socket_id' => 'hogehage',
+                'current_team_id' =>'888'
             ],
         ];
         $this->testAction('/posts/add',

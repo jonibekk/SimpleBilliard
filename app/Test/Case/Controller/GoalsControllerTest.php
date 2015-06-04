@@ -77,6 +77,7 @@ class GoalsControllerTest extends ControllerTestCase
             'special_flg' => true,
         ];
         $Goals->Goal->KeyResult->save($key_result_data);
+        $Goals->Goal->KeyResult->current_team_id=888;
         $goal_data = [
             'user_id' => 1,
             'team_id' => 1,
@@ -147,7 +148,7 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $Goals->Goal->GoalCategory->deleteAll(['team_id' => 1]);
-
+        $Goals->Goal->GoalCategory->current_team_id = 888;
         $this->testAction('/goals/add', ['method' => 'GET']);
     }
 
@@ -880,6 +881,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_UNAPPROVED);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
@@ -889,6 +891,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_APPROVAL);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
@@ -898,6 +901,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_HOLD);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
@@ -907,6 +911,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
+        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }

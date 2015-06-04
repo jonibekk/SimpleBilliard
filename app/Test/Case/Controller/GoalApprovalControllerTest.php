@@ -232,7 +232,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $id = $GoalApproval->Collaborator->getLastInsertID();
         $data = ['collaborator_id' => $id];
         $GoalApproval->_approval($data);
-
+        $GoalApproval->Collaborator->current_team_id=888;
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $valued_flg = $res['Collaborator']['valued_flg'];
         $this->assertEquals($valued_flg, '1');
@@ -262,7 +262,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
     function testModify()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
-        $GoalApproval->current_team_id = 1;
+        $GoalApproval->Collaborator->current_team_id = 888;
         $params = [
             'user_id'    => 999,
             'team_id'    => 888,
@@ -309,7 +309,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
     function testChangeStatusTypeWait()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
-        $GoalApproval->current_team_id = 1;
+        $GoalApproval->Collaborator->current_team_id = 888;
         $params = [
             'user_id'    => 999,
             'team_id'    => 888,
@@ -331,7 +331,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
     function testChangeStatusTypeApproval()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
-        $GoalApproval->current_team_id = 1;
+        $GoalApproval->Collaborator->current_team_id = 888;
         $params = [
             'user_id'    => 999,
             'team_id'    => 888,
@@ -353,7 +353,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
     function testChangeStatusTypeModify()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
-        $GoalApproval->current_team_id = 1;
+        $GoalApproval->Collaborator->current_team_id = 888;
         $params = [
             'user_id'    => 999,
             'team_id'    => 888,
