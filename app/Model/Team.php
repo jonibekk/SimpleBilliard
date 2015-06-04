@@ -32,6 +32,12 @@ class Team extends AppModel
     const TYPE_FREE = 1;
     const TYPE_PRO = 2;
     static public $TYPE = [self::TYPE_FREE => "", self::TYPE_PRO => ""];
+    const OPTION_CHANGE_TERM_FROM_CURRENT = 0;
+    const OPTION_CHANGE_TERM_FROM_NEXT = 1;
+    static public $OPTION_CHANGE_TERM = [
+        self::OPTION_CHANGE_TERM_FROM_CURRENT => "",
+        self::OPTION_CHANGE_TERM_FROM_NEXT    => ""
+    ];
 
     /**
      * タイプの名前をセット
@@ -40,6 +46,12 @@ class Team extends AppModel
     {
         self::$TYPE[self::TYPE_FREE] = __d('gl', "フリー");
         self::$TYPE[self::TYPE_PRO] = __d('gl', "プロ");
+    }
+
+    private function _setTermOptionName()
+    {
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __d('gl', "今期から");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __d('gl', "来期から");
     }
 
     /**
@@ -138,6 +150,7 @@ class Team extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setTypeName();
+        $this->_setTermOptionName();
     }
 
     /**

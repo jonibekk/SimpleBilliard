@@ -109,6 +109,9 @@ class TeamsController extends AppController
         $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
         $previous_term_start_date = viaIsSet($previous_term['start_date']);
         $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
+        $next_term = $this->Team->EvaluateTerm->getNextTerm();
+        $next_term_start_date = viaIsSet($next_term['start_date']);
+        $next_term_end_date = viaIsSet($next_term['end_date']) - 1;
 
         $this->set(compact(
                        'current_statuses',
@@ -125,7 +128,9 @@ class TeamsController extends AppController
                        'previous_eval_is_frozen',
                        'previous_eval_is_started',
                        'previous_term_start_date',
-                       'previous_term_end_date'
+                       'previous_term_end_date',
+                       'next_term_start_date',
+                       'next_term_end_date'
                    ));
 
         return $this->render();

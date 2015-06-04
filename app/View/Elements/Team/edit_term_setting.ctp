@@ -30,6 +30,32 @@
         'url'           => ['action' => 'edit_term']
     ]); ?>
     <div class="panel-body add-team-panel-body">
+        <?php
+        $disabled = null;
+        if ($current_eval_is_started) {
+            $disabled = 'disabled';
+        }
+        ?>
+        <div class="form-group">
+            <label class="col col-sm-3 control-label form-label"><?= __d('gl', '変更適用対象') ?></label>
+
+            <div class="col col-sm-6">
+                <?=
+                $this->Form->input('change_from',
+                                   [
+                                       'type'    => 'radio',
+                                       'legend'  => false,
+                                       'options' => Team::$OPTION_CHANGE_TERM,
+                                       'default' => Team::OPTION_CHANGE_TERM_FROM_NEXT,
+                                       'class'   => 'radio-inline',
+                                       $disabled => $disabled,
+                                   ])
+                ?>
+                <?php if ($disabled): ?>
+                    <span class="help-block font_11px"><?= __d('gl', "評価期間中は今期の変更ができません。") ?></span>
+                <?php endif; ?>
+            </div>
+        </div>
         <?=
         $this->Form->input('start_term_month', [
             'label'                    => __d('gl', "開始月"),
@@ -47,14 +73,42 @@
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
             'options'                  => $border_months_options
         ]) ?>
-        <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d('gl', "現在の期間") ?></label>
+        <?php if ($previous_term_start_date && $previous_term_end_date): ?>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "前期の期間") ?></label>
 
-            <div class="col col-sm-6">
-                <p class="form-control-static" id="CurrentTermStr">
-                </p>
+                <div class="col col-sm-6">
+                    <p class="form-control-static" id="CurrentTermStr">
+                        <?= $this->TimeEx->date($previous_term_start_date) ?>
+                        - <?= $this->TimeEx->date($previous_term_end_date) ?>
+                    </p>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
+        <?php if ($current_term_start_date && $current_term_end_date): ?>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "今期の期間") ?></label>
+
+                <div class="col col-sm-6">
+                    <p class="form-control-static" id="CurrentTermStr">
+                        <?= $this->TimeEx->date($current_term_start_date) ?>
+                        - <?= $this->TimeEx->date($current_term_end_date) ?>
+                    </p>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($next_term_start_date && $next_term_end_date): ?>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "来期の期間") ?></label>
+
+                <div class="col col-sm-6">
+                    <p class="form-control-static" id="CurrentTermStr">
+                        <?= $this->TimeEx->date($next_term_start_date) ?>
+                        - <?= $this->TimeEx->date($next_term_end_date) ?>
+                    </p>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div class="panel-footer addteam_pannel-footer">
