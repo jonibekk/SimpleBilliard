@@ -2,16 +2,20 @@
   # notify_card.less
   notify-cardsのスタイル
 */
-.notify-card {
+.notify-card-link {
   display: block;
   padding: 6px 6px 2px;
 }
 @media screen and (min-width: 768px) {
-  .notify-card {
+  .notify-card-link {
     padding: 12px 8px 8px;
   }
 }
-.notify-dropdown-lists {
+
+/*
+ .notify-dropdown-cards in 'header_logged_in.ctp'
+*/
+.notify-dropdown-cards {
   margin: 0;
   padding: 0;
   max-height: 480px;
@@ -20,7 +24,9 @@
   text-overflow: ellipsis;
 }
 .notify-contents {
-  width: 190px;
+  width: 100%;
+  display: inline-block;
+  float: right;
 }
 .notify-card-head {
   font-size: @fontSmall;
@@ -55,8 +61,8 @@
   .divider;
   background-color: @lightGray;
 }
-.notify-card:hover,
-.notify-card:focus {
+.notify-card-link:hover,
+.notify-card-link:focus {
   color: @black;
   background-color: fade(@darkRed, 20%);
 }
@@ -64,7 +70,11 @@
 .panel-body-notify-page {
   padding: 0;
 }
-.notify-list-page {
+
+/*
+ .notify-page-cards 'Notification/index.ctp'
+*/
+.notify-page-cards {
   margin-bottom: 0;
 }
 /* frame-arrow */
@@ -97,4 +107,13 @@
   left: auto;
   right: -36px;
   top: 40px;
+}
+
+.notify-card-list {
+    clear: both;
+    overflow:hidden;
+}
+
+.notify-dropdown-card {
+  width:278px;
 }

@@ -3652,7 +3652,7 @@ Temporary Properties - YOU MUST FIX
 /* 通知部分 */
 /*
 > notify-dropdown-area
->> notify-card
+>> notify-card-link
 >>> notify-text
 */
 .notify-head {
@@ -3674,10 +3674,6 @@ Temporary Properties - YOU MUST FIX
 
 }
 
-.notify-card-list {
-    clear: both;
-    overflow:hidden;
-}
 
 .notify-card-empty {
     text-align: center;
@@ -3904,7 +3900,7 @@ Temporary Properties - YOU MUST FIX
     height: 100%;
 }
 
-.notify-list-page {
+.notify-page-cards {
     overflow: hidden;
     padding-left: 0;
 }

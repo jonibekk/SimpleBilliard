@@ -13,10 +13,10 @@
  */
 switch ($location_type) {
     case "page":
-        $list_type_class = "page-class";//TODO クラス名を変更する
+        $list_type_class = "notify-page-card";//TODO クラス名を変更する
         break;
     case "dropdown":
-        $list_type_class = "dropdown-class";//TODO クラス名を変更する
+        $list_type_class = "notify-dropdown-card";//TODO クラス名を変更する
         break;
     default:
         $list_type_class = null;
@@ -25,7 +25,7 @@ switch ($location_type) {
 <!-- START app/View/Elements/Notification/notify_item.ctp -->
 <?php $unread_class = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
 <li class="notify-card-list <?= $unread_class ?> <?= $list_type_class ?>" data-score="<?= $notification['score'] ?>">
-    <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card" id="notifyCard">
+    <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card-link" id="notifyCard">
         <?php if (!empty($user)): ?>
             <?=
             $this->Html->image(
@@ -55,7 +55,7 @@ switch ($location_type) {
         <?php endif; ?>
         <div class="col-xxs-9 notify-contents">
             <div class="col col-xxs-12 notify-card-head">
-              <span class="font_bold font_verydark">
+              <span class="font-heading">
                   <?= h($notification['title']) ?>
               </span>
             </div>

@@ -17,7 +17,7 @@
         <?= __d('gl', "すべてのお知らせ") ?>
     </div>
     <div class="panel-body panel-body-notify-page">
-        <ul class="notify-list-page" role="menu">
+        <ul class="notify-page-cards" role="menu">
             <?=
             $this->element('Notification/notify_items', ['user' => $notify_items, 'location_type' => 'page']) ?>
         </ul>
