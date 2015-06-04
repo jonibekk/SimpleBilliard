@@ -34,6 +34,19 @@ class TeamsController extends AppController
         return $this->redirect(['action' => 'invite']);
     }
 
+    public function edit_team($id)
+    {
+        $this->request->allowMethod('put');
+        $this->Team->id = $id;
+        if ($this->Team->save($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "チームの基本設定を更新しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "チームの基本設定の更新に失敗しました。"));
+        }
+        return $this->redirect($this->referer());
+    }
+
     public function settings()
     {
         $this->layout = LAYOUT_SETTING;
@@ -44,6 +57,10 @@ class TeamsController extends AppController
             $this->Pnotify->outError($e);
             $this->redirect($this->referer());
         }
+        $border_months_options = $this->Team->getBorderMonthsOptions();
+        $start_term_month_options = $this->Team->getMonths();
+        $this->set(compact('border_months_options', 'start_term_month_options'));
+
         $team = $this->Team->findById($team_id);
         $term_start_date = $this->Team->getCurrentTermStartDate();
         $term_end_date = $this->Team->getCurrentTermEndDate();
@@ -53,7 +70,7 @@ class TeamsController extends AppController
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
         $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
         $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
-        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories);
+        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
