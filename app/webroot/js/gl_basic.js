@@ -272,6 +272,28 @@ $(document).ready(function () {
         });
     });
 
+    //edit team term setting
+    $(document).on("change", '#EditTermChangeFrom , #EditTermStartTerm , #EditTermBorderMonths', function () {
+        var changeFrom = $('#EditTermChangeFrom:checked').val();
+        var startTermMonth = $('#EditTermStartTerm').val();
+        var borderMonths = $('#EditTermBorderMonths').val();
+        if (startTermMonth === "" || borderMonths === "") {
+            $('#NewCurrentTerm').empty();
+            $('#NewNextTerm').empty();
+            return false;
+        }
+        var url = cake.url.i + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
+        $.get(url, function (data) {
+            if (data.current.start && data.current.end) {
+                $('#NewCurrentTerm').text(data.current.start + "  -  " + data.current.end);
+            }
+            if (data.next.start && data.next.end) {
+                $('#NewNextTerm').text(data.next.start + "  -  " + data.next.end);
+            }
+        });
+    });
+
+
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
         $('#layer-black').css('display', 'block');
@@ -2080,7 +2102,7 @@ function evCommentLatestView() {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
                 //一旦非表示
-               $posts.fadeOut();
+                $posts.fadeOut();
                 $($obj).before($posts);
                 $posts.fadeIn();
                 //ローダーを削除
@@ -2406,11 +2428,9 @@ function copyToClipboard(url) {
 }
 
 $(document).ready(function () {
-    $(window).scroll(function(){
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 200)
-        {
-            if(!autoload_more)
-            {
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+            if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
             }

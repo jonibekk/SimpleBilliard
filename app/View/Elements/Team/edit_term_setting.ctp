@@ -43,6 +43,7 @@
                 <?=
                 $this->Form->input('change_from',
                                    [
+                                       'id'      => "EditTermChangeFrom",
                                        'type'    => 'radio',
                                        'legend'  => false,
                                        'options' => Team::$OPTION_CHANGE_TERM,
@@ -58,6 +59,7 @@
         </div>
         <?=
         $this->Form->input('start_term_month', [
+            'id'                       => "EditTermStartTerm",
             'label'                    => __d('gl', "開始月"),
             'type'                     => 'select',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
@@ -68,6 +70,7 @@
         ]) ?>
         <?=
         $this->Form->input('border_months', [
+            'id'                       => "EditTermBorderMonths",
             'label'                    => __d('gl', "期間"),
             'type'                     => 'select',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
@@ -78,7 +81,7 @@
                 <label class="col col-sm-3 control-label form-label"><?= __d('gl', "前期の期間") ?></label>
 
                 <div class="col col-sm-6">
-                    <p class="form-control-static" id="CurrentTermStr">
+                    <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($previous_term_start_date) ?>
                         - <?= $this->TimeEx->date($previous_term_end_date) ?>
                     </p>
@@ -90,10 +93,12 @@
                 <label class="col col-sm-3 control-label form-label"><?= __d('gl', "今期の期間") ?></label>
 
                 <div class="col col-sm-6">
-                    <p class="form-control-static" id="CurrentTermStr">
+                    <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($current_term_start_date) ?>
                         - <?= $this->TimeEx->date($current_term_end_date) ?>
                     </p>
+
+                    <p class="form-control-static" id="NewCurrentTerm"></p>
                 </div>
             </div>
         <?php endif; ?>
@@ -102,10 +107,12 @@
                 <label class="col col-sm-3 control-label form-label"><?= __d('gl', "来期の期間") ?></label>
 
                 <div class="col col-sm-6">
-                    <p class="form-control-static" id="CurrentTermStr">
+                    <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($next_term_start_date) ?>
                         - <?= $this->TimeEx->date($next_term_end_date) ?>
                     </p>
+
+                    <p class="form-control-static" id="NewNextTerm"></p>
                 </div>
             </div>
         <?php endif; ?>

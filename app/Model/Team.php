@@ -32,8 +32,8 @@ class Team extends AppModel
     const TYPE_FREE = 1;
     const TYPE_PRO = 2;
     static public $TYPE = [self::TYPE_FREE => "", self::TYPE_PRO => ""];
-    const OPTION_CHANGE_TERM_FROM_CURRENT = 0;
-    const OPTION_CHANGE_TERM_FROM_NEXT = 1;
+    const OPTION_CHANGE_TERM_FROM_CURRENT = 1;
+    const OPTION_CHANGE_TERM_FROM_NEXT = 2;
     static public $OPTION_CHANGE_TERM = [
         self::OPTION_CHANGE_TERM_FROM_CURRENT => "",
         self::OPTION_CHANGE_TERM_FROM_NEXT    => ""

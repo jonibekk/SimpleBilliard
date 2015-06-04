@@ -265,6 +265,54 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    function ajax_get_term_start_end_by_edit($start_term_month, $border_months, $option)
+    {
+        $this->_ajaxPreProcess();
+        $res = [
+            'current' => [
+                'start' => null,
+                'end'   => null,
+            ],
+            'next'    => [
+                'start' => null,
+                'end'   => null,
+            ]
+        ];
+
+        switch ($option) {
+            case Team::OPTION_CHANGE_TERM_FROM_CURRENT:
+                //今期からの場合は、今期と来期の両方を返す。
+                //今期の開始日に変更はなし。
+                //来期は通常通り
+                $current = $this->Team->EvaluateTerm->getCurrentTerm();
+                $res['current']['start'] = $current['start_date'];
+                $current_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
+                                                                        $border_months,
+                                                                        REQUEST_TIMESTAMP);
+                $res['current']['end'] = $current_new['end_date'];
+                $next_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
+                                                                     $border_months,
+                                                                     $current_new['end_date'] + 1);
+                $res['next']['start'] = $next_new['start_date'];
+                $res['next']['end'] = $next_new['end_date'];
+
+                break;
+            case Team::OPTION_CHANGE_TERM_FROM_NEXT:
+                $next = $this->Team->EvaluateTerm->getNextTerm();
+                $current_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
+                                                                        $border_months,
+                                                                        REQUEST_TIMESTAMP);
+                $next_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
+                                                                     $border_months,
+                                                                     $current_new['end_date'] + 1);
+                //来期からのみの場合は、来期の開始日は据え置きで終了日のみ変更
+                $res['next']['start'] = $next['start_date'];
+                $res['next']['end'] = $next_new['end_date'];
+                break;
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
     function start_evaluation()
     {
         $this->request->allowMethod('post');
