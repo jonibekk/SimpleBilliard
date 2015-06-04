@@ -9,13 +9,22 @@
  * @var $notification
  * @var $is_unread
  * @var $team
+ * @var $location_type
  */
+switch ($location_type) {
+    case "page":
+        $list_type_class = "page-class";//TODO クラス名を変更する
+        break;
+    case "dropdown":
+        $list_type_class = "dropdown-class";//TODO クラス名を変更する
+        break;
+    default:
+        $list_type_class = null;
+}
 ?>
-
 <!-- START app/View/Elements/Notification/notify_item.ctp -->
 <?php $unread_class = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
-
-<li class="notify-card-list <?= $unread_class ?>" data-score="<?= $notification['score'] ?>">
+<li class="notify-card-list <?= $unread_class ?> <?= $list_type_class ?>" data-score="<?= $notification['score'] ?>">
     <a href="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card" id="notifyCard">
         <?php if (!empty($user)): ?>
             <?=
