@@ -881,7 +881,6 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_UNAPPROVED);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
@@ -891,7 +890,6 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_APPROVAL);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
@@ -901,7 +899,6 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_HOLD);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }
@@ -911,7 +908,6 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $Goals->Goal->Collaborator->id = $this->collabo_id;
-        $Goals->Goal->Collaborator->current_team_id = 888;
         $Goals->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
         $this->testAction('/goals/download_all_goal_csv/', ['method' => 'POST']);
     }

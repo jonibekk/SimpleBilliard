@@ -168,7 +168,7 @@ class SendMail extends AppModel
                 'Team',
             ]
         ];
-        $res = $this->findw('first', $options);
+        $res = $this->findWithoutTeamId('first', $options);
 
         if ($lang) {
             $this->me['language'] = $lang_backup;

@@ -247,7 +247,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
             'goal_id'    => 777,
             'valued_flg' => 0,
         ];
-        $GoalApproval->current_team_id = 1;
+        $GoalApproval->Collaborator->current_team_id = 888;
         $GoalApproval->Collaborator->save($params);
 
         $id = $GoalApproval->Collaborator->getLastInsertID();
