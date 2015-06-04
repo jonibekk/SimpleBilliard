@@ -57,60 +57,64 @@ class TeamsController extends AppController
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
-        $latest_term_id = $this->Team->EvaluateTerm->getLatestTermId();
-
         $eval_start_button_enabled = true;
-        if (!is_null($current_term_id) &&
-            !is_null($latest_term_id) &&
-            $current_term_id === $latest_term_id
-        ) {
+        if (!$this->Team->EvaluateTerm->isAbleToStartEvaluation($current_term_id)) {
             $eval_start_button_enabled = false;
         }
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
                            'eval_scores'));
-        $statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($latest_term_id);
-
-        // 全体progressカウント
-        $all_cnt = array_sum(Hash::extract($statuses, "{s}.all_num"));
-        $incomplete_cnt = array_sum(Hash::extract($statuses, "{s}.incomplete_num"));
-        $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
-        if ($complete_cnt == 0) {
-            $progress_percent = 0;
-        }
-        else {
-            $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
-        }
+        $current_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
+        $current_progress = $this->_getEvalProgress($current_statuses);
+        $previous_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($previous_term_id);
+        $previous_progress = $this->_getEvalProgress($previous_statuses);
 
         // Get term info
         $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
-        $current_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($current_term_id);
-        $current_term_start_date = $this->Team->getCurrentTermStartDate();
-        $current_term_end_date = $this->Team->getCurrentTermEndDate() - 1;
+        $current_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($current_term_id);
+        $current_term = $this->Team->EvaluateTerm->getCurrentTerm();
+        $current_term_start_date = viaIsSet($current_term['start_date']);
+        $current_term_end_date = viaIsSet($current_term['end_date']) - 1;
         $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
-        $previous_eval_is_available = $this->Team->EvaluateTerm->checkTermAvailable($previous_term_id);
-        $previous_term = $this->Team->getBeforeTermStartEnd();
-        $previous_term_start_date = $previous_term['start'];
-        $previous_term_end_date = $previous_term['end'] - 1;
+        $previous_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($previous_term_id);
+        $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
+        $previous_term_start_date = viaIsSet($previous_term['start_date']);
+        $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
 
         $this->set(compact(
-                       'statuses',
-                       'all_cnt',
-                       'incomplete_cnt',
-                       'progress_percent',
+                       'current_statuses',
+                       'current_progress',
+                       'previous_statuses',
+                       'previous_progress',
                        'eval_is_frozen',
                        'current_term_id',
                        'current_eval_is_frozen',
-                       'current_eval_is_available',
+                       'current_eval_is_started',
                        'current_term_start_date',
                        'current_term_end_date',
                        'previous_term_id',
                        'previous_eval_is_frozen',
-                       'previous_eval_is_available',
+                       'previous_eval_is_started',
                        'previous_term_start_date',
                        'previous_term_end_date'
                    ));
 
         return $this->render();
+    }
+
+    function _getEvalProgress($statuses)
+    {
+        if (!$statuses) {
+            return null;
+        }
+        // 全体progressカウント
+        $all_cnt = array_sum(Hash::extract($statuses, "{n}.all_num"));
+        $incomplete_cnt = array_sum(Hash::extract($statuses, "{n}.incomplete_num"));
+        $complete_cnt = (int)$all_cnt - (int)$incomplete_cnt;
+        $progress_percent = 0;
+        if ($complete_cnt != 0) {
+            $progress_percent = round(((int)$complete_cnt / (int)$all_cnt) * 100, 1);
+        }
+        return $progress_percent;
     }
 
     function save_evaluation_setting()
@@ -496,19 +500,23 @@ class TeamsController extends AppController
         return $this->render();
     }
 
-    function change_freeze_status()
+    function change_freeze_status($termId)
     {
         $this->request->allowMethod('post');
-        $termId = viaIsSet($this->request->data['evaluate_term_id']);
         try {
-            $this->Team->EvaluateTerm->changeFreezeStatus($termId);
+            $res = $this->Team->EvaluateTerm->changeFreezeStatus($termId);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e);
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
-                                         $this->Team->EvaluateTerm->getCurrentTermId());
+        if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
+            $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
+                                             $this->Team->EvaluateTerm->getCurrentTermId());
+        }
+        else {
+            $this->Pnotify->outSuccess(__d('gl', "評価の凍結を解除しました。"));
+        }
         return $this->redirect($this->referer());
     }
 

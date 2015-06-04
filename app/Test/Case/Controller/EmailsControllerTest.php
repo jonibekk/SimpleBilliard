@@ -77,6 +77,9 @@ class EmailsControllerTest extends ControllerTestCase
             $this->testAction('emails/delete', ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
+        $Emails->Team->EvaluateTerm->my_uid = 1;
+        $Emails->Team->EvaluateTerm->current_team_id = 1;
+
         $this->assertTrue(isset($e), "[異常]メアド削除");
     }
 
@@ -100,6 +103,8 @@ class EmailsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Emails->Auth->staticExpects($this->any())->method('user')
                      ->will($this->returnValueMap($value_map));
+        $Emails->Team->EvaluateTerm->my_uid = 1;
+        $Emails->Team->EvaluateTerm->current_team_id = 1;
         $email_id = "10";
         try {
             $this->testAction('emails/delete/' . $email_id, ['method' => 'POST']);
@@ -128,6 +133,8 @@ class EmailsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Emails->Auth->staticExpects($this->any())->method('user')
                      ->will($this->returnValueMap($value_map));
+        $Emails->Team->EvaluateTerm->my_uid = 1;
+        $Emails->Team->EvaluateTerm->current_team_id = 1;
         $email_id = '9';
         try {
             $this->testAction('emails/delete/' . $email_id, ['method' => 'POST']);

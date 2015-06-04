@@ -259,7 +259,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testSettingsSuccessNotAvailStartEvalButton()
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
-        $Teams->Team->EvaluateTerm->saveTerm();
+        $Teams->Team->EvaluateTerm->saveCurrentTerm();
 
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
@@ -502,18 +502,16 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
 
-        $Teams->Team->EvaluateTerm->saveTerm();
+        $Teams->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Teams->Team->EvaluateTerm->getLastInsertID();
-        $data = ['evaluate_term_id' => $termId];
-        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/teams/change_freeze_status/' . $termId, ['method' => 'POST']);
     }
 
     function testChangeFreezeStatusFailed()
     {
         $this->_getTeamsCommonMock(null, true);
-        $termId = null;
-        $data = ['evaluate_term_id' => $termId];
-        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+        $termId = 99999999;
+        $this->testAction('/teams/change_freeze_status/' . $termId, ['method' => 'POST']);
     }
 
     function testDownloadFinalEvaluationsCsv()
