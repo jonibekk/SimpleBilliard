@@ -264,6 +264,9 @@ class CirclesControllerTest extends ControllerTestCase
         $Circles->Circle->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Circles->Circle->CircleMember->current_team_id = '1';
+        $Circles->Team->EvaluateTerm->my_uid = 1;
+        $Circles->Team->EvaluateTerm->current_team_id = 1;
+
         return $Circles;
     }
 

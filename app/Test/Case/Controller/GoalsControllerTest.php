@@ -1242,6 +1242,8 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->Follower->current_team_id = '1';
         $Goals->Goal->Post->my_uid = '1';
         $Goals->Goal->Post->current_team_id = '1';
+        $Goals->Team->EvaluateTerm->my_uid = 1;
+        $Goals->Team->EvaluateTerm->current_team_id = 1;
 
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
