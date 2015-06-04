@@ -284,23 +284,29 @@ $(document).ready(function () {
         var startTermMonth = $('#EditTermStartTerm').val();
         var borderMonths = $('#EditTermBorderMonths').val();
         if (startTermMonth === "" || borderMonths === "") {
-            $('#NewCurrentTerm').empty();
-            $('#NewNextTerm').empty();
+            $('#NewCurrentTerm').addClass('none');
+            $('#NewCurrentTerm > div > p').empty();
+            $('#NewNextTerm').addClass('none');
+            $('#NewNextTerm > div > p').empty();
             return false;
         }
         var url = cake.url.i + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
         $.get(url, function (data) {
             if (data.current.start && data.current.end) {
-                $('#NewCurrentTerm').text(data.current.start + "  -  " + data.current.end);
+                $('#NewCurrentTerm').removeClass('none');
+                $('#NewCurrentTerm > div > p').text(data.current.start + "  -  " + data.current.end);
             }
             else {
-                $('#NewCurrentTerm').empty();
+                $('#NewCurrentTerm').addClass('none');
+                $('#NewCurrentTerm > div > p').empty();
             }
             if (data.next.start && data.next.end) {
-                $('#NewNextTerm').text(data.next.start + "  -  " + data.next.end);
+                $('#NewNextTerm').removeClass('none');
+                $('#NewNextTerm > div > p').text(data.next.start + "  -  " + data.next.end);
             }
             else {
-                $('#NewNextTerm').empty();
+                $('#NewNextTerm').addClass('none');
+                $('#NewNextTerm > div > p').empty();
             }
         });
     });

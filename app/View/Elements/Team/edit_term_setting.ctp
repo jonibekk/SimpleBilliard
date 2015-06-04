@@ -97,29 +97,39 @@
         <?php endif; ?>
         <?php if ($current_term_start_date && $current_term_end_date): ?>
             <div class="form-group">
-                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "今期の期間") ?></label>
+                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "現在の今期の期間") ?></label>
 
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($current_term_start_date) ?>
                         - <?= $this->TimeEx->date($current_term_end_date) ?>
                     </p>
+                </div>
+            </div>
+            <div class="form-group none" id="NewCurrentTerm">
+                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "更新後の今期の期間") ?></label>
 
-                    <p class="form-control-static font_darkRed" id="NewCurrentTerm"></p>
+                <div class="col col-sm-6">
+                    <p class="form-control-static font_darkRed" id=""></p>
                 </div>
             </div>
         <?php endif; ?>
         <?php if ($next_term_start_date && $next_term_end_date): ?>
             <div class="form-group">
-                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "来期の期間") ?></label>
+                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "現在の来期の期間") ?></label>
 
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($next_term_start_date) ?>
                         - <?= $this->TimeEx->date($next_term_end_date) ?>
                     </p>
+                </div>
+            </div>
+            <div class="form-group none" id="NewNextTerm">
+                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "更新後の来期の期間") ?></label>
 
-                    <p class="form-control-static font_darkRed" id="NewNextTerm"></p>
+                <div class="col col-sm-6">
+                    <p class="form-control-static font_darkRed" id=""></p>
                 </div>
             </div>
         <?php endif; ?>
