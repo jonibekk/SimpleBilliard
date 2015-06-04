@@ -52,7 +52,8 @@ class TeamsController extends AppController
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
         $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
-        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores);
+        $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
+        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
@@ -142,10 +143,27 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__d('gl', "評価スコア設定が保存できませんでした。"));
         }
         return $this->redirect($this->referer());
+    }
+
+    function save_goal_categories()
+    {
+        $this->request->allowMethod(['post', 'put']);
+        $this->Team->begin();
+        if ($this->Goal->GoalCategory->saveGoalCategories($this->request->data['GoalCategory'],
+                                                          $this->Session->read('current_team_id'))
+        ) {
+            $this->Team->commit();
+            $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリ設定を保存しました。"));
+        }
+        else {
+            $this->Team->rollback();
+            $this->Pnotify->outError(__d('gl', "ゴールカテゴリ設定が保存できませんでした。"));
+        }
+        return $this->redirect($this->referer());
 
     }
 
-    function to_inactive($id)
+    function to_inactive_score($id)
     {
         $this->request->allowMethod(['post']);
         $this->Team->Evaluation->EvaluateScore->setToInactive($id);
@@ -171,6 +189,34 @@ class TeamsController extends AppController
         $response = $this->render('Team/eval_score_form_elm');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_confirm_inactive_goal_category_modal($id)
+    {
+        $this->_ajaxPreProcess();
+        $this->set(compact('id'));
+        $response = $this->render('Team/confirm_to_inactive_goal_category_modal');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function ajax_get_goal_category_elm()
+    {
+        $this->_ajaxPreProcess();
+        if (viaIsSet($this->request->params['named']['index'])) {
+            $this->set(['index' => $this->request->params['named']['index']]);
+        }
+        $response = $this->render('Team/goal_category_form_elm');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    function to_inactive_goal_category($id)
+    {
+        $this->request->allowMethod(['post']);
+        $this->Goal->GoalCategory->setToInactive($id);
+        $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリを削除しました。"));
+        return $this->redirect($this->referer());
     }
 
     function ajax_get_term_start_end($start_term_month, $border_months)
@@ -485,29 +531,29 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_team_member($user_name='')
+    function ajax_get_team_member($user_name = '')
     {
         $team_id = $this->Session->read('current_team_id');
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
         $res = [
-            'user_info'       => $user_info,
-            'count'           => $count,
+            'user_info' => $user_info,
+            'count'     => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_group_member($group_id='')
+    function ajax_get_group_member($group_id = '')
     {
         $team_id = $this->Session->read('current_team_id');
         list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '', $group_id);
         $res = [
-            'user_info'       => $user_info,
-            'count'           => $count,
+            'user_info' => $user_info,
+            'count'     => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_current_team_group_list ()
+    function ajax_get_current_team_group_list()
     {
         $team_id = $this->Session->read('current_team_id');
         // グループ名を取得
