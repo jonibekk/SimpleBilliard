@@ -5,9 +5,8 @@ App::uses('View', 'View');
 
 /**
  * TeamMember Model
-
  *
-*@property User              $User
+ * @property User              $User
  * @property Team              $Team
  * @property MemberType        $MemberType
  * @property User              $CoachUser
@@ -21,9 +20,8 @@ class TeamMember extends AppModel
     public $myTeams = [];
     /**
      * Validation rules
-
      *
-*@var array
+     * @var array
      */
     public $validate = [
         'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
@@ -39,9 +37,8 @@ class TeamMember extends AppModel
 
     /**
      * belongsTo associations
-
      *
-*@var array
+     * @var array
      */
     public $belongsTo = [
         'User',
@@ -63,12 +60,10 @@ class TeamMember extends AppModel
 
     /**
      * 現在有効なチーム一覧を取得
-
      *
-*@param $uid
-
+     * @param $uid
      *
-*@return array
+     * @return array
      */
     function getActiveTeamList($uid)
     {
@@ -135,13 +130,11 @@ class TeamMember extends AppModel
 
     /**
      * 通常のアクセス権限チェック（自分が所属しているチームかどうか？）
-
      *
-*@param $team_id
+     * @param $team_id
      * @param $uid
-
      *
-*@return bool
+     * @return bool
      * @throws RuntimeException
      */
     public function permissionCheck($team_id, $uid)
@@ -165,9 +158,8 @@ class TeamMember extends AppModel
     /**
      * @param $uid
      * @param $team_id
-
      *
-*@return bool
+     * @return bool
      */
     public function isActive($uid, $team_id = null)
     {
@@ -193,13 +185,11 @@ class TeamMember extends AppModel
 
     /**
      * アクセス権限の確認
-
      *
-*@param $team_id
+     * @param $team_id
      * @param $uid
-
      *
-*@return boolean
+     * @return boolean
      * @throws RuntimeException
      */
     public function adminCheck($team_id, $uid)
@@ -250,13 +240,15 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    public function setAdminUserFlag ($member_id, $flag) {
+    public function setAdminUserFlag($member_id, $flag)
+    {
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('admin_flg', $flag);
     }
 
-    public function setActiveFlag ($member_id, $flag) {
+    public function setActiveFlag($member_id, $flag)
+    {
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('active_flg', $flag);
@@ -288,7 +280,7 @@ class TeamMember extends AppModel
     public function select2faStepMemberInfo($team_id)
     {
         $options = $this->defineTeamMemberOption($team_id);
-        $options['conditions']['User.2fa_secret'] = NULL;
+        $options['conditions']['User.2fa_secret'] = null;
         return $this->convertMemberData($this->find('all', $options));
     }
 
@@ -313,18 +305,19 @@ class TeamMember extends AppModel
     /*
      * チームページDefaultのオプション取得
      */
-    public function defineTeamMemberOption ($team_id) {
-         $options = [
+    public function defineTeamMemberOption($team_id)
+    {
+        $options = [
             'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
             'contain'    => [
                 'User' => [
-                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
                     'MemberGroup' => [
                         'fields' => ['group_id'],
-                        'Group' => [
+                        'Group'  => [
                             'fields' => ['name']
                         ]
                     ]
@@ -334,7 +327,8 @@ class TeamMember extends AppModel
         return $options;
     }
 
-    public function convertMemberData ($res) {
+    public function convertMemberData($res)
+    {
         $upload = new UploadHelper(new View());
         foreach ($res as $key => $tm_obj) {
             // グループ名の取得
@@ -362,7 +356,7 @@ class TeamMember extends AppModel
             $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? false : true;
 
             // メイン画像
-            $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
+            $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo', ['style' => 'medium']);
         }
         return $res;
     }
@@ -376,9 +370,8 @@ class TeamMember extends AppModel
 
     /**
      * @param array $member_numbers
-
      *
-*@return array|null [member_no => user_id,...]
+     * @return array|null [member_no => user_id,...]
      */
     function getUserIdsByMemberNos($member_numbers = [])
     {
@@ -404,13 +397,11 @@ class TeamMember extends AppModel
      * 'error_line_no' => 0,
      * 'error_msg'     => null,
      * ];
-
      *
-*@param array $csv
+     * @param array $csv
      * @param       $term_id
-
      *
-*@return array
+     * @return array
      */
     function updateFinalEvaluationFromCsv($csv, $term_id)
     {
@@ -455,12 +446,10 @@ class TeamMember extends AppModel
      * 'error_line_no' => 0,
      * 'error_msg'     => null,
      * ];
-
      *
-*@param array $csv
-
+     * @param array $csv
      *
-*@return array
+     * @return array
      */
     function updateMembersFromCsv($csv)
     {
@@ -598,12 +587,10 @@ class TeamMember extends AppModel
      * 'error_line_no' => 0,
      * 'error_msg'     => null,
      * ];
-
      *
-*@param array $csv
-
+     * @param array $csv
      *
-*@return array
+     * @return array
      */
     function saveNewMembersFromCsv($csv)
     {
@@ -1011,12 +998,10 @@ class TeamMember extends AppModel
 
     /**
      * validate new member csv data
-
      *
-*@param array $csv_data
-
+     * @param array $csv_data
      *
-*@return array
+     * @return array
      */
     function validateNewMemberCsvData($csv_data)
     {
@@ -1507,9 +1492,8 @@ class TeamMember extends AppModel
     /**
      * @param      $term_id
      * @param null $team_id
-
      *
-*@return array
+     * @return array
      */
     function getAllEvaluationsCsvData($term_id, $team_id = null)
     {
@@ -1527,12 +1511,10 @@ class TeamMember extends AppModel
 
     /**
      * get CSV heading
-
      *
-*@param bool $new
-
+     * @param bool $new
      *
-*@return array
+     * @return array
      */
     function _getCsvHeading($new = true)
     {
@@ -1855,13 +1837,11 @@ class TeamMember extends AppModel
 
     /**
      * ログインしているユーザーのコーチIDを取得する
-
      *
-*@param $user_id
+     * @param $user_id
      * @param $team_id
-
      *
-*@return array|null
+     * @return array|null
      */
     function selectCoachUserIdFromTeamMembersTB($user_id, $team_id)
     {
@@ -1880,13 +1860,11 @@ class TeamMember extends AppModel
 
     /**
      * ログインしているユーザーが管理するのメンバーIDを取得する
-
      *
-*@param $user_id
+     * @param $user_id
      * @param $team_id
-
      *
-*@return array|null
+     * @return array|null
      */
     function selectUserIdFromTeamMembersTB($user_id, $team_id)
     {
@@ -1920,7 +1898,8 @@ class TeamMember extends AppModel
         return null;
     }
 
-    function getLoginUserAdminFlag ($team_id, $user_id) {
+    function getLoginUserAdminFlag($team_id, $user_id)
+    {
         $options = [
             'conditions' => [
                 'team_id' => $team_id,
@@ -1934,10 +1913,11 @@ class TeamMember extends AppModel
         return false;
     }
 
-    function getAdminUserCount ($team_id) {
+    function getAdminUserCount($team_id)
+    {
         $options = [
             'conditions' => [
-                'team_id' => $team_id,
+                'team_id'   => $team_id,
                 'admin_flg' => 1
             ]
         ];
@@ -1946,14 +1926,12 @@ class TeamMember extends AppModel
 
     /**
      * マイメンバーのゴールを取得する
-
      *
-*@param      $user_id
+     * @param      $user_id
      * @param null $limit
      * @param int  $page
-
      *
-*@return array|null
+     * @return array|null
      */
     function getCoachingGoalList($user_id, $limit = null, $page = 1)
     {
@@ -1973,13 +1951,11 @@ class TeamMember extends AppModel
 
     /**
      * Param1のユーザーは評価対象の人なのか
-
      *
-*@param $user_id
+     * @param $user_id
      * @param $team_id
-
      *
-*@return array|null
+     * @return array|null
      */
     function getEvaluationEnableFlg($user_id, $team_id)
     {
