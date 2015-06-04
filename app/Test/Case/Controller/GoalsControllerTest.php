@@ -148,7 +148,6 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $Goals->Goal->GoalCategory->deleteAll(['team_id' => 1]);
-        $Goals->Goal->GoalCategory->current_team_id = 888;
         $this->testAction('/goals/add', ['method' => 'GET']);
     }
 
