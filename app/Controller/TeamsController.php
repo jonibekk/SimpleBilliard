@@ -284,17 +284,23 @@ class TeamsController extends AppController
                 //今期からの場合は、今期と来期の両方を返す。
                 //今期の開始日に変更はなし。
                 //来期は通常通り
-                $current = $this->Team->EvaluateTerm->getCurrentTerm();
-                $res['current']['start'] = $current['start_date'];
+                $previous = $this->Team->EvaluateTerm->getPreviousTerm();
                 $current_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
                                                                         $border_months,
                                                                         REQUEST_TIMESTAMP);
-                $res['current']['end'] = $current_new['end_date'];
+                if ($previous) {
+                    $res['current']['start'] = date('Y/m/d', strtotime("+1 day", $previous['end_date'] + 1));
+                }
+                else {
+                    $res['current']['start'] = $current_new['start'];
+                }
+                $res['current']['end'] = $current_new['end'];
                 $next_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
                                                                      $border_months,
-                                                                     $current_new['end_date'] + 1);
-                $res['next']['start'] = $next_new['start_date'];
-                $res['next']['end'] = $next_new['end_date'];
+                                                                     strtotime("+1 day",
+                                                                               strtotime($current_new['end']) + 1));
+                $res['next']['start'] = $next_new['start'];
+                $res['next']['end'] = $next_new['end'];
 
                 break;
             case Team::OPTION_CHANGE_TERM_FROM_NEXT:
@@ -304,10 +310,11 @@ class TeamsController extends AppController
                                                                         REQUEST_TIMESTAMP);
                 $next_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
                                                                      $border_months,
-                                                                     $current_new['end_date'] + 1);
+                                                                     strtotime("+1 day",
+                                                                               strtotime($current_new['end']) + 1));
                 //来期からのみの場合は、来期の開始日は据え置きで終了日のみ変更
-                $res['next']['start'] = $next['start_date'];
-                $res['next']['end'] = $next_new['end_date'];
+                $res['next']['start'] = date('Y/m/d', strtotime("+1 day", $next['start_date']));;
+                $res['next']['end'] = $next_new['end'];
                 break;
         }
         return $this->_ajaxGetResponse($res);

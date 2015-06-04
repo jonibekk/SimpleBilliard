@@ -273,8 +273,14 @@ $(document).ready(function () {
     });
 
     //edit team term setting
-    $(document).on("change", '#EditTermChangeFrom , #EditTermStartTerm , #EditTermBorderMonths', function () {
-        var changeFrom = $('#EditTermChangeFrom:checked').val();
+    $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 , #EditTermStartTerm , #EditTermBorderMonths', function () {
+
+        if ($("#EditTermChangeFrom1:checked").val()) {
+            var changeFrom = $('#EditTermChangeFrom1:checked').val();
+        }
+        else {
+            var changeFrom = $('#EditTermChangeFrom2:checked').val();
+        }
         var startTermMonth = $('#EditTermStartTerm').val();
         var borderMonths = $('#EditTermBorderMonths').val();
         if (startTermMonth === "" || borderMonths === "") {
@@ -287,8 +293,14 @@ $(document).ready(function () {
             if (data.current.start && data.current.end) {
                 $('#NewCurrentTerm').text(data.current.start + "  -  " + data.current.end);
             }
+            else {
+                $('#NewCurrentTerm').empty();
+            }
             if (data.next.start && data.next.end) {
                 $('#NewNextTerm').text(data.next.start + "  -  " + data.next.end);
+            }
+            else {
+                $('#NewNextTerm').empty();
             }
         });
     });

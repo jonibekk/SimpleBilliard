@@ -8,6 +8,13 @@
  * @var      $this CodeCompletionView
  * @var      $border_months_options
  * @var      $start_term_month_options
+ * @var      $current_eval_is_started
+ * @var      $previous_term_start_date
+ * @var      $previous_term_end_date
+ * @var      $current_term_start_date
+ * @var      $current_term_end_date
+ * @var      $next_term_start_date
+ * @var      $next_term_end_date
  */
 ?>
 <!-- START app/View/Elements/Team/edit_term_setting.ctp -->
@@ -98,7 +105,7 @@
                         - <?= $this->TimeEx->date($current_term_end_date) ?>
                     </p>
 
-                    <p class="form-control-static" id="NewCurrentTerm"></p>
+                    <p class="form-control-static font_darkRed" id="NewCurrentTerm"></p>
                 </div>
             </div>
         <?php endif; ?>
@@ -112,7 +119,7 @@
                         - <?= $this->TimeEx->date($next_term_end_date) ?>
                     </p>
 
-                    <p class="form-control-static" id="NewNextTerm"></p>
+                    <p class="form-control-static font_darkRed" id="NewNextTerm"></p>
                 </div>
             </div>
         <?php endif; ?>
