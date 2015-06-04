@@ -77,7 +77,6 @@ class GoalsControllerTest extends ControllerTestCase
             'special_flg' => true,
         ];
         $Goals->Goal->KeyResult->save($key_result_data);
-        $Goals->Goal->KeyResult->current_team_id=888;
         $goal_data = [
             'user_id' => 1,
             'team_id' => 1,
@@ -259,11 +258,11 @@ class GoalsControllerTest extends ControllerTestCase
         $Goal = $this->_getGoalsCommonMock();
         $this->_setDefault($Goal);
         $Goal->Goal->Collaborator->id = $this->collabo_id;
-        $Goal->Goal->Collaborator->saveField('valued_flg',Collaborator::STATUS_MODIFY);
+        $Goal->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
         $data = [
             'Goal'         => [
                 'description' => 'test',
-                'priority'         => 0,
+                'priority'    => 0,
             ],
             'Collaborator' => [
                 [
@@ -417,7 +416,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'role'        => 'test',
                 'description' => 'test',
                 'goal_id'     => 1,
-                'priority'     => 0,
+                'priority'    => 0,
             ]
         ];
         $this->testAction('/goals/edit_collabo', ['method' => 'POST', 'data' => $data]);
@@ -434,7 +433,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'goal_id'     => 1,
             ]
         ];
-        $this->testAction('/goals/edit_collabo/'. $this->collabo_id, ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/goals/edit_collabo/' . $this->collabo_id, ['method' => 'POST', 'data' => $data]);
     }
 
     function testEditCollaboFail()

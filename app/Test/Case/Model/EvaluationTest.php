@@ -171,6 +171,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -178,6 +179,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -185,6 +187,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -212,6 +215,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -219,6 +223,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -226,6 +231,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -255,6 +261,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -262,6 +269,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 5,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -269,6 +277,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 8,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -286,6 +295,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -293,6 +303,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 6,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -300,6 +311,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 9,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -316,6 +328,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
+                    'team_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                 ],
@@ -323,6 +336,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                 ],
@@ -330,6 +344,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                 ],

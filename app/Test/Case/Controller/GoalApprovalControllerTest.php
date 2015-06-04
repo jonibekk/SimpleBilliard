@@ -232,7 +232,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $id = $GoalApproval->Collaborator->getLastInsertID();
         $data = ['collaborator_id' => $id];
         $GoalApproval->_approval($data);
-        $GoalApproval->Collaborator->current_team_id=888;
+        $GoalApproval->Collaborator->current_team_id = 888;
         $res = $GoalApproval->Collaborator->find('first', ['conditions' => ['id' => $id]]);
         $valued_flg = $res['Collaborator']['valued_flg'];
         $this->assertEquals($valued_flg, '1');
@@ -389,6 +389,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApprovals->request->data = ['modify_btn' => ''];
         $GoalApprovals->_trackToMixpanel(1);
     }
+
     function testNotifyToCollaborator()
     {
         $GoalApprovals = $this->_getGoalApprovalCommonMock();
@@ -410,6 +411,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
     function testSetCoachFlagTrue()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
+        $GoalApproval->Collaborator->current_team_id = 888;
         $params = [
             'user_id'       => 999,
             'team_id'       => 888,
@@ -423,6 +425,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
     function testSetMemberFlag()
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
+        $GoalApproval->Collaborator->current_team_id = 888;
         $params = [
             'user_id'       => 999,
             'team_id'       => 888,
@@ -518,6 +521,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval->team_id = 1;
         $GoalApproval->user_id = 999;
         $valued_flg = 0;
+        $GoalApproval->Collaborator->current_team_id = $GoalApproval->team_id;
 
         $params = [
             'user_id'    => $GoalApproval->user_id,
@@ -540,6 +544,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval->team_id = 1;
         $GoalApproval->user_id = 999;
         $valued_flg = 0;
+        $GoalApproval->Collaborator->current_team_id = $GoalApproval->team_id;
 
         $params = [
             'user_id'    => $GoalApproval->user_id,
@@ -573,6 +578,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval = $this->_getGoalApprovalCommonMock();
         $GoalApproval->user_type = 3;
         $GoalApproval->team_id = 1;
+        $GoalApproval->Collaborator->current_team_id = $GoalApproval->team_id;
         $member_id = 888;
         $GoalApproval->member_ids = [$member_id];
         $valued_flg = 0;
