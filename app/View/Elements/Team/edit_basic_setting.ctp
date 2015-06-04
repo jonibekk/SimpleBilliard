@@ -94,32 +94,6 @@
                 . __d('gl', "このプランはチーム作成後にいつでも変更できます。")
                 . '</span>'
         ]) ?>
-        <hr>
-        <?=
-        $this->Form->input('start_term_month', [
-            'label'                    => __d('gl', "開始月"),
-            'type'                     => 'select',
-            "data-bv-notempty-message" => __d('validate', "選択してください。"),
-            'options'                  => $start_term_month_options,
-            'afterInput'               => '<span class="help-block font_11px">'
-                . __d('gl', "基準となる期の開始月を選択して下さい。")
-                . '</span>'
-        ]) ?>
-        <?=
-        $this->Form->input('border_months', [
-            'label'                    => __d('gl', "期間"),
-            'type'                     => 'select',
-            "data-bv-notempty-message" => __d('validate', "選択してください。"),
-            'options'                  => $border_months_options
-        ]) ?>
-        <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d('gl', "現在の期間") ?></label>
-
-            <div class="col col-sm-6">
-                <p class="form-control-static" id="CurrentTermStr">
-                </p>
-            </div>
-        </div>
     </div>
 
     <div class="panel-footer addteam_pannel-footer">

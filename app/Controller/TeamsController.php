@@ -47,6 +47,19 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    public function edit_term($id)
+    {
+        $this->request->allowMethod('put');
+        $this->Team->id = $id;
+        if ($this->Team->save($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "期間設定を更新しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "期間設定の更新に失敗しました。"));
+        }
+        return $this->redirect($this->referer());
+    }
+
     public function settings()
     {
         $this->layout = LAYOUT_SETTING;
