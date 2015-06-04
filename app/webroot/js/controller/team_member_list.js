@@ -128,7 +128,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
                     admin_show_flg = false;
                     $scope.admin_user_cnt = $scope.admin_user_cnt - 1;
 
-                    if ($scope.login_user_id == $scope.team_list[index].User.id) {
+                    if ($scope.login_user_id === $scope.team_list[index].User.id) {
                         $scope.login_user_admin_flg = false;
                     }
                 }
@@ -150,6 +150,6 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
                 $scope.team_list[index].TeamMember.evaluation_enable_flg = show_evaluation_flg;
             });
 
-        }
+        };
     }
 );
