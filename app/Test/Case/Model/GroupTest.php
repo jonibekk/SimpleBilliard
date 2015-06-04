@@ -48,4 +48,17 @@ class GroupTest extends CakeTestCase
         $this->Group->current_team_id = 1;
         $this->assertEmpty($this->Group->getByName('test', null));
     }
+
+    function testGetByAllName()
+    {
+        $team_id = 999;
+        $params = [
+            'team_id' => $team_id,
+            'name' => 'SDG'
+        ];
+        $this->Group->save($params);
+        $res = $this->Group->getByAllName($team_id);
+        $this->assertContains('SDG', $res);
+    }
+
 }
