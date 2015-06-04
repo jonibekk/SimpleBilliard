@@ -475,6 +475,10 @@ class ExtContainableBehavior extends ContainableBehavior
         if (!$this->settings[$Model->alias]['with_team_id']) {
             return $children;
         }
+        /** @noinspection PhpUndefinedFieldInspection */
+        if (!$Model->current_team_id) {
+            return $children;
+        }
         //$model_name
         $child_class_name = null;
         if (isset($Model->hasMany[$model_name]['className'])) {
