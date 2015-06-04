@@ -180,4 +180,16 @@ class GlRedisTest extends CakeTestCase
         $this->assertEmpty($this->GlRedis->getNotifications(1, 1));
     }
 
+    function testGetKeyName()
+    {
+        $method = new ReflectionMethod($this->GlRedis, 'getKeyName');
+        $method->setAccessible(true);
+
+        try {
+            $method->invoke($this->GlRedis, null);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
 }

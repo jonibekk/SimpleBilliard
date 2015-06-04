@@ -1766,6 +1766,18 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/delete_2fa', ['method' => 'POST']);
     }
 
+    function testSetDefaultTeamSuccess()
+    {
+        $Users = $this->_getUsersCommonMock();
+        $Users->_setDefaultTeam(1);
+    }
+
+    function testSetDefaultTeamFail()
+    {
+        $Users = $this->_getUsersCommonMock();
+        $Users->_setDefaultTeam(9999);
+    }
+
     function _getUsersCommonMock()
     {
         /**
