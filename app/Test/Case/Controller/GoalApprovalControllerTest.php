@@ -383,6 +383,7 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApprovals->request->data = ['modify_btn' => ''];
         $GoalApprovals->_trackToMixpanel(1);
     }
+
     function testNotifyToCollaborator()
     {
         $GoalApprovals = $this->_getGoalApprovalCommonMock();
@@ -673,6 +674,8 @@ class GoalApprovalControllerTest extends ControllerTestCase
         $GoalApproval->Goal->Follower->current_team_id = '1';
         $GoalApproval->Goal->Post->my_uid = '1';
         $GoalApproval->Goal->Post->current_team_id = '1';
+        $GoalApproval->Team->EvaluateTerm->my_uid = 1;
+        $GoalApproval->Team->EvaluateTerm->current_team_id = 1;
 
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');

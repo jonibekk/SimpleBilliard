@@ -259,11 +259,11 @@ class GoalsControllerTest extends ControllerTestCase
         $Goal = $this->_getGoalsCommonMock();
         $this->_setDefault($Goal);
         $Goal->Goal->Collaborator->id = $this->collabo_id;
-        $Goal->Goal->Collaborator->saveField('valued_flg',Collaborator::STATUS_MODIFY);
+        $Goal->Goal->Collaborator->saveField('valued_flg', Collaborator::STATUS_MODIFY);
         $data = [
             'Goal'         => [
                 'description' => 'test',
-                'priority'         => 0,
+                'priority'    => 0,
             ],
             'Collaborator' => [
                 [
@@ -417,7 +417,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'role'        => 'test',
                 'description' => 'test',
                 'goal_id'     => 1,
-                'priority'     => 0,
+                'priority'    => 0,
             ]
         ];
         $this->testAction('/goals/edit_collabo', ['method' => 'POST', 'data' => $data]);
@@ -434,7 +434,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'goal_id'     => 1,
             ]
         ];
-        $this->testAction('/goals/edit_collabo/'. $this->collabo_id, ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/goals/edit_collabo/' . $this->collabo_id, ['method' => 'POST', 'data' => $data]);
     }
 
     function testEditCollaboFail()
@@ -1243,6 +1243,8 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->Follower->current_team_id = '1';
         $Goals->Goal->Post->my_uid = '1';
         $Goals->Goal->Post->current_team_id = '1';
+        $Goals->Team->EvaluateTerm->my_uid = 1;
+        $Goals->Team->EvaluateTerm->current_team_id = 1;
 
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');

@@ -15,6 +15,11 @@ class EvaluateTerm extends AppModel
     const STATUS_EVAL_FROZEN = 2;
     const STATUS_EVAL_FINISHED = 3;
 
+    private $previous_term = [];
+    private $current_term = [];
+    private $next_term = [];
+    private $latest_term = [];
+
     /**
      * Validation rules
      *
@@ -47,26 +52,73 @@ class EvaluateTerm extends AppModel
         'Evaluator',
     ];
 
-    function getCurrentTermId()
+    function getTermIdByDate($start, $end)
     {
-        $start_date = $this->Team->getCurrentTermStartDate();
-        $end_date = $this->Team->getCurrentTermEndDate();
+        $res = $this->getTermByDate($start, $end);
+        return viaIsSet($res['id']);
+    }
+
+    function getTermByDate($start, $end)
+    {
         $options = [
             'conditions' => [
-                'start_date >=' => $start_date,
-                'end_date <='   => $end_date,
+                'start_date <=' => $start,
+                'end_date >='   => $end,
                 'team_id'       => $this->current_team_id
             ]
         ];
         $res = $this->find('first', $options);
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
+        $res = Hash::extract($res, 'EvaluateTerm');
+        return $res;
+    }
+
+    function getCurrentTerm()
+    {
+        if ($this->current_term) {
+            return $this->current_term;
         }
-        return null;
+        $res = $this->getTermByDate(REQUEST_TIMESTAMP, REQUEST_TIMESTAMP);
+        $this->current_term = $res;
+        return $this->current_term;
+    }
+
+    function getCurrentTermId()
+    {
+        $current_term = $this->getCurrentTerm();
+        return viaIsSet($current_term['id']);
+    }
+
+    function getNextTerm()
+    {
+        if ($this->next_term) {
+            return $this->next_term;
+        }
+        $next_term_start_end = $this->Team->getAfterTermStartEnd();
+        if (empty($next_term_start_end)) {
+            return null;
+        }
+        $res = $this->getTermByDate($next_term_start_end['start'], $next_term_start_end['end'] - 1);
+        $this->next_term = $res;
+        return $this->next_term;
+    }
+
+    function getNextTermId()
+    {
+        $next_term = $this->getNextTerm();
+        return viaIsSet($next_term['id']);
     }
 
     function getLatestTermId()
     {
+        $res = $this->getLatestTerm();
+        return viaIsSet($res['id']);
+    }
+
+    function getLatestTerm()
+    {
+        if ($this->latest_term) {
+            return $this->latest_term;
+        }
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id
@@ -74,52 +126,131 @@ class EvaluateTerm extends AppModel
             'order'      => ['id' => 'desc']
         ];
         $res = $this->find('first', $options);
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
+        $res = Hash::extract($res, 'EvaluateTerm');
+        return $res;
+    }
+
+    function getAllTerm($order_desc = true)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id
+            ],
+            'order'      => [
+                'start_date' => 'asc'
+            ]
+        ];
+        if ($order_desc) {
+            $options['order']['start_date'] = 'desc';
         }
-        return null;
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.EvaluateTerm.id', '{n}.EvaluateTerm');
+        return $res;
     }
 
     function getPreviousTermId()
     {
-        $start_end = $this->Team->getBeforeTermStartEnd();
-        $start_date = $start_end['start'];
-        $end_date = $start_end['end'];
-        $options = [
-            'conditions' => [
-                'start_date >=' => $start_date,
-                'end_date <='   => $end_date,
-                'team_id'       => $this->current_team_id
-            ]
-        ];
-        $res = $this->find('first', $options);
-        if (viaIsSet($res['EvaluateTerm']['id'])) {
-            return $res['EvaluateTerm']['id'];
-        }
-        return null;
+        $res = $this->getPreviousTerm();
+        return viaIsSet($res['id']);
     }
 
-    function saveTerm()
+    function getPreviousTerm()
+    {
+        if ($this->previous_term) {
+            return $this->previous_term;
+        }
+        $all_term = $this->getAllTerm();
+        if (count($all_term) < 2) {
+            return null;
+        }
+        $current_term_id = $this->getCurrentTermId();
+        $prev_key = null;
+        $res_key = null;
+        foreach ($all_term as $k => $v) {
+            if ($prev_key == $current_term_id) {
+                $res_key = $k;
+                break;
+            }
+            $prev_key = $k;
+        }
+        $this->previous_term = viaIsSet($all_term[$res_key]);
+        return $this->previous_term;
+    }
+
+    function saveCurrentTerm()
+    {
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $latest = $this->getLatestTerm();
+        if (!empty($latest)) {
+            $start_date = $latest['end_date'] + 1;
+        }
+        $res = $this->saveTerm($start_date, $this->Team->getCurrentTermEndDate() - 1);
+        return $res;
+    }
+
+    function saveNextTerm()
+    {
+        $after_start_end = $this->Team->getAfterTermStartEnd();
+        $latest = $this->getLatestTerm();
+        if (!empty($latest)) {
+            $start_date = $latest['end_date'] + 1;
+        }
+        else {
+            $start_date = $after_start_end['start'];
+        }
+        $res = $this->saveTerm($start_date, $after_start_end['end'] - 1);
+        return $res;
+    }
+
+    function saveTerm($start, $end)
     {
         $data = [
             'team_id'    => $this->current_team_id,
-            'start_date' => $this->Team->getCurrentTermStartDate(),
-            'end_date'   => $this->Team->getCurrentTermEndDate() - 1,
+            'start_date' => $start,
+            'end_date'   => $end,
         ];
+        $this->create();
         $res = $this->save($data);
         return $res;
     }
 
-    function checkTermAvailable($id)
+    function changeToInProgress($id)
+    {
+        $this->id = $id;
+        return $this->saveField('evaluate_status', self::STATUS_EVAL_IN_PROGRESS);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return bool
+     */
+    function isAbleToStartEvaluation($id)
+    {
+        $options = [
+            'conditions' => [
+                'id'              => $id,
+                'team_id'         => $this->current_team_id,
+                'evaluate_status' => self::STATUS_EVAL_NOT_STARTED,
+            ],
+        ];
+        $res = $this->find('first', $options);
+        return (bool)$res;
+    }
+
+    function isStartedEvaluation($id)
     {
         $options = [
             'conditions' => [
                 'id'      => $id,
-                'team_id' => $this->current_team_id
+                'team_id' => $this->current_team_id,
+                'NOT'     => [
+                    'evaluate_status' => self::STATUS_EVAL_NOT_STARTED,
+                ]
             ]
         ];
         $res = $this->find('first', $options);
-        return (empty($res)) ? false : true;
+        return (bool)$res;
     }
 
     function changeFreezeStatus($id)

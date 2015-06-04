@@ -66,7 +66,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testIndexSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $eval_data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 1,
@@ -88,7 +88,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testIndexPreviousTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
             'team_id'           => 1,
@@ -106,7 +106,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testIndexPresentTerm()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $presentTermId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $this->_savePreviousTerm($Evaluations);
         $eval_data = [
@@ -141,8 +141,9 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewSuccess()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -172,7 +173,7 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotEnabled()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
         $records = [
             [
@@ -207,8 +208,9 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotExistTotal()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -238,8 +240,9 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewNotMyTern()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $records = [
             [
                 'team_id'           => $Evaluations->Evaluation->current_team_id,
@@ -269,8 +272,9 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewIncorrectEvaluateeId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectEvaluateeId = 10;
         $records = [
             [
@@ -301,8 +305,9 @@ class EvaluationsControllerTest extends ControllerTestCase
     public function testViewIncorrectTermId()
     {
         $Evaluations = $this->_getEvaluationsCommonMock();
-        $Evaluations->Team->EvaluateTerm->saveTerm();
+        $Evaluations->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Evaluations->Team->EvaluateTerm->getLastInsertID();
+        $Evaluations->Team->EvaluateTerm->changeToInProgress($termId);
         $incorrectTermId = 10;
         $records = [
             [
@@ -508,48 +513,56 @@ class EvaluationsControllerTest extends ControllerTestCase
 
     public function testAjaxGetIncompleteEvaluatees()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/evaluations/ajax_get_incomplete_evaluatees/', ['method' => 'GET']);
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetIncompleteEvaluators()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/evaluations/ajax_get_incomplete_evaluators/', ['method' => 'GET']);
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetEvaluatorsStatus()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
         $evaluateeId = 1;
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}/term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetEvaluateesByEvaluator()
     {
-        $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
         $evaluatorId = 1;
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}/term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     public function testAjaxGetIncompleteOneself()
     {
         $this->_getEvaluationsCommonMock();
+        $Evaluations = $this->_getEvaluationsCommonMock();
+        $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_incomplete_oneself", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_oneself/term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
