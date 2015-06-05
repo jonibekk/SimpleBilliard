@@ -162,7 +162,7 @@
 
                 <div class="dropdown dropdown-menu-right navbar-nav-fix header-circle">
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
-                        <ul class="notify-dropdown-lists" id="bell-dropdown" role="menu">
+                        <ul class="notify-dropdown-cards" id="bell-dropdown" role="menu">
                             <li class="notify-card-empty" id="notifyCardEmpty">
                                 <i class="fa fa-smile-o font_33px mr_8px"></i><span
                                     class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>

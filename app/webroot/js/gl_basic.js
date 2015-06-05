@@ -2202,7 +2202,7 @@ function evNotifyMoreView() {
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var oldest_score_id = $("ul.notify-list-page").children("li.notify-card-list:last").attr("data-score");
+    var oldest_score_id = $("ul.notify-page-cards").children("li.notify-card-list:last").attr("data-score");
     var get_url = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -2222,7 +2222,7 @@ function evNotifyMoreView() {
                 var $notify = $(data.html);
                 //一旦非表示
                 $notify.hide();
-                $(".notify-list-page").append($notify);
+                $(".notify-page-cards").append($notify);
                 //html表示
                 $notify.show("slow", function () {
                     //もっと見る
