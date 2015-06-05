@@ -312,6 +312,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'team_id' => $team_id,
             ],
+            'order' => ['TeamMember.created' => 'DESC'],
             'contain'    => [
                 'User' => [
                     'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
