@@ -32,6 +32,12 @@ class Team extends AppModel
     const TYPE_FREE = 1;
     const TYPE_PRO = 2;
     static public $TYPE = [self::TYPE_FREE => "", self::TYPE_PRO => ""];
+    const OPTION_CHANGE_TERM_FROM_CURRENT = 1;
+    const OPTION_CHANGE_TERM_FROM_NEXT = 2;
+    static public $OPTION_CHANGE_TERM = [
+        self::OPTION_CHANGE_TERM_FROM_CURRENT => "",
+        self::OPTION_CHANGE_TERM_FROM_NEXT    => ""
+    ];
 
     /**
      * タイプの名前をセット
@@ -40,6 +46,12 @@ class Team extends AppModel
     {
         self::$TYPE[self::TYPE_FREE] = __d('gl', "フリー");
         self::$TYPE[self::TYPE_PRO] = __d('gl', "プロ");
+    }
+
+    private function _setTermOptionName()
+    {
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __d('gl', "今期から");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __d('gl', "来期から");
     }
 
     /**
@@ -138,6 +150,7 @@ class Team extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setTypeName();
+        $this->_setTermOptionName();
     }
 
     /**
@@ -327,8 +340,8 @@ class Team extends AppModel
     function getTermStrStartEndFromParam($start_term_month, $border_months, $target_date)
     {
         $res = $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
-        $res['start'] = date('Y/m/d', strtotime("+1 day", $res['start']));
-        $res['end'] = date('Y/m/d', $res['end']);
+        $res['start'] = date('Y/m/d', $res['start'] + $this->me['timezone'] * 3600);
+        $res['end'] = date('Y/m/d', $res['end'] + $this->me['timezone'] * 3600 - 1);
         return $res;
     }
 
@@ -404,5 +417,26 @@ class Team extends AppModel
             $term = $this->getTermStartEndByDate((strtotime("+1 day", $term['end'])));
         }
         return $term;
+    }
+
+    /**
+     * @param $team_id
+     * @param $post_data
+     *
+     * @return bool
+     */
+    function saveEditTerm($team_id, $post_data)
+    {
+        $this->id = $team_id;
+        if (!$this->save($post_data)) {
+            return false;
+        }
+        $saved_term = $this->EvaluateTerm->saveChangedTerm(
+            $post_data['Team']['change_from'],
+            $post_data['Team']['start_term_month'],
+            $post_data['Team']['border_months']
+        );
+
+        return (bool)$saved_term;
     }
 }

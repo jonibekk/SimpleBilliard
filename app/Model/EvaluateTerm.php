@@ -294,4 +294,83 @@ class EvaluateTerm extends AppModel
         return (empty($res)) ? false : true;
     }
 
+    function saveChangedTerm($option, $start_term_month, $border_months)
+    {
+        $new_term = $this->getChangeCurrentNextTerm($option, $start_term_month, $border_months);
+        $current_term_id = $this->getCurrentTermId();
+        $next_term_id = $this->getNextTermId();
+        //今期からの場合で評価開始してたら処理しない
+        if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
+            $this->isStartedEvaluation($current_term_id)
+        ) {
+            return false;
+        }
+        $saved_current = true;
+        $saved_next = true;
+        if ($current_term_id && $option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
+            $this->id = $current_term_id;
+            $saved_current = $this->save($new_term['current']);
+        }
+        if ($next_term_id &&
+            ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT ||
+                $option == Team::OPTION_CHANGE_TERM_FROM_NEXT)
+        ) {
+            $this->id = $next_term_id;
+            $saved_next = $this->save($new_term['next']);
+        }
+
+        if ((bool)$saved_next && (bool)$saved_current) {
+            return true;
+        }
+        return false;
+    }
+
+    function getChangeCurrentNextTerm($option, $start_term_month, $border_months)
+    {
+        $res = [
+            'current' => [
+                'start_date' => null,
+                'end_date'   => null,
+            ],
+            'next'    => [
+                'start_date' => null,
+                'end_date'   => null,
+            ]
+        ];
+
+        switch ($option) {
+            case Team::OPTION_CHANGE_TERM_FROM_CURRENT:
+                $previous = $this->getPreviousTerm();
+                $current_new = $this->Team->getTermStartEndFromParam($start_term_month,
+                                                                     $border_months,
+                                                                     REQUEST_TIMESTAMP);
+                if ($previous) {
+                    $res['current']['start_date'] = $previous['end_date'] + 1;
+                }
+                else {
+                    $res['current']['start_date'] = $current_new['start'];
+                }
+                $res['current']['end_date'] = $current_new['end'] - 1;
+                $next_new = $this->Team->getTermStartEndFromParam($start_term_month,
+                                                                  $border_months,
+                                                                  $current_new['end'] + 1);
+                $res['next']['start_date'] = $next_new['start'];
+                $res['next']['end_date'] = $next_new['end'] - 1;
+
+                break;
+            case Team::OPTION_CHANGE_TERM_FROM_NEXT:
+                $next = $this->getNextTerm();
+                $current_new = $this->Team->getTermStartEndFromParam($start_term_month,
+                                                                     $border_months,
+                                                                     REQUEST_TIMESTAMP);
+                $next_new = $this->Team->getTermStartEndFromParam($start_term_month,
+                                                                  $border_months,
+                                                                  $current_new['end'] + 1);
+                //来期からのみの場合は、来期の開始日は据え置きで終了日のみ変更
+                $res['next']['start_date'] = $next['start_date'];
+                $res['next']['end_date'] = $next_new['end'] - 1;
+                break;
+        }
+        return $res;
+    }
 }

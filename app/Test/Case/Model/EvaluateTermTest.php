@@ -16,6 +16,7 @@ class EvaluateTermTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.evaluate_term',
+        'app.evaluation_setting',
         'app.team',
         'app.badge',
         'app.user',
@@ -186,6 +187,42 @@ class EvaluateTermTest extends CakeTestCase
         $res1 = $this->EvaluateTerm->Team->getAfterTermStartEnd();
         $res2 = $this->EvaluateTerm->saveNextTerm();
         $this->assertEquals($res2['EvaluateTerm']['start_date'], $res1['start']);
+    }
+
+    function testGetChangeCurrentNextTermOption1()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->saveNextTerm();
+        $res = $this->EvaluateTerm->getChangeCurrentNextTerm(1, 1, 1);
+        $this->assertNotNull($res['current']['start_date']);
+        $this->assertNotNull($res['next']['start_date']);
+    }
+
+    function testGetChangeCurrentNextTermOption2()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->saveNextTerm();
+        $res = $this->EvaluateTerm->getChangeCurrentNextTerm(2, 1, 1);
+        $this->assertNull($res['current']['start_date']);
+        $this->assertNotNull($res['next']['start_date']);
+    }
+
+    function testSaveChangedTermSuccess1()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->saveCurrentTerm();
+        $this->EvaluateTerm->saveNextTerm();
+        $res = $this->EvaluateTerm->saveChangedTerm(1, 1, 1);
+        $this->assertTrue($res);
+    }
+
+    function testSaveChangedTermFailStartedSuccess2()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->saveCurrentTerm();
+        $this->EvaluateTerm->saveNextTerm();
+        $res = $this->EvaluateTerm->saveChangedTerm(2, 1, 1);
+        $this->assertTrue($res);
     }
 
     function _setDefault()
