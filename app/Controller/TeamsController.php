@@ -622,20 +622,26 @@ class TeamsController extends AppController
     function ajax_get_team_member_init()
     {
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
-        $login_user_info['admin_flg'] = true;
+        $team_id = $this->Session->read('current_team_id');
+        $login_user_id = $this->Auth->user('id');
+        $login_user_admin_flg = $this->Team->TeamMember->getLoginUserAdminFlag($team_id, $login_user_id);
+        $admin_user_cnt = $this->Team->TeamMember->getAdminUserCount($team_id);
+
         $res = [
-            'login_user_info' => $login_user_info,
+            'admin_user_cnt'       => $admin_user_cnt,
+            'login_user_id'        => $login_user_id,
+            'login_user_admin_flg' => $login_user_admin_flg,
+            'login_user_language'  => $this->Session->read('Auth.User.language'),
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_team_member($user_name = '')
+    function ajax_get_team_member()
     {
         $team_id = $this->Session->read('current_team_id');
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, $user_name);
+        $user_info = $this->Team->TeamMember->selectMemberInfo($team_id);
         $res = [
             'user_info' => $user_info,
-            'count'     => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
@@ -643,10 +649,9 @@ class TeamsController extends AppController
     function ajax_get_group_member($group_id = '')
     {
         $team_id = $this->Session->read('current_team_id');
-        list($user_info, $count) = $this->Team->TeamMember->selectMemberInfo($team_id, '', $group_id);
+        $user_info = $this->Team->TeamMember->selectGroupMemberInfo($team_id, $group_id);
         $res = [
             'user_info' => $user_info,
-            'count'     => $count,
         ];
         return $this->_ajaxGetResponse($res);
     }
@@ -657,5 +662,43 @@ class TeamsController extends AppController
         // グループ名を取得
         $group_info = $this->Team->Group->getByAllName($team_id);
         return $this->_ajaxGetResponse($group_info);
+    }
+
+    function ajax_get_current_team_admin_list()
+    {
+        $team_id = $this->Session->read('current_team_id');
+        $user_info = $this->Team->TeamMember->selectAdminMemberInfo($team_id);
+        $res = [
+            'user_info' => $user_info,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_current_not_2fa_step_user_list()
+    {
+        $team_id = $this->Session->read('current_team_id');
+        $user_info = $this->Team->TeamMember->select2faStepMemberInfo($team_id);
+        $res = [
+            'user_info' => $user_info,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_set_current_team_active_flag($member_id, $active_flg)
+    {
+        $res = $this->Team->TeamMember->setActiveFlag($member_id, $active_flg);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_set_current_team_admin_user_flag($member_id, $active_flg)
+    {
+        $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $active_flg);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_set_current_team_evaluation_flag($member_id, $evaluation_flg)
+    {
+        $res = $this->Team->TeamMember->setEvaluationFlag($member_id, $evaluation_flg);
+        return $this->_ajaxGetResponse($res);
     }
 }

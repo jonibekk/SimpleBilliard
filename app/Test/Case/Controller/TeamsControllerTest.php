@@ -569,6 +569,66 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/save_goal_categories', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testMemberList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/member_list', ['method' => 'GET']);
+    }
+
+    function testAjaxGetTeamMemberInit()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_team_member_init', ['method' => 'GET']);
+    }
+
+    function testAjaxGetTeamMember()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_team_member', ['method' => 'GET']);
+    }
+
+    function testAjaxGetGroupMember()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_group_member', ['method' => 'GET']);
+    }
+
+    function testAjaxGetCurrentTeamGroupList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_current_team_group_list', ['method' => 'GET']);
+    }
+
+    function testAjaxGetCurrentTeamAdminList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_current_team_admin_list', ['method' => 'GET']);
+    }
+
+    function testAjaxGetCurrentNot2faStepUserList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_current_not_2fa_step_user_list', ['method' => 'GET']);
+    }
+
+    function testAjaxSetCurrentTeamActiveFlag()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_set_current_team_active_flag/1/0', ['method' => 'GET']);
+    }
+
+    function testAjaxSetCurrentTeamAdminUserFlag()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_set_current_team_admin_user_flag/1/1', ['method' => 'GET']);
+    }
+
+    function testAjaxSetCurrentTeamEvaluationFlag()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_set_current_team_evaluation_flag/1/1', ['method' => 'GET']);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');

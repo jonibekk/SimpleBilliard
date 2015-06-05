@@ -82,4 +82,19 @@ class MemberGroupTest extends CakeTestCase
 
     }
 
+    function testGetGroupMemberUserId()
+    {
+        $user_id = 999;
+        $team_id = 888;
+        $group_id = 777;
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'group_id' => $group_id,
+        ];
+        $this->MemberGroup->save($params);
+        $res = $this->MemberGroup->getGroupMemberUserId($team_id, $group_id);
+        $this->assertContains($user_id, $res);
+    }
+
 }

@@ -39,4 +39,16 @@ class MemberGroup extends AppModel
         'User',
         'Group',
     ];
+
+    public function getGroupMemberUserId($team_id, $group_id)
+    {
+        $options = [
+            'fields'     => ['user_id'],
+            'conditions' => [
+                'team_id' => $team_id,
+                'group_id' => $group_id
+            ]
+        ];
+        return $this->find('list', $options);
+    }
 }

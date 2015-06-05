@@ -290,7 +290,7 @@ $(document).ready(function () {
             $('#NewNextTerm > div > p').empty();
             return false;
         }
-        var url = cake.url.i + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
+        var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
         $.get(url, function (data) {
             if (data.current.start && data.current.end) {
                 $('#NewCurrentTerm').removeClass('none');
