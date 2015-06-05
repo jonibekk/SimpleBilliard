@@ -24,9 +24,8 @@
   text-overflow: ellipsis;
 }
 .notify-contents {
-  width: 100%;
+  width: 80%;
   display: inline-block;
-  float: right;
 }
 .notify-card-head {
   font-size: @fontSmall;
@@ -45,6 +44,7 @@
 .notify-card-pic {
   width: 64px;
   height: 64px;
+  margin-right: 8px;
 }
 .notify-all-view-link {
   .link;
@@ -116,4 +116,34 @@
 
 .notify-dropdown-card {
   width:278px;
+}
+
+.notify-card-pic-box {
+  width: 64px;
+  margin-right: 8px;
+}
+
+.notify-page-card-letters {
+  display: inline-block;
+  width: 80%;
+}
+
+.notify-dropdown-card-letters {
+  display: inline-block;
+  width: 190px;
+}
+
+
+.notify-line-number {
+    margin: 0;
+    line-break: normal;
+    position: relative;
+}
+
+@media screen and (min-width: 768px) {
+    .notify-line-number {
+        margin: 0;
+        line-break: normal;
+        position: relative;
+    }
 }

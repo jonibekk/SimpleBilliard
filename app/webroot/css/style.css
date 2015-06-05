@@ -3663,18 +3663,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 
-@media screen and (min-width: 768px) {
-
-    .notify-line-number {
-        margin: 0;
-        line-break: normal;
-        height: 48px;
-        position: relative;
-    }
-
-}
-
-
 .notify-card-empty {
     text-align: center;
     padding: 10px 0;
@@ -3694,17 +3682,6 @@ Temporary Properties - YOU MUST FIX
     */
     white-space: normal;
     overflow: hidden;
-}
-
-.notify-contents {
-    margin-left: 8px;
-}
-
-.notify-line-number {
-    margin: 0;
-    line-break: normal;
-    height: 32px;
-    position: relative;
 }
 
 .notify-card-list .comment-user {
