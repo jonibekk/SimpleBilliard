@@ -240,38 +240,111 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    public function selectMemberInfo($team_id, $user_name='', $group_id='')
+    public function setAdminUserFlag($member_id, $flag)
+    {
+        $this->id = $member_id;
+        $flag = $flag == 'ON' ? 1 : 0;
+        return $this->saveField('admin_flg', $flag);
+    }
+
+    public function setActiveFlag($member_id, $flag)
+    {
+        $this->id = $member_id;
+        $flag = $flag == 'ON' ? 1 : 0;
+        return $this->saveField('active_flg', $flag);
+    }
+
+    public function setEvaluationFlag($member_id, $flag)
+    {
+        $this->id = $member_id;
+        $flag = $flag == 'ON' ? 1 : 0;
+        return $this->saveField('evaluation_enable_flg', $flag);
+    }
+
+    /*
+     * グループ別のメンバー取得
+     */
+    public function selectGroupMemberInfo($team_id, $group_id)
+    {
+        $options = $this->defineTeamMemberOption($team_id);
+        if (empty($group_id) === false) {
+            $user_id = $this->User->MemberGroup->getGroupMemberUserId($team_id, $group_id);
+            $options['conditions']['user_id'] = $user_id;
+        }
+        return $this->convertMemberData($this->find('all', $options));
+    }
+
+    /*
+     * 2段階認証OFFのメンバーを取得
+     */
+    public function select2faStepMemberInfo($team_id)
+    {
+        $options = $this->defineTeamMemberOption($team_id);
+        $options['conditions']['User.2fa_secret'] = null;
+        return $this->convertMemberData($this->find('all', $options));
+    }
+
+    /*
+     * チーム管理者取得
+     */
+    public function selectAdminMemberInfo($team_id)
+    {
+        $options = $this->defineTeamMemberOption($team_id);
+        $options['conditions']['TeamMember.admin_flg'] = 1;
+        return $this->convertMemberData($this->find('all', $options));
+    }
+
+    /*
+     * すべてのチームメンバー取得
+     */
+    public function selectMemberInfo($team_id)
+    {
+        return $this->convertMemberData($this->find('all', $this->defineTeamMemberOption($team_id)));
+    }
+
+    /*
+     * チームページDefaultのオプション取得
+     */
+    public function defineTeamMemberOption($team_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
             'contain'    => [
                 'User' => [
-                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
-                    'Email' => ['fields' => ['email']],
-                ],
-                'Team' => [
-                    'Group' => [
-                        'fields' => ['id', 'name']
+                    'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'MemberGroup' => [
+                        'fields' => ['group_id'],
+                        'Group'  => [
+                            'fields' => ['name']
+                        ]
                     ]
                 ],
             ]
         ];
+        return $options;
+    }
 
-        if (empty($user_name) === false) {
-            $options['conditions']['User.first_name LIKE'] = '%'. $user_name. '%';
-        }
-
-        if (empty($group_id) === false) {
-        }
-
-        $res = $this->find('all', $options);
+    public function convertMemberData($res)
+    {
         $upload = new UploadHelper(new View());
         foreach ($res as $key => $tm_obj) {
+            // グループ名の取得
+            $group_name = [];
+            foreach ($tm_obj['User']['MemberGroup'] as $g_obj) {
+                if (isset($g_obj['Group']['name']) === true && empty($g_obj['Group']['name']) === false) {
+                    $group_name[] = $g_obj['Group']['name'];
+                }
+            }
+
+            $res[$key]['TeamMember']['group_name'] = '';
+            if (count($group_name) > 0) {
+                $res[$key]['TeamMember']['group_name'] = implode(',', $group_name);
+            }
+
             // コーチ名を取得
-            $res[$key]['TeamMember']['coach_name'] = 'コーチはいません';
             if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
                 $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);
                 if (isset($u_info['User']['display_username']) === true) {
@@ -279,21 +352,13 @@ class TeamMember extends AppModel
                 }
             }
 
-            // 2fa_secret
-            $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? 'OFF' : 'ON';
-            // 評価対象
-            $res[$key]['TeamMember']['evaluation_enable_flg'] = $tm_obj['TeamMember']['evaluation_enable_flg'] === true ? '評価対象者です' : '評価対象者ではありません';
-            // メイン画像
-            $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo',['style' => 'medium']);
-            // Email TODO: 1人が復数のEmail所有することができる？
-            foreach ($tm_obj['User']['Email'] as $val) {
-                $res[$key]['User']['e_mail'] = $val['email'];
-                break;
-            }
-        }
+            // 2fa_secret: AngularJSで整数から始まるキーを読み取れないので別項目にて２段階認証設定表示を行う
+            $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? false : true;
 
-        $count = $this->find('count', $options);
-        return [$res, $count];
+            // メイン画像
+            $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo', ['style' => 'medium']);
+        }
+        return $res;
     }
 
     public function activateMembers($user_ids, $team_id = null)
@@ -1831,6 +1896,32 @@ class TeamMember extends AppModel
             return $res['TeamMember']['id'];
         }
         return null;
+    }
+
+    function getLoginUserAdminFlag($team_id, $user_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'user_id' => $user_id,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['TeamMember']['admin_flg']) === true) {
+            return $res['TeamMember']['admin_flg'];
+        }
+        return false;
+    }
+
+    function getAdminUserCount($team_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id'   => $team_id,
+                'admin_flg' => 1
+            ]
+        ];
+        return $this->find('count', $options);
     }
 
     /**
