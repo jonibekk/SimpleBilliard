@@ -15,6 +15,7 @@ class CircleTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.circle',
         'app.team',
         'app.badge',

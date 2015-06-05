@@ -83,7 +83,7 @@ class TeamMember extends AppModel
             'fields'     => ['TeamMember.team_id', 'Team.name'],
             'contain'    => ['Team']
         ];
-        $res = array_filter($this->find('list', $options));
+        $res = array_filter($this->findWithoutTeamId('list', $options));
         $this->myTeams = $res;
     }
 
