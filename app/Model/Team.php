@@ -419,16 +419,24 @@ class Team extends AppModel
         return $term;
     }
 
+    /**
+     * @param $team_id
+     * @param $post_data
+     *
+     * @return bool
+     */
     function saveEditTerm($team_id, $post_data)
     {
         $this->id = $team_id;
-        $saved_team = $this->save($post_data);
+        if (!$this->save($post_data)) {
+            return false;
+        }
         $saved_term = $this->EvaluateTerm->saveChangedTerm(
             $post_data['Team']['change_from'],
             $post_data['Team']['start_term_month'],
             $post_data['Team']['border_months']
         );
 
-        return (bool)$saved_team && (bool)$saved_term;
+        return (bool)$saved_term;
     }
 }
