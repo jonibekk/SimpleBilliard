@@ -17,6 +17,10 @@
         border-color: lightgray;
     }
 
+    .disable_member {
+        background-color: lightgray;
+    }
+
 </style>
 
 <?php
