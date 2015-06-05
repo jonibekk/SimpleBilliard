@@ -292,17 +292,17 @@ $(document).ready(function () {
         }
         var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
         $.get(url, function (data) {
-            if (data.current.start && data.current.end) {
+            if (data.current.start_date && data.current.end_date) {
                 $('#NewCurrentTerm').removeClass('none');
-                $('#NewCurrentTerm > div > p').text(data.current.start + "  -  " + data.current.end);
+                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date);
             }
             else {
                 $('#NewCurrentTerm').addClass('none');
                 $('#NewCurrentTerm > div > p').empty();
             }
-            if (data.next.start && data.next.end) {
+            if (data.next.start_date && data.next.end_date) {
                 $('#NewNextTerm').removeClass('none');
-                $('#NewNextTerm > div > p').text(data.next.start + "  -  " + data.next.end);
+                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date);
             }
             else {
                 $('#NewNextTerm').addClass('none');

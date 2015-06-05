@@ -106,13 +106,6 @@
                     </p>
                 </div>
             </div>
-            <div class="form-group none" id="NewCurrentTerm">
-                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "更新後の今期の期間") ?></label>
-
-                <div class="col col-sm-6">
-                    <p class="form-control-static font_darkRed" id=""></p>
-                </div>
-            </div>
         <?php endif; ?>
         <?php if ($next_term_start_date && $next_term_end_date): ?>
             <div class="form-group">
@@ -125,14 +118,21 @@
                     </p>
                 </div>
             </div>
-            <div class="form-group none" id="NewNextTerm">
-                <label class="col col-sm-3 control-label form-label"><?= __d('gl', "更新後の来期の期間") ?></label>
-
-                <div class="col col-sm-6">
-                    <p class="form-control-static font_darkRed" id=""></p>
-                </div>
-            </div>
         <?php endif; ?>
+        <div class="form-group none" id="NewCurrentTerm">
+            <label class="col col-sm-3 control-label form-label"><?= __d('gl', "更新後の今期の期間") ?></label>
+
+            <div class="col col-sm-6">
+                <p class="form-control-static font_darkRed" id=""></p>
+            </div>
+        </div>
+        <div class="form-group none" id="NewNextTerm">
+            <label class="col col-sm-3 control-label form-label"><?= __d('gl', "更新後の来期の期間") ?></label>
+
+            <div class="col col-sm-6">
+                <p class="form-control-static font_darkRed" id=""></p>
+            </div>
+        </div>
     </div>
 
     <div class="panel-footer addteam_pannel-footer">

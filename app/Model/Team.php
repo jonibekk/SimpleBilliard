@@ -340,8 +340,8 @@ class Team extends AppModel
     function getTermStrStartEndFromParam($start_term_month, $border_months, $target_date)
     {
         $res = $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
-        $res['start'] = date('Y/m/d', strtotime("+1 day", $res['start']));
-        $res['end'] = date('Y/m/d', $res['end']);
+        $res['start'] = date('Y/m/d', $res['start'] + $this->me['timezone'] * 3600);
+        $res['end'] = date('Y/m/d', $res['end'] + $this->me['timezone'] * 3600 - 1);
         return $res;
     }
 
@@ -417,5 +417,18 @@ class Team extends AppModel
             $term = $this->getTermStartEndByDate((strtotime("+1 day", $term['end'])));
         }
         return $term;
+    }
+
+    function saveEditTerm($team_id, $post_data)
+    {
+        $this->id = $team_id;
+        $saved_team = $this->save($post_data);
+        $saved_term = $this->EvaluateTerm->saveChangedTerm(
+            $post_data['Team']['change_from'],
+            $post_data['Team']['start_term_month'],
+            $post_data['Team']['border_months']
+        );
+
+        return (bool)$saved_team && (bool)$saved_term;
     }
 }

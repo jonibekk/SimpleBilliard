@@ -50,12 +50,14 @@ class TeamsController extends AppController
     public function edit_term($id)
     {
         $this->request->allowMethod('put');
-        $this->Team->id = $id;
-        if ($this->Team->save($this->request->data)) {
+        $this->Team->begin();
+        if ($this->Team->saveEditTerm($id, $this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "期間設定を更新しました。"));
+            $this->Team->commit();
         }
         else {
             $this->Pnotify->outError(__d('gl', "期間設定の更新に失敗しました。"));
+            $this->Team->rollback();
         }
         return $this->redirect($this->referer());
     }
@@ -268,54 +270,16 @@ class TeamsController extends AppController
     function ajax_get_term_start_end_by_edit($start_term_month, $border_months, $option)
     {
         $this->_ajaxPreProcess();
-        $res = [
-            'current' => [
-                'start' => null,
-                'end'   => null,
-            ],
-            'next'    => [
-                'start' => null,
-                'end'   => null,
-            ]
-        ];
-
-        switch ($option) {
-            case Team::OPTION_CHANGE_TERM_FROM_CURRENT:
-                //今期からの場合は、今期と来期の両方を返す。
-                //今期の開始日に変更はなし。
-                //来期は通常通り
-                $previous = $this->Team->EvaluateTerm->getPreviousTerm();
-                $current_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
-                                                                        $border_months,
-                                                                        REQUEST_TIMESTAMP);
-                if ($previous) {
-                    $res['current']['start'] = date('Y/m/d', strtotime("+1 day", $previous['end_date'] + 1));
-                }
-                else {
-                    $res['current']['start'] = $current_new['start'];
-                }
-                $res['current']['end'] = $current_new['end'];
-                $next_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
-                                                                     $border_months,
-                                                                     strtotime("+1 day",
-                                                                               strtotime($current_new['end']) + 1));
-                $res['next']['start'] = $next_new['start'];
-                $res['next']['end'] = $next_new['end'];
-
-                break;
-            case Team::OPTION_CHANGE_TERM_FROM_NEXT:
-                $next = $this->Team->EvaluateTerm->getNextTerm();
-                $current_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
-                                                                        $border_months,
-                                                                        REQUEST_TIMESTAMP);
-                $next_new = $this->Team->getTermStrStartEndFromParam($start_term_month,
-                                                                     $border_months,
-                                                                     strtotime("+1 day",
-                                                                               strtotime($current_new['end']) + 1));
-                //来期からのみの場合は、来期の開始日は据え置きで終了日のみ変更
-                $res['next']['start'] = date('Y/m/d', strtotime("+1 day", $next['start_date']));;
-                $res['next']['end'] = $next_new['end'];
-                break;
+        $res = $this->Team->EvaluateTerm->getChangeCurrentNextTerm($option, $start_term_month, $border_months);
+        if ($res['current']['start_date']) {
+            $res['current']['start_date'] = date('Y/m/d',
+                                                 $res['current']['start_date'] + $this->Team->me['timezone'] * 3600);
+            $res['current']['end_date'] = date('Y/m/d',
+                                               $res['current']['end_date'] + $this->Team->me['timezone'] * 3600);
+        }
+        if ($res['next']['start_date']) {
+            $res['next']['start_date'] = date('Y/m/d', $res['next']['start_date'] + $this->Team->me['timezone'] * 3600);
+            $res['next']['end_date'] = date('Y/m/d', $res['next']['end_date'] + $this->Team->me['timezone'] * 3600);
         }
         return $this->_ajaxGetResponse($res);
     }
