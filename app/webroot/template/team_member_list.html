@@ -44,7 +44,8 @@
 
     <table class="table team_member_table">
         <tr ng-repeat="item in team_list | filter:name_field"
-            ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag">
+            ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
+            ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''">
 
             <td width="30%">
                 <img ng-src="{{item.User.img_url}}" class="feed-img"/>
