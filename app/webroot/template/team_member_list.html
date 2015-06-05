@@ -1,0 +1,125 @@
+<br>
+
+<div class="well">
+    <div id="filter_box" class="row">
+        <div class="col-xs-12 col-sm-4">
+            <select ng-model="filter_name" name="filter_name" class="form-control" ng-change="changeFilter()">
+                <option ng-selected="true" value="">{{ 'FILTER_ALL' | translate}}</option>
+                <option value="coach_name">{{ 'FILTER_COACH_NAME' | translate}}</option>
+                <option value="group_name">{{ 'FILTER_GROUP_NAME' | translate}}</option>
+                <option value="team_admin">{{ 'FILTER_ADMIN' | translate}}</option>
+                <option value="two_step" ng-if="login_user_admin_flg == true">{{ 'FILTER_TWO_STEP' | translate}}</option>
+            </select>
+        </div>
+        <div class="col-xs-12 col-sm-8">
+            <input ng-show="name_field_show"
+                   ng-model="name_field.User.display_username"
+                   class="form-control" placeholder="{{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
+
+            <input ng-show="coach_name_field_show"
+                   ng-model="name_field.TeamMember.coach_name"
+                   class="form-control" placeholder="{{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
+
+            <select ng-show="group_field_show"
+                    ng-model="group_id"
+                    ng-options="num as name for (num, name) in group_list"
+                    ng-change="changeGroupFilter()"
+                    class="form-control">
+                <option ng-selected="true" value="">すべて</option>
+            </select>
+        </div>
+    </div>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox"
+                   ng-model="disp_active_flag"
+                   ng-true-value="0"
+                   ng-false-value="1"> 無効化されたメンバーも表示する
+        </label>
+    </div>
+</div>
+
+<div class="team_member_count_label">対象メンバー ( {{(team_list|filter:name_field).length}} )</div>
+<div class="col-xs-12">
+
+    <table class="table team_member_table">
+        <tr ng-repeat="item in team_list | filter:name_field"
+            ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
+            ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''">
+
+            <td width="30%">
+                <img ng-src="{{item.User.img_url}}" class="feed-img"/>
+
+                <p> {{item.User.display_username}} <i class="fa fa-adn" ng-if="item.TeamMember.admin_flg == '1'"></i></p>
+            </td>
+
+            <td>
+                <!--<p> {{item.User.e_mail}} </p>-->
+
+                <p ng-if="item.TeamMember.group_name == ''"><i class="fa fa-sitemap"></i> 所属グループはありません</p>
+
+                <p ng-if="item.TeamMember.group_name != ''"><i class="fa fa-sitemap"></i> {{item.TeamMember.group_name}}</p>
+
+                <p ng-if="item.TeamMember.coach_user_id == null"><i class="fa fa-venus-double"></i> コーチはいません</p>
+
+                <p ng-if="item.TeamMember.coach_user_id != null && item.TeamMember.coacha_name != ''">
+                    <i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>
+
+                <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == false">
+                    <i class="fa fa-lock"></i> OFF</p>
+
+                <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == true">
+                    <i class="fa fa-lock"></i> ON</p>
+
+                <p ng-if="login_user_admin_flg == true && item.TeamMember.evaluation_enable_flg == true">
+                    <i class="fa fa-shield"></i> 評価対象者です</p>
+
+                <p ng-if="login_user_admin_flg == true && item.TeamMember.evaluation_enable_flg == false">
+                    <i class="fa fa-shield"></i> 評価対象者ではありません</p>
+            </td>
+
+            <td width="20%" ng-if="login_user_admin_flg == true">
+                <div class="pull-right header-function dropdown" ng-if="admin_user_cnt > 1 || login_user_id != item.User.id">
+                    <button class="btn team_member_setting_btn dropdown-toggle" type="button"
+                            id="dropdownMenu1"
+                            data-toggle="dropdown" aria-expanded="true">
+                        <i class="fa fa-cog header-function-icon" style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation" ng-if="item.TeamMember.active_flg == true">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="setActiveFlag($index, item.TeamMember.id, 'OFF')">非アクティブにする</a>
+                        </li>
+
+                        <li role="presentation" ng-if="item.TeamMember.active_flg == false">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="setActiveFlag($index, item.TeamMember.id, 'ON')">アクティブにする</a>
+                        </li>
+
+                        <li role="presentation" ng-if="item.TeamMember.admin_flg == false">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="setAdminUserFlag($index, item.TeamMember.id, 'ON')">管理者にする</a>
+                        </li>
+
+                        <li role="presentation" ng-if="item.TeamMember.admin_flg == true">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="setAdminUserFlag($index, item.TeamMember.id, 'OFF')">管理者から外す</a>
+                        </li>
+
+                        <li role="presentation" ng-if="item.TeamMember.evaluation_enable_flg == false">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="setEvaluationFlag($index, item.TeamMember.id, 'ON')">評価対象者にする</a>
+                        </li>
+
+                        <li role="presentation" ng-if="item.TeamMember.evaluation_enable_flg == true">
+                            <a role="menuitem" tabindex="-1"
+                               ng-click="setEvaluationFlag($index, item.TeamMember.id, 'OFF')">評価対象者から外す</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -272,6 +272,46 @@ $(document).ready(function () {
         });
     });
 
+    //edit team term setting
+    $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 , #EditTermStartTerm , #EditTermBorderMonths', function () {
+
+        if ($("#EditTermChangeFrom1:checked").val()) {
+            var changeFrom = $('#EditTermChangeFrom1:checked').val();
+        }
+        else {
+            var changeFrom = $('#EditTermChangeFrom2:checked').val();
+        }
+        var startTermMonth = $('#EditTermStartTerm').val();
+        var borderMonths = $('#EditTermBorderMonths').val();
+        if (startTermMonth === "" || borderMonths === "") {
+            $('#NewCurrentTerm').addClass('none');
+            $('#NewCurrentTerm > div > p').empty();
+            $('#NewNextTerm').addClass('none');
+            $('#NewNextTerm > div > p').empty();
+            return false;
+        }
+        var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
+        $.get(url, function (data) {
+            if (data.current.start_date && data.current.end_date) {
+                $('#NewCurrentTerm').removeClass('none');
+                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date);
+            }
+            else {
+                $('#NewCurrentTerm').addClass('none');
+                $('#NewCurrentTerm > div > p').empty();
+            }
+            if (data.next.start_date && data.next.end_date) {
+                $('#NewNextTerm').removeClass('none');
+                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date);
+            }
+            else {
+                $('#NewNextTerm').addClass('none');
+                $('#NewNextTerm > div > p').empty();
+            }
+        });
+    });
+
+
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
         $('#layer-black').css('display', 'block');
@@ -2080,7 +2120,7 @@ function evCommentLatestView() {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
                 //一旦非表示
-               $posts.fadeOut();
+                $posts.fadeOut();
                 $($obj).before($posts);
                 $posts.fadeIn();
                 //ローダーを削除
@@ -2202,7 +2242,7 @@ function evNotifyMoreView() {
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var oldest_score_id = $("ul.notify-list-page").children("li.notify-card-list:last").attr("data-score");
+    var oldest_score_id = $("ul.notify-page-cards").children("li.notify-card-list:last").attr("data-score");
     var get_url = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -2222,7 +2262,7 @@ function evNotifyMoreView() {
                 var $notify = $(data.html);
                 //一旦非表示
                 $notify.hide();
-                $(".notify-list-page").append($notify);
+                $(".notify-page-cards").append($notify);
                 //html表示
                 $notify.show("slow", function () {
                     //もっと見る
@@ -2406,11 +2446,9 @@ function copyToClipboard(url) {
 }
 
 $(document).ready(function () {
-    $(window).scroll(function(){
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 200)
-        {
-            if(!autoload_more)
-            {
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+            if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
             }

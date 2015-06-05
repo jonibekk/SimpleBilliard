@@ -8,7 +8,6 @@ module.exports = (grunt) ->
   # 2. less
   options:
     spawn: false
-    livereload: true
 
   coffee:
     files: ['<%= config.coffee %>/**/*.coffee']

@@ -371,6 +371,7 @@ class NotifySetting extends AppModel
                 $user_text .= __d('gl', '%sさん', $name);
             }
         }
+        $title = null;
         switch ($type) {
             case self::TYPE_FEED_POST:
                 $title = __d('gl', '%1$s%2$sが投稿しました。', $user_text,
@@ -447,9 +448,6 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
                 $title = __d('gl', '%1$sがチームに参加しました。', $user_text);
-                break;
-
-            default:
                 break;
         }
         return $title;

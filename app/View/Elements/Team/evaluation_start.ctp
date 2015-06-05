@@ -40,8 +40,8 @@
             <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __d('gl', "今期の期間") ?></label>
 
             <div class="col col-sm-6">
-                <p class="form-control-static"><b><?= $this->TimeEx->date($term_start_date) ?>
-                        - <?= $this->TimeEx->date($term_end_date) ?></b></p>
+                <p class="form-control-static"><b><?= $this->TimeEx->date($current_term_start_date) ?>
+                        - <?= $this->TimeEx->date($current_term_end_date) ?></b></p>
             </div>
         </div>
         <?php if (!$eval_enabled): ?>

@@ -13,7 +13,7 @@ module.exports = (grunt) ->
       separator: ';'
 
   jsDocs:
-    src: ['<%= config.docs %>/js/**/*.html']
+    src: ['<%= config.docs %>/js/**/*.html','!<%= config.docs %>/js/index.html']
     dest: '<%= config.docs %>/js/index.html'
 
   cssDocs:
@@ -21,5 +21,5 @@ module.exports = (grunt) ->
     dest: '<%= config.docs %>/css/index.html'
 
   gruntDocs:
-    src: ['<%= config.docs %>/grunt/**/*.html']
+    src: ['<%= config.docs %>/grunt/**/*.html','!<%= config.docs %>/grunt/index.html']
     dest: '<%= config.docs %>/grunt/index.html'

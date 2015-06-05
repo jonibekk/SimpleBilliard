@@ -28,7 +28,7 @@
         <div class="modal-footer">
             <?=
             $this->Form->postLink(__d('gl', "削除する"),
-                                  ['controller' => 'teams', 'action' => 'to_inactive', $id],
+                                  ['controller' => 'teams', 'action' => 'to_inactive_score', $id],
                                   ['class' => 'btn btn-primary']) ?>
         </div>
     </div>

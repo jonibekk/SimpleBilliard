@@ -22,6 +22,7 @@ class AppModel extends Model
             'field'      => 'del_flg',
             'field_date' => 'deleted',
         ],
+        'WithTeamId',
         'ExtContainable',
     ];
 
@@ -324,6 +325,35 @@ class AppModel extends Model
             'recursive'  => -1,
             'callbacks'  => false
         ));
+    }
+
+    /**
+     * this method is about calling find method without WithTeamIdBehavior.
+     *
+     * @param string $type
+     * @param array  $query
+     *
+     * @return array|null
+     */
+    public function findWithoutTeamId($type = 'first', $query = [])
+    {
+        $enable_containable = false;
+        if ($this->Behaviors->loaded('ExtContainable')) {
+            $enable_containable = true;
+        }
+        if (!$this->Behaviors->loaded('WithTeamId')) {
+            throw new RuntimeException(__d('exception', "Please enable WithTeamIdBehavior!"));
+        }
+        $this->Behaviors->disable('WithTeamId');
+        if ($enable_containable) {
+            $this->Behaviors->load('ExtContainable', array('with_team_id' => false));
+        }
+        $res = $this->find($type, $query);
+        $this->Behaviors->enable('WithTeamId');
+        if ($enable_containable) {
+            $this->Behaviors->load('ExtContainable', array('with_team_id' => true));
+        }
+        return $res;
     }
 
 }

@@ -161,7 +161,7 @@ class Invite extends AppModel
                 'email_token' => $token
             ],
         ];
-        $invite = $this->find('first', $options);
+        $invite = $this->findWithoutTeamId('first', $options);
         $this->tokenData = $invite;
         return $this->tokenData;
     }

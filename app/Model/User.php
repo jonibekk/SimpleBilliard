@@ -218,6 +218,7 @@ class User extends AppModel
      * @var array
      */
     public $hasMany = [
+        'Purpose',
         'Badge',
         'CommentLike',
         'CommentMention',

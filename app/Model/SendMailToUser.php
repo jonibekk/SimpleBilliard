@@ -43,7 +43,7 @@ class SendMailToUser extends AppModel
             ],
             'fields'     => ['user_id']
         ];
-        $res = $this->find('list', $options);
+        $res = $this->findWithoutTeamId('list', $options);
         return $res;
     }
 

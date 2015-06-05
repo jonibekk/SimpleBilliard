@@ -15,6 +15,7 @@ class EvaluationTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
         'app.evaluation',
         'app.team',
         'app.badge',
@@ -151,7 +152,7 @@ class EvaluationTest extends CakeTestCase
     function testCheckAvailParameterInEvalFormStatusCannotGet()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $evaluateeId = 1;
@@ -170,6 +171,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -177,6 +179,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -184,6 +187,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -211,6 +215,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -218,6 +223,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -225,6 +231,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -254,6 +261,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -261,6 +269,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 5,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -268,6 +277,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 8,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -285,6 +295,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
                 ],
@@ -292,6 +303,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 6,
+                    'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
                 ],
@@ -299,6 +311,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 9,
+                    'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
                 ],
@@ -315,6 +328,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
+                    'team_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                 ],
@@ -322,6 +336,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                 ],
@@ -329,6 +344,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                 ],
@@ -404,6 +420,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 1,
+                    'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -416,6 +433,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 2,
+                    'team_id'           => 1,
                     'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -430,6 +448,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 3,
+                    'team_id'           => 1,
                     'evaluatee_user_id' => 2,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -443,6 +462,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 4,
+                    'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -456,6 +476,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 5,
+                    'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -469,6 +490,7 @@ class EvaluationTest extends CakeTestCase
             [
                 'Evaluation' => [
                     'id'                => 6,
+                    'team_id'           => 1,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
                     'evaluate_term_id'  => $evaluateTermId,
@@ -721,7 +743,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $currentTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($currentTermId);
         $this->Evaluation->getMyTurnCount();
@@ -732,10 +754,11 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
         $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
         $this->Evaluation->getMyTurnCount();
     }
@@ -792,7 +815,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $this->Evaluation->Team->EvaluateTerm->getLatestTermId();
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($termId);
         $this->Evaluation->getIsEditable($termId, null);
@@ -801,7 +824,7 @@ class EvaluationTest extends CakeTestCase
     function testGetAllStatusesForTeamSettings()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->evaluate_term_id);
     }
@@ -809,7 +832,7 @@ class EvaluationTest extends CakeTestCase
     function testGetIncompleteEvaluatees()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id);
     }
@@ -817,7 +840,7 @@ class EvaluationTest extends CakeTestCase
     function testGetIncompleteEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $this->Evaluation->getIncompleteEvaluators($this->Evaluation->evaluate_term_id);
     }
@@ -825,7 +848,7 @@ class EvaluationTest extends CakeTestCase
     function testGetEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id, 1);
     }
@@ -833,7 +856,7 @@ class EvaluationTest extends CakeTestCase
     function testGetEvaluateesByEvaluator()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $evaluatorId = 2;
         $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->evaluate_term_id, $evaluatorId);
@@ -842,7 +865,7 @@ class EvaluationTest extends CakeTestCase
     function testGetIncompleteOneselfEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->evaluate_term_id);
     }
@@ -850,7 +873,7 @@ class EvaluationTest extends CakeTestCase
     function testGetFinalEvaluations()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->evaluate_term_id, [1, 2, 3]);
         $this->assertTrue(count($res) === 2);
@@ -859,7 +882,7 @@ class EvaluationTest extends CakeTestCase
     function testGetEvaluateeIdsByTermId()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $excepted = array(
             (int)1 => '1',
@@ -872,7 +895,7 @@ class EvaluationTest extends CakeTestCase
     function testGetEvaluatorIdsByTermId()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveTerm();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
         $excepted = array(
             (int)1 => '1',

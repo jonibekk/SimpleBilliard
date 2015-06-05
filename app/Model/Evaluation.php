@@ -224,7 +224,7 @@ class Evaluation extends AppModel
             throw new RuntimeException(__d('gl', "パラメータが不正です。"));
         }
 
-        if (!$this->Team->EvaluateTerm->checkTermAvailable($termId)) {
+        if (!$this->Team->EvaluateTerm->isStartedEvaluation($termId)) {
             throw new RuntimeException(__d('gl', "この期間の評価はできないか、表示する権限がありません。"));
         }
 
@@ -427,8 +427,10 @@ class Evaluation extends AppModel
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             return false;
         }
-        $this->Team->EvaluateTerm->saveTerm();
-        $term_id = $this->Team->EvaluateTerm->getLastInsertID();
+        if (!$term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
+            $this->Team->EvaluateTerm->saveCurrentTerm();
+            $term_id = $this->Team->EvaluateTerm->getLastInsertID();
+        }
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
         $evaluators = [];
         if ($this->Team->EvaluationSetting->isEnabledEvaluator()) {
@@ -449,6 +451,7 @@ class Evaluation extends AppModel
                               'Evaluation.index_num'        => 0,
                              ]
             );
+            $this->EvaluateTerm->changeToInProgress($term_id);
 
             return (bool)$res;
         }
@@ -863,6 +866,9 @@ class Evaluation extends AppModel
 
     function getAllStatusesForTeamSettings($termId)
     {
+        if (!$termId) {
+            return null;
+        }
         $evaluation_statuses = [
             self::TYPE_ONESELF   => [
                 'label'          => __d('gl', "自己"),

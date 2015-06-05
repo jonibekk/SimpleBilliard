@@ -259,7 +259,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testSettingsSuccessNotAvailStartEvalButton()
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
-        $Teams->Team->EvaluateTerm->saveTerm();
+        $Teams->Team->EvaluateTerm->saveCurrentTerm();
 
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
@@ -402,6 +402,7 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/ajax_get_score_elm/index:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxGetTermStartEnd()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -415,7 +416,7 @@ class TeamsControllerTest extends ControllerTestCase
     {
         $this->_getTeamsCommonMock(null, true);
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/to_inactive/1', ['method' => 'POST']);
+        $this->testAction('/teams/to_inactive_score/1', ['method' => 'POST']);
     }
 
     function testAjaxGetConfirmInactiveScoreModal()
@@ -424,6 +425,40 @@ class TeamsControllerTest extends ControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/ajax_get_confirm_inactive_score_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetConfirmInactiveGoalCategoryModal()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_confirm_inactive_goal_category_modal/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetGoalCategoryElm()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_goal_category_elm/index:1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testToInactiveGoalCategory()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/to_inactive_goal_category/1', ['method' => 'POST']);
+    }
+
+    function testAjaxGetTermStartEndByEdit()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_term_start_end_by_edit/1/1/1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -472,22 +507,42 @@ class TeamsControllerTest extends ControllerTestCase
         $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
     }
 
+    function testEditTermSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'Team' => [
+                'change_from'      => '1',
+                'start_term_month' => 1,
+                'border_months'    => 1,
+            ]
+        ];
+        $this->testAction('/teams/edit_term/1', ['method' => 'PUT', 'data' => $data]);
+    }
+
+    function testEditTermFail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = ['Team' => [
+            'start_term_month' => null
+        ]];
+        $this->testAction('/teams/edit_term/1', ['method' => 'PUT', 'data' => $data]);
+    }
+
     function testChangeFreezeStatusSuccess()
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
 
-        $Teams->Team->EvaluateTerm->saveTerm();
+        $Teams->Team->EvaluateTerm->saveCurrentTerm();
         $termId = $Teams->Team->EvaluateTerm->getLastInsertID();
-        $data = ['evaluate_term_id' => $termId];
-        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/teams/change_freeze_status/' . $termId, ['method' => 'POST']);
     }
 
     function testChangeFreezeStatusFailed()
     {
         $this->_getTeamsCommonMock(null, true);
-        $termId = null;
-        $data = ['evaluate_term_id' => $termId];
-        $this->testAction('/teams/change_freeze_status', ['method' => 'POST', 'data' => $data]);
+        $termId = 99999999;
+        $this->testAction('/teams/change_freeze_status/' . $termId, ['method' => 'POST']);
     }
 
     function testDownloadFinalEvaluationsCsv()
@@ -519,6 +574,90 @@ class TeamsControllerTest extends ControllerTestCase
         $data = ['EvaluateScore' => []];
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/save_evaluation_scores', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testSaveGoalCategoriesSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'GoalCategory' => [
+                [
+                    'team_id'     => 1,
+                    'name'        => 'test',
+                    'description' => 'desc'
+                ]
+            ]
+        ];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/save_goal_categories', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testSaveGoalCategoryFail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = ['GoalCategory' => []];
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/save_goal_categories', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testMemberList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/member_list', ['method' => 'GET']);
+    }
+
+    function testAjaxGetTeamMemberInit()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_team_member_init', ['method' => 'GET']);
+    }
+
+    function testAjaxGetTeamMember()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_team_member', ['method' => 'GET']);
+    }
+
+    function testAjaxGetGroupMember()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_group_member', ['method' => 'GET']);
+    }
+
+    function testAjaxGetCurrentTeamGroupList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_current_team_group_list', ['method' => 'GET']);
+    }
+
+    function testAjaxGetCurrentTeamAdminList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_current_team_admin_list', ['method' => 'GET']);
+    }
+
+    function testAjaxGetCurrentNot2faStepUserList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_current_not_2fa_step_user_list', ['method' => 'GET']);
+    }
+
+    function testAjaxSetCurrentTeamActiveFlag()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_set_current_team_active_flag/1/0', ['method' => 'GET']);
+    }
+
+    function testAjaxSetCurrentTeamAdminUserFlag()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_set_current_team_admin_user_flag/1/1', ['method' => 'GET']);
+    }
+
+    function testAjaxSetCurrentTeamEvaluationFlag()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_set_current_team_evaluation_flag/1/1', ['method' => 'GET']);
     }
 
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')

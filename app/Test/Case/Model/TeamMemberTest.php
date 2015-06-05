@@ -2077,4 +2077,291 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->current_team_id = 1;
         $this->TeamMember->setAllMembers(null, 'final_evaluation');
     }
+
+    function testSetAdminUserFlagPatternON()
+    {
+        $member_id = 999;
+        $params = [
+            'id'        => $member_id,
+            'admin_flg' => 0,
+        ];
+        $this->TeamMember->save($params);
+        $this->TeamMember->setAdminUserFlag($member_id, 'ON');
+
+        $options['conditions']['id'] = $member_id;
+        $res = $this->TeamMember->find('first', $options);
+        $this->assertEquals(1, $res['TeamMember']['admin_flg']);
+    }
+
+    function testSetAdminUserFlagPatternOFF()
+    {
+        $member_id = 999;
+        $params = [
+            'id'        => $member_id,
+            'admin_flg' => 0,
+        ];
+        $this->TeamMember->save($params);
+        $this->TeamMember->setAdminUserFlag($member_id, 'OFF');
+
+        $options['conditions']['id'] = $member_id;
+        $res = $this->TeamMember->find('first', $options);
+        $this->assertEquals(0, $res['TeamMember']['admin_flg']);
+    }
+
+    function testSetActiveFlagPatternON()
+    {
+        $member_id = 999;
+        $params = [
+            'id'         => $member_id,
+            'active_flg' => 0,
+        ];
+        $this->TeamMember->save($params);
+        $this->TeamMember->setActiveFlag($member_id, 'ON');
+
+        $options['conditions']['id'] = $member_id;
+        $res = $this->TeamMember->find('first', $options);
+        $this->assertEquals(1, $res['TeamMember']['active_flg']);
+    }
+
+    function testSetActiveFlagPatternOFF()
+    {
+        $member_id = 999;
+        $params = [
+            'id'         => $member_id,
+            'active_flg' => 0,
+        ];
+        $this->TeamMember->save($params);
+        $this->TeamMember->setActiveFlag($member_id, 'OFF');
+
+        $options['conditions']['id'] = $member_id;
+        $res = $this->TeamMember->find('first', $options);
+        $this->assertEquals(0, $res['TeamMember']['active_flg']);
+    }
+
+    function testSetEvaluationEnableFlagPatternON()
+    {
+        $member_id = 999;
+        $params = [
+            'id'                    => $member_id,
+            'evaluation_enable_flg' => 0,
+        ];
+        $this->TeamMember->save($params);
+        $this->TeamMember->setEvaluationFlag($member_id, 'ON');
+
+        $options['conditions']['id'] = $member_id;
+        $res = $this->TeamMember->find('first', $options);
+        $this->assertEquals(1, $res['TeamMember']['evaluation_enable_flg']);
+    }
+
+    function testSetEvaluationEnableFlagPatternOFF()
+    {
+        $member_id = 999;
+        $params = [
+            'id'                    => $member_id,
+            'evaluation_enable_flg' => 0,
+        ];
+        $this->TeamMember->save($params);
+        $this->TeamMember->setEvaluationFlag($member_id, 'OFF');
+
+        $options['conditions']['id'] = $member_id;
+        $res = $this->TeamMember->find('first', $options);
+        $this->assertEquals(0, $res['TeamMember']['evaluation_enable_flg']);
+    }
+
+    function testSelect2faStepMemberInfoTypeTrue()
+    {
+        $user_id = 999;
+        $params = [
+            'id'         => $user_id,
+            '2fa_secret' => null,
+        ];
+        $this->TeamMember->User->save($params);
+
+        $team_id = 999;
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+        ];
+        $this->TeamMember->save($params);
+
+        $res = $this->TeamMember->select2faStepMemberInfo($team_id);
+        $this->assertEquals($user_id, $res[0]['User']['id']);
+    }
+
+    function testSelect2faStepMemberInfoTypeFalse()
+    {
+        $user_id = 999;
+        $params = [
+            'id'         => $user_id,
+            '2fa_secret' => 'test',
+        ];
+        $this->TeamMember->User->save($params);
+
+        $team_id = 999;
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+        ];
+        $this->TeamMember->save($params);
+
+        $res = $this->TeamMember->select2faStepMemberInfo($team_id);
+        $this->assertCount(0, $res);
+    }
+
+    function testSelectAdminMemberInfoTypeTrue()
+    {
+        $user_id = 999;
+        $params = [
+            'id' => $user_id,
+        ];
+        $this->TeamMember->User->save($params);
+
+        $team_id = 888;
+        $params = [
+            'user_id'   => $user_id,
+            'team_id'   => $team_id,
+            'admin_flg' => 1
+        ];
+        $this->TeamMember->save($params);
+        $res = $this->TeamMember->selectAdminMemberInfo($team_id);
+        $this->assertEquals($user_id, $res[0]['User']['id']);
+    }
+
+    function testSelectAdminMemberInfoTypeFalse()
+    {
+        $user_id = 999;
+        $params = [
+            'id' => $user_id,
+        ];
+        $this->TeamMember->User->save($params);
+
+        $team_id = 888;
+        $params = [
+            'user_id'   => $user_id,
+            'team_id'   => $team_id,
+            'admin_flg' => 0
+        ];
+        $this->TeamMember->save($params);
+        $res = $this->TeamMember->selectAdminMemberInfo($team_id);
+        $this->assertCount(0, $res);
+    }
+
+    function testSelectMemberInfo()
+    {
+        $user_id = 999;
+        $params = [
+            'id' => $user_id,
+        ];
+        $this->TeamMember->User->save($params);
+
+        $team_id = 888;
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+        ];
+        $this->TeamMember->save($params);
+        $res = $this->TeamMember->selectMemberInfo($team_id);
+        $this->assertCount(1, $res);
+    }
+
+    function testSelectGroupMemberInfo()
+    {
+        $user_id = 999;
+        $params = [
+            'id' => $user_id,
+        ];
+        $this->TeamMember->User->save($params);
+
+        $team_id = 888;
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+        ];
+        $this->TeamMember->save($params);
+
+        $group_id = 1;
+        $params = [
+            'user_id'  => $user_id,
+            'team_id'  => $team_id,
+            'group_id' => $group_id,
+        ];
+        $this->TeamMember->User->MemberGroup->save($params);
+        $res = $this->TeamMember->selectGroupMemberInfo($team_id, $group_id);
+        $this->assertEquals($group_id, $res[0]['User']['MemberGroup'][0]['group_id']);
+    }
+
+    function testDefineTeamMemberOption()
+    {
+        $team_id = 999;
+        $options = [
+            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
+            'conditions' => [
+                'team_id' => $team_id,
+            ],
+            'order' => ['TeamMember.created' => 'DESC'],
+            'contain'    => [
+                'User' => [
+                    'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+                    'MemberGroup' => [
+                        'fields' => ['group_id'],
+                        'Group'  => [
+                            'fields' => ['name']
+                        ]
+                    ]
+                ],
+            ]
+        ];
+        $res = $this->TeamMember->defineTeamMemberOption($team_id);
+        $this->assertEquals($options, $res);
+    }
+
+    function testConvertMemberData()
+    {
+        // me
+        $user_id = 999;
+        $params = [
+            'id' => $user_id,
+        ];
+        $this->TeamMember->User->save($params);
+
+        // coach
+        $coach_user_id = 777;
+        $params = [
+            'id' => $coach_user_id,
+            'first_name' => 'coach',
+            'last_name' => 'a'
+        ];
+        $this->TeamMember->User->save($params);
+
+        $team_id = 888;
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'coach_user_id' => $coach_user_id,
+        ];
+        $this->TeamMember->save($params);
+
+        $group_id = 1;
+        $params = [
+            'user_id'  => $user_id,
+            'team_id'  => $team_id,
+            'group_id' => $group_id,
+        ];
+        $this->TeamMember->User->MemberGroup->save($params);
+
+        $group_name = 'SDG';
+        $params = [
+            'id'      => $group_id,
+            'team_id' => $team_id,
+            'name'    => $group_name
+        ];
+        $this->TeamMember->User->MemberGroup->Group->save($params);
+
+        $res = $this->TeamMember->selectGroupMemberInfo($team_id, $group_id);
+        $convert_data = $this->TeamMember->convertMemberData($res);
+        $this->assertEquals($group_name, $convert_data[0]['TeamMember']['group_name']);
+        $this->assertFalse($convert_data[0]['User']['two_step_flg']);
+        $this->assertEquals('/img/no-image-user.jpg', $convert_data[0]['User']['img_url']);
+        $this->assertArrayHasKey('coach_name', $convert_data[0]['TeamMember']);
+    }
 }
