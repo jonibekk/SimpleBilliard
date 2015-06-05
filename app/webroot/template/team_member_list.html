@@ -43,7 +43,7 @@
 <div class="col-xs-12">
 
     <table class="table team_member_table">
-        <tr ng-repeat="item in team_list | filter:name_field"
+        <tr ng-repeat="item in team_list | filter:name_field | orderBy:'TeamMember.created':'desc'"
             ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
             ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''">
 

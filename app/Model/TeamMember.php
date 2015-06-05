@@ -308,7 +308,7 @@ class TeamMember extends AppModel
     public function defineTeamMemberOption($team_id)
     {
         $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg'],
+            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
