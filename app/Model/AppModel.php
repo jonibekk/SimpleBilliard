@@ -338,18 +338,23 @@ class AppModel extends Model
     public function findWithoutTeamId($type = 'first', $query = [])
     {
         $enable_containable = false;
+        $enable_with_team_id = false;
         if ($this->Behaviors->loaded('ExtContainable')) {
             $enable_containable = true;
         }
-        if (!$this->Behaviors->loaded('WithTeamId')) {
-            throw new RuntimeException(__d('exception', "Please enable WithTeamIdBehavior!"));
+        if ($this->Behaviors->loaded('WithTeamId')) {
+            $enable_with_team_id = true;
         }
-        $this->Behaviors->disable('WithTeamId');
+        if ($enable_with_team_id) {
+            $this->Behaviors->disable('WithTeamId');
+        }
         if ($enable_containable) {
             $this->Behaviors->load('ExtContainable', array('with_team_id' => false));
         }
         $res = $this->find($type, $query);
-        $this->Behaviors->enable('WithTeamId');
+        if ($enable_with_team_id) {
+            $this->Behaviors->enable('WithTeamId');
+        }
         if ($enable_containable) {
             $this->Behaviors->load('ExtContainable', array('with_team_id' => true));
         }

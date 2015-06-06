@@ -472,6 +472,9 @@ class ExtContainableBehavior extends ContainableBehavior
      */
     private function _addWithTeamIdConditionForModel(Model $Model, $model_name, $children)
     {
+        if (!$Model->Behaviors->loaded('WithTeamId')) {
+            return $children;
+        }
         if (!$this->settings[$Model->alias]['with_team_id']) {
             return $children;
         }
@@ -479,24 +482,9 @@ class ExtContainableBehavior extends ContainableBehavior
         if (!$Model->current_team_id) {
             return $children;
         }
-        //$model_name
-        $child_class_name = null;
-        if (isset($Model->hasMany[$model_name]['className'])) {
-            $child_class_name = $Model->hasMany[$model_name]['className'];
-        }
-        if (isset($Model->belongsTo[$model_name]['className'])) {
-            $child_class_name = $Model->belongsTo[$model_name]['className'];
-        }
-        if (isset($Model->hasAndBelongsToMany[$model_name]['className'])) {
-            $child_class_name = $Model->hasAndBelongsToMany[$model_name]['className'];
-        }
-        if (!$child_class_name) {
-            return $children;
-        }
-        $ChildModel = ClassRegistry::init($child_class_name);
-        if ($ChildModel->hasField('team_id')) {
+        if ($Model->{$model_name}->hasField('team_id')) {
             /** @noinspection PhpUndefinedFieldInspection */
-            $children['conditions'][$model_name . '.team_id'] = $Model->current_team_id;
+            $children['conditions'][$Model->{$model_name}->alias . '.team_id'] = $Model->current_team_id;
         }
         return $children;
     }
