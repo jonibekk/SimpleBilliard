@@ -35,10 +35,14 @@ class LangComponent extends Object
 
     function initialize()
     {
-        App::uses('L10n', 'I18n');
-        $this->L10n = new L10n();
-        App::import('Lib', 'Utils.Languages');
-        $this->Languages = new Languages();
+        if (!$this->L10n) {
+            App::uses('L10n', 'I18n');
+            $this->L10n = new L10n();
+        }
+        if (!$this->Languages) {
+            App::import('Lib', 'Utils.Languages');
+            $this->Languages = new Languages();
+        }
         $this->_setLangList();
 
     }
