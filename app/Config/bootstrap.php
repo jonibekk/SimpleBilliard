@@ -150,6 +150,9 @@ define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 5);
 //通知リストページの1ブロックのアイテム数
 define('NOTIFY_PAGE_ITEMS_NUMBER', 50);
 
+//投稿フィードのアイテム数
+define('POST_FEED_PAGE_ITEMS_NUMBER', 20);
+
 /**
  * 共通関数
  */
