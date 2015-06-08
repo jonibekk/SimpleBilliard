@@ -133,7 +133,7 @@ if (!empty($posts) && (!isset($this->request->params['post_id']) || empty($this-
     <?php $next_page_num = 2;
     $month_index = 0;
     $more_read_text = __d('gl', "もっと読む ▼");
-    if ((count($posts) != 20)) {
+    if ((count($posts) != POST_FEED_PAGE_ITEMS_NUMBER)) {
         $next_page_num = 1;
         $month_index = 1;
         $more_read_text = __d('gl', "さらに投稿を読み込む ▼");
