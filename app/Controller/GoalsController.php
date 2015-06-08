@@ -238,6 +238,9 @@ class GoalsController extends AppController
             $search_option['term']['0'] = $this->request->params['named']['term'];
             $page = $this->request->params['named']['page'];
         }
+        else{
+            $page = null;
+        }
         $goals = $this->Goal->getAllGoals(50, $search_option, null, true , $page);//TODO 暫定的に300、将来的に20に戻す
 
         $this->set(compact('goals'));
