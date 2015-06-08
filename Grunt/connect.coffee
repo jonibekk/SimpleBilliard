@@ -12,5 +12,5 @@ module.exports = (grunt) ->
       port: 5004
       hostname: 'localhost'
       open: true
-      keepalive: true
       base: 'docs'
+      # keepalive: true
