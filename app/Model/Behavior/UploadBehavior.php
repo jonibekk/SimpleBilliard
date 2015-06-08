@@ -778,6 +778,9 @@ class UploadBehavior extends ModelBehavior
 
     function _setupS3()
     {
+        if ($this->s3) {
+            return;
+        }
         // S3を操作するためのオブジェクトを生成（リージョンは東京）
         $this->s3 = Aws::factory(
             array(

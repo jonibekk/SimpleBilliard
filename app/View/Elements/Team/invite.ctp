@@ -26,7 +26,8 @@
         'class'         => 'form-horizontal',
         'novalidate'    => true,
         'id'            => 'InviteTeamForm',
-        'url'           => ['action' => 'invite']
+        'url'           => ['action' => 'invite'],
+        'method'        => 'post'
     ]); ?>
     <div class="panel-body">
         <div class="form-group">

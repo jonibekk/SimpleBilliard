@@ -34,10 +34,10 @@ class TeamsController extends AppController
         return $this->redirect(['action' => 'invite']);
     }
 
-    public function edit_team($id)
+    public function edit_team()
     {
-        $this->request->allowMethod('put');
-        $this->Team->id = $id;
+        $this->request->allowMethod('post');
+        $this->Team->id = $this->current_team_id;
         if ($this->Team->save($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "チームの基本設定を更新しました。"));
         }
@@ -47,11 +47,11 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function edit_term($id)
+    public function edit_term()
     {
-        $this->request->allowMethod('put');
+        $this->request->allowMethod('post');
         $this->Team->begin();
-        if ($this->Team->saveEditTerm($id, $this->request->data)) {
+        if ($this->Team->saveEditTerm($this->current_team_id, $this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "期間設定を更新しました。"));
             $this->Team->commit();
         }
@@ -77,6 +77,7 @@ class TeamsController extends AppController
         $this->set(compact('border_months_options', 'start_term_month_options'));
 
         $team = $this->Team->findById($team_id);
+        unset($team['Team']['id']);
         $term_start_date = $this->Team->getCurrentTermStartDate();
         $term_end_date = $this->Team->getCurrentTermEndDate();
         $term_end_date = $term_end_date - 1;

@@ -507,6 +507,26 @@ class TeamsControllerTest extends ControllerTestCase
         $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
     }
 
+    function testEditTeamSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'Team' => [
+                'name' => 'test'
+            ]
+        ];
+        $this->testAction('/teams/edit_team', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testEditTeamFail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = ['Team' => [
+            'name' => null
+        ]];
+        $this->testAction('/teams/edit_team', ['method' => 'POST', 'data' => $data]);
+    }
+
     function testEditTermSuccess()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -517,7 +537,7 @@ class TeamsControllerTest extends ControllerTestCase
                 'border_months'    => 1,
             ]
         ];
-        $this->testAction('/teams/edit_term/1', ['method' => 'PUT', 'data' => $data]);
+        $this->testAction('/teams/edit_term', ['method' => 'POST', 'data' => $data]);
     }
 
     function testEditTermFail()
@@ -526,7 +546,7 @@ class TeamsControllerTest extends ControllerTestCase
         $data = ['Team' => [
             'start_term_month' => null
         ]];
-        $this->testAction('/teams/edit_term/1', ['method' => 'PUT', 'data' => $data]);
+        $this->testAction('/teams/edit_term', ['method' => 'POST', 'data' => $data]);
     }
 
     function testChangeFreezeStatusSuccess()
