@@ -232,7 +232,14 @@ class GoalsController extends AppController
     public function ajax_get_more_index_items()
     {
         $this->_ajaxPreProcess();
-        $goals = $this->Goal->getAllGoals(50, null, $this->request->params);//TODO 暫定的に300、将来的に20に戻す
+        $search_option = $this->_getSearchVal();
+        if(isset($this->request->params['named']['term']) && isset($this->request->params['named']['page']))
+        {
+            $search_option['term']['0'] = $this->request->params['named']['term'];
+            $page = $this->request->params['named']['page'];
+        }
+        $goals = $this->Goal->getAllGoals(50, $search_option, null, true , $page);//TODO 暫定的に300、将来的に20に戻す
+
         $this->set(compact('goals'));
 
         //エレメントの出力を変数に格納する
