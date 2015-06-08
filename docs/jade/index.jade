@@ -7,7 +7,7 @@ html(lang="ja")
     p 
       | browse-syncでローカルのGoalousを起動させるコマンド(事前にVagrant upが必要です)
     code 
-      | browser-sync start --proxy "192.168.50.4" --files "app/webroot/css/*.css, app/webroot/js/*.js, app/View/**/*ctp"
+      | vagrant up && browser-sync start --proxy "192.168.50.4" --files "app/webroot/css/*.css, app/webroot/js/*.js, app/View/**/*ctp"
     p.ja-text
       |ドキュメントのindexファイルは、このファイルはJadeを用いて作成しております。記法やJadeそのものについての詳しく知りたい方は
       a(href="http://jade-lang.com/" target="_blank") 公式サイト
