@@ -76,13 +76,17 @@ class MixpanelComponent extends Object
 
     var $user;
 
+    var $alreadySetUser = false;
+
     function initialize(&$controller)
     {
         $this->Controller = $controller;
         $user = $this->getUserInfo();
         if (MIXPANEL_TOKEN) {
-            $this->MpOrigin = Mixpanel::getInstance(MIXPANEL_TOKEN);
-            if ($this->Controller->Auth->user()) {
+            if (!$this->MpOrigin) {
+                $this->MpOrigin = Mixpanel::getInstance(MIXPANEL_TOKEN);
+            }
+            if ($this->Controller->Auth->user() && !$this->alreadySetUser) {
                 //mixpanelにユーザidをセット
                 $this->identify($this->Controller->Auth->user('id'));
                 //チームIDをセット
@@ -93,6 +97,7 @@ class MixpanelComponent extends Object
                 $this->register('$language', $user['language']);
                 //タイムゾーンをセット
                 $this->register('$timezone', $user['timezone']);
+                $this->alreadySetUser = true;
             }
         }
     }

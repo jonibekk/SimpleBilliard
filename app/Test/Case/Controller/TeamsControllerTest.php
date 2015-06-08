@@ -453,6 +453,15 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/to_inactive_goal_category/1', ['method' => 'POST']);
     }
 
+    function testAjaxGetTermStartEndByEdit()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->testAction('/teams/ajax_get_term_start_end_by_edit/1/1/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testDownloadAddMembersCsvFormat()
     {
         $this->_getTeamsCommonMock(null, true);
@@ -496,6 +505,48 @@ class TeamsControllerTest extends ControllerTestCase
         ];
         $this->testAction('/teams/save_evaluation_setting', ['method' => 'POST', 'data' => $data]);
         $this->assertTrue(empty($Teams->Team->EvaluationSetting->validationErrors));
+    }
+
+    function testEditTeamSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'Team' => [
+                'name' => 'test'
+            ]
+        ];
+        $this->testAction('/teams/edit_team', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testEditTeamFail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = ['Team' => [
+            'name' => null
+        ]];
+        $this->testAction('/teams/edit_team', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testEditTermSuccess()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = [
+            'Team' => [
+                'change_from'      => '1',
+                'start_term_month' => 1,
+                'border_months'    => 1,
+            ]
+        ];
+        $this->testAction('/teams/edit_term', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testEditTermFail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $data = ['Team' => [
+            'start_term_month' => null
+        ]];
+        $this->testAction('/teams/edit_term', ['method' => 'POST', 'data' => $data]);
     }
 
     function testChangeFreezeStatusSuccess()

@@ -18,8 +18,10 @@ class TwoFaComponent extends Object
 
     function initialize()
     {
-        App::import('Vendor', 'paragmarx/google2fa/src/Google2FA');
-        $this->Google2Fa = new \PragmaRX\Google2FA\Google2FA();
+        if (!$this->Google2Fa) {
+            App::import('Vendor', 'paragmarx/google2fa/src/Google2FA');
+            $this->Google2Fa = new \PragmaRX\Google2FA\Google2FA();
+        }
     }
 
     function startup(&$controller)

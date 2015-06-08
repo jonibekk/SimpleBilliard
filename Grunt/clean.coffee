@@ -8,7 +8,7 @@ module.exports = (grunt) ->
 
   # Todo : clean the directory for docs
   #
-  # NOTICE: We need this task NO LONGER.
+  # NOTICE: We NO LONGER need this task.
   #
   # styledocco:
   #   "<%= config.docs %>/styledocco"

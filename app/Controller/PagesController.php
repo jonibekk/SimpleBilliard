@@ -72,7 +72,8 @@ class PagesController extends AppController
         $this->set(compact('feed_filter', 'select2_default', 'current_global_menu'));
         $this->set('avail_sub_menu', true);
         try {
-            $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
+            $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
+                                                    $this->request->params)]);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());

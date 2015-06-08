@@ -49,7 +49,7 @@ class ExtContainableBehavior extends ContainableBehavior
     public function setup(Model $Model, $settings = array())
     {
         if (!isset($this->settings[$Model->alias])) {
-            $this->settings[$Model->alias] = array('recursive' => true, 'notices' => true, 'autoFields' => true);
+            $this->settings[$Model->alias] = array('recursive' => true, 'notices' => true, 'autoFields' => true, 'with_team_id' => true);
         }
         $this->settings[$Model->alias] = array_merge($this->settings[$Model->alias], $settings);
     }
@@ -287,6 +287,7 @@ class ExtContainableBehavior extends ContainableBehavior
             }
             //softDelete用conditionを追加
             $children = $this->_addSoftDeleteConditionForModel($name, $children);
+            $children = $this->_addWithTeamIdConditionForModel($Model, $name, $children);
 
             $children = (array)$children;
             foreach ($children as $key => $val) {
@@ -461,4 +462,31 @@ class ExtContainableBehavior extends ContainableBehavior
         $children['conditions'][$model_name . '.del_flg'] = false;
         return $children;
     }
+
+    /**
+     * @param Model $Model
+     * @param       $model_name
+     * @param       $children
+     *
+     * @return mixed
+     */
+    private function _addWithTeamIdConditionForModel(Model $Model, $model_name, $children)
+    {
+        if (!$Model->Behaviors->loaded('WithTeamId')) {
+            return $children;
+        }
+        if (!$this->settings[$Model->alias]['with_team_id']) {
+            return $children;
+        }
+        /** @noinspection PhpUndefinedFieldInspection */
+        if (!$Model->current_team_id) {
+            return $children;
+        }
+        if ($Model->{$model_name}->hasField('team_id')) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $children['conditions'][$Model->{$model_name}->alias . '.team_id'] = $Model->current_team_id;
+        }
+        return $children;
+    }
+
 }

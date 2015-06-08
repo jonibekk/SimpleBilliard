@@ -3652,7 +3652,7 @@ Temporary Properties - YOU MUST FIX
 /* 通知部分 */
 /*
 > notify-dropdown-area
->> notify-card
+>> notify-card-link
 >>> notify-text
 */
 .notify-head {
@@ -3662,22 +3662,6 @@ Temporary Properties - YOU MUST FIX
     background: #e5e5e5;
 }
 
-
-@media screen and (min-width: 768px) {
-
-    .notify-line-number {
-        margin: 0;
-        line-break: normal;
-        height: 48px;
-        position: relative;
-    }
-
-}
-
-.notify-card-list {
-    clear: both;
-    overflow:hidden;
-}
 
 .notify-card-empty {
     text-align: center;
@@ -3698,17 +3682,6 @@ Temporary Properties - YOU MUST FIX
     */
     white-space: normal;
     overflow: hidden;
-}
-
-.notify-contents {
-    margin-left: 8px;
-}
-
-.notify-line-number {
-    margin: 0;
-    line-break: normal;
-    height: 32px;
-    position: relative;
 }
 
 .notify-card-list .comment-user {
@@ -3904,7 +3877,7 @@ Temporary Properties - YOU MUST FIX
     height: 100%;
 }
 
-.notify-list-page {
+.notify-page-cards {
     overflow: hidden;
     padding-left: 0;
 }

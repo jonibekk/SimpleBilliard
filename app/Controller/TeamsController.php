@@ -34,6 +34,34 @@ class TeamsController extends AppController
         return $this->redirect(['action' => 'invite']);
     }
 
+    public function edit_team()
+    {
+        $this->request->allowMethod('post');
+        $this->Team->id = $this->current_team_id;
+        if ($this->Team->save($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "チームの基本設定を更新しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "チームの基本設定の更新に失敗しました。"));
+        }
+        return $this->redirect($this->referer());
+    }
+
+    public function edit_term()
+    {
+        $this->request->allowMethod('post');
+        $this->Team->begin();
+        if ($this->Team->saveEditTerm($this->current_team_id, $this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "期間設定を更新しました。"));
+            $this->Team->commit();
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "期間設定の更新に失敗しました。"));
+            $this->Team->rollback();
+        }
+        return $this->redirect($this->referer());
+    }
+
     public function settings()
     {
         $this->layout = LAYOUT_SETTING;
@@ -44,7 +72,12 @@ class TeamsController extends AppController
             $this->Pnotify->outError($e);
             $this->redirect($this->referer());
         }
+        $border_months_options = $this->Team->getBorderMonthsOptions();
+        $start_term_month_options = $this->Team->getMonths();
+        $this->set(compact('border_months_options', 'start_term_month_options'));
+
         $team = $this->Team->findById($team_id);
+        unset($team['Team']['id']);
         $term_start_date = $this->Team->getCurrentTermStartDate();
         $term_end_date = $this->Team->getCurrentTermEndDate();
         $term_end_date = $term_end_date - 1;
@@ -53,7 +86,7 @@ class TeamsController extends AppController
         $eval_setting = $this->Team->EvaluationSetting->getEvaluationSetting();
         $eval_scores = $this->Team->Evaluation->EvaluateScore->getScore($team_id);
         $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
-        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories);
+        $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
         $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
         $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
@@ -79,6 +112,9 @@ class TeamsController extends AppController
         $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
         $previous_term_start_date = viaIsSet($previous_term['start_date']);
         $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
+        $next_term = $this->Team->EvaluateTerm->getNextTerm();
+        $next_term_start_date = viaIsSet($next_term['start_date']);
+        $next_term_end_date = viaIsSet($next_term['end_date']) - 1;
 
         $this->set(compact(
                        'current_statuses',
@@ -95,7 +131,9 @@ class TeamsController extends AppController
                        'previous_eval_is_frozen',
                        'previous_eval_is_started',
                        'previous_term_start_date',
-                       'previous_term_end_date'
+                       'previous_term_end_date',
+                       'next_term_start_date',
+                       'next_term_end_date'
                    ));
 
         return $this->render();
@@ -227,6 +265,23 @@ class TeamsController extends AppController
     {
         $this->_ajaxPreProcess();
         $res = $this->Team->getTermStrStartEndFromParam($start_term_month, $border_months, REQUEST_TIMESTAMP);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_term_start_end_by_edit($start_term_month, $border_months, $option)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->EvaluateTerm->getChangeCurrentNextTerm($option, $start_term_month, $border_months);
+        if ($res['current']['start_date']) {
+            $res['current']['start_date'] = date('Y/m/d',
+                                                 $res['current']['start_date'] + $this->Team->me['timezone'] * 3600);
+            $res['current']['end_date'] = date('Y/m/d',
+                                               $res['current']['end_date'] + $this->Team->me['timezone'] * 3600);
+        }
+        if ($res['next']['start_date']) {
+            $res['next']['start_date'] = date('Y/m/d', $res['next']['start_date'] + $this->Team->me['timezone'] * 3600);
+            $res['next']['end_date'] = date('Y/m/d', $res['next']['end_date'] + $this->Team->me['timezone'] * 3600);
+        }
         return $this->_ajaxGetResponse($res);
     }
 

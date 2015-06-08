@@ -93,8 +93,9 @@ class PostsControllerTest extends ControllerTestCase
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
             'Post' => [
-                'body'  => 'test',
-                'share' => 'circle_1'
+                'body'    => 'test',
+                'share'   => 'circle_1',
+                'team_id' => '1'
             ],
         ];
         $this->testAction('/posts/add',
@@ -114,7 +115,8 @@ class PostsControllerTest extends ControllerTestCase
             'Post' => [
                 'body'      => 'test',
                 'share'     => 'public,circle_1,user_12',
-                'socket_id' => 'hogehage'
+                'socket_id' => 'hogehage',
+                'team_id'   => '1'
             ],
         ];
         $this->testAction('/posts/add',
@@ -209,6 +211,7 @@ class PostsControllerTest extends ControllerTestCase
         $data = [
             'Comment' => [
                 'body'    => 'test',
+                'team_id' => 1,
                 'post_id' => 1,
             ],
         ];
@@ -239,6 +242,7 @@ class PostsControllerTest extends ControllerTestCase
             'Comment' => [
                 'body'    => 'test',
                 'post_id' => $Posts->Post->getLastInsertID(),
+                'team_id' => 1,
             ],
         ];
 
@@ -261,6 +265,7 @@ class PostsControllerTest extends ControllerTestCase
             'Comment' => [
                 'body'    => 'test',
                 'post_id' => 10000000000,
+                'team_id' => 1,
             ],
         ];
 

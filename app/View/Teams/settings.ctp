@@ -12,7 +12,9 @@
 ?>
 <!-- START app/View/Teams/settings.ctp -->
 <?php $this->start('sidebar') ?>
-<li class="active"><a href="#account"><?= __d('gl', "メンバー招待") ?></a></li>
+<li class="active"><a href="#basic_setting"><?= __d('gl', "基本設定") ?></a></li>
+<li class=""><a href="#term_setting"><?= __d('gl', "期間設定") ?></a></li>
+<li class=""><a href="#account"><?= __d('gl', "メンバー招待") ?></a></li>
 <li class=""><a href="#profile"><?= __d('gl', "一括登録") ?></a></li>
 <li class=""><a href="#goal_category"><?= __d('gl', "ゴールカテゴリ設定") ?></a></li>
 <li class=""><a href="#evaluation"><?= __d('gl', "評価設定") ?></a></li>
@@ -22,6 +24,12 @@
 <li class=""><a href="#final_evaluation"><?= __d('gl', "最終評価") ?></a></li>
 <li class=""><a href="#progress"><?= __d('gl', "評価状況") ?></a></li>
 <?php $this->end() ?>
+<div id="basic_setting">
+    <?= $this->element('Team/edit_basic_setting') ?>
+</div>
+<div id="term_setting">
+    <?= $this->element('Team/edit_term_setting') ?>
+</div>
 <div id="account">
     <?= $this->element('Team/invite') ?>
 </div>
