@@ -99,8 +99,8 @@
             </div>
         <?php else: ?>
             <?= $this->element('Goal/index_items') ?>
-            <? $more_read_url = array_merge($search_url,['action'=>'ajax_get_more_index_items'])?>
-            <?php if (count($goals) == 50)://TODO 暫定的に300、いずれ20に戻す ?>
+            <? $more_read_url = array_merge($search_url, ['action' => 'ajax_get_more_index_items']) ?>
+            <?php if (count($goals) == GOAL_INDEX_ITEMS_NUMBER): ?>
                 <div class="panel-body panel-read-more-body" id="GoalMoreView">
                     <a id="FeedMoreReadLink" href="#" class="btn btn-link click-feed-read-more"
                        parent-id="GoalMoreView"

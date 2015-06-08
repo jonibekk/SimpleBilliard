@@ -915,17 +915,14 @@ class Goal extends AppModel
      *
      * @return array
      */
-    function getAllGoals($limit = 20, $search_option = null, $params = null, $is_complete = false,$page=null)
+    function getAllGoals($limit = 20, $search_option = null, $params = null, $is_complete = false)
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
-
-        if(is_null($page)) {
-            $page = 1;
-            if (isset($params['named']['page']) || !empty($params['named']['page'])) {
-                $page = $params['named']['page'];
-                unset($params['named']['page']);
-            }
+        $page = 1;
+        if (isset($params['named']['page']) || !empty($params['named']['page'])) {
+            $page = $params['named']['page'];
+            unset($params['named']['page']);
         }
         $options = [
             'conditions' => [
@@ -971,7 +968,7 @@ class Goal extends AppModel
                     ],
                 ],
                 'Follower'     => [
-                    'fields'     => [
+                    'fields' => [
                         'Follower.id',
                     ],
                 ],
