@@ -23,7 +23,7 @@ class GoalsController extends AppController
         $search_url = $this->_getSearchUrl($search_option);
         $search_options = $this->Goal->getSearchOptions();
         $this->_setMyCircle();
-        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, null, true);//TODO 暫定的に300、将来的に20に戻す
+        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, null, true);
         $goal_count = $this->Goal->countGoalRes($search_option);
         $this->_setViewValOnRightColumn();
         $current_global_menu = "goal";
@@ -233,8 +233,7 @@ class GoalsController extends AppController
     {
         $this->_ajaxPreProcess();
         $search_option = $this->_getSearchVal();
-        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, $this->request->params,
-                                          true);//TODO 暫定的に300、将来的に20に戻す
+        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, $this->request->params, true);
 
         $this->set(compact('goals'));
 
