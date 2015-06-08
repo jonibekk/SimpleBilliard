@@ -42,6 +42,7 @@ npm-debug.log
 /docs/index.html
 /docs/css
 /docs/js
+/docs/local/docs.min.css
 /app/webroot/less/README.md
 /index.html
 # for dest files of a less and coffee maps

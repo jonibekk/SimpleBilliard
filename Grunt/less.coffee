@@ -10,3 +10,9 @@ module.exports = (grunt) ->
       '<%= config.dest %>/csssrc/goalous.css': ['<%= config.less %>/goalous.less']
     options:
       sourceMap: true
+
+  docs:
+    files:
+      '<%= config.docs %>/local/docs.min.css':['<%= config.docs%>/local/less/docs.less']
+    options:
+      compress: true

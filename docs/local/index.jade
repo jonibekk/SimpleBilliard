@@ -1,0 +1,33 @@
+doctype html
+html(lang="ja")
+  head
+    title Goalous Developers Documents
+    link(rel="stylesheet" href="local/docs.min.css")
+  body#container.container.column.eight
+    header.header
+      h1
+        img.logo(src="local/svg/goalous.svg" alt="Logo" width="44" height="44")
+        |Goalous Developers Documents.
+    section.section
+      h2 はじめに
+      p.ja-text
+        |ドキュメントのindexファイルは、このファイルはJadeを用いて作成しております。記法やJadeそのものについての詳しく知りたい方は
+        a(href="http://jade-lang.com/" target="_blank") 公式サイト
+        |をご覧ください。
+        |コンパイルなどは、Gruntで自動化させておりますので、特に考えることなく使用できると思います。
+      p.en-text
+        |This index file are made by Jade. If you want to get know Jade, you can see 
+        a(href="http://jade-lang.com/" target="_blank") Official Jade Page
+        | :-)
+      ul
+        li: a(href="css/") LESS and CSS
+        li: a(href="js") CoffeeScript and JavaScript
+        li: a(href="grunt") Gruntfile
+
+    section.section
+      h2 browse-syncの使い方
+      p
+        |browse-syncでローカルのGoalousを起動させるコマンド
+        |※Vagrantが立ち上がっていないといけないためセットにしています。
+      pre.code-block
+        |vagrant up && browser-sync start --proxy "192.168.50.4" --files "app/webroot/css/*.css, app/webroot/js/*.js, app/View/**/*ctp"
