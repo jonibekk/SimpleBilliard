@@ -2447,7 +2447,7 @@ function copyToClipboard(url) {
 
 $(document).ready(function () {
     $(window).scroll(function () {
-        if ($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
             if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
