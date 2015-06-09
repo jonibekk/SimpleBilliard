@@ -534,7 +534,6 @@ class PostsController extends AppController
         $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
-        $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
         $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
@@ -557,7 +556,7 @@ class PostsController extends AppController
 
         $this->set('avail_sub_menu', true);
         $this->set('long_text', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params',
+        $this->set(compact('feed_filter', 'circle_members', 'circle_id', 'user_status', 'params',
                            'circle_status'));
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,

@@ -64,12 +64,11 @@ class PagesController extends AppController
         $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
-        $select2_default = $this->User->getAllUsersCirclesSelect2();
         $this->_setViewValOnRightColumn();
         $current_global_menu = "home";
         $feed_filter = 'all';
         $this->set('long_text', false);
-        $this->set(compact('feed_filter', 'select2_default', 'current_global_menu'));
+        $this->set(compact('feed_filter', 'current_global_menu'));
         $this->set('avail_sub_menu', true);
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
