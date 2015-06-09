@@ -323,6 +323,11 @@ $(document).ready(function () {
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
 
+    if(cake.data.j == "0"){
+        $('#FeedMoreReadLink').trigger('click');
+    }
+
+
 });
 function imageLazyOn($elm_obj) {
     if ($elm_obj === undefined) {
