@@ -220,7 +220,6 @@ class PostsController extends AppController
     public function ajax_get_feed()
     {
         $param_named = $this->request->params['named'];
-        $this->log($this->request->params);
         $this->_ajaxPreProcess();
         if (isset($param_named['page']) && !empty($param_named['page'])) {
             $page_num = $param_named['page'];
