@@ -970,7 +970,7 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_select2_circle_user()
+    public function ajax_get_select2_circle_user_all()
     {
         $result = $this->User->getAllUsersCirclesSelect2();
         $this->_ajaxPreProcess();
