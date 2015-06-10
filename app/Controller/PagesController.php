@@ -67,9 +67,9 @@ class PagesController extends AppController
         $this->_setViewValOnRightColumn();
         $current_global_menu = "home";
         $feed_filter = 'all';
-        $this->set('long_text', false);
         $this->set(compact('feed_filter', 'current_global_menu'));
         $this->set('avail_sub_menu', true);
+        $this->set('long_text', false);
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                                                     $this->request->params)]);

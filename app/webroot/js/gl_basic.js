@@ -1751,6 +1751,20 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
+        $(obj).find('.showmore-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '900px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+        $(obj).find('.showmore-comment-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '920px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
     }
     else {
         $('.showmore').showMore({
@@ -1775,7 +1789,6 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
-
         $('.showmore-comment-circle').showMore({
             speedDown: 300,
             speedUp: 300,
