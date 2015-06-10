@@ -599,9 +599,9 @@ class AppController extends Controller
 
         $my_previous_goals = $this->Goal->getMyPreviousGoals();
         $my_previous_goals_count = count($my_previous_goals);
-        $my_goals_count = count($this->Goal->getMyGoals());
-        $collabo_goals_count = count($this->Goal->getMyCollaboGoals());
-        $follow_goals_count = count($this->Goal->getMyFollowedGoals());
+        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count');
+        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count');
+        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count');
         $this->set(compact('my_goals', 'collabo_goals', 'follow_goals',
                            'my_goals_count', 'collabo_goals_count', 'follow_goals_count', 'my_previous_goals',
                            'my_previous_goals_count'));
