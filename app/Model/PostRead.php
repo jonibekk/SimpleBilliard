@@ -1,6 +1,5 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('ExtContainable', 'Model/Behavior');
 
 /**
  * PostRead Model
