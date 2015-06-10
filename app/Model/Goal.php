@@ -482,12 +482,13 @@ class Goal extends AppModel
     /**
      * 自分が作成した前期の未評価ゴール取得
      *
-     * @param null $limit
-     * @param int  $page
+     * @param null   $limit
+     * @param int    $page
+     * @param string $type
      *
      * @return array
      */
-    function getMyPreviousGoals($limit = null, $page = 1)
+    function getMyPreviousGoals($limit = null, $page = 1, $type = "all")
     {
         $term = $this->Team->getBeforeTermStartEnd(1);
         $start_date = $term['start'];
@@ -586,6 +587,10 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page
         ];
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find('count', $options);
+        }
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {

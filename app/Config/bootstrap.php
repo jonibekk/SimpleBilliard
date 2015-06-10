@@ -145,6 +145,7 @@ define('REQUEST_TIMESTAMP', time());
 define('MY_GOALS_DISPLAY_NUMBER', 5);
 define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 5);
 define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 5);
+define('MY_PREVIOUS_GOALS_DISPLAY_NUMBER', 5);
 //通知リストボックス(ベルのアイコンのところ)内のアイテム数
 define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 5);
 //通知リストページの1ブロックのアイテム数

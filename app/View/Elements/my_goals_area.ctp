@@ -81,7 +81,7 @@
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
     </a>
 <?php endif; ?>
-<div id="FollowGoals">
+<div id="PrevGoals">
     <div class="col col-xxs-12 goals-column-head mt_32px">
         <span class="font_18px font_gargoyleGray goals-column-title">
             <?= __d('gl', '前期の未評価のあなたのゴール') ?>
@@ -91,5 +91,11 @@
     </div>
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $my_previous_goals, 'type' => 'my_prev']) ?>
 </div>
-
+<?php if (count($my_previous_goals) < $my_previous_goals_count): ?>
+    <a href="#" class="click-collabo-goals-read-more btn btn-link" next-page-num="2"
+       get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
+       goal-type="my_prev">
+        <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
+    </a>
+<?php endif; ?>
 <!-- END app/View/Elements/my_goals_area.ctp -->
