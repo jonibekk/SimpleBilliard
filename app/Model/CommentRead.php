@@ -56,7 +56,8 @@ class CommentRead extends AppModel
         if (empty($comment_data)) {
             return;
         }
-        $this->saveAll($comment_data);
+        $res = $this->saveAll($comment_data);
+        return $res;
     }
 
     private function pickUnread($comment_list)

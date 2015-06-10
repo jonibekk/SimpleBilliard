@@ -152,7 +152,7 @@ class Post extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'body'            => [
-            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
 
     ];
@@ -497,8 +497,9 @@ class Post extends AppModel
             $post_list = $this->find('list', $post_options);
         }
 
-        //投稿を既読に
-        $this->PostRead->red($post_list);
+        //投稿の既読処理を別プロセスで行う
+        $this->execRedPostComment($post_list, viaIsSet($this->orgParams['post_id']));
+
         $options = [
             'conditions' => [
                 'Post.id' => $post_list,
@@ -604,12 +605,6 @@ class Post extends AppModel
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
-        }
-        //コメントを既読に
-        if (!empty($res)) {
-            /** @noinspection PhpDeprecationInspection */
-            $comment_list = Set::classicExtract(Set::flatten(Set::classicExtract($res, '{n}.Comment.{n}.id')), '{s}');
-            $this->Comment->CommentRead->red($comment_list);
         }
 
         //１件のサークル名をランダムで取得
@@ -956,6 +951,66 @@ class Post extends AppModel
         }
         $res = $this->find('count', $options);
         return $res;
+    }
+
+    /**
+     * @param      $post_ids
+     * @param bool $only_one
+     *
+     * @return array|null
+     */
+    public function getForRed($post_ids, $only_one = false)
+    {
+        $options = [
+            'conditions' => [
+                'Post.id'      => $post_ids,
+                'Post.team_id' => $this->current_team_id
+            ],
+            'fields'     => [
+                'Post.id'
+            ],
+            'order'      => [
+                'Post.created' => 'desc'
+            ],
+            'contain'    => [
+                'Comment' => [
+                    'conditions' => ['Comment.team_id' => $this->current_team_id],
+                    'order'      => ['Comment.created' => 'desc'],
+                    'limit'      => 3,
+                    'fields'     => ['Comment.id']
+                ],
+            ],
+        ];
+        if ($only_one) {
+            //単独の場合はコメントの件数上限外す
+            unset($options['contain']['Comment']['limit']);
+        }
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
+     * execコマンドにて既読処理を行う
+     *
+     * @param          $post_id
+     * @param bool|int $only_one
+     */
+    public function execRedPostComment($post_id, $only_one = 0)
+    {
+        $method_name = "red_post_comment";
+        $set_web_env = "";
+        $nohup = "nohup ";
+        $php = "/usr/bin/php ";
+        $cake_cmd = $php . APP . "Console" . DS . "cake.php";
+        $cake_app = " -app " . APP;
+        $cmd = " post {$method_name}";
+        $cmd .= " -u " . $this->my_uid;
+        $cmd .= " -t " . $this->current_team_id;
+        $cmd .= " -p " . base64_encode(serialize($post_id));
+        $cmd .= " -o " . $only_one;
+        $cmd_end = " > /dev/null &";
+        $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
+        exec($all_cmd);
     }
 
 }

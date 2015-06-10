@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('ExtContainable', 'Model/Behavior');
 
 /**
  * PostRead Model
@@ -56,7 +57,8 @@ class PostRead extends AppModel
         if (empty($post_data)) {
             return;
         }
-        $this->saveAll($post_data);
+        $res = $this->saveAll($post_data);
+        return $res;
     }
 
     private function pickUnreadPosts($post_list)
@@ -71,7 +73,6 @@ class PostRead extends AppModel
             'fields'     => ['post_id']
         ];
         $read = $this->find('all', $options);
-
         /** @noinspection PhpDeprecationInspection */
         $read_list = Set::combine($read, '{n}.PostRead.post_id', '{n}.PostRead.post_id');
         $unread_posts = [];
