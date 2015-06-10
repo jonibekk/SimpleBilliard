@@ -392,12 +392,13 @@ class Goal extends AppModel
     /**
      * 自分が作成したゴール取得
      *
-     * @param null $limit
-     * @param int  $page
+     * @param null   $limit
+     * @param int    $page
+     * @param string $type
      *
      * @return array
      */
-    function getMyGoals($limit = null, $page = 1)
+    function getMyGoals($limit = null, $page = 1, $type = "all")
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
@@ -433,6 +434,10 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page
         ];
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find($type, $options);
+        }
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
@@ -477,12 +482,13 @@ class Goal extends AppModel
     /**
      * 自分が作成した前期の未評価ゴール取得
      *
-     * @param null $limit
-     * @param int  $page
+     * @param null   $limit
+     * @param int    $page
+     * @param string $type
      *
      * @return array
      */
-    function getMyPreviousGoals($limit = null, $page = 1)
+    function getMyPreviousGoals($limit = null, $page = 1, $type = "all")
     {
         $term = $this->Team->getBeforeTermStartEnd(1);
         $start_date = $term['start'];
@@ -581,6 +587,10 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page
         ];
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find('count', $options);
+        }
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
@@ -681,15 +691,19 @@ class Goal extends AppModel
     /**
      * 自分がこらぼったゴール取得
      *
-     * @param null $limit
-     * @param int  $page
+     * @param null   $limit
+     * @param int    $page
+     * @param string $type
      *
      * @return array
      */
-    function getMyCollaboGoals($limit = null, $page = 1)
+    function getMyCollaboGoals($limit = null, $page = 1, $type = "all")
     {
-        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, false, $limit, $page);
-        $res = $this->getByGoalId($goal_ids);
+        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid);
+        if ($type == "count") {
+            return $this->getByGoalId($goal_ids, $limit, $page, $type);
+        }
+        $res = $this->getByGoalId($goal_ids, $limit, $page);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
         $res = $this->sortPriority($res);
@@ -697,7 +711,7 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getMyFollowedGoals($limit = null, $page = 1)
+    function getMyFollowedGoals($limit = null, $page = 1, $type = 'all')
     {
         $follow_goal_ids = $this->Follower->getFollowList($this->my_uid);
         $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->my_uid);
@@ -706,6 +720,9 @@ class Goal extends AppModel
         //exclude collabo goal
         foreach ($collabo_goal_ids as $k => $v) {
             unset($goal_ids[$k]);
+        }
+        if ($type == "count") {
+            return $this->getByGoalId($goal_ids, $limit, $page, $type);
         }
         $res = $this->getByGoalId($goal_ids, $limit, $page);
         // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
@@ -760,7 +777,7 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getByGoalId($goal_ids, $limit = null, $page = 1)
+    function getByGoalId($goal_ids, $limit = null, $page = 1, $type = "all")
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
@@ -795,6 +812,12 @@ class Goal extends AppModel
                 ],
             ]
         ];
+
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find($type, $options);
+        }
+
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {

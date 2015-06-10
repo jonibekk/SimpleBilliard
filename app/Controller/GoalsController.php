@@ -981,10 +981,12 @@ class GoalsController extends AppController
         elseif ($type === 'follow') {
             $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
         }
+        elseif ($type === 'my_prev') {
+            $goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER, $page_num);
+        }
         else {
             $goals = [];
         }
-
         $this->set(compact('goals', 'type'));
 
         //エレメントの出力を変数に格納する

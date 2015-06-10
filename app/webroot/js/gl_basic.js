@@ -323,7 +323,7 @@ $(document).ready(function () {
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
 
-    if(cake.data.j == "0"){
+    if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
     }
 
@@ -2015,6 +2015,10 @@ function evGoalsMoreView() {
     } else if (type === "follow") {
         listBox = $("#FollowGoals");
         limitNumber = cake.data.g;
+    }
+    else if (type === "my_prev") {
+        listBox = $("#PrevGoals");
+        limitNumber = cake.data.k;
     }
     $.ajax({
         type: 'GET',

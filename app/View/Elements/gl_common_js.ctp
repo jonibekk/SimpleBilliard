@@ -126,7 +126,8 @@ echo $this->Html->script('gl_basic');
             g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>,
             h: "<?=viaIsSet($circle_id)?>",
             i: "<?=$this->Session->read('current_team_id')?>",
-            j: "<?= isset($posts)?count($posts):null?>"
+            j: "<?= isset($posts)?count($posts):null?>",
+            k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",

@@ -142,9 +142,10 @@ define('S3_TRIM_PATH', '/upload/');
 //リクエストされた時点のタイムスタンプ
 define('REQUEST_TIMESTAMP', time());
 //右カラム各要素の表示数
-define('MY_GOALS_DISPLAY_NUMBER', 10);
-define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 10);
-define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 20);
+define('MY_GOALS_DISPLAY_NUMBER', 5);
+define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 5);
+define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 5);
+define('MY_PREVIOUS_GOALS_DISPLAY_NUMBER', 5);
 //通知リストボックス(ベルのアイコンのところ)内のアイテム数
 define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 5);
 //通知リストページの1ブロックのアイテム数
@@ -152,8 +153,7 @@ define('NOTIFY_PAGE_ITEMS_NUMBER', 50);
 //投稿フィードのアイテム数
 define('POST_FEED_PAGE_ITEMS_NUMBER', 10);
 //ゴール一覧のアイテム数
-define('GOAL_INDEX_ITEMS_NUMBER', 50);
-
+define('GOAL_INDEX_ITEMS_NUMBER', 20);
 /**
  * 共通関数
  */
