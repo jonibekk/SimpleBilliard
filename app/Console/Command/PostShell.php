@@ -49,8 +49,7 @@ class PostShell extends AppShell
         $res = $this->Post->getForRed($post_ids, $this->params['only_one']);
         //コメントを既読に
         if (!empty($res)) {
-            /** @noinspection PhpDeprecationInspection */
-            $comment_list = Set::classicExtract(Set::flatten(Set::classicExtract($res, '{n}.Comment.{n}.id')), '{s}');
+            $comment_list = Hash::extract($res, '{n}.Comment.{n}.id');
             $this->Post->Comment->CommentRead->red($comment_list);
         }
 

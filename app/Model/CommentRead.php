@@ -105,8 +105,7 @@ class CommentRead extends AppModel
             'fields'     => ['id']
         ];
         $not_mine_list = $this->Comment->find('all', $options);
-        /** @noinspection PhpDeprecationInspection */
-        $not_mines = Set::classicExtract($not_mine_list, '{n}.Comment.id');
+        $not_mines = Hash::extract($not_mine_list, '{n}.Comment.id');
         return $not_mines;
     }
 
