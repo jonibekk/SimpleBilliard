@@ -101,7 +101,7 @@ echo $this->Html->script('gl_basic');
             p: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_admin_user_flag'])?>/",
             q: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_evaluation_flag'])?>/",
             r: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_term_start_end_by_edit'])?>",
-            s: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_select2_circle_user_all'])?>"
+            s: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

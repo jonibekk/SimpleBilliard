@@ -1294,14 +1294,27 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     });
-    var select2_data = [];
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
         placeholder: cake.word.a,
-        data: function () {
-            return {results: select2_data};
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.s,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
         },
+        data: [],
         initSelection: cake.data.b,
         formatSelection: format,
         formatResult: format,
@@ -1310,13 +1323,6 @@ $(document).ready(function () {
             return m;
         },
         containerCssClass: "select2PostCircleMember"
-    });
-    $('#PostBody').on("click", function (e) {
-        if (select2_data.length == 0) {
-            $.get(cake.url.s, function (data) {
-                select2_data = data;
-            });
-        }
     });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
