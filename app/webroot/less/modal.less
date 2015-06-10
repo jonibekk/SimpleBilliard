@@ -1,4 +1,50 @@
+/*
+
+### モーダルで表示されるもの一覧
++ コラボ modal_collabo.ctp
++ チュートリアル modal_tutorial.ctp
++ サークル作成 modal_add_circle.ctp
++ サークル編集 modal_edit_circle.ctp
++ ゴール作成時のヘルプ modal_help.ctp
++ アクション一覧 modal_action_list.ctp
++ プライバシー・ポリシー(サインアップ時) modal_privacy_policy.ctp
++ 利用規約(サインアップ時) modal_tos.ctp
+
+### 共通化しているファイル
++ modals.ctp
+ */
+
+/*
+### モーダル共通の設定
+*/
+
 .modal-dialog {
-  width: 320px;
-  margin: 10% auto 0;
+  width: 80%;
+  max-width: 484px;
+  margin: 8% auto 0;
+}
+
+.modal-header {
+  padding: 15px;
+}
+
+.modal-body {
+  padding: 15px;
+}
+
+.modal-footer {
+  padding: 15px;
+  border-radius: 0 0 6px 6px;
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+/*
+ ### 各モーダル毎の設定
+*/
+
+.modal-action-title {
+  line-height: 32px;
 }
