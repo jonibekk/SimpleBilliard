@@ -310,4 +310,21 @@ class Collaborator extends AppModel
         $res = $this->find('first', $options);
         return $res;
     }
+
+    function getOwnersStatus($goal_ids)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_ids,
+                'type'    => self::TYPE_OWNER
+            ],
+            'fields'     => [
+                'goal_id',
+                'user_id',
+                'valued_flg',
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }
