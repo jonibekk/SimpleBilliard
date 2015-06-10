@@ -688,8 +688,8 @@ class Goal extends AppModel
      */
     function getMyCollaboGoals($limit = null, $page = 1)
     {
-        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, false, $limit, $page);
-        $res = $this->getByGoalId($goal_ids);
+        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid);
+        $res = $this->getByGoalId($goal_ids, $limit, $page);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
         $res = $this->sortPriority($res);
@@ -795,6 +795,7 @@ class Goal extends AppModel
                 ],
             ]
         ];
+
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
