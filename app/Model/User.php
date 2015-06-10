@@ -180,7 +180,7 @@ class User extends AppModel
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'hometown'=>[
+        'hometown'          => [
             'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
@@ -854,9 +854,9 @@ class User extends AppModel
     }
 
     /**
-     * feedのselect2で使うデフォルトデータリスト(json)
+     * feedのselect2で使うデフォルトデータリスト
      *
-     * @return array(json)
+     * @return array
      */
     function getAllUsersCirclesSelect2()
     {
@@ -894,7 +894,7 @@ class User extends AppModel
 
         $res = array_merge($team_res, $circle_res, $user_res);
 
-        return json_encode($res);
+        return $res;
     }
 
     public function getAllMember($with_me = true)

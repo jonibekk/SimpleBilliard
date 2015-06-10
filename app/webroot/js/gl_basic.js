@@ -1298,7 +1298,23 @@ $(document).ready(function () {
     $('#select2PostCircleMember').select2({
         multiple: true,
         placeholder: cake.word.a,
-        data: cake.data.a,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.s,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
         initSelection: cake.data.b,
         formatSelection: format,
         formatResult: format,

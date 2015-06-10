@@ -41,7 +41,7 @@ class TeamFixture extends CakeTestFixture
         array(
             'id'                 => '1',
             'name'               => 'Lorem ipsum dolor sit amet',
-            'photo_file_name'    => 'Lorem ipsum dolor sit amet',
+            'photo_file_name'    => null,
             'type'               => 1,
             'domain_limited_flg' => 1,
             'domain_name'        => 'Lorem ipsum dolor sit amet',
