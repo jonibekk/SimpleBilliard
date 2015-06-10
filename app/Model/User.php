@@ -802,7 +802,7 @@ class User extends AppModel
                 'User.active_flg' => true,
                 'OR'              => [
                     'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'           => "%" . $keyword . "%",
-                    'CONCAT(`LocalName.first_name`," ",`LocalName.last_name`) Like ?' => "%" . $keyword . "%",
+                    'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like ?' => "%" . $keyword . "%",
                 ]
             ],
             'limit'      => $limit,
@@ -811,9 +811,9 @@ class User extends AppModel
                 [
                     'type'       => 'LEFT',
                     'table'      => 'local_names',
-                    'alias'      => 'LocalName',
+                    'alias'      => 'SearchLocalName',
                     'conditions' => [
-                        '`LocalName.user_id`=`User.id`',
+                        '`SearchLocalName.user_id`=`User.id`',
                     ],
                 ]
             ]
