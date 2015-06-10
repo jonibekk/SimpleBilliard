@@ -153,7 +153,10 @@ define('NOTIFY_PAGE_ITEMS_NUMBER', 50);
 define('POST_FEED_PAGE_ITEMS_NUMBER', 10);
 //ゴール一覧のアイテム数
 define('GOAL_INDEX_ITEMS_NUMBER', 50);
-
+//マイゴールエリアのアイテム数
+define('RELATED_GOAL_NUMBER_AS_LEADER', 5);
+define('RELATED_GOAL_NUMBER_AS_COLLABORATOR', 5);
+define('RELATED_GOAL_NUMBER_AS_FOLLOWER', 5);
 /**
  * 共通関数
  */
