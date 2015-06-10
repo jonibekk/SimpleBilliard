@@ -40,7 +40,7 @@ npm-debug.log
 /docs/grunt
 /docs/frontend
 /docs/index.html
-/docs/css
+/docs/css/*.html
 /docs/js
 /docs/local/docs.min.css
 /index.html
