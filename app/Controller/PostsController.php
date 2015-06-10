@@ -221,6 +221,14 @@ class PostsController extends AppController
     {
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
+        if (isset($this->request->params['named']['circle_id'])
+        ) {
+            $this->set('long_text', true);
+        }
+        else {
+            $this->set('long_text', false);
+        }
+
         if (isset($param_named['page']) && !empty($param_named['page'])) {
             $page_num = $param_named['page'];
         }
@@ -534,6 +542,16 @@ class PostsController extends AppController
         $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
+
+        if (isset($this->request->params['circle_id']) ||
+            isset($this->request->params['post_id'])
+        ) {
+            $this->set('long_text', true);
+        }
+        else {
+            $this->set('long_text', false);
+        }
+
         $select2_default = $this->User->getAllUsersCirclesSelect2();
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
@@ -556,7 +574,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set('long_text', true);
+        //$this->set('long_text', true);
         $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params',
                            'circle_status'));
         try {
