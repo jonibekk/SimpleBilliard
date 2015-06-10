@@ -1078,6 +1078,13 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/ajax_get_my_goals/page:1/type:follow', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+    function testAjaxGetMyGoalsTypeMyPrev()
+    {
+        $this->_getGoalsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_my_goals/page:1/type:my_prev', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
 
     function testAjaxGetMyGoalsNotExistPage()
     {
