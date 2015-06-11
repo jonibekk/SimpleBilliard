@@ -245,8 +245,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_goal_detail_modal($goal_id)
+    public function ajax_get_goal_detail_modal()
     {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $this->set(compact('goal'));

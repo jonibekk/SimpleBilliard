@@ -10,7 +10,7 @@
 ?>
 <!-- START app/View/Elements/Feed/goal_sharing_block.ctp -->
 <div class="col col-xxs-12 pt_10px">
-    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $post['Goal']['id']]) ?>"
+    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
        class="no-line font_verydark modal-ajax-get">
         <div class="site-info bd-radius_4px">
             <div class="media">
