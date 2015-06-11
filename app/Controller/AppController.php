@@ -533,6 +533,10 @@ class AppController extends Controller
             elseif (isset($request_params['named']['post_id']) && !empty($request_params['named']['post_id'])) {
                 $id = $request_params['named']['post_id'];
             }
+            //投稿ID指定されてた場合
+            elseif (isset($request_params['named']['goal_id']) && !empty($request_params['named']['goal_id'])) {
+                $id = $request_params['named']['goal_id'];
+            }
             //通常のID指定されていた場合
             elseif (isset($request_params['pass'][0]) && !empty($request_params['pass'][0])) {
                 $id = $request_params['pass'][0];

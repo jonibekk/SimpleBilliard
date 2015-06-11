@@ -14,7 +14,7 @@
  * @var                        $goal_start_date_limit_format
  * @var                        $goal_end_date_limit_format
  */
-$url = isset($this->request->data['Goal']['id']) ? [$this->request->data['Goal']['id']] : [];
+$url = isset($this->request->data['Goal']['id']) ? ['goal_id' => $this->request->data['Goal']['id']] : [];
 
 $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                                           ['purpose_id' => $this->request->params['named']['purpose_id']]) : $url;

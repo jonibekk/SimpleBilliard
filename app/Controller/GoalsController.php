@@ -41,15 +41,14 @@ class GoalsController extends AppController
      * URLパラメータでmodeを付ける
      * mode なしは目標を決める,2はゴールを定める,3は情報を追加
      *
-     * @param null $id
-     *
      * @return \CakeResponse
      */
-    public function add($id = null)
+    public function add()
     {
+        $id = viaIsSet($this->request->params['named']['goal_id']);
         $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
-
+        $this->log($id);
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
             $this->request->data['Goal']['id'] = $id;
@@ -92,7 +91,7 @@ class GoalsController extends AppController
                 $this->Pnotify->outSuccess(__d('gl', "ゴールの目的を保存しました。"));
                 //「ゴールを定める」に進む
                 $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
-                $url = $id ? array_merge([$id], $url) : $url;
+                $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
                 $this->redirect($url);
             }
             // 失敗
@@ -126,7 +125,7 @@ class GoalsController extends AppController
                     }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                     //「情報を追加」に進む
-                    $this->redirect([$this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
+                    $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
                     break;
                 case 3:
                     //完了

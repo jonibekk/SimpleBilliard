@@ -156,7 +156,7 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_setDefault($Goals);
 
         //存在するゴールで自分が作成したもの
-        $this->testAction('/goals/add/' . $this->goal_id, ['method' => 'GET']);
+        $this->testAction('/goals/add/goal_id:' . $this->goal_id, ['method' => 'GET']);
     }
 
     function testAddWithPurposeIdSuccess()
@@ -182,14 +182,14 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->id = $this->goal_id;
         $Goals->Goal->saveField('user_id', 2);
         //存在するゴールで他人が作成したもの
-        $this->testAction('/goals/add/' . $this->goal_id, ['method' => 'GET']);
+        $this->testAction('/goals/add/goal_id:' . $this->goal_id, ['method' => 'GET']);
     }
 
     function testAddWithIdNotExists()
     {
         $this->_getGoalsCommonMock();
         //存在しないゴール
-        $this->testAction('/goals/add/' . 9999999999, ['method' => 'GET']);
+        $this->testAction('/goals/add/goal_id:' . 9999999999, ['method' => 'GET']);
     }
 
     function testAddPostPurpose()
@@ -249,7 +249,7 @@ class GoalsControllerTest extends ControllerTestCase
                 'end_date'         => date('yyyy/mm/dd', $this->end_date),
             ]
         ];
-        $this->testAction("/goals/add/{$this->goal_id}/mode:2/purpose_id:{$this->purpose_id}",
+        $this->testAction("/goals/add/goal_id:{$this->goal_id}/mode:2/purpose_id:{$this->purpose_id}",
                           ['method' => 'POST', 'data' => $data]);
     }
 
@@ -271,7 +271,7 @@ class GoalsControllerTest extends ControllerTestCase
                 ]
             ]
         ];
-        $this->testAction("/goals/add/{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add/goal_id:{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddPostMode3GoApprovalPage()
@@ -297,7 +297,7 @@ class GoalsControllerTest extends ControllerTestCase
         ];
         $Goal->User->TeamMember->save($team_member);
 
-        $this->testAction("/goals/add/{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
+        $this->testAction("/goals/add/goal_id:{$this->goal_id}/mode:3", ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddPostEmpty()
@@ -1078,6 +1078,7 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/ajax_get_my_goals/page:1/type:follow', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxGetMyGoalsTypeMyPrev()
     {
         $this->_getGoalsCommonMock();
