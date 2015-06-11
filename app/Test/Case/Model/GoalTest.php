@@ -611,15 +611,10 @@ class GoalTest extends CakeTestCase
         $team_id = 100;
         $user_id = 200;
         $goal_id = 300;
-        $goal_list[] = ['Goal' => ['id' => $goal_id, 'team_id' => $team_id, 'user_id' => $user_id]];
-        $data = [
-            'team_id'    => $team_id,
-            'user_id'    => $user_id,
-            'goal_id'    => $goal_id,
-            'type'       => Collaborator::TYPE_OWNER,
-            'valued_flg' => 2,
+        $goal_list[] = [
+            'Goal'         => ['id' => $goal_id, 'team_id' => $team_id, 'user_id' => $user_id],
+            'Collaborator' => ['user_id' => $user_id, 'goal_id' => $goal_id, 'valued_flg' => 2],
         ];
-        $this->Goal->Collaborator->save($data);
         $res = $this->Goal->setFollowGoalApprovalFlag($goal_list);
         $this->assertArrayHasKey('owner_approval_flag', $res[0]['Goal']);
     }
