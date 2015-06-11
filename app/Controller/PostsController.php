@@ -562,7 +562,8 @@ class PostsController extends AppController
         $this->_setViewValOnRightColumn();
         //サークル指定の場合はメンバーリスト取得
         if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
-            $circle_members = $this->User->CircleMember->getMembers($this->request->params['circle_id'], true);
+            $active_userids = $this->User->TeamMember->getActiveTeamMembers();
+            $circle_members = $this->User->CircleMember->getMembers($active_userids,$this->request->params['circle_id'], true);
         }
         //抽出条件
         if ($circle_id) {

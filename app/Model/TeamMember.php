@@ -87,6 +87,19 @@ class TeamMember extends AppModel
         $this->myTeams = $res;
     }
 
+    public function getActiveTeamMembers()
+    {
+        $options = [
+            'conditions' => [
+                'active_flg' => true,
+                'team_id' =>$this->current_team_id
+            ],
+            'fields'     => ['user_id']
+        ];
+        $res = $this->find('list', $options);
+        return array_values($res);
+    }
+
     function updateLastLogin($team_id, $uid)
     {
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
