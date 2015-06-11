@@ -56,7 +56,8 @@ class PostRead extends AppModel
         if (empty($post_data)) {
             return;
         }
-        $this->saveAll($post_data);
+        $res = $this->saveAll($post_data);
+        return $res;
     }
 
     private function pickUnreadPosts($post_list)
@@ -71,9 +72,7 @@ class PostRead extends AppModel
             'fields'     => ['post_id']
         ];
         $read = $this->find('all', $options);
-
-        /** @noinspection PhpDeprecationInspection */
-        $read_list = Set::combine($read, '{n}.PostRead.post_id', '{n}.PostRead.post_id');
+        $read_list = Hash::combine($read, '{n}.PostRead.post_id', '{n}.PostRead.post_id');
         $unread_posts = [];
         if (is_array($post_list)) {
             foreach ($post_list as $post_id) {
@@ -107,8 +106,7 @@ class PostRead extends AppModel
             'fields'     => ['id']
         ];
         $un_my_posts = $this->Post->find('all', $options);
-        /** @noinspection PhpDeprecationInspection */
-        $un_my_posts = Set::combine($un_my_posts, '{n}.Post.id', '{n}.Post.id');
+        $un_my_posts = Hash::combine($un_my_posts, '{n}.Post.id', '{n}.Post.id');
         return $un_my_posts;
     }
 
