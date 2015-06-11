@@ -497,8 +497,8 @@ class Post extends AppModel
             $post_list = $this->find('list', $post_options);
         }
 
-        //投稿の既読処理を別プロセスで行う
-        $this->execRedPostComment($post_list, viaIsSet($this->orgParams['post_id']));
+        //投稿を既読に
+        $this->PostRead->red($post_list);
 
         $options = [
             'conditions' => [
@@ -605,6 +605,13 @@ class Post extends AppModel
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
+        }
+
+        //コメントを既読に
+        if (!empty($res)) {
+            /** @noinspection PhpDeprecationInspection */
+            $comment_list = Hash::extract($res, '{n}.Comment.{n}.id');
+            $this->Comment->CommentRead->red($comment_list);
         }
 
         //１件のサークル名をランダムで取得
