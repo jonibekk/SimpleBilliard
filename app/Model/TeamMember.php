@@ -88,7 +88,7 @@ class TeamMember extends AppModel
         $this->myTeams = $res;
     }
 
-    public function getActiveTeamMembers()
+    public function getActiveTeamMembersList()
     {
         if (!empty($this->active_member_list)) {
             return $this->active_member_list;
