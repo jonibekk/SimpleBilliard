@@ -48,7 +48,6 @@ class GoalsController extends AppController
         $id = viaIsSet($this->request->params['named']['goal_id']);
         $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->log($id);
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
             $this->request->data['Goal']['id'] = $id;
