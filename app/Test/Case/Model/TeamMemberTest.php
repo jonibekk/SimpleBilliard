@@ -2364,4 +2364,13 @@ class TeamMemberTest extends CakeTestCase
         $this->assertEquals('/img/no-image-user.jpg', $convert_data[0]['User']['img_url']);
         $this->assertArrayHasKey('coach_name', $convert_data[0]['TeamMember']);
     }
+
+    function testGetActiveTeamMembersList()
+    {
+        $this->setDefault();
+        $res = $this->TeamMember->getActiveTeamMembersList();
+        $this->assertNotEmpty($res);
+        $res = $this->TeamMember->getActiveTeamMembersList();
+        $this->assertNotEmpty($res);
+    }
 }
