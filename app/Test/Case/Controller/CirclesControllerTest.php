@@ -83,7 +83,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/circles/ajax_get_edit_modal/1', ['method' => 'GET']);
+        $this->testAction('/circles/ajax_get_edit_modal/circle_id:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

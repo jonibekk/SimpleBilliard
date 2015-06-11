@@ -43,8 +43,9 @@ class CirclesController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function ajax_get_edit_modal($circle_id)
+    public function ajax_get_edit_modal()
     {
+        $circle_id = $this->request->params['named']['circle_id'];
         $this->_ajaxPreProcess();
         $this->request->data = $this->Circle->getEditData($circle_id);
         //htmlレンダリング結果
