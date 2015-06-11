@@ -2298,17 +2298,20 @@ class TeamMemberTest extends CakeTestCase
             'conditions' => [
                 'team_id' => $team_id,
             ],
-            'order' => ['TeamMember.created' => 'DESC'],
+            'order'      => ['TeamMember.created' => 'DESC'],
             'contain'    => [
-                'User' => [
+                'User'      => [
                     'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
                     'MemberGroup' => [
                         'fields' => ['group_id'],
                         'Group'  => [
                             'fields' => ['name']
                         ]
-                    ]
+                    ],
                 ],
+                'CoachUser' => [
+                    'fields' => $this->TeamMember->User->profileFields
+                ]
             ]
         ];
         $res = $this->TeamMember->defineTeamMemberOption($team_id);
@@ -2327,16 +2330,16 @@ class TeamMemberTest extends CakeTestCase
         // coach
         $coach_user_id = 777;
         $params = [
-            'id' => $coach_user_id,
+            'id'         => $coach_user_id,
             'first_name' => 'coach',
-            'last_name' => 'a'
+            'last_name'  => 'a'
         ];
         $this->TeamMember->User->save($params);
 
         $team_id = 888;
         $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
+            'user_id'       => $user_id,
+            'team_id'       => $team_id,
             'coach_user_id' => $coach_user_id,
         ];
         $this->TeamMember->save($params);
