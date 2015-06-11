@@ -147,11 +147,14 @@ class CircleMember extends AppModel
 
     public function getMembers($circle_id, $with_admin = false, $order = 'CircleMember.modified', $order_direction = "desc")
     {
+        $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'CircleMember.circle_id' => $circle_id,
                 'CircleMember.team_id'   => $this->current_team_id,
                 'CircleMember.admin_flg' => false,
+                'CircleMember.user_id'   => $active_user_ids
             ],
             'order'      => [$order => $order_direction],
             'contain'    => [

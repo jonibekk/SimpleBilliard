@@ -57,6 +57,7 @@ class TeamMember extends AppModel
     private $csv_evaluator_ids = [];
     private $all_users = [];
     private $evaluations = [];
+    private $active_member_list = [];
 
     /**
      * 現在有効なチーム一覧を取得
@@ -85,6 +86,22 @@ class TeamMember extends AppModel
         ];
         $res = array_filter($this->findWithoutTeamId('list', $options));
         $this->myTeams = $res;
+    }
+
+    public function getActiveTeamMembersList()
+    {
+        if (!empty($this->active_member_list)) {
+            return $this->active_member_list;
+        }
+        $options = [
+            'conditions' => [
+                'active_flg' => true,
+                'team_id'    => $this->current_team_id
+            ],
+            'fields'     => ['user_id', 'user_id']
+        ];
+        $this->active_member_list = $this->find('list', $options);
+        return $this->active_member_list;
     }
 
     function updateLastLogin($team_id, $uid)
@@ -312,7 +329,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'team_id' => $team_id,
             ],
-            'order' => ['TeamMember.created' => 'DESC'],
+            'order'      => ['TeamMember.created' => 'DESC'],
             'contain'    => [
                 'User' => [
                     'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
