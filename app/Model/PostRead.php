@@ -56,7 +56,7 @@ class PostRead extends AppModel
         if (empty($post_data)) {
             return;
         }
-        $res = $this->saveAll($post_data);
+        $res = $this->saveAllAtOnce($post_data, true, ['post_id']);
         return $res;
     }
 
