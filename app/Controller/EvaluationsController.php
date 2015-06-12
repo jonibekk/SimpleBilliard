@@ -65,7 +65,6 @@ class EvaluationsController extends AppController
 
     function view($evaluateTermId = null, $evaluateeId = null)
     {
-
         $this->layout = LAYOUT_ONE_COLUMN;
         $my_uid = $this->Auth->user('id');
 
@@ -121,8 +120,12 @@ class EvaluationsController extends AppController
      * @param $evaluateeId
      * @param $evaluateTermId
      */
-    function add($evaluateeId, $evaluateTermId)
+
+    function add()
     {
+        $evaluateeId = viaIsSet($this->request->params['named']['evaluatee_id']);
+        $evaluateTermId = viaIsSet($this->request->params['named']['evaluate_term_id']);
+
         $this->request->allowMethod('post', 'put');
 
         $status = viaIsSet($this->request->data['status']);
@@ -203,8 +206,9 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_evaluators_status($evaluatee_id)
+    public function ajax_get_evaluators_status()
     {
+        $evaluatee_id = viaIsSet($this->request->params['named']['evaluatee_id']);
         $this->_ajaxPreProcess();
         $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
 
@@ -222,8 +226,9 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_evaluatees_by_evaluator($evaluator_id)
+    public function ajax_get_evaluatees_by_evaluator()
     {
+        $evaluator_id = viaIsSet($this->request->params['named']['evaluator_id']);
         $this->_ajaxPreProcess();
         $evaluator = $this->Evaluation->EvaluatorUser->findById($evaluator_id);
 

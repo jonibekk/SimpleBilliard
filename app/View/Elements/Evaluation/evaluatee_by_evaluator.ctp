@@ -17,7 +17,7 @@
         <div class="font_12px font_bold modalFeedTextPadding">
             <?= h($user['User']['display_username']) ?>
             <a class="modal-ajax-get pointer"
-               href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_evaluators_status', $user['User']['id']]) ?>">
+               href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_evaluators_status', 'evaluatee_id'=>$user['User']['id']]) ?>">
                 <?= __d('gl', "詳細を見る") ?>
             </a>
         </div>

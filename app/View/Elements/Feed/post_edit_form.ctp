@@ -11,7 +11,7 @@
 <!-- START app/View/Elements/Feed/post_edit_form.ctp -->
 <?=
 $this->Form->create('Post', [
-    'url'           => ['controller' => 'posts', 'action' => 'post_edit', $post['Post']['id']],
+    'url'           => ['controller' => 'posts', 'action' => 'post_edit', 'post_id'=>$post['Post']['id']],
     'inputDefaults' => [
         'div'       => 'form-group',
         'label'     => false,

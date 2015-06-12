@@ -192,7 +192,7 @@
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="ActionPostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
                             </a><span class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', $post['Post']['id']]) ?>"
+            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id'=>$post['Post']['id']]) ?>"
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
@@ -205,7 +205,7 @@
                     <a href="#" class="btn btn-link click-comment-all"
                        id="ActionComments_<?= $post['Post']['id'] ?>"
                        parent-id="ActionComments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
+                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id'=>$post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
                         >
                         <i class="fa fa-comment-o"></i>&nbsp;<?=
                         __d('gl', "他%s件のコメントを見る",
@@ -220,7 +220,7 @@
                    id="ActionComments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
-                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', $post['Post']['id']]) ?>"
+                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id'=>$post['Post']['id']]) ?>"
                     >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
@@ -250,7 +250,7 @@
                                     replace-elm-parent-id="ActionNewCommentForm_<?= $post['Post']['id'] ?>"
                                     click-target-id="ActionCommentFormBody_<?= $post['Post']['id'] ?>"
                                     tmp-target-height="32"
-                                    ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', $post['Post']['id'], 'Action']) ?>"
+                                    ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id'=>$post['Post']['id'], 'Action']) ?>"
                                     wrap="soft" rows="1"
                                     placeholder="<?= __d('gl', "コメントする") ?>"
                                     cols="30"
