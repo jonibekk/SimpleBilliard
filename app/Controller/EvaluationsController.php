@@ -245,7 +245,7 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_incomplete_oneself()
+    public function circle_feed()
     {
         $this->_ajaxPreProcess();
 

@@ -782,7 +782,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/post_delete/0', ['method' => 'POST']);
+            $this->testAction('posts/post_delete/post_id:0', ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]投稿削除");
@@ -808,7 +808,7 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
         $Posts->Post->Team->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'] = 0;
         try {
-            $this->testAction('posts/post_delete/' . $post['Post']['id'], ['method' => 'POST']);
+            $this->testAction('posts/post_delete/post_id:' . $post['Post']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していない投稿削除");
@@ -834,7 +834,7 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         try {
-            $this->testAction('posts/post_delete/' . $post['Post']['id'], ['method' => 'POST']);
+            $this->testAction('posts/post_delete/post_id:' . $post['Post']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]投稿削除");
@@ -962,7 +962,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/comment_delete/0', ['method' => 'POST']);
+            $this->testAction('posts/comment_delete/comment_id:0', ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]コメント削除");
@@ -988,7 +988,7 @@ class PostsControllerTest extends ControllerTestCase
         $comment = $Posts->Post->Comment->save($comment_data);
         $Posts->Post->Team->TeamMember->myStatusWithTeam['TeamMember']['admin_flg'] = 0;
         try {
-            $this->testAction('posts/comment_delete/' . $comment['Comment']['id'], ['method' => 'POST']);
+            $this->testAction('posts/comment_delete/comment_id:' . $comment['Comment']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していないコメント削除");
@@ -1030,7 +1030,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/comment_edit/0', ['method' => 'POST']);
+            $this->testAction('posts/comment_edit/comment_id:0', ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]コメント編集");
@@ -1056,7 +1056,7 @@ class PostsControllerTest extends ControllerTestCase
         $comment = $Posts->Post->Comment->save($comment_data);
 
         try {
-            $this->testAction('posts/comment_edit/' . $comment['Comment']['id'], ['method' => 'POST']);
+            $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していないコメント編集");
@@ -1093,7 +1093,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/comment_edit/' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]コメント編集");
@@ -1124,7 +1124,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/comment_edit/' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]コメント編集");

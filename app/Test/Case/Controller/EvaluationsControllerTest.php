@@ -385,7 +385,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/evaluatee_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     /**
@@ -430,7 +430,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/evaluatee_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAddPostRegisterCaseEvaluator()
@@ -470,7 +470,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/evaluatee_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAddPostRegisterValidationError()
@@ -509,7 +509,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 ],
             ],
         ];
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/evaluatee_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAjaxGetIncompleteEvaluatees()
@@ -539,7 +539,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}/term_id:{$term_id}",
+        $this->testAction("/evaluations/ajax_get_evaluators_status/evaluatee_id:{$evaluateeId}/term_id:{$term_id}",
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
