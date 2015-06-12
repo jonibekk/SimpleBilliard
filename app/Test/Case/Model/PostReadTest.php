@@ -21,7 +21,8 @@ class PostReadTest extends CakeTestCase
         'app.team',
         'app.goal',
         'app.action_result',
-        'app.key_result'
+        'app.key_result',
+        'app.circle',
     );
 
     /**
@@ -64,12 +65,18 @@ class PostReadTest extends CakeTestCase
         $this->PostRead->Post->save($test_save_data);
         $post_id = $this->PostRead->Post->getLastInsertID();
         $this->PostRead->red($this->PostRead->Post->getLastInsertID());
-        $post_read = $this->PostRead->read();
+        $options = [
+            'conditions' => [
+                'post_id' => $this->PostRead->Post->getLastInsertID(),
+                'user_id' => $uid
+            ]
+        ];
+        $post_read = $this->PostRead->find('first', $options);
         $this->assertEquals($uid, $post_read['PostRead']['user_id']);
 
         $before_data = $post_read;
         $this->PostRead->red($post_id);
-        $after_data = $this->PostRead->read();
+        $after_data = $this->PostRead->find('first', $options);
         $this->assertEquals($before_data, $after_data);
 
         $this->PostRead->Post->create();
