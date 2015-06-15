@@ -147,11 +147,14 @@ class CircleMember extends AppModel
 
     public function getMembers($circle_id, $with_admin = false, $order = 'CircleMember.modified', $order_direction = "desc")
     {
+        $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'CircleMember.circle_id' => $circle_id,
                 'CircleMember.team_id'   => $this->current_team_id,
                 'CircleMember.admin_flg' => false,
+                'CircleMember.user_id'   => $active_user_ids
             ],
             'order'      => [$order => $order_direction],
             'contain'    => [
@@ -175,7 +178,7 @@ class CircleMember extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['roman_username'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }

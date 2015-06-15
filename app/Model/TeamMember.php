@@ -57,6 +57,7 @@ class TeamMember extends AppModel
     private $csv_evaluator_ids = [];
     private $all_users = [];
     private $evaluations = [];
+    private $active_member_list = [];
 
     /**
      * 現在有効なチーム一覧を取得
@@ -85,6 +86,22 @@ class TeamMember extends AppModel
         ];
         $res = array_filter($this->findWithoutTeamId('list', $options));
         $this->myTeams = $res;
+    }
+
+    public function getActiveTeamMembersList()
+    {
+        if (!empty($this->active_member_list)) {
+            return $this->active_member_list;
+        }
+        $options = [
+            'conditions' => [
+                'active_flg' => true,
+                'team_id'    => $this->current_team_id
+            ],
+            'fields'     => ['user_id', 'user_id']
+        ];
+        $this->active_member_list = $this->find('list', $options);
+        return $this->active_member_list;
     }
 
     function updateLastLogin($team_id, $uid)
@@ -312,9 +329,9 @@ class TeamMember extends AppModel
             'conditions' => [
                 'team_id' => $team_id,
             ],
-            'order' => ['TeamMember.created' => 'DESC'],
+            'order'      => ['TeamMember.created' => 'DESC'],
             'contain'    => [
-                'User' => [
+                'User'      => [
                     'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
                     'MemberGroup' => [
                         'fields' => ['group_id'],
@@ -323,6 +340,9 @@ class TeamMember extends AppModel
                         ]
                     ]
                 ],
+                'CoachUser' => [
+                    'fields' => $this->User->profileFields
+                ]
             ]
         ];
         return $options;
@@ -346,12 +366,7 @@ class TeamMember extends AppModel
             }
 
             // コーチ名を取得
-            if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
-                $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);
-                if (isset($u_info['User']['display_username']) === true) {
-                    $res[$key]['TeamMember']['coach_name'] = $u_info['User']['display_username'];
-                }
-            }
+            $res[$key]['TeamMember']['coach_name'] = viaIsSet($res[$key]['CoachUser']['display_username']);
 
             // 2fa_secret: AngularJSで整数から始まるキーを読み取れないので別項目にて２段階認証設定表示を行う
             $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? false : true;

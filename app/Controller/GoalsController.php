@@ -23,7 +23,7 @@ class GoalsController extends AppController
         $search_url = $this->_getSearchUrl($search_option);
         $search_options = $this->Goal->getSearchOptions();
         $this->_setMyCircle();
-        $goals = $this->Goal->getAllGoals(50, $search_option, null, true);//TODO 暫定的に300、将来的に20に戻す
+        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, null, true);
         $goal_count = $this->Goal->countGoalRes($search_option);
         $this->_setViewValOnRightColumn();
         $current_global_menu = "goal";
@@ -232,7 +232,9 @@ class GoalsController extends AppController
     public function ajax_get_more_index_items()
     {
         $this->_ajaxPreProcess();
-        $goals = $this->Goal->getAllGoals(50, null, $this->request->params);//TODO 暫定的に300、将来的に20に戻す
+        $search_option = $this->_getSearchVal();
+        $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, $this->request->params, true);
+
         $this->set(compact('goals'));
 
         //エレメントの出力を変数に格納する
@@ -979,10 +981,12 @@ class GoalsController extends AppController
         elseif ($type === 'follow') {
             $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
         }
+        elseif ($type === 'my_prev') {
+            $goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER, $page_num);
+        }
         else {
             $goals = [];
         }
-
         $this->set(compact('goals', 'type'));
 
         //エレメントの出力を変数に格納する

@@ -202,25 +202,16 @@ class Circle extends AppModel
 
     public function getEditData($id)
     {
-        $options = [
-            'conditions' => ['Circle.id' => $id],
-            'contain'    => [
-                'CircleMember' => [
-                    'conditions' => [
-                        'NOT' => ['CircleMember.user_id' => $this->my_uid]
-                    ]
-                ]
-            ]
-        ];
-        $circle = $this->find('first', $options);
+        $circle = $this->findById($id);
         $circle['Circle']['members'] = null;
-        if (!empty($circle['CircleMember'])) {
-            foreach ($circle['CircleMember'] as $val) {
-                $circle['Circle']['members'][] = 'user_' . $val['user_id'];
+        $circle_members = $this->CircleMember->getMembers($id);
+        if(!empty($circle_members)){
+            foreach($circle_members as $val){
+                $circle['Circle']['members'][] = 'user_' . $val['CircleMember']['user_id'];
             }
             $circle['Circle']['members'] = implode(',', $circle['Circle']['members']);
         }
-        unset($circle['CircleMember']);
+
         return $circle;
     }
 

@@ -1,5 +1,6 @@
 <?php
 App::uses('Model', 'Model');
+App::uses('Sanitize', 'Utility');
 
 /**
  * Application model for Cake.
@@ -359,6 +360,65 @@ class AppModel extends Model
             $this->Behaviors->load('ExtContainable', array('with_team_id' => true));
         }
         return $res;
+    }
+
+    /**
+     * bulk insert method.
+     * if $add_date is true then, adding save fields that `modified` and `created`.
+     * usage about $update_counter_cache_fields:
+     * $update_counter_cache_fields = [
+     * 'foreign key', 'foreign key'
+     * ];
+     *
+     * @param       $data
+     * @param bool  $add_date
+     * @param array $update_counter_cache_fields
+     *
+     * @return bool
+     */
+    public function saveAllAtOnce($data, $add_date = true, $update_counter_cache_fields = [])
+    {
+        if (count($data) > 0 && !empty($data[0])) {
+            $data = Sanitize::clean($data);
+            $value_array = array();
+            if (isset($data[0][$this->name])) {
+                $fields = array_keys($data[0][$this->name]);
+            }
+            else {
+                $fields = array_keys($data[0]);
+            }
+            if ($add_date) {
+                $fields[] = 'modified';
+                $fields[] = 'created';
+
+                foreach ($data as $k => $v) {
+                    if (isset($v[$this->name])) {
+                        $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
+                        $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
+                    }
+                    else {
+                        $data[$k]['modified'] = REQUEST_TIMESTAMP;
+                        $data[$k]['created'] = REQUEST_TIMESTAMP;
+                    }
+                }
+            }
+            foreach ($data as $key => $value) {
+                $value = isset($value[$this->name]) ? $value[$this->name] : $value;
+                $value_array[] = "('" . implode('\',\'', $value) . "')";
+            }
+            $sql = "INSERT INTO "
+                . $this->table . " (" . implode(', ', $fields) . ") VALUES "
+                . implode(',', $value_array);
+            $this->query($sql);
+            foreach ($update_counter_cache_fields as $field) {
+                foreach ($data as $key => $value) {
+                    $value = isset($value[$this->name][$field]) ? $value[$this->name][$field] : $value[$field];
+                    $this->updateCounterCache([$field => $value]);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
 }

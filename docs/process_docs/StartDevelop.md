@@ -10,8 +10,8 @@ Goalousで素早く開発を始められるよう心がけております。
 - Git `version >= 1.8.5`
 - Chef Client `version >= 11.4`
 
-[インストール手順(windows)](https://docs.google.com/a/isao.co.jp/document/d/1LnGo5AMdjAFdgnxh0wivFH8LJbewL77bfl64gQe1F0M/edit?usp=sharing)
-[インストール手順(mac)](https://docs.google.com/a/isao.co.jp/document/d/12OQ5xXhRfkQWKt1B_ckSz6pAg-5uhpyILqjGbr5-rEU/edit?usp=sharing)
+[インストール手順(windows)](http://bit.ly/1TnOXfz)
+[インストール手順(mac)](http://bit.ly/1TnOUAz)
 
 ## Recommend
 - [hubコマンド](http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3)（mac,linuxのみ）
@@ -27,8 +27,7 @@ Goalousで素早く開発を始められるよう心がけております。
 ターミナルで以下を実行
 `cd goalous2`
 `vagrant up`
-[vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](https://docs.google.com/a/isao.co.jp/document/d/1IeZfGQPrJtNO_piMxvcsV5KS8ZX1iq0Mv93kpgIioA4/edit?usp=sharing)
+[vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](http://bit.ly/1TnOYjQ)
 1. 動作確認
 ブラウザから以下にアクセス
 `http://192.168.50.4`
-

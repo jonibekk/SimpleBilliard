@@ -18,6 +18,7 @@ class GoalTest extends CakeTestCase
         'app.approval_history',
         'app.action_result',
         'app.evaluation',
+        'app.evaluate_term',
         'app.purpose',
         'app.goal',
         'app.key_result',
@@ -424,6 +425,8 @@ class GoalTest extends CakeTestCase
         $this->Goal->Post->current_team_id = 1;
         $this->Goal->Evaluation->current_team_id = 1;
         $this->Goal->Evaluation->my_uid = 1;
+        $this->Goal->Team->EvaluateTerm->current_team_id = 1;
+        $this->Goal->Team->EvaluateTerm->my_uid = 1;
 
     }
 
@@ -472,6 +475,36 @@ class GoalTest extends CakeTestCase
                 $this->Goal->getAllGoals(null, $search_option);
             }
         }
+    }
+
+    function testGoalFilterTermNoData()
+    {
+        $this->setDefault();
+        $search_options = [];
+        $search_options['term'] = ['previous'];
+        $this->Goal->setFilter([], $search_options);
+        $search_options['term'] = ['next'];
+        $this->Goal->setFilter([], $search_options);
+        $search_options['term'] = ['before'];
+        $this->Goal->setFilter([], $search_options);
+    }
+
+    function testGoalFilterTermNoExistsData()
+    {
+        $this->setDefault();
+        $current = $this->Goal->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Goal->Team->EvaluateTerm->saveNextTerm();
+        $end = $current['EvaluateTerm']['start_date'] - 1;
+        $start = $current['EvaluateTerm']['start_date'] - 1000000;
+        $this->Goal->Team->EvaluateTerm->saveTerm($start, $end);
+
+        $search_options = [];
+        $search_options['term'] = ['previous'];
+        $this->Goal->setFilter([], $search_options);
+        $search_options['term'] = ['next'];
+        $this->Goal->setFilter([], $search_options);
+        $search_options['term'] = ['before'];
+        $this->Goal->setFilter([], $search_options);
     }
 
     function testGetMyPreviousGoals()
@@ -573,24 +606,21 @@ class GoalTest extends CakeTestCase
         $this->Goal->getAllUserGoalProgress(1, 1);
     }
 
-    function testSetFollowGoalApprovalFlagNo1() {
+    function testSetFollowGoalApprovalFlagNo1()
+    {
         $team_id = 100;
         $user_id = 200;
         $goal_id = 300;
-        $goal_list[] = ['Goal' => ['id' => $goal_id, 'team_id' => $team_id, 'user_id' => $user_id]];
-        $data = [
-            'team_id'    => $team_id,
-            'user_id'    => $user_id,
-            'goal_id'    => $goal_id,
-            'type'       => Collaborator::TYPE_OWNER,
-            'valued_flg' => 2,
+        $goal_list[] = [
+            'Goal'         => ['id' => $goal_id, 'team_id' => $team_id, 'user_id' => $user_id],
+            'Collaborator' => ['user_id' => $user_id, 'goal_id' => $goal_id, 'valued_flg' => 2],
         ];
-        $this->Goal->Collaborator->save($data);
         $res = $this->Goal->setFollowGoalApprovalFlag($goal_list);
         $this->assertArrayHasKey('owner_approval_flag', $res[0]['Goal']);
     }
 
-    function testSetFollowGoalApprovalFlagNo2() {
+    function testSetFollowGoalApprovalFlagNo2()
+    {
         $team_id = 100;
         $user_id = 200;
         $goal_id = 300;

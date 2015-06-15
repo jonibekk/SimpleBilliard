@@ -392,12 +392,13 @@ class Goal extends AppModel
     /**
      * 自分が作成したゴール取得
      *
-     * @param null $limit
-     * @param int  $page
+     * @param null   $limit
+     * @param int    $page
+     * @param string $type
      *
      * @return array
      */
-    function getMyGoals($limit = null, $page = 1)
+    function getMyGoals($limit = null, $page = 1, $type = "all")
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
@@ -433,6 +434,10 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page
         ];
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find($type, $options);
+        }
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
@@ -477,12 +482,13 @@ class Goal extends AppModel
     /**
      * 自分が作成した前期の未評価ゴール取得
      *
-     * @param null $limit
-     * @param int  $page
+     * @param null   $limit
+     * @param int    $page
+     * @param string $type
      *
      * @return array
      */
-    function getMyPreviousGoals($limit = null, $page = 1)
+    function getMyPreviousGoals($limit = null, $page = 1, $type = "all")
     {
         $term = $this->Team->getBeforeTermStartEnd(1);
         $start_date = $term['start'];
@@ -581,6 +587,10 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page
         ];
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find('count', $options);
+        }
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
@@ -681,15 +691,19 @@ class Goal extends AppModel
     /**
      * 自分がこらぼったゴール取得
      *
-     * @param null $limit
-     * @param int  $page
+     * @param null   $limit
+     * @param int    $page
+     * @param string $type
      *
      * @return array
      */
-    function getMyCollaboGoals($limit = null, $page = 1)
+    function getMyCollaboGoals($limit = null, $page = 1, $type = "all")
     {
-        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, false, $limit, $page);
-        $res = $this->getByGoalId($goal_ids);
+        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid);
+        if ($type == "count") {
+            return $this->getByGoalId($goal_ids, $limit, $page, $type);
+        }
+        $res = $this->getByGoalId($goal_ids, $limit, $page);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
         $res = $this->sortPriority($res);
@@ -697,36 +711,48 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getMyFollowedGoals($limit = null, $page = 1)
+    function getMyFollowedGoals($limit = null, $page = 1, $type = 'all')
     {
         $follow_goal_ids = $this->Follower->getFollowList($this->my_uid);
         $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->my_uid);
         $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        //フォローしているゴールとコーチングしているゴールをマージして、そこからコラボしているゴールを除外したものが
+        //フォロー中ゴールとなる
         $goal_ids = $follow_goal_ids + $coaching_goal_ids;
         //exclude collabo goal
         foreach ($collabo_goal_ids as $k => $v) {
             unset($goal_ids[$k]);
         }
-        $res = $this->getByGoalId($goal_ids, $limit, $page);
+        if ($type == "count") {
+            return $this->getByGoalId($goal_ids, $limit, $page, $type);
+        }
+        $goals = $this->getByGoalId($goal_ids, $limit, $page);
+        //のちにコラボデータとマージしやすいように配列のキーをgoal_idに差し替える
+        $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
+        //再度ゴールIDを抽出(フォロー中、コーチング、コラボのゴールは期間の抽出ができない為、期間をキーにして再度抽出する必要がある)
+        $goal_ids = Hash::extract($goals, '{n}.Goal.id');
         // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
         // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
-        $res = $this->setFollowGoalApprovalFlag($res);
+        $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
+        //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
+        $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
+        //認定ステータスのデータをマージ
+        $goals = Hash::merge($goals, $approval_statuses);
+        $res = $this->setFollowGoalApprovalFlag($goals);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
 
         return $res;
     }
 
-    function setFollowGoalApprovalFlag($goal_list)
+    function setFollowGoalApprovalFlag($goals)
     {
-        foreach ($goal_list as $key => $goal) {
-            $cb_goal = $this->Collaborator->getCollaborator(
-                $goal['Goal']['team_id'], $goal['Goal']['user_id'], $goal['Goal']['id']);
-            if (isset($cb_goal['Collaborator']['id']) === true) {
-                $goal_list[$key]['Goal']['owner_approval_flag'] = $cb_goal['Collaborator']['valued_flg'];
+        foreach ($goals as $key => $goal) {
+            if (isset($goal['Collaborator']['valued_flg'])) {
+                $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['valued_flg'];
             }
         }
-        return $goal_list;
+        return $goals;
     }
 
     function getGoalAndKr($goal_ids, $user_id)
@@ -760,7 +786,7 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getByGoalId($goal_ids, $limit = null, $page = 1)
+    function getByGoalId($goal_ids, $limit = null, $page = 1, $type = "all")
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
@@ -795,6 +821,12 @@ class Goal extends AppModel
                 ],
             ]
         ];
+
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find($type, $options);
+        }
+
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
@@ -919,7 +951,6 @@ class Goal extends AppModel
     {
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
-
         $page = 1;
         if (isset($params['named']['page']) || !empty($params['named']['page'])) {
             $page = $params['named']['page'];
@@ -969,7 +1000,7 @@ class Goal extends AppModel
                     ],
                 ],
                 'Follower'     => [
-                    'fields'     => [
+                    'fields' => [
                         'Follower.id',
                     ],
                 ],
@@ -1033,19 +1064,39 @@ class Goal extends AppModel
         //期間指定
         switch (viaIsSet($search_option['term'][0])) {
             case 'previous':
-                $before_term = $this->Team->getBeforeTermStartEnd();
-                $options['conditions']['Goal.start_date >='] = $before_term['start'];
-                $options['conditions']['Goal.end_date <'] = $before_term['end'];
+                $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
+                if (!empty($previous_term)) {
+                    $options['conditions']['Goal.start_date >='] = $previous_term['start_date'];
+                    $options['conditions']['Goal.end_date <'] = $previous_term['end_date'];
+                }
+                else {
+                    $before_term = $this->Team->getBeforeTermStartEnd();
+                    $options['conditions']['Goal.start_date >='] = $before_term['start'];
+                    $options['conditions']['Goal.end_date <'] = $before_term['end'];
+                }
                 break;
             case 'next':
-                $next_term = $this->Team->getAfterTermStartEnd();
-                $options['conditions']['Goal.start_date >='] = $next_term['start'];
-                $options['conditions']['Goal.end_date <'] = $next_term['end'];
+                $next_term = $this->Team->EvaluateTerm->getNextTerm();
+                if (!empty($next_term)) {
+                    $options['conditions']['Goal.start_date >='] = $next_term['start_date'];
+                    $options['conditions']['Goal.end_date <'] = $next_term['end_date'];
+                }
+                else {
+                    $next_term = $this->Team->getAfterTermStartEnd();
+                    $options['conditions']['Goal.start_date >='] = $next_term['start'];
+                    $options['conditions']['Goal.end_date <'] = $next_term['end'];
+                }
                 break;
             case 'before' :
-                $before_term = $this->Team->getBeforeTermStartEnd();
+                $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
+                if (!empty($previous_term)) {
+                    $options['conditions']['Goal.end_date <'] = $previous_term['start_date'];
+                }
+                else {
+                    $before_term = $this->Team->getBeforeTermStartEnd();
+                    $options['conditions']['Goal.end_date <'] = $before_term['start'];
+                }
                 unset($options['conditions']['Goal.start_date >=']);
-                $options['conditions']['Goal.end_date <'] = $before_term['start'];
                 break;
         }
         //カテゴリ指定

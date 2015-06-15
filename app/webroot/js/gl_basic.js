@@ -323,6 +323,11 @@ $(document).ready(function () {
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
 
+    if (cake.data.j == "0") {
+        $('#FeedMoreReadLink').trigger('click');
+    }
+
+
 });
 function imageLazyOn($elm_obj) {
     if ($elm_obj === undefined) {
@@ -1298,7 +1303,23 @@ $(document).ready(function () {
     $('#select2PostCircleMember').select2({
         multiple: true,
         placeholder: cake.word.a,
-        data: cake.data.a,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.s,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
         initSelection: cake.data.b,
         formatSelection: format,
         formatResult: format,
@@ -1735,6 +1756,20 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
+        $(obj).find('.showmore-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '900px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+        $(obj).find('.showmore-comment-circle').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '920px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
     }
     else {
         $('.showmore').showMore({
@@ -1759,7 +1794,6 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
-
         $('.showmore-comment-circle').showMore({
             speedDown: 300,
             speedUp: 300,
@@ -1981,6 +2015,10 @@ function evGoalsMoreView() {
     } else if (type === "follow") {
         listBox = $("#FollowGoals");
         limitNumber = cake.data.g;
+    }
+    else if (type === "my_prev") {
+        listBox = $("#PrevGoals");
+        limitNumber = cake.data.k;
     }
     $.ajax({
         type: 'GET',
@@ -2447,7 +2485,7 @@ function copyToClipboard(url) {
 
 $(document).ready(function () {
     $(window).scroll(function () {
-        if ($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
             if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');

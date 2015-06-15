@@ -301,13 +301,30 @@ class Collaborator extends AppModel
                 'team_id' => $team_id,
                 'user_id' => $user_id,
                 'goal_id' => $goal_id,
-                'type'    => 1,
+                'type'    => self::TYPE_OWNER,
             ],
         ];
         if ($owner === false) {
-            $options['conditions']['type'] = 0;
+            $options['conditions']['type'] = self::TYPE_COLLABORATOR;
         }
         $res = $this->find('first', $options);
+        return $res;
+    }
+
+    function getOwnersStatus($goal_ids)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_ids,
+                'type'    => self::TYPE_OWNER
+            ],
+            'fields'     => [
+                'goal_id',
+                'user_id',
+                'valued_flg',
+            ]
+        ];
+        $res = $this->find('all', $options);
         return $res;
     }
 }

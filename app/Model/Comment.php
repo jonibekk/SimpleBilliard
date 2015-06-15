@@ -97,8 +97,8 @@ class Comment extends AppModel
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'body'            => [
-            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+        'body'               => [
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
 
@@ -182,8 +182,7 @@ class Comment extends AppModel
         $res = $this->find('all', $options);
 
         //既読済みに
-        /** @noinspection PhpDeprecationInspection */
-        $comment_list = Set::classicExtract($res, '{n}.Comment.id');
+        $comment_list = Hash::extract($res, '{n}.Comment.id');
         $this->CommentRead->red($comment_list);
 
         return $res;
@@ -217,7 +216,7 @@ class Comment extends AppModel
         $res = array_reverse($this->find('all', $options));
 
         // Add these comment to red list
-        $commentIdList = Set::classicExtract($res, '{n}.Comment.id');
+        $commentIdList = Hash::extract($res, '{n}.Comment.id');
         $this->CommentRead->red($commentIdList);
 
         return $res;
@@ -270,7 +269,7 @@ class Comment extends AppModel
         }
         $res = $this->find('all', $options);
         /** @noinspection PhpDeprecationInspection */
-        $res = Set::combine($res, '{n}.Comment.user_id', '{n}.Comment.user_id');
+        $res = Hash::combine($res, '{n}.Comment.user_id', '{n}.Comment.user_id');
         return $res;
     }
 
