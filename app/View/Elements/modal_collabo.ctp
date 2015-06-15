@@ -84,7 +84,7 @@
                     <?= $this->Form->end(); ?>
                     <?php if (!empty($goal['MyCollabo'])): ?>
                         <?=
-                        $this->Form->postLink(__d('gl', "コラボ抜ける"),
+                        $this->Form->postLink(__d('gl', "コラボを抜ける"),
                                               ['controller' => 'goals', 'action' => 'delete_collabo', $goal['MyCollabo'][0]['id']],
                                               ['class' => 'pull-left btn btn-link'],
                                               __d('gl', "本当にコラボレータから抜けますか？")) ?>

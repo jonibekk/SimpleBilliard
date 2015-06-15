@@ -895,7 +895,7 @@ msgstr ""
 
 #: View/Elements/modal_add_circle.ctp:61
 #: View/Elements/modal_edit_circle.ctp:61
-msgid "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。"
+msgid "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に���加できます。"
 msgstr ""
 
 #: View/Elements/modal_add_circle.ctp:63
@@ -979,7 +979,7 @@ msgid "例) ○○"
 msgstr ""
 
 #: View/Elements/modal_collabo.ctp:87
-msgid "コラボ抜ける"
+msgid "コラボを抜ける"
 msgstr ""
 
 #: View/Elements/modal_collabo.ctp:90
@@ -1699,7 +1699,7 @@ msgid "達成したいことをざっくり書く"
 msgstr ""
 
 #: View/Goals/add.ctp:75
-msgid "例）新しい価値を人々に提供する"
+msgid "���）新しい価値を人々に提供する"
 msgstr ""
 
 #: View/Goals/add.ctp:84;279

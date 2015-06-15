@@ -11,13 +11,14 @@
 ?>
 
 <style type="text/css">
-    .two_fa_step_box {
+
+    /*.two_fa_step_box {
         border-bottom-style: dashed;
         border-bottom-width: thin;
         margin-bottom: 18px;
         margin-top: 5px;
         padding: 18px;
-    }
+    }*/
     .two_fa_title {
 
     }
@@ -49,28 +50,32 @@
             'novalidate'    => true,
         ]); ?>
         <div class="modal-body" style="max-height: none">
-            <p>STEP 1 ></p>
             <div class="two_fa_step_box">
-                <label for="" ><?= __d('gl', "アプリをインストールする") ?></label>
-                <p><?= __d('gl', "Google認証システム") ?></p>
-                <p>
-                    Android <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __d('gl', "こちらからダウンロード") ?></a>
-                </p>
-                <p>
-                    IOS <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __d('gl', "こちらからダウンロード") ?></a>
-                </p>
+                <label for="" ><?= __d('gl', "STEP 1 ： ") ?><?= __d('gl', "アプリをインストールする") ?></label>
+                <p><?= __d('gl','Google Authenticatorをダウンロードしましょう') ?></p>
+                <div class="modal_two_fa_download">
+                  <div class="btn-frame">
+                    <p><i class="fa fa-android"></i> Android</p>
+                    <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __d('gl', "ダウンロード") ?></a>
+                  </div>
+                  <div class="btn-frame">
+                      <p><i class="fa fa-apple"></i> iOS</p>
+                      <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __d('gl', "ダウンロード") ?></a>
+                  </div>
+                </div>
             </div>
 
-            <p>STEP 2 ></p>
             <div class="two_fa_step_box">
-                <label for="" ><?= __d('gl', "バーコードをスキャンする") ?></label>
+                <label for="" ><?= __d('gl', "STEP 2 ： ") ?><?= __d('gl', "バーコードをスキャンする") ?></label>
                 <p><?= __d('gl', "アプリを起動し、カメラを使用してバーコードをスキャンします。") ?></p>
-                <?= $this->Html->image($url_2fa) ?>
+                <?= $this->Html->image($url_2fa,[
+                  width => '120',
+                  height => '120',
+                ]) ?>
             </div>
 
-            <p>STEP 3 ></p>
             <div class="two_fa_step_box">
-                <label for="" ><?= __d('gl', "確認コードを入力する") ?></label>
+                <label for="" ><?= __d('gl', "STEP 3 ： ") ?><?= __d('gl', "確認コードを入力する") ?></label>
                 <p><?= __d('gl', "バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。") ?></p>
             <?=
             $this->Form->input('2fa_code',

@@ -22,9 +22,9 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'control-label'
                     ],
-                    'wrapInput' => 'col col-sm-6',
+                    'wrapInput' => 'aaa',
                     'class'     => 'form-control modal_input-design'
                 ],
                 'url'           => ['controller' => 'users', 'action' => 'change_email'],
@@ -33,15 +33,13 @@
                 'id'            => 'ChangeEmail',
             ]); ?>
             <div class="modal-body">
-                <p><?= __d('gl', "メールアドレスを保存後に、そのメールアドレス宛に認証用のメールが届きます。") ?></p>
-
-                <p><?= __d('gl', "これは、あなたがそのメールアドレスの持ち主である事を確認する為のものです。") ?></p>
+                <p><?= __d('gl', "変更後にメールアドレス宛に認証用のメールが届きます。") ?></p>
+                <p><?= __d('gl', "メールに掲載されている確認URLを開くと変更が完了します。") ?></p>
                 <?=
                 $this->Form->input('email', [
-                    'label'       => __d('gl', "メールアドレス"),
+                    'label'       => __d('gl', "新しいメールアドレス"),
                     'placeholder' => __d('gl', "hiroshi@example.com"),
                 ]) ?>
-                <hr>
                 <?=
                 $this->Form->input('password_request2', [
                     'label' => __d('gl', "パスワード入力"),

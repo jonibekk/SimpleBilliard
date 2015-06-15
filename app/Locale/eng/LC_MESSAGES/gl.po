@@ -960,7 +960,7 @@ msgid "例) ○○"
 msgstr "eg) **"
 
 #: View/Elements/modal_collabo.ctp:87
-msgid "コラボ抜ける"
+msgid "コラボを抜ける"
 msgstr "Quite the collaboration"
 
 #: View/Elements/modal_collabo.ctp:90
@@ -1122,7 +1122,7 @@ msgid "まだ、この投稿を読んだ人はいません。"
 msgstr "No-one has read this comment yet."
 
 #: View/Elements/Feed/modal_post_liked_users.ctp:18
-msgid "この投稿を%s人が「いいね！」と言っています。"
+msgid "この投稿���%s人が「いいね！」と言っています。"
 msgstr "%s people liked this post."
 
 #: View/Elements/Feed/modal_post_red_users.ctp:18

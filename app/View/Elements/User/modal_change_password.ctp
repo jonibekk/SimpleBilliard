@@ -22,9 +22,9 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label'
+                        'class' => 'control-label'
                     ],
-                    'wrapInput' => 'col col-sm-6',
+                    'wrapInput' => 'aaa',
                     'class'     => 'form-control modal_input-design'
                 ],
                 'url'           => ['action' => 'change_password'],
