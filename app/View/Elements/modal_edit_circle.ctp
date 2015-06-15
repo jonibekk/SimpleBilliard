@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/modal_edit_circle.ctp -->
-<div class="modal-dialog">
+<div class="modal-dialog" tabindex="-1">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
@@ -23,9 +23,9 @@
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
-                    'class' => 'col col-sm-3 modal-label pr_12px'
+                    'class' => 'modal-label pr_12px'
                 ],
-                'wrapInput' => 'col col-sm-6',
+                'wrapInput' => false,
                 'class'     => 'form-control modal_input-design'
             ],
             'class'         => 'form-horizontal',
@@ -41,11 +41,10 @@
                                 'placeholder'              => __d('gl', "例) 営業部"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                ]) ?>
-            <hr>
             <div class="form-group">
-                <label class="col col-sm-3 control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
+                <label class="control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
 
-                <div class="col col-sm-6">
+                <div class="bbb">
                     <?=
                     $this->Form->hidden('members',
                                         ['class' => 'ajax_add_select2_members', 'value' => $this->request->data['Circle']['members'], 'style' => "width: 100%", 'circle_id' => $this->request->data['Circle']['id']]) ?>
@@ -55,7 +54,6 @@
                             h($this->Session->read('Auth.User.display_username'))) ?></span>
                 </div>
             </div>
-            <hr>
             <?php $privacy_option = Circle::$TYPE_PUBLIC;
             $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
                                                                                                    "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
@@ -64,24 +62,23 @@
             ?>
             <?php echo $this->Form->input('public_flg', array(
                 'type'    => 'radio',
-                'before'  => '<label class="col col-sm-3 control-label modal-label">' . __d('gl',
+                'before'  => '<label class="control-label modal-label">' . __d('gl',
                                                                                             'プライバシー') . '</label>',
                 'legend'  => false,
                 'class'   => false,
                 'options' => $privacy_option,
+                'required' => false,
             )); ?>
-            <hr>
             <?=
             $this->Form->input('description',
                                ['label'       => __d('gl', "サークルの説明"),
                                 'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
                                 'rows'        => 1,
                                ]) ?>
-            <hr>
             <div class="form-group">
-                <label for="" class="col col-sm-3 control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
+                <label for="" class="control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
 
-                <div class="col col-sm-6">
+                <div class="ccc">
                     <div class="fileinput_small fileinput-new" data-provides="fileinput">
                         <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                              style="width: 96px; height: 96px; line-height: 96px;"

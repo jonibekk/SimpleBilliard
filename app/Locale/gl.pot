@@ -797,7 +797,7 @@ msgid "エラーが発生しました。"
 msgstr ""
 
 #: View/Elements/gl_common_js.ctp:511;518;527;534
-#: View/Elements/modal_help.ctp:34
+#: View/Elements/modal_tips_add_goal.ctp:34
 #: View/Elements/modal_privacy_policy.ctp:19
 #: View/Elements/modal_public_circles.ctp:56
 #: View/Elements/modal_share_range.ctp:40

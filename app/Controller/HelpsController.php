@@ -56,7 +56,7 @@ class HelpsController extends AppController
         if (isset($this->type[$type])) {
             $help_item = $this->type[$type];
             $this->set(compact('help_item'));
-            $response = $this->render('modal_help');
+            $response = $this->render('modal_tips_add_goal');
             $html = $response->__toString();
         }
         return $this->_ajaxGetResponse($html);

@@ -9,7 +9,7 @@
  * @var      $help_item
  */
 ?>
-<!-- START app/View/Elements/modal_help.ctp -->
+<!-- START app/View/Elements/modal_tips_add_goal.ctp -->
 <div class="modal-dialog modal-mini">
     <div class="modal-content parent-p_0px">
         <div class="modal-header">
@@ -35,4 +35,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_help.ctp -->
+<!-- END app/View/Elements/modal_tips_add_goal.ctp -->
