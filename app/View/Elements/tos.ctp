@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var CodeCompletionView $this
+ */
+?>
 <!-- START app/View/Elements/tos.ctp -->
 <?php if (!isset($no_title) || !$no_title): ?>
     <h2>「Goalous」サービス利用規約（無償版）</h2>

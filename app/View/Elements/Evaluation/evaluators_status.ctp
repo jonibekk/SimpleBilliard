@@ -5,7 +5,8 @@
  * Date: 15/04/15
  * Time: 18:42
  *
- * @var $user
+ * @var CodeCompletionView $this
+ * @var                    $user
  */
 ?>
 <!-- START app/View/Elements/Evaluation/evaluators_status.ctp -->

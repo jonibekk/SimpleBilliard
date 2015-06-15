@@ -2,8 +2,8 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
- * @var $title_for_layout string
- * @var $this             View
+ * @var                    $title_for_layout string
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Layouts/setting.ctp -->

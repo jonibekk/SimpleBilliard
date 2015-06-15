@@ -5,7 +5,8 @@
  * Date: 15/04/17
  * Time: 16:56
  *
- * @var $user
+ * @var CodeCompletionView $this
+ * @var                    $user
  */
 ?>
 <!-- START app/View/Elements/Evaluation/incomplete_oneself.ctp -->

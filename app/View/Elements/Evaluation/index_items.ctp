@@ -4,9 +4,10 @@
  * Date: 3/26/15
  * Time: 3:45 PM
  *
- * @var $evaluatees
- * @var $eval_term_id
- * @var $eval_is_frozen
+ * @var CodeCompletionView $this
+ * @var                    $evaluatees
+ * @var                    $eval_term_id
+ * @var                    $eval_is_frozen
  */
 ?>
 <!-- START app/View/Elements/Evaluation/index_items.ctp -->

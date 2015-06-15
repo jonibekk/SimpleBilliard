@@ -5,8 +5,9 @@
  * Date: 1/20/15
  * Time: 6:34 PM
  *
- * @var $goal_id
- * @var $ar_count
+ * @var                    $goal_id
+ * @var                    $ar_count
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/Goal/add_new_action_form.ctp -->

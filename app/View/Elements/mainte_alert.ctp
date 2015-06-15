@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var CodeCompletionView $this
+ * @var                    $maintenance
+ */
+?>
 <!-- START app/View/Elements/mainte_alert.ctp -->
 <?php if (!empty($maintenance) && isset($maintenance['Maintenance'])): ?>
     <div class="alert alert-error">

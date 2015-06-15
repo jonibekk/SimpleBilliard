@@ -5,8 +5,9 @@
  * Date: 15/04/27
  * Time: 16:57
  *
- * @var $notify_items
- * @var $location_type
+ * @var CodeCompletionView $this
+ * @var                    $notify_items
+ * @var                    $location_type
  */
 ?>
 

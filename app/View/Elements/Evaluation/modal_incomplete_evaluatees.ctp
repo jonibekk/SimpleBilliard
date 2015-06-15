@@ -5,7 +5,8 @@
  * Date: 15/04/14
  * Time: 17:35
  *
- * @var $incomplete_evaluatees
+ * @var CodeCompletionView $this
+ * @var                    $incomplete_evaluatees
  */
 
 ?>

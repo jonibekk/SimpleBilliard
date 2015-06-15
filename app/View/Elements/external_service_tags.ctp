@@ -4,7 +4,7 @@
  * Date: 4/30/14
  * Time: 5:52 PM
  *
- * @var $this View
+ * @var CodeCompletionView $this
  **/
 ?>
 <!-- START app/View/Elements/external_service_tags.ctp -->

@@ -4,8 +4,7 @@
  * Date: 6/11/14
  * Time: 11:40 AM
  *
- * @var View                   $this
- * @var                        $this CodeCompletionView
+ * @var CodeCompletionView     $this
  * @var                        $goal_category_list
  * @var                        $priority_list
  * @var                        $kr_value_unit_list

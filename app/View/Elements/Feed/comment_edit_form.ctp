@@ -5,8 +5,9 @@
  * Date: 2014/07/21
  * Time: 3:12
  *
- * @var $comment
- * @var $id_prefix
+ * @var CodeCompletionView $this
+ * @var                    $comment
+ * @var                    $id_prefix
  */
 ?>
 <?php if (!isset($id_prefix)) {

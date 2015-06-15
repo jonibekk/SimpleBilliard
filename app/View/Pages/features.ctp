@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var CodeCompletionView $this
+ */
+?>
 <!-- START app/View/Pages/features.ctp -->
 <!-- start: title -->
 <div class="page-title">

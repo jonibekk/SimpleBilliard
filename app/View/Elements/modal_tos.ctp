@@ -1,6 +1,8 @@
-<?php /**
- * @var $this View
- * @var $no_title
+<?php
+/**
+ * @var CodeCompletionView $this
+ * @var                    $this View
+ * @var                    $no_title
  */
 ?>
 <!-- START app/View/Elements/modal_tos.ctp -->

@@ -1,5 +1,6 @@
 <?php /**
- * @var $scripts_for_layout string
+ * @var                    $scripts_for_layout string
+ * @var CodeCompletionView $this
  */
 ?>
 <?= $scripts_for_layout; ?>

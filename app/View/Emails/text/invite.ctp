@@ -6,11 +6,12 @@
  *
  * @copyright Copyright 2010 - 2011, Cake Development Corporation (http://cakedc.com)
  * @license   MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @var $to_user_name
- * @var $from_user_name
- * @var $team_name
- * @var $message
- * @var $url
+ * @var                    $to_user_name
+ * @var                    $from_user_name
+ * @var                    $team_name
+ * @var                    $message
+ * @var                    $url
+ * @var CodeCompletionView $this
  */
 if ($to_user_name) {
     echo __d('mail', 'こんにちは %sさん、', h($to_user_name));

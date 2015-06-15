@@ -4,6 +4,9 @@
  * User: saeki
  * Date: 15/04/15
  * Time: 10:28
+ *
+ * @var CodeCompletionView $this
+ * @var                    $user
  */
 ?>
 <!-- START app/View/Elements/Evaluation/incomplete_evaluatee.ctp -->

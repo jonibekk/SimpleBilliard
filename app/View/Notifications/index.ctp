@@ -5,8 +5,9 @@
  * Date: 15/04/27
  * Time: 14:22
  *
- * @var $notify_items
- * @var $isExistMoreNotify
+ * @var                    $notify_items
+ * @var                    $isExistMoreNotify
+ * @var CodeCompletionView $this
  */
 ?>
 

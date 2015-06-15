@@ -5,8 +5,8 @@
  * Date: 6/6/14
  * Time: 3:19 PM
  *
- * @var View $this
- * @var      $help_item
+ * @var CodeCompletionView $this
+ * @var                    $help_item
  */
 ?>
 <!-- START app/View/Elements/modal_help.ctp -->

@@ -2,8 +2,9 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Errors
  * @since         CakePHP(tm) v 0.10.0.1076
- * @var $name string
- * @var $url  string
+ * @var CodeCompletionView $this
+ * @var                    $name string
+ * @var                    $url  string
  */
 ?>
 <div class="jumbotron jumbotron-icon text-center">

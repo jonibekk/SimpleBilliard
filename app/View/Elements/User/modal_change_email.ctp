@@ -5,7 +5,7 @@
  * Date: 6/6/14
  * Time: 3:19 PM
  *
- * @var View $this
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/User/modal_change_email.ctp -->

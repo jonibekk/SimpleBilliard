@@ -5,7 +5,8 @@
  * Date: 2014/07/21
  * Time: 3:12
  *
- * @var $post
+ * @var                    $post
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/Feed/post_edit_form.ctp -->

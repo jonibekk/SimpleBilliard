@@ -4,10 +4,9 @@
  * Date: 6/11/14
  * Time: 11:40 AM
  *
- * @var View $this
- * @var      $this CodeCompletionView
- * @var      $border_months_options
- * @var      $start_term_month_options
+ * @var CodeCompletionView $this
+ * @var                    $border_months_options
+ * @var                    $start_term_month_options
  */
 ?>
 <!-- START app/View/Elements/Team/edit_basic_setting.ctp -->

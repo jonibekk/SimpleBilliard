@@ -5,17 +5,17 @@
  * Date: 5/28/14
  * Time: 5:04 PM
  *
- * @var       $title_for_layout string
- * @var       $this             CodeCompletionView
- * @var       $nav_disable
- * @var array $my_teams
- * @var       $current_global_menu
- * @var       $avail_sub_menu
- * @var       $my_member_status
- * @var       $is_evaluation_available
- * @var       $evaluable_cnt
- * @var       $unapproved_cnt
- * @var       $all_alert_cnt
+ * @var CodeCompletionView $this
+ * @var                    $title_for_layout string
+ * @var                    $nav_disable
+ * @var array              $my_teams
+ * @var                    $current_global_menu
+ * @var                    $avail_sub_menu
+ * @var                    $my_member_status
+ * @var                    $is_evaluation_available
+ * @var                    $evaluable_cnt
+ * @var                    $unapproved_cnt
+ * @var                    $all_alert_cnt
  */
 ?>
 <style type="text/css">
@@ -72,7 +72,7 @@
                 </li>
                 <li class="mtb_5px mtb-sm_0">
                     <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
-                        href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'member_list']) ?>">
+                       href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'member_list']) ?>">
                         <div class="ta-sm_c">
                             <i class="fa fa-users header-link header-icon nav-xxs-icon"></i>
 

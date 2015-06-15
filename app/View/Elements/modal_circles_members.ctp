@@ -5,8 +5,8 @@
  * Date: 2015/04/3
  * Time: 3:19 PM
  *
- * @var View
- * @var $circle_members
+ * @var CodeCompletionView $this
+ * @var                    $circle_members
  */
 ?>
 <!-- START app/View/Elements/modal_circles_members.ctp -->

@@ -5,7 +5,8 @@
  * Date: 5/19/15
  * Time: 02:16
  *
- * @var $post
+ * @var CodeCompletionView $this
+ * @var                    $post
  */
 ?>
 <!-- START app/View/Elements/Feed/goal_sharing_block.ctp -->

@@ -1,5 +1,7 @@
-<?php /**
- * @var $title_for_layout string
+<?php
+/**
+ * @var                    $title_for_layout string
+ * @var CodeCompletionView $this
  */
 if (!isset($channel)):
     $channel = array();

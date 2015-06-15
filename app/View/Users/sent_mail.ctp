@@ -1,6 +1,7 @@
-<?php /**
- * @var View $this
- * @var      $email
+<?php
+/**
+ * @var CodeCompletionView $this
+ * @var                    $email
  */
 ?>
 <!-- START app/View/Users/sent_mail.ctp -->

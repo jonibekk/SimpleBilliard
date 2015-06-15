@@ -5,9 +5,9 @@
  * Date: 6/6/14
  * Time: 3:19 PM
  *
- * @var View   $this
- * @var string $email
- * @var string $email_id
+ * @var CodeCompletionView $this
+ * @var string             $email
+ * @var string             $email_id
  */
 ?>
 <!-- START app/View/Elements/User/modal_delete_email.ctp -->

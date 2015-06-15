@@ -4,6 +4,9 @@
  * User: daikihirakata
  * Date: 5/19/15
  * Time: 02:34
+ *
+ * @var CodeCompletionView $this
+ * @var                    $post
  */
 ?>
 <!-- START app/View/Elements/Feed/display_share_range.ctp -->

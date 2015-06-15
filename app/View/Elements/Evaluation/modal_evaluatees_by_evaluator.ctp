@@ -5,7 +5,8 @@
  * Date: 15/04/17
  * Time: 15:12
  *
- * @var $evaluator
+ * @var CodeCompletionView $this
+ * @var                    $evaluator
  */
 ?>
 <!-- START app/View/Elements/Elements/modal_evaluatees_by_evaluator.ctp -->

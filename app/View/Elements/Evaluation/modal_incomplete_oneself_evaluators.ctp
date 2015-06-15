@@ -4,6 +4,9 @@
  * User: saeki
  * Date: 15/04/17
  * Time: 16:50
+ *
+ * @var CodeCompletionView $this
+ * @var                    $oneself_incomplete_users
  */
 ?>
 <!-- START app/View/Elements/Elements/modal_incomplete_oneself_evaluators.ctp -->

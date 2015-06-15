@@ -4,17 +4,16 @@
  * Date: 6/11/14
  * Time: 11:40 AM
  *
- * @var View $this
- * @var      $this CodeCompletionView
- * @var      $border_months_options
- * @var      $start_term_month_options
- * @var      $current_eval_is_started
- * @var      $previous_term_start_date
- * @var      $previous_term_end_date
- * @var      $current_term_start_date
- * @var      $current_term_end_date
- * @var      $next_term_start_date
- * @var      $next_term_end_date
+ * @var CodeCompletionView $this
+ * @var                    $border_months_options
+ * @var                    $start_term_month_options
+ * @var                    $current_eval_is_started
+ * @var                    $previous_term_start_date
+ * @var                    $previous_term_end_date
+ * @var                    $current_term_start_date
+ * @var                    $current_term_end_date
+ * @var                    $next_term_start_date
+ * @var                    $next_term_end_date
  */
 ?>
 <!-- START app/View/Elements/Team/edit_term_setting.ctp -->

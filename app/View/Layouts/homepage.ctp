@@ -10,9 +10,10 @@
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @var $title_for_layout
- * @var $this View
- * @var $top_lang
+ * @var                    $title_for_layout
+ * @var                    $this View
+ * @var                    $top_lang
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Layouts/homepage.ctp -->

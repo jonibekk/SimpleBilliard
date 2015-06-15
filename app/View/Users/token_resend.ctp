@@ -6,7 +6,7 @@
  * Date: 2014/06/01
  * Time: 0:19
  *
- * @var $this View
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Users/token_resend.ctp -->
