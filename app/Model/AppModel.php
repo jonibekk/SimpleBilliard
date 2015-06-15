@@ -69,13 +69,13 @@ class AppModel extends Model
     ];
 
     public $model_key_map = [
-        'comment_id'     => 'Comment',
-        'post_id'        => 'Post',
-        'goal_id'        => 'Goal',
-        'team_member_id' => 'TeamMember',
-        'circle_id'      => 'Circle',
-        'term_id'        => 'EvaluateTerm',
-        'team_id'        => 'Team',
+        'comment_id'       => 'Comment',
+        'post_id'          => 'Post',
+        'goal_id'          => 'Goal',
+        'team_member_id'   => 'TeamMember',
+        'circle_id'        => 'Circle',
+        'evaluate_term_id' => 'EvaluateTerm',
+        'team_id'          => 'Team',
     ];
 
     /**

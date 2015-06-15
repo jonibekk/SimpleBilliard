@@ -20,7 +20,7 @@
                     <?php foreach ($oneself_incomplete_users as $user): ?>
                         <?=
                         $this->element('Evaluation/incomplete_oneself',
-                                       ['user' => $user['EvaluatorUser'], 'term_id' => $term_id]) ?>
+                                       ['user' => $user['EvaluatorUser'], 'evaluate_term_id' => $term_id]) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>

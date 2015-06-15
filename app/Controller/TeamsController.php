@@ -492,7 +492,7 @@ class TeamsController extends AppController
 
     function ajax_upload_final_evaluations_csv()
     {
-        $term_id = viaIsSet($this->request->params['named']['term_id']);
+        $term_id = viaIsSet($this->request->params['named']['evaluate_term_id']);
         $this->request->allowMethod('post');
         $result = [
             'error' => false,
@@ -527,7 +527,7 @@ class TeamsController extends AppController
 
     function download_final_evaluations_csv()
     {
-        $term_id = viaIsSet($this->request->params['named']['term_id']);
+        $term_id = viaIsSet($this->request->params['named']['evaluate_term_id']);
         $team_id = $this->Session->read('current_team_id');
         $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         $this->layout = false;

@@ -174,9 +174,9 @@ class EvaluationsController extends AppController
     public function ajax_get_incomplete_evaluatees()
     {
         $this->_ajaxPreProcess();
-        $term_id = $this->request->params['named']['term_id'];
+        $term_id = $this->request->params['named']['evaluate_term_id'];
         $incomplete_evaluatees = $this->Evaluation->getIncompleteEvaluatees($term_id);
-        $this->set(compact('incomplete_evaluatees', 'term_id'));
+        $this->set(compact('incomplete_evaluatees', 'evaluate_term_id'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -189,9 +189,9 @@ class EvaluationsController extends AppController
     public function ajax_get_incomplete_evaluators()
     {
         $this->_ajaxPreProcess();
-        $term_id = $this->request->params['named']['term_id'];
+        $term_id = $this->request->params['named']['evaluate_term_id'];
         $incomplete_evaluators = $this->Evaluation->getIncompleteEvaluators($term_id);
-        $this->set(compact('incomplete_evaluators', 'term_id'));
+        $this->set(compact('incomplete_evaluators', 'evaluate_term_id'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -207,7 +207,7 @@ class EvaluationsController extends AppController
         $this->_ajaxPreProcess();
         $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
 
-        $term_id = $this->request->params['named']['term_id'];
+        $term_id = $this->request->params['named']['evaluate_term_id'];
         $res = $this->Evaluation->getEvaluators($term_id, $evaluatee_id);
         $evaluators = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
 
@@ -227,7 +227,7 @@ class EvaluationsController extends AppController
         $this->_ajaxPreProcess();
         $evaluator = $this->Evaluation->EvaluatorUser->findById($evaluator_id);
 
-        $term_id = $this->request->params['named']['term_id'];
+        $term_id = $this->request->params['named']['evaluate_term_id'];
         $res = $this->Evaluation->getEvaluateesByEvaluator($term_id, $evaluator_id);
         $incomplete_evaluatees = Hash::sort($res, '{n}.Evaluation.index_num', 'desc');
         $this->set(compact('incomplete_evaluatees', 'evaluator'));
@@ -244,9 +244,9 @@ class EvaluationsController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        $term_id = $this->request->params['named']['term_id'];
+        $term_id = $this->request->params['named']['evaluate_term_id'];
         $oneself_incomplete_users = $this->Evaluation->getIncompleteOneselfEvaluators($term_id);
-        $this->set(compact('oneself_incomplete_users', 'term_id'));
+        $this->set(compact('oneself_incomplete_users', 'evaluate_term_id'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
