@@ -716,6 +716,8 @@ class Goal extends AppModel
         $follow_goal_ids = $this->Follower->getFollowList($this->my_uid);
         $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->my_uid);
         $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        //フォローしているゴールとコーチングしているゴールをマージして、そこからコラボしているゴールを除外したものが
+        //フォロー中ゴールとなる
         $goal_ids = $follow_goal_ids + $coaching_goal_ids;
         //exclude collabo goal
         foreach ($collabo_goal_ids as $k => $v) {
@@ -727,11 +729,14 @@ class Goal extends AppModel
         $goals = $this->getByGoalId($goal_ids, $limit, $page);
         //のちにコラボデータとマージしやすいように配列のキーをgoal_idに差し替える
         $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
+        //再度ゴールIDを抽出(フォロー中、コーチング、コラボのゴールは期間の抽出ができない為、期間をキーにして再度抽出する必要がある)
+        $goal_ids = Hash::extract($goals, '{n}.Goal.id');
         // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
         // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
         $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
         //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
         $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
+        //認定ステータスのデータをマージ
         $goals = Hash::merge($goals, $approval_statuses);
         $res = $this->setFollowGoalApprovalFlag($goals);
         $res = $this->sortModified($res);
