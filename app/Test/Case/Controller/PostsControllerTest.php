@@ -1093,7 +1093,8 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'],
+                              ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]コメント編集");
@@ -1124,7 +1125,8 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'],
+                              ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]コメント編集");

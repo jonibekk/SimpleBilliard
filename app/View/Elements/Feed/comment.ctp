@@ -40,14 +40,14 @@
                                    target-id="<?= $id_prefix ?>CommentEditForm_<?= $comment['id'] ?>"
                                    opend-text="<?= __d('gl', "編集をやめる") ?>"
                                    closed-text="<?= __d('gl', "コメントを編集") ?>"
-                                   ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_comment_form', 'comment_id'=>$comment['id'], $id_prefix]) ?>"
+                                   ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_comment_form', 'comment_id' => $comment['id'], $id_prefix]) ?>"
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
                                     ><?= __d('gl', "コメントを編集") ?></a></li>
                             <li><?=
                                 $this->Form->postLink(__d('gl', "コメントを削除"),
-                                                      ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id'=>$comment['id']],
+                                                      ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id' => $comment['id']],
                                                       null, __d('gl', "本当にこのコメントを削除しますか？")) ?></li>
                         </ul>
                     </div>
@@ -186,7 +186,7 @@
                     <?= __d('gl', "いいね！") ?></a><span
                     class="font_lightgray"> ･ </span>
             <span>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', 'comment_id'=>$comment['id']]) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', 'comment_id' => $comment['id']]) ?>"
                                class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="<?= $id_prefix ?>CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span

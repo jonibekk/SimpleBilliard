@@ -21,7 +21,7 @@
                     <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
                             <div class="pull-right">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal','goal_id' => $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
@@ -38,7 +38,7 @@
                                 </a>
                             </div>
                             <div class="ln_contain w_88per">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal','goal_id' => $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($post['Goal']['name']) ?>
                                 </a>
@@ -99,7 +99,7 @@
                                            closed-text="<?= __d('gl', "投稿を編集") ?>"
                                            click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
                                            hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
-                                           ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', 'post_id'=>$post['Post']['id']]) ?>"
+                                           ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', 'post_id' => $post['Post']['id']]) ?>"
                                             ><?= __d('gl', "投稿を編集") ?></a>
                                     </li>
                                 <?php endif ?>
@@ -107,7 +107,7 @@
                                     <?php if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
                                         <li><?=
                                             $this->Form->postLink(__d('gl', "投稿を削除"),
-                                                                  ['controller' => 'posts', 'action' => 'post_delete', 'post_id'=>$post['Post']['id']],
+                                                                  ['controller' => 'posts', 'action' => 'post_delete', 'post_id' => $post['Post']['id']],
                                                                   null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
                                     <?php endif; ?>
                                 <?php endif ?>

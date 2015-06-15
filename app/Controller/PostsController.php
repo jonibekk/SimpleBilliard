@@ -338,7 +338,7 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_new_comment_form( $prefix = null)
+    public function ajax_get_new_comment_form($prefix = null)
     {
         $post_id = viaIsSet($this->request->params['named']['post_id']);
         $result = [
@@ -360,7 +360,7 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_edit_comment_form( $id_prefix = null)
+    public function ajax_get_edit_comment_form($id_prefix = null)
     {
         $comment_id = viaIsSet($this->request->params['named']['comment_id']);
         $result = [

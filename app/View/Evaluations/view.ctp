@@ -28,7 +28,7 @@
     ],
     'class'         => 'form-horizontal',
     'id'            => 'evaluation-form',
-    'url'           => ['controller' => 'evaluations', 'action' => 'add', 'evaluatee_id'=>$evaluateeId, 'evaluate_term_id'=>$evaluateTermId],
+    'url'           => ['controller' => 'evaluations', 'action' => 'add', 'evaluatee_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId],
     'data-bv-live'  => "disabled"
 ]) ?>
 

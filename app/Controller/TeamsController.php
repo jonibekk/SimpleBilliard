@@ -258,7 +258,7 @@ class TeamsController extends AppController
 
     function to_inactive_goal_category()
     {
-        $id =  viaIsSet($this->request->params['named']['team_id']);
+        $id = viaIsSet($this->request->params['named']['team_id']);
         $this->request->allowMethod(['post']);
         $this->Goal->GoalCategory->setToInactive($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリを削除しました。"));

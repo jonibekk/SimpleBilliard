@@ -33,13 +33,13 @@
             <?php if ($current_eval_is_frozen): ?>
                 <?=
                 $this->Form->postLink(__d('gl', "今期の評価の凍結を解除する"),
-                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id'=>$current_term_id],
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id' => $current_term_id],
                                       ['class' => 'btn btn-default'],
                                       __d('gl', "今期の評価の凍結を解除します。よろしいですか？")) ?>
             <?php else: ?>
                 <?=
                 $this->Form->postLink(__d('gl', "今期の評価を凍結する"),
-                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id'=>$current_term_id],
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id' => $current_term_id],
                                       ['class' => 'btn btn-primary'],
                                       __d('gl', "今期の評価を凍結します。よろしいですか？")) ?>
             <?php endif; ?>
@@ -50,13 +50,13 @@
             <?php if ($previous_eval_is_frozen): ?>
                 <?=
                 $this->Form->postLink(__d('gl', "前期の評価の凍結を解除する"),
-                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id'=>$previous_term_id],
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id' => $previous_term_id],
                                       ['class' => 'btn btn-default'],
                                       __d('gl', "前期の評価の凍結を解除します。よろしいですか？")) ?>
             <?php else: ?>
                 <?=
                 $this->Form->postLink(__d('gl', "前期の評価を凍結する"),
-                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id'=>$previous_term_id],
+                                      ['controller' => 'teams', 'action' => 'change_freeze_status', 'term_id' => $previous_term_id],
                                       ['class' => 'btn btn-primary'],
                                       __d('gl', "前期の評価を凍結します。よろしいですか？")) ?>
             <?php endif; ?>
