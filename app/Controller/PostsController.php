@@ -584,7 +584,7 @@ class PostsController extends AppController
         $this->set(compact('circles', 'users', 'total_share_user_count'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render('modal_share_circles_users');
+        $response = $this->render('modal_share_range');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);

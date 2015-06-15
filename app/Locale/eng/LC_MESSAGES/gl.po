@@ -788,7 +788,7 @@ msgstr "An error has occurred."
 #: View/Elements/gl_common_js.ctp:511;518;527;534
 #: View/Elements/modal_help.ctp:34 View/Elements/modal_privacy_policy.ctp:19
 #: View/Elements/modal_public_circles.ctp:56
-#: View/Elements/modal_share_circles_users.ctp:40
+#: View/Elements/modal_share_range.ctp:40
 #: View/Elements/modal_tos.ctp:21 View/Elements/modal_tutorial.ctp:55
 #: View/Elements/Feed/modal_comment_liked_users.ctp:34
 #: View/Elements/Feed/modal_comment_red_users.ctp:34
@@ -1001,7 +1001,7 @@ msgstr "Public Circle"
 msgid "公開サークルはありません。"
 msgstr "There are no public circles."
 
-#: View/Elements/modal_share_circles_users.ctp:20
+#: View/Elements/modal_share_range.ctp:20
 msgid "%s人に共有しました"
 msgstr "Shared with %s people"
 
