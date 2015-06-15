@@ -116,11 +116,6 @@ class EvaluationsController extends AppController
                    ));
     }
 
-    /**
-     * @param $evaluateeId
-     * @param $evaluateTermId
-     */
-
     function add()
     {
         $evaluateeId = viaIsSet($this->request->params['named']['evaluatee_id']);
@@ -245,7 +240,7 @@ class EvaluationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function circle_feed()
+    public function ajax_get_incomplete_oneself()
     {
         $this->_ajaxPreProcess();
 
