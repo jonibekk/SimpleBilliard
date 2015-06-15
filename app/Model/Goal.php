@@ -724,26 +724,30 @@ class Goal extends AppModel
         if ($type == "count") {
             return $this->getByGoalId($goal_ids, $limit, $page, $type);
         }
-        $res = $this->getByGoalId($goal_ids, $limit, $page);
+        $goals = $this->getByGoalId($goal_ids, $limit, $page);
+        //のちにコラボデータとマージしやすいように配列のキーをgoal_idに差し替える
+        $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
         // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
         // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
-        $res = $this->setFollowGoalApprovalFlag($res);
+        $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
+        //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
+        $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
+        $goals = Hash::merge($goals, $approval_statuses);
+        $res = $this->setFollowGoalApprovalFlag($goals);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
 
         return $res;
     }
 
-    function setFollowGoalApprovalFlag($goal_list)
+    function setFollowGoalApprovalFlag($goals)
     {
-        foreach ($goal_list as $key => $goal) {
-            $cb_goal = $this->Collaborator->getCollaborator(
-                $goal['Goal']['team_id'], $goal['Goal']['user_id'], $goal['Goal']['id']);
-            if (isset($cb_goal['Collaborator']['id']) === true) {
-                $goal_list[$key]['Goal']['owner_approval_flag'] = $cb_goal['Collaborator']['valued_flg'];
+        foreach ($goals as $key => $goal) {
+            if (isset($goal['Collaborator']['valued_flg'])) {
+                $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['valued_flg'];
             }
         }
-        return $goal_list;
+        return $goals;
     }
 
     function getGoalAndKr($goal_ids, $user_id)

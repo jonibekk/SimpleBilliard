@@ -115,7 +115,7 @@
                                     <a href="#" class="copy_me"
                                        onclick="copyToClipboard('<?=
                                        $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
-                                                        true) ?>')">
+                                                        true) ?>'); return false;">
                                         <?= __d('gl', "リンクをコピー") ?></a>
                                 </li>
                             </ul>

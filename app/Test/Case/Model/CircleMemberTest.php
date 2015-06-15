@@ -70,6 +70,9 @@ class CircleMemberTest extends CakeTestCase
         $this->CircleMember->current_team_id = $team_id;
         $this->CircleMember->Circle->my_uid = $uid;
         $this->CircleMember->Circle->current_team_id = $team_id;
+        $this->CircleMember->Team->TeamMember->my_uid = $uid;
+        $this->CircleMember->Team->TeamMember->current_team_id = $team_id;
+
     }
 
     function testGetMemberList()
@@ -154,26 +157,26 @@ class CircleMemberTest extends CakeTestCase
 
     public function testShowHideStats()
     {
-        $result = $this->CircleMember->show_hide_stats('user_id','circle_id');
+        $result = $this->CircleMember->show_hide_stats('user_id', 'circle_id');
 
         $expected = array(
             array('CircleMember' => array('user_id' => 11), array('circle_id' => '20'))
-                );
+        );
 
-        $this->assertNotEquals($expected,$result);
+        $this->assertNotEquals($expected, $result);
     }
 
     public function testCircleStatusToggle()
     {
         $this->CircleMember->my_uid = 1;
-        $result = $this->CircleMember->show_hide_stats('circle_id','status');
+        $result = $this->CircleMember->show_hide_stats('circle_id', 'status');
 
         $expected = array(
             array('CircleMember' => array('circle_id' => 20), array('status' => '1')),
             array('CircleMember' => array('circle_id' => 8), array('status' => '0')),
         );
 
-        $this->assertNotEquals($expected,$result);
+        $this->assertNotEquals($expected, $result);
     }
 
 }
