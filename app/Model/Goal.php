@@ -743,7 +743,7 @@ class Goal extends AppModel
     function setFollowGoalApprovalFlag($goals)
     {
         foreach ($goals as $key => $goal) {
-            if (viaIsSet($goal['Collaborator']['valued_flg'])) {
+            if (isset($goal['Collaborator']['valued_flg'])) {
                 $goals[$key]['Goal']['owner_approval_flag'] = $goal['Collaborator']['valued_flg'];
             }
         }
