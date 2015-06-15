@@ -73,7 +73,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
     <?php if (viaIsSet($type) && viaIsSet($id) && $type == 'exists'): ?>
         <td>
             <a class="modal-ajax-get"
-               href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_confirm_inactive_score_modal', $id]) ?>"><i
+               href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_confirm_inactive_score_modal', 'team_id' => $id]) ?>"><i
                     class="fa fa-trash font_lightGray-gray"></i></a>
         </td>
         <?= $this->Form->hidden("EvaluateScore.$index.id") ?>

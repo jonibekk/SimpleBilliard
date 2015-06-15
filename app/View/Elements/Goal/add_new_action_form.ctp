@@ -30,7 +30,7 @@ $this->Form->input('ActionResult.name', [
                                           'id'             => "ActionFormName_" . $goal_id,
                                           'target-id'      => "ActionFormSubmit_" . $goal_id,
                                           'select-id'      => "ActionKeyResultId_" . $goal_id,
-                                          'add-select-url' => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', $goal_id])
+                                          'add-select-url' => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => $goal_id])
                                       ]
 )
 ?>

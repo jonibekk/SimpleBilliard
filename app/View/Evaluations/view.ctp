@@ -255,7 +255,7 @@
         <div class="panel-body eval-view-panel-body">
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div class="col col-xxs-6 col-sm-4">
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal[0]['Goal']['id']]) ?>"
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', 'goal_id' => $goal[0]['Goal']['id']]) ?>"
                        class="modal-ajax-get">
                         <?=
                         $this->Html->image('ajax-loader.gif',
@@ -273,7 +273,7 @@
                 <div class="col-xxs-6">
                     <div><?= h($goal[0]['Goal']['GoalCategory']['name']) ?></div>
                     <div>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $goal[0]['Goal']['id']]) ?>"
+                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', 'goal_id' => $goal[0]['Goal']['id']]) ?>"
                            class="modal-ajax-get">
                             <p class="font_bold font_verydark"><?= h($goal[0]['Goal']['name']) ?></p>
                         </a>

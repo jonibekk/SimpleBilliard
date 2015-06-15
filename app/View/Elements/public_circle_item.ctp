@@ -49,7 +49,7 @@ if (!isset($form)) {
             </a>
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', $circle['Circle']['id']]) ?>"
+            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $circle['Circle']['id']]) ?>"
                class="modal-ajax-get">
                 <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
             </a>

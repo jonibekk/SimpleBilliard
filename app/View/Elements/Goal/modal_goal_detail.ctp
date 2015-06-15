@@ -37,7 +37,7 @@
                         <a class="btn btn-white bd-circle_22px pull-right mt_16px font_verydark-white modal-ajax-get-collabo <?= $collabo_opt['class'] ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                             <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_opt['style'] ?>"></i>
                             <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
                         </a>

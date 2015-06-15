@@ -26,7 +26,7 @@
                                     && $post['Post']['type'] == Post::TYPE_ACTION
                                 ): ?>
                                     <li>
-                                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', $post['Post']['action_result_id']]) ?>"
+                                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
                                            class="modal-ajax-get"
                                             ><?= __d('gl', "アクションを編集") ?></a>
                                     </li>
@@ -187,7 +187,7 @@
                         <?= __d('gl', "いいね！") ?></a>
                     <span class="font_lightgray"> ･ </span>
                                 <span>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
                                class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="ActionPostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>

@@ -12,7 +12,7 @@
 ?>
 <!-- START app/View/Elements/Evaluation/index_items.ctp -->
 <?php foreach ($evaluatees as $user): ?>
-    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', $eval_term_id, $user['User']['id']]) ?>"
+    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', 'evaluate_term_id' => $eval_term_id, 'user_id' => $user['User']['id']]) ?>"
        class="font_verydark">
         <div class="col-xxs-12 mb_8px">
             <div class="disp_ib">

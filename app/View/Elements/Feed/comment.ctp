@@ -11,6 +11,7 @@
  * @var                    $like
  * @var                    $id_prefix
  * @var CodeCompletionView $this
+ * @var                    $long_text
  */
 ?>
 <?php if (!isset($id_prefix)) {
@@ -191,7 +192,7 @@
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="<?= $id_prefix ?>CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
                     class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', $comment['id']]) ?>"
+            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', 'comment_id' => $comment['id']]) ?>"
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
             </span>

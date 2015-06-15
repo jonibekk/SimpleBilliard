@@ -39,7 +39,7 @@
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
                         <li role="presentation">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', $kr['KeyResult']['id']]) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
                                class="modal-ajax-get-add-key-result">
                                 <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "出したい成果を編集する") ?></span></a>
                         </li>
@@ -47,12 +47,12 @@
                             <?php if ($kr['KeyResult']['completed']): ?>
                                 <?= $this->Form->postLink('<i class="fa fa-reply"></i><span class="ml_2px">' .
                                                           __d('gl', "出したい成果を未完了にする") . '</span>',
-                                                          ['controller' => 'goals', 'action' => 'incomplete_kr', $kr['KeyResult']['id']],
+                                                          ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['KeyResult']['id']],
                                                           ['escape' => false]) ?>
                             <?php else: ?>
                                 <?php //最後のKRの場合
                                 if ($incomplete_kr_count === 1):?>
-                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', $kr['KeyResult']['id']]) ?>"
+                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
                                        class="modal-ajax-get">
                                         <i class="fa fa-check"></i><span class="ml_2px"><?= __d('gl',
                                                                                                 "出したい成果を完了にする") ?></span>
@@ -60,7 +60,7 @@
                                 <?php else: ?>
                                     <?=
                                     $this->Form->create('Goal', [
-                                        'url'           => ['controller' => 'goals', 'action' => 'complete_kr', $kr['KeyResult']['id']],
+                                        'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['KeyResult']['id']],
                                         'inputDefaults' => [
                                             'div'       => 'form-group',
                                             'label'     => false,
@@ -97,7 +97,7 @@
     <?php if ($kr_can_edit): ?>
         <div class="bd-t pt_8px">
             <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
-               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal_id]) ?>">
+               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal_id]) ?>">
                 <i class="fa fa-plus-circle font_brownRed"></i>
                 <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
             </a>
@@ -107,7 +107,7 @@
     <div class="col col-xxs-12">
         <div class="bd-t pt_8px">
             <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
-               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal_id]) ?>">
+               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal_id]) ?>">
                 <i class="fa fa-plus-circle font_brownRed"></i>
                 <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
             </a>

@@ -33,7 +33,7 @@
                         ?>
                         <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                             <?= __d('gl', "出したい成果を追加") ?></span>
@@ -69,14 +69,14 @@
                         aria-labelledby="dropdownMenu1">
                         <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result"
                                     ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __d('gl', "出したい成果を追加") ?></span></a>
                                 <a class="modal-ajax-get-collabo"
                                    data-toggle="modal"
                                    data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                                     <i class="fa fa-pencil"></i>
                                     <span class="ml_2px"><?= __d('gl', "コラボを編集") ?></span>
                                 </a>
@@ -105,7 +105,7 @@
                         ?>
                         <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                             <?= __d('gl', "出したい成果を追加") ?></span>
@@ -218,7 +218,7 @@
                 <?php }
                 elseif ($type != "follow") { ?>
                     <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>">
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                         <i class="fa fa-plus-circle font_brownRed"></i>
                         <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
                     </a>
