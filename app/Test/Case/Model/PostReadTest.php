@@ -21,7 +21,8 @@ class PostReadTest extends CakeTestCase
         'app.team',
         'app.goal',
         'app.action_result',
-        'app.key_result'
+        'app.key_result',
+        'app.circle',
     );
 
     /**
@@ -64,12 +65,18 @@ class PostReadTest extends CakeTestCase
         $this->PostRead->Post->save($test_save_data);
         $post_id = $this->PostRead->Post->getLastInsertID();
         $this->PostRead->red($this->PostRead->Post->getLastInsertID());
-        $post_read = $this->PostRead->read();
+        $options = [
+            'conditions' => [
+                'post_id' => $this->PostRead->Post->getLastInsertID(),
+                'user_id' => $uid
+            ]
+        ];
+        $post_read = $this->PostRead->find('first', $options);
         $this->assertEquals($uid, $post_read['PostRead']['user_id']);
 
         $before_data = $post_read;
         $this->PostRead->red($post_id);
-        $after_data = $this->PostRead->read();
+        $after_data = $this->PostRead->find('first', $options);
         $this->assertEquals($before_data, $after_data);
 
         $this->PostRead->Post->create();
@@ -99,4 +106,58 @@ class PostReadTest extends CakeTestCase
         $after_data = $this->PostRead->read();
         $this->assertEquals($before_data, $after_data);
     }
+
+    public function testSaveAllAtOnceNoModelName()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->PostRead->my_uid = $uid;
+        $this->PostRead->current_team_id = $team_id;
+        $before_count = $this->PostRead->find('count');
+        $data = [
+            [
+                'post_id' => 1,
+                'user_id' => $uid,
+                'team_id' => $team_id,
+            ]
+        ];
+        $this->PostRead->saveAllAtOnce($data);
+        $after_count = $this->PostRead->find('count');
+        $this->assertEquals($before_count + 1, $after_count);
+    }
+
+    public function testSaveAllAtOnceWithModelName()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->PostRead->my_uid = $uid;
+        $this->PostRead->current_team_id = $team_id;
+        $before_count = $this->PostRead->find('count');
+        $data = [
+            [
+                'PostRead' => [
+                    'post_id' => 1,
+                    'user_id' => $uid,
+                    'team_id' => $team_id,
+                ]
+            ]
+        ];
+        $this->PostRead->saveAllAtOnce($data);
+        $after_count = $this->PostRead->find('count');
+        $this->assertEquals($before_count + 1, $after_count);
+    }
+
+    public function testSaveAllAtOnceNoData()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->PostRead->my_uid = $uid;
+        $this->PostRead->current_team_id = $team_id;
+        $before_count = $this->PostRead->find('count');
+        $data = [];
+        $this->PostRead->saveAllAtOnce($data);
+        $after_count = $this->PostRead->find('count');
+        $this->assertEquals($before_count, $after_count);
+    }
+
 }

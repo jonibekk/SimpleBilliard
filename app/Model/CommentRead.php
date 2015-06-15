@@ -56,7 +56,7 @@ class CommentRead extends AppModel
         if (empty($comment_data)) {
             return;
         }
-        $res = $this->saveAll($comment_data);
+        $res = $this->saveAllAtOnce($comment_data, true, ['comment_id']);
         return $res;
     }
 

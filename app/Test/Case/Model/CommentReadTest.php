@@ -22,7 +22,8 @@ class CommentReadTest extends CakeTestCase
         'app.post',
         'app.goal',
         'app.action_result',
-        'app.key_result'
+        'app.key_result',
+        'app.circle',
     );
 
     /**
@@ -71,21 +72,28 @@ class CommentReadTest extends CakeTestCase
         ];
         $this->CommentRead->Comment->Post->saveAll($test_save_data);
         $this->CommentRead->red($this->CommentRead->Comment->getLastInsertID());
-        $comment_read = $this->CommentRead->read();
+
+        $options = [
+            'conditions' => [
+                'comment_id' => $this->CommentRead->Comment->getLastInsertID(),
+                'user_id'    => $uid
+            ]
+        ];
+        $comment_read = $this->CommentRead->find('first', $options);
         $this->assertEquals($uid, $comment_read['CommentRead']['user_id']);
 
         $before_data = $comment_read;
         $this->CommentRead->red($this->CommentRead->Comment->getLastInsertID());
-        $after_data = $this->CommentRead->read();
+        $after_data = $this->CommentRead->find('first', $options);
         $this->assertEquals($before_data, $after_data);
 
         //自分のコメントは既読にならない
-        $before_data = $this->CommentRead->read();
+        $before_data = $this->CommentRead->find('first', $options);
         $my_comment = $test_save_data;
         $my_comment['Comment']['user_id'] = $uid;
         $this->CommentRead->Comment->Post->saveAll($my_comment);
         $this->CommentRead->red($this->CommentRead->Comment->getLastInsertID());
-        $after_data = $this->CommentRead->read();
+        $after_data = $this->CommentRead->find('first', $options);
         $this->assertEquals($before_data, $after_data);
     }
 
