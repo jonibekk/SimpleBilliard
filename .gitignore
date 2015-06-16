@@ -23,6 +23,7 @@ composer.lock
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
 /.idea/workspace.xml
 /.idea/dataSources.ids
+/.idea/dataSources.xml
 /.idea/vagrant.xml
 /.idea/watcherTasks.xml
 /.idea/inspectionProfiles
