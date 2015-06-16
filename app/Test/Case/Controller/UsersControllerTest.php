@@ -1534,6 +1534,26 @@ class UsersControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxSelect2CircleUserAll()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->_getUsersCommonMock();
+        $Users->User->current_team_id = 1;
+        $Users->User->my_uid = 1;
+        $Users->User->TeamMember->current_team_id = 1;
+        $Users->User->TeamMember->my_uid = 1;
+        $Users->User->CircleMember->my_uid = 1;
+        $Users->User->CircleMember->current_team_id = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->my_uid = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->current_team_id = 1;
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_get_select2_circle_user_all', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxGetPostCount()
     {
         $this->_getUsersCommonMock();

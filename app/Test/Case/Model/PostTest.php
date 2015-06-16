@@ -497,6 +497,20 @@ class PostTest extends CakeTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    function testGetForRed()
+    {
+        $this->_setDefault();
+        $res = $this->Post->getForRed(1, true);
+        $this->assertNotEmpty($res);
+    }
+
+    function testExecRedPostComment()
+    {
+        $this->_setDefault();
+        $res = $this->Post->execRedPostComment(1, true);
+        $this->assertNull($res);
+    }
+
     function _setDefault()
     {
         $uid = '1';

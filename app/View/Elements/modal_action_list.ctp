@@ -55,7 +55,7 @@
                 <?php endif; ?>
             <?php endif; ?>
             <?= $this->element('Feed/action_posts') ?>
-            <?php if (count($posts) == 20): ?>
+            <?php if (count($posts) == POST_FEED_PAGE_ITEMS_NUMBER): ?>
                 <div class="panel panel-default feed-read-more" id="ActionListMoreRead">
                     <div class="panel-body panel-read-more-body">
                         <span class="none" id="ActionShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>

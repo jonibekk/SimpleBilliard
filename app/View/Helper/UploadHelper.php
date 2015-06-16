@@ -14,6 +14,7 @@ App::uses('UploadBehavior', 'Model/Behavior');
 class UploadHelper extends AppHelper
 {
 
+    public $cache = [];
     public $helpers = array('Html');
 
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
@@ -33,6 +34,8 @@ class UploadHelper extends AppHelper
     {
         $options += array('style' => 'original', 'urlize' => true);
         list($model, $field) = explode('.', $field);
+        $id = null;
+        $filename = null;
         if (is_array($data)) {
             if (isset($data[$model])) {
                 if (isset($data[$model]['id'])) {
@@ -46,7 +49,12 @@ class UploadHelper extends AppHelper
             }
         }
 
-        if (isset($id) && !empty($filename)) {
+        $hash = Security::hash($model . $id . $field . $filename . $options['style'] . $options['urlize']);
+        if (isset($this->cache[$hash])) {
+            return $this->cache[$hash];
+        }
+
+        if ($id && !empty($filename)) {
             $settings = UploadBehavior::interpolate($model, $id, $field, $filename, $options['style'],
                                                     array('webroot' => ''));
             $url = isset($settings['url']) ? $settings['url'] : $settings['path'];
@@ -65,6 +73,7 @@ class UploadHelper extends AppHelper
             //s3用の処理追加
             $url = $this->substrS3Url($url);
         }
+        $this->cache[$hash] = $url;
         return $url;
     }
 

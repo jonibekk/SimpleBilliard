@@ -594,14 +594,13 @@ class AppController extends Controller
     public function _setViewValOnRightColumn()
     {
         $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER);
+        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count');
         $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER);
+        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count');
         $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER);
-
-        $my_previous_goals = $this->Goal->getMyPreviousGoals();
-        $my_previous_goals_count = count($my_previous_goals);
-        $my_goals_count = count($this->Goal->getMyGoals());
-        $collabo_goals_count = count($this->Goal->getMyCollaboGoals());
-        $follow_goals_count = count($this->Goal->getMyFollowedGoals());
+        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count');
+        $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
+        $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
         $this->set(compact('my_goals', 'collabo_goals', 'follow_goals',
                            'my_goals_count', 'collabo_goals_count', 'follow_goals_count', 'my_previous_goals',
                            'my_previous_goals_count'));

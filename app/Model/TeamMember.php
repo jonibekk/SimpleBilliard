@@ -57,6 +57,7 @@ class TeamMember extends AppModel
     private $csv_evaluator_ids = [];
     private $all_users = [];
     private $evaluations = [];
+    private $active_member_list = [];
 
     /**
      * 現在有効なチーム一覧を取得
@@ -85,6 +86,22 @@ class TeamMember extends AppModel
         ];
         $res = array_filter($this->findWithoutTeamId('list', $options));
         $this->myTeams = $res;
+    }
+
+    public function getActiveTeamMembersList()
+    {
+        if (!empty($this->active_member_list)) {
+            return $this->active_member_list;
+        }
+        $options = [
+            'conditions' => [
+                'active_flg' => true,
+                'team_id'    => $this->current_team_id
+            ],
+            'fields'     => ['user_id', 'user_id']
+        ];
+        $this->active_member_list = $this->find('list', $options);
+        return $this->active_member_list;
     }
 
     function updateLastLogin($team_id, $uid)
@@ -312,9 +329,9 @@ class TeamMember extends AppModel
             'conditions' => [
                 'team_id' => $team_id,
             ],
-            'order' => ['TeamMember.created' => 'DESC'],
+            'order'      => ['TeamMember.created' => 'DESC'],
             'contain'    => [
-                'User' => [
+                'User'      => [
                     'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
                     'MemberGroup' => [
                         'fields' => ['group_id'],
@@ -323,6 +340,9 @@ class TeamMember extends AppModel
                         ]
                     ]
                 ],
+                'CoachUser' => [
+                    'fields' => $this->User->profileFields
+                ]
             ]
         ];
         return $options;
@@ -346,10 +366,11 @@ class TeamMember extends AppModel
             }
 
             // コーチ名を取得
-            if (is_null($tm_obj['TeamMember']['coach_user_id']) === false) {
-                $u_info = $this->User->getDetail($tm_obj['TeamMember']['coach_user_id']);
-                if (isset($u_info['User']['display_username']) === true) {
-                    $res[$key]['TeamMember']['coach_name'] = $u_info['User']['display_username'];
+            if (isset($res[$key]['CoachUser']['roman_username']) === true) {
+                $res[$key]['search_coach_name_keyword'] = $res[$key]['CoachUser']['roman_username'];
+                if (isset($tm_obj['CoachUser']['display_username']) === true) {
+                    $res[$key]['TeamMember']['coach_name'] = $res[$key]['CoachUser']['display_username'];
+                    $res[$key]['search_coach_name_keyword'] .= $res[$key]['CoachUser']['display_username'];
                 }
             }
 
@@ -358,6 +379,13 @@ class TeamMember extends AppModel
 
             // メイン画像
             $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo', ['style' => 'medium']);
+
+            // ユーザー検索用キーワード作成
+            $res[$key]['search_user_keyword'] = $tm_obj['User']['roman_username'];
+            if (isset($tm_obj['User']['display_username']) === true) {
+                $res[$key]['search_user_keyword'] .= $tm_obj['User']['display_username'];
+            }
+
         }
         return $res;
     }

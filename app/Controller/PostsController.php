@@ -221,6 +221,14 @@ class PostsController extends AppController
     {
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
+        if (isset($this->request->params['named']['circle_id'])
+        ) {
+            $this->set('long_text', true);
+        }
+        else {
+            $this->set('long_text', false);
+        }
+
         if (isset($param_named['page']) && !empty($param_named['page'])) {
             $page_num = $param_named['page'];
         }
@@ -236,7 +244,7 @@ class PostsController extends AppController
             $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
             $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
         }
-        $posts = $this->Post->get($page_num, 20, $start, $end, $this->request->params);
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -260,7 +268,7 @@ class PostsController extends AppController
         else {
             $page_num = 1;
         }
-        $posts = $this->Post->get($page_num, 20, null, null, $this->request->params);
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -279,7 +287,7 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $this->_setFeedMoreReadUrl('posts', 'ajax_get_action_list_more');
-        $posts = $this->Post->get(1, 20, null, null, $this->request->params);
+        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -534,7 +542,16 @@ class PostsController extends AppController
         $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
-        $select2_default = $this->User->getAllUsersCirclesSelect2();
+
+        if (isset($this->request->params['circle_id']) ||
+            isset($this->request->params['post_id'])
+        ) {
+            $this->set('long_text', true);
+        }
+        else {
+            $this->set('long_text', false);
+        }
+
         $feed_filter = null;
         $circle_id = viaIsSet($this->request->params['circle_id']);
         $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
@@ -556,11 +573,11 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set('long_text', true);
-        $this->set(compact('feed_filter', 'select2_default', 'circle_members', 'circle_id', 'user_status', 'params',
+        $this->set(compact('feed_filter', 'circle_members', 'circle_id', 'user_status', 'params',
                            'circle_status'));
         try {
-            $this->set(['posts' => $this->Post->get(1, 20, null, null, $this->request->params)]);
+            $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
+                                                    $this->request->params)]);
         } catch (RuntimeException $e) {
             //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
             //サークルページに居て当該サークルから抜けた場合の対応

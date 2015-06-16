@@ -20,7 +20,6 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 ## Documentation
 - 全てのドキュメントはここから辿れるようにしてください。
 - はじめてGoalous開発に参加される方はまずこのドキュメントのすべてに目を通してください。
-- ここ以外に[Google Docs](https://drive.google.com/a/isao.co.jp/#folders/0B6mjvNcPiJ6PLXBlTUJsZWphMG8)にもあります。(Google Docsは未整理)
 - 手っ取り早くソース弄ってみたいという方は[開発環境構築手順](docs/process_docs/StartDevelop.md)を見て環境を作ってください。
 
 ### ガイドライン
@@ -50,6 +49,7 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 
 ### 手順書
 - [開発環境構築手順書](docs/process_docs/LocalDevEnv.md)
+- [PhpStorm設定](docs/process_docs/PhpStormSetting.md)
 - [GitHub,Waffle運用手順書](docs/process_docs/OperationGitHubAndWaffle.md)
 - [負荷試験環境構築手順書](docs/process_docs/StressTest.md)
 - [AWS Operation](docs/process_docs/OperationForAWS.md)
@@ -60,8 +60,8 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [サービス概要](docs/design_specifications/GoalousOverview.md)
 - [システム概要](docs/design_specifications/SystemOverview.md)
 - [ER図](docs/design_specifications/ERD.md)
-- [要件定義](http://bit.ly/1BRIFvJ)
-- [見積もり](http://bit.ly/1BRIyjU)
+- [要件定義](http://bit.ly/1TnQZfX)
+- [見積もり](http://bit.ly/1TnR3MB)
 
 #### 機能一覧
 - ゴール

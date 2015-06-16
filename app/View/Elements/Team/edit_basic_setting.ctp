@@ -45,8 +45,13 @@
                     <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                          data-trigger="fileinput"
                          style="width: 96px; height: 96px; line-height:96px;">
+                        <?
+                        $team_img_data = $this->request->data;
+                        $add_team_id_data = ['id' => $this->Session->read('current_team_id')];
+                        $team_img_data['Team'] = array_merge($team_img_data['Team'], $add_team_id_data);
+                        ?>
                         <?=
-                        $this->Upload->uploadImage($this->request->data, 'Team.photo',
+                        $this->Upload->uploadImage($team_img_data, 'Team.photo',
                                                    ['style' => 'medium_large']) ?>
                     </div>
                     <div>

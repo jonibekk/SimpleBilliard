@@ -266,6 +266,8 @@ class CirclesControllerTest extends ControllerTestCase
         $Circles->Circle->CircleMember->current_team_id = '1';
         $Circles->Team->EvaluateTerm->my_uid = 1;
         $Circles->Team->EvaluateTerm->current_team_id = 1;
+        $Circles->Circle->Team->TeamMember->my_uid = '1';
+        $Circles->Circle->Team->TeamMember->current_team_id = '1';
 
         return $Circles;
     }

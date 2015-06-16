@@ -8,7 +8,7 @@
 http://bit.ly/1P2FJWx
 
 ## スキーマ設計書
-http://bit.ly/1nCoDzQ
+https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/Schema/schema.php
 
 ## ER図
 [![ER Diagram](https://cloud.githubusercontent.com/assets/3040037/7510526/cb567a42-f4d7-11e4-9670-733fe51bb9a5.png)](https://cloud.githubusercontent.com/assets/3040037/7510526/cb567a42-f4d7-11e4-9670-733fe51bb9a5.png)

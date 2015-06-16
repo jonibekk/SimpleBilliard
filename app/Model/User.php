@@ -180,7 +180,7 @@ class User extends AppModel
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'hometown'=>[
+        'hometown'          => [
             'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
@@ -798,17 +798,31 @@ class User extends AppModel
         $user_list = $this->TeamMember->getAllMemberUserIdList();
         $options = [
             'conditions' => [
-                'User.id'                                               => $user_list,
-                'User.active_flg'                                       => true,
-                'CONCAT(`User.first_name`," ",`User.last_name`) Like ?' => "%" . $keyword . "%",
+                'User.id'         => $user_list,
+                'User.active_flg' => true,
+                'OR'              => [
+                    'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'           => "%" . $keyword . "%",
+                    'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like ?' => "%" . $keyword . "%",
+                ]
             ],
             'limit'      => $limit,
             'fields'     => $this->profileFields,
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'local_names',
+                    'alias'      => 'SearchLocalName',
+                    'conditions' => [
+                        '`SearchLocalName.user_id`=`User.id`',
+                    ],
+                ]
+            ]
         ];
         if ($not_me) {
             $options['conditions']['NOT']['User.id'] = $this->my_uid;
         }
         $res = $this->find('all', $options);
+
         return $res;
     }
 
@@ -820,7 +834,7 @@ class User extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['roman_username'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
@@ -845,7 +859,8 @@ class User extends AppModel
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['roman_username'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
@@ -854,9 +869,9 @@ class User extends AppModel
     }
 
     /**
-     * feedのselect2で使うデフォルトデータリスト(json)
+     * feedのselect2で使うデフォルトデータリスト
      *
-     * @return array(json)
+     * @return array
      */
     function getAllUsersCirclesSelect2()
     {
@@ -894,7 +909,7 @@ class User extends AppModel
 
         $res = array_merge($team_res, $circle_res, $user_res);
 
-        return json_encode($res);
+        return $res;
     }
 
     public function getAllMember($with_me = true)
