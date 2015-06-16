@@ -160,8 +160,9 @@ class CirclesController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function ajax_get_circle_members($circle_id)
+    public function ajax_get_circle_members()
     {
+        $circle_id = $this->request->params['named']['circle_id'];
         $this->_ajaxPreProcess();
         $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true, 'CircleMember.modified', 'desc');
         $this->set(compact('circle_members'));
