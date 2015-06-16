@@ -518,7 +518,8 @@ class EvaluationsControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
-        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/term_id:{$term_id}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/evaluate_term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -528,7 +529,8 @@ class EvaluationsControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
-        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/term_id:{$term_id}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/evaluate_term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -539,7 +541,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluators_status/evaluatee_id:{$evaluateeId}/term_id:{$term_id}",
+        $this->testAction("/evaluations/ajax_get_evaluators_status/evaluatee_id:{$evaluateeId}/evaluate_term_id:{$term_id}",
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
@@ -551,7 +553,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}/term_id:{$term_id}",
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}/evaluate_term_id:{$term_id}",
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
@@ -563,7 +565,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_incomplete_oneself/term_id:{$term_id}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_oneself/evaluate_term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

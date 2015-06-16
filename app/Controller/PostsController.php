@@ -89,12 +89,9 @@ class PostsController extends AppController
      * post_delete method
      *
      * @throws NotFoundException
-     *
-     * @param string $id
-     *
      * @return void
      */
-    public function post_delete($id)
+    public function post_delete()
     {
         $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
         if (!$this->Post->exists()) {
@@ -154,9 +151,6 @@ class PostsController extends AppController
      * comment_delete method
      *
      * @throws NotFoundException
-     *
-     * @param string $comment_id
-     *
      * @return void
      */
     public function comment_delete()

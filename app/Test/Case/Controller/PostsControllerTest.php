@@ -431,7 +431,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->saveAll($post_data);
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_edit_post_form/' . $Posts->Post->getLastInsertID(),
+        $this->testAction('/posts/ajax_get_edit_post_form/post_id:' . $Posts->Post->getLastInsertID(),
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
@@ -467,7 +467,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->saveAll($post_data);
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_edit_comment_form/' . $Posts->Post->Comment->getLastInsertID(),
+        $this->testAction('/posts/ajax_get_edit_comment_form/comment_id:' . $Posts->Post->Comment->getLastInsertID(),
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
@@ -914,7 +914,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]投稿編集");
@@ -946,7 +946,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]投稿編集");
@@ -1014,7 +1014,7 @@ class PostsControllerTest extends ControllerTestCase
         $comment = $Posts->Post->Comment->save($comment_data);
 
         try {
-            $this->testAction('posts/comment_delete/' . $comment['Comment']['id'], ['method' => 'POST']);
+            $this->testAction('posts/comment_delete/comment_id:' . $comment['Comment']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]コメント削除");
