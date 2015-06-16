@@ -18,17 +18,6 @@
  * @var       $all_alert_cnt
  */
 ?>
-<style type="text/css">
-    .sub_cnt_alert {
-        position: absolute;
-        margin: 4px 0 0 132px;
-        color: #fff;
-        font-size: 10px;
-        background-color: red !important;
-        display: block
-    }
-</style>
-
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="navbar navbar-fixed-top navbar-default gl-navbar" id="header" xmlns="http://www.w3.org/1999/html">
     <div class="navbar-toggle-box">
@@ -169,15 +158,9 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="btn btn-danger btn-xs bell-notify-box"
-                         id="bellNum"
-                         style="position: absolute;
-                                margin: 5px 0 0 20px;
-                                color: #fff;
-                                font-size: 10px;
-                                opacity: 0;
-                                background-color:red!important;
-                                display:block">0
+                    <div class="btn btn-xs bell-notify-box notify-bell-numbers"
+                         id="bellNum" style="opacity: 0;">
+                         0
                     </div>
                     <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
@@ -185,12 +168,11 @@
                 </div>
                 <div class="pull-right header-function dropdown">
                     <?php if ($all_alert_cnt > 0): ?>
-                        <div class="btn btn-danger btn-xs" style="position: absolute;
-                                margin: 5px 0 0 33px;
-                                color: #fff;
-                                font-size: 10px;
-                                background-color:red!important;
-                                display:block"><?= $all_alert_cnt ?></div>
+                        <div class="btn btn-xs notify-function-numbers">
+                          <span>
+                            <?= $all_alert_cnt ?>
+                          </span>
+                        </div>
                     <?php endif; ?>
                     <a href="#"
                        class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"

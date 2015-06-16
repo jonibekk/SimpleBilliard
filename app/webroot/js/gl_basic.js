@@ -2397,7 +2397,7 @@ $(document).ready(function () {
 
 function initBellNum() {
     $bellBox = getBellBoxSelector();
-    $bellBox.css("opacity", 0);
+    $bellBox.css("opacity", 1);
     $bellBox.html("0");
 }
 
