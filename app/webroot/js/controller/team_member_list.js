@@ -17,17 +17,31 @@ var app = angular.module('myApp', ['ngRoute', 'pascalprecht.translate']).
 
 app.controller("TeamMemberMainController", function ($scope, $http, $translate) {
 
-        $scope.disp_active_flag = '1';
         var url_list = cake.url;
+        var active_member_list = [];
+        var all_member_list = [];
+        $scope.disp_active_flag = '1';
 
-        var getAllTeamMember = function () {
+        function ActiveMemberList (member_list) {
+            var active_member_list = [];
+            angular.forEach(member_list, function(value){
+                if (value.TeamMember.active_flg === true) {
+                    this.push(value);
+                }
+            }, active_member_list);
+            return active_member_list;
+        }
+
+        function getAllTeamMember () {
             $http.get(url_list.i).success(function (data) {
-                $scope.team_list = data.user_info;
+                all_member_list = data.user_info;
+                active_member_list = ActiveMemberList(data.user_info);
+                $scope.team_list = active_member_list;
             });
         };
         getAllTeamMember();
 
-        var init = function () {
+        function init () {
 
             $scope.name_field_show = true;
             $scope.coach_name_field_show = false;
@@ -71,25 +85,33 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
                 $scope.coach_name_field_show = true;
                 $scope.group_field_show = false;
                 $http.get(url_list.i).success(function (data) {
-                    $scope.team_list = data.user_info;
+                    all_member_list = data.user_info;
+                    active_member_list = ActiveMemberList(data.user_info);
+                    $scope.team_list = active_member_list;
                 });
 
             } else if (filter_name === 'two_step') {
                 init();
                 $http.get(url_list.l).success(function (data) {
-                    $scope.team_list = data.user_info;
+                    all_member_list = data.user_info;
+                    active_member_list = ActiveMemberList(data.user_info);
+                    $scope.team_list = active_member_list;
                 });
 
             } else if (filter_name === 'team_admin') {
                 init();
                 $http.get(url_list.m).success(function (data) {
-                    $scope.team_list = data.user_info;
+                    all_member_list = data.user_info;
+                    active_member_list = ActiveMemberList(data.user_info);
+                    $scope.team_list = active_member_list;
                 });
 
             } else {
                 init();
                 $http.get(url_list.i).success(function (data) {
-                    $scope.team_list = data.user_info;
+                    all_member_list = data.user_info;
+                    active_member_list = ActiveMemberList(data.user_info);
+                    $scope.team_list = active_member_list;
                 });
             }
         };
@@ -100,7 +122,9 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
                 get_group_url = url_list.i;
             }
             $http.get(get_group_url).success(function (data) {
-                $scope.team_list = data.user_info;
+                all_member_list = data.user_info;
+                active_member_list = ActiveMemberList(data.user_info);
+                $scope.team_list = active_member_list;
             });
         };
 
@@ -151,5 +175,13 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
             });
 
         };
+
+        $scope.viewMemberlistChange = function() {
+            if ($scope.disp_active_flag === 0) {
+                $scope.team_list = all_member_list;
+            } else if ($scope.disp_active_flag === 1) {
+                $scope.team_list = active_member_list;
+            }
+        }
     }
 );
