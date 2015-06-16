@@ -146,10 +146,10 @@ echo $this->Html->script('gl_basic');
 //環境を識別できるようにリボンを表示
 ?>
 <?php if (ENV_NAME == "stg"): ?>
-    <p class="ribbon ribbon-staging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Staging</p>
+    <p class="ribbon ribbon-staging">Staging</p>
 <?php elseif (ENV_NAME == "hotfix"): ?>
-    <p class="ribbon ribbon-hotfix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hotfix</p>
+    <p class="ribbon ribbon-hotfix">Hotfix</p>
 <?php elseif (ENV_NAME == "local"): ?>
-    <p class="ribbon ribbon-local">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local</p>
+    <p class="ribbon ribbon-local">Local</p>
 <?php endif; ?>
 <!-- END app/View/Elements/gl_common_js.ctp -->

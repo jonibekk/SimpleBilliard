@@ -6,20 +6,20 @@ ul {
 /*回転するメニューボタン*/
 .toggle-icon {
     font-size: 20px;
-    transition: 0.3s ease-in-out;
     -webkit-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
 }
 
 .rotate {
     -ms-transform: rotate(180deg);
-    transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 .rotate-reverse {
     -ms-transform: rotate(0deg);
-    transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 
 /*/回転するメニューボタン*/
@@ -3252,38 +3252,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 /*noinspection ALL*/
-.ribbon {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    position: fixed;
-    width: 200px;
-    height: 30px;
-    background: red;
-    color: #fff;
-    line-height: 30px;
-    right: -40px;
-    top: 40px;
-    -webkit-transform: rotateZ(45deg);
-    -ms-transform: rotateZ(45deg);
-    transform: rotateZ(45deg);
-    text-align: center;
-    box-shadow: 0 0 6px #666;
-    z-index: -1999;
-}
-
-.ribbon-staging {
-    background: green;
-}
-
-.ribbon-hotfix {
-    background: red;
-}
-
-.ribbon-local {
-    background: blue;
-}
 
 .develop--submenu {
     border: 1px solid #ccc;
