@@ -653,11 +653,6 @@ textarea{
     padding-left: 16px;
 }
 
-.m_pic {
-    width: 280px;
-    margin: 4px 0 4px 10px;
-}
-
 .top_50px {
     top: 50px;
 }
@@ -1987,29 +1982,6 @@ textarea.feed-post-form {
     cursor: pointer;
 }
 
-.photo-up-btn {
-    margin: 6px 0 0;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    background: none;
-}
-
-.photo-up-btn:hover,
-.photo-up-btn:target,
-.photo-up-btn:active,
-.photo-up-btn:focus,
-.photo-up-btn:active:focus {
-    outline: none;
-    border: 1px solid #ccc;
-    background: #f9f9f9;
-}
-
-.post-submit-button {
-    margin-top: 6px;
-    margin-bottom: 6px;
-}
-
 .post-share-range-list {
     padding-left: 0;
     padding-right: 0;
@@ -2287,23 +2259,6 @@ textarea.comment-post-form {
 }
 
 /*/login*/
-
-/*キャンセルボタンのデザイン*/
-.design-cancel {
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
-    background-image: none;
-    color: #777;
-}
-
-.design-cancel:target,
-.design-cancel:hover {
-    border: 1px solid #aaa;
-    background-color: #f0f0f0;
-    background-image: none;
-    color: #231814;
-    text-decoration: none;
-}
 
 .btn[disabled] {
     opacity: 0.3;
@@ -3492,95 +3447,6 @@ Temporary Properties - YOU MUST FIX
     position: absolute;
     z-index: 10;
     right: 4px;
-}
-
-.tutorial-box1 {
-    background-image: url(../img/homepage/home-slider/slide1.jpg);
-    background-size: 100%;
-    background-position: 0 50%;
-    width: 598px;
-    height: 448px;
-}
-
-.tutorial-box2 {
-    background-image: url(../img/homepage/home-slider/slide2.jpg);
-    background-size: 100%;
-    background-position: 0 50%;
-    width: 598px;
-    height: 448px;
-}
-
-.tutorial-box3 {
-    background-image: url(../img/homepage/home-slider/slide3.jpg);
-    background-size: 100%;
-    background-position: 0 50%;
-    width: 598px;
-    height: 448px;
-}
-
-.tutorial-box4 {
-    background-image: url(../img/homepage/home-slider/slide4.jpg);
-    background-size: 100%;
-    background-position: 0 50%;
-    width: 598px;
-    height: 448px;
-}
-
-#tutorialText2, #tutorialText3, #tutorialText4 {
-    display: none;
-}
-
-#modalTutorialPrev {
-    display: none;
-}
-
-.modalTutorial-btnPrev {
-    width: 96px;
-    height: 96px;
-    display: inline;
-    line-height: 100px;
-    border-radius: 50%;
-    background: #fff;
-    text-align: center;
-    opacity: .55;
-    position: absolute;
-    bottom: 16px;
-    left: 16px;
-    padding-right: 8px;
-}
-
-.modalTutorial-btnNext {
-    width: 96px;
-    height: 96px;
-    display: inline;
-    line-height: 100px;
-    border-radius: 50%;
-    background: #fff;
-    text-align: center;
-    opacity: .55;
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    padding-left: 8px;
-}
-
-.modalTutorial-btnGo {
-    display: none;
-    width: 96px;
-    height: 96px;
-    line-height: 100px;
-    border-radius: 50%;
-    background: #fff;
-    text-align: center;
-    opacity: .85;
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-}
-
-.modalTutorial-btnIcon {
-    display: inline;
-    line-height: 96px;
 }
 
 .font_normal {
