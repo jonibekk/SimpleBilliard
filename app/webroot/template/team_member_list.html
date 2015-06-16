@@ -13,11 +13,11 @@
         </div>
         <div class="col-xs-12 col-sm-8">
             <input ng-show="name_field_show"
-                   ng-model="name_field.User.display_username"
+                   ng-model="name_field.search_user_keyword"
                    class="form-control" placeholder="{{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
 
             <input ng-show="coach_name_field_show"
-                   ng-model="name_field.TeamMember.coach_name"
+                   ng-model="name_field.search_coach_name_keyword"
                    class="form-control" placeholder="{{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
 
             <select ng-show="group_field_show"
