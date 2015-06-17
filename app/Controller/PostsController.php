@@ -278,8 +278,8 @@ class PostsController extends AppController
         $response = $this->render('Feed/action_posts');
         $html = $response->__toString();
         $result = array(
-            'html'  => $html,
-            'count' => count($posts),
+            'html'          => $html,
+            'count'         => count($posts),
             'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
