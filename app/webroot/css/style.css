@@ -1232,9 +1232,6 @@ textarea{
 /*==/ モジュール ===*/
 
 /*早めに整理する*/
-.btn-followCollabo {
-    padding: 8px;
-}
 
 /*/早めに整理する*/
 
@@ -1725,14 +1722,6 @@ ul.example-indent {
 .click-feed-read-more:active,
 .click-feed-read-more:target {
     text-decoration: none;
-}
-
-.post-contents .btn-link {
-    color: #ddd;
-}
-
-.comment-text .btn-link {
-    color: #c5c5c5;
 }
 
 .feed-contents {
@@ -2260,9 +2249,6 @@ textarea.comment-post-form {
 
 /*/login*/
 
-.btn[disabled] {
-    opacity: 0.3;
-}
 
 .team-button {
     margin-right: 12px;
@@ -2315,15 +2301,6 @@ textarea.comment-post-form {
     height: 38px;
     line-height: 38px;
     vertical-align: middle;
-}
-
-.btn-help {
-    padding-right: 0;
-}
-
-.follow-on, .follow-on:hover, .follow-on:focus, .collabo-on, .collabo-on:hover, .collabo-on:focus {
-    color: #fff;
-    background-color: #ea5e5b;
 }
 
 .goal-set-buttons input {
@@ -2641,21 +2618,6 @@ textarea.comment-post-form {
 
 .goals-column-title {
 / / margin : 0 0 4 px;
-}
-
-.btn-goals-column-plus {
-    margin: 0 0 4px;
-    border: 1px solid #808080;
-    border-radius: 4px;
-    text-align: center;
-    padding: 2px;
-}
-
-.btn-goals-column-plus:hover,
-.btn-goals-column-plus:target,
-.btn-goals-column-plus:active {
-    text-decoration: none;
-    border-color: #ae2f2f;
 }
 
 .goals-column-add-box {
@@ -3274,14 +3236,6 @@ Temporary Properties - YOU MUST FIX
 
 .nailthumb-container img {
     max-width: 100%;
-}
-
-.comment-btn {
-    height: 0;
-}
-
-.submit-btn {
-    margin-top: 4px;
 }
 
 .input-images {
