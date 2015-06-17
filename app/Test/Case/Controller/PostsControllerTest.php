@@ -441,7 +441,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_edit_post_form/9999', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_edit_post_form/post_id:9999', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -509,7 +509,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->saveAll($post_data);
         $post_id = $Posts->Post->getLastInsertID();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_old_comment/' . $post_id . '/5/long_text:1/', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_old_comment/post_id:' . $post_id . '/5/long_text:1/', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -517,7 +517,7 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         try {
-            $this->testAction('/posts/ajax_get_comment/2', ['method' => 'GET']);
+            $this->testAction('/posts/ajax_get_comment/comment_id:2', ['method' => 'GET']);
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e), "[異常]commentをajax以外で取得しようとしたとき");
@@ -552,7 +552,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->saveAll($post_data);
         $post_id = $Posts->Post->getLastInsertID();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_latest_comment/' . $post_id . '/' . $get_num, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_latest_comment/post_id:' . $post_id . '/' . $get_num, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -560,7 +560,7 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         try {
-            $this->testAction('/posts/ajax_get_latest_comment/2/2', ['method' => 'GET']);
+            $this->testAction('/posts/ajax_get_latest_comment/post_id:2/2', ['method' => 'GET']);
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e), "[異常]commentをajax以外で取得しようとしたとき");
@@ -594,7 +594,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->saveAll($post_data);
         $post_id = $Posts->Post->getLastInsertID();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_post_like/' . $post_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_post_like/post_id:' . $post_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -635,7 +635,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->PostLike->save($post_like);
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_post_like/' . $post_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_post_like/post_id:' . $post_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -669,7 +669,7 @@ class PostsControllerTest extends ControllerTestCase
         $comment = $Posts->Post->Comment->save($comment_data);
         $comment_id = $comment['Comment']['id'];
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_comment_like/' . $comment_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_comment_like/comment_id:' . $comment_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -709,7 +709,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
         $Posts->Post->Comment->CommentLike->save($comment_like_data);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_comment_like/' . $comment_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_comment_like/comment_id:' . $comment_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -757,10 +757,10 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->Comment->CommentLike->save($comment_read_like_data);
         $Posts->Post->Comment->CommentRead->save($comment_read_like_data);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_post_liked_users/' . $post_id, ['method' => 'GET']);
-        $this->testAction('/posts/ajax_get_post_red_users/' . $post_id, ['method' => 'GET']);
-        $this->testAction('/posts/ajax_get_comment_liked_users/' . $comment_id, ['method' => 'GET']);
-        $this->testAction('/posts/ajax_get_comment_red_users/' . $comment_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_post_liked_users/post_id:' . $post_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_post_red_users/post_id:' . $post_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_comment_liked_users/comment_id:' . $comment_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_comment_red_users/comment_id:' . $comment_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -768,7 +768,7 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_share_circles_users_modal/1', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_share_circles_users_modal/post_id:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -876,7 +876,7 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         try {
-            $this->testAction('posts/post_edit/' . $post['Post']['id'], ['method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していない投稿編集");
@@ -1329,14 +1329,14 @@ class PostsControllerTest extends ControllerTestCase
     function testCircleToggleStatusSuccess()
     {
         $this->_getPostsCommonMock();
-        $this->testAction("/posts/circle_toggle_status/20/1", ['method' => 'get']);
+        $this->testAction("/posts/circle_toggle_status/circle_id:20/1", ['method' => 'get']);
     }
 
     function testCircleToggleStatusFailure()
     {
         $this->_getPostsCommonMock();
         try {
-            $this->testAction("/posts/circle_toggle_status/20/1111", ['method' => 'get']);
+            $this->testAction("/posts/circle_toggle_status/circle_id:20/1111", ['method' => 'get']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "Invalid Status Request");

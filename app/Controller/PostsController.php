@@ -112,15 +112,12 @@ class PostsController extends AppController
      * post_edit method
      *
      * @throws NotFoundException
-     *
-     * @param string $id
-     *
      * @return void
      */
     public function post_edit()
     {
         $this->request->allowMethod('post');
-        $this->Post->id = viaIsSet($this->request->params['named']['post_id']);;
+        $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
 
         // 例外チェック
         if (!$this->Post->exists()) {
@@ -753,8 +750,9 @@ class PostsController extends AppController
         return 'not_joined';
     }
 
-    function circle_toggle_status($circle_id, $status)
+    function circle_toggle_status($status)
     {
+        $circle_id = $this->request->params['named']['circle_id'];
         $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg' => $status]);
 
         if ($this->Post->Circle->CircleMember->validates()) {
