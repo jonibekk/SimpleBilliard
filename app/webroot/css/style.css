@@ -2348,10 +2348,6 @@ textarea.comment-post-form {
     background-color: #fbfbfb;
 }
 
-.goal-set-input {
-    margin-bottom: 4px;
-}
-
 .goal-set-buttons {
     margin-left: 10%;
 }
@@ -2621,21 +2617,6 @@ textarea.comment-post-form {
     background-color: #fff;
     cursor: pointer;
 }
-
-/*ゴール作成ページのタテ線の長さ調整一覧*/
-.set-goal + .line-vertical-sm {
-    min-height: 72px;
-}
-
-.set-detail + .line-vertical-sm {
-    min-height: 52px;
-}
-
-.set-importance + .line-vertical-sm {
-    height: 72px;
-}
-
-/*/ゴール作成ページのタテ線の長さ調整一覧*/
 
 .comment-body .site-info {
     margin: 5px 0 7px;
@@ -3010,15 +2991,6 @@ textarea.comment-post-form {
 
     .goal-set-buttons {
         margin-left: 46%;
-    }
-
-    .goal-set-input {
-        margin-left: 14px;
-        padding-left: 18px;
-    }
-
-    .line-vertical-sm {
-        border-left: 1px solid #e0e0e0;
     }
 
     .responsive-goal-space-width {

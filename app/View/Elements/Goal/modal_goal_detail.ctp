@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_goal_detail.ctp -->
-<div class="modal-dialog modal-dialog_300px">
+<div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
@@ -53,7 +53,8 @@
                     <i class="fa fa-folder"></i><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span>
                 </div>
                 <div class="col col-xxs-12">
-                    <p class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></p>
+                    <p class="font_18px fon
+                    t_verydark"><?= h($goal['Goal']['name']) ?></p>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <?= h($goal['Purpose']['name']) ?>
