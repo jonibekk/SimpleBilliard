@@ -540,8 +540,9 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
     }
 
-    public function ajax_switch_team($team_id = null)
+    public function ajax_switch_team()
     {
+        $team_id = viaIsSet($this->request->params['named']['team_id']);
         $this->layout = 'ajax';
         Configure::write('debug', 0);
         $redirect_url = Router::url("/", true);

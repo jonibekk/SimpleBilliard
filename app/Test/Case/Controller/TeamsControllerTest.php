@@ -99,7 +99,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testAjaxSwitchTeamNotFountTeam()
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/teams/ajax_switch_team/test', ['method' => 'GET']);
+        $this->testAction('/teams/ajax_switch_team/team_id:test', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -118,7 +118,7 @@ class TeamsControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->testAction('/teams/ajax_switch_team/' . $Teams->Team->id, ['method' => 'GET']);
+        $this->testAction('/teams/ajax_switch_team/team_id:' . $Teams->Team->id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
