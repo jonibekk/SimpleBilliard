@@ -208,4 +208,14 @@ class Invite extends AppModel
         return $res;
     }
 
+    function getInviteUserList ($team_id) {
+        $options = [
+            'fields' => ['email', 'created'],
+            'conditions' => [
+                'team_id' => $team_id
+            ]
+        ];
+        return $this->find('all', $options);
+    }
+
 }

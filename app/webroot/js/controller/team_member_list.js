@@ -29,6 +29,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
 
         var init = function () {
 
+            $scope.invite_box_show = false;
             $scope.name_field_show = true;
             $scope.coach_name_field_show = false;
             $scope.group_field_show = false;
@@ -86,6 +87,12 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
                     $scope.team_list = data.user_info;
                 });
 
+            } else if (filter_name === 'invite') {
+                $scope.invite_box_show = true;
+                $http.get(url_list.t).success(function (data) {
+                    $scope.invite_list = data.user_info;
+                    console.log(data.user_info);
+                });
             } else {
                 init();
                 $http.get(url_list.i).success(function (data) {
