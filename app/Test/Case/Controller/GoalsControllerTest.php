@@ -631,7 +631,7 @@ class GoalsControllerTest extends ControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $this->testAction('/goals/delete_action/action_result_id9999999', ['method' => 'POST']);
+        $this->testAction('/goals/delete_action/action_result_id:9999999', ['method' => 'POST']);
     }
 
     function testDeleteActionFailNotCollabo()
@@ -648,14 +648,14 @@ class GoalsControllerTest extends ControllerTestCase
         ];
         $Goals->Goal->ActionResult->save($data);
         $ar_id = $Goals->Goal->ActionResult->getLastInsertID();
-        $this->testAction('/goals/delete_action/action_result_id' . $ar_id, ['method' => 'POST']);
+        $this->testAction('/goals/delete_action/action_result_id:' . $ar_id, ['method' => 'POST']);
     }
 
     function testDeleteActionSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $this->testAction('/goals/delete_action/action_result_id1', ['method' => 'POST']);
+        $this->testAction('/goals/delete_action/action_result_id:1', ['method' => 'POST']);
     }
 
     function testAddKeyResultFail()
