@@ -54,7 +54,7 @@
                 'class'     => 'form-control addteam_input-design'
             ],
             'class'         => 'form-horizontal',
-            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', $goal_id, $current_kr_id],
+            'url'           => ['controller' => 'goals', 'action' => 'add_key_result', 'goal_id' => $goal_id, 'key_result_id' => $current_kr_id],
             'novalidate'    => true,
             'id'            => 'AddGoalFormKeyResult',
         ]); ?>

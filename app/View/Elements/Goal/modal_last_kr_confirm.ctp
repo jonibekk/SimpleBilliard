@@ -31,7 +31,7 @@
             <div class="text-align_l font_12px font_rouge mb_12px">※どちらを選択しても、このゴールに紐づいた出したい成果は「すべて完了」となります。</div>
             <?=
             $this->Form->create('Post', [
-                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', $kr_id, true],
+                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr_id, true],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,

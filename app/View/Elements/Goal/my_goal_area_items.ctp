@@ -25,10 +25,10 @@
                         aria-labelledby="dropdownMenu1">
                         <?php //目的のみの場合とそうでない場合でurlが違う
                         $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
-                        $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
+                        $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', 'purpose_id' => $goal['Purpose']['id']];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
                             $edit_url = ['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3];
-                            $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
+                            $del_url = ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']];
                         }
                         ?>
                         <?php if (!empty($goal['Goal'])): ?>
@@ -159,7 +159,7 @@
                                 tmp-target-height="53"
                                 replace-elm-parent-id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>"
                                 click-target-id="ActionFormName_<?= $goal['Goal']['id'] ?>"
-                                ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
+                                ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', 'goal_id' => $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
                                 ></textarea>
                         </div>
                         <?php if ($goal['Goal']['action_result_count'] > 0): ?>
@@ -200,9 +200,9 @@
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
-                <?php $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
+                <?php $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], true];
                 if ($type == "follow") {
-                    $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
+                    $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id']];
                 }
                 ?>
                 <?php if (count($goal['KeyResult']) > 0) { ?>

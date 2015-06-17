@@ -17,7 +17,7 @@
         'wrapInput' => false,
         'class'     => 'form-control',
     ],
-    'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', $goal_id],
+    'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', 'goal_id' => $goal_id],
     'type'          => 'file',
     'class'         => 'form-feed-notify'
 ]); ?>

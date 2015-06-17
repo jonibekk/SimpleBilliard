@@ -1432,12 +1432,12 @@ function evFollowGoal() {
     attrUndefinedCheck(this, 'goal-id');
     attrUndefinedCheck(this, 'data-class');
     var $obj = $(this);
-    var kr_id = $obj.attr('goal-id');
+    var goal_id = $obj.attr('goal-id');
     var data_class = $obj.attr('data-class');
     var url = cake.url.c;
     $.ajax({
         type: 'GET',
-        url: url + '/' + kr_id,
+        url: url + goal_id,
         async: true,
         dataType: 'json',
         success: function (data) {
@@ -1449,7 +1449,7 @@ function evFollowGoal() {
             }
             else {
                 if (data.add) {
-                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
+                    $("." + data_class + "[goal-id=" + goal_id + "]").each(function () {
                         $(this).children('span').text(cake.message.info.d);
                         $(this).children('i').hide();
                         $(this).removeClass('follow-off');
@@ -1457,7 +1457,7 @@ function evFollowGoal() {
                     });
                 }
                 else {
-                    $("." + data_class + "[goal-id=" + kr_id + "]").each(function () {
+                    $("." + data_class + "[goal-id=" + goal_id + "]").each(function () {
                         $(this).children('span').text(cake.message.info.z);
                         $(this).children('i').show();
                         $(this).removeClass('follow-on');
