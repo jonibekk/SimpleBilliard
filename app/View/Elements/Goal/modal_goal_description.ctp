@@ -9,7 +9,7 @@
  * @var                    $goal
  */
 ?>
-<!-- START app/View/Elements/Goal/modal_goal_detail.ctp -->
+<!-- START app/View/Elements/Goal/modal_goal_description.ctp -->
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -143,4 +143,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/Goal/modal_goal_detail.ctp -->
+<!-- END app/View/Elements/Goal/modal_goal_description.ctp -->

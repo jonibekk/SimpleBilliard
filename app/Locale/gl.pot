@@ -198,7 +198,7 @@ msgstr ""
 
 #: Controller/GoalsController.php:616
 #: View/Elements/modal_collabo.ctp:55
-#: View/Elements/Goal/modal_goal_detail.ctp:113
+#: View/Elements/Goal/modal_goal_description.ctp:113
 #: View/Goals/add.ctp:336
 msgid "詳細"
 msgstr ""
@@ -397,7 +397,7 @@ msgstr ""
 
 #: Model/Collaborator.php:29
 #: View/Elements/my_goals_area.ctp:62
-#: View/Elements/Goal/modal_goal_detail.ctp:99
+#: View/Elements/Goal/modal_goal_description.ctp:99
 msgid "コラボレータ"
 msgstr ""
 
@@ -477,7 +477,7 @@ msgid "その他の単位"
 msgstr ""
 
 #: Model/KeyResult.php:39
-#: View/Elements/Goal/modal_goal_detail.ctp:109
+#: View/Elements/Goal/modal_goal_description.ctp:109
 msgid "なし"
 msgstr ""
 
@@ -764,13 +764,13 @@ msgstr ""
 
 #: View/Elements/gl_common_js.ctp:280
 #: View/Elements/Goal/index_items.ctp:69
-#: View/Elements/Goal/modal_goal_detail.ctp:36
+#: View/Elements/Goal/modal_goal_description.ctp:36
 msgid "フォロー中"
 msgstr ""
 
 #: View/Elements/gl_common_js.ctp:288
 #: View/Elements/Goal/index_items.ctp:64
-#: View/Elements/Goal/modal_goal_detail.ctp:31
+#: View/Elements/Goal/modal_goal_description.ctp:31
 msgid "フォロー"
 msgstr ""
 
@@ -809,7 +809,7 @@ msgstr ""
 #: View/Elements/Feed/modal_post_red_users.ctp:35
 #: View/Elements/Goal/modal_add_key_result.ctp:221
 #: View/Elements/Goal/modal_edit_key_result.ctp:244
-#: View/Elements/Goal/modal_goal_detail.ctp:122
+#: View/Elements/Goal/modal_goal_description.ctp:122
 msgid "閉じる"
 msgstr ""
 
@@ -895,7 +895,7 @@ msgstr ""
 
 #: View/Elements/modal_add_circle.ctp:61
 #: View/Elements/modal_edit_circle.ctp:61
-msgid "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に���加できます。"
+msgid "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメ���バーは誰でも自���に�����加できます。"
 msgstr ""
 
 #: View/Elements/modal_add_circle.ctp:63
@@ -961,7 +961,7 @@ msgstr ""
 
 #: View/Elements/modal_collabo.ctp:19;82
 #: View/Elements/Goal/index_items.ctp:80
-#: View/Elements/Goal/modal_goal_detail.ctp:47
+#: View/Elements/Goal/modal_goal_description.ctp:47
 msgid "コラボる"
 msgstr ""
 
@@ -1050,7 +1050,7 @@ msgid "今期のゴール"
 msgstr ""
 
 #: View/Elements/my_goals_area.ctp:39
-#: View/Elements/Goal/modal_goal_detail.ctp:89
+#: View/Elements/Goal/modal_goal_description.ctp:89
 msgid "リーダー"
 msgstr ""
 
@@ -1196,7 +1196,7 @@ msgid "他%s人"
 msgstr ""
 
 #: View/Elements/Goal/index_items.ctp:74
-#: View/Elements/Goal/modal_goal_detail.ctp:41
+#: View/Elements/Goal/modal_goal_description.ctp:41
 msgid "コラボり中"
 msgstr ""
 
@@ -1255,7 +1255,7 @@ msgstr ""
 
 #: View/Elements/Goal/modal_add_key_result.ctp:82
 #: View/Elements/Goal/modal_edit_key_result.ctp:105
-#: View/Elements/Goal/modal_goal_detail.ctp:78
+#: View/Elements/Goal/modal_goal_description.ctp:78
 #: View/Goals/add.ctp:160
 msgid "程度"
 msgstr ""
@@ -1325,19 +1325,19 @@ msgstr ""
 msgid "例）サービスAの国内市場シェアを増加させる"
 msgstr ""
 
-#: View/Elements/Goal/modal_goal_detail.ctp:18
+#: View/Elements/Goal/modal_goal_description.ctp:18
 msgid "ゴール概要"
 msgstr ""
 
-#: View/Elements/Goal/modal_goal_detail.ctp:79
+#: View/Elements/Goal/modal_goal_description.ctp:79
 msgid "単位: %s"
 msgstr ""
 
-#: View/Elements/Goal/modal_goal_detail.ctp:81
+#: View/Elements/Goal/modal_goal_description.ctp:81
 msgid "達成時: %s"
 msgstr ""
 
-#: View/Elements/Goal/modal_goal_detail.ctp:82
+#: View/Elements/Goal/modal_goal_description.ctp:82
 msgid "開始時: %s"
 msgstr ""
 
@@ -1695,7 +1695,7 @@ msgid "達成したいことは？"
 msgstr ""
 
 #: View/Goals/add.ctp:72
-msgid "達成したいことをざっくり書く"
+msgid "達���したいことをざっくり書く"
 msgstr ""
 
 #: View/Goals/add.ctp:75

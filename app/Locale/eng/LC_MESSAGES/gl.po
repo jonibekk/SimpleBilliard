@@ -194,7 +194,7 @@ msgid "開始日"
 msgstr "Start Data"
 
 #: Controller/GoalsController.php:616 View/Elements/modal_collabo.ctp:55
-#: View/Elements/Goal/modal_goal_detail.ctp:113 View/Goals/add.ctp:336
+#: View/Elements/Goal/modal_goal_description.ctp:113 View/Goals/add.ctp:336
 msgid "詳細"
 msgstr "Description"
 
@@ -362,7 +362,7 @@ msgid "パスワードの変更に失敗しました"
 msgstr ""
 
 #: Controller/UsersController.php:455
-msgid "パスワードを変更しました。"
+msgid "パスワ���ドを変更しました。"
 msgstr ""
 
 #: Controller/UsersController.php:478
@@ -395,7 +395,7 @@ msgid "秘密"
 msgstr "Secret"
 
 #: Model/Collaborator.php:29 View/Elements/my_goals_area.ctp:62
-#: View/Elements/Goal/modal_goal_detail.ctp:99
+#: View/Elements/Goal/modal_goal_description.ctp:99
 msgid "コラボレータ"
 msgstr "Collaborator"
 
@@ -471,7 +471,7 @@ msgstr "$"
 msgid "その他の単位"
 msgstr "Other Unit"
 
-#: Model/KeyResult.php:39 View/Elements/Goal/modal_goal_detail.ctp:109
+#: Model/KeyResult.php:39 View/Elements/Goal/modal_goal_description.ctp:109
 msgid "なし"
 msgstr "No Unit"
 
@@ -756,12 +756,12 @@ msgid "検索中･･･"
 msgstr "Searching..."
 
 #: View/Elements/gl_common_js.ctp:280 View/Elements/Goal/index_items.ctp:69
-#: View/Elements/Goal/modal_goal_detail.ctp:36
+#: View/Elements/Goal/modal_goal_description.ctp:36
 msgid "フォロー中"
 msgstr "Following"
 
 #: View/Elements/gl_common_js.ctp:288 View/Elements/Goal/index_items.ctp:64
-#: View/Elements/Goal/modal_goal_detail.ctp:31
+#: View/Elements/Goal/modal_goal_description.ctp:31
 msgid "フォロー"
 msgstr "Follow"
 
@@ -778,7 +778,7 @@ msgid "さらに投稿を読み込む ▼"
 msgstr "View previous posts ▼"
 
 #: View/Elements/gl_common_js.ctp:444
-msgid "これ以上のコメントがありません。"
+msgid "これ以上のコメ���トがありません。"
 msgstr "No more comments."
 
 #: View/Elements/gl_common_js.ctp:478;494
@@ -796,7 +796,7 @@ msgstr "An error has occurred."
 #: View/Elements/Feed/modal_post_red_users.ctp:35
 #: View/Elements/Goal/modal_add_key_result.ctp:221
 #: View/Elements/Goal/modal_edit_key_result.ctp:244
-#: View/Elements/Goal/modal_goal_detail.ctp:122
+#: View/Elements/Goal/modal_goal_description.ctp:122
 msgid "閉じる"
 msgstr "Close"
 
@@ -942,7 +942,7 @@ msgid "キャンセル"
 msgstr "Cancel"
 
 #: View/Elements/modal_collabo.ctp:19;82 View/Elements/Goal/index_items.ctp:80
-#: View/Elements/Goal/modal_goal_detail.ctp:47
+#: View/Elements/Goal/modal_goal_description.ctp:47
 msgid "コラボる"
 msgstr "Collaborate"
 
@@ -1026,7 +1026,7 @@ msgid "今期のゴール"
 msgstr "Goals this term"
 
 #: View/Elements/my_goals_area.ctp:39
-#: View/Elements/Goal/modal_goal_detail.ctp:89
+#: View/Elements/Goal/modal_goal_description.ctp:89
 msgid "リーダー"
 msgstr "Leader"
 
@@ -1122,7 +1122,7 @@ msgid "まだ、この投稿を読んだ人はいません。"
 msgstr "No-one has read this comment yet."
 
 #: View/Elements/Feed/modal_post_liked_users.ctp:18
-msgid "この投稿���%s人が「いいね！」と言っています。"
+msgid "この投������%s人が「いいね！」と言っています。"
 msgstr "%s people liked this post."
 
 #: View/Elements/Feed/modal_post_red_users.ctp:18
@@ -1170,7 +1170,7 @@ msgid "他%s人"
 msgstr "%s other people"
 
 #: View/Elements/Goal/index_items.ctp:74
-#: View/Elements/Goal/modal_goal_detail.ctp:41
+#: View/Elements/Goal/modal_goal_description.ctp:41
 msgid "コラボり中"
 msgstr "Collaborating"
 
@@ -1228,7 +1228,7 @@ msgstr "eg) Complete Website"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:82
 #: View/Elements/Goal/modal_edit_key_result.ctp:105
-#: View/Elements/Goal/modal_goal_detail.ctp:78 View/Goals/add.ctp:160
+#: View/Elements/Goal/modal_goal_description.ctp:78 View/Goals/add.ctp:160
 msgid "程度"
 msgstr "Measurement"
 
@@ -1289,19 +1289,19 @@ msgstr "What signs of achievement will there be?"
 msgid "例）サービスAの国内市場シェアを増加させる"
 msgstr "eg. Increasing the internal market share of A"
 
-#: View/Elements/Goal/modal_goal_detail.ctp:18
+#: View/Elements/Goal/modal_goal_description.ctp:18
 msgid "ゴール概要"
 msgstr "Goal Summary"
 
-#: View/Elements/Goal/modal_goal_detail.ctp:79
+#: View/Elements/Goal/modal_goal_description.ctp:79
 msgid "単位: %s"
 msgstr "Unit: %s"
 
-#: View/Elements/Goal/modal_goal_detail.ctp:81
+#: View/Elements/Goal/modal_goal_description.ctp:81
 msgid "達成時: %s"
 msgstr "Final: %s"
 
-#: View/Elements/Goal/modal_goal_detail.ctp:82
+#: View/Elements/Goal/modal_goal_description.ctp:82
 msgid "開始時: %s"
 msgstr "Initial: %s"
 
@@ -1447,7 +1447,7 @@ msgid "パスワードを再入力"
 msgstr "Confirm your password"
 
 #: View/Elements/User/modal_delete_email.ctp:20
-msgid "確認"
+msgid "���認"
 msgstr "Confirm"
 
 #: View/Elements/User/modal_delete_email.ctp:23

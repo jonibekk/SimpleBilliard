@@ -247,13 +247,13 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_goal_detail_modal($goal_id)
+    public function ajax_get_goal_description_modal($goal_id)
     {
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $this->set(compact('goal'));
         //htmlレンダリング結果
-        $response = $this->render('Goal/modal_goal_detail');
+        $response = $this->render('Goal/modal_goal_description');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
