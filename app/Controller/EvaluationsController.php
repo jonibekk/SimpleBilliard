@@ -63,8 +63,10 @@ class EvaluationsController extends AppController
                    ));
     }
 
-    function view($evaluateTermId = null, $evaluateeId = null)
+    function view()
     {
+        $evaluateeId = viaIsSet($this->request->params['named']['user_id']);
+        $evaluateTermId = viaIsSet($this->request->params['named']['evaluate_term_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
         $my_uid = $this->Auth->user('id');
 

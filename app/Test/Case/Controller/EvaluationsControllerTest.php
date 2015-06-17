@@ -168,7 +168,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewNotEnabled()
@@ -203,7 +204,8 @@ class EvaluationsControllerTest extends ControllerTestCase
         $res = $Evaluations->Evaluation->Team->EvaluationSetting->findByTeamId(1);
         $Evaluations->Evaluation->Team->EvaluationSetting->id = $res['EvaluationSetting']['id'];
         $Evaluations->Evaluation->Team->EvaluationSetting->saveField('enable_flg', false);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewNotExistTotal()
@@ -235,7 +237,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewNotMyTern()
@@ -267,7 +270,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewIncorrectEvaluateeId()
@@ -300,7 +304,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$incorrectEvaluateeId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$incorrectEvaluateeId}",
+                          ['method' => 'GET']);
     }
 
     public function testViewIncorrectTermId()
@@ -333,7 +338,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$incorrectTermId}/{$Evaluations->Evaluation->my_uid}",
+        $this->testAction("/evaluations/view/evaluate_term_id:{$incorrectTermId}/user_id:{$Evaluations->Evaluation->my_uid}",
                           ['method' => 'GET']);
     }
 
