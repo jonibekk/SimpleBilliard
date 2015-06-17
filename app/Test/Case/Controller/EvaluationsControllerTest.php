@@ -553,7 +553,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}/evaluate_term_id:{$term_id}",
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/evaluator_id:{$evaluatorId}/evaluate_term_id:{$term_id}",
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
