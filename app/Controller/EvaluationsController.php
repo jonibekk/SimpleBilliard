@@ -118,7 +118,7 @@ class EvaluationsController extends AppController
 
     function add()
     {
-        $evaluateeId = viaIsSet($this->request->params['named']['evaluatee_id']);
+        $evaluateeId = viaIsSet($this->request->params['named']['user_id']);
         $evaluateTermId = viaIsSet($this->request->params['named']['evaluate_term_id']);
 
         $this->request->allowMethod('post', 'put');
@@ -203,7 +203,7 @@ class EvaluationsController extends AppController
 
     public function ajax_get_evaluators_status()
     {
-        $evaluatee_id = viaIsSet($this->request->params['named']['evaluatee_id']);
+        $evaluatee_id = viaIsSet($this->request->params['named']['user_id']);
         $this->_ajaxPreProcess();
         $evaluatee = $this->Evaluation->EvaluateeUser->findById($evaluatee_id);
 
