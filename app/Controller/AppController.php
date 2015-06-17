@@ -532,13 +532,18 @@ class AppController extends Controller
                 $model_name = $model;
                 break;
             }
+            elseif ($id = viaIsSet($request_params[$key])) {
+                $model_name = $model;
+                break;
+            }
+
         }
         //IDが特定できない場合もしくはidが数値じゃない場合はnullを返す
         if (!$id || !is_numeric($id)) {
             return null;
         }
         $Model = ClassRegistry::init($model_name);
-
+        $this->log($model_name);
         switch ($Model->name) {
             case 'User':
                 //Userの場合

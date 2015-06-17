@@ -69,7 +69,6 @@ class AppModel extends Model
     ];
 
     public $model_key_map = [
-        'user_id'          => 'User',
         'key_result_id'    => 'KeyResult',
         'action_result_id' => 'ActionResult',
         'comment_id'       => 'Comment',
@@ -79,6 +78,7 @@ class AppModel extends Model
         'circle_id'        => 'Circle',
         'evaluate_term_id' => 'EvaluateTerm',
         'team_id'          => 'Team',
+        'user_id'          => 'User',
     ];
 
     /**
