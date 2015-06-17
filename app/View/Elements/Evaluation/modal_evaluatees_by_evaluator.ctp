@@ -7,6 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $evaluator
+ * @var                    $evaluate_term_id
  */
 ?>
 <!-- START app/View/Elements/Elements/modal_evaluatees_by_evaluator.ctp -->
@@ -23,7 +24,7 @@
                     <?php foreach ($incomplete_evaluatees as $user): ?>
                         <?=
                         $this->element('Evaluation/evaluatee_by_evaluator',
-                                       ['user' => $user]) ?>
+                                       ['user' => $user, 'evaluate_term_id' => $evaluate_term_id]) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>

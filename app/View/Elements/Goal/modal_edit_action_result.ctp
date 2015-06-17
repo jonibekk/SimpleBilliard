@@ -84,7 +84,7 @@
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
             <?=
             $this->Form->postLink(__d('gl', "アクションを削除"),
-                                  ['controller' => 'goals', 'action' => 'delete_action', $action['ActionResult']['id']],
+                                  ['controller' => 'goals', 'action' => 'delete_action', 'action_result_id' => $action['ActionResult']['id']],
                                   ['class' => 'btn btn-default pull-left'], __d('gl', "本当にこのアクションを削除しますか？")) ?>
 
 
