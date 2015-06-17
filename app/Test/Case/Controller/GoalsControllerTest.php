@@ -969,8 +969,8 @@ class GoalsControllerTest extends ControllerTestCase
         $request_params = [
             'controller' => 'users',
             'action'     => 'add',
-            'pass'       => [
-                0 => 1,
+            'named'      => [
+                'user_id' => 1,
             ]
         ];
         $Goals->_getTeamIdFromRequest($request_params);
@@ -1022,7 +1022,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->request->params = [
             'controller' => 'goals',
             'action'     => 'add',
-            'goal_id'    => $Goals->Goal->getLastInsertID(),
+            'named'      => [
+                'goal_id' => $Goals->Goal->getLastInsertID(),
+            ]
         ];
         $Goals->_switchTeamBeforeCheck();
     }
@@ -1048,7 +1050,9 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->request->params = [
             'controller' => 'goals',
             'action'     => 'add',
-            'goal_id'    => $Goals->Goal->getLastInsertID(),
+            'named'      => [
+                'goal_id' => $Goals->Goal->getLastInsertID(),
+            ]
         ];
         $Goals->_switchTeamBeforeCheck();
     }

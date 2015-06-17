@@ -551,16 +551,14 @@ class AppController extends Controller
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);
-                if (!empty($team)) {
-                    $team_id = $team['TeamMember']['team_id'];
-                }
+                $team_id = viaIsSet($team['TeamMember']['team_id']);
                 break;
             case 'Team':
                 //チームの場合はそのまま
                 $team_id = $id;
                 break;
             default:
-                $result = $Model->findById($id);
+                $result = $Model->findWithoutTeamId('first', ['conditions' => ['id' => $id]]);
                 if (empty($result)) {
                     return null;
                 }
