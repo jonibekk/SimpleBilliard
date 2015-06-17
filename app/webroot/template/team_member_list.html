@@ -140,7 +140,7 @@
             <tr ng-repeat="item in invite_list | filter:name_field">
                 <td>
                     <p>{{ item.Invite.email }}</p>
-                    <p>{{ item.Invite.created }}</p>
+                    <div ng-bind-html="item.Invite.created"></div>
                 </td>
             </tr>
         </table>

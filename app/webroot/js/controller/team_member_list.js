@@ -15,7 +15,7 @@ var app = angular.module('myApp', ['ngRoute', 'pascalprecht.translate']).
         $translateProvider.fallbackLanguage('en');
     }]);
 
-app.controller("TeamMemberMainController", function ($scope, $http, $translate) {
+app.controller("TeamMemberMainController", function ($scope, $http, $translate, $sce) {
 
         $scope.disp_active_flag = '1';
         var url_list = cake.url;
@@ -90,8 +90,11 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
             } else if (filter_name === 'invite') {
                 $scope.invite_box_show = true;
                 $http.get(url_list.t).success(function (data) {
-                    $scope.invite_list = data.user_info;
-                    console.log(data.user_info);
+                    var invite_list = data.user_info;
+                    angular.forEach(invite_list, function(val, key){
+                        invite_list[key].Invite.created = $sce.trustAsHtml(val.Invite.created);
+                    });
+                    $scope.invite_list = invite_list;
                 });
             } else {
                 init();
