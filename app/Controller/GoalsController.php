@@ -242,7 +242,9 @@ class GoalsController extends AppController
         $response = $this->render('Goal/index_items');
         $html = $response->__toString();
         $result = array(
-            'html' => $html
+            'html'          => $html,
+            'count'         => count($goals),
+            'page_item_num' => GOAL_INDEX_ITEMS_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
     }
