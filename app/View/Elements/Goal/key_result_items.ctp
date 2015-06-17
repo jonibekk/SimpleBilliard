@@ -86,7 +86,7 @@
                             <?=
                             $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
                                                   __d('gl', "出したい成果を削除する") . '</span>',
-                                                  ['controller' => 'goals', 'action' => 'delete_key_result', $kr['KeyResult']['id']],
+                                                  ['controller' => 'goals', 'action' => 'delete_key_result', 'key_result_id' => $kr['KeyResult']['id']],
                                                   ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
                         </li>
                     </ul>

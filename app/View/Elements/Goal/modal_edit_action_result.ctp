@@ -25,7 +25,7 @@
                 'wrapInput' => false,
                 'class'     => 'form-control',
             ],
-            'url'           => ['controller' => 'goals', 'action' => 'edit_action', $action['ActionResult']['id']],
+            'url'           => ['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $action['ActionResult']['id']],
             'type'          => 'file',
         ]); ?>
         <?= $this->Form->hidden('ActionResult.id') ?>

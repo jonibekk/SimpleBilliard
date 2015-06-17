@@ -203,12 +203,11 @@ class GoalsController extends AppController
     /**
      * delete method
      *
-     * @param $purpose_id
-     *
      * @return void
      */
-    public function delete_purpose($purpose_id)
+    public function delete_purpose()
     {
+        $purpose_id = $this->request->params['named']['purpose_id'];
         try {
             if (!$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
@@ -325,11 +324,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    /**
-     * @param null $collabo_id
-     */
-    public function edit_collabo($collabo_id = null)
+    public function edit_collabo()
     {
+        $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
         $this->request->allowMethod('post', 'put');
 
         if (!isset($this->request->data['Collaborator'])) {
@@ -404,11 +401,9 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    /**
-     * @param $kr_id
-     */
-    public function edit_key_result($kr_id)
+    public function edit_key_result()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post', 'put');
         $kr = null;
         try {
@@ -485,8 +480,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function incomplete_kr($kr_id)
+    public function incomplete_kr()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post');
         try {
             $this->Goal->begin();
@@ -510,8 +506,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_key_result($kr_id)
+    public function delete_key_result()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post', 'delete');
         try {
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
@@ -571,8 +568,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_collabo($collabo_id)
+    public function delete_collabo()
     {
+        $collabo_id = $this->request->params['named']['collaborator_id'];
         $this->request->allowMethod('post', 'put');
         $this->Goal->Collaborator->id = $collabo_id;
         if (!$this->Goal->Collaborator->exists()) {
@@ -767,11 +765,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    /**
-     * @param $ar_id
-     */
-    public function edit_action($ar_id)
+    public function edit_action()
     {
+        $ar_id = $this->request->params['named']['action_result_id'];
         $this->request->allowMethod('post', 'put');
         try {
             if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
