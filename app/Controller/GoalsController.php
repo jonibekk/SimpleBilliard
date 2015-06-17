@@ -376,6 +376,7 @@ class GoalsController extends AppController
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             $this->Goal->KeyResult->add($this->request->data, $goal_id);
+            $this->Goal->incomplete($goal_id);
             if ($current_kr_id) {
                 if (!$this->Goal->KeyResult->isPermitted($current_kr_id)) {
                     throw new RuntimeException(__d('gl', "権限がありません。"));
