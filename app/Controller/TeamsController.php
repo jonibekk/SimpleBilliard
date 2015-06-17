@@ -562,8 +562,9 @@ class TeamsController extends AppController
         return $this->render();
     }
 
-    function change_freeze_status($termId)
+    function change_freeze_status()
     {
+        $termId = $this->request->params['named']['evaluate_term_id'];
         $this->request->allowMethod('post');
         try {
             $res = $this->Team->EvaluateTerm->changeFreezeStatus($termId);
