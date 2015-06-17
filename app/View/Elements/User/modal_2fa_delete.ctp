@@ -18,9 +18,9 @@
             <h4 class="modal-title"><?= __d('gl', "2段階認証設定") ?></h4>
         </div>
         <div class="modal-body">
-            <div class="form-group"><label for="" class="col col-sm-3 modal-label pr_12px"></label>
+            <div class="form-group"><label for="" class="modal-label pr_12px"></label>
 
-                <div class="col col-sm-6">
+                <div class="aaa">
                     <p class="form-control-static"><?= __d('gl', "現在、2段階認証が有効になっています。") ?></p>
 
                     <p class="form-control-static"><?= __d('gl', "2段階認証を解除しますか？") ?></p>
