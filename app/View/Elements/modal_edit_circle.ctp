@@ -19,7 +19,7 @@
         </div>
         <?=
         $this->Form->create('Circle', [
-            'url'           => ['controller' => 'circles', 'action' => 'edit', $this->request->data['Circle']['id']],
+            'url'           => ['controller' => 'circles', 'action' => 'edit', 'circle_id' => $this->request->data['Circle']['id']],
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
@@ -134,7 +134,7 @@
                     data-dismiss="modal"><?= __d('gl', "キャンセル") ?></button>
             <?=
             $this->Form->postLink(__d('gl', "サークルを削除"),
-                                  ['controller' => 'circles', 'action' => 'delete', $this->request->data['Circle']['id']],
+                                  ['controller' => 'circles', 'action' => 'delete', 'circle_id' => $this->request->data['Circle']['id']],
                                   ['class' => 'btn btn-default pull-left'], __d('gl', "本当にこのサークルを削除しますか？")) ?>
 
         </div>

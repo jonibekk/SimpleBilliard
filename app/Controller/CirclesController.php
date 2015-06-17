@@ -62,14 +62,14 @@ class CirclesController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function edit($id)
+    public function edit()
     {
-        $this->Circle->id = $id;
+        $this->Circle->id = $this->request->params['named']['circle_id'];
         try {
             if (!$this->Circle->exists()) {
                 throw new RuntimeException(__('gl', "このサークルは存在しません。"));
             }
-            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $id)) {
+            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
                 throw new RuntimeException(__('gl', "サークルの変更ができるのはサークル管理者のみです。"));
             }
         } catch (RuntimeException $e) {
@@ -103,14 +103,14 @@ class CirclesController extends AppController
         $this->redirect($this->referer());
     }
 
-    public function delete($id)
+    public function delete()
     {
-        $this->Circle->id = $id;
+        $this->Circle->id = $this->request->params['named']['circle_id'];
         try {
             if (!$this->Circle->exists()) {
                 throw new RuntimeException(__('gl', "このサークルは存在しません。"));
             }
-            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $id)) {
+            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
                 throw new RuntimeException(__('gl', "サークルの削除ができるのはサークル管理者のみです。"));
             }
         } catch (RuntimeException $e) {
