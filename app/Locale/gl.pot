@@ -1240,7 +1240,7 @@ msgid "出したい成果"
 msgstr ""
 
 #: View/Elements/Goal/modal_add_key_result.ctp:70
-msgid "進捗の指標として『なに』をどうするか？"
+msgid "達成の指標として『なに』をどうするか？"
 msgstr ""
 
 #: View/Elements/Goal/modal_add_key_result.ctp:73

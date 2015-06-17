@@ -63,8 +63,8 @@
                 <?=
                 $this->Form->input('KeyResult.name',
                                    ['before'                   => '<div class="set-goal">' .
-                                       '<h5 class="add-key-result-headings">' . __d('gl', "出したい成果") . '<span class="add-key-result-headings-description">'. __d('gl',
-                                                                             "進捗の指標として『なに』をどうするか？") .'</span></h5></div>' ,
+                                       '<h5 class="modal-key-result-headings">' . __d('gl', "出したい成果") . '<span class="modal-key-result-headings-description">'. __d('gl',
+                                                                             "達成の指標として『なに』をどうするか？") .'</span></h5></div>' ,
                                     'label'                    => false,
                                     'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
@@ -75,7 +75,7 @@
             </div>
             <div class="row">
                 <div class="bbb">
-                    <h5 class="add-key-result-headings"><?= __d('gl', "程度") ?><span class="add-key-result-headings-description"><?= __d('gl', "どのくらい？") ?></span></h5>
+                    <h5 class="modal-key-result-headings"><?= __d('gl', "程度") ?><span class="modal-key-result-headings-description"><?= __d('gl', "どのくらい？") ?></span></h5>
                 </div>
                 <div class=" goal-set-input">
                     <div class="ccc">
@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="row">
-                <h5 class="add-key-result-headings"><?= __d('gl', "期間") ?></h5>
+                <h5 class="modal-key-result-headings"><?= __d('gl', "期間") ?></h5>
 
                 <div class=" goal-set-input">
                     <div class="form-group" id="KeyResult0EndDateContainer">
@@ -194,7 +194,7 @@
             <div class="row">
                 <?=
                 $this->Form->input('priority', [
-                    'before'   => '<h5 class="add-key-result-headings">' . __d('gl', "重要度") . '<span class="add-key-result-headings-description">' . __d('gl', "ゴールにとってこの成果の重要度") . '</span></h5>' ,
+                    'before'   => '<h5 class="modal-key-result-headings">' . __d('gl', "重要度") . '<span class="modal-key-result-headings-description">' . __d('gl', "ゴールにとってこの成果の重要度") . '</span></h5>' ,
                     'label'    => false,
                     'type'     => 'select',
                     'default'  => 3,
