@@ -968,8 +968,6 @@ class TeamMember extends AppModel
         //member_no
         $before_member_numbers = array_column($before_csv_data, 'member_no');
         //レコード数が同一である事を確認
-        $this->log(count($csv_data));
-        $this->log(count($before_csv_data));
         if (count($csv_data) - 1 !== count($before_csv_data)) {
             $res['error_msg'] = __d('validate', "レコード数が一致しません。");
             return $res;
@@ -1385,7 +1383,6 @@ class TeamMember extends AppModel
                 ];
                 break;
         }
-        $this->log($options);
         $this->all_users = $this->find('all', $options);
         return;
     }
