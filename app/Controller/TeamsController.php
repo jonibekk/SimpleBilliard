@@ -674,4 +674,14 @@ class TeamsController extends AppController
         $res = $this->Team->TeamMember->setEvaluationFlag($member_id, $evaluation_flg);
         return $this->_ajaxGetResponse($res);
     }
+
+    function ajax_get_invite_member_list()
+    {
+        $team_id = $this->Session->read('current_team_id');
+        $invite_member_list = $this->Team->Invite->getInviteUserList($team_id);
+        $res = [
+            'user_info' => $invite_member_list,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
 }

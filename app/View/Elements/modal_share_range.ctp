@@ -11,7 +11,7 @@
  * @var                    $total_share_user_count
  */
 ?>
-<!-- START app/View/Elements/modal_share_circles_users.ctp -->
+<!-- START app/View/Elements/modal_share_range.ctp -->
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -41,4 +41,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_share_circles_users.ctp -->
+<!-- END app/View/Elements/modal_share_range.ctp -->

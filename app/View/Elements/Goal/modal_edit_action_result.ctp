@@ -30,24 +30,24 @@
         ]); ?>
         <?= $this->Form->hidden('ActionResult.id') ?>
         <div class="modal-body modal-circle-body">
-            <div class="col col-xxs-12">
+            <div class="aaa">
                 <?=
                 $this->Form->input('ActionResult.name', [
                                                           'label'       => false,
                                                           'rows'        => 1,
                                                           'placeholder' => __d('gl', "今日やったアクションを共有しよう！"),
-                                                          'class'       => 'form-control tiny-form-text blank-disable col-xxs-10 goalsCard-actionInput mb_12px',
+                                                          'class'       => 'form-control tiny-form-text blank-disable goalsCard-actionInput mb_12px',
                                                           'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
                                                           'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
                                                       ]
                 )
                 ?>
                 <div class="form-group">
-                    <label class="font_normal col-xxs-4 lh_40px" for="ActionPhotos">
+                    <label class="font_normal lh_40px" for="ActionPhotos">
                         <i class="fa fa-camera mr_2px"></i><?= __d('gl', "画像") ?>
                     </label>
 
-                    <div class="col-xxs-8">
+                    <div class="bbb">
                         <ul class="col input-images post-images">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <li>
@@ -60,14 +60,14 @@
                               id="ActionResult_<?= $action['ActionResult']['id'] ?>_Photo_ValidateMessage"></span>
                     </div>
                 </div>
-                <label class="font_normal col-xxs-4 lh_40px" for="KeyResults_<?= $action['ActionResult']['id'] ?>">
+                <label class="font_normal lh_40px" for="KeyResults_<?= $action['ActionResult']['id'] ?>">
                     <i class="fa fa-key mr_2px"></i><?= __d('gl', "成果") ?>
                 </label>
                 <?=
                 $this->Form->input('ActionResult.key_result_id', [
                                                                    'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
                                                                    'options' => [null => __d('gl', "選択なし")] + $kr_list,
-                                                                   'class'   => 'form-control col-xxs-8 selectKrForAction',
+                                                                   'class'   => 'form-control selectKrForAction',
                                                                    'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],
                                                                ]
                 )

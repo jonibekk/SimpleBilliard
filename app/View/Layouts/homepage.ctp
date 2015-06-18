@@ -191,7 +191,7 @@
         </div>
     </div>
     <!--end: navbar --> </header>
-<?= $this->element('mainte_alert') ?>
+<?= $this->element('alert_maint') ?>
 <?= $this->Session->flash(); ?>
 <?= $this->fetch('content') ?>
 <!-- start: footer -->

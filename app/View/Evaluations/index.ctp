@@ -28,12 +28,9 @@
                        class="btn btn-default goal-search-elm <?= $selected ?>" role="button">
                         <?php if ($incompleteNum > 0 && !$isFrozens[$key]):
                             ?>
-                            <div class="btn btn-danger btn-xs bell-notify-box" id="bellNum" style="position: absolute;
-                                margin: 0 0 0 33px;
-                                color: #fff;
-                                font-size: 10px;
-                                background-color:red!important;
-                                display:block"><?= $incompleteNum ?></div>
+                            <div class="btn btn-xs bell-notify-box notify-evaluation-numbers" id="bellNum" style="opacity:1;">
+                                <span><?= $incompleteNum ?></span>
+                              </div>
                         <?php endif;
                         ?>
                         <?= $val ?>

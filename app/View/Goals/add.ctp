@@ -46,7 +46,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         'label'     => [
                             'class' => 'col col-sm-3 control-label'
                         ],
-                        'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
+                        'wrapInput' => 'col col-sm-7  goal-set-input',
                         'class'     => 'form-control addteam_input-design disabled'
                     ],
                     'class'         => 'form-horizontal',
@@ -115,7 +115,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         'label'     => [
                             'class' => 'col col-sm-3 control-label no-asterisk goal-set-mid-label'
                         ],
-                        'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
+                        'wrapInput' => 'col col-sm-7  goal-set-input',
                         'class'     => 'form-control addteam_input-design'
                     ],
                     'class'         => 'form-horizontal',
@@ -158,7 +158,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                             <div class="label-addiction pull-right"><?= __d('gl', "どのくらい？") ?></div>
                         </div>
-                        <div class="col col-sm-7 line-vertical-sm goal-set-input">
+                        <div class="col col-sm-7  goal-set-input">
 
                             <?=
                             $this->Form->input('value_unit',
@@ -208,7 +208,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="row">
                         <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
-                        <div class="col col-sm-7 line-vertical-sm goal-set-input">
+                        <div class="col col-sm-7  goal-set-input">
                             <div class="form-group" id="KeyResult0EndDateContainer">
                                 <label for="KeyResult0EndDate" class="col col-sm-3 control-label goal-set-mid-label"><?=
                                     __d('gl',
@@ -319,7 +319,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         'label'     => [
                             'class' => 'col col-sm-3 control-label'
                         ],
-                        'wrapInput' => 'col col-sm-7 line-vertical-sm goal-set-input',
+                        'wrapInput' => 'col col-sm-7  goal-set-input',
                         'class'     => 'form-control addteam_input-design'
                     ],
                     'class'         => 'form-horizontal form-feed-notify',
@@ -362,7 +362,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                             <div class="label-addiction pull-sm-right"><?= __d('gl', "イメージに合った画像を追加しましょう") ?></div>
                         </div>
-                        <div class="col col-sm-6 line-vertical-sm goal-set-input">
+                        <div class="col col-sm-6  goal-set-input">
                             <div class="fileinput_small fileinput-new" data-provides="fileinput">
                                 <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                      data-trigger="fileinput"

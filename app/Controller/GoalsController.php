@@ -238,19 +238,21 @@ class GoalsController extends AppController
         $response = $this->render('Goal/index_items');
         $html = $response->__toString();
         $result = array(
-            'html' => $html
+            'html'          => $html,
+            'count'         => count($goals),
+            'page_item_num' => GOAL_INDEX_ITEMS_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_goal_detail_modal()
+    public function ajax_get_goal_description_modal()
     {
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $this->set(compact('goal'));
         //htmlレンダリング結果
-        $response = $this->render('Goal/modal_goal_detail');
+        $response = $this->render('Goal/modal_goal_description');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
@@ -377,6 +379,7 @@ class GoalsController extends AppController
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
             $this->Goal->KeyResult->add($this->request->data, $goal_id);
+            $this->Goal->incomplete($goal_id);
             if ($current_kr_id) {
                 if (!$this->Goal->KeyResult->isPermitted($current_kr_id)) {
                     throw new RuntimeException(__d('gl', "権限がありません。"));

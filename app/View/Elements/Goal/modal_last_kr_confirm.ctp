@@ -16,19 +16,29 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "ゴールが達成しましたか？") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "ゴールを達成しましたか？") ?></h4>
         </div>
         <div class="modal-body modal-circle-body">
-            <div class="col col-xxs-12">
-                <?= __d('gl', "ゴール名") ?>:<?= h($goal['Goal']['name']) ?><br>
-                <?= __d('gl', "単位") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?><br>
-                <?= __d('gl', "現在値") ?>:<?= $goal['Goal']['current_value'] ?><br>
-                <?= __d('gl', "開始時") ?>:<?= $goal['Goal']['start_value'] ?><br>
-                <?= __d('gl', "達成時") ?>:<?= $goal['Goal']['target_value'] ?><br>
-            </div>
+            <ul class="add-key-result-goal-info">
+                <li>
+                  <i class="fa fa-flag"></i><?= __d('gl', "ゴール名") ?>:<?= h($goal['Goal']['name']) ?>
+                </li>
+                <li>
+                  <?= __d('gl', "単位") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
+                </li>
+                <li>
+                  <?= __d('gl', "現在値") ?>:<?= $goal['Goal']['current_value'] ?>
+                </li>
+                <li>
+                  <?= __d('gl', "開始時") ?>:<?= $goal['Goal']['start_value'] ?>
+                </li>
+                <li>
+                  <?= __d('gl', "達成時") ?>:<?= $goal['Goal']['target_value'] ?>
+                </li>
+            </ul>
         </div>
         <div class="modal-footer">
-            <div class="text-align_l font_12px font_rouge mb_12px">※どちらを選択しても、このゴールに紐づいた出したい成果は「すべて完了」となります。</div>
+            <div class="text-align_l font_12px font_rouge mb_12px">※どちらを選択しても、選択中の成果は「完了」となります。</div>
             <?=
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr_id, true],
@@ -45,7 +55,7 @@
                                                                                                   "出したい成果を追加") ?></a>
             <?=
             $this->Form->submit(__d('gl', "ゴール達成"),
-                                ['class' => 'btn btn-default', 'div' => false]) ?>
+                                ['class' => 'btn btn-primary', 'div' => false]) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>

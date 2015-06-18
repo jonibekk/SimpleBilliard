@@ -202,4 +202,17 @@ class InviteTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
+    function testGetInviteUserList()
+    {
+        $team_id = '999';
+        $email = 'test999@isao.co.jp';
+        $params = [
+            'team_id'  => $team_id,
+            'email' => $email
+        ];
+        $this->Invite->save($params);
+        $res = $this->Invite->getInviteUserList($team_id);
+        $this->assertEquals($email, $res[0]['Invite']['email']);
+    }
+
 }

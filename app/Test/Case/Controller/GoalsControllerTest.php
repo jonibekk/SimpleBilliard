@@ -121,7 +121,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_goal_detail_modal/goal_id:' . $this->goal_id, ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_goal_description_modal/goal_id:' . $this->goal_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -130,7 +130,11 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_more_index_items/page:2', ['method' => 'GET']);
+        $res = $this->testAction('/goals/ajax_get_more_index_items/page:2', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
