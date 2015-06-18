@@ -5,8 +5,8 @@
  * Date: 6/6/14
  * Time: 3:19 PM
  *
- * @var View $this
- * @var      $my_member_status
+ * @var CodeCompletionView $this
+ * @var                    $my_member_status
  */
 ?>
 <!-- START app/View/Elements/modal_add_circle.ctp -->

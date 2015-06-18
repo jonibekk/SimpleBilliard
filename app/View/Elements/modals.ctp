@@ -1,4 +1,9 @@
-<!-- START app/View/Elements/modals.ctp -->
+<?php
+/**
+ * @var CodeCompletionView $this
+ */
+?>
+    <!-- START app/View/Elements/modals.ctp -->
 <?php /**
  * Created by PhpStorm.
  * User: daikihirakata

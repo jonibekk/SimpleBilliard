@@ -13,7 +13,7 @@
 <?php foreach ($goals as $goal): ?>
     <div class="col col-xxs-12 my-goals-item">
         <div class="col col-xxs-3 col-xs-2">
-            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $goal['Goal']['id']]) ?>"
+            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                class="modal-ajax-get">
                 <?=
                 $this->Html->image('ajax-loader.gif',
@@ -28,7 +28,7 @@
         </div>
         <div class="col col-xxs-9 col-xs-10 pl_5px">
             <div class="col col-xxs-12 ln_contain">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $goal['Goal']['id']]) ?>"
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                    class="modal-ajax-get"><p
                         class="ln_trigger-ff font_verydark"><?= h($goal['Goal']['name']) ?></p></a>
             </div>
@@ -64,7 +64,7 @@
                         <a class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>"
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                             <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_opt['style'] ?>"></i>
                             <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
                         </a>

@@ -3,6 +3,8 @@
  * User: daikihirakata
  * Date: 4/24/15
  * Time: 00:43
+ *
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/google_tag_manager.ctp -->

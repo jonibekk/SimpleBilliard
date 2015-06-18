@@ -5,7 +5,9 @@
  * Date: 15/04/17
  * Time: 15:07
  *
- * @var $user
+ * @var CodeCompletionView $this
+ * @var                    $user
+ * @var                    $evaluate_term_id
  */
 ?>
 <!-- START app/View/Elements/Evaluation/incomplete_evaluator.ctp -->
@@ -18,7 +20,7 @@
         <div class="font_12px font_bold modalFeedTextPadding">
             <?= h($user['display_username']) ?>
             <a class="modal-ajax-get pointer"
-               href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_evaluatees_by_evaluator', $user['id'], 'term_id' => $term_id]) ?>">
+               href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_evaluatees_by_evaluator', 'user_id' => $user['id'], 'evaluate_term_id' => $evaluate_term_id]) ?>">
                 <?= __d('gl', "詳細を見る") ?>
             </a>
         </div>

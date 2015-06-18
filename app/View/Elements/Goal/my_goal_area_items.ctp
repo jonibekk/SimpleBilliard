@@ -25,15 +25,15 @@
                         aria-labelledby="dropdownMenu1">
                         <?php //目的のみの場合とそうでない場合でurlが違う
                         $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
-                        $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
+                        $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', 'purpose_id' => $goal['Purpose']['id']];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                            $edit_url = ['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3];
-                            $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
+                            $edit_url = ['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3];
+                            $del_url = ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']];
                         }
                         ?>
                         <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                             <?= __d('gl', "出したい成果を追加") ?></span>
@@ -69,14 +69,14 @@
                         aria-labelledby="dropdownMenu1">
                         <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result"
                                     ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __d('gl', "出したい成果を追加") ?></span></a>
                                 <a class="modal-ajax-get-collabo"
                                    data-toggle="modal"
                                    data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                                     <i class="fa fa-pencil"></i>
                                     <span class="ml_2px"><?= __d('gl', "コラボを編集") ?></span>
                                 </a>
@@ -97,15 +97,15 @@
                         aria-labelledby="dropdownMenu1">
                         <?php //目的のみの場合とそうでない場合でurlが違う
                         $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
-                        $del_url = ['controll er' => 'goals', 'action' => 'delete_purpose', $goal['Purpose']['id']];
+                        $del_url = ['controll er' => 'goals', 'action' => 'delete_purpose', 'purpose_id' => $goal['Purpose']['id']];
                         if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                            $edit_url = ['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3];
+                            $edit_url = ['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3];
                             $del_url = ['controller' => 'goals', 'action' => 'delete', $goal['Goal']['id']];
                         }
                         ?>
                         <?php if (!empty($goal['Goal'])): ?>
                             <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
                                             <?= __d('gl', "出したい成果を追加") ?></span>
@@ -126,7 +126,7 @@
                 </div>
             <?php else: ?>
                 <div class="ln_contain w_88per">
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $goal['Goal']['id']]) ?>"
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                        class="modal-ajax-get">
                         <p class="ln_trigger-f5 font_gray">
                             <i class="fa fa-flag"></i>
@@ -159,7 +159,7 @@
                                 tmp-target-height="53"
                                 replace-elm-parent-id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>"
                                 click-target-id="ActionFormName_<?= $goal['Goal']['id'] ?>"
-                                ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
+                                ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', 'goal_id' => $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
                                 ></textarea>
                         </div>
                         <?php if ($goal['Goal']['action_result_count'] > 0): ?>
@@ -200,9 +200,9 @@
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
-                <?php $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id'], true];
+                <?php $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], true];
                 if ($type == "follow") {
-                    $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', $goal['Goal']['id']];
+                    $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id']];
                 }
                 ?>
                 <?php if (count($goal['KeyResult']) > 0) { ?>
@@ -218,7 +218,7 @@
                 <?php }
                 elseif ($type != "follow") { ?>
                     <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', $goal['Goal']['id']]) ?>">
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                         <i class="fa fa-plus-circle font_brownRed"></i>
                         <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
                     </a>

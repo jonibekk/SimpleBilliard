@@ -68,6 +68,19 @@ class AppModel extends Model
         'eng',
     ];
 
+    public $model_key_map = [
+        'key_result_id'    => 'KeyResult',
+        'action_result_id' => 'ActionResult',
+        'comment_id'       => 'Comment',
+        'post_id'          => 'Post',
+        'goal_id'          => 'Goal',
+        'team_member_id'   => 'TeamMember',
+        'circle_id'        => 'Circle',
+        'evaluate_term_id' => 'EvaluateTerm',
+        'team_id'          => 'Team',
+        'user_id'          => 'User',
+    ];
+
     /**
      * @param bool $id
      * @param null $table

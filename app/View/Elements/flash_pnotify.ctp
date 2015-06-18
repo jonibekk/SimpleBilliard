@@ -5,10 +5,11 @@
  * Date: 2014/05/27
  * Time: 1:23
  *
- * @var $message
- * @var $title
- * @var $icon
- * @var $type
+ * @var CodeCompletionView $this
+ * @var                    $message
+ * @var                    $title
+ * @var                    $icon
+ * @var                    $type
  */
 ?>
 <!-- START app/View/Elements/flash_pnotify.ctp -->

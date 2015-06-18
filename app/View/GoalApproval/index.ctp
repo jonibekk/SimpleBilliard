@@ -172,8 +172,8 @@
                                     <?php }
                                     elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER && $goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_MODIFY) { ?>
                                         <a class="btn btn-primary approval_button"
-                                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', $goal['Goal']['id'], 'mode' => 3]) ?>"><?= __d('gl',
-                                                                                                                                                                  "ゴールを修正する") ?>
+                                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3]) ?>"><?= __d('gl',
+                                                                                                                                                                               "ゴールを修正する") ?>
                                             <i class="fa fa-chevron-right"></i></a>
                                     <?php } ?>
                                 </div>

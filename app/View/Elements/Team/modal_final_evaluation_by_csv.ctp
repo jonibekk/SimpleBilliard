@@ -7,13 +7,13 @@
  *
  * @var CodeCompletionView $this
  * @var                    $my_member_status
- * @var                    $term_id
+ * @var                    $evaluate_term_id
  * @var                    $start
  * @var                    $end
  */
 ?>
 <!-- START app/View/Elements/modal_final_evaluation_by_csv.ctp -->
-<div class="modal fade" tabindex="-1" id="ModalFinalEvaluation_<?= $term_id ?>_ByCsv">
+<div class="modal fade" tabindex="-1" id="ModalFinalEvaluation_<?= $evaluate_term_id ?>_ByCsv">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -26,7 +26,7 @@
             <div class="modal-body">
                 <?=
                 $this->Form->create('Team', [
-                    'url'           => ['controller' => 'teams', 'action' => 'ajax_upload_final_evaluations_csv', $term_id],
+                    'url'           => ['controller' => 'teams', 'action' => 'ajax_upload_final_evaluations_csv', 'evaluate_term_id' => $evaluate_term_id],
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
@@ -37,10 +37,10 @@
                     ],
                     'novalidate'    => true,
                     'type'          => 'file',
-                    'id'            => "FinalEvaluation_{$term_id}_Form",
-                    'loader-id'     => "FinalEvaluation_{$term_id}_Loader",
-                    'result-msg-id' => "FinalEvaluation_{$term_id}_ResultMsg",
-                    'submit-id'     => "FinalEvaluation_{$term_id}_Submit",
+                    'id'            => "FinalEvaluation_{$evaluate_term_id}_Form",
+                    'loader-id'     => "FinalEvaluation_{$evaluate_term_id}_Loader",
+                    'result-msg-id' => "FinalEvaluation_{$evaluate_term_id}_ResultMsg",
+                    'submit-id'     => "FinalEvaluation_{$evaluate_term_id}_Submit",
                     'class'         => 'ajax-csv-upload',
                 ]); ?>
                 <div class="form-group">
@@ -51,7 +51,7 @@
                     <div class="">
                         <?=
                         $this->Html->link(__d('gl', "評価データをダウンロード"),
-                                          ['action' => 'download_final_evaluations_csv', $term_id],
+                                          ['action' => 'download_final_evaluations_csv', 'evaluate_term_id' => $evaluate_term_id],
                                           ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>
@@ -63,7 +63,7 @@
 
                     <div class="">
                         <div class="fileinput fileinput-new fileinput-enabled-submit" data-provides="fileinput"
-                             submit-id="FinalEvaluation_<?= $term_id ?>_Submit">
+                             submit-id="FinalEvaluation_<?= $evaluate_term_id ?>_Submit">
                             <span class="btn btn-default btn-file">
                                 <span class="fileinput-new"><?= __d('gl', "ファイルを選択") ?></span>
                                 <span class="fileinput-exists"><?= __d('gl', "別のファイルに変更する") ?></span>
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="FinalEvaluation_<?= $term_id ?>_ResultMsg" class="none">
+                <div id="FinalEvaluation_<?= $evaluate_term_id ?>_ResultMsg" class="none">
                     <div class="alert" role="alert">
                         <h4 class="alert-heading"></h4>
                         <span class="alert-msg"></span>
@@ -95,7 +95,7 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <div id="FinalEvaluation_<?= $term_id ?>_Loader" class="pull-right none">
+                        <div id="FinalEvaluation_<?= $evaluate_term_id ?>_Loader" class="pull-right none">
                             &nbsp;<i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
@@ -103,7 +103,7 @@
                                                              "キャンセル") ?></button>
                         <?=
                         $this->Form->submit(__d('gl', "更新する"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => "FinalEvaluation_{$term_id}_Submit"]) ?>
+                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => "FinalEvaluation_{$evaluate_term_id}_Submit"]) ?>
 
                     </div>
                 </div>

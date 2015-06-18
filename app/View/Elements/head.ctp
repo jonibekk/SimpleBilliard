@@ -4,8 +4,9 @@
  * Date: 5/28/14
  * Time: 4:55 PM
  *
- * @var $title_for_layout string
- * @var $this             View
+ * @var CodeCompletionView $this
+ * @var                    $title_for_layout string
+ * @var                    $this             View
  */
 ?>
 <!-- START app/View/Elements/head.ctp -->

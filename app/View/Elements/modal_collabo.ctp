@@ -21,7 +21,7 @@
         <?php $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
         $this->Form->create('Collaborator', [
-            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', $collabo_id],
+            'url'           => ['controller' => 'goals', 'action' => 'edit_collabo', 'collaborator_id' => $collabo_id],
             'inputDefaults' => [
                 'div'       => 'form-group',
                 'label'     => [
@@ -85,7 +85,7 @@
                     <?php if (!empty($goal['MyCollabo'])): ?>
                         <?=
                         $this->Form->postLink(__d('gl', "コラボを抜ける"),
-                                              ['controller' => 'goals', 'action' => 'delete_collabo', $goal['MyCollabo'][0]['id']],
+                                              ['controller' => 'goals', 'action' => 'delete_collabo', 'collaborator_id' => $goal['MyCollabo'][0]['id']],
                                               ['class' => 'pull-left btn btn-link'],
                                               __d('gl', "本当にコラボレータから抜けますか？")) ?>
                     <?php endif; ?>

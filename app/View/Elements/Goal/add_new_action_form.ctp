@@ -5,8 +5,9 @@
  * Date: 1/20/15
  * Time: 6:34 PM
  *
- * @var $goal_id
- * @var $ar_count
+ * @var                    $goal_id
+ * @var                    $ar_count
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/Goal/add_new_action_form.ctp -->
@@ -16,7 +17,7 @@
         'wrapInput' => false,
         'class'     => 'form-control',
     ],
-    'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', $goal_id],
+    'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', 'goal_id' => $goal_id],
     'type'          => 'file',
     'class'         => 'form-feed-notify'
 ]); ?>
@@ -29,7 +30,7 @@ $this->Form->input('ActionResult.name', [
                                           'id'             => "ActionFormName_" . $goal_id,
                                           'target-id'      => "ActionFormSubmit_" . $goal_id,
                                           'select-id'      => "ActionKeyResultId_" . $goal_id,
-                                          'add-select-url' => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', $goal_id])
+                                          'add-select-url' => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => $goal_id])
                                       ]
 )
 ?>

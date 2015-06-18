@@ -5,7 +5,8 @@
  * Date: 5/19/15
  * Time: 02:04
  *
- * @var $post
+ * @var                    $post
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/Feed/post_body.ctp -->

@@ -2,9 +2,9 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
- * @var $title_for_layout string
- * @var $this             View
- * @var $avail_sub_menu
+ * @var string             $title_for_layout
+ * @var                    $avail_sub_menu
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Layouts/default.ctp -->

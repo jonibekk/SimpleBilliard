@@ -5,9 +5,10 @@
  * Date: 15/04/14
  * Time: 17:35
  *
- * @var $incomplete_evaluatees
+ * @var CodeCompletionView $this
+ * @var                    $incomplete_evaluatees
+ * @var                    $evaluate_term_id
  */
-
 ?>
 <!-- START app/View/Elements/Elements/modal_incomplete_evaluatees.ctp -->
 <div class="modal-dialog">
@@ -23,7 +24,7 @@
                     <?php foreach ($incomplete_evaluatees as $user): ?>
                         <?=
                         $this->element('Evaluation/incomplete_evaluatee',
-                                       ['user' => $user['User'], 'term_id' => $term_id]) ?>
+                                       ['user' => $user['User'], 'evaluate_term_id' => $evaluate_term_id]) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>

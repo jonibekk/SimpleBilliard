@@ -4,7 +4,9 @@
  * User: saeki
  * Date: 15/04/28
  * Time: 18:46
- * var @notify_items
+ *
+ * @var CodeCompletionView $this
+ * @var                    $notify_items
  */
 ?>
 

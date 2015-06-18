@@ -41,15 +41,13 @@ class GoalsController extends AppController
      * URLパラメータでmodeを付ける
      * mode なしは目標を決める,2はゴールを定める,3は情報を追加
      *
-     * @param null $id
-     *
      * @return \CakeResponse
      */
-    public function add($id = null)
+    public function add()
     {
+        $id = viaIsSet($this->request->params['named']['goal_id']);
         $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
-
         //編集権限を確認。もし権限がある場合はデータをセット
         if ($id) {
             $this->request->data['Goal']['id'] = $id;
@@ -92,7 +90,7 @@ class GoalsController extends AppController
                 $this->Pnotify->outSuccess(__d('gl', "ゴールの目的を保存しました。"));
                 //「ゴールを定める」に進む
                 $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
-                $url = $id ? array_merge([$id], $url) : $url;
+                $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
                 $this->redirect($url);
             }
             // 失敗
@@ -126,7 +124,7 @@ class GoalsController extends AppController
                     }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
                     //「情報を追加」に進む
-                    $this->redirect([$this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
+                    $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
                     break;
                 case 3:
                     //完了
@@ -179,12 +177,11 @@ class GoalsController extends AppController
     /**
      * delete method
      *
-     * @param string $id
-     *
      * @return void
      */
-    public function delete($id)
+    public function delete()
     {
+        $id = $this->request->params['named']['goal_id'];
         try {
             $this->Goal->isPermittedAdmin($id);
             $this->Goal->isNotExistsEvaluation($id);
@@ -206,12 +203,11 @@ class GoalsController extends AppController
     /**
      * delete method
      *
-     * @param $purpose_id
-     *
      * @return void
      */
-    public function delete_purpose($purpose_id)
+    public function delete_purpose()
     {
+        $purpose_id = $this->request->params['named']['purpose_id'];
         try {
             if (!$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
@@ -249,8 +245,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_goal_description_modal($goal_id)
+    public function ajax_get_goal_description_modal()
     {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
         $this->set(compact('goal'));
@@ -261,8 +258,10 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_add_key_result_modal($goal_id, $current_kr_id = null)
+    public function ajax_get_add_key_result_modal()
     {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
         $this->_ajaxPreProcess();
         try {
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
@@ -311,8 +310,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_collabo_change_modal($goal_id)
+    public function ajax_get_collabo_change_modal()
     {
+        $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getCollaboModalItem($goal_id);
         $priority_list = $this->Goal->priority_list;
@@ -326,11 +326,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    /**
-     * @param null $collabo_id
-     */
-    public function edit_collabo($collabo_id = null)
+    public function edit_collabo()
     {
+        $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
         $this->request->allowMethod('post', 'put');
 
         if (!isset($this->request->data['Collaborator'])) {
@@ -368,8 +366,11 @@ class GoalsController extends AppController
         $this->Pnotify->outError(__d('gl', "コラボレータの保存に失敗しました。"));
     }
 
-    public function add_key_result($goal_id, $current_kr_id = null)
+    public function add_key_result()
     {
+        $goal_id = $this->request->params['named']['goal_id'];
+        $current_kr_id = viaIsSet($this->request->params['named']['key_result_id']);
+
         $this->request->allowMethod('post');
         $key_result = null;
         try {
@@ -403,11 +404,9 @@ class GoalsController extends AppController
         $this->redirect($this->referer());
     }
 
-    /**
-     * @param $kr_id
-     */
-    public function edit_key_result($kr_id)
+    public function edit_key_result()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post', 'put');
         $kr = null;
         try {
@@ -431,8 +430,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function complete_kr($kr_id, $with_goal = null)
+    public function complete_kr($with_goal = null)
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $key_result = null;
         $this->request->allowMethod('post');
         try {
@@ -483,8 +483,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function incomplete_kr($kr_id)
+    public function incomplete_kr()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post');
         try {
             $this->Goal->begin();
@@ -508,8 +509,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_key_result($kr_id)
+    public function delete_key_result()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->request->allowMethod('post', 'delete');
         try {
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
@@ -535,8 +537,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_action($ar_id)
+    public function delete_action()
     {
+        $ar_id = $this->request->params['named']['action_result_id'];
         $this->request->allowMethod('post', 'delete');
         try {
             if (!$action = $this->Goal->ActionResult->find('first',
@@ -568,8 +571,9 @@ class GoalsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function delete_collabo($collabo_id)
+    public function delete_collabo()
     {
+        $collabo_id = $this->request->params['named']['collaborator_id'];
         $this->request->allowMethod('post', 'put');
         $this->Goal->Collaborator->id = $collabo_id;
         if (!$this->Goal->Collaborator->exists()) {
@@ -591,12 +595,11 @@ class GoalsController extends AppController
     /**
      * フォロー、アンフォローの切り換え
      *
-     * @param $goal_id
-     *
      * @return CakeResponse
      */
-    public function ajax_toggle_follow($goal_id)
+    public function ajax_toggle_follow()
     {
+        $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
 
         $return = [
@@ -632,8 +635,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
-    function ajax_get_key_results($goal_id, $kr_can_edit = false)
+    function ajax_get_key_results($kr_can_edit = false)
     {
+        $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
 
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id);
@@ -653,8 +657,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_edit_key_result_modal($kr_id)
+    public function ajax_get_edit_key_result_modal()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->_ajaxPreProcess();
         try {
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
@@ -705,8 +710,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_last_kr_confirm($kr_id)
+    public function ajax_get_last_kr_confirm()
     {
+        $kr_id = $this->request->params['named']['key_result_id'];
         $this->_ajaxPreProcess();
         $goal = null;
         try {
@@ -732,15 +738,17 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_kr_list($goal_id)
+    public function ajax_get_kr_list()
     {
+        $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
         $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list", true);
         return $this->_ajaxGetResponse($kr_list);
     }
 
-    public function ajax_get_edit_action_modal($ar_id)
+    public function ajax_get_edit_action_modal()
     {
+        $ar_id = $this->request->params['named']['action_result_id'];
         $this->_ajaxPreProcess();
         try {
             if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
@@ -760,11 +768,9 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    /**
-     * @param $ar_id
-     */
-    public function edit_action($ar_id)
+    public function edit_action()
     {
+        $ar_id = $this->request->params['named']['action_result_id'];
         $this->request->allowMethod('post', 'put');
         try {
             if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
@@ -893,11 +899,10 @@ class GoalsController extends AppController
     /**
      * 完了アクション追加
      * TODO 今後様々なバリエーションのアクションが追加されるが、全てこのfunctionで処理する
-     *
-     * @param $goal_id
      */
-    public function add_completed_action($goal_id)
+    public function add_completed_action()
     {
+        $goal_id = $this->request->params['named']['goal_id'];
         $this->request->allowMethod('post');
         try {
             $this->Goal->begin();
@@ -937,8 +942,9 @@ class GoalsController extends AppController
 
     }
 
-    public function ajax_get_new_action_form($goal_id)
+    public function ajax_get_new_action_form()
     {
+        $goal_id = $this->request->params['named']['goal_id'];
         $result = [
             'error' => true,
             'msg'   => __d('gl', "エラーが発生しました。"),
