@@ -167,7 +167,7 @@ class CirclesController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render('modal_circles_members');
+        $response = $this->render('modal_circle_members');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);

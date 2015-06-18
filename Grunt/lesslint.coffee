@@ -8,3 +8,6 @@ module.exports = (grunt) ->
   # Need to check only goalous.less because All less files are imported to goalous.less !!
   lesslint:
     src: '<%= config.less %>/goalous.less'
+    options:
+      csslint:
+        'font-sizes': false

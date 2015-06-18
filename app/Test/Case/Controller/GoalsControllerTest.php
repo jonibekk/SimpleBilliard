@@ -121,7 +121,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_goal_detail_modal/' . $this->goal_id, ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_goal_description_modal/' . $this->goal_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

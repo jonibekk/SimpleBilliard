@@ -23,9 +23,10 @@
                 <p><?= __d('gl', "%sへのメールアドレス変更をキャンセルしますか？", $email) ?></p>
             </div>
             <div class="modal-footer modal_pannel-footer">
+                <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">閉じる</button>
                 <?=
                 $this->Form
-                    ->postLink(__d('gl', "はい"),
+                    ->postLink(__d('gl', "キャンセルする"),
                                [
                                    'controller' => 'emails',
                                    'action'     => 'delete',

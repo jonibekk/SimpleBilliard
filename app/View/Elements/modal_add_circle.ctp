@@ -24,10 +24,10 @@
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => [
-                        'class' => 'col col-sm-3 control-label modal-label'
+                        'class' => 'aeiou control-label modal-label'
                     ],
-                    'wrapInput' => 'col col-sm-6',
-                    'class'     => 'form-control modal_input-design'
+                    'wrapInput' => false,
+                    'class'     => 'form-control modal_input-design',
                 ],
                 'class'         => 'form-horizontal',
                 'novalidate'    => true,
@@ -41,11 +41,10 @@
                                     'placeholder'              => __d('gl', "例) 営業部"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                    ]) ?>
-                <hr>
                 <div class="form-group">
-                    <label class="col col-sm-3 control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
+                    <label class="ccc control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
 
-                    <div class="col col-sm-6">
+                    <div class="ddd">
                         <?=
                         $this->Form->hidden('members',
                                             ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
@@ -55,7 +54,6 @@
                                 h($this->Session->read('Auth.User.display_username'))) ?></span>
                     </div>
                 </div>
-                <hr>
                 <?php $privacy_option = Circle::$TYPE_PUBLIC;
                 $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
                                                                                                        "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
@@ -64,52 +62,49 @@
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'    => 'radio',
-                    'before'  => '<label class="col col-sm-3 control-label modal-label">' . __d('gl',
+                    'before'  => '<label class="eee control-label modal-label">' . __d('gl',
                                                                                                 'プライバシー') . '</label>',
                     'legend'  => false,
                     'class'   => false,
                     'options' => $privacy_option,
                     'default' => Circle::TYPE_PUBLIC_ON,
+                    'required' => false
                 )); ?>
-                <hr>
                 <?=
                 $this->Form->input('description',
                                    ['label'       => __d('gl', "サークルの説明"),
                                     'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
                                    ]) ?>
-                <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
+                    <label for="" class="f control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
 
-                    <div class="col col-sm-6">
+                    <div class="ggg">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput" style="width: 96px; height: 96px; line-height:96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
-                            <div>
-                        <span class="btn btn-default btn-file">
-                            <span class="fileinput-new">
+                            <span class="btn btn-default btn-file">
+                                <span class="fileinput-new">
+                                    <?= __d('gl', "画像を選択") ?>
+                                </span>
+                                <span class="fileinput-exists"><?= __d('gl', "画像を再選択") ?></span>
                                 <?=
-                                __d('gl',
-                                    "画像を選択") ?>
+                                $this->Form->input('photo',
+                                                   ['type'         => 'file',
+                                                    'label'        => false,
+                                                    'div'          => false,
+                                                    'css'          => false,
+                                                    'wrapInput'    => false,
+                                                    'errorMessage' => false,
+                                                    'required'     => false
+                                                   ]) ?>
                             </span>
-                            <span class="fileinput-exists"><?= __d('gl', "画像を再選択") ?></span>
-                            <?=
-                            $this->Form->input('photo',
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'css'          => false,
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                                'required'     => false
-                                               ]) ?>
-                        </span>
-                                <span class="help-block font_11px inline-block"><?= __d('gl',
-                                                                                        '10MB以下') ?></span>
+                                    <span class="help-block font_11px inline-block"><?= __d('gl',
+                                                                                            '10MB以下') ?></span>
+                                </div>
                             </div>
-                        </div>
+                        <div>
 
                         <div class="has-error">
                             <?=
@@ -120,12 +115,11 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="modal-footer addcircle_pannel-footer">
                 <div class="row">
-                    <div class="col-sm-9 col-sm-offset-3">
+                    <div class="h">
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
                                 data-dismiss="modal"><?= __d('gl',
                                                              "キャンセル") ?></button>
@@ -167,5 +161,6 @@
         });
     });
 </script>
+
 <?php $this->end() ?>
 <!-- END app/View/Elements/modal_add_circle.ctp -->
