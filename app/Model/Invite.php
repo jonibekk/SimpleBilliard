@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * Invite Model
@@ -205,6 +207,22 @@ class Invite extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
+        return $res;
+    }
+
+    function getInviteUserList($team_id)
+    {
+        $options = [
+            'fields'     => ['email', 'created'],
+            'conditions' => [
+                'team_id' => $team_id
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $time = new TimeExHelper(new View());
+        foreach ($res as $key => $val) {
+            $res[$key]['Invite']['created'] = $time->elapsedTime(h($val['Invite']['created']));
+        }
         return $res;
     }
 

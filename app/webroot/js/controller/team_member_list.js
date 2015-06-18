@@ -15,7 +15,7 @@ var app = angular.module('myApp', ['ngRoute', 'pascalprecht.translate']).
         $translateProvider.fallbackLanguage('en');
     }]);
 
-app.controller("TeamMemberMainController", function ($scope, $http, $translate) {
+app.controller("TeamMemberMainController", function ($scope, $http, $translate, $sce) {
 
         var url_list = cake.url;
         var active_member_list = [];
@@ -47,6 +47,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
 
         function init () {
 
+            $scope.invite_box_show = false;
             $scope.name_field_show = true;
             $scope.coach_name_field_show = false;
             $scope.group_field_show = false;
@@ -104,6 +105,15 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate) 
                     setTeamMemberList(data.user_info);
                 });
 
+            } else if (filter_name === 'invite') {
+                $scope.invite_box_show = true;
+                $http.get(url_list.t).success(function (data) {
+                    var invite_list = data.user_info;
+                    angular.forEach(invite_list, function(val, key){
+                        invite_list[key].Invite.created = $sce.trustAsHtml(val.Invite.created);
+                    });
+                    $scope.invite_list = invite_list;
+                });
             } else {
                 init();
                 $http.get(url_list.i).success(function (data) {

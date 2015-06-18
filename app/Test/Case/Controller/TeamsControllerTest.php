@@ -680,6 +680,12 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/ajax_set_current_team_evaluation_flag/1/1', ['method' => 'GET']);
     }
 
+    function testAjaxGetInviteMemberList()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/ajax_get_invite_member_list', ['method' => 'GET']);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
