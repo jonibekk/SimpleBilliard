@@ -1595,7 +1595,7 @@ function evFeedMoreView() {
 
             }
 
-            if (data.count < 20) {
+            if (data.count < data.page_item_num) {
                 if (month_index != undefined) {
                     //ローダーを削除
                     $loader_html.remove();

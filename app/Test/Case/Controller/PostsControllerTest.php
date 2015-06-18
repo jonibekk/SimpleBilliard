@@ -322,7 +322,11 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_feed/', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_feed/', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -331,7 +335,11 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_feed/page:2', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_feed/page:2', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -340,7 +348,11 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_action_list_more/', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_action_list_more/', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -358,7 +370,11 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_action_list_more/page:2', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_action_list_more/page:2', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -367,7 +383,11 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_feed/circle_id:1', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_feed/circle_id:1', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -387,7 +407,11 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_feed/page:1/month_index:2', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_feed/page:1/month_index:2', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
