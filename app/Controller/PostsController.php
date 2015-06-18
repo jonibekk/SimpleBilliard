@@ -252,8 +252,9 @@ class PostsController extends AppController
         $response = $this->render('Feed/posts');
         $html = $response->__toString();
         $result = array(
-            'html'  => $html,
-            'count' => count($posts),
+            'html'          => $html,
+            'count'         => count($posts),
+            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -277,8 +278,9 @@ class PostsController extends AppController
         $response = $this->render('Feed/action_posts');
         $html = $response->__toString();
         $result = array(
-            'html'  => $html,
-            'count' => count($posts),
+            'html'          => $html,
+            'count'         => count($posts),
+            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -601,7 +603,7 @@ class PostsController extends AppController
         $this->set(compact('circles', 'users', 'total_share_user_count'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render('modal_share_circles_users');
+        $response = $this->render('modal_share_range');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);

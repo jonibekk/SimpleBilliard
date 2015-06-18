@@ -124,8 +124,8 @@ class CollaboratorTest extends CakeTestCase
         ];
         $this->Collaborator->save($params);
 
-        $goal_detail = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg);
-        $this->assertEquals($user_id, $goal_detail[0]['User']['id']);
+        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg);
+        $this->assertEquals($user_id, $goal_description[0]['User']['id']);
     }
 
     function testGetCollabeGoalDetailExcludePriorityZero()
@@ -170,8 +170,8 @@ class CollaboratorTest extends CakeTestCase
         ];
         $this->Collaborator->save($params);
 
-        $goal_detail = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, false);
-        $this->assertEmpty($goal_detail);
+        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, false);
+        $this->assertEmpty($goal_description);
     }
 
     function testChangeApprovalStatus()

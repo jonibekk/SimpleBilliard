@@ -1,0 +1,189 @@
+/*
+
+### モーダル一覧
+**ゴール関連**
++ コラボ modal_collabo.ctp
++ ゴール作成時のTips modal_tips_add_goal.ctp
++ アクション一覧 modal_action_list.ctp
+
+**サークル関連**
++ サークル作成 modal_add_circle.ctp
++ サークル編集 modal_edit_circle.ctp
++ サークルメンバー一覧 modal_circle_members.ctp
++ 公開サークル一覧 modal_public_circles.ctp
+
+**フィード**
++ 投稿の共有範囲 modal_share_range.ctp
+
+**CSVによる管理**
++ CSVによるサークルメンバー追加 modal_add_members_by_csv.ctp
++ CSVによるサークルメンバー編集 modal_edit_members_by_csv.ctp
+
+
+**その他**
++ チュートリアル modal_tutorial.ctp
++ 利用規約(サインアップ時) modal_tos.ctp
++ プライバシー・ポリシー(サインアップ時)  modal_privacy_policy.ctp
+
+### 共通化しているファイル
++ modals.ctp
+ */
+
+/*
+### モーダル共通の設定
+*/
+
+.modal-dialog {
+  width: 80%;
+  max-width: 484px;
+  margin: 8% auto 0;
+}
+
+.modal-header {
+  padding: 15px;
+}
+
+.modal-body {
+  padding: 15px;
+}
+
+.modal-footer {
+  padding: 15px;
+  border-radius: 0 0 6px 6px;
+}
+
+.modal-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/*
+ ### 各モーダル毎の設定
+*/
+
+.modal-action-title {
+  line-height: 32px;
+}
+
+
+/*
+2fa
+ */
+.two_fa_step_box:not(:last-child) {
+  margin-bottom: 32px;
+}
+
+.modal_two_fa_download {
+  margin-top: 8px;
+}
+
+/*
+Tutorial
+*/
+
+.tutorial-box1 {
+  .tutorial-box;
+  background-image: url(../img/homepage/home-slider/slide1.jpg);
+}
+
+.tutorial-box2 {
+  .tutorial-box;
+  background-image: url(../img/homepage/home-slider/slide2.jpg);
+}
+
+.tutorial-box3 {
+  .tutorial-box;
+  background-image: url(../img/homepage/home-slider/slide3.jpg);
+}
+
+.tutorial-box4 {
+  .tutorial-box;
+  background-image: url(../img/homepage/home-slider/slide4.jpg);
+}
+
+@media screen and (min-width:768px) {
+  .tutorial-box1, .tutorial-box2, .tutorial-box3, .tutorial-box4 {
+    height: 360px;
+  }
+}
+
+
+#Text2, #tutorialText3, #tutorialText4 {
+    display: none;
+}
+
+#modalTutorialPrev {
+    display: none;
+}
+
+.modalTutorial-btnPrev {
+    width: 96px;
+    height: 96px;
+    display: inline;
+    line-height: 100px;
+    border-radius: 50%;
+    background: #fff;
+    text-align: center;
+    opacity: .55;
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    padding-right: 8px;
+}
+
+.modalTutorial-btnNext {
+    width: 96px;
+    height: 96px;
+    display: inline;
+    line-height: 100px;
+    border-radius: 50%;
+    background: #fff;
+    text-align: center;
+    opacity: .55;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    padding-left: 8px;
+}
+
+.modalTutorial-btnGo {
+    display: none;
+    width: 96px;
+    height: 96px;
+    line-height: 100px;
+    border-radius: 50%;
+    background: #fff;
+    text-align: center;
+    opacity: .85;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+}
+
+.modalTutorial-btnIcon {
+    display: inline;
+    line-height: 96px;
+}
+
+.modal-key-result-headings {
+  font-weight: bold;
+  border-left: 4px solid #888;
+  padding: 2px 4px;
+}
+
+.add-key-result-goal-info {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  padding: 9px;
+  background-color: #f7f7f9;
+  border: 1px solid #e1e1e8;
+  color: #231814;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.modal-key-result-headings-description {
+  padding-left: 12px;
+  color: #c0c0c0;
+  font-size: 12px;
+  font-weight: normal;
+}

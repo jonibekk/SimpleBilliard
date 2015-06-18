@@ -101,7 +101,8 @@ echo $this->Html->script('gl_basic');
             p: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_admin_user_flag'])?>/",
             q: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_evaluation_flag'])?>/",
             r: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_term_start_end_by_edit'])?>",
-            s: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>"
+            s: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
+            t: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_invite_member_list'])?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
@@ -149,10 +150,10 @@ echo $this->Html->script('gl_basic');
 //環境を識別できるようにリボンを表示
 ?>
 <?php if (ENV_NAME == "stg"): ?>
-    <p class="ribbon ribbon-staging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Staging</p>
+    <p class="ribbon ribbon-staging">Staging</p>
 <?php elseif (ENV_NAME == "hotfix"): ?>
-    <p class="ribbon ribbon-hotfix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hotfix</p>
+    <p class="ribbon ribbon-hotfix">Hotfix</p>
 <?php elseif (ENV_NAME == "local"): ?>
-    <p class="ribbon ribbon-local">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local</p>
+    <p class="ribbon ribbon-local">Local</p>
 <?php endif; ?>
 <!-- END app/View/Elements/gl_common_js.ctp -->

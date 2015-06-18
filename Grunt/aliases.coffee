@@ -21,7 +21,7 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'css', [
     'lesslint'
-    'less'
+    'less:dist'
     'autoprefixer'
     'cssmin'
     'copy:css'
@@ -76,6 +76,7 @@ module.exports = (grunt) ->
     'cssdocs'
     'gruntdocs'
     'jade'
+    'less:docs'
     'connect'
   ]
 

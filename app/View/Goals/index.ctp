@@ -105,7 +105,6 @@
                     <a id="FeedMoreReadLink" href="#" class="btn btn-link click-feed-read-more"
                        parent-id="GoalMoreView"
                        next-page-num="2"
-                       month-index="1"
                        get-url="<?= $this->Html->url($more_read_url) ?>">
                         <?= __d('gl', "もっと見る ▼") ?></a>
                 </div>

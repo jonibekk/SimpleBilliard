@@ -9,7 +9,7 @@
  * @var $circle_members
  */
 ?>
-<!-- START app/View/Elements/modal_circles_members.ctp -->
+<!-- START app/View/Elements/modal_circle_members.ctp -->
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -36,4 +36,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Elements/modal_circles_members.ctp -->
+<!-- END app/View/Elements/modal_circle_members.ctp -->

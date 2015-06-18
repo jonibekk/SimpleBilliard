@@ -26,8 +26,8 @@
                         <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                             <div class="col col-xxs-12">
                                 <div class="pull-right">
-                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $posts[0]['Goal']['id']]) ?>"
-                                       class="no-line font_verydark modal-ajax-get">
+                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $posts[0]['Goal']['id']]) ?>"
+                                       class="no-line font_verydark modal-ajax-get modal-action-title">
                                         <?=
                                         $this->Html->image('ajax-loader.gif',
                                                            [
@@ -43,8 +43,8 @@
                                     </a>
                                 </div>
                                 <div class="ln_contain w_88per">
-                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_detail_modal', $posts[0]['Goal']['id']]) ?>"
-                                       class="no-line font_verydark modal-ajax-get">
+                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $posts[0]['Goal']['id']]) ?>"
+                                       class="no-line font_verydark modal-ajax-get modal-action-title">
                                         <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($posts[0]['Goal']['name']) ?>
                                     </a>
                                 </div>

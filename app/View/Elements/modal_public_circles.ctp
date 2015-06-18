@@ -15,7 +15,7 @@
         <div class="modal-header none-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title font_18px font_bold"><?= __d('gl', "公開サークル") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "公開サークル") ?></h4>
         </div>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "参加していない") ?></a></li>

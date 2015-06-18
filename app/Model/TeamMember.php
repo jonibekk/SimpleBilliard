@@ -366,13 +366,26 @@ class TeamMember extends AppModel
             }
 
             // コーチ名を取得
-            $res[$key]['TeamMember']['coach_name'] = viaIsSet($res[$key]['CoachUser']['display_username']);
+            if (isset($res[$key]['CoachUser']['roman_username']) === true) {
+                $res[$key]['search_coach_name_keyword'] = $res[$key]['CoachUser']['roman_username'];
+                if (isset($tm_obj['CoachUser']['display_username']) === true) {
+                    $res[$key]['TeamMember']['coach_name'] = $res[$key]['CoachUser']['display_username'];
+                    $res[$key]['search_coach_name_keyword'] .= $res[$key]['CoachUser']['display_username'];
+                }
+            }
 
             // 2fa_secret: AngularJSで整数から始まるキーを読み取れないので別項目にて２段階認証設定表示を行う
             $res[$key]['User']['two_step_flg'] = is_null($tm_obj['User']['2fa_secret']) === true ? false : true;
 
             // メイン画像
             $res[$key]['User']['img_url'] = $upload->uploadUrl($tm_obj['User'], 'User.photo', ['style' => 'medium']);
+
+            // ユーザー検索用キーワード作成
+            $res[$key]['search_user_keyword'] = $tm_obj['User']['roman_username'];
+            if (isset($tm_obj['User']['display_username']) === true) {
+                $res[$key]['search_user_keyword'] .= $tm_obj['User']['display_username'];
+            }
+
         }
         return $res;
     }

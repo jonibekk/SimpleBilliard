@@ -51,6 +51,7 @@
     ?>
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Oswald:400,300|Pathway+Gothic+One">
     <!--[if lt IE 9]>
     <?= $this->Html->script('vendor/html5shiv')?>
     <?= $this->Html->script('vendor/respond.min')?>
