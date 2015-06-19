@@ -61,7 +61,6 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [システム概要](docs/design_specifications/SystemOverview.md)
 - [ER図](docs/design_specifications/ERD.md)
 - [要件定義](http://bit.ly/1TnQZfX)
-- [見積もり](http://bit.ly/1TnR3MB)
 
 #### 機能一覧
 - ゴール
