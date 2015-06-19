@@ -59,12 +59,10 @@ ul {
     padding: 0 4px;
     margin: 9px 0;
     color: #000000;
-    border: 1px solid #ccc;
 }
 
 .nav-icons > .header-function > a:hover,
 .nav-icons > .header-function > a:focus {
-    border: 1px solid #ae2f2f;
     text-decoration: none;
 }
 
