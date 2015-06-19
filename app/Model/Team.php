@@ -121,6 +121,7 @@ class Team extends AppModel
      */
     public $hasMany = [
         'Badge',
+        'Circle',
         'CommentLike',
         'CommentMention',
         'CommentRead',
@@ -181,6 +182,19 @@ class Team extends AppModel
             $this->TeamMember->User->id = $uid;
             $this->TeamMember->User->saveField('default_team_id', $this->id);
         }
+        // 「チーム全体」サークルを追加
+        $circleData = [
+            'Circle' => [
+                'team_id'      => $this->id,
+                'name'         => __d('gl', 'チーム全体'),
+                'public_flg'   => true,
+                'team_all_flg' => true,
+            ]
+        ];
+        $tmp = $this->Circle->current_team_id;
+        $this->Circle->current_team_id = $this->id;
+        $this->Circle->add($circleData);
+        $this->Circle->current_team_id = $tmp;
         return true;
     }
 
