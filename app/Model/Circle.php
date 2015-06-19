@@ -64,27 +64,37 @@ class Circle extends AppModel
      * @var array
      */
     public $validate = [
-        'name'    => [
+        'name'         => [
             'notEmpty' => [
                 'rule' => ['notEmpty'],
             ],
         ],
-        'del_flg' => [
+        'del_flg'      => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'photo'   => [
+        'team_all_flg' => [
+            'boolean' => [
+                'rule' => ['boolean'],
+            ],
+        ],
+        'public_flg'   => [
+            'boolean' => [
+                'rule' => ['boolean'],
+            ],
+        ],
+        'photo'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'public_flg' => [
+        'public_flg'   => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'description' => [
-            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+        'description'  => [
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
 
@@ -205,8 +215,8 @@ class Circle extends AppModel
         $circle = $this->findById($id);
         $circle['Circle']['members'] = null;
         $circle_members = $this->CircleMember->getMembers($id);
-        if(!empty($circle_members)){
-            foreach($circle_members as $val){
+        if (!empty($circle_members)) {
+            foreach ($circle_members as $val) {
                 $circle['Circle']['members'][] = 'user_' . $val['CircleMember']['user_id'];
             }
             $circle['Circle']['members'] = implode(',', $circle['Circle']['members']);
