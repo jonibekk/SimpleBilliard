@@ -170,9 +170,10 @@
                 </div>
                 <div class="pull-right header-function dropdown nav-icons">
                     <a href="#"
-                       class="font_lightGray-gray font_14px header-function-link"
+                       class="font_lightGray-gray header-icon header-link"
                        data-toggle="dropdown"
                        id="download">
+                       <i class="fa fa-cog header-function-icon"></i>
                        <?php if ($all_alert_cnt > 0): ?>
                            <div class="btn btn-xs notify-function-numbers">
                              <span>
@@ -180,7 +181,6 @@
                              </span>
                            </div>
                        <?php endif; ?>
-                        <i class="fa fa-cog header-function-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">

@@ -2377,7 +2377,7 @@ $(function () {
         var $title = $("title");
         var $originTitle = $("title").attr("origin-title");
         var existingBellCnt = parseInt($bellBox.html());
-        var cntIsTooMuch = "20+";
+        var cntIsTooMuch = '20<sup class="notify-plus">+</sup>';
 
         if (cnt == 0) {
             return;
