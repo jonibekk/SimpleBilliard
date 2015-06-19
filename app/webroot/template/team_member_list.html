@@ -1,9 +1,9 @@
 <br>
 
-<div class="well">
+<div class="well team-members-search-card">
     <div id="filter_box" class="row">
         <div class="col-xs-12 col-sm-4">
-            <select ng-model="filter_name" name="filter_name" class="form-control" ng-change="changeFilter()">
+            <select ng-model="filter_name" name="filter_name" class="form-control team-select-box" ng-change="changeFilter()">
                 <option ng-selected="true" value="">{{ 'FILTER_ALL' | translate}}</option>
                 <option value="coach_name">{{ 'FILTER_COACH_NAME' | translate}}</option>
                 <option value="group_name">{{ 'FILTER_GROUP_NAME' | translate}}</option>
@@ -37,7 +37,9 @@
                    ng-model="disp_active_flag"
                    ng-click="viewMemberlistChange()"
                    ng-true-value="0"
-                   ng-false-value="1"> 無効化されたメンバーも表示する
+                   ng-false-value="1"
+                   class="checkbox">
+                   <p>無効化されたメンバーも表示する</p>
         </label>
     </div>
 </div>
