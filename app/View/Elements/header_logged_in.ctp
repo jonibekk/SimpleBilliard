@@ -61,7 +61,7 @@
                 </li>
                 <li class="mtb_5px mtb-sm_0">
                     <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
-                        href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'member_list']) ?>">
+                       href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'member_list']) ?>">
                         <div class="ta-sm_c">
                             <i class="fa fa-users header-link header-icon nav-xxs-icon"></i>
 
@@ -148,17 +148,19 @@
                     </ul>
                 </div>
                 <a class="develop--forbiddenLink" href="#">
-                  <i class="fa fa-envelope-o header-link header-icon"></i>
+                    <i class="fa fa-envelope-o header-link header-icon"></i>
                 </a>
 
                 <div class="dropdown dropdown-menu-right navbar-nav-fix">
-                  <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
-                    <i class="fa fa-flag fa-bell-o header-icon header-drop-icons header-link"></i>
-                    <div class="btn btn-xs bell-notify-box notify-bell-numbers"
-                         id="bellNum" style="opacity: 0;">
-                         0
-                    </div>
-                  </a>
+                    <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
+                        <i class="fa fa-flag fa-bell-o header-icon header-drop-icons header-link"></i>
+
+                        <div class="btn btn-xs bell-notify-box notify-bell-numbers"
+                             id="bellNum" style="opacity: 0;">
+                            <span>0</span><sup class="notify-plus none">+</sup>
+                        </div>
+                    </a>
+
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
                         <ul class="notify-dropdown-cards" id="bell-dropdown" role="menu">
                             <li class="notify-card-empty" id="notifyCardEmpty">
@@ -173,14 +175,14 @@
                        class="font_lightGray-gray header-icon"
                        data-toggle="dropdown"
                        id="download">
-                       <i class="fa fa-cog header-function-icon header-link"></i>
-                       <?php if ($all_alert_cnt > 0): ?>
-                           <div class="btn btn-xs notify-function-numbers">
+                        <i class="fa fa-cog header-function-icon header-link"></i>
+                        <?php if ($all_alert_cnt > 0): ?>
+                            <div class="btn btn-xs notify-function-numbers">
                              <span>
                                <?= $all_alert_cnt ?>
                              </span>
-                           </div>
-                       <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
@@ -189,9 +191,9 @@
                                                   ['controller' => 'users', 'action' => 'settings']) ?>
                         </li>
                         <li>
-                          <a href="#" data-toggle="modal" data-target="#modal_tutorial">
-                            <?= __d('gl',"チュートリアル") ?>
-                          </a>
+                            <a href="#" data-toggle="modal" data-target="#modal_tutorial">
+                                <?= __d('gl', "チュートリアル") ?>
+                            </a>
                         </li>
                         <li>
                             <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
