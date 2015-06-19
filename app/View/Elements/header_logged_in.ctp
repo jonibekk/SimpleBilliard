@@ -152,8 +152,8 @@
                 </a>
 
                 <div class="dropdown dropdown-menu-right navbar-nav-fix">
-                  <a id="click-header-bell" class="header-link" data-toggle="dropdown" href="#">
-                    <i class="fa fa-flag fa-bell-o header-icon header-drop-icons"></i>
+                  <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
+                    <i class="fa fa-flag fa-bell-o header-icon header-drop-icons header-link"></i>
                     <div class="btn btn-xs bell-notify-box notify-bell-numbers"
                          id="bellNum" style="opacity: 0;">
                          0
@@ -170,10 +170,10 @@
                 </div>
                 <div class="pull-right header-function dropdown nav-icons">
                     <a href="#"
-                       class="font_lightGray-gray header-icon header-link"
+                       class="font_lightGray-gray header-icon"
                        data-toggle="dropdown"
                        id="download">
-                       <i class="fa fa-cog header-function-icon"></i>
+                       <i class="fa fa-cog header-function-icon header-link"></i>
                        <?php if ($all_alert_cnt > 0): ?>
                            <div class="btn btn-xs notify-function-numbers">
                              <span>
