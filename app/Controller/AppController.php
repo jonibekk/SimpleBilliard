@@ -543,7 +543,6 @@ class AppController extends Controller
             return null;
         }
         $Model = ClassRegistry::init($model_name);
-        $this->log($model_name);
         switch ($Model->name) {
             case 'User':
                 //Userの場合
