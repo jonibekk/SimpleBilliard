@@ -10,6 +10,11 @@ cache:
   - bundler
   - apt
   - composer
+cache:
+  directories:
+  - Vendor
+  - Plugin
+#  - $HOME/.composer
 
 services:
   - redis-server
