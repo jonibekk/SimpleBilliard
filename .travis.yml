@@ -13,7 +13,6 @@ cache:
 cache:
   directories:
   - $HOME/.composer
-
 services:
   - redis-server
 
