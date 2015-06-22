@@ -56,7 +56,7 @@
                     <div class="pull-right develop--link-gray">
                         <?=
                         $this->Form->postLink('<i class="fa fa-times comment-cross"></i>',
-                                              ['controller' => 'posts', 'action' => 'comment_delete', $comment['id']],
+                                              ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id' => $comment['id']],
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <?php endif; ?>
