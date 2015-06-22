@@ -4,25 +4,27 @@ App::uses('AppModel', 'Model');
 /**
  * Team Model
  *
- * @property Badge                          $Badge
- * @property CommentLike                    $CommentLike
- * @property CommentMention                 $CommentMention
- * @property CommentRead                    $CommentRead
- * @property Comment                        $Comment
- * @property GivenBadge                     $GivenBadge
- * @property Group                          $Group
- * @property Invite                         $Invite
- * @property JobCategory                    $JobCategory
- * @property PostLike                       $PostLike
- * @property PostMention                    $PostMention
- * @property PostRead                       $PostRead
- * @property Post                           $Post
- * @property TeamMember                     $TeamMember
- * @property Thread                         $Thread
- * @property Evaluator                      $Evaluator
- * @property EvaluationSetting              $EvaluationSetting
- * @property Evaluation                     $Evaluation
- * @property EvaluateTerm                   $EvaluateTerm
+ * @property Badge                           $Badge
+ * @property CommentLike                     $CommentLike
+ * @property CommentMention                  $CommentMention
+ * @property CommentRead                     $CommentRead
+ * @property Comment                         $Comment
+ * @property GivenBadge                      $GivenBadge
+ * @property Group                           $Group
+ * @property Invite                          $Invite
+ * @property JobCategory                     $JobCategory
+ * @property PostLike                        $PostLike
+ * @property PostMention                     $PostMention
+ * @property PostRead                        $PostRead
+ * @property Post                            $Post
+ * @property TeamMember                      $TeamMember
+ * @property Thread                          $Thread
+ * @property Evaluator                       $Evaluator
+ * @property EvaluationSetting               $EvaluationSetting
+ * @property Evaluation                      $Evaluation
+ * @property EvaluateTerm                    $EvaluateTerm
+ * @property TeamVision                      $TeamVision
+ * @property GroupVision                     $GroupVision
  */
 class Team extends AppModel
 {
@@ -140,6 +142,8 @@ class Team extends AppModel
         'EvaluateTerm',
         'EvaluationSetting',
         'EvaluateTerm',
+        'TeamVision',
+        'GroupVision',
     ];
 
     public $current_team = [];

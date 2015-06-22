@@ -209,8 +209,14 @@ class TeamMember extends AppModel
      * @return boolean
      * @throws RuntimeException
      */
-    public function adminCheck($team_id, $uid)
+    public function adminCheck($team_id = null, $uid = null)
     {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
         //まず通常のチームアクセス権限があるかチェック
         $this->permissionCheck($team_id, $uid);
         if (!$this->myStatusWithTeam['TeamMember']['admin_flg']) {

@@ -684,4 +684,30 @@ class TeamsController extends AppController
         ];
         return $this->_ajaxGetResponse($res);
     }
+
+    function add_team_vision()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        try {
+            $this->Team->TeamMember->adminCheck();
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->request->is('get')) {
+            return $this->render();
+        }
+        if (!viaIsSet($this->request->data['TeamVision'])) {
+            $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->Team->TeamVision->saveTeamVision($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "チームビジョンを追加しました。"));
+            //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
+            return $this->redirect("/");
+        }
+        return $this->render();
+    }
 }
