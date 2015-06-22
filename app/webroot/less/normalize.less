@@ -6,4 +6,41 @@ select, input {
 
 .checkbox {
   background-color: @white;
+  padding-left: 0;
+}
+
+input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  border: 1px solid @gray;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: 0 !important;
+  margin-right: 4px;
+}
+
+input[type=checkbox]:checked {
+  background-color: @white;
+  content: "\f00c";
+  /* or whatever styles you want depending on your design */
+  /* be as obvious as possible that it's a checkbox and that it's checked! */
+}
+
+input[type=checkbox]:checked::before {
+  content: "\f00c";
+  color: @gray
+}
+
+/*  Use FontAwesome with Unicode */
+
+input{
+  display: inline-block;
+  font-family:  "Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", FontAwesome, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

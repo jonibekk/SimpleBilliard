@@ -1,8 +1,7 @@
-<br>
-
 <div class="well team-members-search-card">
     <div id="filter_box" class="row">
-        <div class="col-xs-12 col-sm-4">
+      <h3>メンバー一覧</h3>
+        <div class="aaa">
             <select ng-model="filter_name" name="filter_name" class="form-control team-select-box" ng-change="changeFilter()">
                 <option ng-selected="true" value="">{{ 'FILTER_ALL' | translate}}</option>
                 <option value="coach_name">{{ 'FILTER_COACH_NAME' | translate}}</option>
@@ -13,14 +12,14 @@
                 <option value="invite" ng-if="login_user_admin_flg == true">{{ 'FILTER_INVITES' | translate}}</option>
             </select>
         </div>
-        <div class="col-xs-12 col-sm-8">
+        <div class="bbb">
             <input ng-show="name_field_show"
                    ng-model="name_field.search_user_keyword"
-                   class="form-control" placeholder="{{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
+                   class="form-control" placeholder="&#xF002; {{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
 
             <input ng-show="coach_name_field_show"
                    ng-model="name_field.search_coach_name_keyword"
-                   class="form-control" placeholder="{{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
+                   class="form-control" placeholder="&#xF002; {{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
 
             <select ng-show="group_field_show"
                     ng-model="group_id"

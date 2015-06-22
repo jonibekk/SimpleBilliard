@@ -37,5 +37,5 @@ echo $this->Html->script('controller/team_member_list');
 ?>
 
 <div ng-app="myApp">
-    <div ng-controller="TeamMemberMainController" ng-view> ロード中....</div>
+    <div ng-controller="TeamMemberMainController" ng-view class="col-md-6 col-xs-8 col-xxs-12 col-md-offset-3 col-xs-offset-2  layout-main"> ロード中....</div>
 </div>
