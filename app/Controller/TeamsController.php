@@ -725,9 +725,17 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             return $this->redirect($this->referer());
         }
+        if (!$this->Team->TeamVision->exists($team_vision_id)) {
+            $this->Pnotify->outError(__d('gl', "ページが存在しません。"));
+            return $this->redirect($this->referer());
+        }
 
         if ($this->request->is('get')) {
             $this->request->data = $this->Team->TeamVision->findById($team_vision_id);
+            if (empty($this->request->data)) {
+                $this->Pnotify->outError(__d('gl', "ページが存在しません。"));
+                return $this->redirect($this->referer());
+            }
             return $this->render();
         }
         if (!viaIsSet($this->request->data['TeamVision'])) {
@@ -771,6 +779,10 @@ class TeamsController extends AppController
 
         if (!$group_vision_id = viaIsSet($this->request->params['named']['group_vision_id'])) {
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
+        }
+        if (!$this->Team->GroupVision->exists($group_vision_id)) {
+            $this->Pnotify->outError(__d('gl', "ページが存在しません。"));
             return $this->redirect($this->referer());
         }
         $group_list = $this->Team->Group->MemberGroup->getMyGroupList();
