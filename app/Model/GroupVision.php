@@ -75,4 +75,19 @@ class GroupVision extends AppModel
         'Team',
         'Group',
     ];
+
+    function saveGroupVision($data)
+    {
+        if (!viaIsSet($data['GroupVision'])) {
+            return false;
+        }
+        $data['GroupVision']['team_id'] = $this->current_team_id;
+
+        if (!viaIsSet($data['GroupVision']['id'])) {
+            $data['GroupVision']['create_user_id'] = $this->my_uid;
+        }
+        $data['GroupVision']['modify_user_id'] = $this->my_uid;
+        $res = $this->save($data);
+        return $res;
+    }
 }

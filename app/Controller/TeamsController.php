@@ -743,4 +743,53 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    function add_group_vision()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $group_list = $this->Team->Group->getMyGroupList();
+        $this->set(compact('group_list'));
+
+        if ($this->request->is('get')) {
+            return $this->render();
+        }
+        if (!viaIsSet($this->request->data['GroupVision'])) {
+            $this->Pnotify->outError(__d('gl', "グループビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
+            $this->Pnotify->outSuccess(__d('gl', "グループビジョンを追加しました。"));
+            //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
+            return $this->redirect("/");
+        }
+        return $this->render();
+    }
+
+    function edit_group_vision()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        if (!$group_vision_id = viaIsSet($this->request->params['named']['group_vision_id'])) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
+        }
+        $group_list = $this->Team->Group->getMyGroupList();
+        $this->set(compact('group_list'));
+
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Team->GroupVision->findById($group_vision_id);
+            return $this->render();
+        }
+        if (!viaIsSet($this->request->data['GroupVision'])) {
+            $this->Pnotify->outError(__d('gl', "グループビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->Team->GroupVision->saveGroupVision($this->request->data, false)) {
+            $this->Pnotify->outSuccess(__d('gl', "グループビジョンを更新しました。"));
+            //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
+            return $this->redirect("/");
+        }
+        return $this->render();
+    }
 }
