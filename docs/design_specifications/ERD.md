@@ -5,10 +5,14 @@
 - teamsテーブルはほぼ全てのテーブルと関連している為、省略している。
 
 ## Workbenchの元データ
-http://bit.ly/1P2FJWx
+http://bit.ly/1MZ2zZO
 
 ## スキーマ設計書
 https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/Schema/schema.php
 
 ## ER図
-[![ER Diagram](https://cloud.githubusercontent.com/assets/3040037/7510526/cb567a42-f4d7-11e4-9670-733fe51bb9a5.png)](https://cloud.githubusercontent.com/assets/3040037/7510526/cb567a42-f4d7-11e4-9670-733fe51bb9a5.png)
+[![ER Diagram](https://cloud.githubusercontent.com/assets/3040037/8275082/77784b28-18d9-11e5-8935-de83657da05b.png)](https://cloud.githubusercontent.com/assets/3040037/8275082/77784b28-18d9-11e5-8935-de83657da05b.png)
+
+
+
+
