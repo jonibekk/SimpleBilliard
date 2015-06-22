@@ -746,7 +746,7 @@ class TeamsController extends AppController
     function add_group_vision()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $group_list = $this->Team->Group->getMyGroupList();
+        $group_list = $this->Team->Group->MemberGroup->getMyGroupList();
         $this->set(compact('group_list'));
 
         if ($this->request->is('get')) {
@@ -773,7 +773,7 @@ class TeamsController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             return $this->redirect($this->referer());
         }
-        $group_list = $this->Team->Group->getMyGroupList();
+        $group_list = $this->Team->Group->MemberGroup->getMyGroupList();
         $this->set(compact('group_list'));
 
         if ($this->request->is('get')) {

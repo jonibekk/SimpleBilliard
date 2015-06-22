@@ -91,18 +91,4 @@ class Group extends AppModel
         $group = $this->saveNewGroup($name);
         return $group;
     }
-
-    function getMyGroupList()
-    {
-        $options = [
-            'fields'     => ['id', 'name'],
-            'conditions' => [
-                'team_id'    => $this->current_team_id,
-                'active_flg' => true,
-            ],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
 }
