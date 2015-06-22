@@ -366,4 +366,18 @@ class Circle extends AppModel
         ];
         return $this->find('first', $options);
     }
+
+    /**
+     * @return array|null
+     */
+    function getTeamAllCircle()
+    {
+        $options = [
+            'conditions' => [
+                'team_id'      => $this->current_team_id,
+                'team_all_flg' => true,
+            ]
+        ];
+        return $this->find('first', $options);
+    }
 }

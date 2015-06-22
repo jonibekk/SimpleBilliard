@@ -235,8 +235,8 @@ class Post extends AppModel
             $share = explode(",", $postData['Post']['share']);
             foreach ($share as $key => $val) {
                 if (stristr($val, 'public')) {
-                    $postData['Post']['public_flg'] = true;
-                    unset($share[$key]);
+                    $teamAllCircle = $this->Circle->getTeamAllCircle();
+                    $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
                 }
             }
         }

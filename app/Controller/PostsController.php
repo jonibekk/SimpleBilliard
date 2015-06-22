@@ -5,9 +5,14 @@ App::uses('AppController', 'Controller');
  * Posts Controller
  *
  * @property Post               $Post
+ * @property Circle             $Circle
  */
 class PostsController extends AppController
 {
+    public $uses = [
+        'Circle',
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -57,9 +62,10 @@ class PostsController extends AppController
         }
 
         $mixpanel_prop_name = null;
-        // チーム全体公開が含まれている場合はチーム全体にのみpush
+        // チーム全体公開が含まれている場合は、「チーム全体」サークルに共有
         if (in_array("public", $share)) {
-            $this->NotifyBiz->push($socketId, "public");
+            $teamAllCircle = $this->Circle->getTeamAllCircle();
+            $this->NotifyBiz->push($socketId, "circle_" . $teamAllCircle["Circle"]["id"]);
             $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
         }
         else {

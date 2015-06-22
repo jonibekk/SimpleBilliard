@@ -5,6 +5,7 @@ App::uses('AppModel', 'Model');
  * Team Model
  *
  * @property Badge                          $Badge
+ * @property Circle                         $Circle
  * @property CommentLike                    $CommentLike
  * @property CommentMention                 $CommentMention
  * @property CommentRead                    $CommentRead
@@ -182,19 +183,32 @@ class Team extends AppModel
             $this->TeamMember->User->id = $uid;
             $this->TeamMember->User->saveField('default_team_id', $this->id);
         }
+
         // 「チーム全体」サークルを追加
         $circleData = [
-            'Circle' => [
+            'Circle'       => [
                 'team_id'      => $this->id,
                 'name'         => __d('gl', 'チーム全体'),
+                'description'  => __d('gl', 'チーム全体'),
                 'public_flg'   => true,
                 'team_all_flg' => true,
+            ],
+            'CircleMember' => [
+                [
+                    'team_id'   => $this->id,
+                    'user_id'   => $uid,
+                    'admin_flg' => true,
+                ]
             ]
         ];
-        $tmp = $this->Circle->current_team_id;
-        $this->Circle->current_team_id = $this->id;
-        $this->Circle->add($circleData);
-        $this->Circle->current_team_id = $tmp;
+        if ($this->Circle->saveAll($circleData)) {
+            // サークルメンバー数を更新
+            // 新しく追加したチームのサークルなので current_team_id を一時的に変更する
+            $tmp = $this->Circle->CircleMember->current_team_id;
+            $this->Circle->CircleMember->current_team_id = $this->id;
+            $this->Circle->CircleMember->updateCounterCache(['circle_id' => $this->Circle->getLastInsertID()]);
+            $this->Circle->CircleMember->current_team_id = $tmp;
+        }
         return true;
     }
 
