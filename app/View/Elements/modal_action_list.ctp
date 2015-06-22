@@ -8,6 +8,8 @@
  * @var CodeCompletionView $this
  * @var                    $goal
  * @var                    $priority_list
+ * @var                    $posts
+ * @var                    $feed_more_read_url
  */
 ?>
 <!-- START app/View/Elements/modal_action_list.ctp -->
@@ -26,8 +28,8 @@
                         <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                             <div class="col col-xxs-12">
                                 <div class="pull-right">
-                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $posts[0]['Goal']['id']]) ?>"
-                                       class="no-line font_verydark modal-ajax-get modal-action-title">
+                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $posts[0]['Goal']['id']]) ?>"
+                                       class="no-line font_verydark modal-ajax-get">
                                         <?=
                                         $this->Html->image('ajax-loader.gif',
                                                            [
@@ -43,8 +45,8 @@
                                     </a>
                                 </div>
                                 <div class="ln_contain w_88per">
-                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $posts[0]['Goal']['id']]) ?>"
-                                       class="no-line font_verydark modal-ajax-get modal-action-title">
+                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $posts[0]['Goal']['id']]) ?>"
+                                       class="no-line font_verydark modal-ajax-get">
                                         <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($posts[0]['Goal']['name']) ?>
                                     </a>
                                 </div>

@@ -1,9 +1,9 @@
 <?php /**
  * ユーザ登録画面
  *
- * @var $this View
- * @var $last_first
- * @var $email
+ * @var CodeCompletionView $this
+ * @var                    $last_first
+ * @var                    $email
  */
 ?>
 <!-- START app/View/Users/register.ctp -->

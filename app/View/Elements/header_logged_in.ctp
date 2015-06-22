@@ -5,17 +5,17 @@
  * Date: 5/28/14
  * Time: 5:04 PM
  *
- * @var       $title_for_layout string
- * @var       $this             CodeCompletionView
- * @var       $nav_disable
- * @var array $my_teams
- * @var       $current_global_menu
- * @var       $avail_sub_menu
- * @var       $my_member_status
- * @var       $is_evaluation_available
- * @var       $evaluable_cnt
- * @var       $unapproved_cnt
- * @var       $all_alert_cnt
+ * @var CodeCompletionView $this
+ * @var                    $title_for_layout string
+ * @var                    $nav_disable
+ * @var array              $my_teams
+ * @var                    $current_global_menu
+ * @var                    $avail_sub_menu
+ * @var                    $my_member_status
+ * @var                    $is_evaluation_available
+ * @var                    $evaluable_cnt
+ * @var                    $unapproved_cnt
+ * @var                    $all_alert_cnt
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->

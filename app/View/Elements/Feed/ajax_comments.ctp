@@ -5,7 +5,8 @@
  * Date: 7/17/14
  * Time: 4:42 PM
  *
- * @var $comments
+ * @var CodeCompletionView $this
+ * @var                    $comments
  */
 ?>
 <?php foreach ($comments as $comment): ?>

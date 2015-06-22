@@ -89,14 +89,11 @@ class PostsController extends AppController
      * post_delete method
      *
      * @throws NotFoundException
-     *
-     * @param string $id
-     *
      * @return void
      */
-    public function post_delete($id)
+    public function post_delete()
     {
-        $this->Post->id = $id;
+        $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
         if (!$this->Post->exists()) {
             throw new NotFoundException(__('gl', "この投稿は存在しません。"));
         }
@@ -115,15 +112,12 @@ class PostsController extends AppController
      * post_edit method
      *
      * @throws NotFoundException
-     *
-     * @param string $id
-     *
      * @return void
      */
-    public function post_edit($id)
+    public function post_edit()
     {
         $this->request->allowMethod('post');
-        $this->Post->id = $id;
+        $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
 
         // 例外チェック
         if (!$this->Post->exists()) {
@@ -154,14 +148,11 @@ class PostsController extends AppController
      * comment_delete method
      *
      * @throws NotFoundException
-     *
-     * @param string $comment_id
-     *
      * @return void
      */
-    public function comment_delete($comment_id)
+    public function comment_delete()
     {
-        $this->Post->Comment->id = $comment_id;
+        $this->Post->Comment->id = viaIsSet($this->request->params['named']['comment_id']);;
         $post_id = $this->Post->Comment->field('post_id');
         if (!$this->Post->Comment->exists()) {
             throw new NotFoundException(__('gl', "このコメントは存在しません。"));
@@ -187,10 +178,10 @@ class PostsController extends AppController
      * @throws NotFoundException
      * @return void
      */
-    public function comment_edit($comment_id)
+    public function comment_edit()
     {
         $this->request->allowMethod('post');
-        $this->Post->Comment->id = $comment_id;
+        $this->Post->Comment->id = viaIsSet($this->request->params['named']['comment_id']);;
 
         // 例外チェック
         if (!$this->Post->Comment->exists()) {
@@ -300,8 +291,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_old_comment($post_id, $get_num)
+    public function ajax_get_old_comment($get_num)
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getPostsComment($post_id, $get_num);
         $long_text = false;
@@ -322,8 +314,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_latest_comment($post_id, $last_comment_id = 0)
+    public function ajax_get_latest_comment($last_comment_id = 0)
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
@@ -338,8 +331,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_new_comment_form($post_id, $prefix = null)
+    public function ajax_get_new_comment_form($prefix = null)
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $result = [
             'error' => false,
             'msg'   => null,
@@ -359,8 +353,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_edit_comment_form($comment_id, $id_prefix = null)
+    public function ajax_get_edit_comment_form($id_prefix = null)
     {
+        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
         $result = [
             'error' => false,
             'msg'   => null,
@@ -382,8 +377,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_edit_post_form($post_id)
+    public function ajax_get_edit_post_form()
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $result = [
             'error' => false,
             'msg'   => null,
@@ -404,8 +400,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_post_like($post_id)
+    public function ajax_post_like()
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $this->_ajaxPreProcess();
         $res = $this->Post->PostLike->changeLike($post_id);
         if ($res['is_liked']) {
@@ -416,15 +413,17 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_comment_like($comment_id)
+    public function ajax_comment_like()
     {
+        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
         $this->_ajaxPreProcess();
         $res = $this->Post->Comment->CommentLike->changeLike($comment_id);
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_get_post_liked_users($post_id)
+    public function ajax_get_post_liked_users()
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $this->_ajaxPreProcess();
         $liked_users = $this->Post->PostLike->getLikedUsers($post_id);
         $this->set(compact('liked_users'));
@@ -437,8 +436,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_post_red_users($post_id)
+    public function ajax_get_post_red_users()
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $this->_ajaxPreProcess();
         $red_users = $this->Post->PostRead->getRedUsers($post_id);
         $this->set(compact('red_users'));
@@ -451,8 +451,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_comment_liked_users($comment_id)
+    public function ajax_get_comment_liked_users()
     {
+        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
         $this->_ajaxPreProcess();
         $liked_users = $this->Post->Comment->CommentLike->getLikedUsers($comment_id);
         $this->set(compact('liked_users'));
@@ -465,8 +466,9 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function ajax_get_comment_red_users($comment_id)
+    public function ajax_get_comment_red_users()
     {
+        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
         $this->_ajaxPreProcess();
         $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
         $this->set(compact('red_users'));
@@ -593,8 +595,9 @@ class PostsController extends AppController
         }
     }
 
-    public function ajax_get_share_circles_users_modal($post_id)
+    public function ajax_get_share_circles_users_modal()
     {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
         $this->_ajaxPreProcess();
         /** @noinspection PhpUndefinedMethodInspection */
         $circles = $this->Post->PostShareCircle->getShareCirclesAndMembers($post_id);
@@ -749,8 +752,9 @@ class PostsController extends AppController
         return 'not_joined';
     }
 
-    function circle_toggle_status($circle_id, $status)
+    function circle_toggle_status($status)
     {
+        $circle_id = $this->request->params['named']['circle_id'];
         $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg' => $status]);
 
         if ($this->Post->Circle->CircleMember->validates()) {

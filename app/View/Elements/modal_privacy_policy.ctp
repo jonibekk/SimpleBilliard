@@ -1,5 +1,6 @@
-<?php /**
- * @var View $this
+<?php
+/**
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/modal_privacy_policy.ctp -->

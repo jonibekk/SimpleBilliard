@@ -8,6 +8,8 @@
  * @var                    $posts
  * @var                    $my_member_status
  * @var CodeCompletionView $this
+ * @var                    $goal
+ * @var                    $long_text
  */
 ?>
 <?php if (!empty($posts)): ?>
@@ -21,14 +23,14 @@
                     <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
                             <div class="ln_contain w_88per pull-left">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $post['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal',  'goal_id' =>$post['Goal']['id']]) ?>"
                                    class="post-heading-goal
                                     no-line font_verydark modal-ajax-get">
                                     <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($post['Goal']['name']) ?>
                                 </a>
                             </div>
                             <div class="pull-right">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', $post['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $post['Goal']['id']]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
@@ -50,13 +52,13 @@
                     <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
                             <div class="ln_contain w_88per pull-left">
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', $post['Circle']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', 'circle_id' => $post['Circle']['id']]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <i class="fa fa-circle-o font_gray"></i>&nbsp;<?= h($post['Circle']['name']) ?>
                                 </a>
                             </div>
                             <div class="pull-right">
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', $post['Circle']['id']]) ?>"
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', 'circle_id' => $post['Circle']['id']]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
@@ -70,6 +72,12 @@
                                                        ]
                                     )
                                     ?>
+                                </a>
+                            </div>
+                            <div class="ln_contain w_88per">
+                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'circle_feed', $post['Circle']['id']]) ?>"
+                                   class="no-line font_verydark modal-ajax-get">
+                                    <i class="fa fa-circle-o font_gray"></i>&nbsp;<?= h($post['Circle']['name']) ?>
                                 </a>
                             </div>
                         </div>
@@ -100,7 +108,7 @@
                                            closed-text="<?= __d('gl', "投稿を編集") ?>"
                                            click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
                                            hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
-                                           ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', $post['Post']['id']]) ?>"
+                                           ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', 'post_id' => $post['Post']['id']]) ?>"
                                             ><?= __d('gl', "投稿を編集") ?></a>
                                     </li>
                                 <?php endif ?>
@@ -108,7 +116,7 @@
                                     <?php if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
                                         <li><?=
                                             $this->Form->postLink(__d('gl', "投稿を削除"),
-                                                                  ['controller' => 'posts', 'action' => 'post_delete', $post['Post']['id']],
+                                                                  ['controller' => 'posts', 'action' => 'post_delete', 'post_id' => $post['Post']['id']],
                                                                   null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
                                     <?php endif; ?>
                                 <?php endif ?>
@@ -298,7 +306,7 @@
                         <?= __d('gl', "いいね！") ?></a>
                     <span class="font_lightgray"> ･ </span>
                                 <span>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', $post['Post']['id']]) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
                                class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
@@ -316,7 +324,7 @@
                     <a href="#" class="btn btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', $post['Post']['id'], $post['Post']['comment_count'] - 3, 'long_text' => $long_text]) ?>"
+                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3, 'long_text' => $long_text]) ?>"
                         >
                         <?php if ($post['unread_count'] > 0): ?>
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
@@ -346,7 +354,7 @@
                    id="Comments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
-                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', $post['Post']['id']]) ?>"
+                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id' => $post['Post']['id']]) ?>"
                     >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
@@ -376,7 +384,7 @@
                                     replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
                                     click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
                                     tmp-target-height="32"
-                                    ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', $post['Post']['id']]) ?>"
+                                    ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id']]) ?>"
                                     wrap="soft" rows="1"
                                     placeholder="<?= __d('gl', "コメントする") ?>"
                                     cols="30"

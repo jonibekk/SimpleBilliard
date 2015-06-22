@@ -1,3 +1,8 @@
+<?
+/**
+ * @var CodeCompletionView $this
+ */
+?>
 <!-- START app/View/Teams/member_list.ctp -->
 <style type="text/css">
     .team_member_table {

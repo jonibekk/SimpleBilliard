@@ -5,7 +5,8 @@
  * Date: 2014/05/27
  * Time: 1:23
  *
- * @var $id
+ * @var CodeCompletionView $this
+ * @var                    $id
  */
 ?>
 <!-- START app/View/Elements/flash_click_event.ctp -->

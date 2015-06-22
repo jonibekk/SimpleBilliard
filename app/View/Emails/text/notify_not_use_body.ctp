@@ -6,11 +6,12 @@
  *
  * @copyright Copyright 2010 - 2011, Cake Development Corporation (http://cakedc.com)
  * @license   MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @var $to_user_name
- * @var $from_user_name
- * @var $body
- * @var $body_title
- * @var $url
+ * @var                    $to_user_name
+ * @var                    $from_user_name
+ * @var                    $body
+ * @var                    $body_title
+ * @var                    $url
+ * @var CodeCompletionView $this
  */
 echo $body_title;
 echo "\n";

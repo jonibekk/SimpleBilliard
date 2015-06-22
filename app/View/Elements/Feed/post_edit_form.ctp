@@ -5,13 +5,14 @@
  * Date: 2014/07/21
  * Time: 3:12
  *
- * @var $post
+ * @var                    $post
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Elements/Feed/post_edit_form.ctp -->
 <?=
 $this->Form->create('Post', [
-    'url'           => ['controller' => 'posts', 'action' => 'post_edit', $post['Post']['id']],
+    'url'           => ['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']],
     'inputDefaults' => [
         'div'       => 'form-group',
         'label'     => false,

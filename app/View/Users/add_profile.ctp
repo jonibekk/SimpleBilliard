@@ -1,9 +1,9 @@
 <?php
 /**
- * @var View    $this
- * @var array   $me
- * @var boolean $is_not_use_local_name
- * @var string  $language_name
+ * @var CodeCompletionView $this
+ * @var array              $me
+ * @var boolean            $is_not_use_local_name
+ * @var string             $language_name
  */
 ?>
 <!-- START app/View/Users/add_profile.ctp -->

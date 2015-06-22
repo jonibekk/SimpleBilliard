@@ -5,8 +5,9 @@
  * Date: 2014/07/21
  * Time: 3:12
  *
- * @var $comment
- * @var $id_prefix
+ * @var CodeCompletionView $this
+ * @var                    $comment
+ * @var                    $id_prefix
  */
 ?>
 <?php if (!isset($id_prefix)) {
@@ -16,7 +17,7 @@
 <!-- START app/View/Elements/Feed/comment_edit_form.ctp -->
 <?=
 $this->Form->create('Comment', [
-    'url'           => ['controller' => 'posts', 'action' => 'comment_edit', $comment['id']],
+    'url'           => ['controller' => 'posts', 'action' => 'comment_edit', 'comment_id' => $comment['id']],
     'inputDefaults' => [
         'div'       => 'form-group',
         'label'     => false,

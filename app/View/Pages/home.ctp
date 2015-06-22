@@ -10,9 +10,9 @@
  * @package       Cake.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @var $this View
- * @var $user_count
- * @var $top_lang
+ * @var CodeCompletionView $this
+ * @var                    $user_count
+ * @var                    $top_lang
  */
 ?>
 <!-- START app/View/Pages/home.ctp -->

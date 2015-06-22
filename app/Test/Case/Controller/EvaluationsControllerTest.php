@@ -168,7 +168,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewNotEnabled()
@@ -203,7 +204,8 @@ class EvaluationsControllerTest extends ControllerTestCase
         $res = $Evaluations->Evaluation->Team->EvaluationSetting->findByTeamId(1);
         $Evaluations->Evaluation->Team->EvaluationSetting->id = $res['EvaluationSetting']['id'];
         $Evaluations->Evaluation->Team->EvaluationSetting->saveField('enable_flg', false);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewNotExistTotal()
@@ -235,7 +237,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewNotMyTern()
@@ -267,7 +270,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$Evaluations->Evaluation->my_uid}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
+                          ['method' => 'GET']);
     }
 
     public function testViewIncorrectEvaluateeId()
@@ -300,7 +304,8 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$termId}/{$incorrectEvaluateeId}", ['method' => 'GET']);
+        $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$incorrectEvaluateeId}",
+                          ['method' => 'GET']);
     }
 
     public function testViewIncorrectTermId()
@@ -333,7 +338,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
         $Evaluations->Evaluation->saveAll($records);
-        $this->testAction("/evaluations/view/{$incorrectTermId}/{$Evaluations->Evaluation->my_uid}",
+        $this->testAction("/evaluations/view/evaluate_term_id:{$incorrectTermId}/user_id:{$Evaluations->Evaluation->my_uid}",
                           ['method' => 'GET']);
     }
 
@@ -385,7 +390,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/user_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     /**
@@ -430,7 +435,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/user_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAddPostRegisterCaseEvaluator()
@@ -470,7 +475,7 @@ class EvaluationsControllerTest extends ControllerTestCase
             ],
         ];
 
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/user_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAddPostRegisterValidationError()
@@ -509,7 +514,7 @@ class EvaluationsControllerTest extends ControllerTestCase
                 ],
             ],
         ];
-        $this->testAction('/evaluations/add/1/1', ['method' => 'POST', 'data' => $data]);
+        $this->testAction('/evaluations/add/user_id:1/evaluate_term_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
     public function testAjaxGetIncompleteEvaluatees()
@@ -518,7 +523,8 @@ class EvaluationsControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
-        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/term_id:{$term_id}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/evaluate_term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -528,7 +534,8 @@ class EvaluationsControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
-        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/term_id:{$term_id}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_evaluators/evaluate_term_id:{$term_id}",
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -539,7 +546,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluators_status/{$evaluateeId}/term_id:{$term_id}",
+        $this->testAction("/evaluations/ajax_get_evaluators_status/user_id:{$evaluateeId}/evaluate_term_id:{$term_id}",
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
@@ -551,7 +558,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/{$evaluatorId}/term_id:{$term_id}",
+        $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/user_id:{$evaluatorId}/evaluate_term_id:{$term_id}",
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
@@ -563,7 +570,7 @@ class EvaluationsControllerTest extends ControllerTestCase
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction("/evaluations/ajax_get_incomplete_oneself/term_id:{$term_id}", ['method' => 'GET']);
+        $this->testAction("/evaluations/ajax_get_incomplete_oneself/evaluate_term_id:{$term_id}", ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

@@ -40,7 +40,7 @@
                           <a class="btn btn-white bd-circle_22px mt_16px font_verydark modal-ajax-get-collabo <?= $collabo_opt['class'] ?>"
                              data-toggle="modal"
                              data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                             href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', $goal['Goal']['id']]) ?>">
+                             href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                               <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_opt['style'] ?>"></i>
                               <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
                           </a>
@@ -53,8 +53,7 @@
                     <i class="fa fa-folder"></i><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span>
                 </div>
                 <div class="col col-xxs-12">
-                    <p class="font_18px fon
-                    t_verydark"><?= h($goal['Goal']['name']) ?></p>
+                    <p class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></p>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <?= h($goal['Purpose']['name']) ?>

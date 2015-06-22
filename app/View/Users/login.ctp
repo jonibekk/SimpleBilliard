@@ -6,7 +6,7 @@
  * Date: 2014/06/01
  * Time: 0:19
  *
- * @var $this View
+ * @var CodeCompletionView $this
  */
 ?>
 <!-- START app/View/Users/login.ctp -->
@@ -15,6 +15,9 @@
         <div class="panel panel-default">
             <div class="panel-heading"><?= __d('gl', "Goalousにログイン！") ?></div>
             <div class="panel-body login-panel-body">
+                <div id="RequireCookieAlert" class="alert alert-danger" style="display:none">
+                    <?= __d('gl', "Cookieを有効にしてください") ?>
+                </div>
                 <?=
                 $this->Form->create('User', [
                     'inputDefaults' => [
@@ -75,6 +78,9 @@
     $(document).ready(function () {
         $("#UserEmail").attr('autocomplete', 'on');
         $("#UserPassword").attr('autocomplete', 'off');
+        if (!navigator.cookieEnabled) {
+            $('#RequireCookieAlert').show();
+        }
     });
 </script>
 <?php $this->end() ?>

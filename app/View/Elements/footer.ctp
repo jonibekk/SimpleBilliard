@@ -5,8 +5,9 @@
  * Date: 5/28/14
  * Time: 5:07 PM
  *
- * @var $title_for_layout string
- * @var $this             View
+ * @var CodeCompletionView $this
+ * @var                    $title_for_layout string
+ * @var                    $this             View
  */
 ?>
 <!-- START app/View/Elements/footer.ctp -->

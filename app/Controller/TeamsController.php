@@ -205,16 +205,18 @@ class TeamsController extends AppController
 
     }
 
-    function to_inactive_score($id)
+    function to_inactive_score()
     {
+        $id = viaIsSet($this->request->params['named']['team_id']);
         $this->request->allowMethod(['post']);
         $this->Team->Evaluation->EvaluateScore->setToInactive($id);
         $this->Pnotify->outSuccess(__d('gl', "スコア定義を削除しました。"));
         return $this->redirect($this->referer());
     }
 
-    function ajax_get_confirm_inactive_score_modal($id)
+    function ajax_get_confirm_inactive_score_modal()
     {
+        $id = viaIsSet($this->request->params['named']['team_id']);
         $this->_ajaxPreProcess();
         $this->set(compact('id'));
         $response = $this->render('Team/confirm_to_inactive_score_modal');
@@ -233,8 +235,9 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    function ajax_get_confirm_inactive_goal_category_modal($id)
+    function ajax_get_confirm_inactive_goal_category_modal()
     {
+        $id = viaIsSet($this->request->params['named']['team_id']);
         $this->_ajaxPreProcess();
         $this->set(compact('id'));
         $response = $this->render('Team/confirm_to_inactive_goal_category_modal');
@@ -253,8 +256,9 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    function to_inactive_goal_category($id)
+    function to_inactive_goal_category()
     {
+        $id = viaIsSet($this->request->params['named']['team_id']);
         $this->request->allowMethod(['post']);
         $this->Goal->GoalCategory->setToInactive($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールカテゴリを削除しました。"));
@@ -486,8 +490,9 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
     }
 
-    function ajax_upload_final_evaluations_csv($term_id)
+    function ajax_upload_final_evaluations_csv()
     {
+        $evaluate_term_id = viaIsSet($this->request->params['named']['evaluate_term_id']);
         $this->request->allowMethod('post');
         $result = [
             'error' => false,
@@ -498,7 +503,7 @@ class TeamsController extends AppController
         $this->_ajaxPreProcess('post');
         $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
         $this->Team->TeamMember->begin();
-        $save_res = $this->Team->TeamMember->updateFinalEvaluationFromCsv($csv, $term_id);
+        $save_res = $this->Team->TeamMember->updateFinalEvaluationFromCsv($csv, $evaluate_term_id);
         if ($save_res['error']) {
             $this->Team->TeamMember->rollback();
             $result['error'] = true;
@@ -520,8 +525,9 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    function download_final_evaluations_csv($term_id)
+    function download_final_evaluations_csv()
     {
+        $evaluate_term_id = viaIsSet($this->request->params['named']['evaluate_term_id']);
         $team_id = $this->Session->read('current_team_id');
         $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         $this->layout = false;
@@ -529,13 +535,14 @@ class TeamsController extends AppController
 
         //見出し
         $th = $this->Team->TeamMember->_getCsvHeadingEvaluation();
-        $td = $this->Team->TeamMember->getAllEvaluationsCsvData($term_id, $team_id);
+        $td = $this->Team->TeamMember->getAllEvaluationsCsvData($evaluate_term_id, $team_id);
 
         $this->set(compact('filename', 'th', 'td'));
     }
 
-    public function ajax_switch_team($team_id = null)
+    public function ajax_switch_team()
     {
+        $team_id = viaIsSet($this->request->params['named']['team_id']);
         $this->layout = 'ajax';
         Configure::write('debug', 0);
         $redirect_url = Router::url("/", true);
@@ -555,8 +562,9 @@ class TeamsController extends AppController
         return $this->render();
     }
 
-    function change_freeze_status($termId)
+    function change_freeze_status()
     {
+        $termId = $this->request->params['named']['evaluate_term_id'];
         $this->request->allowMethod('post');
         try {
             $res = $this->Team->EvaluateTerm->changeFreezeStatus($termId);

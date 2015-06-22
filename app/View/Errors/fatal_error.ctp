@@ -10,6 +10,7 @@
  * @package       Cake.View.Errors
  * @since         CakePHP(tm) v 2.2.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @var CodeCompletionView $this
  */
 
 ?>

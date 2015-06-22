@@ -448,7 +448,7 @@ class TeamMember extends AppModel
         $uids = $this->getUserIdsByMemberNos(Hash::extract($this->csv_datas, '{n}.member_no'));
         //get Evaluations
         $evaluations = $this->Team->Evaluation->getFinalEvaluations($term_id, $uids);
-        $score_list = $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
+        $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
         //prepare save data
         foreach ($this->csv_datas as $key => $row) {
             $row = Hash::expand($row);

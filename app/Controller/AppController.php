@@ -512,81 +512,61 @@ class AppController extends Controller
 
     public function _getTeamIdFromRequest($request_params)
     {
-        if (empty($request_params)) {
+        if (empty($request_params) ||
+            !isset($request_params['controller']) ||
+            empty($request_params['controller'])
+        ) {
             return null;
         }
         $team_id = null;
-
-        if (isset($request_params['controller']) && !empty($request_params['controller'])
-        ) {
-            //対象IDを特定
-            $id = null;
-            //チームID指定されてた場合はチームIDを返す
-            if (isset($request_params['named']['team_id']) && !empty($request_params['named']['team_id'])) {
-                return $request_params['named']['team_id'];
+        //対象IDを特定
+        $id = null;
+        //チームID指定されてた場合はチームIDを返す
+        if (isset($request_params['named']['team_id']) && !empty($request_params['named']['team_id'])) {
+            return $request_params['named']['team_id'];
+        }
+        //モデル名抽出
+        $model_name = null;
+        foreach ($this->User->model_key_map as $key => $model) {
+            if ($id = viaIsSet($request_params['named'][$key])) {
+                $model_name = $model;
+                break;
             }
-            //サークルID指定されてた場合
-            elseif (isset($request_params['named']['circle_id']) && !empty($request_params['named']['circle_id'])) {
-                $id = $request_params['named']['circle_id'];
-            }
-            //投稿ID指定されてた場合
-            elseif (isset($request_params['named']['post_id']) && !empty($request_params['named']['post_id'])) {
-                $id = $request_params['named']['post_id'];
-            }
-            //通常のID指定されていた場合
-            elseif (isset($request_params['pass'][0]) && !empty($request_params['pass'][0])) {
-                $id = $request_params['pass'][0];
+            elseif ($id = viaIsSet($request_params[$key])) {
+                $model_name = $model;
+                break;
             }
 
-            //IDが特定できない場合はnullを返す
-            if (!$id) {
-                return null;
-            }
-            //idが数値じゃない場合はnullを返す
-            if (!is_numeric($id)) {
-                return null;
-            }
-
-            //モデル名抽出
-            $model_name = null;
-            if ($request_params['controller'] == 'pages') {
-                $model_name = 'Team';
-            }
-            elseif (isset($request_params['named']['circle_id']) && !empty($request_params['named']['circle_id'])) {
-                $model_name = 'Circle';
-            }
-            else {
-                $model_name = Inflector::classify($request_params['controller']);
-            }
-            $Model = ClassRegistry::init($model_name);
-
-            switch ($Model->name) {
-                case 'User':
-                    //Userの場合
-                    //相手が現在のチームに所属しているか確認
-                    $options = array(
-                        'conditions' => array(
-                            'user_id'    => $id,
-                            'team_id'    => $this->Session->read('current_team_id'),
-                            'active_flg' => true,
-                        ),
-                    );
-                    $team = $this->User->TeamMember->find('first', $options);
-                    if (!empty($team)) {
-                        $team_id = $team['TeamMember']['team_id'];
-                    }
-                    break;
-                case 'Team':
-                    //チームの場合はそのまま
-                    $team_id = $id;
-                    break;
-                default:
-                    $result = $Model->findById($id);
-                    if (empty($result)) {
-                        return null;
-                    }
-                    $team_id = $result[$Model->name]['team_id'];
-            }
+        }
+        //IDが特定できない場合もしくはidが数値じゃない場合はnullを返す
+        if (!$id || !is_numeric($id)) {
+            return null;
+        }
+        $Model = ClassRegistry::init($model_name);
+        switch ($Model->name) {
+            case 'User':
+                //Userの場合
+                //相手が現在のチームに所属しているか確認
+                $options = array(
+                    'conditions' => array(
+                        'user_id'    => $id,
+                        'team_id'    => $this->Session->read('current_team_id'),
+                        'active_flg' => true,
+                    ),
+                );
+                $team = $this->User->TeamMember->find('first', $options);
+                $team_id = viaIsSet($team['TeamMember']['team_id']);
+                break;
+            case 'Team':
+                //チームの場合はそのまま
+                $team_id = $id;
+                break;
+            default:
+                $result = $Model->findWithoutTeamId('first', ['conditions' => ['id' => $id]]);
+                if (empty($result)) {
+                    return null;
+                }
+                $team_id = $result[$Model->name]['team_id'];
         }
         return $team_id;
     }

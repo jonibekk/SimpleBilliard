@@ -83,7 +83,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/circles/ajax_get_edit_modal/1', ['method' => 'GET']);
+        $this->testAction('/circles/ajax_get_edit_modal/circle_id:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -107,7 +107,7 @@ class CirclesControllerTest extends ControllerTestCase
                 'members' => 'user_12,user_13'
             ],
         ];
-        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/circles/edit/circle_id:1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testEditSuccessChangePrivacy()
@@ -121,46 +121,47 @@ class CirclesControllerTest extends ControllerTestCase
                 'public_flg' => false,
             ],
         ];
-        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/circles/edit/circle_id:1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testEditFail()
     {
         $this->_getCirclesCommonMock();
         $data = ['Circle' => ['id' => 1, 'name' => null]];
-        $this->testAction('/circles/edit/1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/circles/edit/circle_id:1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testEditNotExists()
     {
         $this->_getCirclesCommonMock();
         $data = [];
-        $this->testAction('/circles/edit/99999', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/circles/edit/circle_id:99999',
+                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testEditNotAdmin()
     {
         $this->_getCirclesCommonMock();
         $data = [];
-        $this->testAction('/circles/edit/2', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+        $this->testAction('/circles/edit/circle_id:2', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testDeleteSuccess()
     {
         $this->_getCirclesCommonMock();
-        $this->testAction('/circles/delete/1', ['method' => 'POST', 'return' => 'contents']);
+        $this->testAction('/circles/delete/circle_id:1', ['method' => 'POST', 'return' => 'contents']);
     }
 
     function testDeleteNotExists()
     {
         $this->_getCirclesCommonMock();
-        $this->testAction('/circles/delete/99999', ['method' => 'POST', 'return' => 'contents']);
+        $this->testAction('/circles/delete/circle_id:99999', ['method' => 'POST', 'return' => 'contents']);
     }
 
     function testDeleteNotAdmin()
     {
         $this->_getCirclesCommonMock();
-        $this->testAction('/circles/delete/2', ['method' => 'POST', 'return' => 'contents']);
+        $this->testAction('/circles/delete/circle_id:2', ['method' => 'POST', 'return' => 'contents']);
     }
 
     function testAjaxGetPublicCirclesModal()
@@ -178,7 +179,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
 
-        $this->testAction('/circles/ajax_get_circle_members/1', ['method' => 'GET']);
+        $this->testAction('/circles/ajax_get_circle_members/circle_id:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

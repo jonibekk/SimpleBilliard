@@ -4,14 +4,15 @@
  * Date: 3/26/15
  * Time: 3:45 PM
  *
- * @var $evaluatees
- * @var $eval_term_id
- * @var $eval_is_frozen
+ * @var CodeCompletionView $this
+ * @var                    $evaluatees
+ * @var                    $eval_term_id
+ * @var                    $eval_is_frozen
  */
 ?>
 <!-- START app/View/Elements/Evaluation/index_items.ctp -->
 <?php foreach ($evaluatees as $user): ?>
-    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', $eval_term_id, $user['User']['id']]) ?>"
+    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', 'evaluate_term_id' => $eval_term_id, 'user_id' => $user['User']['id']]) ?>"
        class="font_verydark">
         <div class="col-xxs-12 mb_8px">
             <div class="disp_ib">

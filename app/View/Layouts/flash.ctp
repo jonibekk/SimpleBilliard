@@ -2,10 +2,11 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.View.Layouts
  * @since         CakePHP(tm) v 0.10.0.1076
- * @var $page_title string
- * @var $url        string
- * @var $pause      string
- * @var $message    string
+ * @var string             $page_title
+ * @var string             $url
+ * @var string             $pause
+ * @var string             $message
+ * @var CodeCompletionView $this
  */
 ?>
 <!DOCTYPE html>
