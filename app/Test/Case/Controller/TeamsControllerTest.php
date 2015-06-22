@@ -729,6 +729,51 @@ class TeamsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data]);
     }
 
+    function testEditTeamVisionNotAdmin()
+    {
+        $this->_getTeamsCommonMock(null, true, true, false);
+        $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
+    }
+
+    function testEditTeamVisionNotFound()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
+    }
+
+    function testEditTeamVisionGet()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/edit_team_vision/team_vision_id:1', ['method' => 'GET']);
+    }
+
+    function testEditTeamVisionPostNoData()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/edit_team_vision/team_vision_id:1', ['method' => 'POST', 'data' => []]);
+    }
+
+    function testEditTeamVisionPostEmpty()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/edit_team_vision/team_vision_id:1',
+                          ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
+    }
+
+    function testEditTeamVisionPostSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
+        $data = [
+            'TeamVision' => [
+                'id'   => 1,
+                'name' => 'test',
+            ]
+        ];
+        $this->testAction('/teams/edit_team_vision/team_vision_id:1',
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_active = true, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
