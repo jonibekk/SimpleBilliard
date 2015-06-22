@@ -710,4 +710,37 @@ class TeamsController extends AppController
         }
         return $this->render();
     }
+
+    function edit_team_vision()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        try {
+            $this->Team->TeamMember->adminCheck();
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect($this->referer());
+        }
+
+        if (!$team_vision_id = viaIsSet($this->request->params['named']['team_vision_id'])) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Team->TeamVision->findById($team_vision_id);
+            return $this->render();
+        }
+        if (!viaIsSet($this->request->data['TeamVision'])) {
+            $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->Team->TeamVision->saveTeamVision($this->request->data, false)) {
+            $this->Pnotify->outSuccess(__d('gl', "チームビジョンを更新しました。"));
+            //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
+            return $this->redirect("/");
+        }
+        return $this->render();
+    }
+
 }
