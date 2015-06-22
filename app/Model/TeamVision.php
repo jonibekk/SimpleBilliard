@@ -17,6 +17,22 @@ class TeamVision extends AppModel
      * @var string
      */
     public $displayField = 'name';
+    public $actsAs = [
+        'Upload' => [
+            'photo' => [
+                'styles'      => [
+                    'small'        => '32x32',
+                    'medium'       => '48x48',
+                    'medium_large' => '96x96',
+                    'large'        => '128x128',
+                    'x_large'      => '256x256',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image-team.jpg',
+                'quality'     => 100,
+            ]
+        ]
+    ];
 
     /**
      * Validation rules
