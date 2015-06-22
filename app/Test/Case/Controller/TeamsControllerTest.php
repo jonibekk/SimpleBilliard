@@ -813,21 +813,47 @@ class TeamsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data]);
     }
 
-    function testAddGroupVisionGet()
+    function testAddGroupVisionNoGroup()
     {
         $this->_getTeamsCommonMock(null, true);
         $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
     }
 
+    function _addMemberGroup($Teams)
+    {
+        $Teams->Team->Group->save(
+            [
+                'name'    => 'test',
+                'team_id' => $Teams->Team->current_team_id,
+            ]
+        );
+        $Teams->Team->Group->MemberGroup->save(
+            [
+                'team_id'  => $Teams->Team->current_team_id,
+                'user_id'  => 1,
+                'group_id' => $Teams->Team->Group->getLastInsertID()
+            ]
+        );
+    }
+
+    function testAddGroupVisionGet()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $this->_addMemberGroup($Teams);
+        $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
+    }
+
     function testAddGroupVisionPostNoData()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $this->_addMemberGroup($Teams);
         $this->testAction('/teams/add_group_vision', ['method' => 'POST', 'data' => []]);
     }
 
     function testAddGroupVisionPostEmpty()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $this->_addMemberGroup($Teams);
         $this->testAction('/teams/add_group_vision',
                           ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
     }
@@ -835,6 +861,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testAddGroupVisionPostSuccess()
     {
         $Teams = $this->_getTeamsCommonMock(null, true);
+        $this->_addMemberGroup($Teams);
         $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
         $data = [
             'GroupVision' => [
@@ -1037,6 +1064,10 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams->Team->TeamVision->my_uid = 1;
         $Teams->Team->GroupVision->current_team_id = $team_id;
         $Teams->Team->GroupVision->my_uid = 1;
+        $Teams->Team->Group->current_team_id = $team_id;
+        $Teams->Team->Group->my_uid = 1;
+        $Teams->Team->Group->MemberGroup->current_team_id = $team_id;
+        $Teams->Team->Group->MemberGroup->my_uid = 1;
 
         return $Teams;
     }

@@ -755,6 +755,10 @@ class TeamsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         $group_list = $this->Team->Group->MemberGroup->getMyGroupList();
+        if (empty($group_list)) {
+            $this->Pnotify->outError(__d('gl', "グループに所属していない為、グループビジョンは作成できません。"));
+            return $this->redirect($this->referer());
+        }
         $this->set(compact('group_list'));
 
         if ($this->request->is('get')) {
