@@ -16,8 +16,6 @@ class GroupVisionTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.group_vision',
-        'app.create_user',
-        'app.modify_user',
         'app.team',
         'app.badge',
         'app.user',
