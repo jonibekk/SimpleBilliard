@@ -2376,8 +2376,8 @@ $(function () {
         var $bellBox = getBellBoxSelector();
         var $title = $("title");
         var $originTitle = $("title").attr("origin-title");
-        var existingBellCnt = parseInt($bellBox.html());
-        var cntIsTooMuch = "20+";
+        var existingBellCnt = parseInt($bellBox.children('span').html());
+        var cntIsTooMuch = '20+';
 
         if (cnt == 0) {
             return;
@@ -2385,10 +2385,12 @@ $(function () {
 
         // set notify number
         if (parseInt(cnt) <= 20) {
-            $bellBox.html(cnt);
+            $bellBox.children('span').html(cnt);
+            $bellBox.children('sup').addClass('none');
             $title.text("(" + cnt + ")" + $originTitle);
         } else {
-            $bellBox.html(cntIsTooMuch);
+            $bellBox.children('span').html(20);
+            $bellBox.children('sup').removeClass('none');
             $title.text("(" + cntIsTooMuch + ")" + $originTitle);
         }
 
@@ -2450,7 +2452,7 @@ function getBellBoxSelector() {
 
 function getNotifyCnt() {
     var $bellBox = getBellBoxSelector();
-    return parseInt($bellBox.html());
+    return parseInt($bellBox.children('span').html());
 }
 
 function updateListBox() {
