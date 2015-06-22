@@ -354,7 +354,7 @@
                    id="Comments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
-                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id' => $post['Post']['id'], 'comment_id' => ""]) ?>"
+                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id' => $post['Post']['id']]) ?>"
                     >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
