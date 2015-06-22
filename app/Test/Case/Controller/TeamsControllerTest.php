@@ -774,6 +774,38 @@ class TeamsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data]);
     }
 
+    function testAddGroupVisionGet()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
+    }
+
+    function testAddGroupVisionPostNoData()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/add_group_vision', ['method' => 'POST', 'data' => []]);
+    }
+
+    function testAddGroupVisionPostEmpty()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $this->testAction('/teams/add_group_vision',
+                          ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
+    }
+
+    function testAddGroupVisionPostSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
+        $data = [
+            'GroupVision' => [
+                'name' => 'test'
+            ]
+        ];
+        $this->testAction('/teams/add_group_vision',
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
     function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_active = true, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
