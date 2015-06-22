@@ -140,7 +140,7 @@
                             </li>
                             <li>
                                 <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_group_vision']) ?>">
-                                    <i class="fa fa-rocket header-drop-icons"></i>
+                                    <i class="fa fa-plane header-drop-icons"></i>
                                     <span class="font_verydark"><?= __d('gl', "グループビジョンを作成") ?></span>
                                 </a>
                             </li>
