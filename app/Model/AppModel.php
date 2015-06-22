@@ -80,6 +80,7 @@ class AppModel extends Model
         'team_id'          => 'Team',
         'user_id'          => 'User',
         'team_vision_id'   => 'TeamVision',
+        'group_vision_id'  => 'GroupVision',
     ];
 
     /**
