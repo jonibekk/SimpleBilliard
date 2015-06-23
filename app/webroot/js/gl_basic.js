@@ -1701,10 +1701,10 @@ function evLike() {
     var url = null;
     var model_id = $obj.attr('model_id');
     if (like_type == "post") {
-        url = cake.url.d + "/" + model_id;
+        url = cake.url.d + model_id;
     }
     else {
-        url = cake.url.e + "/" + model_id;
+        url = cake.url.e + model_id;
     }
 
     $.ajax({
