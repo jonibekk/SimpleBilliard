@@ -36,10 +36,20 @@
             $urlRouterProvider.otherwise("/");
 
             $stateProvider
-                .state('team_list', {
+                .state('member', {
                     url: "/",
                     templateUrl: "/template/team_member_list.html",
                     controller: 'TeamMemberMainController'
+                })
+                .state('vision', {
+                    url: "/vision",
+                    templateUrl: "/template/team_vision_list.html",
+                    controller: ''
+                })
+                .state('group_vision', {
+                    url: "/group_vision",
+                    templateUrl: "/template/group_vision_list.html",
+                    controller: ''
                 });
 
             $translateProvider.useStaticFilesLoader({
@@ -56,9 +66,9 @@
 <div ng-app="myApp">
     <div class="col-xs-3">
         <ul class="nav" style="font-size: 13px;">
-            <li class="active"><a href="#account">チームメンバー一覧</a></li>
-            <li class=""><a href="#profile">チームビジョン一覧</a></li>
-            <li class=""><a class="" href="#notification">グループビジョン一覧</a></li>
+            <li class="active"><a ui-sref="member">チームメンバー一覧</a></li>
+            <li class=""><a ui-sref="vision">チームビジョン一覧</a></li>
+            <li class=""><a ui-sref="group_vision">グループビジョン一覧</a></li>
         </ul>
     </div>
 

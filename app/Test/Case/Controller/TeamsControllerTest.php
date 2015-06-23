@@ -632,7 +632,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testMemberList()
     {
         $this->_getTeamsCommonMock(null, true);
-        $this->testAction('/teams/member_list', ['method' => 'GET']);
+        $this->testAction('/teams/main', ['method' => 'GET']);
     }
 
     function testAjaxGetTeamMemberInit()

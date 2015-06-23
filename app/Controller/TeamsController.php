@@ -583,7 +583,7 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    function member_list()
+    function main()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         $current_global_menu = "team";
