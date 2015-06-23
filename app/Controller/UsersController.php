@@ -821,7 +821,9 @@ class UsersController extends AppController
         $this->_switchTeam($invite['Invite']['team_id']);
         // 「チーム全体」サークルに追加
         $circle = $this->Circle->getTeamAllCircle();
-        $this->Circle->CircleMember->joinNewMember($circle['Circle']['id']);
+        if ($circle) {
+            $this->Circle->CircleMember->joinNewMember($circle['Circle']['id']);
+        }
         //招待者に通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
         return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);

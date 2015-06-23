@@ -89,7 +89,9 @@ class CirclesController extends AppController
         // team_all_flg は変更不可
         unset($this->request->data['Circle']['team_all_flg']);
         // 「チーム全体」サークルの場合、編集可能な項目のみに絞る
-        if ($before_circle['Circle']['team_all_flg']) {
+        if (isset($before_circle['Circle']['team_all_flg']) &&
+            $before_circle['Circle']['team_all_flg']
+        ) {
             $editable_keys = ['id', 'name', 'description', 'photo'];
             $data = [];
             foreach ($editable_keys as $key) {
@@ -127,7 +129,9 @@ class CirclesController extends AppController
                 throw new RuntimeException(__d('gl', "サークルの削除ができるのはサークル管理者のみです。"));
             }
             $teamAllCircle = $this->Circle->getTeamAllCircle();
-            if ($teamAllCircle["Circle"]["id"] == $this->Circle->id) {
+            if (isset($teamAllCircle["Circle"]["id"]) &&
+                $teamAllCircle["Circle"]["id"] == $this->Circle->id
+            ) {
                 throw new RuntimeException(__d('gl', "チーム全体サークルは削除できません。"));
             }
         } catch (RuntimeException $e) {

@@ -124,6 +124,19 @@ class CirclesControllerTest extends ControllerTestCase
         $this->testAction('/circles/edit/circle_id:1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testEditTeamAll()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                'id'         => 3,
+                'name'       => 'xxx',
+                'description' => 'xxxx yyyy',
+            ],
+        ];
+        $this->testAction('/circles/edit/circle_id:3', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
     function testEditFail()
     {
         $this->_getCirclesCommonMock();
@@ -162,6 +175,12 @@ class CirclesControllerTest extends ControllerTestCase
     {
         $this->_getCirclesCommonMock();
         $this->testAction('/circles/delete/circle_id:2', ['method' => 'POST', 'return' => 'contents']);
+    }
+
+    function testDeleteFailTeamAll()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/circle_id:3', ['method' => 'POST', 'return' => 'contents']);
     }
 
     function testAjaxGetPublicCirclesModal()

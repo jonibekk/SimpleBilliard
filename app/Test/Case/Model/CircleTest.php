@@ -114,4 +114,17 @@ class CircleTest extends CakeTestCase
         $this->assertTrue(empty($res));
     }
 
+    function testGetTeamAllCircle()
+    {
+        // 正常系
+        $this->Circle->current_team_id = 1;
+        $testAllCircle = $this->Circle->getTeamAllCircle();
+        $this->assertEquals(1, $testAllCircle['Circle']['team_id']);
+        $this->assertEquals(1, $testAllCircle['Circle']['team_all_flg']);
+
+        // 存在しないチームの場合
+        $this->Circle->current_team_id = 9999999;
+        $testAllCircle = $this->Circle->getTeamAllCircle();
+        $this->assertEmpty($testAllCircle);
+    }
 }
