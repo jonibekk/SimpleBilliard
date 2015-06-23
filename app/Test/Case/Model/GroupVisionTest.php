@@ -82,7 +82,26 @@ class GroupVisionTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testSaveGroupVisionNoData()
     {
+        $this->_setDefault();
+        $this->assertFalse($this->GroupVision->saveGroupVision([]));
+    }
+
+    function testSaveGroupVisionSuccess()
+    {
+        $this->_setDefault();
+        $data = [
+            'GroupVision' => [
+                'name' => 'test'
+            ]
+        ];
+        $this->assertNotEmpty($this->GroupVision->saveGroupVision($data));
+    }
+
+    function _setDefault()
+    {
+        $this->GroupVision->current_team_id = 1;
+        $this->GroupVision->my_uid = 1;
     }
 }

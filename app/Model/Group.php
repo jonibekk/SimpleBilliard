@@ -42,7 +42,7 @@ class Group extends AppModel
     function getByAllName($team_id)
     {
         $options = [
-            'fields' => ['id', 'name'],
+            'fields'     => ['id', 'name'],
             'conditions' => [
                 'team_id' => $team_id,
             ],

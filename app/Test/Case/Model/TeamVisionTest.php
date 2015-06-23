@@ -82,8 +82,20 @@ class TeamVisionTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testSaveTeamVisionNoData()
     {
+        $this->_setDefault();
+        $this->assertFalse($this->TeamVision->saveTeamVision([]));
     }
-
+    function testSaveTeamVisionSuccess()
+    {
+        $this->_setDefault();
+        $data = ['TeamVision'=>['name'=>'test']];
+        $this->assertNotEmpty($this->TeamVision->saveTeamVision($data));
+    }
+    function _setDefault()
+    {
+        $this->TeamVision->current_team_id=1;
+        $this->TeamVision->my_uid=1;
+    }
 }

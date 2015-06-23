@@ -14,6 +14,8 @@ class TeamsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
+        'app.goal_category',
         'app.circle_member',
         'app.member_type',
         'app.evaluation_setting',
@@ -52,7 +54,9 @@ class TeamsControllerTest extends ControllerTestCase
         'app.send_mail',
         'app.send_mail_to_user',
         'app.message',
-        'app.evaluate_term'
+        'app.evaluate_term',
+        'app.team_vision',
+        'app.group_vision',
     );
 
     /**
@@ -132,7 +136,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testInviteFromSetting()
     {
-        $this->_getTeamsCommonMock(null, true, true, '/teams/settings');
+        $this->_getTeamsCommonMock(null, true, true, true, '/teams/settings');
 
         $emails = "aaa@example.com";
         $data = ['Team' => ['emails' => $emails]];
@@ -266,7 +270,9 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testSettingsFail()
     {
-        $this->_getTeamsCommonMock(null, true, false);
+        $Teams = $this->_getTeamsCommonMock(null, true, false);
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
+                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
 
@@ -689,7 +695,275 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/ajax_get_invite_member_list', ['method' => 'GET']);
     }
 
-    function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_admin = true, $referer = '/')
+    function testAddTeamVisionNotAdmin()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
+                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
+        $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
+    }
+
+    function testAddTeamVisionGet()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
+    }
+
+    function testAddTeamVisionPostNoData()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/add_team_vision', ['method' => 'POST', 'data' => []]);
+    }
+
+    function testAddTeamVisionPostEmpty()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/add_team_vision',
+                          ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
+    }
+
+    function testAddTeamVisionPostSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
+        $data = [
+            'TeamVision' => [
+                'name' => 'test'
+            ]
+        ];
+        $this->testAction('/teams/add_team_vision',
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testEditTeamVisionNotAdmin()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
+                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
+        $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
+    }
+
+    function testEditTeamVisionNotFound()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
+    }
+
+    function testEditTeamVisionNotFound2()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/edit_team_vision/team_vision_id:99999', ['method' => 'GET']);
+    }
+
+    function testEditTeamVisionGet()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test'
+        ];
+        $Teams->Team->TeamVision->save($data);
+        $team_vision_id = $Teams->Team->TeamVision->getLastInsertID();
+        $this->testAction("/teams/edit_team_vision/team_vision_id:{$team_vision_id}", ['method' => 'GET']);
+    }
+
+    function testEditTeamVisionPostNoData()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test'
+        ];
+        $Teams->Team->TeamVision->save($data);
+        $team_vision_id = $Teams->Team->TeamVision->getLastInsertID();
+        $this->testAction("/teams/edit_team_vision/team_vision_id:{$team_vision_id}",
+                          ['method' => 'POST', 'data' => []]);
+    }
+
+    function testEditTeamVisionPostEmpty()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test'
+        ];
+        $Teams->Team->TeamVision->save($data);
+        $team_vision_id = $Teams->Team->TeamVision->getLastInsertID();
+        $this->testAction("/teams/edit_team_vision/team_vision_id:{$team_vision_id}",
+                          ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
+    }
+
+    function testEditTeamVisionPostSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test'
+        ];
+        $Teams->Team->TeamVision->save($data);
+        $team_vision_id = $Teams->Team->TeamVision->getLastInsertID();
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
+        $data = [
+            'TeamVision' => [
+                'id'   => $team_vision_id,
+                'name' => 'test',
+            ]
+        ];
+        $this->testAction("/teams/edit_team_vision/team_vision_id:{$team_vision_id}",
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
+    function _addMemberGroup($Teams)
+    {
+        $Teams->Team->Group->save(
+            [
+                'name'    => 'test',
+                'team_id' => $Teams->Team->current_team_id,
+            ]
+        );
+        $Teams->Team->Group->MemberGroup->save(
+            [
+                'team_id'  => $Teams->Team->current_team_id,
+                'user_id'  => 1,
+                'group_id' => $Teams->Team->Group->getLastInsertID()
+            ]
+        );
+    }
+
+    function testAddGroupVisionNoGroup()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $Teams->Team->Group->MemberGroup->deleteAll(['MemberGroup.user_id' => 1, 'MemberGroup.team_id' => 1]);
+        $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
+    }
+
+    function testAddGroupVisionGet()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $this->_addMemberGroup($Teams);
+        $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
+    }
+
+    function testAddGroupVisionPostNoData()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $this->_addMemberGroup($Teams);
+        $this->testAction('/teams/add_group_vision', ['method' => 'POST', 'data' => []]);
+    }
+
+    function testAddGroupVisionPostEmpty()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $this->_addMemberGroup($Teams);
+        $this->testAction('/teams/add_group_vision',
+                          ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
+    }
+
+    function testAddGroupVisionPostSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $this->_addMemberGroup($Teams);
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
+        $data = [
+            'GroupVision' => [
+                'name' => 'test'
+            ]
+        ];
+        $this->testAction('/teams/add_group_vision',
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testEditGroupVisionNotFound()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/edit_group_vision', ['method' => 'GET']);
+    }
+
+    function testEditGroupVisionNotFound2()
+    {
+        $this->_getTeamsCommonMock();
+        $this->testAction('/teams/edit_group_vision/group_vision_id:9999999', ['method' => 'GET']);
+    }
+
+    function testEditGroupVisionGet()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test',
+            'group_id'       => 1,
+        ];
+        $Teams->Team->GroupVision->save($data);
+        $group_vision_id = $Teams->Team->GroupVision->getLastInsertID();
+        $this->testAction("/teams/edit_group_vision/group_vision_id:{$group_vision_id}", ['method' => 'GET']);
+    }
+
+    function testEditGroupVisionPostNoData()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test',
+            'group_id'       => 1,
+        ];
+        $Teams->Team->GroupVision->save($data);
+        $group_vision_id = $Teams->Team->GroupVision->getLastInsertID();
+        $this->testAction("/teams/edit_group_vision/group_vision_id:{$group_vision_id}",
+                          ['method' => 'POST', 'data' => []]);
+    }
+
+    function testEditGroupVisionPostEmpty()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test',
+            'group_id'       => 1,
+        ];
+        $Teams->Team->GroupVision->save($data);
+        $group_vision_id = $Teams->Team->GroupVision->getLastInsertID();
+        $this->testAction("/teams/edit_group_vision/group_vision_id:{$group_vision_id}",
+                          ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
+    }
+
+    function testEditGroupVisionPostSuccess()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'team_id'        => $Teams->Team->current_team_id,
+            'create_user_id' => 1,
+            'modify_user_id' => 1,
+            'name'           => 'test',
+            'group_id'       => 1,
+        ];
+        $Teams->Team->GroupVision->save($data);
+        $group_vision_id = $Teams->Team->GroupVision->getLastInsertID();
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
+        $data = [
+            'GroupVision' => [
+                'id'   => $group_vision_id,
+                'name' => 'test',
+            ]
+        ];
+        $this->testAction("/teams/edit_group_vision/group_vision_id:{$group_vision_id}",
+                          ['method' => 'POST', 'data' => $data]);
+    }
+
+    function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_active = true, $is_admin = true, $referer = '/')
     {
         Configure::write('Config.language', 'jpn');
 
@@ -744,6 +1018,7 @@ class TeamsControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map)
                     );
 
+        $team_id = 1;
         if ($insert_team_data) {
             /** @noinspection PhpUndefinedFieldInspection */
             $Teams->Team->TeamMember->myStatusWithTeam = null;
@@ -751,8 +1026,8 @@ class TeamsControllerTest extends ControllerTestCase
                 'TeamMember' => [
                     [
                         'user_id'    => 1,
-                        'active_flg' => $is_admin,
-                        'admin_flg'  => true,
+                        'active_flg' => $is_active,
+                        'admin_flg'  => $is_admin,
                     ]
                 ],
                 'Team'       => [
@@ -765,6 +1040,7 @@ class TeamsControllerTest extends ControllerTestCase
             $session_value_map = [
                 ['current_team_id', $Teams->Team->getLastInsertId()]
             ];
+            $team_id = $Teams->Team->getLastInsertId();
             /** @noinspection PhpUndefinedMethodInspection */
             $Teams->Auth->staticExpects($this->any())->method('user')
                         ->will($this->returnValueMap([['id', '1']])
@@ -776,15 +1052,15 @@ class TeamsControllerTest extends ControllerTestCase
         }
         $Teams->Team->TeamMember->csv_datas = [];
         $Teams->Team->current_team_id = 1;
-        $Teams->Team->uid = 1;
+        $Teams->Team->uid = $Teams->Team->my_uid = 1;
         $Teams->Team->TeamMember->current_team_id = 1;
-        $Teams->Team->TeamMember->uid = 1;
+        $Teams->Team->TeamMember->uid = $Teams->Team->TeamMember->my_uid = 1;
         $Teams->Team->TeamMember->User->MemberGroup->Group->current_team_id = 1;
-        $Teams->Team->TeamMember->User->MemberGroup->Group->uid = 1;
+        $Teams->Team->TeamMember->User->MemberGroup->Group->uid = $Teams->Team->TeamMember->User->MemberGroup->Group->my_uid = 1;
         $Teams->Team->TeamMember->MemberType->current_team_id = 1;
-        $Teams->Team->TeamMember->MemberType->uid = 1;
+        $Teams->Team->TeamMember->MemberType->uid = $Teams->Team->TeamMember->MemberType->my_uid = 1;
         $Teams->Team->TeamMember->User->Email->current_team_id = 1;
-        $Teams->Team->TeamMember->User->Email->uid = 1;
+        $Teams->Team->TeamMember->User->Email->uid = $Teams->Team->TeamMember->User->Email->my_uid = 1;
         $Teams->Team->EvaluateTerm->current_team_id = 1;
         $Teams->Team->EvaluateTerm->my_uid = 1;
         $Teams->Team->Evaluator->current_team_id = 1;
@@ -793,6 +1069,14 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams->Team->EvaluationSetting->my_uid = 1;
         $Teams->Team->Evaluation->current_team_id = 1;
         $Teams->Team->Evaluation->my_uid = 1;
+        $Teams->Team->TeamVision->current_team_id = $team_id;
+        $Teams->Team->TeamVision->my_uid = 1;
+        $Teams->Team->GroupVision->current_team_id = $team_id;
+        $Teams->Team->GroupVision->my_uid = 1;
+        $Teams->Team->Group->current_team_id = $team_id;
+        $Teams->Team->Group->my_uid = 1;
+        $Teams->Team->Group->MemberGroup->current_team_id = $team_id;
+        $Teams->Team->Group->MemberGroup->my_uid = 1;
 
         return $Teams;
     }
