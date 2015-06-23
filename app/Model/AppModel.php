@@ -79,6 +79,8 @@ class AppModel extends Model
         'evaluate_term_id' => 'EvaluateTerm',
         'team_id'          => 'Team',
         'user_id'          => 'User',
+        'team_vision_id'   => 'TeamVision',
+        'group_vision_id'  => 'GroupVision',
     ];
 
     /**

@@ -121,7 +121,7 @@
                 </div>
                 <a href="<?= $this->Html->url('/') ?>" class="header-home header-link"><?= __d('gl', "ホーム") ?></a>
 
-                <div class="dropdown navbar-nav-fix header-circle">
+                <div class="dropdown navbar-nav-fix">
                     <a href="#" data-toggle="dropdown" id="download">
                         <i class="fa fa-plus-circle header-link header-icon"></i>
                     </a>
@@ -138,6 +138,20 @@
                                     <span class="font_verydark"><?= __d('gl', "サークルを作成") ?></span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_group_vision']) ?>">
+                                    <i class="fa fa-plane header-drop-icons"></i>
+                                    <span class="font_verydark"><?= __d('gl', "グループビジョンを作成") ?></span>
+                                </a>
+                            </li>
+                            <?php if ($my_member_status['TeamMember']['admin_flg']): ?>
+                                <li>
+                                    <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_team_vision']) ?>">
+                                        <i class="fa fa-rocket header-drop-icons"></i>
+                                        <span class="font_verydark"><?= __d('gl', "チームビジョンを作成") ?></span>
+                                    </a>
+                                </li>
+                            <? endif; ?>
                         <?php endif; ?>
                         <li>
                             <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
@@ -147,9 +161,20 @@
                         </li>
                     </ul>
                 </div>
-                <a class="develop--forbiddenLink" href="#"><i class="fa fa-envelope-o header-link header-icon"></i></a>
+                <a class="develop--forbiddenLink" href="#">
+                    <i class="fa fa-envelope-o header-link header-icon"></i>
+                </a>
 
-                <div class="dropdown dropdown-menu-right navbar-nav-fix header-circle">
+                <div class="dropdown dropdown-menu-right navbar-nav-fix">
+                    <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
+                        <i class="fa fa-flag fa-bell-o header-icon header-drop-icons header-link"></i>
+
+                        <div class="btn btn-xs bell-notify-box notify-bell-numbers"
+                             id="bellNum" style="opacity: 0;">
+                            <span>0</span><sup class="notify-plus none">+</sup>
+                        </div>
+                    </a>
+
                     <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
                         <ul class="notify-dropdown-cards" id="bell-dropdown" role="menu">
                             <li class="notify-card-empty" id="notifyCardEmpty">
@@ -158,28 +183,20 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="btn btn-xs bell-notify-box notify-bell-numbers"
-                         id="bellNum" style="opacity: 0;">
-                         0
-                    </div>
-                    <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
-                        <i class="fa fa-flag fa-bell-o header-link header-icon header-drop-icons"></i>
-                    </a>
                 </div>
-                <div class="pull-right header-function dropdown">
-                    <?php if ($all_alert_cnt > 0): ?>
-                        <div class="btn btn-xs notify-function-numbers">
-                          <span>
-                            <?= $all_alert_cnt ?>
-                          </span>
-                        </div>
-                    <?php endif; ?>
+                <div class="pull-right header-function dropdown nav-icons">
                     <a href="#"
-                       class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
+                       class="font_lightGray-gray header-icon"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog header-function-icon"></i>
-                        <i class="fa fa-caret-down goals-column-fa-caret-down header-function-icon"></i>
+                        <i class="fa fa-cog header-function-icon header-link"></i>
+                        <?php if ($all_alert_cnt > 0): ?>
+                            <div class="btn btn-xs notify-function-numbers">
+                             <span>
+                               <?= $all_alert_cnt ?>
+                             </span>
+                            </div>
+                        <?php endif; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
@@ -187,9 +204,11 @@
                             <?= $this->Html->link(__d('gl', "ユーザ設定"),
                                                   ['controller' => 'users', 'action' => 'settings']) ?>
                         </li>
-                        <li><a href="#" data-toggle="modal" data-target="#modal_tutorial"><?=
-                                __d('gl',
-                                    "チュートリアル") ?></a></li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#modal_tutorial">
+                                <?= __d('gl', "チュートリアル") ?>
+                            </a>
+                        </li>
                         <li>
                             <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
                                 <div class="btn btn-danger btn-xs sub_cnt_alert">

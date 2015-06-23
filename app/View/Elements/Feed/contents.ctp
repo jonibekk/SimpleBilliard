@@ -54,7 +54,7 @@ else { ?>
                 <?php if ($user_status != 'admin') { ?>
                     <div class="pull-right header-function dropdown">
                         <a id="download" data-toggle="dropdown"
-                           class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px bd-radius_4px header-function-link"
+                           class="font_lightGray-gray"
                            href="#" style="opacity: 0.54;">
                             <i class="fa fa-cog header-function-icon"
                                style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
