@@ -695,7 +695,9 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testAddTeamVisionNotAdmin()
     {
-        $this->_getTeamsCommonMock();
+        $Teams = $this->_getTeamsCommonMock();
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
+                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
         $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
     }
 
@@ -733,7 +735,9 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditTeamVisionNotAdmin()
     {
-        $this->_getTeamsCommonMock();
+        $Teams = $this->_getTeamsCommonMock();
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
+                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
         $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
     }
 
