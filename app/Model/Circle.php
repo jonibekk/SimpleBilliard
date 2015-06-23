@@ -167,27 +167,30 @@ class Circle extends AppModel
         if (!isset($data['Circle']) || empty($data['Circle'])) {
             return false;
         }
-        //既存のメンバーを取得
-        $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
-        if (isset($data['Circle']['members']) && !empty($data['Circle']['members'])) {
-            $members = explode(",", $data['Circle']['members']);
-            foreach ($members as $val) {
-                $val = str_replace('user_', '', $val);
-                $key = array_search($val, $exists_member_list);
-                if ($key !== false) {
-                    unset($exists_member_list[$key]);
-                    continue;
+        // チーム全体サークルでない場合は、メンバーの編集処理を行う
+        if (!$data['Circle']['team_all_flg']) {
+            //既存のメンバーを取得
+            $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
+            if (isset($data['Circle']['members']) && !empty($data['Circle']['members'])) {
+                $members = explode(",", $data['Circle']['members']);
+                foreach ($members as $val) {
+                    $val = str_replace('user_', '', $val);
+                    $key = array_search($val, $exists_member_list);
+                    if ($key !== false) {
+                        unset($exists_member_list[$key]);
+                        continue;
+                    }
+                    $data['CircleMember'][] = [
+                        'team_id' => $this->current_team_id,
+                        'user_id' => $val,
+                    ];
+                    $this->add_new_member_list[] = $val;
                 }
-                $data['CircleMember'][] = [
-                    'team_id' => $this->current_team_id,
-                    'user_id' => $val,
-                ];
-                $this->add_new_member_list[] = $val;
             }
-        }
-        //既存メンバーで指定されないメンバーがいた場合、削除
-        if (!empty($exists_member_list)) {
-            $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
+            //既存メンバーで指定されないメンバーがいた場合、削除
+            if (!empty($exists_member_list)) {
+                $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
+            }
         }
         if ($res = $this->saveAll($data)) {
             $this->CircleMember->updateCounterCache(['circle_id' => $data['Circle']['id']]);

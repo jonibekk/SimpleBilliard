@@ -86,8 +86,6 @@ class CirclesController extends AppController
         ) {
             $is_privacy_changed = true;
         }
-        // team_all_flg は変更不可
-        unset($this->request->data['Circle']['team_all_flg']);
         // 「チーム全体」サークルの場合、編集可能な項目のみに絞る
         if (isset($before_circle['Circle']['team_all_flg']) &&
             $before_circle['Circle']['team_all_flg']
@@ -101,6 +99,9 @@ class CirclesController extends AppController
             }
             $this->request->data = $data;
         }
+        // team_all_flg は変更不可
+        $this->request->data['Circle']['team_all_flg'] = $before_circle['Circle']['team_all_flg'];
+
         if ($this->Circle->edit($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
