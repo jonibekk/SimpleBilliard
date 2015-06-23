@@ -88,13 +88,40 @@ class MemberGroupTest extends CakeTestCase
         $team_id = 888;
         $group_id = 777;
         $params = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
+            'user_id'  => $user_id,
+            'team_id'  => $team_id,
             'group_id' => $group_id,
         ];
         $this->MemberGroup->save($params);
         $res = $this->MemberGroup->getGroupMemberUserId($team_id, $group_id);
         $this->assertContains($user_id, $res);
+    }
+
+    function testGetMyGroupList()
+    {
+        $this->_setDefault();
+        $this->MemberGroup->Group->save(
+            [
+                'name'    => 'test',
+                'team_id' => 1,
+            ]
+        );
+        $this->MemberGroup->save(
+            [
+                'team_id'  => 1,
+                'user_id'  => 1,
+                'group_id' => $this->MemberGroup->Group->getLastInsertID()
+            ]
+        );
+        $this->assertNotEmpty($this->MemberGroup->getMyGroupList());
+    }
+
+    function _setDefault()
+    {
+        $this->MemberGroup->current_team_id = 1;
+        $this->MemberGroup->my_uid = 1;
+        $this->MemberGroup->Group->current_team_id = 1;
+        $this->MemberGroup->Group->my_uid = 1;
     }
 
 }
