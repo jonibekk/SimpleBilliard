@@ -270,7 +270,9 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testSettingsFail()
     {
-        $this->_getTeamsCommonMock(null, true, false);
+        $Teams = $this->_getTeamsCommonMock(null, true, false);
+        $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
+                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
 
