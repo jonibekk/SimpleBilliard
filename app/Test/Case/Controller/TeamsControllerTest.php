@@ -731,25 +731,25 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditTeamVisionNotAdmin()
     {
-        $this->_getTeamsCommonMock(null, true, true, false);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
     }
 
     function testEditTeamVisionNotFound()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
     }
 
     function testEditTeamVisionNotFound2()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/edit_team_vision/team_vision_id:99999', ['method' => 'GET']);
     }
 
     function testEditTeamVisionGet()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -763,7 +763,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditTeamVisionPostNoData()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -778,7 +778,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditTeamVisionPostEmpty()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -793,7 +793,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditTeamVisionPostSuccess()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -815,7 +815,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testAddGroupVisionNoGroup()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
     }
 
@@ -838,21 +838,21 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testAddGroupVisionGet()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $this->_addMemberGroup($Teams);
         $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
     }
 
     function testAddGroupVisionPostNoData()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $this->_addMemberGroup($Teams);
         $this->testAction('/teams/add_group_vision', ['method' => 'POST', 'data' => []]);
     }
 
     function testAddGroupVisionPostEmpty()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $this->_addMemberGroup($Teams);
         $this->testAction('/teams/add_group_vision',
                           ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
@@ -860,7 +860,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testAddGroupVisionPostSuccess()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $this->_addMemberGroup($Teams);
         $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
         $data = [
@@ -874,19 +874,19 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditGroupVisionNotFound()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/edit_group_vision', ['method' => 'GET']);
     }
 
     function testEditGroupVisionNotFound2()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/edit_group_vision/group_vision_id:9999999', ['method' => 'GET']);
     }
 
     function testEditGroupVisionGet()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -901,7 +901,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditGroupVisionPostNoData()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -917,7 +917,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditGroupVisionPostEmpty()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -933,7 +933,7 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testEditGroupVisionPostSuccess()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $data = [
             'team_id'        => $Teams->Team->current_team_id,
             'create_user_id' => 1,
@@ -1042,23 +1042,23 @@ class TeamsControllerTest extends ControllerTestCase
                            );
         }
         $Teams->Team->TeamMember->csv_datas = [];
-        $Teams->Team->current_team_id = $team_id;
-        $Teams->Team->my_uid = 1;
-        $Teams->Team->TeamMember->current_team_id = $team_id;
-        $Teams->Team->TeamMember->my_uid = 1;
-        $Teams->Team->TeamMember->User->MemberGroup->Group->current_team_id = $team_id;
-        $Teams->Team->TeamMember->User->MemberGroup->Group->my_uid = 1;
-        $Teams->Team->TeamMember->MemberType->current_team_id = $team_id;
-        $Teams->Team->TeamMember->MemberType->my_uid = 1;
-        $Teams->Team->TeamMember->User->Email->current_team_id = $team_id;
-        $Teams->Team->TeamMember->User->Email->my_uid = 1;
-        $Teams->Team->EvaluateTerm->current_team_id = $team_id;
+        $Teams->Team->current_team_id = 1;
+        $Teams->Team->uid = $Teams->Team->my_uid = 1;
+        $Teams->Team->TeamMember->current_team_id = 1;
+        $Teams->Team->TeamMember->uid = $Teams->Team->TeamMember->my_uid = 1;
+        $Teams->Team->TeamMember->User->MemberGroup->Group->current_team_id = 1;
+        $Teams->Team->TeamMember->User->MemberGroup->Group->uid = $Teams->Team->TeamMember->User->MemberGroup->Group->my_uid = 1;
+        $Teams->Team->TeamMember->MemberType->current_team_id = 1;
+        $Teams->Team->TeamMember->MemberType->uid = $Teams->Team->TeamMember->MemberType->my_uid = 1;
+        $Teams->Team->TeamMember->User->Email->current_team_id = 1;
+        $Teams->Team->TeamMember->User->Email->uid = $Teams->Team->TeamMember->User->Email->my_uid = 1;
+        $Teams->Team->EvaluateTerm->current_team_id = 1;
         $Teams->Team->EvaluateTerm->my_uid = 1;
-        $Teams->Team->Evaluator->current_team_id = $team_id;
+        $Teams->Team->Evaluator->current_team_id = 1;
         $Teams->Team->Evaluator->my_uid = 1;
-        $Teams->Team->EvaluationSetting->current_team_id = $team_id;
+        $Teams->Team->EvaluationSetting->current_team_id = 1;
         $Teams->Team->EvaluationSetting->my_uid = 1;
-        $Teams->Team->Evaluation->current_team_id = $team_id;
+        $Teams->Team->Evaluation->current_team_id = 1;
         $Teams->Team->Evaluation->my_uid = 1;
         $Teams->Team->TeamVision->current_team_id = $team_id;
         $Teams->Team->TeamVision->my_uid = 1;
