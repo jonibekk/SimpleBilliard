@@ -849,7 +849,13 @@ class User extends AppModel
         $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
         $circle_res = [];
         foreach ($circles as $val) {
-            $data['id'] = 'circle_' . $val['Circle']['id'];
+            $data = [];
+            if ($val['Circle']['team_all_flg']) {
+                $data['id'] = 'public';
+            }
+            else {
+                $data['id'] = 'circle_' . $val['Circle']['id'];
+            }
             $data['text'] = $val['Circle']['name'];
             $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
             $circle_res[] = $data;

@@ -204,7 +204,7 @@ class Circle extends AppModel
                 'name Like ?' => "%" . $keyword . "%",
             ],
             'limit'      => $limit,
-            'fields'     => ['name', 'id', 'photo_file_name'],
+            'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
         ];
         $res = $this->find('all', $options);
         return $res;

@@ -121,10 +121,14 @@ class CirclesController extends AppController
         $this->Circle->id = $this->request->params['named']['circle_id'];
         try {
             if (!$this->Circle->exists()) {
-                throw new RuntimeException(__('gl', "このサークルは存在しません。"));
+                throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
             }
             if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-                throw new RuntimeException(__('gl', "サークルの削除ができるのはサークル管理者のみです。"));
+                throw new RuntimeException(__d('gl', "サークルの削除ができるのはサークル管理者のみです。"));
+            }
+            $teamAllCircle = $this->Circle->getTeamAllCircle();
+            if ($teamAllCircle["Circle"]["id"] == $this->Circle->id) {
+                throw new RuntimeException(__d('gl', "チーム全体サークルは削除できません。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
