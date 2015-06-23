@@ -14,6 +14,8 @@ class TeamsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.purpose',
+        'app.goal_category',
         'app.circle_member',
         'app.member_type',
         'app.evaluation_setting',
