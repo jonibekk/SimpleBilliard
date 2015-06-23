@@ -72,4 +72,19 @@ class TeamVision extends AppModel
         ],
         'Team',
     ];
+
+    function saveTeamVision($data)
+    {
+        if (!viaIsSet($data['TeamVision'])) {
+            return false;
+        }
+        $data['TeamVision']['team_id'] = $this->current_team_id;
+
+        if (!viaIsSet($data['TeamVision']['id'])) {
+            $data['TeamVision']['create_user_id'] = $this->my_uid;
+        }
+        $data['TeamVision']['modify_user_id'] = $this->my_uid;
+        $res = $this->save($data);
+        return $res;
+    }
 }
