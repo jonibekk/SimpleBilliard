@@ -732,10 +732,6 @@ class TeamsController extends AppController
 
         if ($this->request->is('get')) {
             $this->request->data = $this->Team->TeamVision->findById($team_vision_id);
-            if (empty($this->request->data)) {
-                $this->Pnotify->outError(__d('gl', "ページが存在しません。"));
-                return $this->redirect($this->referer());
-            }
             return $this->render();
         }
         if (!viaIsSet($this->request->data['TeamVision'])) {

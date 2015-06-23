@@ -819,12 +819,6 @@ class TeamsControllerTest extends ControllerTestCase
                           ['method' => 'POST', 'data' => $data]);
     }
 
-    function testAddGroupVisionNoGroup()
-    {
-        $this->_getTeamsCommonMock();
-        $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
-    }
-
     function _addMemberGroup($Teams)
     {
         $Teams->Team->Group->save(
@@ -840,6 +834,13 @@ class TeamsControllerTest extends ControllerTestCase
                 'group_id' => $Teams->Team->Group->getLastInsertID()
             ]
         );
+    }
+
+    function testAddGroupVisionNoGroup()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $Teams->Team->Group->MemberGroup->deleteAll(['MemberGroup.user_id' => 1, 'MemberGroup.team_id' => 1]);
+        $this->testAction('/teams/add_group_vision', ['method' => 'GET']);
     }
 
     function testAddGroupVisionGet()
