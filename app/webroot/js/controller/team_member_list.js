@@ -1,20 +1,3 @@
-var app = angular.module('myApp', ['ngRoute', 'pascalprecht.translate']).
-
-    config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
-        $routeProvider
-            .when('/', {
-                controller: 'TeamMemberMainController',
-                templateUrl: '/template/team_member_list.html'
-            });
-
-        $translateProvider.useStaticFilesLoader({
-            prefix: '/i18n/locale-',
-            suffix: '.json'
-        });
-        $translateProvider.preferredLanguage('ja');
-        $translateProvider.fallbackLanguage('en');
-    }]);
-
 app.controller("TeamMemberMainController", function ($scope, $http, $translate, $sce) {
 
         var url_list = cake.url;

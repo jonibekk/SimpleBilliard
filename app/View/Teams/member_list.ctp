@@ -28,14 +28,41 @@
 
 </style>
 
-<?php
-echo $this->Html->script('vendor/angular/angular.min');
-echo $this->Html->script('vendor/angular/angular-route.min');
-echo $this->Html->script('vendor/angular/angular-translate.min');
-echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
-echo $this->Html->script('controller/team_member_list');
-?>
+<script>
+    var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate']);
+
+    app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
+        function ($stateProvider, $urlRouterProvider, $translateProvider) {
+            $urlRouterProvider.otherwise("/");
+
+            $stateProvider
+                .state('team_list', {
+                    url: "/",
+                    templateUrl: "/template/team_member_list.html",
+                    controller: 'TeamMemberMainController'
+                });
+
+            $translateProvider.useStaticFilesLoader({
+                prefix: '/i18n/locale-',
+                suffix: '.json'
+            });
+            $translateProvider.preferredLanguage('ja');
+            $translateProvider.fallbackLanguage('en');
+        }]);
+
+</script>
+<?php echo $this->Html->script('controller/team_member_list'); ?>
 
 <div ng-app="myApp">
-    <div ng-controller="TeamMemberMainController" ng-view> ロード中....</div>
+    <div class="col-xs-3">
+        <ul class="nav" style="font-size: 13px;">
+            <li class="active"><a href="#account">チームメンバー一覧</a></li>
+            <li class=""><a href="#profile">チームビジョン一覧</a></li>
+            <li class=""><a class="" href="#notification">グループビジョン一覧</a></li>
+        </ul>
+    </div>
+
+    <div class="col-xs-9">
+        <div ui-view> ロード中....</div>
+    </div>
 </div>

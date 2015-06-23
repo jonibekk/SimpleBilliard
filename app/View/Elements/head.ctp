@@ -49,6 +49,12 @@
     echo $this->fetch('css');
     echo $this->fetch('meta');
 
+    echo $this->Html->script('vendor/angular/angular.min');
+    echo $this->Html->script('vendor/angular/angular-ui-router.min');
+    echo $this->Html->script('vendor/angular/angular-route.min');
+    echo $this->Html->script('vendor/angular/angular-translate.min');
+    echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
+
     ?>
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
