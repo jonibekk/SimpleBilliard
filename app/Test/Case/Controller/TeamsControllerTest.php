@@ -695,32 +695,32 @@ class TeamsControllerTest extends ControllerTestCase
 
     function testAddTeamVisionNotAdmin()
     {
-        $this->_getTeamsCommonMock(null, true, true, false);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
     }
 
     function testAddTeamVisionGet()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
     }
 
     function testAddTeamVisionPostNoData()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/add_team_vision', ['method' => 'POST', 'data' => []]);
     }
 
     function testAddTeamVisionPostEmpty()
     {
-        $this->_getTeamsCommonMock(null, true);
+        $this->_getTeamsCommonMock();
         $this->testAction('/teams/add_team_vision',
                           ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
     }
 
     function testAddTeamVisionPostSuccess()
     {
-        $Teams = $this->_getTeamsCommonMock(null, true);
+        $Teams = $this->_getTeamsCommonMock();
         $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
         $data = [
             'TeamVision' => [
