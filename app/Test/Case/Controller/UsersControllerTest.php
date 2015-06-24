@@ -183,6 +183,62 @@ class UsersControllerTest extends ControllerTestCase
         $this->assertTextNotContains('help-block text-danger', $this->view, "【正常系】[ユーザ登録画面]招待Post");
     }
 
+    function testRegisterValidationError()
+    {
+        $invite_token = 'token_test002';
+
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->generate('Users', [
+            'components' => [
+                'Session'  => ['setFlash'],
+                'Auth'     => ['user'],
+                'Security' => ['_validateCsrf', '_validatePost'],
+            ]
+        ]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+        $value_map = [
+            ["id", 1234567890],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+                    );
+        $Users->Circle->CircleMember->my_uid = 1234567890;
+
+        $data = [
+            'User'  => [
+                'first_name'       => '',
+                'last_name'        => '',
+                'password'         => '12345678',
+                'password_confirm' => '12345678',
+                'agree_tos'        => true,
+                'local_date'       => date('Y-m-d H:i:s'),
+            ],
+            'Email' => [
+                ['email' => 'taro@sato.comaaaaaa'],
+            ]
+        ];
+        $this->testAction(
+            '/users/register/invite_token:' . $invite_token,
+            [
+                'return' => 'contents',
+                'data'   => $data,
+                'method' => 'post',
+            ]
+        );
+    }
+
     function testSentMailSuccess()
     {
         Configure::write('Config.language', 'ja');
@@ -321,6 +377,11 @@ class UsersControllerTest extends ControllerTestCase
         ];
         $Users->Auth->logout();
         $this->testAction('/users/login', ['data' => $data, 'method' => 'post']);
+    }
+
+    function testLoginWithUvParam()
+    {
+        $this->testAction('/users/login?uv_login=1', ['method' => 'GET']);
     }
 
     function testLogout()
@@ -751,6 +812,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $this->testAction('/users/password_reset');
+        $this->testAction('/users/password_reset', ['method' => 'GET']);
     }
 
     function testPasswordResetWithParam()
@@ -764,6 +826,7 @@ class UsersControllerTest extends ControllerTestCase
             ]
         ]);
         $this->testAction('/users/password_reset/aaaaa');
+        $this->testAction('/users/password_reset/aaaaa', ['method' => 'GET']);
 
     }
 
@@ -844,6 +907,7 @@ class UsersControllerTest extends ControllerTestCase
         $UserTest->User->Email->save($email);
         $UserTest->User->save($user);
         $this->testAction('users/password_reset/' . $user['User']['password_token']);
+        $this->testAction('users/password_reset/' . $user['User']['password_token'], ['method' => 'GET']);
     }
 
     function testPasswordResetPostPassword()
@@ -1424,6 +1488,7 @@ class UsersControllerTest extends ControllerTestCase
         ];
         $user = $Users->User->getDetail("2");
         $Users->User->me = $user['User'];
+        $Users->Circle->CircleMember->my_uid = 2;
 
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1455,6 +1520,7 @@ class UsersControllerTest extends ControllerTestCase
         ];
         $user = $Users->User->getDetail("1");
         $Users->User->me = $user['User'];
+        $Users->Circle->CircleMember->my_uid = 1;
 
         /** @noinspection PhpUndefinedMethodInspection */
         $Users->Auth->expects($this->any())->method('loggedIn')
@@ -1493,6 +1559,7 @@ class UsersControllerTest extends ControllerTestCase
                     ->will($this->returnValueMap($value_map));
         $user = $Users->User->getDetail("10");
         $Users->User->me = $user['User'];
+        $Users->Circle->CircleMember->my_uid = 10;
 
         try {
             $this->testAction('users/accept_invite/' . $intite_token, ['method' => 'GET', 'return' => 'contents']);
