@@ -5,7 +5,8 @@
 -->
 
 <div class="pull-right" style="padding-bottom:10px;">
-    <a ui-sref="vision_archive({team_id:1, active_flg:0})">アーカイブを見る</a>
+    <a ng-if="archive_flag === false" ui-sref="vision_archive({team_id:1, active_flg:0})">アーカイブを見る</a>
+    <a ng-if="archive_flag === true" ui-sref="vision({team_id:1})">チームビジョン一覧に戻る</a>
 </div>
 
 

@@ -5,6 +5,7 @@ app.controller("TeamVisionController", function ($scope, $http, $translate, team
         team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
     });
     $scope.teamVisionList = team_vision_list;
+    $scope.archive_flag = false;
 
 });
 
@@ -15,5 +16,5 @@ app.controller("TeamVisionArchiveController", function ($scope, $http, $translat
         team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
     });
     $scope.teamVisionList = team_vision_list;
-
+    $scope.archive_flag = true;
 });
