@@ -91,10 +91,10 @@ class TeamVision extends AppModel
         return $res;
     }
 
-    function getTeamVision($team_id, $active_flg = 1)
+    function getTeamVision($team_id, $active_flg)
     {
         $options = [
-            'condition' => [
+            'conditions' => [
                 'team_id' => $team_id,
                 'active_flg' => $active_flg
             ]

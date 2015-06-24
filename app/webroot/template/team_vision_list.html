@@ -4,6 +4,11 @@
 </div>
 -->
 
+<div class="pull-right" style="padding-bottom:10px;">
+    <a ui-sref="vision_archive({team_id:1, active_flg:0})">アーカイブを見る</a>
+</div>
+
+
 <table class="table team_member_table">
     <tr ng-repeat="item in teamVisionList">
         <td width="20%">
@@ -11,6 +16,7 @@
         </td>
         <td>
             <p class="vision_title">{{item.TeamVision.name}}</p>
+
             <div class="vision_modified_date">
                 最終更新日:
                 <span ng-bind-html="item.TeamVision.modified"/>

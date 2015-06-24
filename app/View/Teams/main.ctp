@@ -18,6 +18,7 @@
         padding: 5px;
         font-size: 13px;
     }
+
     .team_member_table {
         background-color: #ffffff;
         font-size: 14px;
@@ -59,12 +60,30 @@
                     templateUrl: "/template/team_vision_list.html",
                     controller: 'TeamVisionController',
                     resolve: {
-                        teamVisionList: ['$stateParams', '$http', function($stateParams, $http) {
+                        teamVisionList: ['$stateParams', '$http', function ($stateParams, $http) {
                             var request = {
                                 method: 'GET',
-                                url:cake.url.u + $stateParams.team_id
+                                url: cake.url.u + $stateParams.team_id
                             }
-                            return $http(request).then(function(response){
+                            return $http(request).then(function (response) {
+                                return response.data;
+                            })
+
+                        }]
+                    }
+
+                })
+                .state('vision_archive', {
+                    url: "/vision_archive/:team_id/:active_flg",
+                    templateUrl: "/template/team_vision_list.html",
+                    controller: 'TeamVisionArchiveController',
+                    resolve: {
+                        teamVisionArchiveList: ['$stateParams', '$http', function ($stateParams, $http) {
+                            var request = {
+                                method: 'GET',
+                                url: cake.url.u + $stateParams.team_id + '/' + $stateParams.active_flg
+                            }
+                            return $http(request).then(function (response) {
                                 return response.data;
                             })
 
