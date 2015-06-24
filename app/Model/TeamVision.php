@@ -102,6 +102,12 @@ class TeamVision extends AppModel
         return $this->find('all', $options);
     }
 
+    function setTeamVisionActiveFlag($team_vision_id, $active_flg)
+    {
+        $this->id = $team_vision_id;
+        return $this->save(['active_flg' => $active_flg]);
+    }
+
     function convertData($data) {
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());

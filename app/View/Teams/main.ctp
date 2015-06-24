@@ -89,7 +89,23 @@
 
                         }]
                     }
-
+                })
+                .state('set_vision_archive', {
+                    url: "/set_vision_archive/:team_vision_id/:active_flg",
+                    resolve: {
+                        setVisionArchive: ['$stateParams', '$http', function ($stateParams, $http) {
+                            var request = {
+                                method: 'GET',
+                                url: cake.url.v + $stateParams.team_vision_id + '/' + $stateParams.active_flg
+                            }
+                            return $http(request).then(function (response) {
+                                return response.data;
+                            })
+                        }]
+                    },
+                    controller: function($state){
+                        $state.go('vision', {team_id:1});
+                    }
                 })
                 .state('group_vision', {
                     url: "/group_vision",

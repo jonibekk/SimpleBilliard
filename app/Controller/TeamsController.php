@@ -599,6 +599,12 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($team_vision_list);
     }
 
+    function ajax_set_team_vision_archive($team_archive_id, $active_flg = 1)
+    {
+        $res = $this->Team->TeamVision->setTeamVisionActiveFlag($team_archive_id, $active_flg);
+        return $this->_ajaxGetResponse($res);
+    }
+
     function ajax_get_team_member_init()
     {
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
