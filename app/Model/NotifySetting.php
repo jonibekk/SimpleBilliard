@@ -332,9 +332,9 @@ class NotifySetting extends AppModel
                     //アプリがoff
                     $res_data[$val['NotifySetting']['user_id']]['app'] = false;
                 }
-                if (!$val['NotifySetting'][$field_prefix . '_email_flg']) {
-                    //メールがoff
-                    $res_data[$val['NotifySetting']['user_id']]['email'] = false;
+                if ($val['NotifySetting'][$field_prefix . '_email_flg']) {
+                    //メールがon
+                    $res_data[$val['NotifySetting']['user_id']]['email'] = true;
                 }
                 //引数のユーザリストから除去
                 if (($array_key = array_search($val['NotifySetting']['user_id'], $user_ids)) !== false) {
