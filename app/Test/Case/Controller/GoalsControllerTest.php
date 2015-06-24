@@ -514,6 +514,14 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add_completed_action/', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testAddCompletedActionFailNoData()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [];
+        $this->testAction('/goals/add_completed_action/goal_id:1', ['method' => 'POST', 'data' => $data]);
+    }
+
     function testAddCompletedActionSuccessNoKR()
     {
         $Goals = $this->_getGoalsCommonMock();

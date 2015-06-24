@@ -902,8 +902,8 @@ class GoalsController extends AppController
      */
     public function add_completed_action()
     {
-        if (!$goal_id = viaIsSet($this->request->params['named']['goal_id'])) {
-            $goal_id = viaIsSet($this->request->data['ActionResult']['goal_id']);
+        if (!$goal_id = isset($this->request->params['named']['goal_id']) ? $this->request->params['named']['goal_id'] : null) {
+            $goal_id = isset($this->request->data['ActionResult']['goal_id']) ? $this->request->data['ActionResult']['goal_id'] : null;
         }
         if (!$goal_id) {
             $this->Pnotify->outError(__d('gl', "アクションの追加に失敗しました。。"));
@@ -916,7 +916,7 @@ class GoalsController extends AppController
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
-            $share = viaIsSet($this->request->data['ActionResult']['share']);
+            $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,

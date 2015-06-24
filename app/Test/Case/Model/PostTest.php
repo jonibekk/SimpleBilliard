@@ -518,6 +518,13 @@ class PostTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
+    function testDoShareNoData()
+    {
+        $this->_setDefault();
+        $res = $this->Post->doShare(1, "");
+        $this->assertFalse($res);
+    }
+
     function _setDefault()
     {
         $uid = '1';
