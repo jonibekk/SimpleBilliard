@@ -60,7 +60,7 @@
                 <div class="row form-group m_0px none" id="PostFormImage">
                     <ul class="col input-images post-images">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <li>
+                        <li id="WrapPhotoForm_Post_<?= $i ?>">
                             <?= $this->element('Feed/photo_upload',
                                                ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
                             </li><?php endfor ?>
@@ -134,7 +134,7 @@
                 <div class="row form-group m_0px" id="CommonActionFormImage">
                     <ul class="col input-images post-images">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <li>
+                        <li id="WrapPhotoForm_Action_<?= $i ?>">
                             <?= $this->element('Feed/photo_upload',
                                                ['type' => 'action_result', 'index' => $i, 'submit_id' => 'CommonActionSubmit']) ?>
                             </li><?php endfor ?>
