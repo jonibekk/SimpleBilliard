@@ -131,7 +131,7 @@
                     "required"       => false
                 ])
                 ?>
-                <div class="row form-group m_0px none" id="CommonActionFormImage">
+                <div class="row form-group m_0px" id="CommonActionFormImage">
                     <ul class="col input-images post-images">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                             <li>
@@ -162,13 +162,6 @@
             </div>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="CommonActionFormFooter">
-                    <a href="#" class="target-show-target-click link-red" target-id="CommonActionFormImage"
-                       click-target-id="CommonAction__Photo_1">
-                        <button type="button" class="btn pull-left photo-up-btn"><i
-                                class="fa fa-camera post-camera-icon"></i>
-                        </button>
-                    </a>
-
                     <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                         <?=
                         $this->Form->submit(__d('gl', "アクション登録"),
