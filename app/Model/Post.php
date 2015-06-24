@@ -874,7 +874,7 @@ class Post extends AppModel
      * @return mixed
      * @throws Exception
      */
-    function addGoalPost($type, $goal_id, $uid = null, $public = true, $model_id = null, $share = [])
+    function addGoalPost($type, $goal_id, $uid = null, $public = true, $model_id = null, $share = null)
     {
         if (!$uid) {
             $uid = $this->my_uid;
@@ -897,7 +897,7 @@ class Post extends AppModel
                 break;
         }
         $res = $this->save($data);
-        if ($res && !empty($share)) {
+        if ($res && $share) {
             return $this->doShare($this->getLastInsertID(), $share);
         }
         return $res;
@@ -905,7 +905,7 @@ class Post extends AppModel
 
     function doShare($post_id, $share)
     {
-        if (empty($share)) {
+        if (!$share) {
             return false;
         }
         $public = false;
@@ -922,31 +922,32 @@ class Post extends AppModel
             $this->saveField('public_flg', true);
         }
         //TODO ここまで
-
-        if (!empty($share)) {
-            //ユーザとサークルに分割
-            $users = [];
-            $circles = [];
-            foreach ($share as $val) {
-                //ユーザの場合
-                if (stristr($val, 'user_')) {
-                    $users[] = str_replace('user_', '', $val);
-                }
-                //サークルの場合
-                elseif (stristr($val, 'circle_')) {
-                    $circles[] = str_replace('circle_', '', $val);
-                }
-            }
-            //共有ユーザ保存
-            $this->PostShareUser->add($post_id, $users);
-            //共有サークル保存
-            $this->PostShareCircle->add($post_id, $circles);
-            //共有サークル指定されてた場合の未読件数更新
-            $this->User->CircleMember->incrementUnreadCount($circles);
-            //共有サークル指定されてた場合、更新日時更新
-            $this->User->CircleMember->updateModified($circles);
-            $this->PostShareCircle->Circle->updateModified($circles);
+        if (empty($share)) {
+            return true;
         }
+
+        //ユーザとサークルに分割
+        $users = [];
+        $circles = [];
+        foreach ($share as $val) {
+            //ユーザの場合
+            if (stristr($val, 'user_')) {
+                $users[] = str_replace('user_', '', $val);
+            }
+            //サークルの場合
+            elseif (stristr($val, 'circle_')) {
+                $circles[] = str_replace('circle_', '', $val);
+            }
+        }
+        //共有ユーザ保存
+        $this->PostShareUser->add($post_id, $users);
+        //共有サークル保存
+        $this->PostShareCircle->add($post_id, $circles);
+        //共有サークル指定されてた場合の未読件数更新
+        $this->User->CircleMember->incrementUnreadCount($circles);
+        //共有サークル指定されてた場合、更新日時更新
+        $this->User->CircleMember->updateModified($circles);
+        $this->PostShareCircle->Circle->updateModified($circles);
         return true;
     }
 

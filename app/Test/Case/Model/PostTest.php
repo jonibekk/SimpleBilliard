@@ -389,7 +389,7 @@ class PostTest extends CakeTestCase
     function testAddGoalPost()
     {
         $this->Post->current_team_id = 1;
-        $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1);
+        $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1, true, null, 'public');
     }
 
     function testGetRelatedPostList()
@@ -509,6 +509,13 @@ class PostTest extends CakeTestCase
         $this->_setDefault();
         $res = $this->Post->execRedPostComment(1, true);
         $this->assertNull($res);
+    }
+
+    function testDoShare()
+    {
+        $this->_setDefault();
+        $res = $this->Post->doShare(1, 'public,circle_1,user_1');
+        $this->assertTrue($res);
     }
 
     function _setDefault()
