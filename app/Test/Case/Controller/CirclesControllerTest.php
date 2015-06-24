@@ -226,6 +226,22 @@ class CirclesControllerTest extends ControllerTestCase
 
     }
 
+    function testJoinTeamAllCircle()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                [
+                    'join'      => true,
+                    'circle_id' => "3",
+                ],
+            ],
+        ];
+        $this->testAction('/circles/join',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
+    }
+
     function testJoinFail()
     {
         $this->_getCirclesCommonMock();
