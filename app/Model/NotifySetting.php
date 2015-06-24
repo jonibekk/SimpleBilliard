@@ -314,7 +314,7 @@ class NotifySetting extends AppModel
         }
         $default_data = [
             'app'   => true,
-            'email' => true,
+            'email' => false,
         ];
         $options = array(
             'conditions' => array(
