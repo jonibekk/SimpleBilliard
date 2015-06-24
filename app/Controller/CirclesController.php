@@ -67,14 +67,15 @@ class CirclesController extends AppController
         $this->Circle->id = $this->request->params['named']['circle_id'];
         try {
             if (!$this->Circle->exists()) {
-                throw new RuntimeException(__('gl', "このサークルは存在しません。"));
+                throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
             }
             if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-                throw new RuntimeException(__('gl', "サークルの変更ができるのはサークル管理者のみです。"));
+                throw new RuntimeException(__d('gl', "サークルの変更ができるのはサークル管理者のみです。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
+            return;
         }
         $this->request->allowMethod('put');
         $before_circle = $this->Circle->read();
@@ -87,21 +88,7 @@ class CirclesController extends AppController
             $is_privacy_changed = true;
         }
         // team_all_flg は変更不可
-        unset($this->request->data['Circle']['team_all_flg']);
-        // 「チーム全体」サークルの場合、編集可能な項目のみに絞る
-        if (isset($before_circle['Circle']['team_all_flg']) &&
-            $before_circle['Circle']['team_all_flg']
-        ) {
-            $editable_keys = ['id', 'name', 'description', 'photo'];
-            $data = [];
-            foreach ($editable_keys as $key) {
-                if (isset($this->request->data['Circle'][$key])) {
-                    $data['Circle'][$key] = $this->request->data['Circle'][$key];
-                }
-            }
-            $data['Circle']['team_all_flg'] = 1;
-            $this->request->data = $data;
-        }
+        $this->request->data['Circle']['team_all_flg'] = $before_circle['Circle']['team_all_flg'];
 
         if ($this->Circle->edit($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
