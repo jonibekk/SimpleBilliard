@@ -1,1 +1,21 @@
-team vision
+<!--
+<div class="team-button pull-right" style="padding-bottom:10px">
+    <a class="btn btn-primary" style="border-radius: 10px; font-size: 13px">チームビジョン作成</a>
+</div>
+-->
+
+<table class="table team_member_table">
+    <tr ng-repeat="item in teamVisionList">
+        <td width="20%">
+            <img ng-src="{{item.TeamVision.photo_path}}"/>
+        </td>
+        <td>
+            <p class="vision_title">{{item.TeamVision.name}}</p>
+            <div class="vision_modified_date">
+                最終更新日:
+                <span ng-bind-html="item.TeamVision.modified"/>
+            </div>
+            <p class="vision_description">{{item.TeamVision.description}}</p>
+        </td>
+    </tr>
+</table>

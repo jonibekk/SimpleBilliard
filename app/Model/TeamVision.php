@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * TeamVision Model
@@ -86,5 +89,26 @@ class TeamVision extends AppModel
         $data['TeamVision']['modify_user_id'] = $this->my_uid;
         $res = $this->save($data);
         return $res;
+    }
+
+    function getTeamVision($team_id, $active_flg = 1)
+    {
+        $options = [
+            'condition' => [
+                'team_id' => $team_id,
+                'active_flg' => $active_flg
+            ]
+        ];
+        return $this->find('all', $options);
+    }
+
+    function convertData($data) {
+        $upload = new UploadHelper(new View());
+        $time = new TimeExHelper(new View());
+        foreach ($data as $key => $team) {
+            $data[$key]['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo', ['style' => 'large']);
+            $data[$key]['TeamVision']['modified'] = $time->elapsedTime(h($team['TeamVision']['modified']));
+        }
+        return $data;
     }
 }

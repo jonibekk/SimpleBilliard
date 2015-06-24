@@ -592,6 +592,13 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    function ajax_get_team_vision($team_id)
+    {
+        $res = $this->Team->TeamVision->getTeamVision($team_id);
+        $team_vision_list = $this->Team->TeamVision->convertData($res);
+        return $this->_ajaxGetResponse($team_vision_list);
+    }
+
     function ajax_get_team_member_init()
     {
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
