@@ -157,6 +157,8 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        $Users->Circle->CircleMember->my_uid = 1234567890;
+
         $data = [
             'User'  => [
                 'first_name'       => 'taro',
