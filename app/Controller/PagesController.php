@@ -67,9 +67,7 @@ class PagesController extends AppController
         $this->_setViewValOnRightColumn();
         // チーム全体サークル
         $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
-        if ($teamAllCircle) {
-            $this->set('team_all_circle', $teamAllCircle);
-        }
+        $this->set('team_all_circle', $teamAllCircle);
         $current_global_menu = "home";
         $feed_filter = 'all';
         $this->set(compact('feed_filter', 'current_global_menu'));
