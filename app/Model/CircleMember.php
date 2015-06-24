@@ -96,6 +96,7 @@ class CircleMember extends AppModel
                         'Circle.description',
                         'Circle.public_flg',
                         'Circle.photo_file_name',
+                        'Circle.team_all_flg',
                     ]
                 ]
             ]
@@ -252,11 +253,19 @@ class CircleMember extends AppModel
         $join_circles = [];
         foreach ($postData['Circle'] as $val) {
             $joined = false;
+            $team_all = false;
             foreach ($my_circles as $my_circle) {
                 if ($val['circle_id'] == $my_circle['CircleMember']['circle_id']) {
                     $joined = true;
+                    if ($my_circle['Circle']['team_all_flg']) {
+                        $team_all = true;
+                    }
                     break;
                 }
+            }
+            // チーム全体サークルは変更不可
+            if ($team_all) {
+                continue;
             }
             if ($val['join']) {
                 //既に参加しているサークル以外を追加
