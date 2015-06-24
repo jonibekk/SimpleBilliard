@@ -12,8 +12,7 @@
 <!-- START app/View/Elements/Feed/display_share_range.ctp -->
 <div class="font_11px font_lightgray">
     <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
-    <?php if ($post['Post']['type'] != Post::TYPE_ACTION
-        && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
+    <?php if ($post['Post']['type'] != Post::TYPE_KR_COMPLETE
     ): ?>
         <span class="font_lightgray"> ･ </span>
         <?php //公開の場合
