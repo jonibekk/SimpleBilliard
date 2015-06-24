@@ -111,7 +111,7 @@
                     'wrapInput' => '',
                     'class'     => 'form-control',
                 ],
-                'id'            => 'PostDisplayForm',
+                'id'            => 'CommonActionDisplayForm',
                 'type'          => 'file',
                 'novalidate'    => true,
                 'class'         => 'form-feed-notify'
