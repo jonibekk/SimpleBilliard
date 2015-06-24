@@ -902,27 +902,33 @@ class GoalsController extends AppController
      */
     public function add_completed_action()
     {
-        $goal_id = $this->request->params['named']['goal_id'];
+        if (!$goal_id = viaIsSet($this->request->params['named']['goal_id'])) {
+            $goal_id = viaIsSet($this->request->data['ActionResult']['goal_id']);
+        }
+        if (!$goal_id) {
+            $this->Pnotify->outError(__d('gl', "アクションの追加に失敗しました。。"));
+            $this->redirect($this->referer());
+        }
+
         $this->request->allowMethod('post');
         try {
             $this->Goal->begin();
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
+            $share = viaIsSet($this->request->data['ActionResult']['share']);
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
-                                                   $this->Goal->ActionResult->getLastInsertID())
+                                                   $this->Goal->ActionResult->getLastInsertID(), $share)
             ) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }
-
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
-
         $this->Goal->commit();
 
         // pusherに通知

@@ -104,7 +104,7 @@
         </div>
         <div class="tab-pane fade" id="ActionForm">
             <?= $this->Form->create('ActionResult', [
-                'url'           => ['controller' => 'goals', 'action' => 'add_completed_action', 'goal_id' => ""],
+                'url'           => ['controller' => 'goals', 'action' => 'add_completed_action'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -118,7 +118,7 @@
             ]); ?>
             <div class="post-panel-body plr_11px ptb_7px">
                 <?=
-                $this->Form->input('ActionResult.name', [
+                $this->Form->input('name', [
                     'label'          => false,
                     'type'           => 'textarea',
                     'wrap'           => 'soft',
@@ -136,11 +136,20 @@
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                             <li>
                             <?= $this->element('Feed/photo_upload',
-                                               ['type' => 'post', 'index' => $i, 'submit_id' => 'CommonActionSubmit']) ?>
+                                               ['type' => 'action_result', 'index' => $i, 'submit_id' => 'CommonActionSubmit']) ?>
                             </li><?php endfor ?>
                     </ul>
                     <span class="help-block" id="CommonAction__Photo_ValidateMessage"></span>
                 </div>
+            </div>
+            <div class="panel-body post-share-range-panel-body" id="">
+                <?=
+                $this->Form->input('goal_id', [
+                    'label'    => __d('gl', "ゴール"),
+                    'required' => true,
+                    'options'  => $goal_list_for_action_option,
+                ])
+                ?>
             </div>
             <div class="panel-body post-share-range-panel-body" id="CommonActionFormShare">
                 <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
