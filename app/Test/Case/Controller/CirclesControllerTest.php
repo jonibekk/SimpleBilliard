@@ -217,7 +217,7 @@ class CirclesControllerTest extends ControllerTestCase
                 ],
                 [
                     'join'      => true,
-                    'circle_id' => "3",
+                    'circle_id' => "4",
                 ],
             ],
         ];

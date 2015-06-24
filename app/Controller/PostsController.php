@@ -65,10 +65,8 @@ class PostsController extends AppController
         // チーム全体公開が含まれている場合は、「チーム全体」サークルに共有
         if (in_array("public", $share)) {
             $teamAllCircle = $this->Circle->getTeamAllCircle();
-            if ($teamAllCircle) {
-                $this->NotifyBiz->push($socketId, "circle_" . $teamAllCircle["Circle"]["id"]);
-                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
-            }
+            $this->NotifyBiz->push($socketId, "circle_" . $teamAllCircle["Circle"]["id"]);
+            $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
         }
         else {
             $share_circle = false;
