@@ -5,8 +5,8 @@
 -->
 
 <div class="pull-right" style="padding-bottom:10px;">
-    <a ng-if="archive_flag === false" ui-sref="vision_archive({team_id:1, active_flg:0})">アーカイブを見る</a>
-    <a ng-if="archive_flag === true" ui-sref="vision({team_id:1})">チームビジョン一覧に戻る</a>
+    <a ng-if="archive_flag === false" ui-sref="vision_archive({team_id:team_id, active_flg:0})">アーカイブを見る</a>
+    <a ng-if="archive_flag === true" ui-sref="vision({team_id:team_id})">チームビジョン一覧に戻る</a>
 </div>
 
 
@@ -19,6 +19,10 @@
             <div class="row">
                 <div class="col-xs-11">
                     <p class="vision_title">{{item.TeamVision.name}}</p>
+                    <div class="vision_modified_date">
+                        最終更新日:
+                        <span ng-bind-html="item.TeamVision.modified"/>
+                    </div>
                 </div>
                 <div class="col-xs-1">
                     <div class="pull-right header-function dropdown">
@@ -42,10 +46,6 @@
             </div>
 
             <div class="row">
-                <div class="vision_modified_date">
-                    最終更新日:
-                    <span ng-bind-html="item.TeamVision.modified"/>
-                </div>
 
                 <p class="vision_description">{{item.TeamVision.description}}</p>
             </div>

@@ -1,4 +1,27 @@
-var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate']);
+var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate'])
+    .run(['$rootScope', '$state', '$stateParams', '$http', '$translate',
+        function ($rootScope, $state, $stateParams, $http, $translate) {
+
+            $rootScope.$state = $state;
+            $rootScope.$stateParams = $stateParams;
+
+
+            $http.get(cake.url.j).success(function (data) {
+                console.log(data);
+
+                $rootScope.team_id = data.current_team_id;
+                $rootScope.login_user_id = data.login_user_id;
+                $rootScope.login_user_admin_flg = data.login_user_admin_flg;
+
+                $rootScope.login_user_language = data.login_user_language;
+                if ($rootScope.login_user_language === 'eng') {
+                    $translate.use('en');
+                }
+                $rootScope.admin_user_cnt = data.admin_user_cnt;
+            });
+        }]
+);
+
 
 app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
     function ($stateProvider, $urlRouterProvider, $translateProvider) {
