@@ -179,4 +179,14 @@ class CircleMemberTest extends CakeTestCase
         $this->assertNotEquals($expected, $result);
     }
 
+    public function testGetMyCircle()
+    {
+        $this->CircleMember->my_uid = 1;
+        $this->CircleMember->current_team_id = 1;
+        $result = $this->CircleMember->getMyCircle();
+        $this->assertNotEmpty($result);
+        // 先頭はチーム全体サークル
+        $this->assertEquals(1, $result[0]['Circle']['team_all_flg']);
+    }
+
 }

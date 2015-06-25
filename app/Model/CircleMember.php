@@ -87,7 +87,7 @@ class CircleMember extends AppModel
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ],
-            'order'      => ['Circle.modified desc'],
+            'order'      => ['Circle.team_all_flg desc', 'Circle.modified desc'],
             'contain'    => [
                 'Circle' => [
                     'fields' => [

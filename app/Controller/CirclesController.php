@@ -144,6 +144,14 @@ class CirclesController extends AppController
             $this->Circle->getPublicCircles('non-joined', strtotime("-1 week"), null, 'Circle.created desc'),
             $this->Circle->getPublicCircles('non-joined', null, strtotime("-1 week"), 'Circle.modified desc')
         );
+        // チーム全体サークルを先頭に移動する
+        foreach ($joined_circles as $k => $circle) {
+            if ($circle['Circle']['team_all_flg']) {
+                $team_all_circle = array_splice($joined_circles, $k, 1);
+                array_unshift($joined_circles, $team_all_circle[0]);
+                break;
+            }
+        }
         $this->set(compact('joined_circles', 'non_joined_circles'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
