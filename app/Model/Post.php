@@ -276,22 +276,6 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getPublicList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
-    {
-        $options = [
-            'conditions' => [
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-                'public_flg'               => true,
-            ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['id'],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
     /**
      * @param        $start
      * @param        $end
@@ -410,8 +394,6 @@ class Post extends AppModel
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
-            //公開の投稿
-            $p_list = array_merge($p_list, $this->getPublicList($start, $end));
             //自分の投稿
             $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
             //自分が共有範囲指定された投稿
