@@ -168,7 +168,7 @@ class Circle extends AppModel
             return false;
         }
         // チーム全体サークルでない場合は、メンバーの編集処理を行う
-        if (!(isset($data['Circle']['team_all_flg']) && $data['Circle']['team_all_flg'])) {
+        if (!viaIsSet($data['Circle']['team_all_flg'])) {
             //既存のメンバーを取得
             $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
             if (isset($data['Circle']['members']) && !empty($data['Circle']['members'])) {
@@ -305,6 +305,7 @@ class Circle extends AppModel
                 'Circle.name',
                 'Circle.photo_file_name',
                 'Circle.circle_member_count',
+                'Circle.created',
                 'Circle.modified',
             ],
             'contain'    => [

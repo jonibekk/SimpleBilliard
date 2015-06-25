@@ -87,7 +87,7 @@ class CircleMember extends AppModel
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ],
-            'order'      => ['Circle.modified desc'],
+            'order'      => ['Circle.team_all_flg desc', 'Circle.modified desc'],
             'contain'    => [
                 'Circle' => [
                     'fields' => [
@@ -249,23 +249,29 @@ class CircleMember extends AppModel
         }
         //自分の所属しているサークルを取得
         $my_circles = $this->getMyCircle();
+        // チーム全体サークルのIDを確認
+        $team_all_circle_id = null;
+        foreach ($my_circles as $c) {
+            if ($c['Circle']['team_all_flg']) {
+                $team_all_circle_id = $c['Circle']['id'];
+                break;
+            }
+        }
+
         $un_join_circles = [];
         $join_circles = [];
         foreach ($postData['Circle'] as $val) {
+            // チーム全体サークルは変更不可
+            if ($val['circle_id'] == $team_all_circle_id) {
+                continue;
+            }
+
             $joined = false;
-            $team_all = false;
             foreach ($my_circles as $my_circle) {
                 if ($val['circle_id'] == $my_circle['CircleMember']['circle_id']) {
                     $joined = true;
-                    if ($my_circle['Circle']['team_all_flg']) {
-                        $team_all = true;
-                    }
                     break;
                 }
-            }
-            // チーム全体サークルは変更不可
-            if ($team_all) {
-                continue;
             }
             if ($val['join']) {
                 //既に参加しているサークル以外を追加
