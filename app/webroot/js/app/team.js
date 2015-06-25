@@ -1,13 +1,11 @@
-var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate'])
+var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap'])
     .run(['$rootScope', '$state', '$stateParams', '$http', '$translate',
         function ($rootScope, $state, $stateParams, $http, $translate) {
 
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
 
-
             $http.get(cake.url.j).success(function (data) {
-                console.log(data);
 
                 $rootScope.team_id = data.current_team_id;
                 $rootScope.login_user_id = data.login_user_id;

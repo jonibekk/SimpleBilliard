@@ -5,6 +5,7 @@
 <?php echo $this->Html->script('controller/team_member_list'); ?>
 <?php echo $this->Html->script('controller/team_vision_list'); ?>
 
+
 <div ng-app="myApp">
     <div class="col-xs-3">
         <ul class="nav" style="font-size: 13px;">
