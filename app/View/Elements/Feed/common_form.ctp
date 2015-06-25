@@ -18,7 +18,7 @@
                                               class="switch-post-anchor"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
-                                         class="switch-action-anchor develop--forbiddenLink"><i
+                                         class="switch-action-anchor"><i
                         class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab"
                                         class="switch-badge-anchor develop--forbiddenLink"><i
@@ -60,7 +60,7 @@
                 <div class="row form-group m_0px none" id="PostFormImage">
                     <ul class="col input-images post-images">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <li>
+                        <li id="WrapPhotoForm_Post_<?= $i ?>">
                             <?= $this->element('Feed/photo_upload',
                                                ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
                             </li><?php endfor ?>
@@ -103,7 +103,73 @@
             <?= $this->Form->end() ?>
         </div>
         <div class="tab-pane fade" id="ActionForm">
-            action
+            <?= $this->Form->create('ActionResult', [
+                'url'           => ['controller' => 'goals', 'action' => 'add_completed_action'],
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => false,
+                    'wrapInput' => '',
+                    'class'     => 'form-control',
+                ],
+                'id'            => 'CommonActionDisplayForm',
+                'type'          => 'file',
+                'novalidate'    => true,
+                'class'         => 'form-feed-notify'
+            ]); ?>
+            <div class="post-panel-body plr_11px ptb_7px">
+                <?=
+                $this->Form->input('name', [
+                    'label'          => false,
+                    'type'           => 'textarea',
+                    'wrap'           => 'soft',
+                    'rows'           => 1,
+                    'required'       => true,
+                    'placeholder'    => __d('gl', "今日やったアクションを共有しよう！"),
+                    'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align change-warning',
+                    'target_show_id' => "CommonActionFormFooter",
+                    'target-id'      => "CommonActionSubmit",
+                    "required"       => false
+                ])
+                ?>
+                <div class="row form-group m_0px" id="CommonActionFormImage">
+                    <ul class="col input-images post-images">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <li id="WrapPhotoForm_Action_<?= $i ?>">
+                            <?= $this->element('Feed/photo_upload',
+                                               ['type' => 'action_result', 'index' => $i, 'submit_id' => 'CommonActionSubmit']) ?>
+                            </li><?php endfor ?>
+                    </ul>
+                    <span class="help-block" id="CommonAction__Photo_ValidateMessage"></span>
+                </div>
+            </div>
+            <div class="panel-body post-share-range-panel-body" id="">
+                <?=
+                $this->Form->input('goal_id', [
+                    'label'    => __d('gl', "ゴール"),
+                    'required' => true,
+                    'options'  => $goal_list_for_action_option,
+                ])
+                ?>
+            </div>
+            <div class="panel-body post-share-range-panel-body" id="CommonActionFormShare">
+                <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
+                    <?=
+                    $this->Form->hidden('share',
+                                        ['id' => 'select2ActionCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
+                    <?php $this->Form->unlockField('ActionResult.share') ?>
+                    <?php $this->Form->unlockField('socket_id') ?>
+                </div>
+            </div>
+            <div class="post-panel-footer">
+                <div class="font_12px none" id="CommonActionFormFooter">
+                    <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
+                        <?=
+                        $this->Form->submit(__d('gl', "アクション登録"),
+                                            ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit', 'disabled' => 'disabled']) ?>
+                    </div>
+                </div>
+            </div>
+            <?= $this->Form->end() ?>
         </div>
         <div class="tab-pane fade" id="BadgeForm">
             badge
