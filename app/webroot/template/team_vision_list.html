@@ -24,7 +24,7 @@
                         <span ng-bind-html="item.TeamVision.modified"/>
                     </div>
                 </div>
-                <div class="col-xs-1">
+                <div class="col-xs-1" ng-if="login_user_admin_flg === true">
                     <div class="pull-right header-function dropdown">
                         <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                                 id="dropdownMenu1"
@@ -37,7 +37,7 @@
                             aria-labelledby="dropdownMenu1">
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1" ui-sref="set_vision_archive({team_vision_id:item.TeamVision.id, active_flg:0})">アーカイブ</a>
-                                <a role="menuitem" tabindex="-1">編集</a>
+                                <a role="menuitem" tabindex="-1" ng-href="/teams/edit_team_vision/team_vision_id:{{item.TeamVision.id}}">編集</a>
                                 <a role="menuitem" tabindex="-1">削除</a>
                             </li>
                         </ul>
