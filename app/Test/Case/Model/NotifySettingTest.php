@@ -66,26 +66,30 @@ class NotifySettingTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testIsOnNotify()
+    function testIsOnNotify1()
     {
         $uid = 1000000;
-        $uid2 = 9999999;
         $this->NotifySetting->my_uid = 1;
         $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
-            $uid => ['app' => true, 'email' => true]
+            $uid => ['app' => true, 'email' => false]
         ];
         $this->assertEquals($expected, $res, "通知設定なし");
         $data = ['feed_post_app_flg' => false, 'feed_post_email_flg' => false, 'user_id' => $uid];
         $this->NotifySetting->save($data);
-        $notifi_setting_id = $this->NotifySetting->getLastInsertID();
         $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app' => false, 'email' => false]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、off");
-        $data = ['id' => $notifi_setting_id, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true];
-        $this->NotifySetting->create();
+    }
+
+    function testIsOnNotify2()
+    {
+        $uid = 1000000;
+        $uid2 = 9999999;
+
+        $data = ['user_id' => $uid, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true];
         $this->NotifySetting->save($data);
         $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
@@ -95,9 +99,10 @@ class NotifySettingTest extends CakeTestCase
         $res = $this->NotifySetting->getAppEmailNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid  => ['app' => true, 'email' => true],
-            $uid2 => ['app' => true, 'email' => true]
+            $uid2 => ['app' => true, 'email' => false]
         ];
         $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");
+
     }
 
     function testGetTitle()

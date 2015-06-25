@@ -581,7 +581,10 @@ class AppController extends Controller
         $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count');
         $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
         $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
-        $this->set(compact('my_goals', 'collabo_goals', 'follow_goals',
+        //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
+        $goal_list_for_action_option = Hash::combine(array_merge($my_goals, $collabo_goals),
+                                                     '{n}.Goal.id', '{n}.Goal.name');
+        $this->set(compact('goal_list_for_action_option', 'my_goals', 'collabo_goals', 'follow_goals',
                            'my_goals_count', 'collabo_goals_count', 'follow_goals_count', 'my_previous_goals',
                            'my_previous_goals_count'));
     }
