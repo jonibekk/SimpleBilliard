@@ -60,7 +60,7 @@
                                            'div'         => false,
                                            'type'        => 'checkbox',
                                            'class'       => 'bt-switch',
-                                           'default'     => true,
+                                           'default'     => false,
                                        ])
                     ?>
                 </div>
