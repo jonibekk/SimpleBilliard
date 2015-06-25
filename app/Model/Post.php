@@ -48,7 +48,6 @@ class Post extends AppModel
         self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __d('gl', "あたらしいサークルをつくりました。");
     }
 
-    const SHARE_ALL = 1;
     const SHARE_PEOPLE = 2;
     const SHARE_ONLY_ME = 3;
     const SHARE_CIRCLE = 4;
@@ -706,10 +705,7 @@ class Post extends AppModel
     function getShareMode($data)
     {
         foreach ($data as $key => $val) {
-            if ($val['Post']['public_flg']) {
-                $data[$key]['share_mode'] = self::SHARE_ALL;
-            }
-            elseif (!empty($val['PostShareCircle'])) {
+            if (!empty($val['PostShareCircle'])) {
                 $data[$key]['share_mode'] = self::SHARE_CIRCLE;
             }
             else {
@@ -729,9 +725,6 @@ class Post extends AppModel
         foreach ($data as $key => $val) {
             $data[$key]['share_text'] = null;
             switch ($val['share_mode']) {
-                case self::SHARE_ALL:
-                    $data[$key]['share_text'] = __d('gl', "チーム全体に共有");
-                    break;
                 case self::SHARE_PEOPLE:
                     if (count($val['PostShareUser']) == 1) {
                         $data[$key]['share_text'] = __d('gl', "%sに共有",
