@@ -368,7 +368,7 @@ class PostTest extends CakeTestCase
 
     function testAddGoalPost()
     {
-        $this->Post->current_team_id = 1;
+        $this->_setDefault();
         $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1, true, null, 'public');
     }
 
@@ -511,6 +511,8 @@ class PostTest extends CakeTestCase
         $team_id = '1';
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
+        $this->Post->Circle->my_uid = $uid;
+        $this->Post->Circle->current_team_id = $team_id;
         $this->Post->PostRead->my_uid = $uid;
         $this->Post->PostRead->current_team_id = $team_id;
         $this->Post->Comment->CommentRead->my_uid = $uid;
