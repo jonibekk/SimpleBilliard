@@ -32,6 +32,7 @@ class DataMigrationForAllTeam0625 extends CakeMigration
     public function before($direction)
     {
         if ($direction == 'up') {
+            ini_set('memory_limit', '2024M');
             /**
              * @var Team            $Team
              * @var TeamMember      $TeamMember
