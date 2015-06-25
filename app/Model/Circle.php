@@ -88,11 +88,6 @@ class Circle extends AppModel
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'public_flg'   => [
-            'boolean' => [
-                'rule' => ['boolean'],
-            ],
-        ],
         'description'  => [
             'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
@@ -383,5 +378,11 @@ class Circle extends AppModel
             ]
         ];
         return $this->find('first', $options);
+    }
+
+    function getTeamAllCircleId()
+    {
+        $team_all_circle = $this->getTeamAllCircle();
+        return viaIsSet($team_all_circle['Circle']['id']);
     }
 }

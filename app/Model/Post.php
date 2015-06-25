@@ -960,13 +960,16 @@ class Post extends AppModel
         }
 
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $this->current_team_id,
-            'type'       => self::TYPE_CREATE_CIRCLE,
-            'public_flg' => true,
-            'circle_id'  => $circle_id,
+            'user_id'   => $uid,
+            'team_id'   => $this->current_team_id,
+            'type'      => self::TYPE_CREATE_CIRCLE,
+            'circle_id' => $circle_id,
         ];
-        return $this->save($data);
+        $res = $this->save($data);
+        if ($team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
+            $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
+        }
+        return $res;
     }
 
     /**
