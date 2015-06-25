@@ -13,6 +13,8 @@ cache:
 cache:
   directories:
   - $HOME/.composer
+  - $HOME/apcu-4.0.2
+  - $HOME/redis-2.2.7
 services:
   - redis-server
 
@@ -34,11 +36,13 @@ before_script:
   - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
   - sudo apt-get install php-pear php5-dev
   - pecl install oauth
-  - wget http://pecl.php.net/get/apcu-4.0.2.tgz ; tar -xzf apcu-4.0.2.tgz ; sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
+  - if [ ! -e apcu-4.0.2]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz ; tar -xzf apcu-4.0.2.tgz ; fi
+  - sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - wget http://pecl.php.net/get/redis-2.2.7.tgz ; tar -xzf redis-2.2.7.tgz ; sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
+  - if [ ! -e redis-2.2.7]; then wget http://pecl.php.net/get/redis-2.2.7.tgz ; tar -xzf redis-2.2.7.tgz ; fi
+  - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # Download browscap.ini
   - wget -O /home/travis/browscap.ini http://browscap.org/stream?q=LITE_PHP_BrowsCapINI
