@@ -36,12 +36,12 @@ before_script:
   - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
   - sudo apt-get install php-pear php5-dev
   - pecl install oauth
-  - if [ ! -e apcu-4.0.2]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz ; tar -xzf apcu-4.0.2.tgz ; fi
+  - sh -c "if [ ! -e apcu-4.0.2]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz ; tar -xzf apcu-4.0.2.tgz ; fi"
   - sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - if [ ! -e redis-2.2.7]; then wget http://pecl.php.net/get/redis-2.2.7.tgz ; tar -xzf redis-2.2.7.tgz ; fi
+  - sh -c "if [ ! -e redis-2.2.7]; then wget http://pecl.php.net/get/redis-2.2.7.tgz ; tar -xzf redis-2.2.7.tgz ; fi"
   - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # Download browscap.ini
