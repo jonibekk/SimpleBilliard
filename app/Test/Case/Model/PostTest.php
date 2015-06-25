@@ -272,7 +272,7 @@ class PostTest extends CakeTestCase
                 'Post'       => [
                     'public_flg' => true
                 ],
-                'share_mode' => 1,
+                'share_mode' => 3,
             ],
             [
                 'Post'            => [
