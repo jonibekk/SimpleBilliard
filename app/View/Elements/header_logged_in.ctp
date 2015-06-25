@@ -109,7 +109,7 @@
                        id="download">
                         <?=
                         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                                   ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
+                                                   ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'header-nav-avator pull-left img-circle mtb_3px']) ?>
                         <i class="fa fa-caret-down header-profile-icon visible-xxs pull-right"></i>
                         <span
                             class="font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.display_first_name') ?></span>
