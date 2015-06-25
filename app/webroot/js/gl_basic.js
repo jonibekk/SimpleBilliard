@@ -1329,6 +1329,35 @@ $(document).ready(function () {
         },
         containerCssClass: "select2PostCircleMember"
     });
+    $('#select2ActionCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.a,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.s,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2ActionCircleMember"
+    });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -1348,6 +1377,18 @@ $(document).ready(function () {
             }).success(function () {
                 $('body').addClass('modal-open');
             });
+        }
+    });
+
+    $('#PostDisplayForm, #CommonActionDisplayForm').change(function (e) {
+        var $target = $(e.target);
+        switch ($target.attr('id')) {
+            case "PostBody":
+                $('#ActionResultName').val($target.val()).autosize().trigger('autosize.resize');
+                break;
+            case "ActionResultName":
+                $('#PostBody').val($target.val()).autosize().trigger('autosize.resize');
+                break;
         }
     });
 });

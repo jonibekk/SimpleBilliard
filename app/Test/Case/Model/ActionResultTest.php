@@ -110,6 +110,13 @@ class ActionResultTest extends CakeTestCase
         $this->assertTrue(!empty($res));
     }
 
+    function testAddCompletedActionFail()
+    {
+        $this->_setDefault();
+        $res = $this->ActionResult->addCompletedAction([], 1);
+        $this->assertFalse($res);
+    }
+
     function _setDefault()
     {
         $this->ActionResult->current_team_id = 1;
