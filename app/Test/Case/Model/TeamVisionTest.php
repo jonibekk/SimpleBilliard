@@ -98,4 +98,61 @@ class TeamVisionTest extends CakeTestCase
         $this->TeamVision->current_team_id=1;
         $this->TeamVision->my_uid=1;
     }
+
+    function testGetTeamVision()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name
+        ];
+        $this->TeamVision->save($data);
+        $res = $this->TeamVision->getTeamVision($team_id, 1);
+        $this->assertEquals($res[0]['TeamVision']['name'], $name);
+    }
+
+    function testSetTeamVisionActiveFlag()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $active_flg = 1;
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name,
+            'active_flg' => $active_flg
+        ];
+        $this->TeamVision->save($data);
+        $res = $this->TeamVision->setTeamVisionActiveFlag($this->TeamVision->getLastInsertID(), 0);
+        $this->assertEquals($res['TeamVision']['active_flg'], 0);
+    }
+
+    function testDeleteTeamVision()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name,
+        ];
+        $this->TeamVision->save($data);
+        $res = $this->TeamVision->deleteTeamVision($this->TeamVision->getLastInsertID());
+        $this->assertEquals($res['TeamVision']['del_flg'], 1);
+    }
+
+    function testConvertData()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $image_name = 'test.jpg';
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name,
+            'photo_file_name' => $image_name
+        ];
+        $this->TeamVision->save($data);
+        $res = $this->TeamVision->getTeamVision($team_id, 1);
+        $convert_data = $this->TeamVision->convertData($res);
+        $this->assertNotEquals($image_name, $convert_data[0]['TeamVision']['photo_path']);
+    }
 }
