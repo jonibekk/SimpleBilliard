@@ -34,7 +34,6 @@ before_script:
   - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
   - sudo apt-get install php-pear php5-dev
   - pecl install oauth
-  - echo "extension=oauth.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - wget http://pecl.php.net/get/apcu-4.0.2.tgz ; tar -xzf apcu-4.0.2.tgz ; sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
