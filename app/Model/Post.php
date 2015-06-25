@@ -874,11 +874,10 @@ class Post extends AppModel
         }
 
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $this->current_team_id,
-            'type'       => $type,
-            'public_flg' => $public,
-            'goal_id'    => $goal_id,
+            'user_id' => $uid,
+            'team_id' => $this->current_team_id,
+            'type'    => $type,
+            'goal_id' => $goal_id,
         ];
 
         switch ($type) {
@@ -890,8 +889,13 @@ class Post extends AppModel
                 break;
         }
         $res = $this->save($data);
-        if ($res && $share) {
-            return $this->doShare($this->getLastInsertID(), $share);
+        if ($res) {
+            if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
+                return $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
+            }
+            if ($share) {
+                return $this->doShare($this->getLastInsertID(), $share);
+            }
         }
         return $res;
     }
@@ -901,8 +905,8 @@ class Post extends AppModel
         if (!$share) {
             return false;
         }
-        $public = false;
         $share = explode(",", $share);
+        $public = false;
         //TODO 近々、ここは「チーム全体」をサークル化する為、この処理はいずれ削除する。
         foreach ($share as $key => $val) {
             if (stristr($val, 'public')) {
@@ -910,15 +914,7 @@ class Post extends AppModel
                 unset($share[$key]);
             }
         }
-        if ($public) {
-            $this->id = $post_id;
-            $this->saveField('public_flg', true);
-        }
         //TODO ここまで
-        if (empty($share)) {
-            return true;
-        }
-
         //ユーザとサークルに分割
         $users = [];
         $circles = [];
@@ -931,6 +927,9 @@ class Post extends AppModel
             elseif (stristr($val, 'circle_')) {
                 $circles[] = str_replace('circle_', '', $val);
             }
+        }
+        if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
+            $circles[] = $team_all_circle_id;
         }
         //共有ユーザ保存
         $this->PostShareUser->add($post_id, $users);
