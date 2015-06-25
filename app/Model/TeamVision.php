@@ -117,4 +117,9 @@ class TeamVision extends AppModel
         }
         return $data;
     }
+
+    function deleteTeamVision($team_vision_id){
+        $this->id = $team_vision_id;
+        return $this->save(['del_flg' => 1]);
+    }
 }

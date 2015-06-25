@@ -73,14 +73,31 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
                         var request = {
                             method: 'GET',
                             url: cake.url.v + $stateParams.team_vision_id + '/' + $stateParams.active_flg
-                        }
+                        };
                         return $http(request).then(function (response) {
                             return response.data;
                         })
                     }]
                 },
-                controller: function ($state) {
-                    $state.go('vision', {team_id: 1});
+                controller: function ($scope, $state) {
+                    $state.go('vision', {team_id: $scope.team_id});
+                }
+            })
+            .state('vision_delete', {
+                url: "/vision_delete/:team_vision_id",
+                resolve: {
+                    deleteVision: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.w + $stateParams.team_vision_id
+                        };
+                        return $http(request).then(function(response){
+                            return response;
+                        })
+                    }]
+                },
+                controller: function ($scope, $state) {
+                    $state.go('vision', {team_id: $scope.team_id})
                 }
             })
             .state('group_vision', {

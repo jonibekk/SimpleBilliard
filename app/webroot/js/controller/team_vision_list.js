@@ -9,12 +9,16 @@ app.controller("TeamVisionController",
         $scope.archive_flag = false;
 
         $scope.viewDeleteModal = function (team_vision_id, name) {
-
             var modalInstance = $modal.open({
                 templateUrl: '/template/modal/team_vision_delete.html',
-                controller: function ($scope, $modalInstance) {
+                controller: function ($scope, $state, $modalInstance) {
                     $scope.team_vision_body = name;
                     $scope.ok = function () {
+                        $modalInstance.close();
+                        $state.go('vision_delete', {team_vision_id: team_vision_id});
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss();
                     };
                 }
             });

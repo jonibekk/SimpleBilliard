@@ -592,6 +592,12 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    function ajax_delete_team_vision($team_vision_id)
+    {
+        $res = $this->Team->TeamVision->deleteTeamVision($team_vision_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
     function ajax_get_team_vision($team_id, $active_flg = 1)
     {
         $res = $this->Team->TeamVision->getTeamVision($team_id, $active_flg);
