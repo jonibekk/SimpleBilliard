@@ -236,9 +236,7 @@ class Post extends AppModel
             foreach ($share as $key => $val) {
                 if (stristr($val, 'public')) {
                     $teamAllCircle = $this->Circle->getTeamAllCircle();
-                    if ($teamAllCircle) {
-                        $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
-                    }
+                    $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
                 }
             }
         }

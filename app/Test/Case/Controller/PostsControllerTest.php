@@ -1457,6 +1457,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->ActionResult->current_team_id = '1';
         $Posts->Team->EvaluateTerm->my_uid = 1;
         $Posts->Team->EvaluateTerm->current_team_id = 1;
+        $Posts->Team->Circle->current_team_id = 1;
 
         return $Posts;
     }
