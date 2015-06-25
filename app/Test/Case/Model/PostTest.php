@@ -72,8 +72,7 @@ class PostTest extends CakeTestCase
         $team_id = '1';
         $postData = [
             'Post' => [
-                'body'       => 'test',
-                'public_flg' => 1
+                'body' => 'test',
             ]
         ];
         $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
@@ -117,27 +116,8 @@ class PostTest extends CakeTestCase
 
         $this->Post->getShareAllMemberList($post_id);
         $this->Post->id = $post_id;
-        $this->Post->saveField('public_flg', true);
         $this->Post->getShareAllMemberList($post_id);
         $this->Post->getShareAllMemberList(9999999999);
-    }
-
-    public function testIsPublic()
-    {
-        $uid = '1';
-        $team_id = '1';
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $data = [
-            'user_id'    => $uid,
-            'team_id'    => $team_id,
-            'public_flg' => true,
-            'body'       => 'test'
-        ];
-        $this->Post->save($data);
-
-        $res = $this->Post->isPublic($this->Post->id);
-        $this->assertTrue($res);
     }
 
     public function testIsMyPost()
@@ -147,10 +127,10 @@ class PostTest extends CakeTestCase
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $team_id,
-            'public_flg' => true,
-            'body'       => 'test'
+            'user_id' => $uid,
+            'team_id' => $team_id,
+
+            'body'    => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
@@ -481,11 +461,11 @@ class PostTest extends CakeTestCase
 
         $expected = [
             'Post' => [
-                'user_id'    => '1',
-                'team_id'    => '1',
-                'type'       => (int)7,
-                'public_flg' => true,
-                'circle_id'  => (int)1,
+                'user_id'   => '1',
+                'team_id'   => '1',
+                'type'      => (int)7,
+
+                'circle_id' => (int)1,
             ]
         ];
 

@@ -123,7 +123,6 @@ class Post extends AppModel
         'comment_count'   => ['numeric' => ['rule' => ['numeric'],],],
         'post_like_count' => ['numeric' => ['rule' => ['numeric'],],],
         'post_read_count' => ['numeric' => ['rule' => ['numeric'],],],
-        'public_flg'      => ['boolean' => ['rule' => ['boolean'],],],
         'important_flg'   => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'         => ['boolean' => ['rule' => ['boolean'],],],
         'photo1'          => [
@@ -309,22 +308,6 @@ class Post extends AppModel
         return $res;
     }
 
-    public function isPublic($post_id)
-    {
-        $options = [
-            'conditions' => [
-                'id'         => $post_id,
-                'team_id'    => $this->current_team_id,
-                'public_flg' => true,
-            ]
-        ];
-        $res = $this->find('list', $options);
-        if (!empty($res)) {
-            return true;
-        }
-        return false;
-    }
-
     public function isMyPost($post_id)
     {
         $options = [
@@ -428,8 +411,6 @@ class Post extends AppModel
                     $p_list = $this->orgParams['post_id'];
                 }
                 elseif (
-                    //公開か？
-                    $this->isPublic($this->orgParams['post_id']) ||
                     //自分の投稿か？
                     $this->isMyPost($this->orgParams['post_id']) ||
                     //自分が共有範囲指定された投稿か？
@@ -450,8 +431,6 @@ class Post extends AppModel
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
                 $p_list = $this->getAllExistGoalPostList($start, $end);
-                //フォローorコラボのゴール投稿を取得
-                $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
             }
         }
 
@@ -625,7 +604,6 @@ class Post extends AppModel
                     'goal_id' => null,
                 ],
                 'team_id'                  => $this->current_team_id,
-                'public_flg'               => true,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [$order => $order_direction],
@@ -817,18 +795,13 @@ class Post extends AppModel
             return [];
         }
         $share_member_list = [];
-        //チーム全体なら
-        if ($post['Post']['public_flg']) {
-            $share_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
-        }
-        else {
-            //サークル共有ユーザを追加
-            $share_member_list = array_merge($share_member_list,
-                                             $this->PostShareCircle->getShareCircleMemberList($post_id));
-            //メンバー共有なら
-            $share_member_list = array_merge($share_member_list,
-                                             $this->PostShareUser->getShareUserListByPost($post_id));
-        }
+        //サークル共有ユーザを追加
+        $share_member_list = array_merge($share_member_list,
+                                         $this->PostShareCircle->getShareCircleMemberList($post_id));
+        //メンバー共有なら
+        $share_member_list = array_merge($share_member_list,
+                                         $this->PostShareUser->getShareUserListByPost($post_id));
+
         $share_member_list = array_unique($share_member_list);
         //自分自身を除外
         $key = array_search($this->my_uid, $share_member_list);
