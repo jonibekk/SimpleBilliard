@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap'])
+var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap', 'jlareau.pnotify'])
     .run(['$rootScope', '$state', '$stateParams', '$http', '$translate',
         function ($rootScope, $state, $stateParams, $http, $translate) {
 
@@ -70,35 +70,57 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
                 url: "/set_vision_archive/:team_vision_id/:active_flg",
                 resolve: {
                     setVisionArchive: ['$stateParams', '$http', function ($stateParams, $http) {
-                        var request = {
+                        var request01 = {
                             method: 'GET',
-                            url: cake.url.v + $stateParams.team_vision_id + '/' + $stateParams.active_flg
+                            url: cake.url.x
                         };
-                        return $http(request).then(function (response) {
-                            return response.data;
+                        return $http(request01).then(function (response) {
+
+                            if (response.data.is_admin_user === false) {
+                                return false;
+                            }
+
+                            var request = {
+                                method: 'GET',
+                                url: cake.url.v + $stateParams.team_vision_id + '/' + $stateParams.active_flg
+                            };
+                            return $http(request).then(function (response) {
+                                return response.data;
+                            });
                         });
+
                     }]
                 },
-                controller: function ($scope, $state) {
-                    $state.go('vision', {team_id: $scope.team_id});
-                }
+                controller: "TeamVisionArchiveController"
             })
             .state('vision_delete', {
                 url: "/vision_delete/:team_vision_id",
                 resolve: {
                     deleteVision: ['$stateParams', '$http', function ($stateParams, $http) {
-                        var request = {
+                        var request01 = {
                             method: 'GET',
-                            url: cake.url.w + $stateParams.team_vision_id
+                            url: cake.url.x
                         };
-                        return $http(request).then(function(response){
-                            return response;
+                        return $http(request01).then(function (response) {
+
+                            if (response.data.is_admin_user === false) {
+                                return false;
+                            }
+
+                            var request02 = {
+                                method: 'GET',
+                                url: cake.url.w + $stateParams.team_vision_id
+                            };
+                            return $http(request02).then(function (response) {
+                                return response;
+                            });
+
                         });
+
+
                     }]
                 },
-                controller: function ($scope, $state) {
-                    $state.go('vision', {team_id: $scope.team_id});
-                }
+                controller: "TeamVisionDeleteController"
             })
             .state('group_vision', {
                 url: "/group_vision",

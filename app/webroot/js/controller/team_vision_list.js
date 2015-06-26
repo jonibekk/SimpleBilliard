@@ -1,5 +1,5 @@
 app.controller("TeamVisionController",
-    function ($scope, $http, $translate, teamVisionList, $sce, $modal) {
+    function ($scope, $http, $translate, teamVisionList, $sce, $modal, notificationService) {
 
         var team_vision_list = teamVisionList;
         angular.forEach(team_vision_list, function (val, key) {
@@ -35,4 +35,20 @@ app.controller("TeamVisionArchiveController",
         });
         $scope.teamVisionList = team_vision_list;
         $scope.archive_flag = true;
+    });
+
+app.controller("TeamVisionDeleteController",
+    function ($scope, $state, deleteVision, notificationService) {
+        if (deleteVision === false) {
+            notificationService.error('管理者以外の方には削除できません');
+        }
+        $state.go('vision', {team_id: $scope.team_id});
+    });
+
+app.controller("TeamVisionArchiveController",
+    function ($scope, $state, setVisionArchive, notificationService) {
+        if (setVisionArchive === false) {
+            notificationService.error('管理者以外の方にはアーカイブできません');
+        }
+        $state.go('vision', {team_id: $scope.team_id});
     });

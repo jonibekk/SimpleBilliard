@@ -592,6 +592,19 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    function ajax_team_admin_user_check()
+    {
+        $is_admin_user = true;
+        $team_id = $this->Session->read('current_team_id');
+        $user_id = $this->Auth->user('id');
+        try {
+            $this->Team->TeamMember->adminCheck($team_id, $user_id);
+        } catch (RuntimeException $e) {
+            $is_admin_user = false;
+        }
+        return $this->_ajaxGetResponse(['is_admin_user' => $is_admin_user]);
+    }
+
     function ajax_delete_team_vision($team_vision_id)
     {
         $res = $this->Team->TeamVision->deleteTeamVision($team_vision_id);
