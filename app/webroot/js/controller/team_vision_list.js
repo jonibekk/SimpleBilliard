@@ -41,14 +41,18 @@ app.controller("TeamVisionDeleteController",
     function ($scope, $state, deleteVision, notificationService) {
         if (deleteVision === false) {
             notificationService.error('管理者以外の方には削除できません');
+        } else {
+            notificationService.success('チームビジョンを削除しました');
         }
         $state.go('vision', {team_id: $scope.team_id});
     });
 
-app.controller("TeamVisionArchiveController",
+app.controller("TeamVisionSetArchiveController",
     function ($scope, $state, setVisionArchive, notificationService) {
         if (setVisionArchive === false) {
             notificationService.error('管理者以外の方にはアーカイブできません');
+        } else {
+            notificationService.success('チームビジョンをアーカイブしました。');
         }
         $state.go('vision', {team_id: $scope.team_id});
     });

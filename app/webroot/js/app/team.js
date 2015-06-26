@@ -91,7 +91,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
 
                     }]
                 },
-                controller: "TeamVisionArchiveController"
+                controller: "TeamVisionSetArchiveController"
             })
             .state('vision_delete', {
                 url: "/vision_delete/:team_vision_id",
