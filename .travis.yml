@@ -48,7 +48,7 @@ before_script:
   - wget -O /home/travis/browscap.ini http://browscap.org/stream?q=LITE_PHP_BrowsCapINI
   - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
-  - composer update --no-interaction --no-dev
+  - composer install --no-interaction --no-dev
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
   - mkdir ./app/tmp
@@ -118,20 +118,19 @@ before_script:
       }
     }
     }" > app/Config/database.php
-#  - mysql cakephp_test < app/Config/sql/mysql.sql
-
-script:
   - mkdir -p build/logs
   - cd ./app
   - echo -ne '\n\n' | ./Console/cake schema create
-  - sh -c 'if [ ! "${TRAVIS_PULL_REQUEST}" = "false" ]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist ; else ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist; fi'
+
+script:
+  - ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
   - cd ../
 
 after_script:
-  - sh -c 'if [ ! "${TRAVIS_PULL_REQUEST}" = "false" ]; then php Vendor/bin/coveralls -v ; fi'
+  - php Vendor/bin/coveralls -v
 
 before_deploy:
-  - sh -c 'if [ ! "${TRAVIS_PULL_REQUEST}" = "false" ]; then php Vendor/bin/coveralls -v ; fi'
+  - php Vendor/bin/coveralls -v
 
 notifications:
   slack: goalous:JkI6FxdrZDzE1gILR6qTJ69p
