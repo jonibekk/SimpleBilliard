@@ -166,7 +166,7 @@
                 </a>
 
                 <div class="dropdown dropdown-menu-right navbar-nav-fix">
-                    <a id="click-header-bell" class="" data-toggle="dropdown" href="#">
+                    <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
                         <i class="fa fa-flag fa-bell-o header-icon header-drop-icons header-link"></i>
 
                         <div class="btn btn-xs bell-notify-box notify-bell-numbers"
