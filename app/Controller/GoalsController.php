@@ -743,6 +743,7 @@ class GoalsController extends AppController
         $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
         $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list", true);
+        $kr_list = [null => __d('gl', '出したい成果を選択')] + $kr_list;
         return $this->_ajaxGetResponse($kr_list);
     }
 

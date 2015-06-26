@@ -130,6 +130,8 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-next-select-with-value", evChangeTargetSelectWithValue);
+    //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
@@ -750,9 +752,19 @@ function setSelectOptions(url, select_id) {
             var option = '<option value="' + k + '">' + v + '</option>';
             options_elem += option;
         });
-
-        $("#" + select_id).append(options_elem);
+        $("#" + select_id).empty().append(options_elem);
     });
+}
+
+function evChangeTargetSelectWithValue() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var target_id = $(this).attr("target-id");
+    if ($(this).val() == undefined || $(this).val() == 0 || $(this).val() == false) {
+        return;
+    }
+    var url = $(this).attr("ajax-url") + $(this).val();
+    setSelectOptions(url, target_id);
 }
 
 function evShowAndThisWideClose() {
