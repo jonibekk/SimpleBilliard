@@ -109,13 +109,17 @@ echo $this->Html->script('gl_basic');
             b: function (element, callback) {
                 var data = [{
                     <?php if(isset($current_circle)&&!empty($current_circle)):?>
+                    <?php if($current_circle['Circle']['team_all_flg']): ?>
+                    id: "public",
+                    <?php else: ?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
+                    <?php endif ?>
                     text: "<?=h($current_circle['Circle']['name'])?>",
                     image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    <?php else:?>
+                    <?php elseif(isset($team_all_circle)&&!empty($team_all_circle)):?>
                     id: 'public',
-                    text: "<?=__d('gl',"チーム全体")?>",
-                    image: "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
+                    text: "<?=h($team_all_circle['Circle']['name'])?>",
+                    image: "<?=$this->Upload->uploadUrl($team_all_circle, 'Circle.photo', ['style' => 'small'])?>"
                     <?php endif;?>
                 }];
                 callback(data);

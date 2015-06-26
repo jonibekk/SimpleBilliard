@@ -645,6 +645,22 @@ class UserTest extends CakeTestCase
         $this->User->getProfileAndEmail(1, 'jpn');
     }
 
+    function testGetUsersCirclesSelect2()
+    {
+        $this->User->CircleMember->current_team_id = 1;
+        $this->User->CircleMember->my_uid = 1;
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+
+        // チーム全体サークルを取得する場合
+        $res = $this->User->getUsersCirclesSelect2('チーム全体');
+        $this->assertEquals('public', $res['results'][0]['id']);
+
+        // 通常のサークルを取得する場合
+        $res = $this->User->getUsersCirclesSelect2('test');
+        $this->assertEquals('circle_1', $res['results'][0]['id']);
+    }
+
     function testGetAllUsersCirclesSelect2()
     {
         $this->User->my_uid = 1;

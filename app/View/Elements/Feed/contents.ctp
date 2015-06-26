@@ -63,16 +63,18 @@ else { ?>
                         </a>
                         <ul aria-labelledby="dropdownMenu1" role="menu"
                             class="dropdown-menu dropdown-menu-right frame-arrow-icon">
-                            <li>
-                                <?php if ($user_status != 'joined') { ?>
-                                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'join_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                                        <?= __d('gl', 'Join Circle') ?></a>
-                                <?php }
-                                else { ?>
-                                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                                        <?= __d('gl', 'Leave Circle') ?></a>
-                                <?php } ?>
-                            </li>
+                            <?php if (!$current_circle['Circle']['team_all_flg']): ?>
+                                <li>
+                                    <?php if ($user_status != 'joined') { ?>
+                                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'join_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
+                                            <?= __d('gl', 'Join Circle') ?></a>
+                                    <?php }
+                                    else { ?>
+                                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
+                                            <?= __d('gl', 'Leave Circle') ?></a>
+                                    <?php } ?>
+                                </li>
+                            <?php endif; ?>
                             <?php if ($user_status == 'joined'): ?>
                                 <li>
                                     <?php if ($circle_status == '1') {

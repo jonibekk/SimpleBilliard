@@ -72,8 +72,7 @@ class PostTest extends CakeTestCase
         $team_id = '1';
         $postData = [
             'Post' => [
-                'body'       => 'test',
-                'public_flg' => 1
+                'body' => 'test',
             ]
         ];
         $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
@@ -117,27 +116,8 @@ class PostTest extends CakeTestCase
 
         $this->Post->getShareAllMemberList($post_id);
         $this->Post->id = $post_id;
-        $this->Post->saveField('public_flg', true);
         $this->Post->getShareAllMemberList($post_id);
         $this->Post->getShareAllMemberList(9999999999);
-    }
-
-    public function testIsPublic()
-    {
-        $uid = '1';
-        $team_id = '1';
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $data = [
-            'user_id'    => $uid,
-            'team_id'    => $team_id,
-            'public_flg' => true,
-            'body'       => 'test'
-        ];
-        $this->Post->save($data);
-
-        $res = $this->Post->isPublic($this->Post->id);
-        $this->assertTrue($res);
     }
 
     public function testIsMyPost()
@@ -147,10 +127,10 @@ class PostTest extends CakeTestCase
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $team_id,
-            'public_flg' => true,
-            'body'       => 'test'
+            'user_id' => $uid,
+            'team_id' => $team_id,
+
+            'body'    => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
@@ -292,7 +272,7 @@ class PostTest extends CakeTestCase
                 'Post'       => [
                     'public_flg' => true
                 ],
-                'share_mode' => 1,
+                'share_mode' => 3,
             ],
             [
                 'Post'            => [
@@ -388,8 +368,15 @@ class PostTest extends CakeTestCase
 
     function testAddGoalPost()
     {
-        $this->Post->current_team_id = 1;
+        $this->_setDefault();
         $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1, true, null, 'public');
+    }
+
+    function testAddGoalPostShareCircle()
+    {
+        $this->_setDefault();
+        $res = $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1, false, 1, 'circle_id');
+        $this->assertNotEmpty($res);
     }
 
     function testGetRelatedPostList()
@@ -481,11 +468,11 @@ class PostTest extends CakeTestCase
 
         $expected = [
             'Post' => [
-                'user_id'    => '1',
-                'team_id'    => '1',
-                'type'       => (int)7,
-                'public_flg' => true,
-                'circle_id'  => (int)1,
+                'user_id'   => '1',
+                'team_id'   => '1',
+                'type'      => (int)7,
+
+                'circle_id' => (int)1,
             ]
         ];
 
@@ -531,6 +518,8 @@ class PostTest extends CakeTestCase
         $team_id = '1';
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
+        $this->Post->Circle->my_uid = $uid;
+        $this->Post->Circle->current_team_id = $team_id;
         $this->Post->PostRead->my_uid = $uid;
         $this->Post->PostRead->current_team_id = $team_id;
         $this->Post->Comment->CommentRead->my_uid = $uid;

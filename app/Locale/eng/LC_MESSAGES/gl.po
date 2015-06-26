@@ -635,7 +635,7 @@ msgstr "Neither"
 
 #: Model/User.php:897 View/Elements/gl_common_js.ctp:142
 msgid "チーム全体"
-msgstr "Team"
+msgstr "All Team"
 
 #: View/Elements/circle_list.ctp:51
 msgid "すべて表示"
