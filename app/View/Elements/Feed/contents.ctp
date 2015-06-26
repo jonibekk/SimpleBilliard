@@ -145,10 +145,12 @@ if (!isset($this->request->params['post_id']) || empty($this->request->params['p
     }
 
     // circle_feed ページの場合
-    // サークル作成日以前の投稿は存在しないので読み込まないようにする
+    // サークル作成日以前の投稿は存在しないので読み込まない
     if (isset($current_circle) && $current_circle) {
         $oldest_post_time = $current_circle['Circle']['created'];
     }
+    // ホーム画面の場合
+    // チーム作成日以前の投稿は存在しないので読み込まない
     elseif (isset($current_team) && $current_team) {
         $oldest_post_time = $current_team['Team']['created'];
     }

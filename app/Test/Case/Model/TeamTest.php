@@ -585,6 +585,17 @@ class TeamTest extends CakeTestCase
         $this->Team->getAfterTermStartEnd(1);
     }
 
+    function testGetCurrentTeam()
+    {
+        // current_team_id がセットされてない場合
+        $this->assertEmpty($this->Team->getCurrentTeam());
+
+        // current_team_id がセットされている場合
+        $this->setDefault();
+        $current_team = $this->Team->getCurrentTeam();
+        $this->assertEquals($this->Team->current_team_id, $current_team['Team']['id']);
+    }
+
     function setDefault()
     {
         $this->Team->my_uid = 1;

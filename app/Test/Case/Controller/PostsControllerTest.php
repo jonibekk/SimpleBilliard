@@ -327,6 +327,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -340,6 +341,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -353,6 +355,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -375,6 +378,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -388,6 +392,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -412,6 +417,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

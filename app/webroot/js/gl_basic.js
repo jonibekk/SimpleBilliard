@@ -1565,7 +1565,7 @@ autoload_more = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
-        loader: null
+        loader_id: null
     }, options);
 
     attrUndefinedCheck(this, 'parent-id');
@@ -1583,10 +1583,9 @@ function evFeedMoreView(options) {
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
 
-    var $loader_html = opt.loader;
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<i id="__feed_loader" class="fa fa-refresh fa-spin"></i>');
     if (!opt.recursive) {
-        //ローダー表示
-        $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
         $obj.after($loader_html);
     }
 
@@ -1653,21 +1652,21 @@ function evFeedMoreView(options) {
                     //次のページ番号をセット
                     $obj.attr('next-page-num', 1);
 
+                    // ajax で取得したデータ件数が 0 件の場合
                     if (data.count == 0) {
                         // さらに古い投稿が存在する可能性がある場合
                         if (data.start && data.start > oldest_post_time) {
-
                             setTimeout(function () {
-                                evFeedMoreView.call($obj[0], {recursive: true, loader: $loader_html});
+                                evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
                             }, 200);
                             return;
                         }
                         // これ以上古い投稿が存在しない場合
                         else {
-                            //ローダーを削除
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
                             $obj.remove();
+                            return;
                         }
                     }
 
@@ -1676,7 +1675,6 @@ function evFeedMoreView(options) {
                     //ローダーを削除
                     $loader_html.remove();
                     $obj.text(cake.message.info.f);
-                    // $("#" + no_data_text_id).show();
                 }
                 else {
                     //ローダーを削除
