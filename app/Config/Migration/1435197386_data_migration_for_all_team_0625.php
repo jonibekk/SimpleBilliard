@@ -49,21 +49,23 @@ class DataMigrationForAllTeam0625 extends CakeMigration
             $PostShareCircle = ClassRegistry::init('PostShareCircle');
 
             //key: team_id, val: team_id
-            $all_teams = $Team->find('list', ['fields' => 'id,id']);
+            $all_teams = $Team->find('list', ['fields' => 'id,created']);
+            $team_ids = array_keys($all_teams);
             $options = [
                 'conditions' => [
-                    'team_id'      => $all_teams,
+                    'team_id'      => $team_ids,
                     'team_all_flg' => true
                 ],
                 'fields'     => ['team_id', 'id']
             ];
+            unset($team_ids);
             //key: team_id, val: circle_id
             $exists_all_team_circles = $Circle->findWithoutTeamId('list', $options);
             //merge circle_id
-            foreach ($all_teams as $key => $team_id) {
+            foreach ($all_teams as $team_id => $created) {
                 if (array_key_exists($team_id, $exists_all_team_circles)) {
                     //既にチーム全体サークルが存在する場合は除外
-                    unset($all_teams[$key]);
+                    unset($all_teams[$team_id]);
                     continue;
                 }
                 //team_allの登録
@@ -75,9 +77,10 @@ class DataMigrationForAllTeam0625 extends CakeMigration
                         'description'  => __d('gl', "チーム全体"),
                         'team_all_flg' => true,
                         'public_flg'   => true,
+                        'created'      => $created,
                     ]
                 );
-                $all_teams[$key] = ['circle_id' => $Circle->getLastInsertID()];
+                $all_teams[$team_id] = ['circle_id' => $Circle->getLastInsertID()];
             }
             unset($exists_all_team_circles);
 
