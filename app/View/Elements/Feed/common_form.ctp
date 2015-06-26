@@ -7,6 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $current_circle
+ * @var                    $goal_list_for_action_option
  */
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
@@ -147,7 +148,17 @@
                 $this->Form->input('goal_id', [
                     'label'    => __d('gl', "ゴール"),
                     'required' => true,
+                    'id'       => 'GoalSelectOnActionForm',
                     'options'  => $goal_list_for_action_option,
+                ])
+                ?>
+            </div>
+            <div class="panel-body post-share-range-panel-body" id="">
+                <?=
+                $this->Form->input('key_result_id', [
+                    'label'    => __d('gl', "出したい成果"),
+                    'required' => true,
+                    'options'  => [null => __d('gl', '出したい成果を選択する')],
                 ])
                 ?>
             </div>
