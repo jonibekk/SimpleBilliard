@@ -47,19 +47,18 @@
     <div class="team_member_count_label">対象メンバー ( {{(team_list|filter:name_field).length}} )</div>
     <div class="col-xs-12">
 
-        <table class="table team_member_table">
-            <tr ng-repeat="item in team_list | filter:name_field"
+        <section class="team_member_table">
+            <div ng-repeat="item in team_list | filter:name_field"
                 ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
-                ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''">
+                ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''" class="team-members-card">
 
-                <td width="30%">
+                <div class="team-members-card-avator-box">
                     <img ng-src="{{item.User.img_url}}" class="feed-img avator-team-member-list"/>
+                </div>
 
-                    <p> {{item.User.display_username}} <i class="fa fa-adn"
+                <div class="team-members-card-description-box">
+                    <p class="team-members-admin-name"> {{item.User.display_username}} <i class="fa fa-adn team-members-card-admin-icon"
                                                           ng-if="item.TeamMember.admin_flg == '1'"></i></p>
-                </td>
-
-                <td>
                     <!--<p> {{item.User.e_mail}} </p>-->
 
                     <p ng-if="item.TeamMember.group_name == ''"><i class="fa fa-sitemap"></i> 所属グループはありません</p>
@@ -83,10 +82,10 @@
 
                     <p ng-if="login_user_admin_flg == true && item.TeamMember.evaluation_enable_flg == false">
                         <i class="fa fa-shield"></i> 評価対象者ではありません</p>
-                </td>
+                </div>
 
-                <td width="20%" ng-if="login_user_admin_flg == true">
-                    <div class="pull-right header-function dropdown"
+                <div ng-if="login_user_admin_flg == true" class="team-members-card-function-box pull-right">
+                    <div class="pull-right header-function dropdown team-members-card-function"
                          ng-if="admin_user_cnt > 1 || login_user_id != item.User.id">
                         <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                                 id="dropdownMenu1"
@@ -129,9 +128,9 @@
 
                         </ul>
                     </div>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 
