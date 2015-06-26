@@ -372,6 +372,13 @@ class PostTest extends CakeTestCase
         $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1, true, null, 'public');
     }
 
+    function testAddGoalPostShareCircle()
+    {
+        $this->_setDefault();
+        $res = $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, 1, 1, false, 1, 'circle_id');
+        $this->assertNotEmpty($res);
+    }
+
     function testGetRelatedPostList()
     {
         $this->Post->current_team_id = 1;
