@@ -11,7 +11,9 @@
         <ul class="nav" style="font-size: 13px;">
             <li class="active"><a ui-sref="member">チームメンバー一覧</a></li>
             <li class=""><a ui-sref="vision({team_id:team_id})">チームビジョン一覧</a></li>
+            <!--
             <li class=""><a ui-sref="group_vision">グループビジョン一覧</a></li>
+            -->
         </ul>
     </div>
 
