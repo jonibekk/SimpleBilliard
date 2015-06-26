@@ -40,10 +40,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
                         var request = {
                             method: 'GET',
                             url: cake.url.u + $stateParams.team_id
-                        }
+                        };
                         return $http(request).then(function (response) {
                             return response.data;
-                        })
+                        });
 
                     }]
                 }
@@ -58,10 +58,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
                         var request = {
                             method: 'GET',
                             url: cake.url.u + $stateParams.team_id + '/' + $stateParams.active_flg
-                        }
+                        };
                         return $http(request).then(function (response) {
                             return response.data;
-                        })
+                        });
 
                     }]
                 }
@@ -76,7 +76,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
                         };
                         return $http(request).then(function (response) {
                             return response.data;
-                        })
+                        });
                     }]
                 },
                 controller: function ($scope, $state) {
@@ -93,11 +93,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
                         };
                         return $http(request).then(function(response){
                             return response;
-                        })
+                        });
                     }]
                 },
                 controller: function ($scope, $state) {
-                    $state.go('vision', {team_id: $scope.team_id})
+                    $state.go('vision', {team_id: $scope.team_id});
                 }
             })
             .state('group_vision', {

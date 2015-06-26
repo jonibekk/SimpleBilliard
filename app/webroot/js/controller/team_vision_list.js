@@ -9,7 +9,7 @@ app.controller("TeamVisionController",
         $scope.archive_flag = false;
 
         $scope.viewDeleteModal = function (team_vision_id, name) {
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: '/template/modal/team_vision_delete.html',
                 controller: function ($scope, $state, $modalInstance) {
                     $scope.team_vision_body = name;
@@ -22,7 +22,7 @@ app.controller("TeamVisionController",
                     };
                 }
             });
-        }
+        };
 
     });
 
