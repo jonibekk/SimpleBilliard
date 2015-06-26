@@ -1562,7 +1562,12 @@ function getModalPostList(e) {
     }
 }
 autoload_more = false;
-function evFeedMoreView() {
+function evFeedMoreView(options) {
+    var opt = $.extend({
+        recursive: false,
+        loader: null
+    }, options);
+
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
     attrUndefinedCheck(this, 'get-url');
@@ -1573,11 +1578,18 @@ function evFeedMoreView() {
     var get_url = $obj.attr('get-url');
     var month_index = $obj.attr('month-index');
     var no_data_text_id = $obj.attr('no-data-text-id');
+    var oldest_post_time = $obj.attr('oldest-post-time') || 0;
+
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    //ローダー表示
-    $obj.after($loader_html);
+
+    var $loader_html = opt.loader;
+    if (!opt.recursive) {
+        //ローダー表示
+        $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+        $obj.after($loader_html);
+    }
+
     //url生成
     var url = get_url + '/page:' + next_page_num;
     if (month_index != undefined && month_index > 0) {
@@ -1632,22 +1644,39 @@ function evFeedMoreView() {
                 });
 
                 $('.custom-radio-check').customRadioCheck();
-
-
             }
 
             if (data.count < data.page_item_num) {
                 if (month_index != undefined) {
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //リンクを有効化
-                    $obj.removeAttr('disabled');
                     month_index++;
                     $obj.attr('month-index', month_index);
                     //次のページ番号をセット
                     $obj.attr('next-page-num', 1);
+
+                    if (data.count == 0) {
+                        // さらに古い投稿が存在する可能性がある場合
+                        if (data.start && data.start > oldest_post_time) {
+
+                            setTimeout(function () {
+                                evFeedMoreView.call($obj[0], {recursive: true, loader: $loader_html});
+                            }, 200);
+                            return;
+                        }
+                        // これ以上古い投稿が存在しない場合
+                        else {
+                            //ローダーを削除
+                            $loader_html.remove();
+                            $("#" + no_data_text_id).show();
+                            $obj.remove();
+                        }
+                    }
+
+                    //リンクを有効化
+                    $obj.removeAttr('disabled');
+                    //ローダーを削除
+                    $loader_html.remove();
                     $obj.text(cake.message.info.f);
-                    $("#" + no_data_text_id).show();
+                    // $("#" + no_data_text_id).show();
                 }
                 else {
                     //ローダーを削除

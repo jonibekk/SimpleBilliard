@@ -137,10 +137,20 @@ if (!isset($this->request->params['post_id']) || empty($this->request->params['p
     <?php $next_page_num = 2;
     $month_index = 0;
     $more_read_text = __d('gl', "もっと読む ▼");
+    $oldest_post_time = 0;
     if ((count($posts) != POST_FEED_PAGE_ITEMS_NUMBER)) {
         $next_page_num = 1;
         $month_index = 1;
         $more_read_text = __d('gl', "さらに投稿を読み込む ▼");
+    }
+
+    // circle_feed ページの場合
+    // サークル作成日以前の投稿は存在しないので読み込まないようにする
+    if (isset($current_circle) && $current_circle) {
+        $oldest_post_time = $current_circle['Circle']['created'];
+    }
+    elseif (isset($current_team) && $current_team) {
+        $oldest_post_time = $current_team['Team']['created'];
     }
     ?>
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
@@ -154,6 +164,7 @@ if (!isset($this->request->params['post_id']) || empty($this->request->params['p
                get-url="<?=
                $this->Html->url($feed_more_read_url) ?>"
                id="FeedMoreReadLink"
+               oldest-post-time="<?= $oldest_post_time ?>"
                 >
                 <?= $more_read_text ?></a>
         </div>

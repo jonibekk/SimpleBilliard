@@ -471,4 +471,14 @@ class Team extends AppModel
 
         return (bool)$saved_term;
     }
+
+    /**
+     * @return null
+     */
+    function getCurrentTeam() {
+        if (empty($this->current_team)) {
+            $this->current_team = $this->findById($this->current_team_id);
+        }
+        return $this->current_team;
+    }
 }
