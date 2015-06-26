@@ -165,7 +165,7 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
-        $data = ['Post' => ['comment_count' => 'test', 'public_flg' => 1]];
+        $data = ['Post' => ['comment_count' => 'test']];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
@@ -1246,10 +1246,9 @@ class PostsControllerTest extends ControllerTestCase
         $team_id = 1;
         $post_data = [
             'Post' => [
-                'user_id'    => $user_id,
-                'team_id'    => $team_id,
-                'public_flg' => false,
-                'body'       => 'test'
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'body'    => 'test'
             ],
         ];
         $Posts->Post->save($post_data);
@@ -1323,6 +1322,14 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $circle_id = '1';
+        $this->testAction("/posts/unjoin_circle/circle_id:{$circle_id}", ['method' => 'get']);
+    }
+
+    function testUnJoinCircleAllTeam()
+    {
+        $Posts = $this->_getPostsCommonMock();
+
+        $circle_id = $Posts->Post->Circle->getTeamAllCircleId();
         $this->testAction("/posts/unjoin_circle/circle_id:{$circle_id}", ['method' => 'get']);
     }
 
@@ -1457,6 +1464,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Post->ActionResult->current_team_id = '1';
         $Posts->Team->EvaluateTerm->my_uid = 1;
         $Posts->Team->EvaluateTerm->current_team_id = 1;
+        $Posts->Team->Circle->current_team_id = 1;
 
         return $Posts;
     }

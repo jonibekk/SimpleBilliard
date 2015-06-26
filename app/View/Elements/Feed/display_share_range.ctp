@@ -15,11 +15,8 @@
     <?php if ($post['Post']['type'] != Post::TYPE_KR_COMPLETE
     ): ?>
         <span class="font_lightgray"> ･ </span>
-        <?php //公開の場合
-        if ($post['share_mode'] == Post::SHARE_ALL): ?>
-            <i class="fa fa-group"></i>&nbsp;<?= $post['share_text'] ?>
         <?php //自分のみ
-        elseif ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
+        if ($post['share_mode'] == Post::SHARE_ONLY_ME): ?>
             <i class="fa fa-user"></i>&nbsp;<?= $post['share_text'] ?>
         <?php //共有ユーザ
         elseif ($post['share_mode'] == Post::SHARE_PEOPLE): ?>

@@ -25,6 +25,8 @@ if (!isset($form)) {
             <div class="pull-right circle-join-switch">
                 <?php if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者") ?>
+                <?php elseif ($circle['Circle']['team_all_flg']): ?>
+                    <?php // チーム全体サークルは変更不可 ?>
                 <?php else: ?>
                     <?php $joined = false;
                     foreach ($circle['CircleMember'] as $member) {

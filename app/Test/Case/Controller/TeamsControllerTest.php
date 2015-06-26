@@ -57,6 +57,7 @@ class TeamsControllerTest extends ControllerTestCase
         'app.evaluate_term',
         'app.team_vision',
         'app.group_vision',
+        'app.circle',
     );
 
     /**
@@ -1077,6 +1078,7 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams->Team->Group->my_uid = 1;
         $Teams->Team->Group->MemberGroup->current_team_id = $team_id;
         $Teams->Team->Group->MemberGroup->my_uid = 1;
+        $Teams->Team->Circle->current_team_id = 1;
 
         return $Teams;
     }

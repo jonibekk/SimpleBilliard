@@ -48,7 +48,6 @@ class Post extends AppModel
         self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __d('gl', "あたらしいサークルをつくりました。");
     }
 
-    const SHARE_ALL = 1;
     const SHARE_PEOPLE = 2;
     const SHARE_ONLY_ME = 3;
     const SHARE_CIRCLE = 4;
@@ -124,7 +123,6 @@ class Post extends AppModel
         'comment_count'   => ['numeric' => ['rule' => ['numeric'],],],
         'post_like_count' => ['numeric' => ['rule' => ['numeric'],],],
         'post_read_count' => ['numeric' => ['rule' => ['numeric'],],],
-        'public_flg'      => ['boolean' => ['rule' => ['boolean'],],],
         'important_flg'   => ['boolean' => ['rule' => ['boolean'],],],
         'del_flg'         => ['boolean' => ['rule' => ['boolean'],],],
         'photo1'          => [
@@ -235,8 +233,8 @@ class Post extends AppModel
             $share = explode(",", $postData['Post']['share']);
             foreach ($share as $key => $val) {
                 if (stristr($val, 'public')) {
-                    $postData['Post']['public_flg'] = true;
-                    unset($share[$key]);
+                    $teamAllCircle = $this->Circle->getTeamAllCircle();
+                    $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
                 }
             }
         }
@@ -277,22 +275,6 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getPublicList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
-    {
-        $options = [
-            'conditions' => [
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-                'public_flg'               => true,
-            ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['id'],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
     /**
      * @param        $start
      * @param        $end
@@ -324,22 +306,6 @@ class Post extends AppModel
         ];
         $res = $this->find('list', $options);
         return $res;
-    }
-
-    public function isPublic($post_id)
-    {
-        $options = [
-            'conditions' => [
-                'id'         => $post_id,
-                'team_id'    => $this->current_team_id,
-                'public_flg' => true,
-            ]
-        ];
-        $res = $this->find('list', $options);
-        if (!empty($res)) {
-            return true;
-        }
-        return false;
     }
 
     public function isMyPost($post_id)
@@ -411,8 +377,6 @@ class Post extends AppModel
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
-            //公開の投稿
-            $p_list = array_merge($p_list, $this->getPublicList($start, $end));
             //自分の投稿
             $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
             //自分が共有範囲指定された投稿
@@ -447,8 +411,6 @@ class Post extends AppModel
                     $p_list = $this->orgParams['post_id'];
                 }
                 elseif (
-                    //公開か？
-                    $this->isPublic($this->orgParams['post_id']) ||
                     //自分の投稿か？
                     $this->isMyPost($this->orgParams['post_id']) ||
                     //自分が共有範囲指定された投稿か？
@@ -469,8 +431,6 @@ class Post extends AppModel
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
                 $p_list = $this->getAllExistGoalPostList($start, $end);
-                //フォローorコラボのゴール投稿を取得
-                $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
             }
         }
 
@@ -644,7 +604,6 @@ class Post extends AppModel
                     'goal_id' => null,
                 ],
                 'team_id'                  => $this->current_team_id,
-                'public_flg'               => true,
                 'modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [$order => $order_direction],
@@ -706,10 +665,7 @@ class Post extends AppModel
     function getShareMode($data)
     {
         foreach ($data as $key => $val) {
-            if ($val['Post']['public_flg']) {
-                $data[$key]['share_mode'] = self::SHARE_ALL;
-            }
-            elseif (!empty($val['PostShareCircle'])) {
+            if (!empty($val['PostShareCircle'])) {
                 $data[$key]['share_mode'] = self::SHARE_CIRCLE;
             }
             else {
@@ -729,9 +685,6 @@ class Post extends AppModel
         foreach ($data as $key => $val) {
             $data[$key]['share_text'] = null;
             switch ($val['share_mode']) {
-                case self::SHARE_ALL:
-                    $data[$key]['share_text'] = __d('gl', "チーム全体に共有");
-                    break;
                 case self::SHARE_PEOPLE:
                     if (count($val['PostShareUser']) == 1) {
                         $data[$key]['share_text'] = __d('gl', "%sに共有",
@@ -842,18 +795,13 @@ class Post extends AppModel
             return [];
         }
         $share_member_list = [];
-        //チーム全体なら
-        if ($post['Post']['public_flg']) {
-            $share_member_list = $this->Team->TeamMember->getAllMemberUserIdList();
-        }
-        else {
-            //サークル共有ユーザを追加
-            $share_member_list = array_merge($share_member_list,
-                                             $this->PostShareCircle->getShareCircleMemberList($post_id));
-            //メンバー共有なら
-            $share_member_list = array_merge($share_member_list,
-                                             $this->PostShareUser->getShareUserListByPost($post_id));
-        }
+        //サークル共有ユーザを追加
+        $share_member_list = array_merge($share_member_list,
+                                         $this->PostShareCircle->getShareCircleMemberList($post_id));
+        //メンバー共有なら
+        $share_member_list = array_merge($share_member_list,
+                                         $this->PostShareUser->getShareUserListByPost($post_id));
+
         $share_member_list = array_unique($share_member_list);
         //自分自身を除外
         $key = array_search($this->my_uid, $share_member_list);
@@ -881,11 +829,10 @@ class Post extends AppModel
         }
 
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $this->current_team_id,
-            'type'       => $type,
-            'public_flg' => $public,
-            'goal_id'    => $goal_id,
+            'user_id' => $uid,
+            'team_id' => $this->current_team_id,
+            'type'    => $type,
+            'goal_id' => $goal_id,
         ];
 
         switch ($type) {
@@ -897,8 +844,13 @@ class Post extends AppModel
                 break;
         }
         $res = $this->save($data);
-        if ($res && $share) {
-            return $this->doShare($this->getLastInsertID(), $share);
+        if ($res) {
+            if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
+                return $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
+            }
+            if ($share) {
+                return $this->doShare($this->getLastInsertID(), $share);
+            }
         }
         return $res;
     }
@@ -908,8 +860,8 @@ class Post extends AppModel
         if (!$share) {
             return false;
         }
-        $public = false;
         $share = explode(",", $share);
+        $public = false;
         //TODO 近々、ここは「チーム全体」をサークル化する為、この処理はいずれ削除する。
         foreach ($share as $key => $val) {
             if (stristr($val, 'public')) {
@@ -917,15 +869,7 @@ class Post extends AppModel
                 unset($share[$key]);
             }
         }
-        if ($public) {
-            $this->id = $post_id;
-            $this->saveField('public_flg', true);
-        }
         //TODO ここまで
-        if (empty($share)) {
-            return true;
-        }
-
         //ユーザとサークルに分割
         $users = [];
         $circles = [];
@@ -938,6 +882,9 @@ class Post extends AppModel
             elseif (stristr($val, 'circle_')) {
                 $circles[] = str_replace('circle_', '', $val);
             }
+        }
+        if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
+            $circles[] = $team_all_circle_id;
         }
         //共有ユーザ保存
         $this->PostShareUser->add($post_id, $users);
@@ -967,13 +914,16 @@ class Post extends AppModel
         }
 
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $this->current_team_id,
-            'type'       => self::TYPE_CREATE_CIRCLE,
-            'public_flg' => true,
-            'circle_id'  => $circle_id,
+            'user_id'   => $uid,
+            'team_id'   => $this->current_team_id,
+            'type'      => self::TYPE_CREATE_CIRCLE,
+            'circle_id' => $circle_id,
         ];
-        return $this->save($data);
+        $res = $this->save($data);
+        if ($team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
+            $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
+        }
+        return $res;
     }
 
     /**

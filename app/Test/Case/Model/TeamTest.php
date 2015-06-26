@@ -36,6 +36,8 @@ class TeamTest extends CakeTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
+        'app.circle',
+        'app.circle_member',
 
         'app.thread'
     );
@@ -80,6 +82,11 @@ class TeamTest extends CakeTestCase
         $uid = '1';
         $res = $this->Team->add($postData, $uid);
         $this->assertTrue($res, "[正常]チーム追加");
+
+        // チーム全体サークルが追加されているか
+        $this->Team->Circle->current_team_id = $this->Team->getLastInsertID();
+        $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
+        $this->assertEquals($this->Team->Circle->current_team_id, $teamAllCircle["Circle"]["team_id"]);
     }
 
     function testEmailsValidation()

@@ -722,7 +722,12 @@ class PostsController extends AppController
             $this->Pnotify->outError(__d('gl', "アクセスURLに誤りがあります。"));
             return $this->redirect($this->referer());
         }
-        $this->Post->Circle->CircleMember->unjoinMember($this->request->params['named']['circle_id']);
+        $circle_id = $this->request->params['named']['circle_id'];
+        if ($circle_id == $this->Post->Circle->getTeamAllCircleId()) {
+            $this->Pnotify->outError(__d('gl', "このサークルから抜けることはできません。"));
+            return $this->redirect($this->referer());
+        }
+        $this->Post->Circle->CircleMember->unjoinMember($circle_id);
         $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
         return $this->redirect($this->referer());
     }

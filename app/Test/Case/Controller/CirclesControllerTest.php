@@ -124,6 +124,19 @@ class CirclesControllerTest extends ControllerTestCase
         $this->testAction('/circles/edit/circle_id:1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
+    function testEditTeamAll()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
+                'id'         => 3,
+                'name'       => 'xxx',
+                'description' => 'xxxx yyyy',
+            ],
+        ];
+        $this->testAction('/circles/edit/circle_id:3', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+    }
+
     function testEditFail()
     {
         $this->_getCirclesCommonMock();
@@ -164,6 +177,12 @@ class CirclesControllerTest extends ControllerTestCase
         $this->testAction('/circles/delete/circle_id:2', ['method' => 'POST', 'return' => 'contents']);
     }
 
+    function testDeleteFailTeamAll()
+    {
+        $this->_getCirclesCommonMock();
+        $this->testAction('/circles/delete/circle_id:3', ['method' => 'POST', 'return' => 'contents']);
+    }
+
     function testAjaxGetPublicCirclesModal()
     {
         $this->_getCirclesCommonMock();
@@ -196,6 +215,22 @@ class CirclesControllerTest extends ControllerTestCase
                     'join'      => false,
                     'circle_id' => "2",
                 ],
+                [
+                    'join'      => true,
+                    'circle_id' => "4",
+                ],
+            ],
+        ];
+        $this->testAction('/circles/join',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
+    }
+
+    function testJoinTeamAllCircle()
+    {
+        $this->_getCirclesCommonMock();
+        $data = [
+            'Circle' => [
                 [
                     'join'      => true,
                     'circle_id' => "3",

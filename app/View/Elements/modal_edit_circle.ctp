@@ -41,34 +41,37 @@
                                 'placeholder'              => __d('gl', "例) 営業部"),
                                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                ]) ?>
-            <div class="form-group">
-                <label class="control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
+            <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
+                <div class="form-group">
+                    <label class="control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
 
-                <div class="bbb">
-                    <?=
-                    $this->Form->hidden('members',
-                                        ['class' => 'ajax_add_select2_members', 'value' => $this->request->data['Circle']['members'], 'style' => "width: 100%", 'circle_id' => $this->request->data['Circle']['id']]) ?>
-                    <?php $this->Form->unlockField('Circle.members') ?>
-                    <span class="help-block font_11px"><?=
-                        __d('gl', "管理者：%s",
-                            h($this->Session->read('Auth.User.display_username'))) ?></span>
+                    <div class="bbb">
+                        <?=
+                        $this->Form->hidden('members',
+                                            ['class' => 'ajax_add_select2_members', 'value' => $this->request->data['Circle']['members'], 'style' => "width: 100%", 'circle_id' => $this->request->data['Circle']['id']]) ?>
+                        <?php $this->Form->unlockField('Circle.members') ?>
+                        <span class="help-block font_11px"><?=
+                            __d('gl', "管理者：%s",
+                                h($this->Session->read('Auth.User.display_username'))) ?></span>
+                    </div>
                 </div>
-            </div>
-            <?php $privacy_option = Circle::$TYPE_PUBLIC;
-            $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
-                                                                                                   "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
-            $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
-                                                                                                    "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
-            ?>
-            <?php echo $this->Form->input('public_flg', array(
-                'type'    => 'radio',
-                'before'  => '<label class="control-label modal-label">' . __d('gl',
-                                                                                            'プライバシー') . '</label>',
-                'legend'  => false,
-                'class'   => false,
-                'options' => $privacy_option,
-                'required' => false,
-            )); ?>
+
+                <?php $privacy_option = Circle::$TYPE_PUBLIC;
+                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('gl',
+                                                                                                       "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
+                                                                                                        "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+                ?>
+                <?php echo $this->Form->input('public_flg', array(
+                    'type'     => 'radio',
+                    'before'   => '<label class="control-label modal-label">' . __d('gl',
+                                                                                    'プライバシー') . '</label>',
+                    'legend'   => false,
+                    'class'    => false,
+                    'options'  => $privacy_option,
+                    'required' => false,
+                )); ?>
+            <?php endif ?>
             <?=
             $this->Form->input('description',
                                ['label'       => __d('gl', "サークルの説明"),
@@ -129,11 +132,12 @@
             <?= $this->Form->end(); ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
                     data-dismiss="modal"><?= __d('gl', "キャンセル") ?></button>
-            <?=
-            $this->Form->postLink(__d('gl', "サークルを削除"),
-                                  ['controller' => 'circles', 'action' => 'delete', 'circle_id' => $this->request->data['Circle']['id']],
-                                  ['class' => 'btn btn-default pull-left'], __d('gl', "本当にこのサークルを削除しますか？")) ?>
-
+            <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
+                <?=
+                $this->Form->postLink(__d('gl', "サークルを削除"),
+                                      ['controller' => 'circles', 'action' => 'delete', 'circle_id' => $this->request->data['Circle']['id']],
+                                      ['class' => 'btn btn-default pull-left'], __d('gl', "本当にこのサークルを削除しますか？")) ?>
+            <?php endif ?>
         </div>
     </div>
 </div>

@@ -79,7 +79,7 @@
                 <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
                     <?=
                     $this->Form->hidden('share',
-                                        ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
+                                        ['id' => 'select2PostCircleMember', 'value' => $current_circle && !$current_circle['Circle']['team_all_flg'] ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
                     <?php $this->Form->unlockField('Post.share') ?>
                     <?php $this->Form->unlockField('socket_id') ?>
                 </div>
