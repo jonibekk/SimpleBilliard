@@ -1645,16 +1645,25 @@ function evFeedMoreView(options) {
                 $('.custom-radio-check').customRadioCheck();
             }
 
+            // 取得したデータ件数が、１ページの表示件数未満だった場合
             if (data.count < data.page_item_num) {
+                // 前月以前のデータを取得する必要がある場合
                 if (month_index != undefined) {
                     month_index++;
                     $obj.attr('month-index', month_index);
                     //次のページ番号をセット
                     $obj.attr('next-page-num', 1);
 
-                    // ajax で取得したデータ件数が 0 件の場合
-                    if (data.count == 0) {
-                        // さらに古い投稿が存在する可能性がある場合
+                    // 取得した件数が 1 件以上の場合
+                    // 「さらに読み込む」リンクを表示
+                    if (data.count > 0) {
+                        $obj.removeAttr('disabled');
+                        $loader_html.remove();
+                        $obj.text(cake.message.info.f);
+                    }
+                    // 取得したデータ件数が 0 件の場合
+                    else {
+                        // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
                         if (data.start && data.start > oldest_post_time) {
                             setTimeout(function () {
                                 evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
@@ -1669,13 +1678,8 @@ function evFeedMoreView(options) {
                             return;
                         }
                     }
-
-                    //リンクを有効化
-                    $obj.removeAttr('disabled');
-                    //ローダーを削除
-                    $loader_html.remove();
-                    $obj.text(cake.message.info.f);
                 }
+                // 前月以前のデータを取得する必要がない場合
                 else {
                     //ローダーを削除
                     $loader_html.remove();
