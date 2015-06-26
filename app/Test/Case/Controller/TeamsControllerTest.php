@@ -629,6 +629,32 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/save_goal_categories', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testAjaxTeamAdminUserCheckReturnTrue ()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $admin_flg = 1;
+        $data = [
+            'user_id' => $Teams->Team->TeamMember->uid,
+            'team_id' => $Teams->Team->TeamMember->current_team_id,
+            'admin_flg' => $admin_flg
+        ];
+        $Teams->Team->TeamMember->save($data);
+        $this->testAction('/teams/ajax_team_admin_user_check', ['method' => 'GET']);
+    }
+
+    function testAjaxTeamAdminUserCheckReturnFalse ()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $admin_flg = 0;
+        $data = [
+            'user_id' => $Teams->Team->TeamMember->uid,
+            'team_id' => $Teams->Team->TeamMember->current_team_id,
+            'admin_flg' => $admin_flg
+        ];
+        $Teams->Team->TeamMember->save($data);
+        $this->testAction('/teams/ajax_team_admin_user_check', ['method' => 'GET']);
+    }
+
     function testAjaxDeleteTeamVision()
     {
         $this->_getTeamsCommonMock(null, true);
