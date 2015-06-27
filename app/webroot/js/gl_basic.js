@@ -748,6 +748,10 @@ function evShowAndThisWide() {
 function setSelectOptions(url, select_id) {
     var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
+        if (data.length == 0) {
+            $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
+            return;
+        }
         $.each(data, function (k, v) {
             var option = '<option value="' + k + '">' + v + '</option>';
             options_elem += option;

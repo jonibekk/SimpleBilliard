@@ -80,7 +80,8 @@ echo $this->Html->script('gl_basic');
             h: "<?=__d('gl',"文字長すぎます")?>",
             i: "<?=__d('gl',"最多で")?>",
             j: "<?=__d('gl',"項目までしか選択できません")?>",
-            k: "<?=__d('gl',"出したい成果を選択する")?>"
+            k: "<?=__d('gl',"出したい成果を選択する")?>",
+            l: "<?=__d('gl',"出したい成果はありません")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
