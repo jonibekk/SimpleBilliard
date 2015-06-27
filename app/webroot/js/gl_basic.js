@@ -746,7 +746,7 @@ function evShowAndThisWide() {
     $(this).addClass('clicked');
 }
 function setSelectOptions(url, select_id) {
-    var options_elem = null;
+    var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
         $.each(data, function (k, v) {
             var option = '<option value="' + k + '">' + v + '</option>';
