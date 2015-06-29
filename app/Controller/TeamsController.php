@@ -594,6 +594,7 @@ class TeamsController extends AppController
 
     function ajax_team_admin_user_check()
     {
+        $this->_ajaxPreProcess();
         $is_admin_user = true;
         $team_id = $this->Session->read('current_team_id');
         $user_id = $this->Auth->user('id');
@@ -607,12 +608,14 @@ class TeamsController extends AppController
 
     function ajax_delete_team_vision($team_vision_id)
     {
+        $this->_ajaxPreProcess();
         $res = $this->Team->TeamVision->deleteTeamVision($team_vision_id);
         return $this->_ajaxGetResponse($res);
     }
 
     function ajax_get_team_vision($team_id, $active_flg = 1)
     {
+        $this->_ajaxPreProcess();
         $res = $this->Team->TeamVision->getTeamVision($team_id, $active_flg);
         $team_vision_list = $this->Team->TeamVision->convertData($res);
         return $this->_ajaxGetResponse($team_vision_list);
@@ -620,12 +623,14 @@ class TeamsController extends AppController
 
     function ajax_set_team_vision_archive($team_archive_id, $active_flg = 1)
     {
+        $this->_ajaxPreProcess();
         $res = $this->Team->TeamVision->setTeamVisionActiveFlag($team_archive_id, $active_flg);
         return $this->_ajaxGetResponse($res);
     }
 
     function ajax_get_team_member_init()
     {
+        $this->_ajaxPreProcess();
         // ログインユーザーは管理者なのか current_team_idのadmin_flgがtrueを検索
         $current_team_id = $this->Session->read('current_team_id');
         $login_user_id = $this->Auth->user('id');
@@ -644,6 +649,7 @@ class TeamsController extends AppController
 
     function ajax_get_team_member()
     {
+        $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->selectMemberInfo($team_id);
         $res = [
@@ -654,6 +660,7 @@ class TeamsController extends AppController
 
     function ajax_get_group_member($group_id = '')
     {
+        $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->selectGroupMemberInfo($team_id, $group_id);
         $res = [
@@ -664,6 +671,7 @@ class TeamsController extends AppController
 
     function ajax_get_current_team_group_list()
     {
+        $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         // グループ名を取得
         $group_info = $this->Team->Group->getByAllName($team_id);
@@ -672,6 +680,7 @@ class TeamsController extends AppController
 
     function ajax_get_current_team_admin_list()
     {
+        $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->selectAdminMemberInfo($team_id);
         $res = [
@@ -682,6 +691,7 @@ class TeamsController extends AppController
 
     function ajax_get_current_not_2fa_step_user_list()
     {
+        $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         $user_info = $this->Team->TeamMember->select2faStepMemberInfo($team_id);
         $res = [
@@ -692,24 +702,28 @@ class TeamsController extends AppController
 
     function ajax_set_current_team_active_flag($member_id, $active_flg)
     {
+        $this->_ajaxPreProcess();
         $res = $this->Team->TeamMember->setActiveFlag($member_id, $active_flg);
         return $this->_ajaxGetResponse($res);
     }
 
     function ajax_set_current_team_admin_user_flag($member_id, $active_flg)
     {
+        $this->_ajaxPreProcess();
         $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $active_flg);
         return $this->_ajaxGetResponse($res);
     }
 
     function ajax_set_current_team_evaluation_flag($member_id, $evaluation_flg)
     {
+        $this->_ajaxPreProcess();
         $res = $this->Team->TeamMember->setEvaluationFlag($member_id, $evaluation_flg);
         return $this->_ajaxGetResponse($res);
     }
 
     function ajax_get_invite_member_list()
     {
+        $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         $invite_member_list = $this->Team->Invite->getInviteUserList($team_id);
         $res = [

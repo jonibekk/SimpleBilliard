@@ -21,10 +21,12 @@ var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bo
 );
 
 
-app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
-    function ($stateProvider, $urlRouterProvider, $translateProvider) {
-        $urlRouterProvider.otherwise("/");
+app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$httpProvider',
+    function ($stateProvider, $urlRouterProvider, $translateProvider, $httpProvider) {
 
+        $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+
+        $urlRouterProvider.otherwise("/");
         $stateProvider
             .state('member', {
                 url: "/",
