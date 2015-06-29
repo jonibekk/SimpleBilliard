@@ -296,6 +296,8 @@ class Circle extends AppModel
 
     function getCirclesAndMemberById($circle_ids)
     {
+        $active_user_ids = $this->Team->TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'Circle.id'      => $circle_ids,
@@ -310,6 +312,9 @@ class Circle extends AppModel
             ],
             'contain'    => [
                 'CircleMember' => [
+                    'conditions' => [
+                        'CircleMember.user_id' => $active_user_ids,
+                    ],
                     'fields' => [
                         'CircleMember.id'
                     ],
