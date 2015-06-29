@@ -225,6 +225,8 @@ class Circle extends AppModel
 
     function getPublicCircles($type = 'all', $start_date = null, $end_date = null, $order = 'Circle.modified desc')
     {
+        $active_user_ids = $this->Team->TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'Circle.team_id'    => $this->current_team_id,
@@ -233,7 +235,10 @@ class Circle extends AppModel
             'order'      => [$order],
             'contain'    => [
                 'CircleMember' => [
-                    'fields' => [
+                    'conditions' => [
+                        'CircleMember.user_id' => $active_user_ids,
+                    ],
+                    'fields'     => [
                         'CircleMember.id',
                         'CircleMember.user_id'
                     ],
