@@ -136,8 +136,16 @@ class TeamVisionTest extends CakeTestCase
             'name'=>$name,
         ];
         $this->TeamVision->save($data);
-        $res = $this->TeamVision->deleteTeamVision($this->TeamVision->getLastInsertID());
-        $this->assertEquals($res['TeamVision']['del_flg'], 1);
+        $this->TeamVision->deleteTeamVision($this->TeamVision->getLastInsertID());
+
+        $options = [
+            'fields' => ['del_flg'],
+            'conditions' => [
+                'id' => $this->TeamVision->getLastInsertID()
+            ]
+        ];
+        $res = $this->TeamVision->find('first', $options);
+        $this->assertCount(0, $res);
     }
 
     function testConvertData()
