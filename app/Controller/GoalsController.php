@@ -241,6 +241,7 @@ class GoalsController extends AppController
             'html'          => $html,
             'count'         => count($goals),
             'page_item_num' => GOAL_INDEX_ITEMS_NUMBER,
+            'start'         => 0,
         );
         return $this->_ajaxGetResponse($result);
     }

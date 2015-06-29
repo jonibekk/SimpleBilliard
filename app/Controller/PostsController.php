@@ -246,6 +246,7 @@ class PostsController extends AppController
             'html'          => $html,
             'count'         => count($posts),
             'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -272,6 +273,7 @@ class PostsController extends AppController
             'html'          => $html,
             'count'         => count($posts),
             'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'         => 0,
         );
         return $this->_ajaxGetResponse($result);
     }

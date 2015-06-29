@@ -177,7 +177,7 @@ class KeyResult extends AppModel
         return true;
     }
 
-    function getKeyResults($goal_id, $find_type = "all",$is_complete = false)
+    function getKeyResults($goal_id, $find_type = "all", $is_complete = false)
     {
         $options = [
             'conditions' => [
@@ -191,8 +191,8 @@ class KeyResult extends AppModel
                 'KeyResult.priority DESC',
             ]
         ];
-        if($is_complete === true){
-            $options['conditions']['completed']=null;
+        if ($is_complete === true) {
+            $options['conditions']['completed'] = null;
         }
 
         $res = $this->find($find_type, $options);

@@ -130,6 +130,8 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-next-select-with-value", evChangeTargetSelectWithValue);
+    //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".check-target-toggle", evToggle);
@@ -744,15 +746,29 @@ function evShowAndThisWide() {
     $(this).addClass('clicked');
 }
 function setSelectOptions(url, select_id) {
-    var options_elem = null;
+    var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
+        if (data.length == 0) {
+            $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
+            return;
+        }
         $.each(data, function (k, v) {
             var option = '<option value="' + k + '">' + v + '</option>';
             options_elem += option;
         });
-
-        $("#" + select_id).append(options_elem);
+        $("#" + select_id).empty().append(options_elem);
     });
+}
+
+function evChangeTargetSelectWithValue() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var target_id = $(this).attr("target-id");
+    if ($(this).val() == undefined || $(this).val() == 0 || $(this).val() == false) {
+        return;
+    }
+    var url = $(this).attr("ajax-url") + $(this).val();
+    setSelectOptions(url, target_id);
 }
 
 function evShowAndThisWideClose() {
@@ -1562,7 +1578,12 @@ function getModalPostList(e) {
     }
 }
 autoload_more = false;
-function evFeedMoreView() {
+function evFeedMoreView(options) {
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
     attrUndefinedCheck(this, 'get-url');
@@ -1573,11 +1594,17 @@ function evFeedMoreView() {
     var get_url = $obj.attr('get-url');
     var month_index = $obj.attr('month-index');
     var no_data_text_id = $obj.attr('no-data-text-id');
+    var oldest_post_time = $obj.attr('oldest-post-time') || 0;
+
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+
     //ローダー表示
-    $obj.after($loader_html);
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<i id="__feed_loader" class="fa fa-refresh fa-spin"></i>');
+    if (!opt.recursive) {
+        $obj.after($loader_html);
+    }
+
     //url生成
     var url = get_url + '/page:' + next_page_num;
     if (month_index != undefined && month_index > 0) {
@@ -1632,23 +1659,43 @@ function evFeedMoreView() {
                 });
 
                 $('.custom-radio-check').customRadioCheck();
-
-
             }
 
+            // 取得したデータ件数が、１ページの表示件数未満だった場合
             if (data.count < data.page_item_num) {
+                // 前月以前のデータを取得する必要がある場合
                 if (month_index != undefined) {
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //リンクを有効化
-                    $obj.removeAttr('disabled');
                     month_index++;
                     $obj.attr('month-index', month_index);
                     //次のページ番号をセット
                     $obj.attr('next-page-num', 1);
-                    $obj.text(cake.message.info.f);
-                    $("#" + no_data_text_id).show();
+
+                    // 取得した件数が 1 件以上の場合
+                    // 「さらに読み込む」リンクを表示
+                    if (data.count > 0) {
+                        $obj.removeAttr('disabled');
+                        $loader_html.remove();
+                        $obj.text(cake.message.info.f);
+                    }
+                    // 取得したデータ件数が 0 件の場合
+                    else {
+                        // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
+                        if (data.start && data.start > oldest_post_time) {
+                            setTimeout(function () {
+                                evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
+                            }, 200);
+                            return;
+                        }
+                        // これ以上古い投稿が存在しない場合
+                        else {
+                            $loader_html.remove();
+                            $("#" + no_data_text_id).show();
+                            $obj.remove();
+                            return;
+                        }
+                    }
                 }
+                // 前月以前のデータを取得する必要がない場合
                 else {
                     //ローダーを削除
                     $loader_html.remove();
