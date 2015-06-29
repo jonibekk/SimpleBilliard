@@ -38,21 +38,21 @@ app.controller("TeamVisionArchiveController",
     });
 
 app.controller("TeamVisionDeleteController",
-    function ($scope, $state, deleteVision, notificationService) {
+    function ($scope, $state, deleteVision, notificationService, $translate) {
         if (deleteVision === false) {
-            notificationService.error('管理者以外の方には削除できません');
+            notificationService.error($translate.instant('TEAM_VISION.DELETE_FAILED_MASSAGE'));
         } else {
-            notificationService.success('チームビジョンを削除しました');
+            notificationService.success($translate.instant('TEAM_VISION.DELETE_SUCCESS_MASSAGE'));
         }
         $state.go('vision', {team_id: $scope.team_id});
     });
 
 app.controller("TeamVisionSetArchiveController",
-    function ($scope, $state, setVisionArchive, notificationService) {
+    function ($scope, $state, setVisionArchive, notificationService, $translate) {
         if (setVisionArchive === false) {
-            notificationService.error('管理者以外の方にはアーカイブできません');
+            notificationService.error($translate.instant('TEAM_VISION.ARCHIVE_FAILED_MASSAGE'));
         } else {
-            notificationService.success('チームビジョンをアーカイブしました。');
+            notificationService.success($translate.instant('TEAM_VISION.ARCHIVE_SUCCESS_MASSAGE'));
         }
         $state.go('vision', {team_id: $scope.team_id});
     });
