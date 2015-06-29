@@ -120,6 +120,6 @@ class TeamVision extends AppModel
 
     function deleteTeamVision($team_vision_id){
         $this->id = $team_vision_id;
-        return $this->save(['del_flg' => 1]);
+        return $this->delete();
     }
 }
