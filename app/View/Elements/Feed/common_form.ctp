@@ -7,6 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $current_circle
+ * @var                    $goal_list_for_action_option
  */
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
@@ -145,9 +146,23 @@
             <div class="panel-body post-share-range-panel-body" id="">
                 <?=
                 $this->Form->input('goal_id', [
-                    'label'    => __d('gl', "ゴール"),
+                    'label'     => __d('gl', "ゴール"),
+                    'required'  => true,
+                    'class'     => 'form-control change-next-select-with-value',
+                    'id'        => 'GoalSelectOnActionForm',
+                    'options'   => $goal_list_for_action_option,
+                    'target-id' => 'KrSelectOnActionForm',
+                    'ajax-url'  => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""])
+                ])
+                ?>
+            </div>
+            <div class="panel-body post-share-range-panel-body" id="">
+                <?=
+                $this->Form->input('key_result_id', [
+                    'label'    => __d('gl', "出したい成果"),
                     'required' => true,
-                    'options'  => $goal_list_for_action_option,
+                    'id'       => 'KrSelectOnActionForm',
+                    'options'  => [null => __d('gl', '出したい成果を選択する')],
                 ])
                 ?>
             </div>
