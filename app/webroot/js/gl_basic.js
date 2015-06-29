@@ -764,9 +764,6 @@ function evChangeTargetSelectWithValue() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'ajax-url');
     var target_id = $(this).attr("target-id");
-    if ($(this).val() == undefined || $(this).val() == 0 || $(this).val() == false) {
-        return;
-    }
     var url = $(this).attr("ajax-url") + $(this).val();
     setSelectOptions(url, target_id);
 }
