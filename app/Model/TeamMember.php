@@ -745,6 +745,16 @@ class TeamMember extends AppModel
                 $this->create();
                 $team_member = $this->save($row_v['TeamMember']);
                 $this->csv_datas[$row_k]['TeamMember'] = $team_member['TeamMember'];
+
+                // チーム全体サークルのCircleMemberに登録
+                $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
+                $row = [
+                    'circle_id' => $teamAllCircle['Circle']['id'],
+                    'team_id'   => $this->current_team_id,
+                    'user_id'   => $user['User']['id'],
+                ];
+                $this->Team->Circle->CircleMember->create();
+                $this->Team->Circle->CircleMember->save($row);
             }
         }
 

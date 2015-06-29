@@ -79,7 +79,9 @@ echo $this->Html->script('gl_basic');
             g: "<?=__d('gl',"検索文字列が")?>",
             h: "<?=__d('gl',"文字長すぎます")?>",
             i: "<?=__d('gl',"最多で")?>",
-            j: "<?=__d('gl',"項目までしか選択できません")?>"
+            j: "<?=__d('gl',"項目までしか選択できません")?>",
+            k: "<?=__d('gl',"出したい成果を選択する")?>",
+            l: "<?=__d('gl',"出したい成果はありません")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
@@ -113,13 +115,17 @@ echo $this->Html->script('gl_basic');
             b: function (element, callback) {
                 var data = [{
                     <?php if(isset($current_circle)&&!empty($current_circle)):?>
+                    <?php if($current_circle['Circle']['team_all_flg']): ?>
+                    id: "public",
+                    <?php else: ?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
+                    <?php endif ?>
                     text: "<?=h($current_circle['Circle']['name'])?>",
                     image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    <?php else:?>
+                    <?php elseif(isset($team_all_circle)&&!empty($team_all_circle)):?>
                     id: 'public',
-                    text: "<?=__d('gl',"チーム全体")?>",
-                    image: "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
+                    text: "<?=h($team_all_circle['Circle']['name'])?>",
+                    image: "<?=$this->Upload->uploadUrl($team_all_circle, 'Circle.photo', ['style' => 'small'])?>"
                     <?php endif;?>
                 }];
                 callback(data);

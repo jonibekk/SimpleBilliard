@@ -51,25 +51,23 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
         }
         self::$timeout = $timeout;
         self::$key = Configure::read('Session.handler.key') ? Configure::read('Session.handler.key') : null;
+        App::uses('ConnectionManager', 'Model');
+        self::$store = ConnectionManager::getDataSource('redis');
     }
 
     /**
      * open
-     * connect to Redis
-     * authorize
-     * select database
      */
     public function open()
     {
-        App::uses('ConnectionManager', 'Model');
-        self::$store = ConnectionManager::getDataSource('redis');
+        return true;
     }
 
     /**
      * close
      * disconnect from Redis
      *
-     * @return type
+     * @return bool
      */
     public function close()
     {

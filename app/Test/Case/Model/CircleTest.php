@@ -78,7 +78,17 @@ class CircleTest extends CakeTestCase
     {
         $this->Circle->my_uid = 1;
         $this->Circle->current_team_id = 1;
-        $this->Circle->getPublicCircles($type = 'all');
+        $this->Circle->Team->TeamMember->current_team_id = 1;
+
+        $circles = $this->Circle->getPublicCircles($type = 'all');
+        // CircleMemberに含まれているのが、全員アクティブなチームメンバーか確認
+        $active_user_ids = $this->Circle->Team->TeamMember->getActiveTeamMembersList();
+        foreach ($circles as $circle) {
+            foreach ($circle['CircleMember'] as $member) {
+                $this->assertContains($member['user_id'], $active_user_ids);
+            }
+        }
+
         $this->Circle->getPublicCircles($type = 'joined');
         $this->Circle->getPublicCircles($type = 'non-joined');
         $this->Circle->my_uid = 2;
@@ -105,6 +115,10 @@ class CircleTest extends CakeTestCase
         $this->Circle->current_team_id = 1;
         $this->Circle->PostShareCircle->Post->my_uid = 1;
         $this->Circle->PostShareCircle->Post->current_team_id = 1;
+        $this->Circle->PostShareCircle->my_uid = 1;
+        $this->Circle->PostShareCircle->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
     }
 
     function testIsSecret()
@@ -114,4 +128,33 @@ class CircleTest extends CakeTestCase
         $this->assertTrue(empty($res));
     }
 
+    function testGetTeamAllCircle()
+    {
+        // 正常系
+        $this->Circle->current_team_id = 1;
+        $testAllCircle = $this->Circle->getTeamAllCircle();
+        $this->assertEquals(1, $testAllCircle['Circle']['team_id']);
+        $this->assertEquals(1, $testAllCircle['Circle']['team_all_flg']);
+
+        // 存在しないチームの場合
+        $this->Circle->current_team_id = 9999999;
+        $testAllCircle = $this->Circle->getTeamAllCircle();
+        $this->assertEmpty($testAllCircle);
+    }
+
+    function testGetCirclesAndMemberById() {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->Team->TeamMember->current_team_id = 1;
+
+        $circles = $this->Circle->getCirclesAndMemberById([1]);
+        $this->assertNotEmpty($circles);
+
+        // CircleMemberに含まれているのが、全員アクティブなチームメンバーか確認
+        $active_user_ids = $this->Circle->Team->TeamMember->getActiveTeamMembersList();
+        foreach ($circles as $circle) {
+            foreach ($circle['CircleMember'] as $member) {
+                $this->assertContains($member['user_id'], $active_user_ids);
+            }
+        }
+    }
 }

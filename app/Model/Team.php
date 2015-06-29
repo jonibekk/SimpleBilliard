@@ -5,6 +5,7 @@ App::uses('AppModel', 'Model');
  * Team Model
  *
  * @property Badge                           $Badge
+ * @property Circle                          $Circle
  * @property CommentLike                     $CommentLike
  * @property CommentMention                  $CommentMention
  * @property CommentRead                     $CommentRead
@@ -123,6 +124,7 @@ class Team extends AppModel
      */
     public $hasMany = [
         'Badge',
+        'Circle',
         'CommentLike',
         'CommentMention',
         'CommentRead',
@@ -184,6 +186,32 @@ class Team extends AppModel
         if (isset($user['User']) && !$user['User']['default_team_id']) {
             $this->TeamMember->User->id = $uid;
             $this->TeamMember->User->saveField('default_team_id', $this->id);
+        }
+
+        // 「チーム全体」サークルを追加
+        $circleData = [
+            'Circle'       => [
+                'team_id'      => $this->id,
+                'name'         => __d('gl', 'チーム全体'),
+                'description'  => __d('gl', 'チーム全体'),
+                'public_flg'   => true,
+                'team_all_flg' => true,
+            ],
+            'CircleMember' => [
+                [
+                    'team_id'   => $this->id,
+                    'user_id'   => $uid,
+                    'admin_flg' => true,
+                ]
+            ]
+        ];
+        if ($this->Circle->saveAll($circleData)) {
+            // サークルメンバー数を更新
+            // 新しく追加したチームのサークルなので current_team_id を一時的に変更する
+            $tmp = $this->Circle->CircleMember->current_team_id;
+            $this->Circle->CircleMember->current_team_id = $this->id;
+            $this->Circle->CircleMember->updateCounterCache(['circle_id' => $this->Circle->getLastInsertID()]);
+            $this->Circle->CircleMember->current_team_id = $tmp;
         }
         return true;
     }
@@ -442,5 +470,15 @@ class Team extends AppModel
         );
 
         return (bool)$saved_term;
+    }
+
+    /**
+     * @return null
+     */
+    function getCurrentTeam() {
+        if (empty($this->current_team)) {
+            $this->current_team = $this->findById($this->current_team_id);
+        }
+        return $this->current_team;
     }
 }

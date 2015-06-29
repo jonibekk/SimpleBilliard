@@ -27,7 +27,9 @@ class TeamMemberTest extends CakeTestCase
         'app.team',
         'app.group',
         'app.job_category',
-        'app.evaluate_term'
+        'app.evaluate_term',
+        'app.circle',
+        'app.circle_member',
     );
 
     /**
@@ -274,6 +276,7 @@ class TeamMemberTest extends CakeTestCase
     function testSaveNewMembersFromCsvSuccessChangeLocalName()
     {
         $this->setDefault();
+        $this->TeamMember->Team->Circle->current_team_id = 1;
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();

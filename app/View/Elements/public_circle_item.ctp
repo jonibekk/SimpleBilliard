@@ -25,6 +25,8 @@ if (!isset($form)) {
             <div class="pull-right circle-join-switch">
                 <?php if (!empty($circle['CircleAdmin'])): ?>
                     <?= __d('gl', "管理者") ?>
+                <?php elseif ($circle['Circle']['team_all_flg']): ?>
+                    <?php // チーム全体サークルは変更不可 ?>
                 <?php else: ?>
                     <?php $joined = false;
                     foreach ($circle['CircleMember'] as $member) {
@@ -51,7 +53,7 @@ if (!isset($form)) {
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
             <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $circle['Circle']['id']]) ?>"
                class="modal-ajax-get">
-                <?= __d('gl', "%s メンバー", $circle['Circle']['circle_member_count']) ?>
+                <?= __d('gl', "%s メンバー", count($circle['CircleMember'])) ?>
             </a>
             &middot;
             <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified']), 'rough') ?>

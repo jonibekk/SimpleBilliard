@@ -13,6 +13,8 @@ cache:
 cache:
   directories:
   - $HOME/.composer
+  - $HOME/apcu-4.0.2
+  - $HOME/redis-2.2.7
 services:
   - redis-server
 
@@ -34,19 +36,19 @@ before_script:
   - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
   - sudo apt-get install php-pear php5-dev
   - pecl install oauth
-  - echo "extension=oauth.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - wget http://pecl.php.net/get/apcu-4.0.2.tgz ; tar -xzf apcu-4.0.2.tgz ; sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
+  - sh -c "if [ ! -e apcu-4.0.2 ]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz && tar -xzf apcu-4.0.2.tgz ; fi"
+  - sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enabled=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - wget http://pecl.php.net/get/redis-2.2.7.tgz ; tar -xzf redis-2.2.7.tgz ; sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
+  - sh -c "if [ ! -e redis-2.2.7 ]; then wget http://pecl.php.net/get/redis-2.2.7.tgz && tar -xzf redis-2.2.7.tgz ; fi"
+  - sh -c "cd redis-2.2.7 && phpize && ./configure && make && sudo make install"
   - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # Download browscap.ini
   - wget -O /home/travis/browscap.ini http://browscap.org/stream?q=LITE_PHP_BrowsCapINI
   - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
-  - curl -s http://getcomposer.org/installer | php
-  - composer update --no-interaction
+  - composer install --no-interaction --no-dev
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
   - mkdir ./app/tmp
@@ -116,12 +118,11 @@ before_script:
       }
     }
     }" > app/Config/database.php
-#  - mysql cakephp_test < app/Config/sql/mysql.sql
-
-script:
   - mkdir -p build/logs
   - cd ./app
   - echo -ne '\n\n' | ./Console/cake schema create
+
+script:
   - ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
   - cd ../
 

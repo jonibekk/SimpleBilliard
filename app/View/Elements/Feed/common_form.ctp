@@ -7,6 +7,7 @@
  *
  * @var CodeCompletionView $this
  * @var                    $current_circle
+ * @var                    $goal_list_for_action_option
  */
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
@@ -79,7 +80,7 @@
                 <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
                     <?=
                     $this->Form->hidden('share',
-                                        ['id' => 'select2PostCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
+                                        ['id' => 'select2PostCircleMember', 'value' => $current_circle && !$current_circle['Circle']['team_all_flg'] ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
                     <?php $this->Form->unlockField('Post.share') ?>
                     <?php $this->Form->unlockField('socket_id') ?>
                 </div>
@@ -145,9 +146,23 @@
             <div class="panel-body post-share-range-panel-body" id="">
                 <?=
                 $this->Form->input('goal_id', [
-                    'label'    => __d('gl', "ゴール"),
+                    'label'     => __d('gl', "ゴール"),
+                    'required'  => true,
+                    'class'     => 'form-control change-next-select-with-value',
+                    'id'        => 'GoalSelectOnActionForm',
+                    'options'   => $goal_list_for_action_option,
+                    'target-id' => 'KrSelectOnActionForm',
+                    'ajax-url'  => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""])
+                ])
+                ?>
+            </div>
+            <div class="panel-body post-share-range-panel-body" id="">
+                <?=
+                $this->Form->input('key_result_id', [
+                    'label'    => __d('gl', "出したい成果"),
                     'required' => true,
-                    'options'  => $goal_list_for_action_option,
+                    'id'       => 'KrSelectOnActionForm',
+                    'options'  => [null => __d('gl', '出したい成果を選択する')],
                 ])
                 ?>
             </div>

@@ -21,7 +21,6 @@ class PostFixture extends CakeTestFixture
         'comment_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'コメント数(commentsテーブルにレコードが追加されたらカウントアップされる)'),
         'post_like_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'いいね数(post_likesテーブルni'),
         'post_read_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '読んだ数'),
-        'public_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'important_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index'),
         'goal_id'              => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
         'circle_id'            => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'サークルID'),
@@ -46,7 +45,6 @@ class PostFixture extends CakeTestFixture
             'modified'         => array('column' => 'modified', 'unique' => 0),
             'del_flg'          => array('column' => 'del_flg', 'unique' => 0),
             'type'             => array('column' => 'type', 'unique' => 0),
-            'public_flg'       => array('column' => 'public_flg', 'unique' => 0),
             'important_flg'    => array('column' => 'important_flg', 'unique' => 0),
             'action_result_id' => array('column' => 'action_result_id', 'unique' => 0),
             'key_result_id'    => array('column' => 'key_result_id', 'unique' => 0)
@@ -69,7 +67,6 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 1,
             'post_like_count' => 1,
             'post_read_count' => 1,
-            'public_flg'      => 0,
             'important_flg'   => 0,
             'goal_id'         => null,
             'del_flg'         => 0,
@@ -86,7 +83,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 2,
             'post_like_count' => 2,
             'post_read_count' => 2,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -104,7 +101,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 3,
             'post_like_count' => 3,
             'post_read_count' => 3,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -122,7 +119,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 4,
             'post_like_count' => 4,
             'post_read_count' => 4,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -140,7 +137,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 5,
             'post_like_count' => 5,
             'post_read_count' => 5,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -158,7 +155,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 6,
             'post_like_count' => 6,
             'post_read_count' => 6,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -176,7 +173,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 7,
             'post_like_count' => 7,
             'post_read_count' => 7,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -194,7 +191,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 8,
             'post_like_count' => 8,
             'post_read_count' => 8,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -212,7 +209,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 9,
             'post_like_count' => 9,
             'post_read_count' => 9,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,
@@ -230,7 +227,7 @@ class PostFixture extends CakeTestFixture
             'comment_count'   => 10,
             'post_like_count' => 10,
             'post_read_count' => 10,
-            'public_flg'      => 1,
+
             'important_flg'   => 1,
             'goal_id'         => '',
             'del_flg'         => 1,

@@ -241,6 +241,7 @@ class GoalsController extends AppController
             'html'          => $html,
             'count'         => count($goals),
             'page_item_num' => GOAL_INDEX_ITEMS_NUMBER,
+            'start'         => 0,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -742,7 +743,10 @@ class GoalsController extends AppController
     {
         $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
-        $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list", true);
+        $kr_list = [];
+        if ($goal_id) {
+            $kr_list = $this->Goal->KeyResult->getKeyResults($goal_id, "list", true);
+        }
         return $this->_ajaxGetResponse($kr_list);
     }
 
