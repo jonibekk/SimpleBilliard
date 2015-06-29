@@ -633,6 +633,7 @@ class TeamsControllerTest extends ControllerTestCase
     function testAjaxTeamAdminUserCheckReturnTrue ()
     {
         $Teams = $this->_getTeamsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $admin_flg = 1;
         $data = [
             'user_id' => $Teams->Team->TeamMember->uid,
@@ -641,11 +642,13 @@ class TeamsControllerTest extends ControllerTestCase
         ];
         $Teams->Team->TeamMember->save($data);
         $this->testAction('/teams/ajax_team_admin_user_check', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxTeamAdminUserCheckReturnFalse ()
     {
         $Teams = $this->_getTeamsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $admin_flg = 0;
         $data = [
             'user_id' => $Teams->Team->TeamMember->uid,
@@ -654,24 +657,31 @@ class TeamsControllerTest extends ControllerTestCase
         ];
         $Teams->Team->TeamMember->save($data);
         $this->testAction('/teams/ajax_team_admin_user_check', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxDeleteTeamVision()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_delete_team_vision/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetTeamVision()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_team_vision/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxSetTeamVisionArchive()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_set_team_vision_archive/1/0', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testMemberList()
@@ -683,61 +693,81 @@ class TeamsControllerTest extends ControllerTestCase
     function testAjaxGetTeamMemberInit()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_team_member_init', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetTeamMember()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_team_member', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetGroupMember()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_group_member', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetCurrentTeamGroupList()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_current_team_group_list', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetCurrentTeamAdminList()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_current_team_admin_list', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetCurrentNot2faStepUserList()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_current_not_2fa_step_user_list', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxSetCurrentTeamActiveFlag()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_set_current_team_active_flag/1/0', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxSetCurrentTeamAdminUserFlag()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_set_current_team_admin_user_flag/1/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxSetCurrentTeamEvaluationFlag()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_set_current_team_evaluation_flag/1/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAjaxGetInviteMemberList()
     {
         $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/teams/ajax_get_invite_member_list', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     function testAddTeamVisionNotAdmin()
