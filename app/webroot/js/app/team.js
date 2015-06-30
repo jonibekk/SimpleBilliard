@@ -126,21 +126,21 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 url: "/group_vision/:team_id",
                 templateUrl: "/template/group_vision_list.html",
                 resolve: {
-                    LoginUserGroupId: ['$http', '$rootScope', function($http, $rootScope) {
+                    LoginUserGroupId: ['$http', '$rootScope', function ($http, $rootScope) {
                         var request = {
                             method: 'GET',
                             url: cake.url.ab + $rootScope.team_id + '/' + $rootScope.login_user_id
                         };
-                        return $http(request).then(function(response){
+                        return $http(request).then(function (response) {
                             return response.data;
                         });
                     }],
-                    GroupVisionList: ['$stateParams', '$http', function($stateParams, $http) {
+                    GroupVisionList: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
                             url: cake.url.y + $stateParams.team_id
                         };
-                        return $http(request).then(function(response){
+                        return $http(request).then(function (response) {
                             return response.data;
                         });
                     }]
@@ -167,23 +167,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 url: "/set_group_vision_archive/:group_vision_id/:active_flg",
                 resolve: {
                     setGroupVisionArchive: ['$stateParams', '$http', function ($stateParams, $http) {
-                        var request01 = {
+                        var request = {
                             method: 'GET',
-                            url: cake.url.x
+                            url: cake.url.z + $stateParams.group_vision_id + '/' + $stateParams.active_flg
                         };
-                        return $http(request01).then(function (response) {
-
-                            if (response.data.is_admin_user === false) {
-                                return false;
-                            }
-
-                            var request = {
-                                method: 'GET',
-                                url: cake.url.z + $stateParams.group_vision_id + '/' + $stateParams.active_flg
-                            };
-                            return $http(request).then(function (response) {
-                                return response.data;
-                            });
+                        return $http(request).then(function (response) {
+                            return response.data;
                         });
                     }]
                 },
@@ -193,25 +182,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 url: "/group_vision_delete/:group_vision_id",
                 resolve: {
                     deleteVision: ['$stateParams', '$http', function ($stateParams, $http) {
-                        var request01 = {
+                        var request02 = {
                             method: 'GET',
-                            url: cake.url.x
+                            url: cake.url.aa + $stateParams.group_vision_id
                         };
-                        return $http(request01).then(function (response) {
-
-                            if (response.data.is_admin_user === false) {
-                                return false;
-                            }
-
-                            var request02 = {
-                                method: 'GET',
-                                url: cake.url.aa + $stateParams.group_vision_id
-                            };
-                            return $http(request02).then(function (response) {
-                                return response;
-                            });
-
+                        return $http(request02).then(function (response) {
+                            return response;
                         });
+
                     }]
                 },
                 controller: "GroupVisionDeleteController"
