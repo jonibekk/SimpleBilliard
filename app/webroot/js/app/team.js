@@ -126,6 +126,15 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 url: "/group_vision/:team_id",
                 templateUrl: "/template/group_vision_list.html",
                 resolve: {
+                    LoginUserGroupId: ['$http', '$rootScope', function($http, $rootScope) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ab + $rootScope.team_id + '/' + $rootScope.login_user_id
+                        };
+                        return $http(request).then(function(response){
+                            return response.data;
+                        });
+                    }],
                     GroupVisionList: ['$stateParams', '$http', function($stateParams, $http) {
                         var request = {
                             method: 'GET',

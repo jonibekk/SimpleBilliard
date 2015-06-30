@@ -619,6 +619,19 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * 所属のグループ情報を取得
+     * @param $team_id
+     * @param $user_id
+     * @return CakeResponse
+     */
+    function ajax_get_login_user_group_id ($team_id, $user_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->Group->MemberGroup->getMyGroupList($team_id, $user_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
     function ajax_delete_group_vision($group_vision_id)
     {
         $this->_ajaxPreProcess();

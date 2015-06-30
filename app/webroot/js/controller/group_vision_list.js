@@ -1,9 +1,15 @@
 app.controller("GroupVisionController",
-    function ($scope, $http, $translate, GroupVisionList, $sce, $modal, notificationService) {
+    function ($rootScope, $scope, $http, $translate, GroupVisionList, LoginUserGroupId, $sce, $modal, notificationService) {
 
         var group_vision_list = GroupVisionList;
         angular.forEach(group_vision_list, function (val, key) {
             group_vision_list[key].GroupVision.modified = $sce.trustAsHtml(val.GroupVision.modified);
+
+            group_vision_list[key].GroupVision.showSettingBox = false;
+            if (typeof LoginUserGroupId[val.GroupVision.group_id] !== "undefined"
+                || $rootScope.login_user_admin_flg === true) {
+                group_vision_list[key].GroupVision.showSettingBox = true;
+            }
         });
 
         $scope.GroupVisionList = group_vision_list;
