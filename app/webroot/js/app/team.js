@@ -153,6 +153,33 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                     }]
                 },
                 controller: 'GroupVisionArchiveController'
+            })
+            .state('set_group_vision_archive', {
+                url: "/set_group_vision_archive/:group_vision_id/:active_flg",
+                resolve: {
+                    setGroupVisionArchive: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request01 = {
+                            method: 'GET',
+                            url: cake.url.x
+                        };
+                        return $http(request01).then(function (response) {
+
+                            if (response.data.is_admin_user === false) {
+                                return false;
+                            }
+
+                            var request = {
+                                method: 'GET',
+                                url: cake.url.z + $stateParams.group_vision_id + '/' + $stateParams.active_flg
+                            };
+                            return $http(request).then(function (response) {
+                                return response.data;
+                            });
+                        });
+
+                    }]
+                },
+                controller: "GroupVisionSetArchiveController"
             });
 
         $translateProvider.useStaticFilesLoader({

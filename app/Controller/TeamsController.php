@@ -606,6 +606,19 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($group_vision_list);
     }
 
+    /**
+     * グループビジョンアーカイブ設定
+     * @param     $group_vision_id
+     * @param int $active_flg
+     * @return CakeResponse
+     */
+    function ajax_set_group_vision_archive($group_vision_id, $active_flg = 1)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->GroupVision->setGroupVisionActiveFlag($group_vision_id, $active_flg);
+        return $this->_ajaxGetResponse($res);
+    }
+
     function ajax_team_admin_user_check()
     {
         $this->_ajaxPreProcess();

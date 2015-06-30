@@ -13,5 +13,12 @@
         "ARCHIVE_SUCCESS_MASSAGE": "チームビジョンをアーカイブしました",
         "DELETE_FAILED_MASSAGE": "管理者以外の方には削除できません",
         "DELETE_SUCCESS_MASSAGE": "チームビジョンを削除しました"
+    },
+
+    "GROUP_VISION": {
+        "ARCHIVE_FAILED_MASSAGE": "管理者以外の方にはアーカイブできません",
+        "ARCHIVE_SUCCESS_MASSAGE": "グループビジョンをアーカイブしました",
+        "DELETE_FAILED_MASSAGE": "管理者以外の方には削除できません",
+        "DELETE_SUCCESS_MASSAGE": "グループビジョンを削除しました"
     }
 }

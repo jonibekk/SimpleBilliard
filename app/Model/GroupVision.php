@@ -132,4 +132,17 @@ class GroupVision extends AppModel
         }
         return $data;
     }
+
+    /**
+     * アーカイブ設定
+     * @param $group_vision_id
+     * @param $active_flg
+     * @return mixed
+     * @throws Exception
+     */
+    function setGroupVisionActiveFlag($group_vision_id, $active_flg)
+    {
+        $this->id = $group_vision_id;
+        return $this->save(['active_flg' => $active_flg]);
+    }
 }
