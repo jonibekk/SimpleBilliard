@@ -138,7 +138,30 @@ echo $this->Html->script('gl_basic');
             h: "<?=viaIsSet($circle_id)?>",
             i: "<?=$this->Session->read('current_team_id')?>",
             j: "<?= isset($posts)?count($posts):null?>",
-            k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>
+            k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>,
+            l: function (element, callback) {
+                var data = [
+                    {
+                        id: "coach",
+                        text: "<?=__d('gl',"コーチ")?>",
+                        icon: "fa fa-venus-double",
+                        locked: true
+                    },
+                    {
+                        id: "followers",
+                        text: "<?=__d('gl',"フォロワー")?>",
+                        icon: "fa fa-heart",
+                        locked: true
+                    },
+                    {
+                        id: "collaborators",
+                        text: "<?=__d('gl',"コラボレータ")?>",
+                        icon: "fa fa-child",
+                        locked: true
+                    }
+                ];
+                callback(data);
+            }
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",

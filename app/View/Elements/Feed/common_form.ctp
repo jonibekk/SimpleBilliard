@@ -149,19 +149,20 @@
                                                    ['type' => 'action_result', 'index' => $i, 'submit_id' => 'CommonActionSubmit']) ?>
                                 </li><?php endfor ?>
                         </ul>
-                        <span class="help-block" id="CommonAction__Photo_ValidateMessage"></span>
+                        <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
                     </div>
                 </div>
                 <div class="panel-body post-share-range-panel-body" id="">
                     <?=
                     $this->Form->input('goal_id', [
-                        'label'     => __d('gl', "ゴール"),
-                        'required'  => true,
-                        'class'     => 'form-control change-next-select-with-value',
-                        'id'        => 'GoalSelectOnActionForm',
-                        'options'   => $goal_list_for_action_option,
-                        'target-id' => 'KrSelectOnActionForm',
-                        'ajax-url'  => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""])
+                        'label'                    => __d('gl', "ゴール"),
+                        'required'                 => true,
+                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                        'class'                    => 'form-control change-next-select-with-value',
+                        'id'                       => 'GoalSelectOnActionForm',
+                        'options'                  => $goal_list_for_action_option,
+                        'target-id'                => 'KrSelectOnActionForm',
+                        'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
                     ])
                     ?>
                 </div>
@@ -169,17 +170,19 @@
                     <?=
                     $this->Form->input('key_result_id', [
                         'label'    => __d('gl', "出したい成果"),
-                        'required' => true,
+                        'required' => false,
                         'id'       => 'KrSelectOnActionForm',
                         'options'  => [null => __d('gl', '出したい成果を選択する')],
                     ])
                     ?>
                 </div>
                 <div class="panel-body post-share-range-panel-body" id="CommonActionFormShare">
+                    <label for="KrSelectOnActionForm"><?= __d('gl', "通知先を追加") ?></label>
+
                     <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
                         <?=
                         $this->Form->hidden('share',
-                                            ['id' => 'select2ActionCircleMember', 'value' => $current_circle ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
+                                            ['id' => 'select2ActionCircleMember', 'value' => "coach,followers,collaborators", 'style' => "width: 100%",]) ?>
                         <?php $this->Form->unlockField('ActionResult.share') ?>
                         <?php $this->Form->unlockField('socket_id') ?>
                     </div>
