@@ -10,9 +10,10 @@ app.controller("TeamVisionController",
 
         $scope.viewDeleteModal = function (team_vision_id, name) {
             $modal.open({
-                templateUrl: '/template/modal/team_vision_delete.html',
+                templateUrl: '/template/modal/vision_delete.html',
                 controller: function ($scope, $state, $modalInstance) {
-                    $scope.team_vision_body = name;
+                    $scope.vision_title = 'チームビジョン';
+                    $scope.vision_body = name;
                     $scope.ok = function () {
                         $modalInstance.close();
                         $state.go('vision_delete', {team_vision_id: team_vision_id});

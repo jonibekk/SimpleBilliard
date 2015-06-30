@@ -145,4 +145,14 @@ class GroupVision extends AppModel
         $this->id = $group_vision_id;
         return $this->save(['active_flg' => $active_flg]);
     }
+
+    /**
+     * 削除
+     * @param $group_vision_id
+     * @return bool
+     */
+    function deleteGroupVision($group_vision_id){
+        $this->id = $group_vision_id;
+        return $this->delete();
+    }
 }

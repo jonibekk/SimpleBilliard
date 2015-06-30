@@ -176,10 +176,36 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                                 return response.data;
                             });
                         });
-
                     }]
                 },
                 controller: "GroupVisionSetArchiveController"
+            })
+            .state('group_vision_delete', {
+                url: "/group_vision_delete/:group_vision_id",
+                resolve: {
+                    deleteVision: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request01 = {
+                            method: 'GET',
+                            url: cake.url.x
+                        };
+                        return $http(request01).then(function (response) {
+
+                            if (response.data.is_admin_user === false) {
+                                return false;
+                            }
+
+                            var request02 = {
+                                method: 'GET',
+                                url: cake.url.aa + $stateParams.group_vision_id
+                            };
+                            return $http(request02).then(function (response) {
+                                return response;
+                            });
+
+                        });
+                    }]
+                },
+                controller: "GroupVisionDeleteController"
             });
 
         $translateProvider.useStaticFilesLoader({
