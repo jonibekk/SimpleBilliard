@@ -1284,6 +1284,11 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
+    $('#CommonActionDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
 
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
