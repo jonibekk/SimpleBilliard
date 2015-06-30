@@ -132,7 +132,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                             url: cake.url.y + $stateParams.team_id
                         };
                         return $http(request).then(function(response){
-                            console.log(response.data);
+                            return response.data;
                         });
                     }]
                 },

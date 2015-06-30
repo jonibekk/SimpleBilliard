@@ -602,7 +602,8 @@ class TeamsController extends AppController
     {
         $this->_ajaxPreProcess();
         $res = $this->Team->GroupVision->getGroupVision($team_id, $active_flg);
-        return $this->_ajaxGetResponse($res);
+        $group_vision_list = $this->Team->GroupVision->convertData($team_id, $res);
+        return $this->_ajaxGetResponse($group_vision_list);
     }
 
     function ajax_team_admin_user_check()

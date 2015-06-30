@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * GroupVision Model
@@ -102,9 +105,31 @@ class GroupVision extends AppModel
         $options = [
             'conditions' => [
                 'team_id' => $team_id,
-                'active_flg' => $active_flg
+                'active_flg' => $active_flg,
             ]
         ];
         return $this->find('all', $options);
+    }
+
+    /**
+     * AngularJSのテンプレート側から処理しやすく加工
+     * @param $team_id
+     * @param $data
+     * @return mixed
+     */
+    function convertData($team_id, $data)
+    {
+        $group_list = $this->Group->getByAllName($team_id);
+        $upload = new UploadHelper(new View());
+        $time = new TimeExHelper(new View());
+
+        foreach ($data as $key => $group) {
+            $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'], 'GroupVision.photo', ['style' => 'large']);
+            $data[$key]['GroupVision']['modified'] = $time->elapsedTime(h($group['GroupVision']['modified']));
+            if (isset($group_list[$group['GroupVision']['group_id']]) === true) {
+                $data[$key]['GroupVision']['group_name'] = $group_list[$group['GroupVision']['group_id']];
+            }
+        }
+        return $data;
     }
 }
