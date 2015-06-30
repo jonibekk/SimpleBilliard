@@ -1,6 +1,6 @@
 <div class="pull-right" style="padding-bottom:10px;">
-    <a ng-if="archive_flag === false">アーカイブを見る</a>
-    <a ng-if="archive_flag === true">グループビジョン一覧に戻る</a>
+    <a ng-if="archive_flag === false" ui-sref="group_vision_archive({team_id:team_id, active_flg:0})">アーカイブを見る</a>
+    <a ng-if="archive_flag === true" ui-sref="group_vision({team_id:team_id})">グループビジョン一覧に戻る</a>
 </div>
 
 

@@ -137,6 +137,22 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                     }]
                 },
                 controller: "GroupVisionController"
+            })
+            .state('group_vision_archive', {
+                url: "/group_vision_archive/:team_id/:active_flg",
+                templateUrl: "/template/group_vision_list.html",
+                resolve: {
+                    GroupVisionArchiveList: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.y + $stateParams.team_id + '/' + $stateParams.active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }]
+                },
+                controller: 'GroupVisionArchiveController'
             });
 
         $translateProvider.useStaticFilesLoader({
