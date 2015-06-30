@@ -90,4 +90,21 @@ class GroupVision extends AppModel
         $res = $this->save($data);
         return $res;
     }
+
+    /**
+     * チームに所属するすべてのグループビジョンを取得
+     * @param $team_id
+     * @param $active_flg
+     * @return array|null
+     */
+    function getGroupVision($team_id, $active_flg)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'active_flg' => $active_flg
+            ]
+        ];
+        return $this->find('all', $options);
+    }
 }

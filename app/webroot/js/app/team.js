@@ -118,16 +118,25 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                             });
 
                         });
-
-
                     }]
                 },
                 controller: "TeamVisionDeleteController"
             })
             .state('group_vision', {
-                url: "/group_vision",
+                url: "/group_vision/:team_id",
                 templateUrl: "/template/group_vision_list.html",
-                controller: ''
+                resolve: {
+                    GroupVisionList: ['$stateParams', '$http', function($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.y + $stateParams.team_id
+                        };
+                        return $http(request).then(function(response){
+                            console.log(response.data);
+                        });
+                    }]
+                },
+                controller: "GroupVisionController"
             });
 
         $translateProvider.useStaticFilesLoader({

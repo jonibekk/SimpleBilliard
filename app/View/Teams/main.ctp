@@ -4,6 +4,7 @@
 <?php echo $this->Html->script('app/team'); ?>
 <?php echo $this->Html->script('controller/team_member_list'); ?>
 <?php echo $this->Html->script('controller/team_vision_list'); ?>
+<?php echo $this->Html->script('controller/group_vision_list'); ?>
 
 
 <div ng-app="myApp">
@@ -11,9 +12,7 @@
         <ul class="nav" style="font-size: 13px;">
             <li class="active"><a ui-sref="member">チームメンバー一覧</a></li>
             <li class=""><a ui-sref="vision({team_id:team_id})">チームビジョン一覧</a></li>
-            <!--
-            <li class=""><a ui-sref="group_vision">グループビジョン一覧</a></li>
-            -->
+            <li class=""><a ui-sref="group_vision({team_id:team_id})">グループビジョン一覧</a></li>
         </ul>
     </div>
 
