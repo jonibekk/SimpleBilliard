@@ -348,19 +348,21 @@ class CircleMember extends AppModel
         return $this->save($options);
     }
 
-    function unjoinMember($circle_id)
+    function unjoinMember($circle_id, $user_id = null)
     {
-        if (empty($this->User->CircleMember->isBelong($circle_id))) {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
+        if (empty($this->User->CircleMember->isBelong($circle_id, $user_id))) {
             return;
         }
-        $this->deleteAll(
+        return $this->deleteAll(
             [
                 'CircleMember.circle_id' => $circle_id,
-                'CircleMember.user_id'   => $this->my_uid,
+                'CircleMember.user_id'   => $user_id,
                 'CircleMember.team_id'   => $this->current_team_id,
             ]
         );
-        return;
     }
 
     function show_hide_stats($userid, $circle_id)
@@ -384,6 +386,27 @@ class CircleMember extends AppModel
         ];
 
         $res = $this->updateAll(['CircleMember.show_for_all_feed_flg' => $status], $conditions);
+        return $res;
+    }
+
+    /**
+     * 管理者フラグを変更する
+     *
+     * @param $circle_id
+     * @param $user_id
+     * @param $admin_status
+     *
+     * @return bool
+     */
+    function editAdminStatus($circle_id, $user_id, $admin_status)
+    {
+        $conditions = [
+            'CircleMember.circle_id' => $circle_id,
+            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id'   => $user_id,
+        ];
+
+        $res = $this->updateAll(['CircleMember.admin_flg' => $admin_status], $conditions);
         return $res;
     }
 }

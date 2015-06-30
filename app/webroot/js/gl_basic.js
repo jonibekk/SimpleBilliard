@@ -313,6 +313,10 @@ $(document).ready(function () {
         });
     });
 
+    //
+    $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
+    $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
+
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
@@ -324,6 +328,14 @@ $(document).ready(function () {
         $('#layer-black').css('display', 'none');
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
+
+    // サークル編集画面のタブ切り替え
+    // タブによって footer 部分を切り替える
+    $(document).on('shown.bs.tab', '.modal-dialog.edit-circles a[data-toggle="tab"]', function (e) {
+        var $target = $(e.target);
+        var tabId = $target.attr('href').replace('#', '');
+        $target.closest('.modal-dialog').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
+    })
 
     if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
@@ -2580,3 +2592,105 @@ $(document).ready(function () {
         }
     });
 });
+
+function evAjaxEditCircleAdminStatus(e)
+{
+    e.preventDefault();
+
+    var $this = $(this);
+    var show_class_name = $this.attr('data-show-class-on-success');
+    var hide_class_name = $this.attr('data-hide-class-on-success');
+    var user_id = $this.attr('data-user-id');
+
+    $.ajax({
+        url: $this.attr('action'),
+        type: 'POST',
+        method: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
+        .done(function (data) {
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    title: data.title,
+                    text: data.msg,
+                    icon: "fa fa-check-circle",
+                    delay: 4000,
+                    mouse_reset: false
+                });
+            }
+            else {
+                new PNotify({
+                    type: 'success',
+                    title: data.title,
+                    text: data.msg,
+                    icon: "fa fa-exclamation-triangle",
+                    delay: 4000,
+                    mouse_reset: false
+                });
+                var $member_row = $this.closest('.member-row-' + user_id);
+                $member_row.find('.' + hide_class_name).hide();
+                $member_row.find('.' + show_class_name).show();
+            }
+        })
+        .fail(function (data) {
+            new PNotify({
+                type:'error',
+                text: cake.message.notice.d,
+                delay: 4000,
+                mouse_reset: false
+            });
+        });
+}
+
+function evAjaxLeaveCircle(e)
+{
+    e.preventDefault();
+
+    var $this = $(this);
+    var remove_class_name = $this.attr('data-remove-class-on-success');
+
+    $.ajax({
+        url: $this.attr('action'),
+        type: 'POST',
+        method: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
+        .done(function (data) {
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    title: data.title,
+                    text: data.msg,
+                    icon: "fa fa-check-circle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+            }
+            else {
+                new PNotify({
+                    type: 'success',
+                    title: data.title,
+                    text: data.msg,
+                    icon: "fa fa-exclamation-triangle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+                $this.closest('.' + remove_class_name).fadeOut('fast', function () {
+                    $(this).remove();
+                });
+            }
+        })
+        .fail(function (data) {
+            new PNotify({
+                type:'error',
+                text: cake.message.notice.d,
+                delay: 4000,
+                mouse_reset: false
+            });
+        });
+}
