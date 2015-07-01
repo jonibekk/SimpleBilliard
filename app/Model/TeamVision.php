@@ -114,12 +114,12 @@ class TeamVision extends AppModel
         $time = new TimeExHelper(new View());
 
         if (isset($data['TeamVision']) === true) {
-            $data['TeamVision']['photo_path'] = $upload->uploadUrl($data['TeamVision'], 'TeamVision.photo', ['style' => 'large']);
+            $data['TeamVision']['photo_path'] = $upload->uploadUrl($data['TeamVision'], 'TeamVision.photo', ['style' => 'original']);
             $data['TeamVision']['modified'] = $time->elapsedTime(h($data['TeamVision']['modified']));
 
         } else {
             foreach ($data as $key => $team) {
-                $data[$key]['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo', ['style' => 'large']);
+                $data[$key]['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo', ['style' => 'original']);
                 $data[$key]['TeamVision']['modified'] = $time->elapsedTime(h($team['TeamVision']['modified']));
             }
         }

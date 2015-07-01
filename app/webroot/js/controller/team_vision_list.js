@@ -60,8 +60,6 @@ app.controller("TeamVisionSetArchiveController",
 
 app.controller("TeamVisionDetailController",
     function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail) {
-
-        console.log(teamVisionDetail);
         teamVisionDetail.TeamVision.modified = $sce.trustAsHtml(teamVisionDetail.TeamVision.modified);
         $scope.detail = teamVisionDetail.TeamVision;
     });

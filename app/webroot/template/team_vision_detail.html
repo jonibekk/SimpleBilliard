@@ -1,11 +1,18 @@
-<div class="table team_member_table">
-    <p>Group Vision</p>
-    <p class="vision_title">{{detail.name}}</p>
-    <span ng-bind-html="detail.modified"></span>
+<div class="team_member_table">
 
-    <p>Description</p>
-    <p>{{detail.description}}</p>
+    <div class="vision_detail_block">
+        <div class="">Group Vision</div>
+        <div class="vision_detail_title">{{detail.name}}</div>
+        <span class="vision_detail_date" ng-bind-html="detail.modified"></span>
+    </div>
 
+    <div class="vision_detail_block">
+        <div>Description</div>
+        <div class="vision_modified_date">{{detail.description}}</div>
+    </div>
 
-    <img ng-src="{{detail.photo_path}}"/>
+    <div class="vision_detail_block" ng-if="detail.photo_file_name !== null">
+        <img class="vision_detail_image" ng-src="{{detail.photo_path}}"/>
+    </div>
+
 </div>
