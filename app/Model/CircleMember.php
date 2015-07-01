@@ -186,6 +186,62 @@ class CircleMember extends AppModel
         return ['results' => $user_res];
     }
 
+    /**
+     * サークルメンバーでないユーザーのリストを select2 用のデータ形式で返す
+     *
+     * @param     $circle_id
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $member_list = $this->getMemberList($circle_id, true);
+
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id'    => $this->current_team_id,
+                'TeamMember.active_flg' => true,
+                'NOT'                   => [
+                    'TeamMember.user_id' => $member_list
+                ],
+                'OR'                    => [
+                    'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'                       => "%" . $keyword . "%",
+                    'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like ?' => "%" . $keyword . "%",
+                ]
+            ],
+            'limit'      => $limit,
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ]
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'local_names',
+                    'alias'      => 'SearchLocalName',
+                    'conditions' => [
+                        '`SearchLocalName.user_id`=`User.id`',
+                    ],
+                ]
+            ]
+        ];
+        $users = $this->User->TeamMember->find('all', $options);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
+        return ['results' => $user_res];
+    }
+
     function isAdmin($user_id, $circle_id)
     {
         $options = [

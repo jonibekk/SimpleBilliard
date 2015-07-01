@@ -239,9 +239,14 @@
                         <div class="bbb">
                             <?=
                             $this->Form->hidden('members',
-                                                ['class' => 'ajax_add_select2_members',
-                                                 'value' => null,
-                                                 'style' => "width: 100%"]) ?>
+                                                ['class'    => 'ajax_add_select2_members',
+                                                 'value'    => null,
+                                                 'style'    => "width: 100%",
+                                                 'data-url' => $this->Html->url(
+                                                     ['controller' => 'circles',
+                                                      'action'     => 'ajax_select2_non_circle_member',
+                                                      'circle_id'  => $this->request->data['Circle']['id']])
+                                                ]) ?>
                             <?php $this->Form->unlockField('Circle.members') ?>
                         </div>
                     </div>

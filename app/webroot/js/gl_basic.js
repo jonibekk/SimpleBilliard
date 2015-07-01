@@ -1422,14 +1422,17 @@ function format(item) {
     return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
 }
 function bindSelect2Members($this) {
+    var $select2elem = $this.find(".ajax_add_select2_members");
+    var url = $select2elem.attr('data-url');
+
     //noinspection JSUnusedLocalSymbols
-    $this.find(".ajax_add_select2_members").select2({
+    $select2elem.select2({
         'val': null,
         multiple: true,
         minimumInputLength: 2,
         placeholder: cake.message.notice.b,
         ajax: {
-            url: cake.url.a,
+            url: url ? url : cake.url.a,
             dataType: 'json',
             quietMillis: 100,
             cache: true,

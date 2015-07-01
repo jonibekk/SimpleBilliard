@@ -339,6 +339,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('message', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
+
     function testAjaxEditAdminStatusToNormal()
     {
         $this->_getCirclesCommonMock();
@@ -448,7 +449,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         $data = [
             'CircleMember' => [
-                'user_id'   => 2,
+                'user_id' => 2,
             ]
         ];
         $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:1', ['data' => $data, 'method' => 'POST']);
@@ -466,7 +467,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         $data = [
             'CircleMember' => [
-                'user_id'   => 2,
+                'user_id' => 2,
             ]
         ];
         $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:999999',
@@ -485,7 +486,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         $data = [
             'CircleMember' => [
-                'user_id'   => 2,
+                'user_id' => 2,
             ]
         ];
         $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:2', ['data' => $data, 'method' => 'POST']);
@@ -503,7 +504,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         $data = [
             'CircleMember' => [
-                'user_id'   => 1,
+                'user_id' => 1,
             ]
         ];
         $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:1', ['data' => $data, 'method' => 'POST']);
@@ -527,7 +528,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         $data = [
             'CircleMember' => [
-                'user_id'   => 2,
+                'user_id' => 2,
             ]
         ];
         $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:1', ['data' => $data, 'method' => 'POST']);
@@ -535,6 +536,17 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSelect2NonCircleMember()
+    {
+        $this->_getCirclesCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $ret = $this->testAction('/circles/ajax_select2_non_circle_member/circle_id:1',
+                                 ['data' => ['term' => 'name', 'page_limit' => 10], 'method' => 'GET']);
+        $json_data = json_decode($ret, true);
+        $this->assertArrayHasKey('results', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

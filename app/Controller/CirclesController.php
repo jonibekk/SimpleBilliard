@@ -65,6 +65,22 @@ class CirclesController extends AppController
     }
 
     /**
+     * select2のユーザ検索 （サークルメンバー追加用）
+     * サークル未参加のユーザーリストを返す
+     */
+    function ajax_select2_non_circle_member()
+    {
+        $this->_ajaxPreProcess();
+        $circle_id = $this->request->params['named']['circle_id'];
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && $query['term'] && isset($query['page_limit']) && $query['page_limit']) {
+            $res = $this->Circle->CircleMember->getNonCircleMemberSelect2($circle_id, $query['term'], $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
      * サークル基本情報更新
      */
     public function edit()
