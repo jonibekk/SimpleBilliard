@@ -53,6 +53,13 @@ $(document).ready(function () {
     $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
     });
+    //tab open
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var $target = $(e.target);
+        if ($target.hasClass('click-target-focus') && $target.attr('target-id') != undefined) {
+            $('#' + $target.attr('target-id')).focus();
+        }
+    })
 
     $('.fileinput-enabled-submit').fileinput()
         //ファイル選択時にsubmitボタンを有効化する
@@ -107,7 +114,7 @@ $(document).ready(function () {
      */
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
-    $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("focus", ".tiny-form-text", evShowAndThisWide);
     $(document).on("click", ".tiny-form-text-close", evShowAndThisWideClose);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
