@@ -52,14 +52,6 @@ ul {
     color: #000000;
 }
 
-.nav-icons > .header-function > a {
-    float: right;
-    font-size: 20px;
-    padding: 0 4px;
-    margin: 9px 0;
-    color: #000000;
-}
-
 .nav-icons > .header-function > a:hover,
 .nav-icons > .header-function > a:focus {
     text-decoration: none;
@@ -2692,14 +2684,6 @@ textarea.comment-post-form {
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
-}
-
-.goals-column-function {
-    border: 1px solid #ccc;
-}
-
-.goals-column-fa-caret-down {
-    margin-left: 2px;
 }
 
 .goals-column-purpose {

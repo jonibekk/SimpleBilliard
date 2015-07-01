@@ -122,7 +122,7 @@
                 <a href="<?= $this->Html->url('/') ?>" class="header-home header-link"><?= __d('gl', "ホーム") ?></a>
 
                 <div class="dropdown navbar-nav-fix">
-                    <a href="#" data-toggle="dropdown" id="download">
+                    <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
                         <i class="fa fa-plus-circle header-link header-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" aria-labelledby="download">
@@ -161,9 +161,11 @@
                         </li>
                     </ul>
                 </div>
-                <a class="develop--forbiddenLink" href="#">
-                    <i class="fa fa-envelope-o header-link header-icon"></i>
-                </a>
+                <div class="dropdown dropdown-menu-right navbar-nav-fix develop--forbiddenLink">
+                  <a class="btn-message-header" href="#">
+                      <i class="fa fa-envelope-o header-link header-icon"></i>
+                  </a>
+                </div>
 
                 <div class="dropdown dropdown-menu-right navbar-nav-fix">
                     <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
@@ -184,12 +186,12 @@
                         </ul>
                     </div>
                 </div>
-                <div class="pull-right header-function dropdown nav-icons">
+                <div class="dropdown dropdown-menu-right navbar-nav-fix header-function nav-icons">
                     <a href="#"
-                       class="font_lightGray-gray header-icon"
+                       class="font_lightGray-gray header-icon btn-function-header"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog header-function-icon header-link"></i>
+                        <i class="fa fa-cog header-function-icon header-drop-icons header-icon header-link"></i>
                         <?php if ($all_alert_cnt > 0): ?>
                             <div class="btn btn-xs notify-function-numbers">
                              <span>
