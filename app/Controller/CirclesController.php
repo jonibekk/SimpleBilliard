@@ -113,7 +113,7 @@ class CirclesController extends AppController
      */
     public function add_member()
     {
-        $this->request->allowMethod('post');
+        $this->request->allowMethod('put');
         $this->Circle->id = $this->request->params['named']['circle_id'];
         $before_circle = null;
         try {

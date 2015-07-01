@@ -230,7 +230,7 @@
                         'class'      => 'form-horizontal',
                         'novalidate' => true,
                         'id'         => 'AddCircleMemberForm',
-                        'type'       => 'post',
+                        'type'       => 'put',
                     ]); ?>
                     <?= $this->Form->hidden('id') ?>
                     <div class="form-group">
