@@ -1,21 +1,4 @@
-var app = angular.module('myApp', ['ngRoute', 'pascalprecht.translate']).
-
-    config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
-        $routeProvider
-            .when('/', {
-                controller: 'TeamMemberMainController',
-                templateUrl: '/template/team_member_list.html'
-            });
-
-        $translateProvider.useStaticFilesLoader({
-            prefix: '/i18n/locale-',
-            suffix: '.json'
-        });
-        $translateProvider.preferredLanguage('ja');
-        $translateProvider.fallbackLanguage('en');
-    }]);
-
-app.controller("TeamMemberMainController", function ($scope, $http, $translate, $sce) {
+app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
 
         var url_list = cake.url;
         var active_member_list = [];
@@ -46,27 +29,13 @@ app.controller("TeamMemberMainController", function ($scope, $http, $translate, 
         getAllTeamMember();
 
         function init () {
-
             $scope.invite_box_show = false;
             $scope.name_field_show = true;
             $scope.coach_name_field_show = false;
             $scope.group_field_show = false;
-
             $scope.name_field = '';
             $scope.group_id = null;
 
-            $http.get(url_list.j).success(function (data) {
-
-                $scope.login_user_id = data.login_user_id;
-                $scope.login_user_admin_flg = data.login_user_admin_flg;
-
-                $scope.login_user_language = data.login_user_language;
-                if ($scope.login_user_language === 'eng') {
-                    $translate.use('en');
-                }
-
-                $scope.admin_user_cnt = data.admin_user_cnt;
-            });
         };
         init();
 

@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :virtualbox do |vb|
     vb.memory = 2048
-    vb.cpus = 2
+    vb.cpus = 1
   end
 
   if Vagrant.has_plugin?("vagrant-cachier")
