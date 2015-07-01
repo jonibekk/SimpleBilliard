@@ -150,18 +150,28 @@ class GroupVisionTest extends CakeTestCase
 
     function testConvertData()
     {
-        $team_id = 1;
-        $name = 'test';
-        $image_name = 'test.jpg';
+        $team_id = 999;
+        $group_id = 888;
+        $group_name = 'sdg';
+
         $data = [
             'team_id' => $team_id,
+            'id' => $group_id,
+            'name' => $group_name
+        ];
+        $this->GroupVision->Group->save($data);
+
+        $name = 'test';
+        $data = [
+            'team_id' => $team_id,
+            'group_id' => $group_id,
             'name'=>$name,
-            'photo_file_name' => $image_name
         ];
         $this->GroupVision->save($data);
         $res = $this->GroupVision->getGroupVision($team_id, 1);
         $convert_data = $this->GroupVision->convertData($team_id, $res);
-        $this->assertNotEquals($image_name, $convert_data[0]['GroupVision']['photo_path']);
+
+        $this->assertEquals($group_name, $convert_data[0]['GroupVision']['group_name']);
     }
 
     function _setDefault()
