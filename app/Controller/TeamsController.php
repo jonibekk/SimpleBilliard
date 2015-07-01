@@ -632,6 +632,11 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * グループビジョンの削除
+     * @param $group_vision_id
+     * @return CakeResponse
+     */
     function ajax_delete_group_vision($group_vision_id)
     {
         $this->_ajaxPreProcess();
