@@ -331,7 +331,7 @@ $(document).ready(function () {
 
     // サークル編集画面のタブ切り替え
     // タブによって footer 部分を切り替える
-    $(document).on('shown.bs.tab', '.modal-dialog.edit-circles a[data-toggle="tab"]', function (e) {
+    $(document).on('shown.bs.tab', '.modal-dialog.edit-circle a[data-toggle="tab"]', function (e) {
         var $target = $(e.target);
         var tabId = $target.attr('href').replace('#', '');
         $target.closest('.modal-dialog').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
@@ -2598,41 +2598,48 @@ function evAjaxEditCircleAdminStatus(e)
     e.preventDefault();
 
     var $this = $(this);
-    var show_class_name = $this.attr('data-show-class-on-success');
-    var hide_class_name = $this.attr('data-hide-class-on-success');
     var user_id = $this.attr('data-user-id');
 
     $.ajax({
         url: $this.attr('action'),
         type: 'POST',
-        method: 'POST',
         dataType: 'json',
         processData: false,
         data: $this.serialize()
     })
         .done(function (data) {
+            // 処理失敗時
             if (data.error) {
                 new PNotify({
                     type: 'error',
-                    title: data.title,
-                    text: data.msg,
+                    title: data.message.title,
+                    text: data.message.text,
                     icon: "fa fa-check-circle",
-                    delay: 4000,
+                    delay: 2000,
                     mouse_reset: false
                 });
             }
+            // 処理成功時
             else {
                 new PNotify({
                     type: 'success',
-                    title: data.title,
-                    text: data.msg,
+                    title: data.message.title,
+                    text: data.message.text,
                     icon: "fa fa-exclamation-triangle",
-                    delay: 4000,
+                    delay: 2000,
                     mouse_reset: false
                 });
-                var $member_row = $this.closest('.member-row-' + user_id);
-                $member_row.find('.' + hide_class_name).hide();
-                $member_row.find('.' + show_class_name).show();
+                var $member_row = $('#edit-circle-member-row-' + user_id);
+                // 非管理者 -> 管理者 の場合
+                if (data.result.admin_flg == "1") {
+                    $member_row.find('.item-for-non-admin').hide();
+                    $member_row.find('.item-for-admin').show();
+                }
+                // 管理者 -> 非管理者 の場合
+                else {
+                    $member_row.find('.item-for-admin').hide();
+                    $member_row.find('.item-for-non-admin').show();
+                }
             }
         })
         .fail(function (data) {
@@ -2650,37 +2657,39 @@ function evAjaxLeaveCircle(e)
     e.preventDefault();
 
     var $this = $(this);
-    var remove_class_name = $this.attr('data-remove-class-on-success');
+    var user_id = $this.attr('data-user-id');
 
     $.ajax({
         url: $this.attr('action'),
         type: 'POST',
-        method: 'POST',
         dataType: 'json',
         processData: false,
         data: $this.serialize()
     })
         .done(function (data) {
+            // 処理失敗時
             if (data.error) {
                 new PNotify({
                     type: 'error',
-                    title: data.title,
-                    text: data.msg,
+                    title: data.message.title,
+                    text: data.message.text,
                     icon: "fa fa-check-circle",
                     delay: 2000,
                     mouse_reset: false
                 });
             }
+            // 処理成功時
             else {
                 new PNotify({
                     type: 'success',
-                    title: data.title,
-                    text: data.msg,
+                    title: data.message.title,
+                    text: data.message.text,
                     icon: "fa fa-exclamation-triangle",
                     delay: 2000,
                     mouse_reset: false
                 });
-                $this.closest('.' + remove_class_name).fadeOut('fast', function () {
+                var $member_row = $('#edit-circle-member-row-' + user_id);
+                $member_row.fadeOut('fast', function () {
                     $(this).remove();
                 });
             }

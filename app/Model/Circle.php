@@ -169,17 +169,7 @@ class Circle extends AppModel
         if (!isset($data['Circle']) || empty($data['Circle'])) {
             return false;
         }
-        // チーム全体サークルでない場合は、メンバーの編集処理を行う
-        if (!viaIsSet($data['Circle']['team_all_flg'])) {
-            //既存メンバーで指定されないメンバーがいた場合、削除
-//            if (!empty($exists_member_list)) {
-//                $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
-//            }
-        }
-        if ($res = $this->saveAll($data)) {
-            $this->CircleMember->updateCounterCache(['circle_id' => $data['Circle']['id']]);
-        }
-        return $res;
+        return $this->save($data);
     }
 
     /**
@@ -204,7 +194,9 @@ class Circle extends AppModel
             return false;
         }
 
-        $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
+        // 管理者を含めたサークルメンバー全員
+        $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id'], true);
+
         $members = explode(",", $data['Circle']['members']);
         $new_members = [];
         foreach ($members as $val) {
@@ -224,6 +216,7 @@ class Circle extends AppModel
             ];
             $this->add_new_member_list[] = $user_id;
         }
+
         $res = false;
         if ($new_members) {
             $res = $this->CircleMember->saveAll($new_members);
@@ -345,10 +338,10 @@ class Circle extends AppModel
                     'conditions' => [
                         'CircleMember.user_id' => $active_user_ids,
                     ],
-                    'fields' => [
+                    'fields'     => [
                         'CircleMember.id'
                     ],
-                    'User'   => [
+                    'User'       => [
                         'fields' => $this->CircleMember->User->profileFields
                     ]
                 ]

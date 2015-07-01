@@ -406,7 +406,6 @@ class CircleMember extends AppModel
             'CircleMember.user_id'   => $user_id,
         ];
 
-        $res = $this->updateAll(['CircleMember.admin_flg' => $admin_status], $conditions);
-        return $res;
+        return $this->updateAll(['CircleMember.admin_flg' => $admin_status], $conditions);
     }
 }

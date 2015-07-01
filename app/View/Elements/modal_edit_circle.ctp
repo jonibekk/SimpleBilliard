@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/modal_edit_circle.ctp -->
-<div class="modal-dialog edit-circles">
+<div class="modal-dialog edit-circle">
     <div class="modal-content">
         <div class="modal-header none-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
@@ -20,12 +20,15 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "基本情報") ?></a></li>
             <li><a href="#tab2" data-toggle="tab"><?= __d('gl', "メンバー一覧") ?></a></li>
-            <li><a href="#tab3" data-toggle="tab"><?= __d('gl', "メンバー追加") ?></a></li>
+            <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
+                <li><a href="#tab3" data-toggle="tab"><?= __d('gl', "メンバー追加") ?></a></li>
+            <?php endif ?>
         </ul>
 
         <div class="modal-body modal-circle-body tab-content">
             <div class="tab-pane fade in active" id="tab1">
                 <?=
+                // サークル基本情報変更フォーム
                 $this->Form->create('Circle', [
                     'url'           => ['controller' => 'circles', 'action' => 'edit', 'circle_id' => $this->request->data['Circle']['id']],
                     'inputDefaults' => [
@@ -120,10 +123,10 @@
             </div>
 
             <div class="tab-pane fade" id="tab2">
-                <?php if (!empty($circle_members)): ?>
+                <?php if ($circle_members): ?>
                     <div class="row borderBottom">
                         <?php foreach ($circle_members as $user): ?>
-                            <div class="col col-xxs-12 mpTB0 member-row-<?= h($user['User']['id']) ?>">
+                            <div class="col col-xxs-12 mpTB0" id="edit-circle-member-row-<?= h($user['User']['id']) ?>">
                                 <div class="pull-right">
                                     <a class="btn btn-link btn-lightGray btn-white bd-radius_4px"
                                        data-toggle="dropdown">
@@ -132,62 +135,63 @@
                                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu">
                                         <li>
                                             <?=
-                                            $this->Form->create('Circle', [
-                                                'url'                        => ['controller' => 'circles',
-                                                                                 'action'     => 'ajax_edit_admin_status',
-                                                                                 'circle_id'  => $this->request->data['Circle']['id']],
-                                                'class'                      => 'ajax-edit-circle-admin-status edit-admin-status-form-group1',
-                                                'id'                         => 'EditAdminStatusForm1_' . $user['User']['id'],
-                                                'style'                      => $user['CircleMember']['admin_flg'] ? 'display:none' : '',
-                                                'data-user-id'               => $user['User']['id'],
-                                                'data-show-class-on-success' => 'edit-admin-status-form-group2',
-                                                'data-hide-class-on-success' => 'edit-admin-status-form-group1',
+                                            // 非管理者 -> 管理者 設定フォーム
+                                            $this->Form->create('CircleMember', [
+                                                'url'          => ['controller' => 'circles',
+                                                                   'action'     => 'ajax_edit_admin_status',
+                                                                   'circle_id'  => $this->request->data['Circle']['id']],
+                                                'class'        => 'ajax-edit-circle-admin-status',
+                                                'id'           => 'EditAdminStatusForm1_' . $user['User']['id'],
+                                                'type'         => 'post',
+                                                'data-user-id' => $user['User']['id'],
                                             ]); ?>
                                             <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                             <?= $this->Form->hidden('admin_flg', ['value' => 1]) ?>
                                             <?= $this->Form->end() ?>
-                                            <?= $this->Html->link(__d('gl', "管理者にする"),
-                                                                  '#',
-                                                                  ['class'   => 'edit-admin-status-form-group1',
+                                            <?= $this->Html->link(__d('gl', "管理者にする"), '#',
+                                                                  ['class'   => 'item-for-non-admin',
                                                                    'style'   => $user['CircleMember']['admin_flg'] ? 'display:none' : '',
                                                                    'onclick' => "$('#EditAdminStatusForm1_{$user['User']['id']}').submit(); return false;"]) ?>
 
                                             <?=
-                                            $this->Form->create('Circle', [
-                                                'url'                        => ['controller' => 'circles',
-                                                                                 'action'     => 'ajax_edit_admin_status',
-                                                                                 'circle_id'  => $this->request->data['Circle']['id']],
-                                                'class'                      => 'ajax-edit-circle-admin-status edit-admin-status-form-group2',
-                                                'id'                         => 'EditAdminStatusForm2_' . $user['User']['id'],
-                                                'style'                      => $user['CircleMember']['admin_flg'] ? '' : 'display:none',
-                                                'data-user-id'               => $user['User']['id'],
-                                                'data-show-class-on-success' => 'edit-admin-status-form-group1',
-                                                'data-hide-class-on-success' => 'edit-admin-status-form-group2',
+                                            // 管理者 -> 非管理者 設定フォーム
+                                            $this->Form->create('CircleMember', [
+                                                'url'          => ['controller' => 'circles',
+                                                                   'action'     => 'ajax_edit_admin_status',
+                                                                   'circle_id'  => $this->request->data['Circle']['id']],
+                                                'class'        => 'ajax-edit-circle-admin-status',
+                                                'id'           => 'EditAdminStatusForm2_' . $user['User']['id'],
+                                                'type'         => 'post',
+                                                'data-user-id' => $user['User']['id'],
                                             ]); ?>
                                             <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                             <?= $this->Form->hidden('admin_flg', ['value' => 0]) ?>
                                             <?= $this->Form->end() ?>
                                             <?= $this->Html->link(__d('gl', "管理者から外す"), '#',
-                                                                  ['class'   => 'edit-admin-status-form-group2',
+                                                                  ['class'   => 'item-for-admin',
                                                                    'style'   => $user['CircleMember']['admin_flg'] ? '' : 'display:none',
                                                                    'onclick' => "$('#EditAdminStatusForm2_{$user['User']['id']}').submit(); return false;"]) ?>
 
                                         </li>
-                                        <li>
-                                            <?=
-                                            $this->Form->create('Circle', [
-                                                'url'                          => ['controller' => 'circles',
-                                                                                   'action'     => 'ajax_leave_circle',
-                                                                                   'circle_id'  => $this->request->data['Circle']['id']],
-                                                'class'                        => 'ajax-leave-circle',
-                                                'id'                           => 'LeaveCircleForm',
-                                                'data-remove-class-on-success' => 'member-row-' . $user['User']['id'],
-                                            ]); ?>
-                                            <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
-                                            <?= $this->Form->end() ?>
-                                            <?= $this->Html->link(__d('gl', "サークルから外す"), '#',
-                                                                  ['onclick' => "$('#LeaveCircleForm').submit(); return false;"]) ?>
-                                        </li>
+                                        <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
+                                            <li>
+                                                <?=
+                                                // サークルから外す 設定フォーム
+                                                $this->Form->create('CircleMember', [
+                                                    'url'          => ['controller' => 'circles',
+                                                                       'action'     => 'ajax_leave_circle',
+                                                                       'circle_id'  => $this->request->data['Circle']['id']],
+                                                    'class'        => 'ajax-leave-circle',
+                                                    'id'           => 'LeaveCircleForm_' . $user['User']['id'],
+                                                    'type'         => 'post',
+                                                    'data-user-id' => $user['User']['id'],
+                                                ]); ?>
+                                                <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
+                                                <?= $this->Form->end() ?>
+                                                <?= $this->Html->link(__d('gl', "サークルから外す"), '#',
+                                                                      ['onclick' => "$('#LeaveCircleForm_{$user['User']['id']}').submit(); return false;"]) ?>
+                                            </li>
+                                        <?php endif ?>
                                     </ul>
                                 </div>
                                 <?=
@@ -197,7 +201,8 @@
                                 <div class="comment-body modal-comment">
                                     <div class="font_12px font_bold modalFeedTextPadding">
                                         <?= h($user['User']['display_username']) ?>
-                                        <i class="fa fa-adn ng-scope edit-admin-status-form-group2" <?php if (!$user['CircleMember']['admin_flg']): ?>style="display:none"<?php endif ?>></i>
+                                        <i class="fa fa-adn ng-scope item-for-admin"
+                                           <?php if (!$user['CircleMember']['admin_flg']): ?>style="display:none"<?php endif ?>></i>
                                     </div>
                                     <?php if ($user['CircleMember']['modified']): ?>
                                         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
@@ -214,47 +219,42 @@
                 <?php endif ?>
             </div>
 
-            <div class="tab-pane fade" id="tab3">
-                <?=
-                $this->Form->create('Circle', [
-                    'url'           => ['controller' => 'circles',
-                                        'action'     => 'add_member',
-                                        'circle_id'  => $this->request->data['Circle']['id']],
-                    'inputDefaults' => [
-                        'div'       => 'form-group',
-                        'label'     => [
-                            'class' => 'modal-label pr_12px'
-                        ],
-                        'wrapInput' => false,
-                        'class'     => 'form-control modal_input-design'
-                    ],
-                    'class'         => 'form-horizontal',
-                    'novalidate'    => true,
-                    'id'            => 'AddCircleMemberForm',
-                ]); ?>
-                <?= $this->Form->hidden('id') ?>
-                <div class="form-group">
-                    <label class="control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
+            <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
+                <div class="tab-pane fade" id="tab3">
+                    <?=
+                    // メンバー追加フォーム
+                    $this->Form->create('Circle', [
+                        'url'        => ['controller' => 'circles',
+                                         'action'     => 'add_member',
+                                         'circle_id'  => $this->request->data['Circle']['id']],
+                        'class'      => 'form-horizontal',
+                        'novalidate' => true,
+                        'id'         => 'AddCircleMemberForm',
+                        'type'       => 'post',
+                    ]); ?>
+                    <?= $this->Form->hidden('id') ?>
+                    <div class="form-group">
+                        <label class="control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
 
-                    <div class="bbb">
-                        <?=
-                        $this->Form->hidden('members',
-                                            ['class'     => 'ajax_add_select2_members',
-                                             'value'     => null,
-                                             'style'     => "width: 100%",
-                                             'circle_id' => $this->request->data['Circle']['id']]) ?>
-                        <?php $this->Form->unlockField('Circle.members') ?>
+                        <div class="bbb">
+                            <?=
+                            $this->Form->hidden('members',
+                                                ['class' => 'ajax_add_select2_members',
+                                                 'value' => null,
+                                                 'style' => "width: 100%"]) ?>
+                            <?php $this->Form->unlockField('Circle.members') ?>
+                        </div>
                     </div>
+                    <?= $this->Form->end(); ?>
                 </div>
-                <?= $this->Form->end(); ?>
-            </div>
+            <?php endif ?>
         </div>
 
         <div class="modal-footer tab1-footer">
             <?=
             $this->Form->button(__d('gl', "変更を保存"),
                                 ['class'   => 'btn btn-primary pull-right',
-                                 'onclick' => "$('#EditCircleForm').submit(); return false;",
+                                 'onclick' => "document.getElementById('EditCircleForm').submit(); return false;",
                                  'div'     => false,]) ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
                     data-dismiss="modal"><?= __d('gl', "キャンセル") ?></button>
@@ -268,16 +268,20 @@
                                       __d('gl', "本当にこのサークルを削除しますか？")) ?>
             <?php endif ?>
         </div>
+
         <div class="modal-footer tab2-footer" style="display:none">
         </div>
-        <div class="modal-footer tab3-footer" style="display:none">
-            <?=
-            $this->Form->button(__d('gl', "メンバー追加"),
-                                ['class'   => 'btn btn-primary pull-right',
-                                 'onclick' => "document.getElementById('AddCircleMemberForm').submit(); return false;",
-                                 'div'     => false,
-                                ]) ?>
-        </div>
+
+        <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
+            <div class="modal-footer tab3-footer" style="display:none">
+                <?=
+                $this->Form->button(__d('gl', "メンバー追加"),
+                                    ['class'   => 'btn btn-primary pull-right',
+                                     'onclick' => "document.getElementById('AddCircleMemberForm').submit(); return false;",
+                                     'div'     => false,
+                                    ]) ?>
+            </div>
+        <?php endif ?>
 
     </div>
 </div>
