@@ -99,6 +99,71 @@ class GroupVisionTest extends CakeTestCase
         $this->assertNotEmpty($this->GroupVision->saveGroupVision($data));
     }
 
+    function testGetGroupVision()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name
+        ];
+        $this->GroupVision->save($data);
+        $res = $this->GroupVision->getGroupVision($team_id, 1);
+        $this->assertEquals($res[0]['GroupVision']['name'], $name);
+    }
+
+    function testSetGroupVisionActiveFlag()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $active_flg = 1;
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name,
+            'active_flg' => $active_flg
+        ];
+        $this->GroupVision->save($data);
+        $res = $this->GroupVision->setGroupVisionActiveFlag($this->GroupVision->getLastInsertID(), 0);
+        $this->assertEquals($res['GroupVision']['active_flg'], 0);
+    }
+
+    function testDeleteGroupVision()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name,
+        ];
+        $this->GroupVision->save($data);
+        $this->GroupVision->deleteGroupVision($this->GroupVision->getLastInsertID());
+
+        $options = [
+            'fields' => ['del_flg'],
+            'conditions' => [
+                'id' => $this->GroupVision->getLastInsertID()
+            ]
+        ];
+        $res = $this->GroupVision->find('first', $options);
+        $this->assertCount(0, $res);
+    }
+
+    function testConvertData()
+    {
+        $team_id = 1;
+        $name = 'test';
+        $image_name = 'test.jpg';
+        $data = [
+            'team_id' => $team_id,
+            'name'=>$name,
+            'photo_file_name' => $image_name
+        ];
+        $this->GroupVision->save($data);
+        $res = $this->GroupVision->getGroupVision($team_id, 1);
+        $convert_data = $this->GroupVision->convertData($team_id, $res);
+        $this->assertNotEquals($image_name, $convert_data[0]['GroupVision']['photo_path']);
+    }
+
     function _setDefault()
     {
         $this->GroupVision->current_team_id = 1;
